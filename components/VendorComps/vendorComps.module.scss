@@ -602,7 +602,7 @@
         margin-top: 8px;
  
         .singleLanguage {
-          background: #1A1D21;
+          background: $bgTile;
           padding: 12px 16px;
           border-radius: 4px;
         }
@@ -642,7 +642,7 @@
           margin-top: 8px;
     
           .singleLanguage {
-            background: #1A1D21;
+            background: $bgTile;
             padding: 12px 16px;
             border-radius: 4px;
           }
@@ -684,7 +684,7 @@
         font-size: 15px;
         align-items: center;
         gap: 15px;
-        color: white;
+        color: $white;
         background-color: $secondary;
         border: none;
         padding-top: 10px;
@@ -694,6 +694,26 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+      }
+    }
+    .showFilesMain{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      
+
+      .showFiles{
+        display: flex;
+        gap: 10px;
+        width: fit-content;
+        padding: 5px 10px;
+        background: $bgTile;
+        border: 1px solid $secondary;
+        border-radius: 4px;
+        img{
+          width: 30px;
+          height: 30px;
+        }
       }
     }
 
@@ -982,7 +1002,7 @@
       cursor: pointer;
     }
         .exButton {
-          background-color: #1A1D21 !important;
+          background-color: $bgTile !important;
           width: max-content;
           flex-direction: row;
           span{
@@ -1002,7 +1022,7 @@
           gap: 10px;
           margin-top: 8px;
           .singleLanguage{
-                background: #1A1D21;
+                background: $bgTile;
                   padding: 12px 16px;
                   border-radius: 4px;
           }
@@ -1025,7 +1045,7 @@
       align-items: center;
       gap: 15px;
       color: white;
-      background-color: #1a1d21;
+      background-color: $bgTile;
       border: none;
       padding-top: 10px;
       padding-bottom: 10px;

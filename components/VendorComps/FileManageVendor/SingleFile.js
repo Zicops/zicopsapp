@@ -11,7 +11,7 @@ const SingleFile = ({ data }) => {
           <p className={`${styles.fileName}`}>{data?.name}</p>
           <div className={`${styles.hr}`}></div>
           <div className={`${styles.filePrice}`}>
-            <div className={`${styles.rate}`}>{data?.pricing}</div>
+            <div className={`${styles.rate}`}>{data?.price}</div>
             <div className={`${styles.deleteIcon}`} onClick={() => {}}>
               <img src="/images/svg/delete.svg" alt="" />
             </div>

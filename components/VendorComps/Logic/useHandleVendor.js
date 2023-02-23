@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import {
+  GET_ALL_PROFILE_DETAILS,
+  GET_SAMPLE_FILES,
   GET_SINGLE_EXPERIENCE_DETAILS,
+  GET_SINGLE_PROFILE_DETAILS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
   userQueryClient
@@ -11,11 +14,12 @@ import {
   getVendorObject,
   VendorProfileAtom,
   VendorStateAtom,
-  VendorExperiencesAtom,
-  VendorAllExperiencesAtom,
-  VendorAllLanguages,
-  VendorAllExpertise,
-  SampleAtom
+  SampleAtom,
+  allProfileAtom,
+  allSampleFilesAtom,
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -27,7 +31,14 @@ import {
   userClient,
   CREATE_PROFILE_VENDOR,
   CREATE_EXPERIENCE_VENDOR,
-  CREATE_SAMPLE_FILE
+  CREATE_SAMPLE_FILE,
+  UPDATE_PROFILE_VENDOR,
+  CREATE_SUBJECT_MATTER_EXPERTISE,
+  UPDATE_SUBJECT_MATTER_EXPERTISE,
+  CREATE_CLASS_ROOM_TRANING,
+  UPDATE_CLASS_ROOM_TRANING,
+  CREATE_CONTENT_DEVELOPMENT,
+  UPDATE_CONTENT_DEVELOPMENT
 } from '@/api/UserMutations';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
@@ -35,15 +46,24 @@ export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
+  const [createSme] = useMutation(CREATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
+  const [updateSme] = useMutation(UPDATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
+  const [createCrt] = useMutation(CREATE_CLASS_ROOM_TRANING, { client: userClient });
+  const [updateCrt] = useMutation(UPDATE_CLASS_ROOM_TRANING, { client: userClient });
+  const [createCd] = useMutation(CREATE_CONTENT_DEVELOPMENT, { client: userClient });
+  const [updateCd] = useMutation(UPDATE_CONTENT_DEVELOPMENT, { client: userClient });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
-  const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
-  const [allExpertise, setAllExpertise] = useRecoilState(VendorAllExpertise);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+  const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
+  const [fileDatails, setFileDetails] = useRecoilState(allSampleFilesAtom);
+  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
+  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
+  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -51,6 +71,8 @@ export default function useHandleVendor() {
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+
+  console.info('profileDetails', profileDetails);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -112,6 +134,36 @@ export default function useHandleVendor() {
     };
     setVendorData(getVendorObject(singleData));
   }
+  async function getAllProfileInfo() {
+    setLoading(true);
+    const profileInfo = await loadQueryDataAsync(
+      GET_ALL_PROFILE_DETAILS,
+      { vendor_id: vendorId },
+      {},
+      userQueryClient
+    );
+    setProfileDetails(profileInfo?.viewAllProfiles);
+    setLoading(true);
+  }
+  async function getSingleProfileInfo() {
+    const profileInfo = await loadQueryDataAsync(
+      GET_SINGLE_PROFILE_DETAILS,
+      { vendor_id: vendorId, email: profileData?.email },
+      {},
+      userQueryClient
+    );
+    setProfileData(getProfileObject(profileInfo));
+  }
+
+  async function getSampleFiles() {
+    const fileInfo = await loadQueryDataAsync(
+      GET_SAMPLE_FILES,
+      { vendor_id: vendorId, p_type: 'sme' },
+      {},
+      userQueryClient
+    );
+    setFileDetails(fileInfo?.getSampleFiles);
+  }
 
   // async function getSingleExperience() {
   //   const vendorInfo = await loadQueryDataAsync(
@@ -171,40 +223,42 @@ export default function useHandleVendor() {
   }
 
   async function addUpdateProfile() {
-    const type = vendorData?.type;
     const sendData = {
       vendor_id: vendorId || '',
-      type: 'sme' || '',
       first_name: profileData?.firstName?.trim() || '',
       last_name: profileData?.lastName?.trim() || '',
       email: profileData?.email?.trim() || '',
       phone: profileData?.contactNumber.trim() || '',
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
-      languages: allLanguages || [],
-      SME_expertise: allExpertise || [],
-      Classroom_expertise: [],
-      experience: allExperiences?.map((exp) => exp?.title + '@' + exp?.company_name) || [],
+      languages: profileData?.languages || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      experience:
+        profileData?.experience?.map((exp) =>
+          typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
+        ) || [],
       experience_years: profileData?.experienceYear,
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
 
     let isError = false;
 
-    // if (profileData?.profileId) {
-    //   sendData.profileId = profileData?.profileId;
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
 
-    //   await updateVendor({ variables: sendData }).catch((err) => {
-    //     console.log(err);
-    //     isError = !!err;
-    //     return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-    //   });
+      await updateProfileVendor({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
+      });
 
-    //   if (isError) return;
-    //   setToastMsg({ type: 'success', message: 'Vendor Updated' });
-    //   return;
-    // }
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+      return;
+    }
 
     const res = await createProfileVendor({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -212,24 +266,40 @@ export default function useHandleVendor() {
       return setToastMsg({ type: 'danger', message: 'Add profile Error' });
     });
     if (isError) return;
+    setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
     return res;
   }
 
   async function addUpdateExperience() {
     let isError = false;
-    for (let i = 0; i < allExperiences?.length; i++) {
+    for (let i = 0; i < profileData?.experience?.length; i++) {
       let sendData = {
         vendor_id: vendorId || '',
-        title: allExperiences[i]?.title?.trim() || '',
+        title: profileData?.experience[i]?.title?.trim() || '',
         email: profileData?.email?.trim() || '',
-        company_name: allExperiences[i]?.company_name?.trim() || '',
-        employement_type: allExperiences[i]?.employement_type?.trim() || '',
-        location: allExperiences[i]?.location?.trim() || '',
-        location_type: allExperiences[i]?.locationType?.trim() || '',
-        start_date: allExperiences[i]?.start_date || null,
-        end_date: allExperiences[i]?.end_date || null,
-        status: allExperiences[i]?.status
+        company_name: profileData?.experience[i]?.company_name?.trim() || '',
+        employement_type: profileData?.experience[i]?.employement_type?.trim() || '',
+        location: profileData?.experience[i]?.location?.trim() || '',
+        location_type: profileData?.experience[i]?.locationType?.trim() || '',
+        start_date: profileData?.experience[i]?.start_date || null,
+        end_date: profileData?.experience[i]?.end_date || null,
+        status: profileData?.experience[i]?.status
       };
+      console.info(profileData?.experience);
+
+      if (profileData?.experience?.ExpId) {
+        sendData.ExpId = profileData?.experience?.ExpId;
+
+        await updateVendor({ variables: sendData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Update Experience Error' });
+        });
+
+        if (isError) return;
+        setToastMsg({ type: 'success', message: 'Experience Updated' });
+        return;
+      }
 
       const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
         console.log(err);
@@ -238,21 +308,7 @@ export default function useHandleVendor() {
       });
       if (isError) break;
     }
-    return isError;
-
-    // if (profileData?.profileId) {
-    //   sendData.profileId = profileData?.profileId;
-
-    //   await updateVendor({ variables: sendData }).catch((err) => {
-    //     console.log(err);
-    //     isError = !!err;
-    //     return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-    //   });
-
-    //   if (isError) return;
-    //   setToastMsg({ type: 'success', message: 'Vendor Updated' });
-    //   return;
-    // }
+    // return isError;
   }
 
   async function addSampleFile() {
@@ -275,6 +331,141 @@ export default function useHandleVendor() {
       return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
     });
     if (isError) return;
+    setToastMsg({ type: 'success', message: 'Sample File Created' });
+    return res;
+  }
+
+  async function addUpdateSme() {
+    const sendData = {
+      vendor_id: vendorId,
+      description: smeData?.serviceDescription || '',
+      is_applicable: smeData?.isApplicableSME || false,
+      expertise: smeData?.expertises || [],
+      languages: smeData?.languages || [],
+      output_deliveries: smeData?.formats || [],
+      sample_files: [],
+      profiles: [],
+      Status: VENDOR_MASTER_STATUS.active
+    };
+
+    let isError = false;
+
+    // if (profileData?.profileId) {
+    //   sendData.profileId = profileData?.profileId;
+
+    //   await updateSme({ variables: sendData }).catch((err) => {
+    //     console.log(err);
+    //     isError = !!err;
+    //     return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
+    //   });
+
+    //   if (isError) return;
+    //   setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+    //   return;
+    // }
+
+    const res = await createSme({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
+    return res;
+  }
+
+  async function addUpdateCrt() {
+    const sendData = {
+      vendor_id: vendorId || '',
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: profileData?.languages || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      experience:
+        profileData?.experience?.map((exp) =>
+          typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
+        ) || [],
+      experience_years: profileData?.experienceYear,
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
+
+    let isError = false;
+
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
+
+      await updateCrt({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
+      });
+
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+      return;
+    }
+
+    const res = await createCrt({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
+    return res;
+  }
+  async function addUpdateCd() {
+    const sendData = {
+      vendor_id: vendorId || '',
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: profileData?.languages || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      experience:
+        profileData?.experience?.map((exp) =>
+          typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
+        ) || [],
+      experience_years: profileData?.experienceYear,
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
+
+    let isError = false;
+
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
+
+      await updateCd({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
+      });
+
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+      return;
+    }
+
+    const res = await createCd({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
     return res;
   }
 
@@ -286,8 +477,15 @@ export default function useHandleVendor() {
     handleProfilePhoto,
     getAllVendors,
     addUpdateProfile,
+    getAllProfileInfo,
+    getSingleProfileInfo,
+    getSampleFiles,
+    profileDetails,
     addUpdateExperience,
     addSampleFile,
+    addUpdateSme,
+    addUpdateCrt,
+    addUpdateCd,
     loading,
     setLoading
   };

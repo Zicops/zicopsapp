@@ -857,6 +857,7 @@ export const GET_VENDOR_DETAILS = gql`
       photo_url
       address
       website
+      users
       facebook_url
       instagram_url
       twitter_url
@@ -869,6 +870,7 @@ export const GET_VENDOR_DETAILS = gql`
     }
   }
 `;
+
 export const GET_VENDOR_EXPERIENCES = gql`
   query getVendorExperience($vendor_id: String!, $pf_id: String!) {
     getVendorExperience(vendor_id: $vendor_id, pf_id: $pf_id) {
@@ -913,11 +915,10 @@ export const GET_SINGLE_EXPERIENCE_DETAILS = gql`
   }
 `;
 export const GET_SINGLE_PROFILE_DETAILS = gql`
-  query viewProfileVendorDetails($vendor_id: String!, $email: String!, $ptype: String!) {
-    viewProfileVendorDetails(vendor_id: $vendor_id, email: $email, p_type: $ptype) {
+  query viewProfileVendorDetails($vendor_id: String!, $email: String!) {
+    viewProfileVendorDetails(vendor_id: $vendor_id, email: $email) {
       pf_id
       vendor_id
-      type
       first_name
       last_name
       email
@@ -939,11 +940,10 @@ export const GET_SINGLE_PROFILE_DETAILS = gql`
   }
 `;
 export const GET_ALL_PROFILE_DETAILS = gql`
-  query viewAllProfiles($vendor_id: String!, $ptype: String!) {
-    viewAllProfiles(vendor_id: $vendor_id, p_type: $ptype) {
+  query viewAllProfiles($vendor_id: String!) {
+    viewAllProfiles(vendor_id: $vendor_id) {
       pf_id
       vendor_id
-      type
       first_name
       last_name
       email
@@ -966,8 +966,8 @@ export const GET_ALL_PROFILE_DETAILS = gql`
 `;
 
 export const GET_SAMPLE_FILES = gql`
-  query getSampleFiles($vendor_id: String!, $ptype: String!) {
-    getSampleFiles(vendor_id: $vendor_id, p_type: $ptype) {
+  query getSampleFiles($vendor_id: String!, $p_type: String!) {
+    getSampleFiles(vendor_id: $vendor_id, p_type: $p_type) {
       sf_id
       name
       fileType

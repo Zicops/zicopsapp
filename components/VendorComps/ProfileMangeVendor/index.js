@@ -1,16 +1,21 @@
 import IconButton from '@/components/common/IconButton';
 import styles from '../vendorComps.module.scss';
 import SingleProfile from './SingleProfile';
-import { manageVendorProfiles } from '../Logic/vendorComps.helper';
 import { useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddVendorProfile from '../AddVendorProfile';
 import useHandleVendor from '../Logic/useHandleVendor';
+import { allProfileAtom, getProfileObject, VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { useEffect } from 'react';
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
-  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
+  const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const { addUpdateProfile, addUpdateExperience, getAllProfileInfo } = useHandleVendor();
   const addProfileHandler = () => {
+    setProfileData(getProfileObject());
     setIsOpenProfile(true);
   };
 
@@ -19,12 +24,17 @@ const ProfileManageVendor = () => {
     addUpdateProfile();
     setCompleteProfile(true);
     setIsOpenProfile(false);
+    setProfileData(getProfileObject());
   };
+
+  useEffect(() => {
+    getAllProfileInfo();
+  }, []);
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
       <div className={`${styles.manageVendorProfileMain}`}>
-        {manageVendorProfiles?.map((data, index) => (
+        {profileDetails?.map((data, index) => (
           <div key={index}>
             <SingleProfile data={data} />
           </div>
@@ -53,7 +63,7 @@ const ProfileManageVendor = () => {
         popUpState={[showCompleteProfile, setCompleteProfile]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
+        submitBtn={{ name: 'Done', handleClick: () => setCompleteProfile(false) }}
         isFooterVisible={true}>
         <ProfileManageVendor />
       </VendorPopUp>

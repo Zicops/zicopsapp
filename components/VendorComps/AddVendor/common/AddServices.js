@@ -17,7 +17,14 @@ import AddExpertise from './AddExpertise';
 import useHandleVendor from '../../Logic/useHandleVendor';
 import AddSample from '../../AddSample';
 import FileManageVendor from '../../FileManageVendor';
-import { AllSampleFilesAtom, SampleAtom } from '@/state/atoms/vendor.atoms';
+import {
+  allProfileAtom,
+  allSampleFilesAtom,
+  getProfileObject,
+  getSampleObject,
+  SampleAtom,
+  VendorProfileAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 
@@ -33,25 +40,27 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [selectedFormats, setSelectedFormats] = useState([]);
-  const [selectSampleFiles, setSelectSampleFiles] = useState([]);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
-  const [allSampleData, setAllSampleData] = useRecoilState(AllSampleFilesAtom);
-
-  const { addUpdateProfile, addUpdateExperience, addSampleFile } = useHandleVendor();
+  const [allSampleData, setAllSampleData] = useRecoilState(allSampleFilesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
+  const {
+    addUpdateProfile,
+    addUpdateExperience,
+    getAllProfileInfo,
+    addSampleFile,
+    getSampleFiles
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
-  const clickHandlerSample = () => {
-    setSamplePopupState(true);
-  };
 
-  const addProfileHandler = () => {
-    setIsOpenProfile(true);
-  };
-  const completeProfileHandler = () => {
-    addUpdateProfile();
-    addUpdateExperience();
+  const completeProfileHandler = async () => {
+    await addUpdateProfile();
+    await addUpdateExperience();
+    getAllProfileInfo();
     setIsOpenProfile(false);
     setCompleteProfile(true);
+    setProfileData(getProfileObject());
   };
 
   const addExpertiseHandler = () => {
@@ -87,26 +96,26 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
     setOPDeliverablePopupState(false);
   };
 
-  const addSampleFileHandler = () => {
-    setSelectSampleFiles([
-      ...selectSampleFiles,
-      {
-        vendorId: vendorId,
-        pType: 'sme' || '',
-        name: sampleData?.sampleName || '',
-        description: sampleData?.description || '',
-        pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
-        file: sampleData?.sampleFile || null,
-        fileType: sampleData?.fileType || '',
-        status: VENDOR_MASTER_STATUS.active
-      }
-    ]);
-    setAllSampleData([...selectSampleFiles]);
-    // addSampleFile();
+  const addSampleFileHandler = async () => {
+    // setAllSampleData([
+    //   ...allSampleData,
+    //   {
+    //     vendorId: vendorId,
+    //     name: sampleData?.sampleName || '',
+    //     description: sampleData?.description || '',
+    //     pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+    //     file: sampleData?.sampleFile || null,
+    //     fileType: sampleData?.fileType || '',
+    //     status: VENDOR_MASTER_STATUS.active
+    //   }
+    // ]);
+    await addSampleFile();
+    getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);
+    setSampleData(getSampleObject());
   };
-  // console.info('allSampleData', allSampleData);
+
   return (
     <>
       <div className={`${styles.addServiceContainer}`}>
@@ -234,21 +243,62 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            <IconButton
-              text="Add sample files"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={clickHandlerSample}
-            />
+            {!allSampleData?.length ? (
+              <IconButton
+                text="Add sample files"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setSamplePopupState(true)}
+              />
+            ) : (
+              <>
+                <div className={`${styles.showFilesMain}`}>
+                  {allSampleData?.map((file) => (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/description.svg" alt="" />
+                      {file?.name + '.' + file?.fileType}
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setSamplePopupState(true)}
+                />
+              </>
+            )}
           </div>
           <div className={`${styles.addProfiles}`}>
             <label for="profiles">Add profiles: </label>
-            <IconButton
-              text="Add profiles"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={addProfileHandler}
-            />
+            {!profileDetails?.length ? (
+              <IconButton
+                text="Add profiles"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => {
+                  setProfileData(getProfileObject());
+                  setIsOpenProfile(true);
+                }}
+              />
+            ) : (
+              <>
+                <div className={`${styles.showFilesMain}`}>
+                  {profileDetails?.map((data) => (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/account_circle.svg" alt="" />
+                      {data?.first_name + '&' + data?.email}
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setIsOpenProfile(true)}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -283,7 +333,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         popUpState={[showCompleteProfile, setCompleteProfile]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
+        submitBtn={{ name: 'Done', handleClick: () => setCompleteProfile(false) }}
         isFooterVisible={true}>
         <ProfileManageVendor />
       </VendorPopUp>

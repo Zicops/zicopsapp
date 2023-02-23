@@ -37,12 +37,16 @@ export function getProfileObject(data) {
     description: data?.description || '',
     profileImage: data?.profileImage || null,
     experienceYear: data?.experienceYear || null,
+    languages: data?.languages || [],
+    sme_expertises: data?.sme_expertises || [],
+    crt_expertises: data?.crt_expertises || [],
+    experience: data?.experience || [],
     isSpeaker: data?.isSpeaker || false
   };
 }
 
-export const VendorAllExperiencesAtom = atom({
-  key: 'vendorAllExperiences',
+export const allProfileAtom = atom({
+  key: 'allprofileState',
   default: []
 });
 
@@ -67,28 +71,6 @@ export function getExperiencesObject(data) {
   };
 }
 
-export const VendorAllLanguages = atom({
-  key: 'vendorAllLanguages',
-  default: []
-});
-
-export const VendorAllExpertise = atom({
-  key: 'vendorAllExpertise',
-  default: []
-});
-
-// export const VendorServicesAtom = atom({
-//   key: 'vendorServicesState',
-//   default: getVendorServicesObject()
-// });
-
-// export function getVendorServicesObject(data) {
-//   return {
-//     isApplicable: data?.isApplicable || true,
-//     serviceDescription: data?.serviceDescription || ''
-//   };
-// }
-
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
   default: getSMEServicesObject()
@@ -112,7 +94,10 @@ export const CtServicesAtom = atom({
 export function getCTServicesObject(data) {
   return {
     isApplicableCT: data?.isApplicableCT || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
 
@@ -124,7 +109,10 @@ export const CdServicesAtom = atom({
 export function getCDServicesObject(data) {
   return {
     isApplicableCD: data?.isApplicableCD || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
 
@@ -144,8 +132,7 @@ export function getSampleObject(data) {
     unit: data?.unit || ''
   };
 }
-
-export const AllSampleFilesAtom = atom({
-  key: 'allSampleFiles',
+export const allSampleFilesAtom = atom({
+  key: 'allSampleFilesState',
   default: []
 });

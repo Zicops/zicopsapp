@@ -12,8 +12,6 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import {
   VendorAllExperiencesAtom,
-  VendorAllExpertise,
-  VendorAllLanguages,
   VendorExperiencesAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
@@ -34,9 +32,6 @@ const AddVendorProfile = ({ data = {} }) => {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-  const [allExperiences, setAllExperiences] = useRecoilState(VendorAllExperiencesAtom);
-  const [allLanguages, setAllLanguages] = useRecoilState(VendorAllLanguages);
-  const [allExpertise, setAllExpertise] = useRecoilState(VendorAllExpertise);
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
@@ -50,25 +45,24 @@ const AddVendorProfile = ({ data = {} }) => {
     const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
     const end_date = new Date(EndDate);
     const end_timestamp = end_date.getTime() / 1000;
-    setAllExperiences([
-      ...allExperiences,
-      {
-        vendor_id: vendorId || '',
-        title: experiencesData?.title?.trim() || '',
-        email: profileData?.email?.trim() || '',
-        company_name: experiencesData?.companyName?.trim() || '',
-        employement_type: experiencesData?.employeeType?.trim() || '',
-        location: experiencesData?.location?.trim() || '',
-        location_type: experiencesData?.locationType?.trim() || '',
-        start_date: start_timestamp || null,
-        end_date: end_timestamp || null,
-        status: VENDOR_MASTER_STATUS.active
-      }
-    ]);
+    const experienceData = {
+      vendor_id: vendorId || '',
+      title: experiencesData?.title || '',
+      email: profileData?.email || '',
+      company_name: experiencesData?.companyName || '',
+      employement_type: experiencesData?.employeeType || '',
+      location: experiencesData?.location || '',
+      location_type: experiencesData?.locationType || '',
+      start_date: start_timestamp || null,
+      end_date: end_timestamp || null,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    // setAllExperiences([...allExperiences, experienceData]);
     // setAllExperiences(null);
+    console.info('profileData', profileData);
+    setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
     setIsOpenExpriences(false);
   };
-
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -79,12 +73,12 @@ const AddVendorProfile = ({ data = {} }) => {
   };
 
   const addLanguagesHandler = () => {
-    setAllLanguages([...selectedLanguages]);
+    setProfileData({ ...profileData, languages: [...selectedLanguages] });
     setIsOpenLanguage(false);
   };
 
   const handleAddExpertise = () => {
-    setAllExpertise([...selectedExpertise]);
+    setProfileData({ ...profileData, sme_expertises: [...selectedExpertise] });
     setOpenExpertise(false);
   };
 
@@ -97,7 +91,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
-              value: data?.firstName || profileData.firstName
+              value: profileData.firstName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -109,7 +103,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
-              value: data?.lastName || profileData.lastName
+              value: profileData.lastName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -121,7 +115,7 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: data?.email || profileData.email
+              value: profileData.email
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -133,7 +127,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
-              value: data?.contact || profileData.contactNumber
+              value: profileData.contactNumber
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -147,7 +141,7 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: data?.description || profileData.description
+              value: profileData.description
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -176,8 +170,8 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'experienceYear',
               placeholder: 'Select Years',
               value: {
-                label: data?.experience || profileData.experienceYear,
-                value: data?.experience || profileData.experienceYear
+                label: profileData.experienceYear,
+                value: profileData.experienceYear
               },
               options: optionYearArray
             }}
@@ -187,7 +181,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Experience: </label>
-          {!allExperiences?.length ? (
+          {!profileData?.experience?.length ? (
             <IconButton
               text="Add experiences"
               styleClass={`${styles.button}`}
@@ -196,9 +190,11 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {allExperiences?.map((data) => (
+              {profileData?.experience?.map((exp) => (
                 <IconButton
-                  text={data?.title + ' ' + '@' + ' ' + data?.company_name}
+                  text={
+                    typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
+                  }
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => setIsOpenExpriences(true)}
@@ -216,7 +212,7 @@ const AddVendorProfile = ({ data = {} }) => {
 
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Language: </label>
-          {!allLanguages?.length ? (
+          {!profileData?.languages?.length ? (
             <IconButton
               text="Add language"
               styleClass={`${styles.button}`}
@@ -226,7 +222,7 @@ const AddVendorProfile = ({ data = {} }) => {
           ) : (
             <>
               <div className={`${styles.languages}`}>
-                {allLanguages?.map((data, index) => (
+                {profileData?.languages?.map((data, index) => (
                   <div className={`${styles.singleLanguage}`} key={index}>
                     <LabeledRadioCheckbox
                       type="checkbox"
@@ -248,7 +244,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Subject matter expertise:</label>
-          {!allExpertise?.length ? (
+          {!profileData?.sme_expertises?.length ? (
             <IconButton
               text="Add subject matter expertise"
               styleClass={`${styles.button}`}
@@ -258,7 +254,7 @@ const AddVendorProfile = ({ data = {} }) => {
           ) : (
             <>
               <div className={`${styles.languages}`}>
-                {allExpertise?.map((data, index) => (
+                {profileData?.sme_expertises?.map((data, index) => (
                   <div className={`${styles.singleLanguage}`} key={index}>
                     <LabeledRadioCheckbox
                       type="checkbox"
@@ -287,13 +283,6 @@ const AddVendorProfile = ({ data = {} }) => {
           isChecked={profileData?.isSpeaker}
           changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
         />
-        <div className={`${styles.addProfile}`}>
-          <IconButton
-            text="Add the profile"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-          />
-        </div>
       </div>
 
       <VendorPopUp
@@ -337,7 +326,9 @@ const AddVendorProfile = ({ data = {} }) => {
                 type="checkbox"
                 label={data}
                 value={data}
-                isChecked={selectedLanguages.includes(data)}
+                isChecked={
+                  selectedLanguages.includes(data) || profileData?.languages.includes(data)
+                }
                 changeHandler={handleLanguageSelection}
               />
             </div>

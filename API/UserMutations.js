@@ -1445,7 +1445,6 @@ export const UPDATE_VENDOR = gql`
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!
-    $type: String!
     $first_name: String
     $last_name: String
     $email: String!
@@ -1453,8 +1452,8 @@ export const CREATE_PROFILE_VENDOR = gql`
     $photo: Upload
     $description: String
     $languages: [String]
-    $SME_Expertise: [String]
-    $Classroom_Expertise: [String]
+    $SME_expertise: [String]
+    $Classroom_expertise: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
@@ -1463,7 +1462,6 @@ export const CREATE_PROFILE_VENDOR = gql`
     createProfileVendor(
       input: {
         vendor_id: $vendor_id
-        type: $type
         first_name: $first_name
         last_name: $last_name
         email: $email
@@ -1471,8 +1469,8 @@ export const CREATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_expertise: $SME_Expertise
-        Classroom_expertise: $Classroom_Expertise
+        SME_expertise: $SME_expertise
+        Classroom_expertise: $Classroom_expertise
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
@@ -1481,7 +1479,6 @@ export const CREATE_PROFILE_VENDOR = gql`
     ) {
       pf_id
       vendor_id
-      type
       first_name
       last_name
       email
@@ -1505,7 +1502,6 @@ export const CREATE_PROFILE_VENDOR = gql`
 export const UPDATE_PROFILE_VENDOR = gql`
   mutation updateProfileVendor(
     $vendor_id: String!
-    $type: String!
     $first_name: String
     $last_name: String
     $email: String!
@@ -1523,7 +1519,6 @@ export const UPDATE_PROFILE_VENDOR = gql`
     updateProfileVendor(
       input: {
         vendor_id: $vendor_id
-        type: $type
         first_name: $first_name
         last_name: $last_name
         email: $email
@@ -1541,7 +1536,6 @@ export const UPDATE_PROFILE_VENDOR = gql`
     ) {
       pf_id
       vendor_id
-      type
       first_name
       last_name
       email
@@ -1691,5 +1685,281 @@ export const CREATE_SAMPLE_FILE = gql`
       updated_by
       status
     }
+  }
+`;
+
+export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
+  mutation createSubjectMatterExpertise(
+    $vendor_id: String!
+    $sme_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $profiles: [String]
+    $Status: String
+  ) {
+    createSubjectMatterExpertise(
+      input: {
+        vendor_id: $vendor_id
+        sme_id: $sme_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        profiles: $profiles
+        Status: $Status
+      }
+    ) {
+      vendor_id
+      sme_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
+  mutation updateSubjectMatterExpertise(
+    $vendor_id: String!
+    $sme_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $profiles: [String]
+    $Status: String
+  ) {
+    updateSubjectMatterExpertise(
+      input: {
+        vendor_id: $vendor_id
+        sme_id: $sme_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        profiles: $profiles
+        Status: $Status
+      }
+    ) {
+      vendor_id
+      sme_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const CREATE_CLASS_ROOM_TRANING = gql`
+  mutation createClassRoomTraining(
+    $vendor_id: String!
+    $crt_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $profiles: [String]
+    $is_expertise_online: Boolean
+    $status: String
+  ) {
+    createClassRoomTraining(
+      input: {
+        vendor_id: $vendor_id
+        crt_id: $crt_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        profiles: $profiles
+        is_expertise_online: $is_expertise_online
+        Status: $Status
+      }
+    ) {
+      crt_id
+      vendor_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      is_expertise_online
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_CLASS_ROOM_TRANING = gql`
+  mutation updateClassRoomTraining(
+    $vendor_id: String!
+    $crt_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $profiles: [String]
+    $is_expertise_online: Boolean
+    $Status: String
+  ) {
+    updateClassRoomTraining(
+      input: {
+        vendor_id: $vendor_id
+        crt_id: $crt_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        profiles: $profiles
+        is_expertise_online: $is_expertise_online
+        Status: $Status
+      }
+    ) {
+      crt_id
+      vendor_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      is_expertise_online
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const CREATE_CONTENT_DEVELOPMENT = gql`
+  mutation createContentDevelopment(
+    $vendor_id: String!
+    $cd_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $Status: String
+  ) {
+    createContentDevelopment(
+      input: {
+        vendor_id: $vendor_id
+        cd_id: $cd_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        Status: $status
+      }
+    ) {
+      cd_id
+      vendor_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_CONTENT_DEVELOPMENT = gql`
+  mutation updateContentDevelopment(
+    $vendor_id: String!
+    $cd_id: String
+    $description: String
+    $is_applicable: Boolean
+    $expertise: [String]
+    $languages: [String]
+    $output_deliveries: [String]
+    $sample_files: [String]
+    $Status: String
+  ) {
+    updateContentDevelopment(
+      input: {
+        vendor_id: $vendor_id
+        cd_id: $cd_id
+        description: $description
+        is_applicable: $is_applicable
+        expertise: $expertise
+        languages: $languages
+        output_deliveries: $output_deliveries
+        sample_files: $sample_files
+        Status: $Status
+      }
+    ) {
+      cd_id
+      vendor_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const DELETE_SAMPLE_FILE = gql`
+  mutation deleteSampleFile($sfId: String!, $vendor_id: String!, $p_type: String!) {
+    deleteSampleFile(input: { sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type })
   }
 `;
