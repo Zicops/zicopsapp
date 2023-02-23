@@ -1,42 +1,76 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_COURSE_VIEWS } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getUnixFromDate, months } from '@/helper/utils.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 
 export default function useHandleCourseViews() {
-  const now = new Date();
   const [courseViews, setCourseViews] = useState([]);
-  const [month, setMonth] = useState(months[now?.getMonth()]);
+  const [filterBy, setFilterBy] = useState('Month');
+  const [selectedDate, setSelectedDate] = useState({
+    start: moment().startOf('month'),
+    end: moment().endOf('month')
+  });
 
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
 
-    const startOfMonth = moment().startOf(month).format('YYYY-MM-DD');
-    const endOfMonth = moment().endOf(month).format('YYYY-MM-DD');
-
     loadAndSetData();
 
     async function loadAndSetData() {
+      const dateFormat = 'YYYY-MM-DD';
       const queryVariables = {
         lsp_id: [_lspId],
-        startTime: getUnixFromDate(startOfMonth)?.toString(),
-        endTime: getUnixFromDate(endOfMonth)?.toString()
+        startTime: selectedDate?.start?.format(dateFormat),
+        endTime: selectedDate?.end?.format(dateFormat)
       };
 
-      const courseStats = loadQueryDataAsync(GET_COURSE_VIEWS, queryVariables, {}, userClient);
+      const courseStats = await loadQueryDataAsync(
+        GET_COURSE_VIEWS,
+        queryVariables,
+        {},
+        userClient
+      );
 
-      console.info(await courseStats);
-      //   const subCategoryData = (await courseStats)?.getBasicCourseStats?.sub_categories?.map(
-      //     (data) => {
-      //       const subCat = catSubCat?.subCat?.find((s) => s?.Name === data?.name);
-      //       const cat = catSubCat?.subCatGrp?.[subCat?.CatId];
-      //       return { ...data, ...subCat, cat: cat?.cat };
-      //     }
-      //   );
+      const allDates = [];
+      for (
+        let i = 0;
+        allDates[allDates?.length - 1]?.date_string !== selectedDate?.end.format(dateFormat);
+        i++
+      ) {
+        const startDate = new Date(selectedDate.start.valueOf());
+        const currentDate = startDate.setDate(startDate.getDate() + i);
+        const dateString = moment(currentDate).format(dateFormat);
+
+        const dataFromBackend =
+          courseStats?.getCourseViews?.find((obj) => obj?.date_string === dateString) || {};
+        allDates.push({
+          seconds: 0,
+          lsp_id: _lspId,
+          user_ids: [],
+          date_string: dateString,
+          index: i + 1,
+          ...dataFromBackend
+        });
+      }
+      setCourseViews(allDates);
     }
-  }, []);
+  }, [selectedDate?.start, selectedDate.end]);
 
-  return {};
+  useEffect(() => {
+    if (filterBy === 'Month') {
+      setSelectedDate({
+        start: moment(selectedDate.start.valueOf()).startOf('month'),
+        end: moment(selectedDate.end.valueOf()).endOf('month')
+      });
+    } else {
+      setSelectedDate({
+        start: moment(selectedDate.start.valueOf()).startOf('week'),
+        end: moment(selectedDate.start.valueOf()).endOf('week')
+      });
+    }
+  }, [filterBy]);
+
+  return { courseViews, selectedDate, setSelectedDate, filterBy, setFilterBy };
 }

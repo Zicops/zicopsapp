@@ -355,6 +355,7 @@ export default function useUserCourseData() {
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
+        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
@@ -1081,7 +1082,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      console.log(user);
+      if (user?.id === userDataAbout?.id) continue;
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {

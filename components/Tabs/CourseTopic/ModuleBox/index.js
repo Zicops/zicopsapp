@@ -2,10 +2,13 @@ import {
   DELETE_COURSE_CHAPTER,
   DELETE_COURSE_MODULE,
   DELETE_COURSE_TOPIC,
+  DELETE_COURSE_TOPIC_CONTENT,
   UPDATE_COURSE_CHAPTER,
   UPDATE_COURSE_MODULE,
   UPDATE_COURSE_TOPIC
 } from '@/api/Mutations';
+import { GET_COURSE_TOPICS_CONTENT_ID } from '@/api/Queries';
+import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
 import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
@@ -78,6 +81,24 @@ export default function ModuleBox({
         return setToastMsg({ type: 'danger', message: 'Sequnce Update Error' });
       });
     }
+  }
+
+  async function deleteTopicContentOnTopicDelete(topicId) {
+    const res = await loadQueryDataAsync(GET_COURSE_TOPICS_CONTENT_ID, {
+      topic_id: topicId
+    });
+
+    for (let i = 0; i < res?.getTopicContent.length; i++) {
+      const contentId = res?.getTopicContent[i]?.id;
+      const isDeleted = await deleteData(DELETE_COURSE_TOPIC_CONTENT, { id: contentId });
+
+      if (!isDeleted?.deleteTopicContent) {
+        setToastMsg({ type: 'danger', message: 'Topic Delete Failed. Please Try again!' });
+        return false;
+      }
+    }
+
+    return true;
   }
 
   let topicIndex = 0;
@@ -160,6 +181,8 @@ export default function ModuleBox({
                               id: topic?.id,
                               resKey: 'deleteCourseTopic',
                               mutation: DELETE_COURSE_TOPIC,
+                              beforeDelete: async () =>
+                                await deleteTopicContentOnTopicDelete(topic?.id),
                               onDelete: async () => {
                                 const _top = filteredTopics?.filter((t) => t?.id !== topic?.id);
                                 await updateSequence(_top, updateCourseTopic);
@@ -218,6 +241,7 @@ export default function ModuleBox({
                       id: topic?.id,
                       resKey: 'deleteCourseTopic',
                       mutation: DELETE_COURSE_TOPIC,
+                      beforeDelete: async () => await deleteTopicContentOnTopicDelete(topic?.id),
                       onDelete: async () => {
                         const _top = filteredAndSortedData?.filter((t) => t?.id !== topic?.id);
                         await updateSequence(_top, updateCourseTopic);

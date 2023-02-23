@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -49,10 +49,12 @@ export default function MyUserPage() {
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
     // console.log(emails);
 
+    // send lowercase email only.
+    let sendEmails = emails?.map((email) => email?.toLowerCase());
     let isError = false;
     let errorMsg;
     const resEmail = await inviteUsers({
-      variables: { emails: emails, lsp_id: userOrgData?.lsp_id }
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id }
     }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;

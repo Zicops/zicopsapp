@@ -46,7 +46,7 @@ export default function BulkUpload() {
         const email = row?.__EMPTY;
         const isEmailValid = isEmail(email);
         if (isEmailValid && !uniqueEmails?.includes(email)) {
-          uniqueEmails.push(email?.trim());
+          uniqueEmails.push(email?.trim()?.toLowerCase());
         }
       });
 

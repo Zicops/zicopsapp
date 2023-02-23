@@ -1,14 +1,13 @@
+import { PROFILE_IMAGE_TYPE } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import CloseIcon from '@mui/icons-material/Close';
 import { Box, Dialog, IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import ImageCropper from '../../ImageCropper';
 import styles from '../formComponents.module.scss';
-import { useEffect, useRef, useState } from 'react';
-import ToolTip from '../../ToolTip';
-import { PROFILE_IMAGE_TYPE } from '@/helper/constants.helper';
-import { useRecoilState } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 const UploadAndPreview = ({
   inputName,
@@ -258,6 +257,8 @@ const UploadAndPreview = ({
                 <CustomButton
                   onClick={() => {
                     const file = image;
+                    if (initialImage?.includes('/images/Avatars') && image?.type.includes('text'))
+                      return setToastMsg({ type: 'info', message: 'Please select image first.' });
                     const imageFile = dataURLtoFile(preview, `${file?.name}`);
                     handleUpdateImage(imageFile);
                   }}
