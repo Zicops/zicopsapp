@@ -13,7 +13,7 @@ const UploadAndPreview = ({
   inputName,
   label,
   description = '320 x 320 pixels (Recommended)',
-  isPreview,
+  isAccountSetup = true,
   isRemove = false,
   handleChange = function () {},
   styleClass = {},
@@ -43,7 +43,7 @@ const UploadAndPreview = ({
     setPop(true);
   }, []);
 
-  if (!imageUrl && !initialImage && (image !== null || preview !== '')) {
+  if (!imageUrl && !initialImage && (image !== null || preview !== '') && !isAccountSetup) {
     console.log(imageUrl, image, preview, initialImage, 'all val jieofjcae');
     setPreview('');
     setImage(null);
