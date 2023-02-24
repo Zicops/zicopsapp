@@ -413,7 +413,7 @@ export default function useHandleAddUserDetails() {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
           user_id: [userId],
-          link:''
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -426,7 +426,7 @@ export default function useHandleAddUserDetails() {
       {},
       userQueryClient
     );
-    
+
     const cohorts = resCohorts?.getLatestCohorts?.cohorts;
     console.log(cohorts);
 
@@ -436,7 +436,7 @@ export default function useHandleAddUserDetails() {
           title: NOTIFICATION_TITLES?.cohortAssign,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
           user_id: [userId],
-          link:""
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -446,7 +446,7 @@ export default function useHandleAddUserDetails() {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
         user_id: [userId],
-        link:''
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
@@ -455,14 +455,19 @@ export default function useHandleAddUserDetails() {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
         user_id: [userId],
-        link:''
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
     return true;
   }
 
-  async function updateAboutUser(newImage = null, isVerified = true,isFirst = false) {
+  async function updateAboutUser(
+    newImage = null,
+    isVerified = true,
+    isFirst = false,
+    isVendor = false
+  ) {
     let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
@@ -485,14 +490,27 @@ export default function useHandleAddUserDetails() {
       created_by: userAboutData?.created_by || 'Zicops',
       updated_by: userAboutData?.updated_by || 'Zicops'
     };
-
+    let isError = false;
+    if (isVendor) {
+      let sendLspData = {
+        user_lsp_id: userDataOrgLsp?.user_lsp_id,
+        user_id: userAboutData?.id,
+        lsp_id: userDataOrgLsp?.lsp_id,
+        status: USER_STATUS.activate
+      };
+      console.log(sendLspData, 'error at update user');
+      const res = await updateLsp({ variables: sendLspData }).catch((err) => {
+        errorMsg = err.message;
+        isError = true;
+        return setToastMsg({ type: 'danger', message: 'Update Lsp  Error' });
+      });
+    }
     if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
     if (newImage) sendUserData.Photo = newImage;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     // console.log(sendUserData, 'updateAboutUser');
 
-    let isError = false;
     let errorMsg = null;
     const res = await updateAbout({ variables: sendUserData }).catch((err) => {
       // console.log(err,'error at update user');
@@ -517,8 +535,8 @@ export default function useHandleAddUserDetails() {
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
 
-    if (isVerified && isFirst) {
-      await notficationOnFirstLogin(userAboutData?.id,userLspId);
+    if (isVerified && isFirst && !isVendor) {
+      await notficationOnFirstLogin(userAboutData?.id, userLspId);
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;

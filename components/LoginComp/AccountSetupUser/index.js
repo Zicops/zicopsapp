@@ -152,10 +152,10 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
             onClick={async () => {
-              const _error = await updateAboutUser(null, false);
+              let is_vendor = userOrgData?.user_lsp_role === USER_LSP_ROLE.vendor;
+              const _error = await updateAboutUser(null, true, false, is_vendor);
               // console.log(_error);
-              if (!_error && userOrgData?.user_lsp_role !== USER_LSP_ROLE.vendor)
-                return setCurrentComponent(1);
+              if (!_error && !is_vendor) return setCurrentComponent(1);
               if (!_error) return router.push('/');
             }}>
             {userOrgData?.user_lsp_role === USER_LSP_ROLE.vendor ? 'Submit' : 'Next'}

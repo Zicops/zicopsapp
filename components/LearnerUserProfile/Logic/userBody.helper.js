@@ -11,10 +11,10 @@ import UserLearningDashBoardTab from '../UserLearningDashBoardTab';
 
 export const tabs = [
   { name: 'About', comp: <UserAboutTab /> },
-  { name: 'Cohort', comp: <UserCohortTab />, isDemo: true },
-  { name: 'Courses', comp: <UserCoursesTab />, isDemo: true },
+  { name: 'Cohort', comp: <UserCohortTab /> },
+  { name: 'Courses', comp: <UserCoursesTab /> },
   { name: 'Dashboard', comp: <UserLearningDashBoardTab />, isDemo: true },
-  { name: 'Schedule', comp: <UserScheduleTab />, isDemo: true }
+  { name: 'Schedule', comp: <UserScheduleTab /> }
 ];
 
 export const courseData = [
