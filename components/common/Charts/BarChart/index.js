@@ -79,17 +79,17 @@ export default function BarChart({
         //   }
         // }
       },
-      ...(options.plugins || {})
+      ...(options?.plugins || {})
     },
     animation: {
       animateScale: true,
       animateRotate: true,
-      ...(options.animation || {})
+      ...(options?.animation || {})
     },
     interaction: {
       mode: 'index',
       intersect: false,
-      ...(options.interaction || {})
+      ...(options?.interaction || {})
     }
   };
 
