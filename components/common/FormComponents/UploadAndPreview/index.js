@@ -219,7 +219,8 @@ const UploadAndPreview = ({
                       style={{
                         width: '20px',
                         marginRight: '10px',
-                        height: '30px'
+                        height: '30px',
+                        cursor:'pointer'
                       }}
                       className={`${styles.btn}`}
                       onClick={() => imgRef?.current?.click()}>
