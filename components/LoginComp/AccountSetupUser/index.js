@@ -1,9 +1,11 @@
 import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import { changeHandler } from '@/helper/common.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -22,7 +24,9 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
-  const { isAccountSetupReady, setPhCountryCode ,updateAboutUser } = useHandleAddUserDetails();
+  const { isAccountSetupReady, setPhCountryCode, updateAboutUser } = useHandleAddUserDetails();
+
+  const router = useRouter();
 
   useEffect(() => {
     setUserData({ ...userData, Photo: image });
@@ -147,13 +151,14 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             disabled={!isAccountSetupReady}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={async() => {
-              const _error = await updateAboutUser(null,false);
+            onClick={async () => {
+              const _error = await updateAboutUser(null, false);
               // console.log(_error);
-              if(!_error) setCurrentComponent(1);
-
+              if (!_error && userOrgData?.user_lsp_role !== USER_LSP_ROLE.vendor)
+                return setCurrentComponent(1);
+              if (!_error) return router.push('/');
             }}>
-            Next
+            {userOrgData?.user_lsp_role === USER_LSP_ROLE.vendor ? 'Submit' : 'Next'}
           </Button>
         </div>
       </div>

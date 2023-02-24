@@ -19,11 +19,16 @@ import {
   allSampleFilesAtom,
   SmeServicesAtom,
   CtServicesAtom,
-  CdServicesAtom
+  CdServicesAtom,
+  vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import {
+  CUSTOM_ERROR_MESSAGE,
+  USER_LSP_ROLE,
+  VENDOR_MASTER_STATUS
+} from '@/helper/constants.helper';
 import { useRouter } from 'next/router';
 import {
   ADD_VENDOR,
@@ -38,9 +43,12 @@ import {
   CREATE_CLASS_ROOM_TRANING,
   UPDATE_CLASS_ROOM_TRANING,
   CREATE_CONTENT_DEVELOPMENT,
-  UPDATE_CONTENT_DEVELOPMENT
+  UPDATE_CONTENT_DEVELOPMENT,
+  INVITE_USERS,
+  INVITE_USERS_WITH_ROLE
 } from '@/api/UserMutations';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
@@ -55,6 +63,9 @@ export default function useHandleVendor() {
   const [updateCrt] = useMutation(UPDATE_CLASS_ROOM_TRANING, { client: userClient });
   const [createCd] = useMutation(CREATE_CONTENT_DEVELOPMENT, { client: userClient });
   const [updateCd] = useMutation(UPDATE_CONTENT_DEVELOPMENT, { client: userClient });
+  const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
+    client: userClient
+  });
 
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
@@ -64,6 +75,8 @@ export default function useHandleVendor() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -72,12 +85,49 @@ export default function useHandleVendor() {
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
-  console.info('profileDetails', profileDetails);
-
   useEffect(() => {
     if (!router.isReady) return;
     setVendorData(getVendorObject());
   }, [router.isReady]);
+
+  async function handleMail() {
+    console.info('emailId', emailId);
+
+    // if (loading) return;
+    if (emailId.length === 0)
+      return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
+    let emails = emailId?.map((item) => item?.props?.children[0]);
+    // console.log(emails, emailId);
+    //for removing duplicate email ids
+    emails = emails.filter((value, index) => emails.indexOf(value) === index);
+    // console.log(emails);
+
+    // send lowercase email only.
+    let sendEmails = emails?.map((email) => email?.toLowerCase());
+    let isError = false;
+    let errorMsg;
+    const resEmail = await inviteUsers({
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
+    }).catch((err) => {
+      console.log('error', err);
+      errorMsg = err.message;
+
+      isError = !!err;
+    });
+
+    if (isError) return setToastMsg({ type: 'danger', message: isError });
+    // if (isError) {
+    //   // const message = JSON.parse(errorMsg?.split('body:')[1]);
+    //   if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
+    //     return setToastMsg({ type: 'danger', message: `Email already exists!` });
+    //   return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    // }
+
+    // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
+    // console.log(resEmail);
+
+    setToastMsg({ type: 'success', message: `Emails send successfully!` });
+  }
 
   function handlePhotoInput(e) {
     const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
@@ -376,23 +426,15 @@ export default function useHandleVendor() {
 
   async function addUpdateCrt() {
     const sendData = {
-      vendor_id: vendorId || '',
-      first_name: profileData?.firstName?.trim() || '',
-      last_name: profileData?.lastName?.trim() || '',
-      email: profileData?.email?.trim() || '',
-      phone: profileData?.contactNumber.trim() || '',
-      photo: profileData?.profileImage || null,
-      description: profileData?.description.trim() || '',
-      languages: profileData?.languages || [],
-      SME_expertise: profileData?.sme_expertises || [],
-      Classroom_expertise: profileData?.crt_expertises || [],
-      experience:
-        profileData?.experience?.map((exp) =>
-          typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
-        ) || [],
-      experience_years: profileData?.experienceYear,
-      is_speaker: profileData?.isSpeaker || false,
-      status: VENDOR_MASTER_STATUS.active
+      vendor_id: vendorId,
+      description: ctData?.serviceDescription || '',
+      is_applicable: ctData?.isApplicableCT || false,
+      expertise: ctData?.expertises || [],
+      languages: ctData?.languages || [],
+      output_deliveries: ctData?.formats || [],
+      sample_files: [],
+      profiles: [],
+      Status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 
@@ -423,23 +465,15 @@ export default function useHandleVendor() {
   }
   async function addUpdateCd() {
     const sendData = {
-      vendor_id: vendorId || '',
-      first_name: profileData?.firstName?.trim() || '',
-      last_name: profileData?.lastName?.trim() || '',
-      email: profileData?.email?.trim() || '',
-      phone: profileData?.contactNumber.trim() || '',
-      photo: profileData?.profileImage || null,
-      description: profileData?.description.trim() || '',
-      languages: profileData?.languages || [],
-      SME_expertise: profileData?.sme_expertises || [],
-      Classroom_expertise: profileData?.crt_expertises || [],
-      experience:
-        profileData?.experience?.map((exp) =>
-          typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
-        ) || [],
-      experience_years: profileData?.experienceYear,
-      is_speaker: profileData?.isSpeaker || false,
-      status: VENDOR_MASTER_STATUS.active
+      vendor_id: vendorId,
+      description: cdData?.serviceDescription || '',
+      is_applicable: cdData?.isApplicableCD || false,
+      expertise: cdData?.expertises || [],
+      languages: cdData?.languages || [],
+      output_deliveries: cdData?.formats || [],
+      sample_files: [],
+      profiles: [],
+      Status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 
@@ -486,6 +520,7 @@ export default function useHandleVendor() {
     addUpdateSme,
     addUpdateCrt,
     addUpdateCd,
+    handleMail,
     loading,
     setLoading
   };

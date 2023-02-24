@@ -136,3 +136,8 @@ export const allSampleFilesAtom = atom({
   key: 'allSampleFilesState',
   default: []
 });
+
+export const vendorUserInviteAtom = atom({
+  key: 'vendorUserInviteState',
+  default: []
+});

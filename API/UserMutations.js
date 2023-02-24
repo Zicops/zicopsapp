@@ -89,6 +89,15 @@ export const INVITE_USERS = gql`
   }
 `;
 
+export const INVITE_USERS_WITH_ROLE = gql`
+  mutation inviteUsersWithRole($emails: [String!]!, $lsp_id: String, $role: String) {
+    inviteUsersWithRole(emails: $emails, lsp_id: $lsp_id, role: $role) {
+      email
+      message
+    }
+  }
+`;
+
 export const UPDATE_USER = gql`
   mutation UpdateUser(
     $id: ID

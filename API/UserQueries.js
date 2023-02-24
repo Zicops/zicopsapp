@@ -789,6 +789,7 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
     }
   }
 `;
+// VENDOR QUERIES START
 
 export const GET_VENDORS_BY_LSP = gql`
   query getVendors($lsp_id: String) {
