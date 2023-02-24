@@ -17,8 +17,10 @@ export default function Timeline({
 }) {
   const currentTime = +videoRef.current?.currentTime || 0;
   const videoDuration = +videoRef.current?.duration?.toFixed(2) || 0;
-  const progressPercent = +((currentTime / videoDuration) * 100).toFixed(2) || 0;
+  let progressPercent = +((currentTime / videoDuration) * 100).toFixed(2) || null;
   const selectedTime = (videoDuration * selectedWidth) / 100;
+
+  if (progressPercent === Infinity || progressPercent == null) progressPercent = 0;
 
   return (
     <>
@@ -42,7 +44,7 @@ export default function Timeline({
           <div
             className={`${styles.progressFill}`}
             style={{
-              width: `${limitValueInRange(isSelected ? selectedWidth : progressPercent, 0, 99)}%`,
+              width: `${limitValueInRange(isSelected ? selectedWidth : progressPercent, 0, 100)}%`,
             }}></div>
         </div>
       </div>

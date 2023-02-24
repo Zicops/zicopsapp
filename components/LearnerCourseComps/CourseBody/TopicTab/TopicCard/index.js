@@ -1,3 +1,4 @@
+import useLoadTopicData from '@/components/LearnerCourseComps/Logic/useLoadTopicData';
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
 import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -5,6 +6,7 @@ import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
   courseHeroObj,
+  CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
 } from '../../../atoms/learnerCourseComps.atom';
 import styles from '../../../learnerCourseComps.module.scss';
@@ -13,8 +15,15 @@ import TopicContentDetails from './TopicContentDetails';
 
 export default function TopicCard({ topicId }) {
   const topicData = useRecoilValue(CourseTopicsAtomFamily(topicId));
+  const topicContent = useRecoilValue(CourseTopicContentAtomFamily(topicId));
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
+
+  useLoadTopicData(topicId, topicData?.type);
+
+  // default topic content is the first because we sort based on is_default (check loadTopicContent() in useLoadTopicData)
+  const defaultTopicContent = topicContent?.[0] || null;
+  const isLoading = defaultTopicContent == null;
 
   return (
     <>
@@ -24,7 +33,15 @@ export default function TopicCard({ topicId }) {
         }`}
         onClick={() => {
           setActiveHero(courseHeroObj.topicPreview);
-          setActiveCourseData({ ...activeCourseData, topicId });
+          setActiveCourseData({
+            ...activeCourseData,
+            moduleId: topicData?.moduleId,
+            chapterId: topicData?.chapterId,
+            topicId,
+            topicContentId: defaultTopicContent?.id,
+            language: defaultTopicContent?.language || null,
+            subTitle: defaultTopicContent?.subtitleUrl?.[0] || null,
+          });
         }}>
         <div className={`${styles.resourcesLink}`}>
           <div
@@ -51,8 +68,13 @@ export default function TopicCard({ topicId }) {
         </div>
 
         {topicData?.type === COURSE_TOPIC_TYPES.content && (
-          <TopicContentDetails topicId={topicData?.id} />
+          <TopicContentDetails
+            topicId={topicData?.id}
+            topicContent={defaultTopicContent}
+            isLoading={isLoading}
+          />
         )}
+        {topicData?.type !== COURSE_TOPIC_TYPES.content && topicData?.type}
       </div>
     </>
   );

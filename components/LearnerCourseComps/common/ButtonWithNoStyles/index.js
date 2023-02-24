@@ -1,12 +1,13 @@
 import styles from './buttonWithNoStyles.module.scss';
 
 export default function ButtonWithNoStyles({
-  text = '',
+  text = null,
   styleClass = '',
   customInlineStyles = {},
   isDisabled = false,
   btnProps = {},
   handleClick = () => {},
+  children = null,
 }) {
   return (
     <>
@@ -16,7 +17,7 @@ export default function ButtonWithNoStyles({
         disabled={isDisabled}
         onClick={handleClick}
         {...btnProps}>
-        {text}
+        {text || children}
       </button>
     </>
   );

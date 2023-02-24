@@ -7,7 +7,7 @@ import {
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import CourseMetaDataPreview from './CourseMetaDataPreview';
 import CoursePreviewVideo from './CoursePreviewVideo';
-import TopicPreview from './TopicPreview';
+import TopicContentPreview from './TopicContentPreview';
 
 export default function CourseHero() {
   const activeHero = useRecoilValue(ActiveCourseHeroAtom);
@@ -18,7 +18,7 @@ export default function CourseHero() {
   const isTopicPreview = courseHeroObj.topicPreview === activeHero;
 
   if (isCoursePreview) return <CoursePreviewVideo />;
-  if (isTopicPreview && !!activeCourseData?.topicId) return <TopicPreview />;
+  if (isTopicPreview && !!activeCourseData?.topicId) return <TopicContentPreview />;
 
   return (
     <>

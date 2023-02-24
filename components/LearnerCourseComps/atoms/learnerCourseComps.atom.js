@@ -128,6 +128,7 @@ export function getActiveCourseDataObj(data = {}) {
     topicId: data?.topicId || null,
     topicContentId: data?.topicContentId || null,
     language: data?.language || null,
+    subTitle: data?.subTitle || null,
   };
 }
 
@@ -153,5 +154,10 @@ export const CourseTopicsAtomFamily = atomFamily({
 
 export const CourseTopicContentAtomFamily = atomFamily({
   key: 'CourseTopicContent',
+  default: [],
+});
+
+export const TopicQuizAtomFamily = atomFamily({
+  key: 'TopicQuiz',
   default: [],
 });

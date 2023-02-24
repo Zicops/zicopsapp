@@ -1,5 +1,6 @@
 // components\common\VideoPlayer\Video.js
 
+import { useEffect, useState } from 'react';
 import styles from './videoPlayer.module.scss';
 
 export default function Video({
@@ -7,56 +8,54 @@ export default function Video({
   videoSrc = '',
   updateStateProgress = () => {},
   toggleIsPlaying = () => {},
-  children = null,
   playerState = {},
+  isSubtitleShown = false,
+  subtitleUrl = null,
 }) {
+  const [subtitles, setSubtitles] = useState('');
+
+  useEffect(() => {
+    if (!videoRef?.current) return;
+    if (!isSubtitleShown) return;
+
+    const track = videoRef?.current?.textTracks[0];
+    const cues = track.cues;
+
+    track.mode = 'hidden'; // must occur before cues is retrieved
+    if (!cues || !cues?.length) return;
+
+    for (let i = 0; i < cues.length; i++) {
+      const cue = cues[i];
+      cue.onenter = function () {
+        setSubtitles(this.text);
+      };
+      cue.onexit = () => setSubtitles('');
+    }
+  }, [videoRef.current?.textTracks?.[0]?.cues?.length]);
+
+  if (!(isSubtitleShown || subtitleUrl) && subtitles?.length) setSubtitles('');
+
   return (
     <>
       <div className={`${styles.player}`} onClick={() => toggleIsPlaying()}>
         <video
           tabIndex="0"
           ref={videoRef}
-          // onClick={handleClick}
-          // onKeyDown={handleKeyDown}
           onTimeUpdate={() => updateStateProgress()}
           muted={playerState?.isMute}
-          // className={`${styles.videoElement}`}
-          src={videoSrc}
-          // onPlay={() => updateIsPlayingTo(true)}
-          // onPause={() => updateIsPlayingTo(false)}
-          // src={'https://www.youtube.com/watch?v=PNtFSVU-YTI'}
-          // autoPlay={isAutoPlay}
-          // controls
-        >
-          {/* {isSubtitleShown && (
+          src={videoSrc}>
+          {!!(isSubtitleShown && subtitleUrl?.url) && (
             <track
               kind="subtitles"
-              label="English Subtitles"
-              srcLang="en"
+              label={subtitleUrl?.language}
               default
               hidden
-              // src={
-              //   isTrackSrcAvailable
-              //     ? topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex]
-              //         ?.url
-              //     : ''
-              // }
-              src={
-                isTrackSrcAvailable
-                  ? `/api/overrideCors?filePath=${encodeURIComponent(
-                      topicContent[currentTopicContentIndex]?.subtitleUrl[
-                        currentSubtitleIndex
-                      ]?.url
-                    )}`
-                  : ''
-              }
-              // src={'/pineapple.vtt'}
+              src={`/api/overrideCors?filePath=${encodeURIComponent(subtitleUrl?.url)}`}
             />
-          )} */}
-          {/* <track default kind="captions" srcLang="en" src="/sub.vtt" /> */}
+          )}
         </video>
 
-        {children}
+        {!!subtitles && <span className={`${styles.subtitles}`}>{subtitles}</span>}
       </div>
     </>
   );

@@ -11,7 +11,9 @@ import styles from './videoPlayer.module.scss';
 export default function VideoPlayer({
   videoData = {
     src: '',
-    isAutoPlay: false,
+    isAutoPlay: true,
+    isSubtitleShown: false,
+    subtitleUrl: null,
     startFrom: 0,
     handleNextClick: null,
     handlePreviousClick: null,
@@ -46,6 +48,8 @@ export default function VideoPlayer({
         updateStateProgress={updateStateProgress}
         toggleIsPlaying={toggleIsPlaying}
         playerState={playerState}
+        subtitleUrl={videoData?.subtitleUrl}
+        isSubtitleShown={videoData?.isSubtitleShown}
       />
 
       <ControlBar

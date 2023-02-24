@@ -3,7 +3,6 @@ import {
   GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
-  GET_COURSE_TOPICS_CONTENT,
 } from '@/api/Queries';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -22,7 +21,6 @@ import {
   CourseModuleIdsAtom,
   CourseModulesAtomFamily,
   CourseTopcIdsAtom,
-  CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
   getCourseMetaDataObj,
   getUserCourseMapDataObj,
@@ -46,10 +44,6 @@ export default function useHandleCourseData() {
   const addTopicToRecoil = useRecoilCallback(({ set }) => (topicData, id) => {
     set(CourseTopicsAtomFamily(id), topicData);
   });
-  const addTopicContentToRecoil = useRecoilCallback(({ set }) => (topicContentData, id) => {
-    set(CourseTopicContentAtomFamily(id), topicContentData);
-  });
-
   const router = useRouter();
   const courseId = router.query.courseId || null;
 
@@ -184,19 +178,6 @@ export default function useHandleCourseData() {
     );
   }
 
-  async function loadTopicContent(topicId = null) {
-    if (!topicId) return;
-
-    const topicContentRes = loadAndCacheDataAsync(GET_COURSE_TOPICS_CONTENT, { topic_id: topicId });
-    const topicContent = sortArrByKeyInOrder(
-      (await topicContentRes)?.getTopicContent,
-      'is_default',
-      false,
-    );
-
-    addTopicContentToRecoil(topicContent, topicId);
-  }
-
   // helper functions
   function saveCourseModulesChaptersTopicInRecoil(moduleDataArr, chapterDataArr, topicDataArr) {
     const sortedModuleDataArr = sortArrByKeyInOrder(moduleDataArr);
@@ -205,8 +186,8 @@ export default function useHandleCourseData() {
 
     let filteredChapterData = [...sortedChapterDataArr];
     let filteredTopicData = [...sortedTopicDataArr];
-    const moduleIds = [];
-    const topicIds = [];
+    const _moduleIds = [];
+    const _topicIds = [];
 
     sortedModuleDataArr?.forEach((mod) => {
       if (!mod?.chapters) mod.chapters = [];
@@ -217,7 +198,7 @@ export default function useHandleCourseData() {
 
         filteredTopicData = getFilteredTopicData(filteredTopicData, mod?.id, null, chapterData);
 
-        topicIds.push(...chapterData?.topicIds);
+        _topicIds.push(...chapterData?.topicIds);
         mod?.chapters?.push(chapterData);
       }
 
@@ -229,18 +210,18 @@ export default function useHandleCourseData() {
           ? getFilteredTopicData(filteredTopicData, mod?.id, chap?.id, chapterData)
           : filteredTopicData;
 
-        topicIds.push(...chapterData?.topicIds);
+        _topicIds.push(...chapterData?.topicIds);
         mod?.chapters?.push(chapterData);
 
         return !isChapterMatched;
       });
 
-      moduleIds.push(mod?.id);
+      _moduleIds.push(mod?.id);
       addModuleToRecoil(mod, mod?.id);
     });
 
-    setTopicIds(topicIds);
-    setModuleIds(moduleIds);
+    setTopicIds(_topicIds);
+    setModuleIds(_moduleIds);
   }
 
   function getFilteredTopicData(topicArr, moduleId, chapterId, chapterData) {
@@ -258,6 +239,4 @@ export default function useHandleCourseData() {
       return !isTopicMatched;
     });
   }
-
-  return { loadTopicContent };
 }

@@ -5,6 +5,8 @@
   outline: none;
   padding: 0;
 
+  cursor: pointer;
+
   &:focus-visible {
     border: 1px solid $white;
   }

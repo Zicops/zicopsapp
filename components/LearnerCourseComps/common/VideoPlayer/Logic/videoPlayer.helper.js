@@ -54,21 +54,22 @@ export function playerStateReducer(state, action) {
   if (action.type?.includes('togglePlaying')) {
     let _isPlaying = !state.isPlaying;
 
-    if (typeof action?.payload === 'boolean') _isPlaying = action.payload;
+    if (typeof action?.payload?.isPlaying === 'boolean') _isPlaying = action.payload?.isPlaying;
     return { ...state, isPlaying: _isPlaying };
   }
 
   if (action.type?.includes('toggleFullScreen')) {
     let _isFullScreen = !state.isFullScreen;
 
-    if (typeof action?.payload === 'boolean') _isFullScreen = action.payload;
+    if (typeof action?.payload?.isFullScreen === 'boolean')
+      _isFullScreen = action.payload?.isFullScreen;
     return { ...state, isFullScreen: _isFullScreen };
   }
 
   if (action.type?.includes('toggleMute')) {
     let _isMute = !state.isMute;
 
-    if (typeof action?.payload === 'boolean') _isMute = action.payload;
+    if (typeof action?.payload?.isMute === 'boolean') _isMute = action.payload?.isMute;
     return { ...state, isMute: _isMute };
   }
 

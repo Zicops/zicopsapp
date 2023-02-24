@@ -1,4 +1,4 @@
-$heroSectionPadding: 1em;
+$heroSectionPadding: 2em;
 
 .topBar {
   position: absolute;
@@ -301,10 +301,104 @@ $heroSectionPadding: 1em;
   }
 }
 
-.coursePreview {
+.courseHeroContainer {
   height: 100%;
   width: 100%;
 }
+
+// TOP BAR ICONS START
+
+.leftIcons,
+.rightIcons {
+  display: flex;
+  justify-content: space-evenly;
+  flex: 1;
+}
+
+.iconBtnWithBox {
+  .iconBtn {
+    height: 100%;
+    width: 100%;
+  }
+
+  .boxComp {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.subtitleBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  color: $white;
+  padding: 0.1em;
+
+  width: 18em;
+  height: 10em;
+
+  overflow: hidden;
+  background-color: rgba($bgContent, 0.6);
+  border: 1px solid $white;
+
+  > div {
+    width: 100%;
+    height: 100%;
+    padding: 0.2em;
+    text-align: center;
+    overflow: hidden;
+    flex: 1;
+
+    &:first-child {
+      border-right: 1px solid $primary;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+
+      height: 80%;
+      padding: 0.3em;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+    }
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 0.3em;
+
+      color: $primary;
+      border: 1px solid $primary;
+      text-transform: capitalize;
+
+      &.active,
+      &:hover {
+        background-color: $white;
+        color: $black;
+      }
+    }
+
+    &.scrollArrow {
+      grid-column: 1/3;
+      text-align: center;
+      height: fit-content;
+
+      img {
+        height: 15px;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+}
+// TOP BAR ICONS END
 
 // COURSE BODY TABS
 
@@ -398,6 +492,8 @@ $heroSectionPadding: 1em;
       position: relative;
       margin: 4em auto;
 
+      cursor: pointer;
+
       &:hover,
       &.activeTopic {
         transition: all 0.3s ease-in-out;
@@ -448,6 +544,8 @@ $heroSectionPadding: 1em;
       }
 
       .topicDetails {
+        width: 100%;
+
         span {
           font-weight: 600;
           font-size: 1.1rem;

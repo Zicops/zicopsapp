@@ -1,34 +1,20 @@
-import {
-  CourseTopicContentAtomFamily,
-  UserTopicProgressDataAtom,
-} from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
+import { UserTopicProgressDataAtom } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 import ZicopsSkeleton from '@/components/LearnerCourseComps/common/ZicopsSkeleton';
-import useHandleCourseData from '@/components/LearnerCourseComps/Logic/useHandleCourseData';
 import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { getCourseDisplayTime } from '@/utils/date.utils';
-import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../learnerCourseComps.module.scss';
 
-export default function TopicContentDetails({ topicId = null }) {
-  const topicContent = useRecoilValue(CourseTopicContentAtomFamily(topicId));
+export default function TopicContentDetails({
+  topicId = null,
+  topicContent = {},
+  isLoading = false,
+}) {
   const topicProgressData = useRecoilValue(UserTopicProgressDataAtom);
 
-  const { loadTopicContent } = useHandleCourseData();
-
-  useEffect(() => {
-    if (!topicId || topicContent?.length !== 0) return;
-
-    loadTopicContent(topicId);
-  }, [topicId, topicContent?.length]);
-
   const currentTopicProgress = topicProgressData?.find((progress) => progress?.topicId === topicId);
-
   const isCompleted = currentTopicProgress?.status === COURSE_TOPIC_STATUS.completed;
-  // default topic content is the first because we sort based on is_default (check loadTopicContent())
-  const defaultTopicContent = topicContent?.[0] || null;
-  const isLoading = defaultTopicContent == null;
 
   const progressBarStyles = {
     backgroundColor: isCompleted ? styles.success : styles.primary,
@@ -48,7 +34,7 @@ export default function TopicContentDetails({ topicId = null }) {
             {isLoading ? (
               <ZicopsSkeleton variant="text" height={30} width={150} />
             ) : (
-              <>Duration: {getCourseDisplayTime(defaultTopicContent?.duration)}</>
+              <>Duration: {getCourseDisplayTime(topicContent?.duration)}</>
             )}
           </span>
         </div>

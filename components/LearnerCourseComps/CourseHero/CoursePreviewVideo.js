@@ -12,7 +12,7 @@ export default function CoursePreviewVideo() {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
 
   return (
-    <div ref={coursePreviewRef} className={styles.coursePreview}>
+    <div ref={coursePreviewRef} className={styles.courseHeroContainer}>
       <CourseHeroTopBar
         centerComps={<TopBarCenterTitle title={courseMeta?.name} subtitle="Preview Video" />}
       />

@@ -22,12 +22,30 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
   // initial video load setup
   useEffect(() => {
     const videoElem = videoRef.current;
-    videoElem.addEventListener('loadstart', () => setIsBuffering(true));
-    videoElem.addEventListener('canplay', () => setIsBuffering(false));
 
-    videoElem.addEventListener('waiting', () => setIsBuffering(true));
-    videoElem.addEventListener('playing', () => setIsBuffering(false));
-  }, []);
+    function activateBuffer() {
+      setIsBuffering(true);
+    }
+    function deactivateBuffer() {
+      setIsBuffering(false);
+    }
+
+    videoElem.addEventListener('loadstart', activateBuffer);
+    videoElem.addEventListener('canplay', deactivateBuffer);
+
+    videoElem.addEventListener('waiting', activateBuffer);
+    videoElem.addEventListener('playing', deactivateBuffer);
+
+    videoElem?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' });
+
+    return () => {
+      videoElem.removeEventListener('loadstart', activateBuffer);
+      videoElem.removeEventListener('canplay', deactivateBuffer);
+
+      videoElem.removeEventListener('waiting', activateBuffer);
+      videoElem.removeEventListener('playing', deactivateBuffer);
+    };
+  }, [videoData?.src]);
 
   // for displaying video buffer loaded
   useEffect(() => {
@@ -45,7 +63,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
     });
 
     setIsBuffering(true);
-    moveVideoProgressBy(videoData?.startFrom || 0);
+    moveVideoProgressBy(videoData?.startFrom || 0, false);
     setIsBuffering(false);
   }, [videoData?.src, videoData?.startFrom]);
 
@@ -54,12 +72,13 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
     if (!videoData?.isAutoPlay) return;
 
     toggleIsPlaying(true);
-  }, [videoData?.isAutoPlay]);
+  }, [videoData?.isAutoPlay, videoData?.src]);
 
   // update video element for play pause
+
   useEffect(() => {
     playerState?.isPlaying ? videoRef?.current?.play() : videoRef?.current?.pause();
-  }, [playerState?.isPlaying]);
+  }, [playerState?.isPlaying, videoRef?.current?.paused]);
 
   // sync volume and video
   useEffect(() => {
@@ -117,8 +136,11 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
   // update progressPercent on specific time
   const moveVideoProgressBy = useCallback(
-    (secondsToAdd = 0) => {
+    (secondsToAdd = 0, showCenterIcon = true) => {
       videoRef.current.currentTime = videoRef.current.currentTime + secondsToAdd;
+
+      if (!showCenterIcon) return;
+
       setVideoStateChange(
         secondsToAdd > 0 ? videoStateChangeList.forward : videoStateChangeList.backward,
       );
