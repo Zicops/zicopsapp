@@ -21,7 +21,8 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
   // initial video load setup
   useEffect(() => {
-    const videoElem = videoRef.current;
+    const videoElem = videoRef?.current;
+    if (!videoElem) return;
 
     function activateBuffer() {
       setIsBuffering(true);
@@ -50,13 +51,16 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
   // for displaying video buffer loaded
   useEffect(() => {
     if (!canvasRef?.current) return;
-    const videoElem = videoRef.current;
+    const videoElem = videoRef?.current;
 
     drawProgress(canvasRef?.current, videoElem?.buffered, videoElem?.duration);
   }, [videoRef?.current?.buffered]);
 
   // update video element
   useEffect(() => {
+    if (!videoRef?.current) return;
+    if (!videoData?.src) return;
+
     dispatch({
       type: 'updateVideoData',
       payload: { videoSrc: videoData?.src },
@@ -65,7 +69,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
     setIsBuffering(true);
     moveVideoProgressBy(videoData?.startFrom || 0, false);
     setIsBuffering(false);
-  }, [videoData?.src, videoData?.startFrom]);
+  }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
 
   // auto play video
   useEffect(() => {
@@ -77,6 +81,9 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
   // update video element for play pause
 
   useEffect(() => {
+    if (videoRef?.current?.paused && playerState?.isPlaying)
+      return videoRef?.current?.play().catch((e) => toggleIsPlaying(false));
+
     playerState?.isPlaying ? videoRef?.current?.play() : videoRef?.current?.pause();
   }, [playerState?.isPlaying, videoRef?.current?.paused]);
 
@@ -112,8 +119,8 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
   // update progressPercent on video progress
   const updateStateProgress = useCallback(() => {
-    const currentTime = +videoRef.current?.currentTime || 0;
-    const videoDuration = +videoRef.current?.duration?.toFixed(2) || 0;
+    const currentTime = +videoRef?.current?.currentTime || 0;
+    const videoDuration = +videoRef?.current?.duration?.toFixed(2) || 0;
     const progress = +((currentTime / videoDuration) * 100).toFixed(2) || 0;
 
     dispatch({
@@ -131,13 +138,13 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
     (progressPercent = 0) => {
       videoRef.current.currentTime = progressPercent;
     },
-    [videoRef.current],
+    [videoRef?.current],
   );
 
   // update progressPercent on specific time
   const moveVideoProgressBy = useCallback(
     (secondsToAdd = 0, showCenterIcon = true) => {
-      videoRef.current.currentTime = videoRef.current.currentTime + secondsToAdd;
+      videoRef.current.currentTime = videoRef?.current?.currentTime + secondsToAdd;
 
       if (!showCenterIcon) return;
 
@@ -145,7 +152,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
         secondsToAdd > 0 ? videoStateChangeList.forward : videoStateChangeList.backward,
       );
     },
-    [videoRef.current],
+    [videoRef?.current],
   );
 
   // update progressPercent on video progress
@@ -155,7 +162,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
     setVideoStateChange(
       _isFullScreen ? videoStateChangeList.enterFullScreen : videoStateChangeList.exitFullScreen,
     );
-  }, [videoRef.current]);
+  }, [videoRef?.current]);
 
   const toggleMute = useCallback(
     (isMute) => {
@@ -168,7 +175,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
         !(payload.isMute || _isMute) ? videoStateChangeList.mute : videoStateChangeList.unmute,
       );
     },
-    [videoRef.current, playerState.isMute],
+    [videoRef?.current, playerState.isMute],
   );
 
   const handleVolume = useCallback(
@@ -179,7 +186,7 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
         volume > 0 ? videoStateChangeList.volumeUp : videoStateChangeList.volumeDown,
       );
     },
-    [videoRef.current],
+    [videoRef?.current],
   );
 
   // https://stackoverflow.com/a/45720576/13419786

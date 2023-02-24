@@ -18,7 +18,7 @@ export default function KeyValueWithColon({ keyData, valueData, isLoading = fals
           {isLoading ? (
             <ZicopsSkeleton variant="rounded" height={20} width={200} />
           ) : (
-            <>{Array.isArray(value) ? value?.join(', ') : value}</>
+            <>{Array.isArray(value) ? value?.join(', ') || 'N/A' : value || 'N/A'}</>
           )}
         </span>
       </p>

@@ -19,11 +19,10 @@ export default function TopicCard({ topicId }) {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
 
-  useLoadTopicData(topicId, topicData?.type);
+  const { isLoading } = useLoadTopicData(topicId, topicData?.type);
 
   // default topic content is the first because we sort based on is_default (check loadTopicContent() in useLoadTopicData)
   const defaultTopicContent = topicContent?.[0] || null;
-  const isLoading = defaultTopicContent == null;
 
   return (
     <>
@@ -61,7 +60,7 @@ export default function TopicCard({ topicId }) {
         <div className={`${styles.topicDetails}`}>
           <p className={`${styles.topicName}`}>
             <span>{topicData?.sequence}. </span>
-            Topic Name {topicData?.name}
+            {topicData?.name}
           </p>
 
           <p className={styles.description}>{topicData?.description}</p>

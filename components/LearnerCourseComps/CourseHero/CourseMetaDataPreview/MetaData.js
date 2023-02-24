@@ -35,9 +35,9 @@ export default function MetaData() {
     userCourseMapData?.courseStatus !== COURSE_MAP_STATUS.disable;
 
   const catSubCatData = [
-    courseMeta?.category,
-    courseMeta?.subCategory,
-    durationInMinutes ? `Duration: ${durationInMinutes} mins` : null,
+    courseMeta?.category || 'N/A',
+    courseMeta?.subCategory || 'N/A',
+    durationInMinutes ? `Duration: ${durationInMinutes} mins` : 'N/A',
   ];
   const keyValues = [
     { id: 1, key: 'Course Benefits', value: courseMeta?.benefits },
@@ -57,8 +57,9 @@ export default function MetaData() {
         ) : (
           <>
             This course is provisioned by{' '}
-            <span className={`${styles.boldWhite}`}>{courseMeta?.owner}</span> and published by{' '}
-            <span className={`${styles.boldWhite}`}>{courseMeta?.publisher}</span>
+            <span className={`${styles.boldWhite}`}>{courseMeta?.owner || 'N/A'}</span> and
+            published by{' '}
+            <span className={`${styles.boldWhite}`}>{courseMeta?.publisher || 'N/A'}</span>
           </>
         )}
       </p>
@@ -68,7 +69,7 @@ export default function MetaData() {
           if (!data) return null;
           if (isLoading) return <ZicopsSkeleton variant="text" height={30} width={100} />;
 
-          <li>{data}</li>;
+          return <li>{data}</li>;
         })}
       </ul>
 
@@ -76,7 +77,7 @@ export default function MetaData() {
         {isLoading ? (
           <ZicopsSkeleton variant="rounded" height={40} width={600} />
         ) : (
-          courseMeta?.summary
+          courseMeta?.summary || 'N/A'
         )}
       </summary>
 

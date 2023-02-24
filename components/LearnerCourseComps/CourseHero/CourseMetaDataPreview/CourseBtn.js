@@ -42,7 +42,7 @@ export default function CourseBtn({
         />
         {completedPercent !== null && (
           <p>
-            <span>{completedPercent}%</span>
+            <span>{completedPercent || 0}%</span>
             Completed
           </p>
         )}

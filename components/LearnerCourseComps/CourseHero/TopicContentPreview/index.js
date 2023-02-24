@@ -12,7 +12,9 @@ import SubtitleBox from './SubtitleBox';
 export default function TopicContentPreview() {
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
+
   const [activeBox, setActiveBox] = useState(null);
+
   const { containerRef, selectedTopicContent, videoStartTime } = useHandleTopicProgress();
 
   function toggleActiveBox(id) {

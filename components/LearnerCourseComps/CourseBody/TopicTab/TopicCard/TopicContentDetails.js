@@ -34,7 +34,10 @@ export default function TopicContentDetails({
             {isLoading ? (
               <ZicopsSkeleton variant="text" height={30} width={150} />
             ) : (
-              <>Duration: {getCourseDisplayTime(topicContent?.duration)}</>
+              <>
+                Duration:{' '}
+                {!topicContent?.duration ? 'N/A' : getCourseDisplayTime(topicContent?.duration)}
+              </>
             )}
           </span>
         </div>

@@ -94,7 +94,7 @@ export function getUserCourseMapDataObj(data = {}) {
 
 export const UserTopicProgressDataAtom = atom({
   key: 'UserTopicProgressData',
-  default: [],
+  default: null,
 });
 
 export function getUserTopicProgressDataObj(data = {}) {
@@ -134,30 +134,30 @@ export function getActiveCourseDataObj(data = {}) {
 
 export const CourseModuleIdsAtom = atom({
   key: 'CourseModuleIds',
-  default: [],
+  default: null,
 });
 
 export const CourseTopcIdsAtom = atom({
   key: 'CourseTopcIds',
-  default: [],
+  default: null,
 });
 
 export const CourseModulesAtomFamily = atomFamily({
   key: 'CourseModules',
-  default: [],
+  default: null,
 });
 
 export const CourseTopicsAtomFamily = atomFamily({
   key: 'CourseTopics',
-  default: [],
+  default: null,
 });
 
 export const CourseTopicContentAtomFamily = atomFamily({
   key: 'CourseTopicContent',
-  default: [],
+  default: null,
 });
 
 export const TopicQuizAtomFamily = atomFamily({
   key: 'TopicQuiz',
-  default: [],
+  default: null,
 });

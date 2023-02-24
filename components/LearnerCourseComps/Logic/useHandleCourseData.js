@@ -17,6 +17,9 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
+  ActiveCourseDataAtom,
+  ActiveCourseHeroAtom,
+  courseHeroObj,
   CourseMetaDataAtom,
   CourseModuleIdsAtom,
   CourseModulesAtomFamily,
@@ -30,6 +33,8 @@ import {
 } from '../atoms/learnerCourseComps.atom';
 
 export default function useHandleCourseData() {
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
+  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [courseMeta, setCourseMeta] = useRecoilState(CourseMetaDataAtom);
   const [userCourseMapData, setUserCourseMapData] = useRecoilState(UserCourseMapDataAtom);
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
@@ -44,18 +49,32 @@ export default function useHandleCourseData() {
   const addTopicToRecoil = useRecoilCallback(({ set }) => (topicData, id) => {
     set(CourseTopicsAtomFamily(id), topicData);
   });
+
   const router = useRouter();
   const courseId = router.query.courseId || null;
+  const topicId = router.query.topicId || null;
 
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router?.isReady) return;
+
+    if (topicId && activeCourseData?.topicId !== topicId) {
+      setActiveCourseData({ ...activeCourseData, topicId });
+      setActiveHero(courseHeroObj.topicPreview);
+    }
 
     loadCourseMetaData();
+    loadUserCourseMap();
     loadModuleAndChapterData();
+    loadUserTopicProgress();
   }, [router.isReady]);
 
-  loadUserCourseMap();
-  loadUserTopicProgress();
+  useEffect(() => {
+    if (!moduleIds?.length) return;
+    if (activeCourseData?.moduleId) return;
+    if (topicId) return;
+
+    setActiveCourseData({ ...activeCourseData, moduleId: moduleIds[0] });
+  }, [moduleIds?.length]);
 
   async function loadCourseMetaData() {
     if (!courseId) return;
@@ -67,6 +86,7 @@ export default function useHandleCourseData() {
         setCourseMeta(
           getCourseMetaDataObj({
             ..._courseMetaData,
+            id: _courseMetaData?.id || courseId,
             subCategory: _courseMetaData?.sub_category,
             subCategories: _courseMetaData?.sub_categories,
             expertiseLevel: _courseMetaData?.expertise_level,
@@ -88,7 +108,7 @@ export default function useHandleCourseData() {
   async function loadUserCourseMap() {
     if (!courseId) return;
     if (!userId) return;
-    if (userCourseMapData?.userCourseId) return;
+    if (userCourseMapData?.courseId === courseId) return;
 
     loadAndCacheDataAsync(
       GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -105,7 +125,7 @@ export default function useHandleCourseData() {
             userCourseId: _courseMapData?.user_course_id,
             userId: _courseMapData?.user_id,
             userLspId: _courseMapData?.user_lsp_id,
-            courseId: _courseMapData?.course_id,
+            courseId: _courseMapData?.course_id || courseId,
             courseType: _courseMapData?.course_type,
             addedBy: _courseMapData?.added_by,
             isMandatory: _courseMapData?.is_mandatory,
@@ -126,7 +146,7 @@ export default function useHandleCourseData() {
     if (!userId) return;
     if (!userCourseMapData?.userCourseId) return;
     if (userCourseMapData?.courseStatus === COURSE_MAP_STATUS.disable) return;
-    if (topicProgressData?.length) return;
+    if (topicProgressData?.length != null) return;
 
     loadAndCacheDataAsync(
       GET_USER_COURSE_PROGRESS,
@@ -165,7 +185,7 @@ export default function useHandleCourseData() {
 
   async function loadModuleAndChapterData() {
     if (!courseId) return;
-    if (moduleIds?.length) return;
+    if (moduleIds?.length != null) return;
 
     const moduleRes = loadAndCacheDataAsync(GET_COURSE_MODULES, { course_id: courseId });
     const chapterRes = loadAndCacheDataAsync(GET_COURSE_CHAPTERS, { course_id: courseId });

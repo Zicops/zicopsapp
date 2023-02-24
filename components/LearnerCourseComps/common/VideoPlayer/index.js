@@ -1,6 +1,5 @@
 import Spinner from '@/components/common/Spinner';
-import { bool, func, instanceOf, number, oneOfType, shape, string } from 'prop-types';
-import { Component } from 'react';
+import { bool, number, shape, string } from 'prop-types';
 import CenterFlash from './CenterFlash';
 import ControlBar from './ControlBar';
 import useHandleVideo from './Logic/useHandleVideo';
@@ -75,5 +74,4 @@ VideoPlayer.propTypes = {
     isAutoPlay: bool,
     startFrom: number,
   }),
-  containerRef: oneOfType([func, shape({ current: instanceOf(Component) })]),
 };

@@ -51,9 +51,9 @@ export default function ModuleView({ moduleId }) {
             )}
 
             <section>
-              {chapterData?.topicIds?.map((topicId) => {
-                return <TopicCard key={topicId} topicId={topicId} />;
-              })}
+              {chapterData?.topicIds?.map((topicId) => (
+                <TopicCard key={topicId} topicId={topicId} />
+              ))}
             </section>
           </Fragment>
         );
