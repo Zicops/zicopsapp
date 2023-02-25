@@ -54,6 +54,7 @@ import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
   USER_MAP_STATUS
@@ -264,7 +265,7 @@ export default function useUserCourseData() {
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
     const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (course) => course?.course_status?.toLowerCase() !== USER_MAP_STATUS?.disable
+      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable
     );
 
     const currentLspId = sessionStorage.getItem('lsp_id');
