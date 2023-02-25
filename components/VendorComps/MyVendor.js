@@ -1,6 +1,5 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
-import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';

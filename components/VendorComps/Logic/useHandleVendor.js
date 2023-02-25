@@ -257,6 +257,8 @@ export default function useHandleVendor() {
       status: VENDOR_MASTER_STATUS.active
     };
 
+    let uniqEmails = [...new Set(vendorData?.users)];
+    sendData.users = uniqEmails ;
     let isError = false;
     if (vendorData?.vendorId) {
       sendData.vendorId = vendorData?.vendorId;

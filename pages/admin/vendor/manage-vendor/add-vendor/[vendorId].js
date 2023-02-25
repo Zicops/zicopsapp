@@ -74,7 +74,7 @@ export default function EditVendor() {
             footerObj={{
               showFooter: true,
               handleSubmit: () => {
-                // addUpdateVendor();
+                addUpdateVendor();
                 handleMail();
                 // addUpdateSme();
               },

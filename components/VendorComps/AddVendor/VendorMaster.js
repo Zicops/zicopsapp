@@ -1,17 +1,17 @@
-import styles from '../vendorComps.module.scss';
+import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
-import { changeHandler } from '@/helper/common.helper';
-import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
-import { useEffect, useState } from 'react';
-import VendorPopUp from '../common/VendorPopUp';
-import AddUrl from './common/AddUrl';
-import useHandleVendor from '../Logic/useHandleVendor';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
+import { changeHandler } from '@/helper/common.helper';
+import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import VendorPopUp from '../common/VendorPopUp';
+import useHandleVendor from '../Logic/useHandleVendor';
+import styles from '../vendorComps.module.scss';
+import AddUrl from './common/AddUrl';
 
 export default function VendorMaster() {
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
@@ -24,7 +24,7 @@ export default function VendorMaster() {
   const vendorId = router.query.vendorId || null;
 
   useEffect(() => {
-    setVendorData((prev) => ({ ...prev, users: emails?.map((item) => item?.props?.children[0]) }));
+    setVendorData((prev) => ({ ...prev, users: [...vendorData?.users,...emails?.map((item) => item?.props?.children[0])] }));
   }, [emails]);
 
   const socialMediaPopup = [
