@@ -545,6 +545,7 @@ export default function useHandleAddUserDetails() {
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    if(!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url; 
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')

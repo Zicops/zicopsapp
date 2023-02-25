@@ -16,7 +16,8 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -36,6 +37,7 @@ import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/glo
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  getUserObject,
   InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
@@ -238,6 +240,9 @@ export default function useUserCourseData() {
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
+    client: userClient
+  });
 
   async function getUserCourseData(pageSize = 999999999, userId = null) {
     const { id } = getUserData();
@@ -876,6 +881,22 @@ export default function useUserCourseData() {
     return orgData?.data;
   }
 
+  async function getLoggedUserInfo(){
+    if(!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return ;
+    if(userDataGlobal?.id) return ;
+    let isError = false;
+    
+    const res = await userLogin().catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if(isError) return {};
+
+    return res?.data?.login || getUserObject();
+
+  }
+
   return {
     getUserCourseData,
     getUserPreferences,
@@ -884,7 +905,8 @@ export default function useUserCourseData() {
     getScheduleExams,
     OrgDetails,
     getUserLspRoleLatest,
-    getOrgByDomain
+    getOrgByDomain,
+    getLoggedUserInfo
   };
 }
 
