@@ -1,4 +1,4 @@
-import { ALL_COURSE_TYPES, COURSE_MAP_STATUS, COURSE_STATUS } from '@/helper/constants.helper';
+import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const courseHeroObj = {
@@ -78,12 +78,11 @@ export function getUserCourseMapDataObj(data = {}) {
     userId: data?.userId || null,
     userLspId: data?.userLspId || null,
     courseId: data?.courseId || null,
-
-    courseType: data?.courseType || ALL_COURSE_TYPES.selfPaced,
+    courseType: data?.courseType || null,
     addedBy: data?.addedBy || '',
     isMandatory: data?.isMandatory || false,
     endDate: data?.endDate || '',
-    courseStatus: data?.courseStatus || COURSE_MAP_STATUS.disable,
+    courseStatus: data?.courseStatus || null,
 
     createdAt: data?.createdAt || '',
     updatedAt: data?.updatedAt || '',

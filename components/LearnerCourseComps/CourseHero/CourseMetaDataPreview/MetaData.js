@@ -49,7 +49,7 @@ export default function MetaData() {
 
   return (
     <div className={`${styles.courseDataContainer}`}>
-      <CourseTitle name={courseMeta?.name} isLoading={isLoading} isAssigned={isAssigned} />
+      <CourseTitle isLoading={isLoading} isAssigned={isAssigned} />
 
       <p className={`${styles.textGray}`}>
         {isLoading ? (

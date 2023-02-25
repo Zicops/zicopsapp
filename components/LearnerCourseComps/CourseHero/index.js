@@ -7,7 +7,7 @@ import {
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
 } from '../atoms/learnerCourseComps.atom';
-import useHandleCourseData from '../Logic/useHandleCourseData';
+import useLoadCourseData from '../Logic/useLoadCourseData';
 import useLoadTopicData from '../Logic/useLoadTopicData';
 import CourseMetaDataPreview from './CourseMetaDataPreview';
 import CoursePreviewVideo from './CoursePreviewVideo';
@@ -19,7 +19,7 @@ export default function CourseHero() {
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
 
-  useHandleCourseData();
+  useLoadCourseData();
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
 
   const isCoursePreview = courseHeroObj.coursePreviewVideo === activeHero;

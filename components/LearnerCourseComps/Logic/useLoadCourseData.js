@@ -32,7 +32,7 @@ import {
   UserTopicProgressDataAtom,
 } from '../atoms/learnerCourseComps.atom';
 
-export default function useHandleCourseData() {
+export default function useLoadCourseData() {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [courseMeta, setCourseMeta] = useRecoilState(CourseMetaDataAtom);
@@ -67,6 +67,19 @@ export default function useHandleCourseData() {
     loadModuleAndChapterData();
     loadUserTopicProgress();
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!userCourseMapData?.userCourseId) return clearUserProgress();
+    if (userCourseMapData?.courseStatus === COURSE_MAP_STATUS.disable) return clearUserProgress();
+    if (userCourseMapData?.userCourseId && topicProgressData !== null) return;
+
+    loadUserCourseMap();
+    loadUserTopicProgress();
+
+    function clearUserProgress() {
+      setTopicProgressData(null);
+    }
+  }, [userCourseMapData?.userCourseId, userCourseMapData?.courseStatus]);
 
   useEffect(() => {
     if (!moduleIds?.length) return;
@@ -108,7 +121,7 @@ export default function useHandleCourseData() {
   async function loadUserCourseMap() {
     if (!courseId) return;
     if (!userId) return;
-    if (userCourseMapData?.courseId === courseId) return;
+    if (userCourseMapData?.courseId === courseId && !!userCourseMapData?.userCourseId) return;
 
     loadAndCacheDataAsync(
       GET_USER_COURSE_MAPS_BY_COURSE_ID,
