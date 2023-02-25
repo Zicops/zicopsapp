@@ -1,54 +1,49 @@
-import { useEffect, useState } from 'react';
+import {
+  ADD_VENDOR,
+  CREATE_CLASS_ROOM_TRANING,
+  CREATE_CONTENT_DEVELOPMENT,
+  CREATE_EXPERIENCE_VENDOR,
+  CREATE_PROFILE_VENDOR,
+  CREATE_SAMPLE_FILE,
+  CREATE_SUBJECT_MATTER_EXPERTISE,
+  INVITE_USERS_WITH_ROLE,
+  UPDATE_CLASS_ROOM_TRANING,
+  UPDATE_CONTENT_DEVELOPMENT,
+  UPDATE_PROFILE_VENDOR,
+  UPDATE_SUBJECT_MATTER_EXPERTISE,
+  UPDATE_VENDOR,
+  userClient
+} from '@/api/UserMutations';
 import {
   GET_ALL_PROFILE_DETAILS,
   GET_SAMPLE_FILES,
-  GET_SINGLE_EXPERIENCE_DETAILS,
   GET_SINGLE_PROFILE_DETAILS,
+  GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { useMutation } from '@apollo/client';
+import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
-  getVendorObject,
-  VendorProfileAtom,
-  VendorStateAtom,
-  SampleAtom,
   allProfileAtom,
   allSampleFilesAtom,
-  SmeServicesAtom,
-  CtServicesAtom,
   CdServicesAtom,
+  CtServicesAtom,
+  getVendorObject,
+  SampleAtom,
+  SmeServicesAtom,
+  VendorProfileAtom,
+  VendorStateAtom,
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import {
-  CUSTOM_ERROR_MESSAGE,
-  USER_LSP_ROLE,
-  VENDOR_MASTER_STATUS
-} from '@/helper/constants.helper';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import {
-  ADD_VENDOR,
-  UPDATE_VENDOR,
-  userClient,
-  CREATE_PROFILE_VENDOR,
-  CREATE_EXPERIENCE_VENDOR,
-  CREATE_SAMPLE_FILE,
-  UPDATE_PROFILE_VENDOR,
-  CREATE_SUBJECT_MATTER_EXPERTISE,
-  UPDATE_SUBJECT_MATTER_EXPERTISE,
-  CREATE_CLASS_ROOM_TRANING,
-  UPDATE_CLASS_ROOM_TRANING,
-  CREATE_CONTENT_DEVELOPMENT,
-  UPDATE_CONTENT_DEVELOPMENT,
-  INVITE_USERS,
-  INVITE_USERS_WITH_ROLE
-} from '@/api/UserMutations';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
@@ -76,6 +71,7 @@ export default function useHandleVendor() {
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -162,6 +158,22 @@ export default function useHandleVendor() {
     );
 
     const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
+
+    setVendorDetails(_sortedData);
+    setLoading(false);
+  }
+
+  async function getUserVendors() {
+    if (!userData?.id) return;
+    // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
+    setLoading(true);
+    const res = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userData?.id },
+      {},
+      userClient
+    );
+    const _sortedData = sortArrByKeyInOrder(res?.getUserVendor || [], 'updated_at', false);
 
     setVendorDetails(_sortedData);
     setLoading(false);
@@ -509,6 +521,7 @@ export default function useHandleVendor() {
     getSingleVendorInfo,
     handlePhotoInput,
     handleProfilePhoto,
+    getUserVendors,
     getAllVendors,
     addUpdateProfile,
     getAllProfileInfo,

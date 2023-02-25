@@ -983,6 +983,31 @@ export const GET_SAMPLE_FILES = gql`
   }
 `;
 
+export const GET_USER_VENDORS = gql`
+  query getUserVendor($user_id: String) {
+    getUserVendor(user_id: $user_id) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
 // DASHBOARD QUERIES START
 export const GET_COURSE_CONSUMPTION_STATS = gql`
   query getCourseConsumptionStats(
