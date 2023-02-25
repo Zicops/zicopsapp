@@ -3,7 +3,7 @@ import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutat
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, USER_MAP_STATUS } from '@/helper/constants.helper';
 import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -102,7 +102,9 @@ export default function useHandleCourseHero(isPreview) {
     if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
       return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
-    const userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID?.[0] || {};
+    const _mapRes = mapRes?.data?.getgetUserCourseMapByCourseID?.filter((course) => course?.course_status !== USER_MAP_STATUS?.disable);
+
+    const userCourseMapping = _mapRes?.data?.getUserCourseMapByCourseID?.[0] || {};
 
     console.log(userCourseMapping, 1111111111111111);
     setUserCourseData({

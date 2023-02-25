@@ -264,7 +264,7 @@ export default function useUserCourseData() {
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
     const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (course) => course?.course_status?.toLowerCase() !== 'disabled'
+      (course) => course?.course_status?.toLowerCase() !== USER_MAP_STATUS?.disable
     );
 
     const currentLspId = sessionStorage.getItem('lsp_id');
