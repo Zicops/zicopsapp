@@ -1,8 +1,9 @@
 import ToolTip from '@/components/common/ToolTip';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   GET_FIXED_QUESTION,
   GET_QUESTION_BANK_QUESTIONS,
@@ -58,6 +59,7 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
   );
   const [questionPaperTabData, setQuestionPaperTabData] = useRecoilState(QuestionPaperTabDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [qbQuestions, setQbQuestions] = useState(null);
   const [qbFilteredQuestions, setQbFilteredQuestions] = useState(null);
@@ -182,7 +184,8 @@ export default function AddQuestionMetaData({ sectionId, editData }) {
                 </ToolTip>
               }
               name="selection"
-              isDisabled={!!editData?.id}
+              // isDisabled={!!editData?.id}
+              isDisabled={isDev || isDemo ? false : true}
               isChecked={isUploadSelected}
               changeHandler={() => setIsUploadSelected(true)}
             />
