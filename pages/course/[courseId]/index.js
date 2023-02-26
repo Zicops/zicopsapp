@@ -90,8 +90,8 @@ export default function Course() {
           style={{
             backgroundColor: 'var(--tile-bg)',
             margin: 0,
-            padding: 0,
-            contain: 'paint'
+            padding: '0 0 20px 0',
+            overflowX: 'clip',
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
