@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { ActiveCourseDataAtom, CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
+import {
+  ActiveCourseDataAtom,
+  CourseMetaDataAtom,
+  CourseModulesAtomFamily,
+  CourseTopicsAtomFamily,
+} from '../../atoms/learnerCourseComps.atom';
 import VideoPlayer from '../../common/VideoPlayer';
 import styles from '../../learnerCourseComps.module.scss';
 import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
@@ -12,6 +17,8 @@ import SubtitleBox from './SubtitleBox';
 export default function TopicContentPreview() {
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
+  const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
+  const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
   const [activeBox, setActiveBox] = useState(null);
 
@@ -83,8 +90,15 @@ export default function TopicContentPreview() {
               })}
             </>
           }
-          rightComps={<>rightSideComps</>}
-          centerComps={<TopBarCenterTitle title={courseMeta?.name} subtitle="Preview Video" />}
+          rightComps={<>right Side Comps</>}
+          centerComps={
+            <TopBarCenterTitle
+              title={courseMeta?.name}
+              subtitle={`M${moduleData?.sequence || '1'}T${topicData?.sequence || '1'} ${
+                topicData?.name || ''
+              }`}
+            />
+          }
         />
 
         <VideoPlayer

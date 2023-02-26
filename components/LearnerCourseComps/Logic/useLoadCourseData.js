@@ -3,6 +3,7 @@ import {
   GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
+  GET_TOPIC_RESOURCES_BY_COURSE_ID,
 } from '@/api/Queries';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
@@ -11,6 +12,7 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { ResourcesAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { sortArrByKeyInOrder } from '@/utils/array.utils';
 import { useRouter } from 'next/router';
@@ -40,6 +42,7 @@ export default function useLoadCourseData() {
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
   const [moduleIds, setModuleIds] = useRecoilState(CourseModuleIdsAtom);
   const [topicIds, setTopicIds] = useRecoilState(CourseTopcIdsAtom);
+  const [resources, setResources] = useRecoilState(ResourcesAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);
 
   // callback for atom family
@@ -66,6 +69,8 @@ export default function useLoadCourseData() {
     loadUserCourseMap();
     loadModuleAndChapterData();
     loadUserTopicProgress();
+
+    loadAllTopicResources();
   }, [router.isReady]);
 
   useEffect(() => {
@@ -209,6 +214,19 @@ export default function useLoadCourseData() {
       (await chapterRes)?.getCourseChapters,
       (await topicRes)?.getTopics,
     );
+  }
+
+  async function loadAllTopicResources() {
+    if (!courseId) return;
+    if (userCourseMapData?.courseId === courseId && !!userCourseMapData?.userCourseId) return;
+
+    loadAndCacheDataAsync(GET_TOPIC_RESOURCES_BY_COURSE_ID, { course_id: courseId }, {})
+      .then((resourcesRes) => {
+        const resourcesData = structuredClone(resourcesRes?.getResourcesByCourseId || []);
+
+        setResources(resourcesData);
+      })
+      .catch((err) => console.error('Topic Resources Load Err:', err));
   }
 
   // helper functions

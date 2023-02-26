@@ -156,6 +156,23 @@ export const CourseTopicContentAtomFamily = atomFamily({
   default: null,
 });
 
+export const TopicResourcesAtom = atom({
+  key: 'TopicResources',
+  default: null,
+});
+
+export const SelectedResourceDataAtom = atom({
+  key: 'SelectedResourceData',
+  default: getSelectedResourcesDataObj(),
+});
+
+export function getSelectedResourcesDataObj(data = {}) {
+  return {
+    title: data?.title || null,
+    url: data?.url || null,
+  };
+}
+
 export const TopicQuizAtomFamily = atomFamily({
   key: 'TopicQuiz',
   default: null,

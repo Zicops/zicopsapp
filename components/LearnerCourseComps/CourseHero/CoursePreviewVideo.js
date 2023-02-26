@@ -19,10 +19,7 @@ export default function CoursePreviewVideo() {
 
       <VideoPlayer
         containerRef={coursePreviewRef}
-        videoData={{
-          src: courseMeta?.previewVideo || '',
-          isAutoPlay: true,
-        }}
+        videoData={{ src: courseMeta?.previewVideo || '', isAutoPlay: true }}
       />
     </div>
   );

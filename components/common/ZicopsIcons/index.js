@@ -1,12 +1,13 @@
 import { theme } from '@/helper/theme.helper';
 
-export function ArrowLeft({ color = theme.neutralWhite }) {
+export function ArrowLeft({ color = theme.neutralWhite, turns = 0 }) {
   return (
     <svg
       height="100%"
       width="100%"
       viewBox="0 0 24 24"
       fill="none"
+      style={{ transform: `rotate(${turns}turn)` }}
       xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"

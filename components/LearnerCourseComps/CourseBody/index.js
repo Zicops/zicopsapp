@@ -1,7 +1,14 @@
+import PopUp from '@/components/common/PopUp';
+import ViewDoc from '@/components/common/ViewDoc';
 import ZicopsTabs from '@/components/common/ZicopsTabs';
+import { useRecoilState } from 'recoil';
+import { SelectedResourceDataAtom } from '../atoms/learnerCourseComps.atom';
+import ResourcesTab from './ResourcesTab';
 import TopicTab from './TopicTab';
 
 export default function CourseBody() {
+  const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);
+
   const courseBodyTabs = [
     {
       id: 1,
@@ -11,7 +18,7 @@ export default function CourseBody() {
     {
       id: 2,
       title: 'Resources',
-      body: <>Resources Body Comp</>,
+      body: <ResourcesTab />,
     },
     {
       id: 3,
@@ -33,6 +40,15 @@ export default function CourseBody() {
   return (
     <>
       <ZicopsTabs tabData={courseBodyTabs} />
+
+      <PopUp
+        title={selectedResourceData?.title}
+        popUpState={[selectedResourceData?.url, setSelectedResourceData]}
+        size="large"
+        positionLeft="50%"
+        isFooterVisible={false}>
+        <ViewDoc url={selectedResourceData?.url} />
+      </PopUp>
     </>
   );
 }

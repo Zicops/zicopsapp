@@ -1,7 +1,7 @@
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ActiveCourseDataAtom, CourseModuleIdsAtom } from '../../atoms/learnerCourseComps.atom';
 import styles from '../../learnerCourseComps.module.scss';
+import ModuleSelection from '../ModuleSelection';
 import ModuleView from './ModuleView';
 
 export default function TopicTab() {
@@ -13,20 +13,7 @@ export default function TopicTab() {
 
   return (
     <div className={`${styles.topicTab}`}>
-      <LabeledDropdown
-        dropdownOptions={{
-          inputName: 'moduleSelection',
-          placeholder: 'Select course module',
-          options: courseModuleIds?.map((modId, i) => ({ value: modId, label: `MODULE ${i + 1}` })),
-          value: { value: activeCourseData?.moduleId, label: `MODULE ${moduleIndex + 1 || ''}` },
-          isSearchEnable: true,
-          isDisabled: !courseModuleIds?.length,
-        }}
-        styleClass={`${styles.moduleDropdown}`}
-        changeHandler={(e) =>
-          setActiveCourseData({ ...activeCourseData, moduleId: e?.value || null })
-        }
-      />
+      <ModuleSelection />
 
       <ModuleView moduleId={activeCourseData?.moduleId} />
     </div>

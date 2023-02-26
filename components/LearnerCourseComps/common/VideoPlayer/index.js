@@ -38,7 +38,7 @@ export default function VideoPlayer({
 
   return (
     <div className={`${styles.videoPlayer}`} ref={videoContainerRef}>
-      {!!isBuffering && <Spinner />}
+      {!!isBuffering && <Spinner customStyles={{ zIndex: 0 }} />}
       <CenterFlash />
 
       <Video

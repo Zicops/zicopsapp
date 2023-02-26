@@ -39,6 +39,11 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
     videoElem?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' });
 
+    videoElem.onerror = () => {
+      setIsBuffering(false);
+      console.error(`Error ${videoElem.error.code}; details: ${videoElem.error.message}`);
+    };
+
     return () => {
       videoElem.removeEventListener('loadstart', activateBuffer);
       videoElem.removeEventListener('canplay', deactivateBuffer);
@@ -60,14 +65,12 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
   useEffect(() => {
     if (!videoRef?.current) return;
     if (!videoData?.src) return;
-
-    dispatch({
-      type: 'updateVideoData',
-      payload: { videoSrc: videoData?.src },
-    });
-
     setIsBuffering(true);
-    moveVideoProgressBy(videoData?.startFrom || 0, false);
+
+    dispatch({ type: 'updateVideoData', payload: { videoSrc: videoData?.src } });
+    const isVideoStartTimeSet = videoRef?.current?.currentTime === videoData?.startFrom;
+    if (!isVideoStartTimeSet) moveVideoProgressBy(videoData?.startFrom || 0, false);
+
     setIsBuffering(false);
   }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
 

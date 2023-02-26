@@ -99,7 +99,7 @@ $heroSectionPadding: 2em;
         color: $primary;
         padding: 0.4em;
         border: 1px solid $primary;
-        margin: auto 0.3em;
+        margin: 0 0.3em;
 
         cursor: pointer;
 
@@ -413,8 +413,9 @@ $heroSectionPadding: 2em;
 
 // COURSE BODY TABS
 
-// TOPIC
-.topicTab {
+.moduleSelection {
+  margin: 1em 1em 2em;
+
   .moduleDropdown {
     max-width: 15em;
     margin: auto;
@@ -441,47 +442,13 @@ $heroSectionPadding: 2em;
       display: block;
     }
   }
+}
 
+// TOPIC
+.topicTab {
   .description {
     color: $darkThree;
     font-size: 0.9rem;
-  }
-
-  .chapterBlock {
-    display: block;
-    margin-top: 1em;
-
-    .name {
-      font-weight: bold;
-      font-size: 1.6rem;
-
-      position: relative;
-      display: flex;
-      align-items: center;
-      text-align: center;
-
-      &::before,
-      &::after {
-        content: '';
-        flex: 1;
-        border-bottom: 2px solid $white;
-      }
-
-      &::before {
-        flex: 0.047;
-      }
-
-      &:not(:empty)::before {
-        margin-right: 0.5em;
-      }
-      &:not(:empty)::after {
-        margin-left: 0.5em;
-      }
-    }
-
-    .description {
-      padding-left: 4%;
-    }
   }
 
   section {
@@ -603,6 +570,33 @@ $heroSectionPadding: 2em;
           margin: 1em auto;
         }
       }
+    }
+  }
+}
+
+.resourceTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1em;
+
+  span {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+}
+
+.resourcesList {
+  padding: 1em 4%;
+
+  .gridThree {
+    display: grid;
+    grid-template-columns: repeat(3, 33%);
+    gap: 15px;
+
+    h2 {
+      grid-column: 1/4;
     }
   }
 }
