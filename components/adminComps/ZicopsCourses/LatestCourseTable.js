@@ -1,13 +1,15 @@
 // components\adminComps\ZicopsCourses\LatestCourseTable.js
 
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
+import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
 import ZicopsTable from '@/components/common/ZicopsTable';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen, getUnixFromDate } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
@@ -19,6 +21,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   });
 
   const courseType = useRecoilValue(CourseTypeAtom);
+  const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDemo } = useRecoilValue(FeatureFlagsAtom);
 
@@ -26,9 +29,25 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
   const [searchParam, setSearchParam] = useState('');
 
-  useEffect(() => {
+  useEffect(async () => {
     if (!userOrgData?.lsp_id) return;
     const time = getUnixFromDate();
+
+    const courseFiltes = {
+      Type: courseType,
+      SearchText: searchParam?.trim(),
+      LspId: zicopsLspId || userOrgData?.lsp_id
+    };
+
+    if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)) {
+      const vendorDetail = await loadQueryDataAsync(
+        GET_USER_VENDORS,
+        { user_id: userData?.id },
+        {},
+        userQueryClient
+      );
+      courseFiltes.Owner = userOrgData?.getUserVendor?.[0]?.name;
+    }
 
     loadMyCourses({
       variables: {
@@ -36,11 +55,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         pageSize: 1000,
         pageCursor: '',
         status: zicopsLspId ? COURSE_STATUS.publish : courseStatus,
-        filters: {
-          Type: courseType,
-          SearchText: searchParam?.trim(),
-          LspId: zicopsLspId || userOrgData?.lsp_id
-        }
+        filters: courseFiltes
       }
     }).then((res) => {
       const _latestCourses = sortArrByKeyInOrder(
