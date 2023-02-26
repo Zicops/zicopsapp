@@ -102,9 +102,10 @@ export default function useHandleCourseHero(isPreview) {
     if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
       return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
-    const userCourseMapping = mapRes?.data?.getUserCourseMapByCourseID?.[0] || {};
+    const _mapRes = mapRes?.data?.getUserCourseMapByCourseID?.filter((course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable);
 
-    console.log(userCourseMapping, 1111111111111111);
+    const userCourseMapping = _mapRes?.[0] || {};
+
     setUserCourseData({
       ...userCourseData,
       userCourseMapping: userCourseMapping || {},
