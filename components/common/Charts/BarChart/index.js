@@ -6,7 +6,7 @@ import styles from '../charts.module.scss';
 
 export default function BarChart({
   chartData,
-  options = null,
+  options = {},
   containerStyles = {},
   tooltipBody = () => {},
   direction = 'ltr',
