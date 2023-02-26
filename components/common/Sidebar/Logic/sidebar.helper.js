@@ -1,3 +1,7 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { PRODUCT_TOUR_FLOW } from '../../ProductTour/productTour.flow';
 import { ADMIN_COURSES, ADMIN_EXAMS, ADMIN_USERS } from '../../ToolTip/tooltip.helper';
 
@@ -220,3 +224,59 @@ export const analyticsSideBarData = {
     }
   ]
 };
+
+export default function useHandleRole() {
+  const courseSidebarData = {
+    image: '/images/CourseManagement.png',
+    heading: 'Course Management',
+    data: [
+      {
+        id: 1,
+        title: 'Zicops Courses',
+        link: '/admin/course/zicops-courses',
+        description: ADMIN_COURSES.sidebarData.zicopsCourses
+      },
+      {
+        id: 2,
+        title: 'My Courses',
+        link: '/admin/course/my-courses',
+        description: ADMIN_COURSES.sidebarData.myCourses
+      },
+      {
+        id: 3,
+        title: 'Categories',
+        link: '/admin/course/categories',
+        description: ADMIN_COURSES.sidebarData.categories
+      },
+      {
+        id: 4,
+        title: 'Sub-categories',
+        link: '/admin/course/subcategories',
+        description: ADMIN_COURSES.sidebarData.addSubCategories
+      },
+      {
+        id: 5,
+        title: 'Dashboard',
+        link: '/admin',
+        description: ADMIN_COURSES.sidebarData.dashboard,
+        isHidden: true
+      }
+    ]
+  };
+
+  const [sideBarData, setSideBarData] = useState([]);
+
+  function getRoleBasedSideBarData() {
+    let initialSideBar = { ...courseSidebarData } ;
+    const userOrgData = useRecoilValue(UsersOrganizationAtom);
+    if (userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return initialSideBar;
+    let sideBarArray = initialSideBar?.data?.map((data) => {
+      if (data?.title !== 'My Courses') return { ...data, isHidden: true };
+      return { ...data };
+    });
+
+    return { ...initialSideBar, data: [...sideBarArray] };
+  }
+
+  return { getRoleBasedSideBarData };
+}

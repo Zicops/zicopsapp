@@ -7,12 +7,18 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import AddExpriences from './AddExpriences';
-import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
+import {
+  VendorAllExperiencesAtom,
+  VendorExperiencesAtom,
+  VendorProfileAtom
+} from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
 import VendorPopUp from './common/VendorPopUp';
 import AddExpertise from './AddVendor/common/AddExpertise';
+import useHandleVendor from './Logic/useHandleVendor';
 
 const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
   label: val,
@@ -24,10 +30,57 @@ const AddVendorProfile = ({ data = {} }) => {
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenExpertise, setOpenExpertise] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
-  const [experienceYear, setExpericeYear] = useState(null);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const [selectedExpertise, setSelectedExpertise] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
 
-  const handleClick = () => {};
+  const { handleProfilePhoto } = useHandleVendor();
+  const router = useRouter();
+  const vendorId = router.query.vendorId || '0';
+  const completeExperienceHandler = () => {
+    const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
+    const start_date = new Date(StartDate);
+    const start_timestamp = start_date.getTime() / 1000;
+    const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
+    const end_date = new Date(EndDate);
+    const end_timestamp = end_date.getTime() / 1000;
+    const experienceData = {
+      vendor_id: vendorId || '',
+      title: experiencesData?.title || '',
+      email: profileData?.email || '',
+      company_name: experiencesData?.companyName || '',
+      employement_type: experiencesData?.employeeType || '',
+      location: experiencesData?.location || '',
+      location_type: experiencesData?.locationType || '',
+      start_date: start_timestamp || null,
+      end_date: end_timestamp || null,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    // setAllExperiences([...allExperiences, experienceData]);
+    // setAllExperiences(null);
+    console.info('profileData', profileData);
+    setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
+    setIsOpenExpriences(false);
+  };
+  const handleLanguageSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
+    }
+  };
+
+  const addLanguagesHandler = () => {
+    setProfileData({ ...profileData, languages: [...selectedLanguages] });
+    setIsOpenLanguage(false);
+  };
+
+  const handleAddExpertise = () => {
+    setProfileData({ ...profileData, sme_expertises: [...selectedExpertise] });
+    setOpenExpertise(false);
+  };
 
   return (
     <div className={`${styles.inputMain}`}>
@@ -38,7 +91,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
-              value: data?.firstName || profileData.firstName
+              value: profileData.firstName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -50,7 +103,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
-              value: data?.lastName || profileData.lastName
+              value: profileData.lastName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -62,7 +115,7 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: data?.email || profileData.email
+              value: profileData.email
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -74,7 +127,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
-              value: data?.contact || profileData.contactNumber
+              value: profileData.contactNumber
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -88,59 +141,138 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: data?.description || profileData.description
+              value: profileData.description
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
         </div>
         <div className={`${styles.input2}`}>
-          <label for="vendorName">Upload photo: </label>
+          <label for="profileImage">Upload photo: </label>
           <BrowseAndUpload
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
             title="Drag and drop"
-            handleFileUpload={() => {}}
+            handleFileUpload={handleProfilePhoto}
+            handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
+            previewData={{
+              fileName: profileData?.profileImage?.name,
+              filePath: profileData?.profileImage
+            }}
+            inputName="profileImage"
+            // hideRemoveBtn={true}
+            isActive={profileData?.profileImage}
           />
         </div>
         <div className={`${styles.input1}`}>
-          <label for="vendorName">Years of experience: </label>
+          <label for="expriences">Years of experience: </label>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'year',
+              inputName: 'experienceYear',
               placeholder: 'Select Years',
-              value: data?.experience || experienceYear,
+              value: {
+                label: profileData.experienceYear,
+                value: profileData.experienceYear
+              },
               options: optionYearArray
             }}
-            changeHandler={(val) => setExpericeYear(val)}
+            changeHandler={(e) => changeHandler(e, profileData, setProfileData, 'experienceYear')}
             styleClass={styles.dropDownMain}
           />
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Experience: </label>
-          <IconButton
-            text="Add experiences"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setIsOpenExpriences(true)}
-          />
+          {!profileData?.experience?.length ? (
+            <IconButton
+              text="Add experiences"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setIsOpenExpriences(true)}
+            />
+          ) : (
+            <>
+              {profileData?.experience?.map((exp) => (
+                <IconButton
+                  text={
+                    typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
+                  }
+                  styleClasses={`${styles.exButton}`}
+                  imgUrl="/images/svg/business_center.svg"
+                  handleClick={() => setIsOpenExpriences(true)}
+                />
+              ))}
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setIsOpenExpriences(true)}
+              />
+            </>
+          )}
         </div>
+
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Language: </label>
-          <IconButton
-            text="Add language"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setIsOpenLanguage(true)}
-          />
+          {!profileData?.languages?.length ? (
+            <IconButton
+              text="Add language"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setIsOpenLanguage(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {profileData?.languages?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setIsOpenLanguage(true)}
+              />
+            </>
+          )}
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Subject matter expertise:</label>
-          <IconButton
-            text="Add subject matter expertise"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setOpenExpertise(true)}
-          />
+          {!profileData?.sme_expertises?.length ? (
+            <IconButton
+              text="Add subject matter expertise"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setOpenExpertise(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {profileData?.sme_expertises?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setOpenExpertise(true)}
+              />
+            </>
+          )}
         </div>
       </div>
       <div className={`${styles.addProfileContainer}`}>
@@ -151,13 +283,6 @@ const AddVendorProfile = ({ data = {} }) => {
           isChecked={profileData?.isSpeaker}
           changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
         />
-        <div className={`${styles.addProfile}`}>
-          <IconButton
-            text="Add the profile"
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-          />
-        </div>
       </div>
 
       <VendorPopUp
@@ -166,7 +291,7 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done', handleClick: handleClick }}
+        submitBtn={{ name: 'Done', handleClick: completeExperienceHandler }}
         isFooterVisible={true}>
         <AddExpriences />
       </VendorPopUp>
@@ -177,9 +302,14 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenExpertise, setOpenExpertise]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: handleClick }}
+        submitBtn={{ name: 'Add', handleClick: handleAddExpertise }}
         isFooterVisible={true}>
-        <AddExpertise expertiseValue={expertiseSearch} setExpertise={setExpertiseSearch} />
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedExpertise}
+          setSelectedExpertise={setSelectedExpertise}
+        />
       </VendorPopUp>
       <VendorPopUp
         open={isOpenLanguage}
@@ -187,12 +317,20 @@ const AddVendorProfile = ({ data = {} }) => {
         popUpState={[isOpenLanguage, setIsOpenLanguage]}
         size="small"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: handleClick }}
+        submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}
         isFooterVisible={true}>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
-            <div className={`${styles.expertiseCheckbox}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+            <div className={`${styles.expertiseCheckbox}`} key={index}>
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={data}
+                value={data}
+                isChecked={
+                  selectedLanguages.includes(data) || profileData?.languages.includes(data)
+                }
+                changeHandler={handleLanguageSelection}
+              />
             </div>
           );
         })}

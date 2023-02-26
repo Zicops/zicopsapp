@@ -1,68 +1,119 @@
-import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import {
+  VENDOR_FILE_FORMATS,
+  VENDOR_LANGUAGES,
+  VENDOR_MASTER_STATUS
+} from '@/helper/constants.helper';
 import { useState } from 'react';
 import AddVendorProfile from '../../AddVendorProfile';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import VendorPopUp from '../../common/VendorPopUp';
 import AddExpertise from './AddExpertise';
+import useHandleVendor from '../../Logic/useHandleVendor';
+import AddSample from '../../AddSample';
+import FileManageVendor from '../../FileManageVendor';
+import {
+  allProfileAtom,
+  allSampleFilesAtom,
+  getProfileObject,
+  getSampleObject,
+  SampleAtom,
+  VendorProfileAtom
+} from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
 
 export default function AddServices({ data, setData = () => {}, inputName }) {
-  const [popupState, setPopupState] = useState(false);
   const [isOpenProflie, setIsOpenProfile] = useState(false);
   const [expertisePopupState, setExpertisePopupState] = useState(false);
   const [languagePopupState, setLanguagePopupState] = useState(false);
   const [opdeliverablePopupState, setOPDeliverablePopupState] = useState(false);
   const [samplePopupState, setSamplePopupState] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
+  const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
+  const [selectedExpertise, setSelectedExpertise] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedFormats, setSelectedFormats] = useState([]);
+  const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+  const [allSampleData, setAllSampleData] = useRecoilState(allSampleFilesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
+  const {
+    addUpdateProfile,
+    addUpdateExperience,
+    getAllProfileInfo,
+    addSampleFile,
+    getSampleFiles
+  } = useHandleVendor();
+  const router = useRouter();
+  const vendorId = router.query.vendorId || '0';
 
-  const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const clickHandler = () => {
-    setPopupState(true);
-  };
-
-  const clickHandlerExpertise = () => {
-    setExpertisePopupState(true);
-  };
-
-  const clickHandlerLanguage = () => {
-    setLanguagePopupState(true);
-  };
-
-  const clickHandlerOPDeliverable = () => {
-    setOPDeliverablePopupState(true);
-  };
-
-  const clickHandlerSample = () => {
-    setSamplePopupState(true);
-  };
-
-  const addProfileHandler = () => {
-    setIsOpenProfile(true);
-  };
-  const completeProfileHandler = () => {
+  const completeProfileHandler = async () => {
+    await addUpdateProfile();
+    await addUpdateExperience();
+    getAllProfileInfo();
+    setIsOpenProfile(false);
     setCompleteProfile(true);
+    setProfileData(getProfileObject());
+  };
+
+  const addExpertiseHandler = () => {
+    setData({ ...data, expertises: [...selectedExpertise] });
+    setExpertisePopupState(false);
+  };
+
+  const handleLanguageSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
+    }
+  };
+
+  const addLanguagesHandler = () => {
+    setData({ ...data, languages: [...selectedLanguages] });
+    setLanguagePopupState(false);
+  };
+
+  const handleFileSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedFormats([...selectedFormats, value]);
+    } else {
+      setSelectedFormats(selectedFormats.filter((lang) => lang !== value));
+    }
+  };
+
+  const addFormatsHandler = () => {
+    setData({ ...data, formats: [...selectedFormats] });
+    setOPDeliverablePopupState(false);
+  };
+
+  const addSampleFileHandler = async () => {
+    // setAllSampleData([
+    //   ...allSampleData,
+    //   {
+    //     vendorId: vendorId,
+    //     name: sampleData?.sampleName || '',
+    //     description: sampleData?.description || '',
+    //     pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+    //     file: sampleData?.sampleFile || null,
+    //     fileType: sampleData?.fileType || '',
+    //     status: VENDOR_MASTER_STATUS.active
+    //   }
+    // ]);
+    await addSampleFile();
+    getSampleFiles();
+    setSamplePopupState(false);
+    setShowCompleteFile(true);
+    setSampleData(getSampleObject());
   };
 
   return (
@@ -92,52 +143,162 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
 
           <div className={`${styles.addExpertise}`}>
             <label for="serviceDescription">Add Expertise: </label>
-            <IconButton
-              text="Add Expertise"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={clickHandlerExpertise}
-            />
+            {!data?.expertises?.length ? (
+              <IconButton
+                text="Add subject matter expertise"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setExpertisePopupState(true)}
+              />
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {data?.expertises?.map((expert, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={expert}
+                        value={expert}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setExpertisePopupState(true)}
+                />
+              </>
+            )}
           </div>
         </div>
         <div className={`${styles.addLanguageOPFormat}`}>
           <div className={`${styles.addLanguages}`}>
             <label for="serviceDescription">Language: </label>
-            <IconButton
-              text="Add language"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={clickHandlerLanguage}
-            />
+            {!data?.languages?.length ? (
+              <IconButton
+                text="Add language"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setLanguagePopupState(true)}
+              />
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {data?.languages?.map((lang, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={lang}
+                        value={lang}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setLanguagePopupState(true)}
+                />
+              </>
+            )}
           </div>
           <div className={`${styles.addOPFormat}`}>
             <label for="serviceDescription">O/P deliverable formats: </label>
-            <IconButton
-              text="Add O/P deliverable formats"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={clickHandlerOPDeliverable}
-            />
+            {!data?.formats?.length ? (
+              <IconButton
+                text="Add O/P deliverable formats"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setOPDeliverablePopupState(true)}
+              />
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {data?.formats?.map((format, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={format}
+                        value={format}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setOPDeliverablePopupState(true)}
+                />
+              </>
+            )}
           </div>
         </div>
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            <IconButton
-              text="Add sample files"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={clickHandlerSample}
-            />
+            {!allSampleData?.length ? (
+              <IconButton
+                text="Add sample files"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setSamplePopupState(true)}
+              />
+            ) : (
+              <>
+                <div className={`${styles.showFilesMain}`}>
+                  {allSampleData?.map((file) => (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/description.svg" alt="" />
+                      {file?.name + '.' + file?.fileType}
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setSamplePopupState(true)}
+                />
+              </>
+            )}
           </div>
           <div className={`${styles.addProfiles}`}>
             <label for="profiles">Add profiles: </label>
-            <IconButton
-              text="Add profiles"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={addProfileHandler}
-            />
+            {!profileDetails?.length ? (
+              <IconButton
+                text="Add profiles"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => {
+                  setProfileData(getProfileObject());
+                  setIsOpenProfile(true);
+                }}
+              />
+            ) : (
+              <>
+                <div className={`${styles.showFilesMain}`}>
+                  {profileDetails?.map((data) => (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/account_circle.svg" alt="" />
+                      {data?.first_name + '&' + data?.email}
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  handleClick={() => setIsOpenProfile(true)}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -147,8 +308,13 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         size="large"
         title="Add expertise"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add' }}>
-        <AddExpertise expertiseValue={expertiseSearch} setExpertise={setExpertiseSearch} />
+        submitBtn={{ name: 'Add', handleClick: addExpertiseHandler }}>
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedExpertise}
+          setSelectedExpertise={setSelectedExpertise}
+        />
       </VendorPopUp>
       <VendorPopUp
         open={isOpenProflie}
@@ -167,7 +333,7 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         popUpState={[showCompleteProfile, setCompleteProfile]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Done' }}
+        submitBtn={{ name: 'Done', handleClick: () => setCompleteProfile(false) }}
         isFooterVisible={true}>
         <ProfileManageVendor />
       </VendorPopUp>
@@ -177,11 +343,17 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         size="small"
         title="Add language"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add' }}>
+        submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={data}
+                value={data}
+                isChecked={selectedLanguages.includes(data)}
+                changeHandler={handleLanguageSelection}
+              />
             </div>
           );
         })}
@@ -192,16 +364,22 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         size="medium"
         title="Add O/P deliverable formats"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add' }}>
+        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
         <h4>Select Format</h4>
         {VENDOR_FILE_FORMATS.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={data}
+                value={data}
+                isChecked={selectedFormats.includes(data)}
+                changeHandler={handleFileSelection}
+              />
             </div>
           );
         })}
-        <h3 style={{ display: 'flex', justifyContent: 'center' }}>Or </h3>
+        <h3 className={`${styles.separation}`}>Or</h3>
         <label>Other:</label>
         <LabeledInput
           inputOptions={{
@@ -221,62 +399,24 @@ export default function AddServices({ data, setData = () => {}, inputName }) {
         open={samplePopupState}
         popUpState={[samplePopupState, setSamplePopupState]}
         size="large"
+        title="Add Sample"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add' }}>
-        <h1>Add Sample</h1>
-        <div className={`${styles.sampleName}`}>
-          <label>Sample name:</label>
-          <LabeledInput inputOptions={{ inputName: 'sampleName' }} />
-        </div>
-        <div className={`${styles.descriptionSample}`}>
-          <div className={`${styles.description}`}>
-            <label>Description</label>
-            <LabeledTextarea inputOptions={{ inputName: 'sampleDescription' }} />
-          </div>
-          <div className={`${styles.sample}`}>
-            <label>Add sample file: </label>
-            <BrowseAndUpload styleClassBtn={`${styles.button}`} title="Drag & Drop" />
-          </div>
-        </div>
-        <div className={`${styles.file}`}>
-          <label>File type:</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              inputName: 'FileType',
-              placeholder: 'Select File Type',
-              options: fileFormatArray
-            }}
-            styleClass={`${styles.fileFormatDropDown}`}
-          />
-        </div>
-        <div className={`${styles.rateCurrencyUnit}`}>
-          <div className={`${styles.rate}`}>
-            <label>Rate:</label>
-            <LabeledInput inputOptions={{ inputName: 'rate', placeholder: 'Enter Rate' }} />
-          </div>
-          <div className={`${styles.currency}`}>
-            <label>Currency:</label>
-            <LabeledDropdown
-              dropdownOptions={{
-                inputName: 'Currency',
-                placeholder: 'Select Currency',
-                options: currency
-              }}
-              styleClass={`${styles.currencyDropDown}`}
-            />
-          </div>
-          <div className={`${styles.unit}`}>
-            <label>Unit:</label>
-            <LabeledDropdown
-              dropdownOptions={{
-                inputName: 'Currency',
-                placeholder: 'Select Unit',
-                options: unit
-              }}
-              styleClass={`${styles.unitDropDown}`}
-            />
-          </div>
-        </div>
+        submitBtn={{ name: 'Add', handleClick: addSampleFileHandler }}>
+        <AddSample />
+      </VendorPopUp>
+      <VendorPopUp
+        open={showCompleteFile}
+        popUpState={[showCompleteFile, setShowCompleteFile]}
+        title="Add Sample"
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{
+          name: 'Done',
+          handleClick: () => {
+            setShowCompleteFile(false);
+          }
+        }}>
+        <FileManageVendor />
       </VendorPopUp>
     </>
   );

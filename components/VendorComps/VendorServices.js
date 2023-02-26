@@ -1,15 +1,16 @@
-import styles from './vendorComps.module.scss';
-import { ExpertiseIcon } from '/components/common/ZicopsIcons/index.js';
-import { LanguagesIcon } from '/components/common/ZicopsIcons/index.js';
-import { ContentFormatIcon } from '/components/common/ZicopsIcons/index.js';
 import { useState } from 'react';
-import { sampleFiles } from './Logic/vendorComps.helper';
 import VendorPopUp from './common/VendorPopUp';
+import { sampleFiles } from './Logic/vendorComps.helper';
+import styles from './vendorComps.module.scss';
+import {
+  ContentFormatIcon,
+  ExpertiseIcon,
+  LanguagesIcon
+} from '/components/common/ZicopsIcons/index.js';
 
 export default function VendorServices({ data }) {
-  const [samplePopup, setSamplePopup] = useState(false);
-
-  const handleClick = () => setSamplePopup(true);
+  const [samplePopup, setSamplePopup] = useState(null);
+  const [sampleDetails, setSampleDetails] = useState(false);
 
   return (
     <div className={`${styles.vendorTypeContainer}`}>
@@ -52,32 +53,70 @@ export default function VendorServices({ data }) {
         </div>
         <div className={`${styles.sampleFiles}`}>
           {sampleFiles.map((data, index) => {
-            return <img src={data.previewImage} onClick={handleClick} />;
+            return <img src={data.previewImage} onClick={() => setSamplePopup(+data.id)} />;
           })}
         </div>
       </div>
-
+      {console.info(samplePopup)}
       <VendorPopUp
-        open={samplePopup}
-        popUpState={[samplePopup, setSamplePopup]}
+        popUpState={[samplePopup != null, setSamplePopup]}
         size="large"
-        title={sampleFiles[0].title}
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add' }}>
+        title={sampleFiles?.[samplePopup]?.title}
+        headerComps={
+          <div className={`${styles.sampleDetailButton}`}>
+            <img
+              src="/images/svg/info.svg"
+              alt=""
+              onClick={() => setSampleDetails(!sampleDetails)}
+            />
+          </div>
+        }
+        isFooterVisible={false}>
         <div className={`${styles.samplePopupContainer}`}>
           <div className={`${styles.sampleFilePreview}`}>
             <img src="/images/Cohort-Mapped.jpg" />
           </div>
-          <div className={`${styles.sampleFileDetails}`}>
-            <h3>Details</h3>
-            <label>File Name</label>
-            <p>Python_management 1.0</p>
-            <label>File Description</label>
-            <p>{sampleFiles[0].description}</p>
-            <label>File Size</label>
-            <p>{sampleFiles[0].size}</p>
-            <p> {sampleFiles[0].rate}</p>
+
+          <div className={`${styles.samplePopupFooter}`}>
+            <p>{sampleFiles?.[samplePopup]?.rate}</p>
+
+            <div className={`${styles.samplePopupButtons}`}>
+              <button
+                onClick={() => {
+                  let updatedIndex = +samplePopup - 1;
+                  if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
+                  setSamplePopup(+updatedIndex);
+                }}>
+                Prev
+              </button>
+              <button
+                onClick={() => {
+                  let updatedIndex = +samplePopup + 1;
+                  if (updatedIndex === sampleFiles.length) updatedIndex = 0;
+                  setSamplePopup(+updatedIndex);
+                }}>
+                Next
+              </button>
+            </div>
           </div>
+
+          {sampleDetails && (
+            <div className={`${styles.sampleFileDetails}`}>
+              <h3>Details</h3>
+
+              <label>File Name</label>
+              <p>{sampleFiles?.[samplePopup]?.title}</p>
+
+              <label>File Description</label>
+              <p>{sampleFiles?.[samplePopup]?.description}</p>
+
+              <label>File Size</label>
+              <p>{sampleFiles?.[samplePopup]?.size}</p>
+
+              <label>Price</label>
+              <p> {sampleFiles?.[samplePopup]?.rate}</p>
+            </div>
+          )}
         </div>
       </VendorPopUp>
     </div>
