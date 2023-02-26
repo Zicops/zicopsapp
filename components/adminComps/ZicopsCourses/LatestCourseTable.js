@@ -5,10 +5,10 @@ import ZicopsTable from '@/components/common/ZicopsTable';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen, getUnixFromDate } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
-import { Switch } from '@mui/material';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -20,6 +20,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
 
   const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const [latestCourses, setLatestCourse] = useState([]);
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
@@ -128,10 +129,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     }
   ];
 
-  const filterOptions = [
-    { label: 'Saved', value: COURSE_STATUS.save },
-    { label: 'Published', value: COURSE_STATUS.publish }
-  ];
+  const filterOptions = [{ label: 'Saved', value: COURSE_STATUS.save }];
+
+  // remove this later
+  if (isDemo) filterOptions.push({ label: 'For Approval', value: COURSE_STATUS.approvalPending });
+  filterOptions.push({ label: 'Published', value: COURSE_STATUS.publish });
 
   if (zicopsLspId == null) {
     filterOptions.push({ label: 'Expired', value: COURSE_STATUS.reject });
