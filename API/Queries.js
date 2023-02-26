@@ -419,6 +419,14 @@ export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
   }
 `;
 
+export const GET_COURSE_TOPICS_CONTENT_ID = gql`
+  query getTopicContentId($topic_id: String) {
+    getTopicContent(topic_id: $topic_id) {
+      id
+    }
+  }
+`;
+
 export const GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID = gql`
   query getTopicContent($module_id: String) {
     getTopicContentByModuleId(module_id: $module_id) {

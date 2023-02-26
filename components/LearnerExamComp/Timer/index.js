@@ -23,6 +23,7 @@ export default function Timer({ submitPaper }) {
 
   let timeInterval;
   useEffect(() => {
+    timerGenerator(true).next(true);
     clearInterval(timeInterval);
 
     timeInterval = setInterval(() => {

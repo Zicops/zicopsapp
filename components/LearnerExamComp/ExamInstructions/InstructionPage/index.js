@@ -40,14 +40,26 @@ const InstructionPage = ({
     }
   }, []);
 
+  let timer = null;
   useEffect(() => {
-    if (isTestExam) return setIsExamAccessible(terms && getIsExamAccessible(learnerExamData));
+    clearTimeout(timer);
+    const isAccessible = getIsExamAccessible(learnerExamData);
+    if (isTestExam) return setIsExamAccessible(terms && isAccessible);
 
     const attemptsLeft = learnerExamData?.examData?.noAttempts;
     let isAttemptLeft = true;
     if (attemptsLeft > 0) isAttemptLeft = learnerExamData?.insPageData?.attempts < attemptsLeft;
 
-    setIsExamAccessible(terms && getIsExamAccessible(learnerExamData) && isAttemptLeft);
+    setIsExamAccessible(terms && isAccessible && isAttemptLeft);
+
+    if (!(terms && isAccessible && isAttemptLeft)) {
+      const timeLeft = learnerExamData?.examData.examStart?.valueOf() - Date.now();
+      if (timeLeft < 0) return;
+      timer = setTimeout(() => {
+        setTerms((prev) => (prev === true ? 1 : prev));
+      }, timeLeft);
+    }
+    return () => clearTimeout(timer);
   }, [terms]);
 
   return (

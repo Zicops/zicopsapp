@@ -138,6 +138,7 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           handleChange={setImage}
           uploadedFile={userData?.Photo}
           imageUrl={userData?.photo_url}
+          isAccountSetup={true}
         />
         <Box mt={2} />
       </div>

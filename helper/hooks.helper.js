@@ -16,7 +16,8 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -36,6 +37,7 @@ import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/glo
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  getUserObject,
   InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
@@ -54,6 +56,7 @@ import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
   USER_LSP_ROLE,
@@ -238,6 +241,9 @@ export default function useUserCourseData() {
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
+    client: userClient
+  });
 
   async function getUserCourseData(pageSize = 999999999, userId = null) {
     const { id } = getUserData();
@@ -265,7 +271,7 @@ export default function useUserCourseData() {
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
     const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (course) => course?.course_status?.toLowerCase() !== 'disabled'
+      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable
     );
 
     const currentLspId = sessionStorage.getItem('lsp_id');
@@ -356,6 +362,7 @@ export default function useUserCourseData() {
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
       userCourseArray.push({
+        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
@@ -878,6 +885,22 @@ export default function useUserCourseData() {
     return orgData?.data;
   }
 
+  async function getLoggedUserInfo(){
+    if(!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return ;
+    if(userDataGlobal?.id) return ;
+    let isError = false;
+    
+    const res = await userLogin().catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if(isError) return {};
+
+    return res?.data?.login || getUserObject();
+
+  }
+
   return {
     getUserCourseData,
     getUserPreferences,
@@ -886,7 +909,8 @@ export default function useUserCourseData() {
     getScheduleExams,
     OrgDetails,
     getUserLspRoleLatest,
-    getOrgByDomain
+    getOrgByDomain,
+    getLoggedUserInfo
   };
 }
 
@@ -1085,7 +1109,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      console.log(user);
+      if (user?.id === userDataAbout?.id) continue;
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {

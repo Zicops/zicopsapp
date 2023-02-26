@@ -6,7 +6,7 @@ import styles from '../charts.module.scss';
 
 export default function BarChart({
   chartData,
-  options = null,
+  options = {},
   containerStyles = {},
   tooltipBody = () => {},
   direction = 'ltr',
@@ -79,17 +79,17 @@ export default function BarChart({
         //   }
         // }
       },
-      ...(options.plugins || {})
+      ...(options?.plugins || {})
     },
     animation: {
       animateScale: true,
       animateRotate: true,
-      ...(options.animation || {})
+      ...(options?.animation || {})
     },
     interaction: {
       mode: 'index',
       intersect: false,
-      ...(options.interaction || {})
+      ...(options?.interaction || {})
     }
   };
 

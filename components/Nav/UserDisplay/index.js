@@ -1,5 +1,5 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { getUserData } from '@/helper/loggeduser.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { getUserDetailsObj, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -27,12 +27,16 @@ const UserDisplay = () => {
 
   const [lspName, setLspName] = useState('');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const { getLoggedUserInfo } = useUserCourseData();
 
   useEffect(() => {
-    if (!isUpdate) return;
+    // if (!isUpdate) return;
+    if (userProfileData?.isUserUpdated) {
+      setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+    }
     setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
     setIsUpdate(false);
-  }, [isUpdate, userProfileData?.first_name, userProfileData?.last_name]);
+  }, [userProfileData?.isUserUpdated]);
 
   useEffect(() => {
     const lspName = sessionStorage?.getItem('lsp_name');
@@ -50,20 +54,21 @@ const UserDisplay = () => {
   }, [userProfileData]);
 
   async function loadAndSetUserData() {
-    const data = getUserData();
-    const userId = data?.id;
-    if (!userId) return;
-    const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
-      console.log(err);
-    });
-    if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.data?.getUserDetails?.[0];
+    // const data = getUserData();
+    // const userId = data?.id;
+    // if (!userId) return;
+    // const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
+    //   console.log(err);
+    // });
+    // if (userData?.error) return console.log('User data load error');
+    const userData = await getLoggedUserInfo();
+    const basicInfo = userData;
 
     setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
     setUserProfileData((prevValue) => ({
       ...prevValue,
       ...basicInfo,
-      photoUrl: basicInfo?.photoUrl,
+      photo_url: basicInfo?.photo_url,
       isUserUpdated: false
     }));
   }

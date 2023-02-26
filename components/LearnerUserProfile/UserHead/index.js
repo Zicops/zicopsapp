@@ -1,6 +1,7 @@
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { IsUpdatedAtom, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -21,10 +22,12 @@ const UserHead = () => {
   );
 
   const { updateAboutUser } = useHandleAddUserDetails();
+  const { getLoggedUserInfo } = useUserCourseData();
 
   //used to not immedialty update the Full name state
   useEffect(() => {
     if (!isUpdate) return;
+    // if(!userProfileData?.first_name?.length) return;
     setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
     sessionStorage.setItem('loggedUser', JSON.stringify({ ...userProfileData }));
     sessionStorage.setItem('userAccountSetupData', JSON.stringify({ ...userAccountData }));
@@ -37,11 +40,12 @@ const UserHead = () => {
       // const userId = [];
       // userId.push(data?.id);
       const userId = data?.id;
-      const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
-        console.log(err);
-      });
-      if (userData?.error) return console.log('User data load error');
-      const basicInfo = userData?.data?.getUserDetails[0];
+      // const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
+      //   console.log(err);
+      // });
+      const userData = await getLoggedUserInfo();
+      
+      const basicInfo = userData;
       // console.log(basicInfo);
 
       const orgData = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
@@ -49,7 +53,7 @@ const UserHead = () => {
       setUserProfiledata((prevValue) => ({
         ...prevValue,
         ...data,
-        photoUrl: basicInfo?.photoUrl
+        photo_url: basicInfo?.photo_url
       }));
       setFullName(`${data?.first_name} ${data?.last_name}`);
       return;

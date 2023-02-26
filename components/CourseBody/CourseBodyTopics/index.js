@@ -70,7 +70,7 @@ export default function CourseBodyTopics() {
 
       <Header
         title={currentModule?.name}
-        description={currentModule?.description || 'this is a description.'}
+        description={currentModule?.description || ''}
         expertise={currentModule?.level?.split(',').join(' | ')}
       />
 

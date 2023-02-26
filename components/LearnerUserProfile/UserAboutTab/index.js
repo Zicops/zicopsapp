@@ -11,7 +11,6 @@ import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -106,7 +105,6 @@ const UserAboutTab = () => {
       user_lsp_role: userLspRole,
       ...orgData[0]
     }));
-    console.log(userAccountDetails, 'sf');
   }, [userDataGlobal?.preferences]);
 
   const router = useRouter();
