@@ -140,7 +140,7 @@ const VendorOrders = () => {
           // { handleClick: () => router.push(`/edit-order`) },
           {
             text: 'Edit',
-            handleClick: () => router.push(`admin/vendor/edit-order`)
+            handleClick: () => router.push(`/admin/vendor/orders/edit-order`)
           },
           {
             text: 'Disable'
