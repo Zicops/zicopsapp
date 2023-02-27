@@ -1338,3 +1338,45 @@
   justify-content: flex-end;
   flex: 1;
 }
+
+.orderMasterContainer {
+  .orderMasterDetails {
+    display: flex;
+  }
+
+  .dateNameID {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .valueDTI {
+      color: $bgBody;
+      font-size: 90%;
+      margin-left: 3px;
+    }
+  }
+
+  .statusTypeService {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .valueSTS {
+      color: $bgBody;
+      font-size: 90%;
+      margin-left: 3px;
+    }
+  }
+
+  .orderDescription {
+    margin-top: 25px;
+
+    .valueDescription {
+      color: $bgBody;
+      font-size: 90%;
+      margin-top: 10px;
+    }
+  }
+}
