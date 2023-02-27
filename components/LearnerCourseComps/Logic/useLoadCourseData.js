@@ -21,6 +21,7 @@ import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
+  AllCourseModulesDataAtom,
   courseHeroObj,
   CourseMetaDataAtom,
   CourseModuleIdsAtom,
@@ -43,6 +44,7 @@ export default function useLoadCourseData() {
   const [moduleIds, setModuleIds] = useRecoilState(CourseModuleIdsAtom);
   const [topicIds, setTopicIds] = useRecoilState(CourseTopcIdsAtom);
   const [resources, setResources] = useRecoilState(ResourcesAtom);
+  const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);
 
   // callback for atom family
@@ -235,8 +237,9 @@ export default function useLoadCourseData() {
     const sortedChapterDataArr = sortArrByKeyInOrder(chapterDataArr);
     const sortedTopicDataArr = sortArrByKeyInOrder(topicDataArr);
 
-    let filteredChapterData = [...sortedChapterDataArr];
-    let filteredTopicData = [...sortedTopicDataArr];
+    let allChapters = [...sortedChapterDataArr];
+    let allTopics = [...sortedTopicDataArr];
+    const _allModules = [];
     const _moduleIds = [];
     const _topicIds = [];
 
@@ -244,22 +247,21 @@ export default function useLoadCourseData() {
       if (!mod?.chapters) mod.chapters = [];
 
       // if no chapters are present, filter topics by module id
-      if (!filteredChapterData?.length) {
-        const chapterData = { generatedId: Math.random(), topicIds: [] };
+      if (!allChapters?.length) {
+        const chapterData = { generatedId: Math.random(), topicIds: [], topics: [] };
 
-        filteredTopicData = getFilteredTopicData(filteredTopicData, mod?.id, null, chapterData);
+        allTopics = getFilteredTopicData(allTopics, mod?.id, null, chapterData);
 
-        _topicIds.push(...chapterData?.topicIds);
         mod?.chapters?.push(chapterData);
       }
 
-      filteredChapterData = filteredChapterData?.filter((chap) => {
+      allChapters = allChapters?.filter((chap) => {
         const isChapterMatched = chap?.moduleId === mod?.id;
-        const chapterData = { ...chap, topicIds: [] };
+        const chapterData = { ...chap, topicIds: [], topics: [] };
 
-        filteredTopicData = isChapterMatched
-          ? getFilteredTopicData(filteredTopicData, mod?.id, chap?.id, chapterData)
-          : filteredTopicData;
+        allTopics = isChapterMatched
+          ? getFilteredTopicData(allTopics, mod?.id, chap?.id, chapterData)
+          : allTopics;
 
         _topicIds.push(...chapterData?.topicIds);
         mod?.chapters?.push(chapterData);
@@ -267,11 +269,13 @@ export default function useLoadCourseData() {
         return !isChapterMatched;
       });
 
+      _allModules.push(mod);
       _moduleIds.push(mod?.id);
       addModuleToRecoil(mod, mod?.id);
     });
 
     setTopicIds(_topicIds);
+    setAllModules(_allModules);
     setModuleIds(_moduleIds);
   }
 
@@ -283,7 +287,10 @@ export default function useLoadCourseData() {
         ? topic?.chapterId === chapterId
         : topic?.moduleId === moduleId;
 
-      if (isTopicMatched) chapterData?.topicIds?.push(topic?.id);
+      if (isTopicMatched) {
+        chapterData?.topicIds?.push(topic?.id);
+        chapterData?.topics?.push(topic);
+      }
 
       addTopicToRecoil(topic, topic?.id);
 

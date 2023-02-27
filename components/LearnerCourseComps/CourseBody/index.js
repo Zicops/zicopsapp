@@ -3,6 +3,7 @@ import ViewDoc from '@/components/common/ViewDoc';
 import ZicopsTabs from '@/components/common/ZicopsTabs';
 import { useRecoilState } from 'recoil';
 import { SelectedResourceDataAtom } from '../atoms/learnerCourseComps.atom';
+import AboutTab from './AboutTab';
 import ResourcesTab from './ResourcesTab';
 import TopicTab from './TopicTab';
 
@@ -33,7 +34,7 @@ export default function CourseBody() {
     {
       id: 5,
       title: 'About',
-      body: <>About Body Comp</>,
+      body: <AboutTab />,
     },
   ];
 

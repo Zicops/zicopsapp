@@ -141,6 +141,11 @@ export const CourseTopcIdsAtom = atom({
   default: null,
 });
 
+export const AllCourseModulesDataAtom = atom({
+  key: 'AllCourseModulesData',
+  default: null,
+});
+
 export const CourseModulesAtomFamily = atomFamily({
   key: 'CourseModules',
   default: null,

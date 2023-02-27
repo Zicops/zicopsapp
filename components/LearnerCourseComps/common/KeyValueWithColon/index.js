@@ -3,18 +3,20 @@ import ZicopsSkeleton from '../ZicopsSkeleton';
 import styles from './keyValueWithColon.module.scss';
 
 export default function KeyValueWithColon({ keyData, valueData, isLoading = false }) {
-  const { text: key, textColor: keyColor } = keyData;
-  const { text: value, textColor: valueColor, limit } = valueData;
+  const { text: key, textColor: keyColor, isBold: isKeyBold } = keyData;
+  const { text: value, textColor: valueColor, isBold: isValueBold, limit } = valueData;
 
   return (
     <>
       <p className={`${styles.keyValue}`}>
-        <span style={{ color: keyColor }}>
+        <span style={{ color: keyColor, fontWeight: isKeyBold ? 'bold' : 'normal' }}>
           <span>{key}</span>
           <span className={`${styles.colon}`}>:</span>
         </span>
 
-        <span className={`${styles.value}`} style={{ color: valueColor }}>
+        <span
+          className={`${styles.value}`}
+          style={{ color: valueColor, fontWeight: isValueBold ? 'bold' : 'normal' }}>
           {isLoading ? (
             <ZicopsSkeleton variant="rounded" height={20} width={200} />
           ) : (

@@ -600,3 +600,42 @@ $heroSectionPadding: 2em;
     }
   }
 }
+
+// ABOUT TAB
+.aboutTabContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3em;
+
+  margin: 3em 6em;
+
+  .sectionTitle {
+    color: $primary;
+    font-size: 1.5vw;
+    padding-bottom: 1em;
+    font-weight: 700;
+  }
+
+  .aboutSection {
+    background-color: $popupBgColor;
+    padding: 50px;
+    border-radius: 5px;
+  }
+
+  .aboutTab {
+    grid-column: 1/3;
+
+    .courseDescription {
+      color: $primary;
+      font-size: 0.9vw;
+    }
+
+    .courseDetails {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+
+      margin: 1em auto;
+    }
+  }
+}
