@@ -607,6 +607,7 @@ $heroSectionPadding: 2em;
   grid-template-columns: 1fr 1fr;
   gap: 3em;
 
+  font-size: 0.9em;
   margin: 3em 6em;
 
   .sectionTitle {
@@ -636,6 +637,31 @@ $heroSectionPadding: 2em;
       gap: 1em;
 
       margin: 1em auto;
+    }
+  }
+
+  .gapBetweenPointers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .listContainer {
+    color: $primary;
+
+    ul {
+      padding: 0 1em;
+      li {
+        margin: 1em 0;
+      }
+    }
+
+    .pills {
+      border: 2px solid $primary;
+      padding: 0.5em 1.5em;
+      margin-right: 1.5em;
+      margin-bottom: 1.5em;
+      border-radius: 20px;
     }
   }
 }

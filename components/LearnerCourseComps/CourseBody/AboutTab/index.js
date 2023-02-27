@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
+import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import AboutCard from './AboutCard';
 import Inclusions from './Inclusions';
 import Lists from './Lists';
-import TargetAudienceList from './TargetAudienceList';
+import SectionTitle from './SectionTitle';
 
 export default function AboutTab() {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
@@ -13,6 +14,11 @@ export default function AboutTab() {
   const router = useRouter();
   const courseId = router.query.courseId;
   const isLoading = courseMeta?.id !== courseId;
+
+  const targetAudienceList = [
+    { key: 'Good For', value: courseMeta?.goodFor },
+    { key: 'Must For', value: courseMeta?.mustFor },
+  ];
 
   return (
     <div className={`${styles.aboutTabContainer}`}>
@@ -31,11 +37,22 @@ export default function AboutTab() {
       </div>
 
       <div className={`${styles.aboutSection}`}>
-        <TargetAudienceList goodFor={courseMeta.goodFor} mustFor={courseMeta.mustFor} />
+        <SectionTitle title="Target Audience" />
+
+        <div className={`${styles.gapBetweenPointers}`}>
+          {targetAudienceList?.map((inclusion) => (
+            <KeyValueWithColon
+              keyData={{ text: inclusion?.key, textColor: styles.primary, flex: 1.5 }}
+              valueData={{ text: inclusion?.value, textColor: styles.primary }}
+            />
+          ))}
+        </div>
       </div>
+
       <div className={`${styles.aboutSection}`}>
         <Inclusions languages={courseMeta.language} />
       </div>
+
       <div className={`${styles.aboutSection}`}>
         <Lists title="Related Skills" list={courseMeta.relatedSkills} isPills={true} />
       </div>
