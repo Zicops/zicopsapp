@@ -37,9 +37,18 @@ export function getProfileObject(data) {
     description: data?.description || '',
     profileImage: data?.profileImage || null,
     experienceYear: data?.experienceYear || null,
+    languages: data?.languages || [],
+    sme_expertises: data?.sme_expertises || [],
+    crt_expertises: data?.crt_expertises || [],
+    experience: data?.experience || [],
     isSpeaker: data?.isSpeaker || false
   };
 }
+
+export const allProfileAtom = atom({
+  key: 'allprofileState',
+  default: []
+});
 
 export const VendorExperiencesAtom = atom({
   key: 'vendorExperiences',
@@ -48,7 +57,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
-    id: data?.id || '',
+    expId: data?.expId || '',
     title: data?.title || '',
     companyName: data?.companyName || '',
     location: data?.location || '',
@@ -62,18 +71,6 @@ export function getExperiencesObject(data) {
   };
 }
 
-// export const VendorServicesAtom = atom({
-//   key: 'vendorServicesState',
-//   default: getVendorServicesObject()
-// });
-
-// export function getVendorServicesObject(data) {
-//   return {
-//     isApplicable: data?.isApplicable || true,
-//     serviceDescription: data?.serviceDescription || ''
-//   };
-// }
-
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
   default: getSMEServicesObject()
@@ -82,7 +79,10 @@ export const SmeServicesAtom = atom({
 export function getSMEServicesObject(data) {
   return {
     isApplicableSME: data?.isApplicableSME || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
 
@@ -94,7 +94,10 @@ export const CtServicesAtom = atom({
 export function getCTServicesObject(data) {
   return {
     isApplicableCT: data?.isApplicableCT || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
 
@@ -106,6 +109,35 @@ export const CdServicesAtom = atom({
 export function getCDServicesObject(data) {
   return {
     isApplicableCD: data?.isApplicableCD || false,
-    serviceDescription: data?.serviceDescription || ''
+    serviceDescription: data?.serviceDescription || '',
+    languages: data?.languages || [],
+    expertises: data?.expertises || [],
+    formats: data?.formats || []
   };
 }
+
+export const SampleAtom = atom({
+  key: 'SampleAtom',
+  default: getSampleObject()
+});
+export function getSampleObject(data) {
+  return {
+    sampleId: data?.sampleId || null,
+    sampleName: data?.sampleName || '',
+    description: data?.description || '',
+    sampleFile: data?.sampleFile || null,
+    fileType: data?.fileType || '',
+    rate: data?.rate || '',
+    currency: data?.currency || '',
+    unit: data?.unit || ''
+  };
+}
+export const allSampleFilesAtom = atom({
+  key: 'allSampleFilesState',
+  default: []
+});
+
+export const vendorUserInviteAtom = atom({
+  key: 'vendorUserInviteState',
+  default: []
+});

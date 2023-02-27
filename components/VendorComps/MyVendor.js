@@ -1,15 +1,21 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
+import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor.js';
 
 const MyVendor = () => {
-  const { vendorDetails, getAllVendors, loading } = useHandleVendor();
+  const { vendorDetails, getAllVendors, getUserVendors, loading } = useHandleVendor();
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   useEffect(() => {
     if (!vendorDetails?.length) {
-      getAllVendors();
+      // getAllVendors();
+      if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+      return getAllVendors();
     }
   }, []);
 

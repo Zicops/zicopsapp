@@ -335,7 +335,7 @@
 .input1 {
   // font-size: 18px;
   font-weight: 400;
-  margin-top: 8px;
+  // margin-top: 8px;
 }
 
 .input1 input {
@@ -373,7 +373,6 @@
       textarea {
         width: 100%;
         margin-top: 8px;
-
         border: 1px solid #747474;
         border-radius: 5px;
         background: transparent;
@@ -596,6 +595,18 @@
         margin-top: 10px;
         cursor: pointer;
       }
+      .languages {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+ 
+        .singleLanguage {
+          background: $bgTile;
+          padding: 12px 16px;
+          border-radius: 4px;
+        }
+      }
     }
   }
 
@@ -624,6 +635,18 @@
         cursor: pointer;
       }
     }
+        .languages {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 8px;
+    
+          .singleLanguage {
+            background: $bgTile;
+            padding: 12px 16px;
+            border-radius: 4px;
+          }
+        }
 
     .addOPFormat {
       width: 50%;
@@ -661,7 +684,7 @@
         font-size: 15px;
         align-items: center;
         gap: 15px;
-        color: white;
+        color: $white;
         background-color: $secondary;
         border: none;
         padding-top: 10px;
@@ -671,6 +694,26 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+      }
+    }
+    .showFilesMain{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      
+
+      .showFiles{
+        display: flex;
+        gap: 10px;
+        width: fit-content;
+        padding: 5px 10px;
+        background: $bgTile;
+        border: 1px solid $secondary;
+        border-radius: 4px;
+        img{
+          width: 30px;
+          height: 30px;
+        }
       }
     }
 
@@ -913,8 +956,9 @@
 }
 .inputContainer {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
+  padding: 10px;
 
   label {
     margin-bottom: 8px;
@@ -939,8 +983,7 @@
   }
 
   .addExpertise {
-    width: 50%;
-
+    // width: 50%;
     button {
       display: flex;
       flex-direction: row-reverse;
@@ -958,6 +1001,31 @@
       margin-top: 8px;
       cursor: pointer;
     }
+        .exButton {
+          background-color: $bgTile !important;
+          width: max-content;
+          flex-direction: row;
+          span{
+            display: flex;
+            align-items: center;
+            img{
+              width: 24px;
+              height: 24px;
+            }
+
+          }
+        }
+  }
+  .languages{
+        display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 8px;
+          .singleLanguage{
+                background: $bgTile;
+                  padding: 12px 16px;
+                  border-radius: 4px;
+          }
   }
 }
 
@@ -965,6 +1033,7 @@
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
+  padding: 10px;
 
   .addProfile {
     // width: 50%;
@@ -976,7 +1045,7 @@
       align-items: center;
       gap: 15px;
       color: white;
-      background-color: #1a1d21;
+      background-color: $bgTile;
       border: none;
       padding-top: 10px;
       padding-bottom: 10px;
@@ -1025,7 +1094,7 @@
   .title input {
     width: 100%;
     // height: 48px;
-    margin-top: 8px;
+    // margin-top: 8px;
     border: 1px solid #747474;
     border-radius: 5px;
     background: transparent;
@@ -1042,7 +1111,7 @@
 .dropDownMain {
   margin-top: 8px;
 }
-.singleProfileContainer {
+.singleProfileContainer , .singleFileContainer{
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
@@ -1087,8 +1156,37 @@
   .editIcon {
     cursor: pointer;
   }
+  .singleFileDetails{
+    display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 70%;
+      color: $white;
+      .fileName{
+        font-size: 20px;
+      }
+      .filePrice{
+        display: flex;
+          width: 100%;
+          font-size: 18px;
+          justify-content: space-between;
+          align-items: center;
+          color: $bgBody;
+      }
+  }
+    .deleteIcon {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+     width: 20px;
+    height: 20px;
+      img {
+       width: 100%;
+       height: 100%;
+      }
+    }
 }
-.manageVendorProfileMain {
+.manageVendorProfileMain , .vendorFileMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;

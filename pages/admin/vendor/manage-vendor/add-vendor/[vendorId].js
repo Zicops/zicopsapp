@@ -20,7 +20,7 @@ import { useRecoilValue } from 'recoil';
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
 
-  const { addUpdateVendor, getSingleVendorInfo } = useHandleVendor();
+  const { addUpdateVendor, getSingleVendorInfo, handleMail, addUpdateSme } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
@@ -73,8 +73,10 @@ export default function EditVendor() {
             setTab={setTab}
             footerObj={{
               showFooter: true,
-              handleSubmit: async () => {
-                await addUpdateVendor();
+              handleSubmit: () => {
+                addUpdateVendor();
+                handleMail();
+                // addUpdateSme();
               },
               status: 'DRAFT'
             }}

@@ -1,8 +1,9 @@
 import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -22,6 +23,7 @@ export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
 
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const courseContextData = useContext(courseContext);
@@ -32,49 +34,27 @@ export default function CourseConfiguration() {
   useEffect(() => {
     setIsLoading(courseUploading ? 'UPDATING...' : null);
   }, [courseUploading]);
-  // const { publishDate, expireDate, setPublishDate, setExpireDate } =
-  //   useHandleConfig(courseContextData);
 
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
-
-  // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   let isDisabled = fullCourse?.qa_required;
   if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
   if (isPublishCourseEditable) isDisabled = false;
 
+  function getIsFreezeDisabled() {
+    if (isPublishCourseEditable) return false;
+    if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) return true;
+    if (
+      userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor) &&
+      fullCourse?.status === COURSE_STATUS.approvalPending
+    )
+      return true;
+
+    return false;
+  }
+
   return (
     <>
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        {/* publis date *
-        <>
-          <label htmlFor="publish_date" className={`w-25`}>
-            Publish Date
-          </label>
-          <div className={`w-25`}>
-            <InputDatePicker
-              selectedDate={publishDate}
-              minDate={new Date()}
-              changeHandler={(d) => setPublishDate(d)}
-            />
-          </div>
-        </>
-
-        {/* expiry date *
-        <>
-          <label htmlFor="expire_date" className={`w-25`}>
-            Expire Date
-          </label>
-          <div className={`w-25`}>
-            <InputDatePicker
-              selectedDate={expireDate}
-              minDate={publishDate}
-              changeHandler={(d) => setExpireDate(d)}
-            />
-          </div>
-        </>
-      </div> */}
-
       {/* visiblity */}
       <div>
         <h4>Access Control</h4>
@@ -124,7 +104,7 @@ export default function CourseConfiguration() {
               description:
                 'Once a course is frozen it is no longer editable and ready for approval/publishing',
               name: 'qa_required',
-              isDisabled: [COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status),
+              isDisabled: getIsFreezeDisabled(),
               isChecked: fullCourse?.qa_required || false,
               handleChange: (e) => {
                 const isFreeze = e.target.checked;
@@ -150,7 +130,7 @@ export default function CourseConfiguration() {
       </div>
 
       {/* Expire */}
-      {isDisabled && (
+      {COURSE_STATUS.publish === fullCourse?.status && (
         <div>
           <h4>Expire Course</h4>
 
@@ -218,49 +198,6 @@ export default function CourseConfiguration() {
           />
         </div>
       )}
-      {/* disable course */}
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="visible" className="w-25">
-          Expire Course
-        </label>
-
-        <div className="w-75">
-          <SwitchButton
-            // label="Display"
-            inputName="expire_course"
-            isChecked={fullCourse?.status === COURSE_STATUS.reject || false}
-            isDisabled={isCoursePublished}
-            handleChange={() =>
-              updateCourseMaster({
-                ...fullCourse,
-                status:
-                  fullCourse?.status === COURSE_STATUS.reject
-                    ? COURSE_STATUS.save
-                    : COURSE_STATUS.reject
-              })
-            }
-          />
-        </div>
-      </div> */}
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <SwitchButton
-          label="Active"
-          inputName="is_active"
-          isChecked={fullCourse?.is_active}
-          handleChange={(e) => {
-            if (!fullCourse?.is_active)
-              return updateCourseMaster({ ...fullCourse, is_active: true });
-
-            setShowConfirmBox(true);
-          }}
-        />
-        <SwitchButton
-          label="Display"
-          inputName="is_display"
-          isChecked={fullCourse?.is_display || false}
-          handleChange={handleChange}
-        />
-      </div> */}
       {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
 
       {showConfirmBox && (

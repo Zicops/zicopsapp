@@ -789,6 +789,7 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
     }
   }
 `;
+// VENDOR QUERIES START
 
 export const GET_VENDORS_BY_LSP = gql`
   query getVendors($lsp_id: String) {
@@ -857,6 +858,7 @@ export const GET_VENDOR_DETAILS = gql`
       photo_url
       address
       website
+      users
       facebook_url
       instagram_url
       twitter_url
@@ -869,6 +871,7 @@ export const GET_VENDOR_DETAILS = gql`
     }
   }
 `;
+
 export const GET_VENDOR_EXPERIENCES = gql`
   query getVendorExperience($vendor_id: String!, $pf_id: String!) {
     getVendorExperience(vendor_id: $vendor_id, pf_id: $pf_id) {
@@ -887,6 +890,120 @@ export const GET_VENDOR_EXPERIENCES = gql`
       UpdatedAt
       UpdatedBy
       Status
+    }
+  }
+`;
+
+export const GET_SINGLE_EXPERIENCE_DETAILS = gql`
+  query getVendorExperienceDetails($vendor_id: String!, $pf_id: String!, $exp_id: String!) {
+    getVendorExperienceDetails(vendor_id: $vendor_id, pf_id: $pf_id, exp_id: $exp_id) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
+  }
+`;
+export const GET_SINGLE_PROFILE_DETAILS = gql`
+  query viewProfileVendorDetails($vendor_id: String!, $email: String!) {
+    viewProfileVendorDetails(vendor_id: $vendor_id, email: $email) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_ALL_PROFILE_DETAILS = gql`
+  query viewAllProfiles($vendor_id: String!) {
+    viewAllProfiles(vendor_id: $vendor_id) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_SAMPLE_FILES = gql`
+  query getSampleFiles($vendor_id: String!, $p_type: String!) {
+    getSampleFiles(vendor_id: $vendor_id, p_type: $p_type) {
+      sf_id
+      name
+      fileType
+      price
+      file_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_USER_VENDORS = gql`
+  query getUserVendor($user_id: String) {
+    getUserVendor(user_id: $user_id) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
     }
   }
 `;

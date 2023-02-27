@@ -10,7 +10,7 @@ export const COURSE_MAP_STATUS = {
   completed: 'completed',
   disable: 'disable'
 };
-export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
+export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
