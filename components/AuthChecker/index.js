@@ -1,4 +1,10 @@
-import { GIBBERISH_VALUE_FOR_LOGIN_STATE, PUBLIC_PATHS } from '@/helper/constants.helper';
+import { GET_USER_LSP_ROLES, userQueryClient } from '@/api/UserQueries';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import {
+  GIBBERISH_VALUE_FOR_LOGIN_STATE,
+  PUBLIC_PATHS,
+  USER_ROLES_WITH_ADMIN_ACCESS
+} from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
@@ -117,8 +123,39 @@ const AuthChecker = ({ children }) => {
   useEffect(() => {
     if (!router.asPath?.includes('admin')) return;
     if (!!userOrg?.user_lsp_role?.length) return;
-    const _userLspRole = sessionStorage?.getItem('user_lsp_role');
-    if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
+
+    getUserLspRoleList()
+      .then((lspRoleArr) => {
+        const adminAccessRoleObj = lspRoleArr?.find((roleObj) =>
+          USER_ROLES_WITH_ADMIN_ACCESS.includes(roleObj?.role?.toLowerCase())
+        );
+
+        if (!adminAccessRoleObj?.is_active) return router.push('/');
+      })
+      .catch((err) => {
+        console.log(`Role Check Error: ${err}`);
+        router.push('/');
+      });
+
+    async function getUserLspRoleList() {
+      const defaultIfFailed = [{ role: 'learner', is_active: true }];
+      const _userLspId = sessionStorage?.getItem('user_lsp_id');
+      const user = parseJson(sessionStorage?.getItem('loggedUser'));
+      if (!user?.id) return defaultIfFailed;
+      if (!_userLspId) return defaultIfFailed;
+
+      const lspRoleArr = await loadAndCacheDataAsync(
+        GET_USER_LSP_ROLES,
+        { user_id: user?.id, user_lsp_ids: [_userLspId] },
+        {},
+        userQueryClient
+      );
+
+      if (!lspRoleArr?.getUserLspRoles?.length) return defaultIfFailed;
+
+      return lspRoleArr?.getUserLspRoles || [];
+    }
+    // if (!_userLspRole?.toLowerCase()?.includes('admin')) return router.push('/');
   }, [router?.asPath]);
 
   async function lspCheck() {

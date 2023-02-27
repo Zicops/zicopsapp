@@ -19,6 +19,7 @@ import {
 import { loadQueryDataAsync, sendNotificationWithLink } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import {
+  COURSE_MAP_STATUS,
   CUSTOM_ERROR_MESSAGE,
   NOTIFICATION_MSG_LINKS,
   NOTIFICATION_TITLES,
@@ -90,6 +91,7 @@ export default function useHandleAddUserDetails() {
   const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
   const fcmToken = useRecoilValue(FcmTokenAtom);
+  
 
   // setting up local states
   useEffect(() => {
@@ -389,9 +391,9 @@ export default function useHandleAddUserDetails() {
     // return isError;
   }
 
-  async function notficationOnFirstLogin(userId = null, userLspId = null) {
+  async function notficationOnFirstLogin(userData = null, userLspId = null) {
     const sendData = {
-      user_id: userId,
+      user_id: userData?.id,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 1000
@@ -405,15 +407,17 @@ export default function useHandleAddUserDetails() {
 
     //filtering the courses based on user_lsp_id
     const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
-      (item) => item?.user_lsp_id === userLspId
+      (item) =>
+        item?.user_lsp_id === userLspId &&
+        utem?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
     );
     if (!!courses?.length) {
-      sendNotificationWithLink(
+    sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
-          user_id: [userId],
-          link:''
+          user_id: [userData?.id],
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -426,7 +430,7 @@ export default function useHandleAddUserDetails() {
       {},
       userQueryClient
     );
-    
+
     const cohorts = resCohorts?.getLatestCohorts?.cohorts;
     console.log(cohorts);
 
@@ -435,8 +439,8 @@ export default function useHandleAddUserDetails() {
         {
           title: NOTIFICATION_TITLES?.cohortAssign,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
-          user_id: [userId],
-          link:""
+          user_id: [userData?.id],
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -445,24 +449,43 @@ export default function useHandleAddUserDetails() {
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
-        user_id: [userId],
-        link:''
+        user_id: [userData?.id],
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
+
+    // const origin = window?.location?.origin || '';
+    // const bodyData = {
+    //   user_name: userData?.first_name || '',
+    //   lsp_name: sessionStorage?.getItem('lsp_name'),
+    //   // course_name: courseName || '',
+    //   // end_date: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY'),
+    //   link: `${origin}/`
+    // };
+
+    // let emailBody = {
+    //   to: [userData?.email],
+    //   sender_name: sessionStorage?.getItem('lsp_name'),
+    //   user_name: userData?.first_name || '',
+    //   body: JSON.stringify(bodyData),
+    //   template_id: ''
+    // }
+    // sendEmail(emailBody,{ context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } })
     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
-        user_id: [userId],
-        link:''
+        user_id: [userData?.id],
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
     return true;
   }
 
-  async function updateAboutUser(newImage = null, isVerified = true,isFirst = false) {
+  async function updateAboutUser(newImage = null, isVerified = true, isFirst = false) {
+    
     let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
@@ -487,7 +510,7 @@ export default function useHandleAddUserDetails() {
     };
 
     if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
-    if (newImage) sendUserData.Photo = newImage;
+    if (newImage && newImage?.type?.includes('image')) sendUserData.Photo = newImage;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     // console.log(sendUserData, 'updateAboutUser');
@@ -518,10 +541,11 @@ export default function useHandleAddUserDetails() {
     const _userData = { ...userAboutData, ...data };
 
     if (isVerified && isFirst) {
-      await notficationOnFirstLogin(userAboutData?.id,userLspId);
+      await notficationOnFirstLogin(userAboutData, userLspId );
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    if(!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url; 
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')
