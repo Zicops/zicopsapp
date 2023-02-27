@@ -1,18 +1,14 @@
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
-import { useRecoilValue } from 'recoil';
-import { QuizAtom } from '../../../../state/atoms/module.atoms';
-import {
-  ActiveCourseDataAtom,
-  AllCourseModulesDataAtom,
-} from '../../atoms/learnerCourseComps.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { AllCourseModulesDataAtom, TopicQuizAtom } from '../../atoms/learnerCourseComps.atom';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import SectionTitle from './SectionTitle';
 
 export default function Inclusions({ languages = [] }) {
-  const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
   const allModules = useRecoilValue(AllCourseModulesDataAtom);
-  const quizData = useRecoilValue(QuizAtom);
+  const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
+
   let chapterCount = 0;
   let topicCount = 0;
   let assessmentCount = 0;
@@ -36,7 +32,7 @@ export default function Inclusions({ languages = [] }) {
       key: 'Structured View',
       value: `Modules: ${allModules?.length}, Chapters: ${chapterCount}, Topics: ${topicCount}`,
     },
-    { key: 'Interactive Quizzes', value: quizData?.length || '0' },
+    { key: 'Interactive Quizzes', value: topicQuiz?.length || '0' },
     { key: 'Practice Exercises & Labs', value: labsCount?.toString() },
     { key: 'Assessments', value: assessmentCount?.toString() },
   ];

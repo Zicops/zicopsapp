@@ -3,6 +3,7 @@ import {
   GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
+  GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
 } from '@/api/Queries';
 import {
@@ -31,6 +32,7 @@ import {
   getCourseMetaDataObj,
   getUserCourseMapDataObj,
   getUserTopicProgressDataObj,
+  TopicQuizAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
 } from '../atoms/learnerCourseComps.atom';
@@ -45,6 +47,7 @@ export default function useLoadCourseData() {
   const [topicIds, setTopicIds] = useRecoilState(CourseTopcIdsAtom);
   const [resources, setResources] = useRecoilState(ResourcesAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
+  const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);
 
   // callback for atom family
@@ -95,6 +98,12 @@ export default function useLoadCourseData() {
 
     setActiveCourseData({ ...activeCourseData, moduleId: moduleIds[0] });
   }, [moduleIds?.length]);
+
+  useEffect(() => {
+    if (!topicIds?.length) return;
+
+    loadAllTopicQuiz(topicIds);
+  }, [topicIds?.length]);
 
   async function loadCourseMetaData() {
     if (!courseId) return;
@@ -229,6 +238,22 @@ export default function useLoadCourseData() {
         setResources(resourcesData);
       })
       .catch((err) => console.error('Topic Resources Load Err:', err));
+  }
+
+  async function loadAllTopicQuiz(allTopicIds = []) {
+    if (!allTopicIds?.length) return;
+
+    const _allTopicQuiz = allTopicIds?.map((topicId) => {
+      return loadAndCacheDataAsync(GET_TOPIC_QUIZ, { topic_id: topicId }).then(
+        (res) => res?.getTopicQuizes || [],
+      );
+    });
+
+    Promise.allSettled(_allTopicQuiz).then((res) => {
+      const allQuiz = [];
+      res?.map((obj) => allQuiz.push(...obj.value));
+      setTopicQuiz(allQuiz);
+    });
   }
 
   // helper functions

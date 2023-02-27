@@ -178,7 +178,30 @@ export function getSelectedResourcesDataObj(data = {}) {
   };
 }
 
-export const TopicQuizAtomFamily = atomFamily({
+export const TopicQuizAtom = atom({
   key: 'TopicQuiz',
-  default: null,
+  default: [],
 });
+
+export const TopicQuizAttemptsAtom = atom({
+  key: 'TopicQuizAttempts',
+  default: [],
+});
+
+export function getTopicQuizAttemptsDataObj(data = {}) {
+  return {
+    userQaId: data?.userQaId,
+    userId: data?.userId,
+    userCpId: data?.userCpId,
+    userCourseId: data?.userCourseId,
+    quizId: data?.quizId,
+    quizAttempt: data?.quizAttempt,
+    topicId: data?.topicId,
+    result: data?.result,
+    isActive: data?.isActive,
+    createdBy: data?.createdBy,
+    updatedBy: data?.updatedBy,
+    createdAt: data?.createdAt,
+    updatedAt: data?.updatedAt,
+  };
+}
