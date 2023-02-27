@@ -189,7 +189,7 @@ export const COURSE_TOPIC_TYPES = {
 
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
-  'https://zicops.com',
+  'https://zicops.com'
   // 'https://myspace.zicops.com'
 ];
 
@@ -211,3 +211,6 @@ export const VENDOR_LANGUAGES = [
 export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
 //Vendor Constant End
+
+// GENERIC CONSTANTS
+export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
