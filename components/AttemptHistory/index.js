@@ -1,4 +1,4 @@
-import { GET_EXAM_CONFIG, GET_EXAM_INSTRUCTION, GET_EXAM_META, queryClient } from '@/api/Queries';
+import { GET_EXAM_CONFIG } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { parseJson, secondsToHMS } from '@/helper/utils.helper';
@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import Popup from 'reactjs-popup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Button from '../common/Button';
-import { getDateTimeFromUnix } from '../Tabs/Logic/tabs.helper';
 import styles from './attemptHistory.module.scss';
 
 const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose }) => {
@@ -54,18 +53,26 @@ const AttempHistory = ({ examId = null, userCourseProgressId = null, handleClose
 
     if (!attemptData?.length) return setTableData(null);
 
-    for (let i = 0; i < attemptData.length; i++) {
-      const attempt = attemptData[i];
+    const attemptIdArr = attemptData?.map((attempt) => ({
+      user_id: userData?.id,
+      user_ea_id: attempt?.user_ea_id
+    }));
 
-      const resultRes = await loadQueryDataAsync(
-        GET_USER_EXAM_RESULTS,
-        { user_ea_details: [{ user_id: userData?.id, user_ea_id: attempt?.user_ea_id }] },
-        {},
-        userQueryClient
-      );
+    const resultRes = await loadQueryDataAsync(
+      GET_USER_EXAM_RESULTS,
+      { user_ea_details: attemptIdArr },
+      {},
+      userQueryClient
+    );
 
-      if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
-      attemptData[i].result = resultRes?.getUserExamResults?.[0]?.results?.[0] || {};
+    if (resultRes?.error) return setToastMsg({ type: 'danger', message: 'Result Load Error' });
+
+    for (let i = 0; i < resultRes?.getUserExamResults?.length; i++) {
+      const result = resultRes?.getUserExamResults[i];
+
+      const index = attemptData?.findIndex((attempt) => attempt?.user_ea_id === result?.user_ea_id);
+      if (index < 0) continue;
+      attemptData[index].result = result?.results?.[0];
     }
 
     const examConfigRes = await loadQueryDataAsync(GET_EXAM_CONFIG, { exam_id: examId });

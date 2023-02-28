@@ -4,11 +4,10 @@ import HomeHeader from '@/components/HomePage/HomeHeader';
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import ZicopsLogin from '..';
 import LoginButton from '../LoginButton';
-import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
@@ -17,6 +16,7 @@ const ForgotPassword = ({ setPage }) => {
   const router = useRouter();
   const [sendEmail, setSendEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  let isResetPasswordScreen = router?.query?.email?.length >= 0;
 
   function handleEmail(e, setState) {
     setState(e.target.value);
@@ -54,13 +54,23 @@ const ForgotPassword = ({ setPage }) => {
     return;
   }
 
+  useEffect(() => {
+    if (!router.query?.email) return;
+    if (!router.query?.email?.length) return;
+    setSendEmail(router.query?.email);
+  }, []);
+
   return (
     <>
       <HomeHeader showLogin={false} showBackBtn={true} />
       <ZicopsLogin>
         <LoginHeadOne
-          heading={'Reset Password'}
-          sub_heading={'Send reset email to your registered email id'}
+          heading={isResetPasswordScreen ? 'Link Expired!' : 'Forgot Password'}
+          sub_heading={
+            isResetPasswordScreen
+              ? 'This link has expired. Please enter your email id to generate new link'
+              : 'Send reset email to your registered email id'
+          }
         />
         <div className="login_body">
           {/* <input
@@ -75,7 +85,8 @@ const ForgotPassword = ({ setPage }) => {
             inputOptions={{
               inputName: 'email',
               placeholder: 'Email address',
-              value: sendEmail
+              value: sendEmail,
+              isDisabled: router.query?.email?.length
             }}
             changeHandler={(e) => handleEmail(e, setSendEmail)}
           />
@@ -83,8 +94,10 @@ const ForgotPassword = ({ setPage }) => {
           <div className="change_buttons">
             <LoginButton title={'Send Email'} handleClick={handleSubmit} isDisabled={loading} />
           </div>
+
           <div className={`${styles.small_text}`}>
-            Did not receive email to reset password?<p onClick={handleSubmit}>Resend</p>
+            {'Did not receive email to reset password?'}
+            <p onClick={handleSubmit}>Resend</p>
           </div>
         </div>
       </ZicopsLogin>

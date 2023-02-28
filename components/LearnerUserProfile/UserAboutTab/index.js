@@ -5,7 +5,6 @@ import ProfilePreferences from '@/components/LoginComp/ProfilePreferences';
 import SubCategoriesPreview from '@/components/LoginComp/SubCategoriesPreview';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
-import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
@@ -71,22 +70,23 @@ const UserAboutTab = () => {
 
     const orgData = resOrg?.data?.getUserOrganizations?.filter((orgMap) => orgMap?.user_lsp_id === userLspId);
 
-    const orgId = orgData?.[0]?.organization_id ;
+    const orgId = orgData?.[0]?.organization_id || '';
+
+    if(!orgId?.length) return ;
 
     const orgDetails = await loadQueryDataAsync(GET_ORGANIZATIONS_DETAILS,{org_ids:[orgId]},{},userQueryClient);
     // console.log(orgDetails?.getOrganizations);
 
-    const _orgDetails = orgDetails?.getOrganizations;
+    const _orgDetails = orgDetails?.getOrganizations || null;
     if(!_orgDetails) return ;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
-      sub_category: baseSubcategory[0]?.sub_category,
+      sub_category: baseSubcategory?.[0]?.sub_category,
       learningSpace_name: lspName,
-      organization_name:_orgDetails[0]?.name,
+      organization_name:_orgDetails?.[0]?.name,
       user_lsp_role:userLspRole,
-      ...orgData[0]
+      ...orgData?.[0]
     }));
-    console.log(userAccountDetails,'sf');
   }, [userDataGlobal?.preferences]);
 
   const router = useRouter();

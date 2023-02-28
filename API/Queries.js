@@ -419,6 +419,14 @@ export const GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID = gql`
   }
 `;
 
+export const GET_COURSE_TOPICS_CONTENT_ID = gql`
+  query getTopicContentId($topic_id: String) {
+    getTopicContent(topic_id: $topic_id) {
+      id
+    }
+  }
+`;
+
 export const GET_COURSE_TOPICS_CONTENT_BY_MODULE_ID = gql`
   query getTopicContent($module_id: String) {
     getTopicContentByModuleId(module_id: $module_id) {
@@ -1091,6 +1099,47 @@ export const GET_DISCUSSION_REPLY = gql`
       Updated_by
       Updated_at
       Status
+    }
+  }
+`;
+
+// BasicCourseStatsInput {
+//   lsp_id: String!
+//   course_status: String
+//   duration: Int
+//   owner: String
+//   created_by: String
+//   course_type: String
+//   categories: [String]
+//   sub_categories: [String]
+//   languages: [String]
+//   expertise_level: [String]
+// }
+export const GET_BASIC_COURSES_STATS = gql`
+  query getBasicCourseStats($input: BasicCourseStatsInput) {
+    getBasicCourseStats(input: $input) {
+      lsp_id
+      course_status
+      duration
+      owner
+      created_by
+      course_type
+      categories {
+        name
+        count
+      }
+      sub_categories {
+        name
+        count
+      }
+      languages {
+        name
+        count
+      }
+      expertise_level {
+        name
+        count
+      }
     }
   }
 `;

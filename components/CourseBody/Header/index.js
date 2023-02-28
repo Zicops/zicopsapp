@@ -7,7 +7,7 @@ export default function Header({ title, description, expertise }) {
         <div className="heading">
           <h2>
             {title || (
-              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={400} />
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={30} width={300} />
             )}
           </h2>
         </div>
@@ -16,16 +16,16 @@ export default function Header({ title, description, expertise }) {
           {/* Description: */}
           <span>
             {description || (
-              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={10} width={150} />
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={450} />
             )}
           </span>
         </div>
 
         <div className="subheading">
-          Expertise Level:
+          
           <span>
-            {expertise || (
-              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={10} width={150} />
+            {expertise ? 'Expertise Level : ' + expertise : (
+              <Skeleton sx={{ bgcolor: 'dimgray' }} variant="text" height={20} width={150} />
             )}
           </span>
         </div>

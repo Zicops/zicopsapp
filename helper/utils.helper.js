@@ -70,7 +70,7 @@ export function secondsToHMS(secs, showHour = true) {
 
 export function displayMinToHMS(mins) {
   if (!mins) return '00 mins';
-  if (mins < 60) return `${mins} mins`;
+  if (mins < 60) return `${Math.ceil(mins)} mins`;
 
   const hours = ('0' + Math.floor(mins / 60)).substr(-2) || '00';
   const divisor_for_minutes = mins % 60;
@@ -155,6 +155,9 @@ export function toggleFullScreen(elem) {
 }
 
 export function getUnixFromDate(dateObj = new Date()) {
+  //implemented for unix timestamp
+  if (!(dateObj instanceof Date)) return dateObj;
+
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;

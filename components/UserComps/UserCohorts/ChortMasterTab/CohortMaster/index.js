@@ -28,17 +28,18 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
 
   const [image, setImage] = useState(null);
   useEffect(() => {
-    if (!image) return setCohortData((prev) => ({ ...prev, cohort_image: null }));
-
+    // if (!image) return setCohortData((prev) => ({ ...prev, cohort_image: null }));
+    if(image) return setCohortData((prev) => ({ ...prev, cohort_image: image }));
     const _cohortData = structuredClone(cohortData);
 
-    const isUrlPresent = cohortData?.image_url;
+    const isUrlPresent = !!cohortData?.image_url?.length;
     _cohortData.cohort_image = isUrlPresent ? image : null;
     if (!isUrlPresent) {
       setImage(null);
     }
     setCohortData(_cohortData);
   }, [image]);
+
 
   const difficultyOptions = [
     { value: 'Open', label: 'Open' },
@@ -239,7 +240,7 @@ const CohortMaster = ({ isEdit = false, isReadOnly = false }) => {
         isRemove={true}
         description={false}
         tooltipTitle={ADMIN_USERS.userCohort.cohortMaster}
-        imageUrl={cohortData?.image_url}
+        imageUrl={!isEdit ? '': cohortData?.image_url}
         handleChange={setImage}
         isDisabled={isReadOnly}
       />

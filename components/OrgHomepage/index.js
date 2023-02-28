@@ -1,15 +1,15 @@
-import styles from './orgHomepage.module.scss';
-import LoginEmail from '../ZicopsLogin/LoginEmail';
-import { useEffect, useState, useRef } from 'react';
-import LabeledInput from '../common/FormComponents/LabeledInput';
-import LoginButton from '../ZicopsLogin/LoginButton/index.js';
-import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { isEmail } from '@/helper/common.helper';
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
-import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLoginMutation } from '@/helper/useLoginMutation';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import LabeledInput from '../common/FormComponents/LabeledInput';
+import LoginButton from '../ZicopsLogin/LoginButton/index.js';
+import LoginEmail from '../ZicopsLogin/LoginEmail';
+import styles from './orgHomepage.module.scss';
 
 const OrgHomepage = ({ data }) => {
   const { loginUser } = useLoginMutation();
@@ -44,8 +44,9 @@ const OrgHomepage = ({ data }) => {
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
 
     if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
+    let _email = email?.toLowerCase();
 
-    const userData = await signIn(email, password);
+    const userData = await signIn(_email, password);
 
     if (userData) loginUser(userData);
   };
@@ -98,8 +99,8 @@ const OrgHomepage = ({ data }) => {
         <div className={`${styles.left_cont_text}`}>
           <div className={`${styles.left_cont_maintext}`}>
             <p>Welcome To</p>
-            <p>{data.name}</p>
-            <p>learning space</p>
+            <p>{data?.name}</p>
+            <p>learning pod</p>
           </div>
           <div className={`${styles.left_cont_supporttext}`}>
             <p>Comprehensive Learning for sustainable growth</p>
@@ -110,7 +111,7 @@ const OrgHomepage = ({ data }) => {
       <div className={`${styles.right_cont}`}>
         <div className={`${styles.right_div}`}>
           <div className={`${styles.icon_logo}`}>
-            <img src={data.logo_url || '/images/svg/amdocsicon.svg'} alt="" />
+            <img src={data?.logo_url || '/images/svg/asset-6.svg'} alt="" />
             {/*<p>{data.name || 'Zicops'}</p>*/}
           </div>
           <div className={`${styles.login_deets}`}>

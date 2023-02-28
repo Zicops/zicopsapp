@@ -1,52 +1,40 @@
-import { GridColumnMenuContainer, GridFilterMenuItem, SortGridMenuItems } from '@mui/x-data-grid';
 import { useRef } from 'react';
 import StyledDataGrid from '../../common/StyledDataGrid';
 import TableSearchComp from '../TableSearchComp';
 import {
   CustomAscendingIcon,
+  CustomColumnMenu,
   CustomDescendingIcon,
   CustomPagination
 } from './Logic/zicopsTable.helper';
-import styles from './zicopsTable.module.scss';
 
-// https://stackoverflow.com/questions/66514102/how-can-you-disable-specific-material-ui-datagrid-column-menu-options
-const CustomColumnMenu = (props) => {
-  const { hideMenu, currentColumn } = props;
-  return (
-    <GridColumnMenuContainer
-      hideMenu={hideMenu}
-      currentColumn={currentColumn}
-      style={{ backgroundColor: 'var(--dark_three)' }}>
-      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-      <div>Custom Text</div>
-      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-    </GridColumnMenuContainer>
-  );
-};
 const ZicopsTable = ({
   columns,
   data,
   pageSize,
   rowsPerPageOptions,
-  tableHeight,
+  tableHeight = '70vh',
   customStyles = {},
   loading = false,
   hideFooterPagination = false,
   showCustomSearch = false,
   searchProps = {},
   onPageChange = () => {},
-  currentPage = null
+  currentPage = null,
+  customId = null,
+  customPaginationUiComp = null
 }) => {
   const tableContainerRef = useRef(null);
-
   const customProps = {};
 
-  const tableBody = process.browser
-    ? document.getElementsByClassName('MuiDataGrid-virtualScroller')?.[0]
-    : null;
+  const tableBody = tableContainerRef?.current?.getElementsByClassName(
+    'MuiDataGrid-virtualScroller'
+  )?.[0];
+
   const height = tableBody?.offsetHeight || null;
 
   if (data?.length >= pageSize && height) customProps.rowHeight = height / pageSize;
+  if (!!customId) customProps.getRowId = (row) => row?.[customId];
 
   return (
     <>
@@ -58,8 +46,6 @@ const ZicopsTable = ({
           ref={tableContainerRef}
           rows={data || []}
           columns={columns}
-          style={customStyles}
-          hideFooterPagination={hideFooterPagination}
           sx={{
             border: 0,
             pt: 2,
@@ -67,10 +53,12 @@ const ZicopsTable = ({
             px: 5,
             color: '#fff'
           }}
+          style={customStyles}
+          hideFooterPagination={hideFooterPagination}
           autoHeight={false}
-          // disableColumnMenu={true}
-          onPageChange={onPageChange}
+          disableColumnMenu={true}
           disableSelectionOnClick
+          onPageChange={onPageChange}
           components={{
             Pagination: CustomPagination,
             ColumnSortedDescendingIcon: CustomDescendingIcon,
@@ -78,7 +66,7 @@ const ZicopsTable = ({
             ColumnMenu: CustomColumnMenu
           }}
           componentsProps={{
-            pagination: { background: 'red', currentPage }
+            pagination: { currentPage, customUiComp: customPaginationUiComp }
           }}
           pageSize={pageSize}
           rowsPerPageOptions={rowsPerPageOptions}

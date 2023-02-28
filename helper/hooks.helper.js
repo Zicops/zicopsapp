@@ -16,7 +16,8 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -32,10 +33,11 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
-import { CatSubCatAtom, UserDataAtom } from '@/state/atoms/global.atom';
+import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
+  getUserObject,
   InviteUserAtom,
   IsUpdatedAtom,
   UsersOrganizationAtom,
@@ -54,6 +56,7 @@ import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
 import {
   COMMON_LSPS,
+  COURSE_MAP_STATUS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
   USER_MAP_STATUS
@@ -75,6 +78,7 @@ export function useHandleCatSubCat(selectedCategory) {
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   useEffect(async () => {
     if (!refetch) return;
@@ -84,14 +88,14 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-
-    const zicopsLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
 
     let currentLspData = null;
     if (_lspId !== zicopsLsp) {
-      currentLspData = loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
+      currentLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
         lsp_ids: [_lspId]
       });
     }
@@ -236,6 +240,9 @@ export default function useUserCourseData() {
   const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
+    client: userClient
+  });
 
   async function getUserCourseData(pageSize = 999999999, userId = null) {
     const { id } = getUserData();
@@ -263,7 +270,7 @@ export default function useUserCourseData() {
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
     const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (course) => course?.course_status?.toLowerCase() !== 'disabled'
+      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable
     );
 
     const currentLspId = sessionStorage.getItem('lsp_id');
@@ -353,6 +360,14 @@ export default function useUserCourseData() {
 
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
+      let completedDate = 0;
+      if (topicsCompleted === userProgressArr?.length)
+        userProgressArr?.forEach((courseProgress) => {
+          if (courseProgress?.updated_at > completedDate) {
+            completedDate = courseProgress?.updated_at;
+          }
+        });
+
       userCourseArray.push({
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
@@ -367,7 +382,8 @@ export default function useUserCourseData() {
         completedPercentage: completedPercent,
         topicsStartedPercentage: progressPercent,
         scheduleDate: _courseData?.end_date,
-        dataType: 'course'
+        dataType: 'course',
+        completedOn : !!completedDate ?  moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
         // remove this value or below value
         // completedPercentage: progressPercent,
         // course completed percentage replace this with above value
@@ -832,39 +848,60 @@ export default function useUserCourseData() {
     });
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || ''
     }));
     if (loadLsp) {
-      const lspData = await getLspDetails([lspId]).catch((err) => console.error(err));
+      const lspData = await getLspDetails([lspId]);
+
       setUserOrgData((prev) => ({
         ...prev,
-        lsp_logo_url: lspData?.data?.getLearningSpaceDetails?.[0]?.logo_url
+        lsp_logo_url: lspData?.getLearningSpaceDetails?.[0]?.logo_url || ''
       }));
     }
   };
 
-  async function getUserLspRoleLatest(userId=null,userLspId = null){
-
-    if(!userLspId || !userId) return ;
+  async function getUserLspRoleLatest(userId = null, userLspId = null) {
+    if (!userLspId || !userId) return;
     //this function gets users lsp role and return the latest one
-    const lspRoleArr = await loadQueryDataAsync(
+    const lspRoleArr = await loadAndCacheDataAsync(
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },
       {},
       userQueryClient
     );
 
-    const lspRoles = lspRoleArr?.getUserLspRoles;
+    const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
     let userLspRole = 'learner';
 
-    if (lspRoleArr?.length > 1) {
-      const latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
+    if (lspRoles?.length > 1) {
+      let latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
     } else {
-      userLspRole = lspRoles?.[0]?.role;
+      userLspRole = lspRoles?.[0]?.role ?? 'learner';
     }
+    return userLspRole;
+  }
 
-    return userLspRole ;
+  async function getOrgByDomain() {
+    if (!API_LINKS?.getOrg?.split('/')?.[0]) return {};
+    const data = await fetch(API_LINKS?.getOrg);
+    const orgData = await data?.json();
+    return orgData?.data;
+  }
+
+  async function getLoggedUserInfo() {
+    if (!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return;
+    if (userDataGlobal?.id) return;
+    let isError = false;
+
+    const res = await userLogin().catch((err) => {
+      console.log(err);
+      isError = !!err;
+    });
+
+    if (isError) return {};
+
+    return res?.data?.login || getUserObject();
   }
 
   return {
@@ -874,7 +911,9 @@ export default function useUserCourseData() {
     getUsersForAdmin,
     getScheduleExams,
     OrgDetails,
-    getUserLspRoleLatest
+    getUserLspRoleLatest,
+    getOrgByDomain,
+    getLoggedUserInfo
   };
 }
 
@@ -1073,7 +1112,7 @@ export function useUpdateUserAboutData() {
     let isError = false;
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
-      console.log(user);
+      if (user?.id === userDataAbout?.id) continue;
       if (disabledUserList?.includes(user?.id)) continue;
       // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
@@ -1302,4 +1341,17 @@ export function useHandleCohortUsers() {
   }
 
   return { removeCohortUser };
+}
+
+// https://stackoverflow.com/a/60907638/13419786
+export function useAsync(asyncFn, onSuccess) {
+  useEffect(() => {
+    let isActive = true;
+    asyncFn().then((data) => {
+      if (isActive) onSuccess(data);
+    });
+    return () => {
+      isActive = false;
+    };
+  }, [asyncFn, onSuccess]);
 }

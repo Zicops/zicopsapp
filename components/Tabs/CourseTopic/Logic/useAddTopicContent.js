@@ -84,6 +84,7 @@ export default function useAddTopicContent(topic) {
         return;
       }
 
+      if (inputName === 'language') setNewTopicVideo({ ...newTopicVideo, language: e.value });
       return setNewTopicContent({ ...newTopicContent, [inputName]: e.value });
     }
 

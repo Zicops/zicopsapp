@@ -1,0 +1,52 @@
+@import '../../../styles/base.scss';
+.availabilityCard{
+    background-color: #242630;
+    width:100%;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #30323F;
+    gap: 10px;
+    justify-content: center;
+    .availabilityCardFirst{
+        display: flex;
+        gap:10px;
+        align-items: center;
+        justify-content: space-between;
+        .imgText{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            grid-gap: 8px;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 20px;
+            color: #EAEAEA;
+        }
+        img{
+            width: 30px;
+        }
+        // p{
+        //     font-weight: 500;
+        //     font-size: 20px;
+        //     color: #EAEAEA;
+            
+        // }
+    }
+    .availabilityCardSecond{
+        display: flex;
+        gap:10px;
+        align-items: center;
+        .card_count{
+            font-weight: 500;
+            font-size: 40px;
+            color: #EAEAEA;
+        }
+        .card_text{
+            font-weight: 400;
+            font-size: 16px;
+            color: #919397;
+        }
+    }
+}
