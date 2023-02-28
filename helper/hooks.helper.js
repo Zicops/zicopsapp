@@ -59,6 +59,7 @@ import {
   COURSE_MAP_STATUS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
+  USER_LSP_ROLE,
   USER_MAP_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -869,10 +870,13 @@ export default function useUserCourseData() {
       {},
       userQueryClient
     );
-
     const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
+    const _isVendor = lspRoles?.filter((lsp) => lsp?.role === USER_LSP_ROLE.vendor)?.length > 0;
     let userLspRole = 'learner';
-
+    if (_isVendor) {
+      userLspRole = USER_LSP_ROLE.vendor;
+      return userLspRole;
+    }
     if (lspRoles?.length > 1) {
       let latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;

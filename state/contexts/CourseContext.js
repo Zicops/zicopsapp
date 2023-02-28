@@ -1,5 +1,5 @@
 import { COURSE_TYPES } from '@/helper/constants.helper';
-import { createContext, useState, useReducer, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import { tabData } from '../../components/Tabs/Logic/tabs.helper';
 
 export const courseContext = createContext();
@@ -43,12 +43,12 @@ const CourseContextProvider = (props) => {
     created_by: '',
     updated_by: '',
     status: '',
-    is_display: false,
+    is_display: true,
     is_active: true,
     category: '',
     sub_category: '',
     sub_categories: [],
-    lspId:null
+    lspId: null
   });
   const updateCourseMaster = (data) => {
     const sub_categories_filtered = data.sub_categories?.filter((s) => s.name);
@@ -92,7 +92,7 @@ const CourseContextProvider = (props) => {
       category: data.category || '',
       sub_category: data.sub_category || '',
       lspId: data.lspId || '',
-      sub_categories: sub_categories || [] ,//this is an array that contains objects
+      sub_categories: sub_categories || [] //this is an array that contains objects
     });
   };
   return (

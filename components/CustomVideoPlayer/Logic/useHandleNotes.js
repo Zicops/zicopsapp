@@ -35,8 +35,7 @@ export default function useHandleNotes() {
         )
       ) || [];
     const allTopicNotes =
-      floatingNotes?.filter((notes) => notes?.topic_id === topic_id && notes?.is_active)?.length ||
-      0;
+      floatingNotes?.filter((notes) => notes?.topic_id === topic_id && notes?.is_active) || [];
 
     // const lastNote = allNotes?.[allNotes.length - 1];
     // console.log(allNotes, floatingNotes);

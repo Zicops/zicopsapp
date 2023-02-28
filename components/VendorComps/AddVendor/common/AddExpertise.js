@@ -1,9 +1,25 @@
+import { useState } from 'react';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
-import React from 'react';
+import { VendorAllExpertise } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
-const AddExpertise = ({ expertiseValue, setExpertise }) => {
+const AddExpertise = ({
+  expertiseValue,
+  setExpertise,
+  selectedExpertise,
+  setSelectedExpertise
+}) => {
+  const handleExpretiseSelection = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedExpertise([...selectedExpertise, value]);
+    } else {
+      setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
+    }
+  };
+  console.info('selectedExpertise', selectedExpertise);
   return (
     <div>
       <SearchBar
@@ -25,7 +41,13 @@ const AddExpertise = ({ expertiseValue, setExpertise }) => {
               if (value.CatId === data.id)
                 return (
                   <div className={`${styles.expertiseCheckbox}`}>
-                    <LabeledRadioCheckbox type="checkbox" label={value.Name} />
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={value.Name}
+                      value={value.Name}
+                      isChecked={selectedExpertise.includes(value.Name)}
+                      changeHandler={handleExpretiseSelection}
+                    />
                   </div>
                 );
             })}
