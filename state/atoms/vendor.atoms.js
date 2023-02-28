@@ -40,6 +40,7 @@ export function getProfileObject(data) {
     languages: data?.languages || [],
     sme_expertises: data?.sme_expertises || [],
     crt_expertises: data?.crt_expertises || [],
+    content_development: data?.content_development || [],
     experience: data?.experience || [],
     isSpeaker: data?.isSpeaker || false
   };
@@ -58,6 +59,7 @@ export const VendorExperiencesAtom = atom({
 export function getExperiencesObject(data) {
   return {
     expId: data?.expId || '',
+    pfId: data?.pfId || '',
     title: data?.title || '',
     companyName: data?.companyName || '',
     location: data?.location || '',
@@ -78,11 +80,14 @@ export const SmeServicesAtom = atom({
 
 export function getSMEServicesObject(data) {
   return {
+    sme_id: data?.sme_id || '',
     isApplicableSME: data?.isApplicableSME || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    smeSample: data?.smeSample || [],
+    smeProfile: data?.smeProfile || []
   };
 }
 
@@ -93,11 +98,14 @@ export const CtServicesAtom = atom({
 
 export function getCTServicesObject(data) {
   return {
+    crt_id: data?.crt_id || '',
     isApplicableCT: data?.isApplicableCT || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    ctSample: data?.ctSample || [],
+    ctProfile: data?.ctProfile || []
   };
 }
 
@@ -108,11 +116,14 @@ export const CdServicesAtom = atom({
 
 export function getCDServicesObject(data) {
   return {
+    cd_id: data?.cd_id || '',
     isApplicableCD: data?.isApplicableCD || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    cdSample: data?.cdSample || [],
+    cdProfile: data?.cdProfile || []
   };
 }
 

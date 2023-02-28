@@ -20,7 +20,14 @@ import { useRecoilValue } from 'recoil';
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
 
-  const { addUpdateVendor, getSingleVendorInfo, handleMail, addUpdateSme } = useHandleVendor();
+  const {
+    addUpdateVendor,
+    getSingleVendorInfo,
+    handleMail,
+    addUpdateCrt,
+    addUpdateSme,
+    addUpdateCd
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
@@ -60,8 +67,9 @@ export default function EditVendor() {
         <AdminHeader
           title={
             <>
-              {vendorData?.name || 'Edit Vendor'}{' '}
-              <p className={`${styles.subHeader}`}>{vendorData?.type}</p>
+              {vendorData?.name || 'Edit Vendor'}
+              <p style={{ color: 'var(--primary)', fontSize: '18px' }}>[ {vendorData?.type} ]</p>
+              {/* <p className={`${styles.subHeader}`}>{vendorData?.type}</p> */}
             </>
           }
         />
@@ -74,9 +82,11 @@ export default function EditVendor() {
             footerObj={{
               showFooter: true,
               handleSubmit: () => {
-                addUpdateVendor();
-                handleMail();
-                // addUpdateSme();
+                // addUpdateVendor();
+                // handleMail();
+                addUpdateSme();
+                // addUpdateCrt();
+                // addUpdateCd();
               },
               status: 'DRAFT'
             }}

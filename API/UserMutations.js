@@ -1463,6 +1463,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     $languages: [String]
     $SME_expertise: [String]
     $Classroom_expertise: [String]
+    $content_development: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
@@ -1478,8 +1479,9 @@ export const CREATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_expertise: $SME_expertise
-        Classroom_expertise: $Classroom_expertise
+        sme_expertise: $SME_expertise
+        classroom_expertise: $Classroom_expertise
+        content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
@@ -1497,6 +1499,7 @@ export const CREATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      experience_years
       experience
       is_speaker
       created_at
@@ -1520,6 +1523,7 @@ export const UPDATE_PROFILE_VENDOR = gql`
     $languages: [String]
     $SME_Expertise: [String]
     $Classroom_Expertise: [String]
+    $content_development: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
@@ -1535,8 +1539,9 @@ export const UPDATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_expertise: $SME_Expertise
-        Classroom_expertise: $Classroom_Expertise
+        sme_expertise: $SME_Expertise
+        classroom_expertise: $Classroom_Expertise
+        content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
@@ -1813,7 +1818,7 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
         sample_files: $sample_files
         profiles: $profiles
         is_expertise_online: $is_expertise_online
-        Status: $Status
+        status: $status
       }
     ) {
       crt_id
@@ -1847,7 +1852,7 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
     $sample_files: [String]
     $profiles: [String]
     $is_expertise_online: Boolean
-    $Status: String
+    $status: String
   ) {
     updateClassRoomTraining(
       input: {
@@ -1861,7 +1866,7 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
         sample_files: $sample_files
         profiles: $profiles
         is_expertise_online: $is_expertise_online
-        Status: $Status
+        status: $status
       }
     ) {
       crt_id
@@ -1905,7 +1910,7 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $status
+        status: $Status
       }
     ) {
       cd_id
@@ -1969,6 +1974,6 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
 
 export const DELETE_SAMPLE_FILE = gql`
   mutation deleteSampleFile($sfId: String!, $vendor_id: String!, $p_type: String!) {
-    deleteSampleFile(input: { sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type })
+    deleteSampleFile(sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type)
   }
 `;

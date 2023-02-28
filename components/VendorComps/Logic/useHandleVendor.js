@@ -18,6 +18,7 @@ import {
 import {
   GET_ALL_PROFILE_DETAILS,
   GET_SAMPLE_FILES,
+  GET_SINGLE_EXPERIENCE_DETAILS,
   GET_SINGLE_PROFILE_DETAILS,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
@@ -37,6 +38,7 @@ import {
   getVendorObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorExperiencesAtom,
   VendorProfileAtom,
   VendorStateAtom,
   vendorUserInviteAtom
@@ -68,13 +70,13 @@ export default function useHandleVendor() {
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
-  // const [fileDatails, setFileDetails] = useRecoilState(allSampleFilesAtom);
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -208,7 +210,11 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setProfileDetails(profileInfo?.viewAllProfiles);
+    const sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
+      let experience = data?.experience?.length ? data?.experience : [];
+      return { ...data, experience: experience };
+    });
+    setProfileDetails(sanetizeProfiles);
     setLoading(true);
   }
 
@@ -220,6 +226,27 @@ export default function useHandleVendor() {
       userQueryClient
     );
     setProfileData(getProfileObject(profileInfo));
+  }
+
+  async function getProfileExperience(pfId) {
+    const experienceInfo = await loadAndCacheDataAsync(
+      GET_VENDOR_EXPERIENCES,
+      { vendor_id: vendorId, pf_id: pfId },
+      {},
+      userQueryClient
+    );
+
+    setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
+  }
+  async function getSingleExperience(pfId, expId) {
+    const experienceInfo = await loadAndCacheDataAsync(
+      GET_SINGLE_EXPERIENCE_DETAILS,
+      { vendor_id: vendorId, pf_id: pfId, exp_id: expId },
+      {},
+      userQueryClient
+    );
+
+    setExperiencesData(experienceInfo);
   }
 
   async function getSMESampleFiles() {
@@ -571,6 +598,8 @@ export default function useHandleVendor() {
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,
+    getSingleExperience,
+    getProfileExperience,
     addUpdateExperience,
     addSampleFile,
     addUpdateSme,

@@ -14,7 +14,7 @@ const SingleProfile = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
+  const { addUpdateProfile, addUpdateExperience, getAllProfileInfo } = useHandleVendor();
   const editProfileData = profileDetails?.filter((e) => e?.pf_id === data?.pf_id);
   const editProfilehandler = () => {
     const profileInfo = {
@@ -36,9 +36,10 @@ const SingleProfile = ({ data }) => {
     setIsOpen(true);
   };
 
-  const completeProfileHandler = () => {
-    addUpdateProfile();
-    addUpdateExperience();
+  const completeProfileHandler = async () => {
+    await addUpdateProfile();
+    await addUpdateExperience();
+    await getAllProfileInfo();
     setIsOpen(false);
     setProfileData(getProfileObject());
   };

@@ -9,25 +9,31 @@ export default function AddVendorServices() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
-
+  const ptype = [{ SME: 'sme' }, { CRT: 'crt' }, { CD: 'cd' }];
   const servicesHelper = [
     {
       data: smeData,
       setData: setSMEData,
       title: 'Subject Matter Expertise',
-      inputName: 'isApplicableSME'
+      inputName: 'isApplicableSME',
+      experticeName: 'Add Subject Matter Expertise',
+      ptype: ptype?.SME
     },
     {
       data: ctData,
       setData: setCTData,
       title: 'Classroom Training',
-      inputName: 'isApplicableCT'
+      inputName: 'isApplicableCT',
+      experticeName: 'Add Classroom Training Expertise',
+      ptype: ptype?.CRT
     },
     {
       data: cdData,
       setData: setCDData,
       title: 'Content Development',
-      inputName: 'isApplicableCD'
+      inputName: 'isApplicableCD',
+      experticeName: 'Add Content Development Expertise',
+      ptype: ptype?.CD
     }
   ];
 
@@ -36,7 +42,13 @@ export default function AddVendorServices() {
       {servicesHelper.map((value, index) => {
         return (
           <ZicopsAccordian title={value.title}>
-            <AddServices data={value.data} setData={value.setData} inputName={value.inputName} />
+            <AddServices
+              data={value.data}
+              setData={value.setData}
+              inputName={value.inputName}
+              experticeName={value.experticeName}
+              pType={value.ptype}
+            />
           </ZicopsAccordian>
         );
       })}
