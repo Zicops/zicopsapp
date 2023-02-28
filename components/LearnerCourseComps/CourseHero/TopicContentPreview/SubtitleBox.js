@@ -37,6 +37,9 @@ export default function SubtitleBox() {
             {allLanguages?.map((lang) => (
               <ButtonWithNoStyles
                 key={lang?.label}
+                handleClick={() =>
+                  setActiveCourseData({ ...activeCourseData, topicContentId: lang?.value })
+                }
                 styleClass={`${lang?.label === activeCourseData?.language ? styles.active : ''}`}>
                 {truncateToN(lang?.label, 15)}
               </ButtonWithNoStyles>

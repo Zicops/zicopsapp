@@ -141,10 +141,8 @@ $thumbnailWidth: 200px;
 
       .progressBar {
         position: relative;
-        background-color: $progress-bar-background;
+        background-color: rgba($progress-bar-background, 0.4);
         height: $progress-bar-height;
-
-        opacity: 0.6;
 
         cursor: pointer;
         transition: all 0.5 ease-in-out;
@@ -173,6 +171,7 @@ $thumbnailWidth: 200px;
             &::after {
               height: calc($progress-bar-height + 10px);
               width: calc($progress-bar-height + 10px);
+              opacity: 1;
             }
           }
         }

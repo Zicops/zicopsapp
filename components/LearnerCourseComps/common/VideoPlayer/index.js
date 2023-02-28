@@ -38,7 +38,15 @@ export default function VideoPlayer({
 
   return (
     <div className={`${styles.videoPlayer}`} ref={videoContainerRef}>
-      {!!isBuffering && <Spinner customStyles={{ zIndex: 0 }} />}
+      {!!isBuffering && (
+        <Spinner
+          customStyles={{
+            zIndex: 1,
+            position: 'absolute',
+            backgroundColor: playerState?.isPlaying ? 'transparent' : '',
+          }}
+        />
+      )}
       <CenterFlash />
 
       <Video
