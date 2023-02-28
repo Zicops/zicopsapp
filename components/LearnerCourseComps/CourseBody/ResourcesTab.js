@@ -1,36 +1,25 @@
 import { ResourcesAtom } from '@/state/atoms/module.atoms';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../atoms/learnerCourseComps.atom';
 import LineTextWithDescription from '../common/LineTextWithDescription';
 import ResourceFile from '../common/ResourceFile';
 import TopicDataCard from '../common/TopicDataCard';
 import ZicopsCarousel from '../common/ZicopsCarousel';
 import { getTwoRowCarousel } from '../common/ZicopsCarousel/Logic/zicopsCarousel.helper';
 import styles from '../learnerCourseComps.module.scss';
+import useHandleResourceSelection from '../Logic/useHandleResourceSelection';
 import ModuleSelection from './ModuleSelection';
 
 export default function ResourcesTab() {
-  const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
-  const moduleData = useRecoilValue(CourseModulesAtomFamily(activeCourseData?.moduleId));
   const resources = useRecoilValue(ResourcesAtom);
 
-  const [selectedResources, setSelectedResources] = useState(null);
-
-  const currentModuleTopicIds = [];
-  moduleData?.chapters?.forEach((chap) => {
-    const topicIds = chap?.topicIds?.map((topicId) => topicId);
-
-    return currentModuleTopicIds.push(...topicIds);
-  });
-
-  const isResourcesPresent = resources?.some((resource) =>
-    currentModuleTopicIds?.includes(resource?.topicId),
-  );
-
-  useEffect(() => {
-    if (selectedResources?.resources) setSelectedResources(null);
-  }, [activeCourseData?.moduleId]);
+  const {
+    isResourcesPresent,
+    selectedResources,
+    setSelectedResources,
+    resourceViewRef,
+    currentModuleTopicIds,
+  } = useHandleResourceSelection();
 
   let prevType = null;
 
@@ -76,7 +65,7 @@ export default function ResourcesTab() {
         <>
           <LineTextWithDescription title={selectedResources?.topicData?.name} />
 
-          <div className={`${styles.resourcesList}`}>
+          <div className={`${styles.resourcesList}`} ref={resourceViewRef}>
             {selectedResources?.resources?.length === 0 ? (
               <div className={`${styles.resourceType}`}>No Resources Uploaded</div>
             ) : (
