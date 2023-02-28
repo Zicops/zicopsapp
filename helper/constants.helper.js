@@ -167,7 +167,7 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
-  courseVideoSize: ONE_MB_IN_BYTES * 240
+  courseVideoSize: ONE_MB_IN_BYTES * 25
 };
 
 export const EMAIL_TEMPLATE_IDS = {
