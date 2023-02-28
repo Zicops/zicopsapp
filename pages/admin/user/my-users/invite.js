@@ -70,7 +70,7 @@ export default function MyUserPage() {
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
 
-    setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    setToastMsg({ type: 'success', message: `Emails sent successfully!` });
 
     return setIsOpen(true);
   }
