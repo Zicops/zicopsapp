@@ -85,7 +85,9 @@ const UserAboutTab = () => {
       (orgMap) => orgMap?.user_lsp_id === userLspId
     );
 
-    const orgId = orgData?.[0]?.organization_id;
+    const orgId = orgData?.[0]?.organization_id || '';
+
+    if(!orgId?.length) return ;
 
     const orgDetails = await loadQueryDataAsync(
       GET_ORGANIZATIONS_DETAILS,
@@ -95,15 +97,16 @@ const UserAboutTab = () => {
     );
     // console.log(orgDetails?.getOrganizations);
 
-    const _orgDetails = orgDetails?.getOrganizations;
-    if (!_orgDetails) return;
+    const _orgDetails = orgDetails?.getOrganizations || null;
+    if(!_orgDetails) return ;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
-      sub_category: baseSubcategory[0]?.sub_category,
+      sub_category: baseSubcategory?.[0]?.sub_category,
       learningSpace_name: lspName,
-      organization_name: _orgDetails[0]?.name,
-      user_lsp_role: userLspRole,
-      ...orgData[0]
+
+      organization_name:_orgDetails?.[0]?.name,
+      user_lsp_role:userLspRole,
+      ...orgData?.[0]
     }));
   }, [userDataGlobal?.preferences]);
 
