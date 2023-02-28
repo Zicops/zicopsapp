@@ -26,7 +26,11 @@ export default function TopicContentDetails({
   const [topicQuizAttempt, setTopicQuizAttempt] = useRecoilState(TopicQuizAttemptsAtom);
 
   const currentTopicQuiz = topicQuiz?.filter((quiz) => quiz?.topicId === topicId);
-  const currentTopicQuizAttempts = topicQuizAttempt?.filter((qa) => qa?.topicId === topicId);
+  let currentTopicQuizAttempts = 0;
+  topicQuiz?.forEach((quiz) => {
+    const isQuizAttempted = topicQuizAttempt?.find((qa) => qa?.quizId === quiz?.id);
+    if (isQuizAttempted) ++currentTopicQuizAttempts;
+  });
 
   useEffect(() => {
     if (!topicId) return;
@@ -40,13 +44,32 @@ export default function TopicContentDetails({
       {},
       userQueryClient,
     )
-      .then((res) =>
-        setTopicQuizAttempt((prev) =>
-          [...prev, ...(res?.getUserQuizAttempts || [])].map((qa) =>
-            getTopicQuizAttemptsDataObj(qa),
+      .then((res) => {
+        const quizAttempts = structuredClone(topicQuizAttempt);
+
+        quizAttempts.push(
+          ...(res?.getUserQuizAttempts || []).map((qa) =>
+            getTopicQuizAttemptsDataObj({
+              ...qa,
+              userQaId: qa?.user_qa_id,
+              userId: qa?.user_id,
+              userCpId: qa?.user_cp_id,
+              userCourseId: qa?.user_course_id,
+              quizId: qa?.quiz_id,
+              quizAttempt: qa?.quiz_attempt,
+              topicId: qa?.topic_id,
+              result: qa?.result,
+              isActive: qa?.is_active,
+              createdBy: qa?.created_by,
+              updatedBy: qa?.updated_by,
+              createdAt: qa?.created_at,
+              updatedAt: qa?.updated_at,
+            }),
           ),
-        ),
-      )
+        );
+
+        setTopicQuizAttempt(quizAttempts);
+      })
       .catch((err) => console.log(`Error while loading quiz:`, err));
   }, [topicId, userData?.id, currentTopicQuiz?.length]);
 
@@ -69,8 +92,8 @@ export default function TopicContentDetails({
           <span>e-Content</span>
           <span>
             {!!currentTopicQuiz?.length
-              ? `Quiz: ${currentTopicQuizAttempts?.length}/ ${currentTopicQuiz?.length}`
-              : 'S'}
+              ? `Quiz: ${currentTopicQuizAttempts}/ ${currentTopicQuiz?.length}`
+              : ''}
           </span>
           <span>
             {isLoading ? (
