@@ -70,7 +70,6 @@ export default function Layout({ children }) {
     //   userQueryClient
     // );
     const dUser = await getLoggedUserInfo();
-    
 
     // if (userData?.error) return console.log('User data load error');
     // const basicInfo = userData?.getUserDetails?.[0];
@@ -104,7 +103,11 @@ export default function Layout({ children }) {
 
               let isDeleted = 'localDelete';
               const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
-              if (!isBeforeDeleteSuccess) return setDeleteConfirmData(getDeleteConfirmDataObj());
+
+              if (!isBeforeDeleteSuccess) {
+                setDisableBtn(false);
+                return setDeleteConfirmData(getDeleteConfirmDataObj());
+              }
 
               if (deleteConfirmData?.id) {
                 isDeleted = await deleteData(deleteConfirmData?.mutation, {
@@ -115,10 +118,13 @@ export default function Layout({ children }) {
 
               setDeleteConfirmData(getDeleteConfirmDataObj());
 
-              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey])
+              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+                setDisableBtn(false);
                 return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
+              }
 
               deleteConfirmData?.onDelete();
+              setDisableBtn(false);
             },
             handleClickRight: () => setDeleteConfirmData(getDeleteConfirmDataObj())
           }}
