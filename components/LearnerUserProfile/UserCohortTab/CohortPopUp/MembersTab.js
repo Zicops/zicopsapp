@@ -1,24 +1,20 @@
 // components\LearnerUserProfile\UserCohortTab\CohortPopUp\MembersTab.js
 
+import SearchBar from '@/components/common/FormComponents/SearchBar';
 import IconBtn from '@/components/common/IconBtn';
 import { useEffect, useState } from 'react';
-import SearchBar from '@/components/common/FormComponents/SearchBar';
 
 import CohortListCard from '@/components/common/CohortListCard';
-import styles from '../../learnerUserProfile.module.scss';
-import { memberTabData } from '../../Logic/userBody.helper';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { IsUpdatedAtom, SelectedCohortDataAtom } from '@/state/atoms/users.atom';
-import useUserCourseData from '@/helper/hooks.helper';
-import useHandleCohortTab from '../../Logic/useHandleCohortTab';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import Loader from '@/components/common/Loader';
+import useUserCourseData from '@/helper/hooks.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { SelectedCohortDataAtom } from '@/state/atoms/users.atom';
+import { useRecoilState } from 'recoil';
+import styles from '../../learnerUserProfile.module.scss';
+import useHandleCohortTab from '../../Logic/useHandleCohortTab';
 
 export default function MembersTab() {
   const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
-  const [isUpdated,setIsUpdated] = useRecoilState(IsUpdatedAtom);
   const setToastMsg = useRecoilState(ToastMsgAtom);
   const [cohortUsers, setCohortUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
