@@ -70,20 +70,22 @@ const UserAboutTab = () => {
 
     const orgData = resOrg?.data?.getUserOrganizations?.filter((orgMap) => orgMap?.user_lsp_id === userLspId);
 
-    const orgId = orgData?.[0]?.organization_id ;
+    const orgId = orgData?.[0]?.organization_id || '';
+
+    if(!orgId?.length) return ;
 
     const orgDetails = await loadQueryDataAsync(GET_ORGANIZATIONS_DETAILS,{org_ids:[orgId]},{},userQueryClient);
     // console.log(orgDetails?.getOrganizations);
 
-    const _orgDetails = orgDetails?.getOrganizations;
+    const _orgDetails = orgDetails?.getOrganizations || null;
     if(!_orgDetails) return ;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
-      sub_category: baseSubcategory[0]?.sub_category,
+      sub_category: baseSubcategory?.[0]?.sub_category,
       learningSpace_name: lspName,
-      organization_name:_orgDetails[0]?.name,
+      organization_name:_orgDetails?.[0]?.name,
       user_lsp_role:userLspRole,
-      ...orgData[0]
+      ...orgData?.[0]
     }));
   }, [userDataGlobal?.preferences]);
 

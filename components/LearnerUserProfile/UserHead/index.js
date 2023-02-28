@@ -2,8 +2,7 @@ import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import useHandleAddUserDetails from '@/components/LoginComp/Logic/useHandleAddUser';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getUserData } from '@/helper/loggeduser.helper';
-import { IsUpdatedAtom, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -14,51 +13,27 @@ const UserHead = () => {
   });
   const [isOpen, setIsopen] = useState(false);
   const [image, setImage] = useState(null);
-  const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   const [userProfileData, setUserProfiledata] = useRecoilState(UserStateAtom);
   const [userAccountData, setUserAccountdata] = useRecoilState(UsersOrganizationAtom);
-  const [fullName, setFullName] = useState(
-    `${userProfileData?.first_name} ${userProfileData?.last_name}`
-  );
+  const [fullName, setFullName] = useState('');
 
   const { updateAboutUser } = useHandleAddUserDetails();
   const { getLoggedUserInfo } = useUserCourseData();
 
-  //used to not immedialty update the Full name state
-  useEffect(() => {
-    if (!isUpdate) return;
-    // if(!userProfileData?.first_name?.length) return;
-    setFullName(`${userProfileData?.first_name} ${userProfileData?.last_name}`);
-    sessionStorage.setItem('loggedUser', JSON.stringify({ ...userProfileData }));
-    sessionStorage.setItem('userAccountSetupData', JSON.stringify({ ...userAccountData }));
-    setIsUpdate(false);
-  }, [isUpdate]);
+  //used to not immedialty update the full name state
 
   useEffect(async () => {
-    if (!userProfileData?.first_name && !userProfileData?.last_name) {
-      const data = getUserData();
-      // const userId = [];
-      // userId.push(data?.id);
-      const userId = data?.id;
-      // const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
-      //   console.log(err);
-      // });
-      const userData = await getLoggedUserInfo();
-      
-      const basicInfo = userData;
-      // console.log(basicInfo);
-
-      const orgData = JSON.parse(sessionStorage.getItem('userAccountSetupData'));
-      setUserAccountdata((prevValue) => ({ ...prevValue, ...orgData }));
-      setUserProfiledata((prevValue) => ({
-        ...prevValue,
-        ...data,
-        photo_url: basicInfo?.photo_url
-      }));
-      setFullName(`${data?.first_name} ${data?.last_name}`);
-      return;
+    if(!userProfileData?.id) return ;
+    if (userProfileData?.isUserUpdated) {
+      setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+      setUserProfiledata((prev) => ({...prev, isUserUpdated: false}));
+      return ;
     }
-  }, []);
+    if(!fullName?.length){
+      setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+      return ;
+    }
+  }, [userProfileData]);
 
   let userGender = userProfileData?.gender?.toLowerCase();
   useEffect(() => {
@@ -105,7 +80,7 @@ const UserHead = () => {
         />
       )}
 
-      <div className={`${styles.userName}`}>{fullName ? `${fullName}` : ''}</div>
+      <div className={`${styles.userName}`}>{userProfileData?.id ? `${fullName}` : ''}</div>
       <div className={`${styles.userRole}`}>
         {userAccountData?.organization_role
           ? `${userAccountData?.organization_role} at ${
