@@ -1,4 +1,3 @@
-import UserButton from '@/components/common/UserButton';
 import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
 import Button from 'common/components/Button';
 import { useRouter } from 'next/router';
@@ -19,7 +18,7 @@ const InviteUserEmails = ({ userEmails = [], closePopUp = () => {}, userType = '
     <>
       <div className={`${styles.inviteUserContainer}`}>
         <div className={`${styles.titleContainer}`}>
-          The invite has been send to the following emails:
+          The invite has been sent to the following emails:
         </div>
         <div className={`${styles.emailContainer}`}>
           {userEmails?.map((email) => (
