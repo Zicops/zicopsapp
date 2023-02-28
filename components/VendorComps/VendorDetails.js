@@ -1,19 +1,19 @@
 import styles from './vendorComps.module.scss';
 
-const socialMediaData = [
-  { label: 'LinkedIn', value: 'http://www.abc.com' },
-  { label: 'Twitter', value: 'http://www.abc.com' },
-  { label: 'Facebook', value: 'http://www.abc.com' },
-  { label: 'Instagram', value: 'http://www.abc.com' }
-];
+export default function VendorDetails({ data }) {
+  const socialMediaData = [
+    { label: 'LinkedIn', value: data.linkedin_url },
+    { label: 'Twitter', value: data.twitter_url },
+    { label: 'Facebook', value: data.facebook_url },
+    { label: 'Instagram', value: data.instagram_url }
+  ];
 
-const vendorDetails = [
-  { label: 'Name', value: 'ABC Learning Pvt Ltd.' },
-  { label: 'Address', value: 'House no. , Colony, City, State, Country' },
-  { label: 'Website', value: 'http://www.abc.com' },
-  { label: 'Type', value: 'Organisation' }
-];
-export default function VendorDetails() {
+  const vendorDetails = [
+    { label: 'Name', value: data.name },
+    { label: 'Address', value: data.address },
+    { label: 'Website', value: data.website },
+    { label: 'Type', value: data.type }
+  ];
   return (
     <div className={`${styles.vendorDetailsContainer}`}>
       <div className={`${styles.details}`}>

@@ -7,7 +7,7 @@ import {
   serviceType
 } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
 import { useRouter } from 'next/router';
 import CoursesVendor from '@/components/VendorComps/CoursesVendor';
@@ -22,7 +22,12 @@ import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
 import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
+import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 export default function VendorInfo() {
+  const vendorData = useRecoilValue(VendorStateAtom);
+
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -81,11 +86,19 @@ export default function VendorInfo() {
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
   const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+  // console.info(router.query.vendorId);
+
+  const { getSingleVendorInfo } = useHandleVendor();
+
+  useEffect(() => {
+    getSingleVendorInfo();
+  }, []);
+
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
   const tabData = [
     {
       name: 'About',
-      component: <AboutVendor data={myVendors[vendorId]} />
+      component: <AboutVendor data={vendorData} />
     },
     {
       name: 'Courses',

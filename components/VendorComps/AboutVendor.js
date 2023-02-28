@@ -9,9 +9,9 @@ import {
 } from './Logic/vendorComps.helper';
 
 export default function AboutVendor({ data }) {
-  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data.id);
-  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data.id);
-  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data.id);
+  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data?.vendorId);
+  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data?.vendorId);
+  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data?.vendorId);
 
   const accordianMarketyardDetails = [
     {
@@ -37,7 +37,7 @@ export default function AboutVendor({ data }) {
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
-        <p>{data.desc}</p>
+        <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
         {accordianMarketyardDetails.map((value, index) => {
@@ -48,7 +48,7 @@ export default function AboutVendor({ data }) {
           );
         })}
       </div>
-      <VendorDetails />
+      <VendorDetails data={data} />
     </div>
   );
 }
