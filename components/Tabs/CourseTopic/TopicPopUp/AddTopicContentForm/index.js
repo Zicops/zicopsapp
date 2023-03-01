@@ -1,4 +1,4 @@
-import { LIMITS } from '@/helper/constants.helper';
+import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -96,12 +96,25 @@ export default function AddTopicContentForm({
           <div className={`center-element-with-flex ${styles.marginBottom}`}>
             <label className={`w-25`}>Upload Contents:</label>
             <div className={`w-35`}>
+              <small
+                style={{
+                  color: styles.bgBody,
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}>
+                Max: {Math.ceil(LIMITS.topicVideoSize / ONE_MB_IN_BYTES)} Mb
+              </small>
               <BrowseAndUpload
                 handleFileUpload={(e) => {
                   const file = e.target.files?.[0];
 
-                  if (file?.size > LIMITS.courseVideoSize)
-                    return setToastMsg({ type: 'danger', message: 'File Size limit is 240 mb' });
+                  if (file?.size > LIMITS.topicVideoSize)
+                    return setToastMsg({
+                      type: 'danger',
+                      message: `File Size limit is ${Math.ceil(
+                        LIMITS.topicVideoSize / ONE_MB_IN_BYTES
+                      )} mb`
+                    });
 
                   if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);
 

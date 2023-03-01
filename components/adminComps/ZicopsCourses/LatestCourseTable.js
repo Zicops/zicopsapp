@@ -46,7 +46,8 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         {},
         userQueryClient
       );
-      courseFiltes.Owner = userOrgData?.getUserVendor?.[0]?.name;
+      courseFiltes.Owner = vendorDetail?.getUserVendor?.[0]?.name;
+      // courseFiltes.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
     }
 
     loadMyCourses({
@@ -144,11 +145,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     }
   ];
 
-  const filterOptions = [{ label: 'Saved', value: COURSE_STATUS.save }];
-
-  // remove this later
-  if (isDemo) filterOptions.push({ label: 'For Approval', value: COURSE_STATUS.approvalPending });
-  filterOptions.push({ label: 'Published', value: COURSE_STATUS.publish });
+  const filterOptions = [
+    { label: 'Saved', value: COURSE_STATUS.save },
+    { label: 'For Approval', value: COURSE_STATUS.approvalPending },
+    { label: 'Published', value: COURSE_STATUS.publish }
+  ];
 
   if (zicopsLspId == null) {
     filterOptions.push({ label: 'Expired', value: COURSE_STATUS.reject });

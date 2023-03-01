@@ -1226,10 +1226,7 @@ const ExamScreen = () => {
     currentExamAttemptData.attempt_status = 'completed';
     const examAttemptSendData = {
       ...currentExamAttemptData,
-      attempt_duration:
-        userExamData?.duration?.timeLeft === 0
-          ? userExamData?.duration?.total
-          : +currentExamAttemptData?.attempt_duration
+      attempt_duration: +currentExamAttemptData?.attempt_duration
     };
     const examAttemptRes = await updateUserExamAttempts({ variables: examAttemptSendData }).catch(
       (err) => {

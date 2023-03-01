@@ -1,10 +1,11 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_USER_BOOKMARKS } from '@/api/UserQueries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS, COURSE_STATUS } from '@/helper/constants.helper';
+import { GET_USER_BOOKMARKS, GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS, COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { parseJson } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { OnGoingExamAtom } from 'pages/exams';
@@ -26,6 +27,8 @@ export default function useHandleSearch() {
   const preferredSubCat = router.query?.preferredSubCat || null;
 
   const userDataGlobal = useRecoilValue(UserDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const examOngoingData = useRecoilValue(OnGoingExamAtom);
 
@@ -53,11 +56,14 @@ export default function useHandleSearch() {
 
   const { getUserCourseData } = useUserCourseData();
 
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
   // load table data
   const time = Date.now();
   useEffect(async () => {
     // return if router is not ready
     if (!router.isReady) return;
+    if (isVendor && !userData?.id) return;
     if (isLoading) return;
     setIsLoading(true);
 
@@ -117,6 +123,18 @@ export default function useHandleSearch() {
       status: COURSE_STATUS.publish,
       filters: { LspId: currentLspId }
     };
+
+    if (isVendor) {
+      const vendorDetail = await loadQueryDataAsync(
+        GET_USER_VENDORS,
+        { user_id: userData?.id },
+        {},
+        userQueryClient
+      );
+      queryVariables.filters.Owner = vendorDetail?.getUserVendor?.[0]?.name;
+      // queryVariables.filters.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
+    }
+
     if (searchQuery) {
       queryVariables.filters.SearchText = searchQuery;
       setBookmarkData({ ...bookmarkData, isLoading: true });
@@ -219,7 +237,8 @@ export default function useHandleSearch() {
     filter,
     searchQuery,
     preferredSubCat ? userDataGlobal?.preferences?.length : 0,
-    preferredSubCat
+    preferredSubCat,
+    isVendor ? userData?.id : ''
   ]);
 
   useEffect(() => {

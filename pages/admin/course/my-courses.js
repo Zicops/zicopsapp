@@ -2,6 +2,7 @@ import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import MyCourseList from '../../../components/adminComps/ZicopsCourses/MyCourseList';
 import Sidebar from '../../../components/common/Sidebar';
 import useHandleRole from '../../../components/common/Sidebar/Logic/sidebar.helper';
+import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
 import CourseHead from '../../../components/CourseHead';
 
 const MyCourses = () => {

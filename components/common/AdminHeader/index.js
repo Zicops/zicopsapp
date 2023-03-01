@@ -1,7 +1,8 @@
 import { snakeCaseToTitleCase } from '@/helper/common.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ActiveTourAtom } from '@/state/atoms/productTour.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -27,9 +28,12 @@ export default function AdminHeader({
 }) {
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
   const activeTour = useRecoilValue(ActiveTourAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [showSitemap, setShowSitemap] = useState(false);
   const router = useRouter();
   const route = router.route;
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const options = COURSE_TYPES.map((v, i) => {
     return { value: v, label: snakeCaseToTitleCase(v), isDisabled: [1, 2].includes(i) };
@@ -99,7 +103,8 @@ export default function AdminHeader({
               src="/images/sitemap_icon.png"
               className="rightside_icon"
               alt=""
-              onClick={() => setShowSitemap(true)}
+              style={isVendor ? { cursor: 'not-allowed' } : {}}
+              onClick={() => (isVendor ? '' : setShowSitemap(true))}
             />
           </ToolTip>
         </div>

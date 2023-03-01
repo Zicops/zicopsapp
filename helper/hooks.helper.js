@@ -361,8 +361,15 @@ export default function useUserCourseData() {
 
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
+      let completedDate = 0;
+      if (topicsCompleted === userProgressArr?.length)
+        userProgressArr?.forEach((courseProgress) => {
+          if (courseProgress?.updated_at > completedDate) {
+            completedDate = courseProgress?.updated_at;
+          }
+        });
+
       userCourseArray.push({
-        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
@@ -376,7 +383,8 @@ export default function useUserCourseData() {
         completedPercentage: completedPercent,
         topicsStartedPercentage: progressPercent,
         scheduleDate: _courseData?.end_date,
-        dataType: 'course'
+        dataType: 'course',
+        completedOn : !!completedDate ?  moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
         // remove this value or below value
         // completedPercentage: progressPercent,
         // course completed percentage replace this with above value
@@ -885,20 +893,19 @@ export default function useUserCourseData() {
     return orgData?.data;
   }
 
-  async function getLoggedUserInfo(){
-    if(!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return ;
-    if(userDataGlobal?.id) return ;
+  async function getLoggedUserInfo() {
+    if (!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return;
+    if (userDataGlobal?.id) return;
     let isError = false;
-    
+
     const res = await userLogin().catch((err) => {
       console.log(err);
       isError = !!err;
     });
 
-    if(isError) return {};
+    if (isError) return {};
 
     return res?.data?.login || getUserObject();
-
   }
 
   return {
