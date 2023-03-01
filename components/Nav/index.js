@@ -1,6 +1,7 @@
 import { userClient } from '@/api/UserMutations';
 import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
 import { sendNotification } from '@/helper/api.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getCurrentHost } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -30,6 +31,7 @@ export default function Nav() {
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
 
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const [showNotification, setShowNotification] = useState(false);
@@ -38,6 +40,8 @@ export default function Nav() {
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const handleClickInside = () => setShowNotification(!showNotification);
   // const OrgDetails = async () => {
@@ -131,6 +135,7 @@ export default function Nav() {
               if (val?.isDisabled || val?.isDemo || val?.isDev) pageRoute = null;
               if (isDemo && val?.isDemo) pageRoute = val?.link;
               if (isDev && val?.isDev) pageRoute = val?.link;
+              if (isVendor && !val?.roleAccess?.includes(USER_LSP_ROLE.vendor)) pageRoute = null;
 
               // disabled links
               if (!pageRoute)

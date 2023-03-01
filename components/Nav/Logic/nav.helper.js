@@ -1,10 +1,16 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
+
 export function truncateTo16(str) {
   return str.length > 16 ? str.substring(0, 13) + '...' : str;
 }
 
 export const AdminMenu = [
   { title: 'Users', link: '/admin/user/my-users' },
-  { title: 'Course', link: '/admin/course/my-courses' },
+  {
+    title: 'Course',
+    link: '/admin/course/my-courses',
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
   { title: 'Training', link: '/admin', isDisabled: true },
   { title: 'Exams', link: '/admin/exams/my-question-bank' },
   { title: 'Vendor', link: '/admin/vendor/manage-vendor', isDev: true },
