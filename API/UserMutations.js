@@ -1813,7 +1813,7 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
         sample_files: $sample_files
         profiles: $profiles
         is_expertise_online: $is_expertise_online
-        Status: $Status
+        status: $status
       }
     ) {
       crt_id
@@ -1893,7 +1893,7 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     createContentDevelopment(
       input: {
@@ -1905,7 +1905,7 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $status
+        status: $status
       }
     ) {
       cd_id

@@ -95,6 +95,7 @@ export default function VendorInfo() {
   }, []);
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
+
   const tabData = [
     {
       name: 'About',

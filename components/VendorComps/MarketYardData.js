@@ -14,7 +14,6 @@ export default function MarketYardData() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const vendorList1 = await getLspVendors(lspId, true);
     setLspVendors(vendorList1);
-    console.info(vendorList1, '1');
 
     const orgLspId = LEARNING_SPACE_ID;
     const vendorList2 = await getLspVendors(orgLspId, true);

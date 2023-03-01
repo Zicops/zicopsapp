@@ -1008,6 +1008,69 @@ export const GET_USER_VENDORS = gql`
   }
 `;
 
+export const GET_SME_DETAILS = gql`
+  query getSmeDetails($vendor_id: String!) {
+    getSmeDetails(vendor_id: $vendor_id) {
+      vendor_id
+      sme_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CRT_DETAILS = gql`
+  query getClassRoomTraining($vendor_id: String!) {
+    getClassRoomTraining(vendor_id: $vendor_id) {
+      vendor_id
+      crt_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CD_DETAILS = gql`
+  query getContentDevelopment($vendor_id: String!) {
+    getContentDevelopment(vendor_id: $vendor_id) {
+      vendor_id
+      cd_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      profiles
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
 // DASHBOARD QUERIES START
 export const GET_COURSE_CONSUMPTION_STATS = gql`
   query getCourseConsumptionStats(

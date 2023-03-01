@@ -2,11 +2,12 @@ import styles from './vendorComps.module.scss';
 
 export default function VendorDetails({ data }) {
   const socialMediaData = [
-    { label: 'LinkedIn', value: data.linkedin_url },
-    { label: 'Twitter', value: data.twitter_url },
-    { label: 'Facebook', value: data.facebook_url },
-    { label: 'Instagram', value: data.instagram_url }
+    { label: 'LinkedIn', value: data.linkedinURL },
+    { label: 'Twitter', value: data.twitterURL },
+    { label: 'Facebook', value: data.facebookURL },
+    { label: 'Instagram', value: data.instagramURL }
   ];
+
 
   const vendorDetails = [
     { label: 'Name', value: data.name },

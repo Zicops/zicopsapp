@@ -7,11 +7,23 @@ import {
   classroomTraining,
   contentDevelopment
 } from './Logic/vendorComps.helper';
+import { useRecoilValue } from 'recoil';
+import { SmeServicesAtom, CtServicesAtom, CdServicesAtom } from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
+import useHandleVendor from './Logic/useHandleVendor';
 
 export default function AboutVendor({ data }) {
-  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data?.vendorId);
-  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data?.vendorId);
-  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data?.vendorId);
+  const { getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
+
+  useEffect(() => {
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
+  }, []);
+
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
 
   const accordianMarketyardDetails = [
     {

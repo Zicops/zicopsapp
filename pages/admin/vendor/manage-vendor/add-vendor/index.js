@@ -14,7 +14,7 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 
 export default function VendorInfo() {
-  const { addUpdateVendor, addUpdateSme, handleMail } = useHandleVendor();
+  const { addUpdateVendor, addUpdateSme, handleMail, addUpdateCrt, addUpdateCd } = useHandleVendor();
   const tabData = [
     {
       name: 'Master',
@@ -56,7 +56,9 @@ export default function VendorInfo() {
               handleSubmit: () => {
                 addUpdateVendor();
                 handleMail();
-                // addUpdateSme();
+                addUpdateSme();
+                addUpdateCrt();
+                addUpdateCd();
               },
               status: VENDOR_MASTER_STATUS.draft.toUpperCase()
             }}

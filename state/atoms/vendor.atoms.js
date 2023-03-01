@@ -82,7 +82,9 @@ export function getSMEServicesObject(data) {
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 
@@ -97,7 +99,9 @@ export function getCTServicesObject(data) {
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 
@@ -112,7 +116,9 @@ export function getCDServicesObject(data) {
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 

@@ -20,12 +20,25 @@ import { useRecoilValue } from 'recoil';
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
 
-  const { addUpdateVendor, getSingleVendorInfo, handleMail, addUpdateSme } = useHandleVendor();
+  const {
+    addUpdateVendor,
+    getSingleVendorInfo,
+    handleMail,
+    addUpdateSme,
+    getSmeDetails,
+    addUpdateCrt,
+    getCrtDetails,
+    addUpdateCd,
+    getCdDetails
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   useEffect(() => {
     getSingleVendorInfo();
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
   }, []);
 
   const tabData = [
@@ -76,7 +89,9 @@ export default function EditVendor() {
               handleSubmit: () => {
                 addUpdateVendor();
                 handleMail();
-                // addUpdateSme();
+                addUpdateSme();
+                addUpdateCrt();
+                addUpdateCd();
               },
               status: 'DRAFT'
             }}
