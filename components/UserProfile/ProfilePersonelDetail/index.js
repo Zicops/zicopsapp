@@ -1,26 +1,22 @@
 import styles from '../userProfile.module.scss';
 
-const ProfilePersonelDetail = ({ currentUserData }) => {
+const ProfilePersonelDetail = ({ currentUserData , imageUrl = null}) => {
   const userProfileDetailsData = {
     name: `${currentUserData?.first_name || ''} ${currentUserData?.last_name || ''}`,
     email: currentUserData?.email,
     contact: currentUserData?.phone
   };
 
-  const userGender = currentUserData?.gender?.toLowerCase() || '';
-  let imageUrl = `/images/Avatars/${userGender}Profile.png`;
-  
-
   return (
     <>
       <div className={`${styles.profileDetailsContainer}`}>
         <div className={`${styles.profilePicContainer}`}>
-          <img src={currentUserData?.photo_url || imageUrl} alt="not found" width={200} />
+          <img src={imageUrl || '/images/Avatars/Profile.png'} alt="not found" width={200} />
         </div>
         <div className={`${styles.profileDetails}`}>
           {Object.keys(userProfileDetailsData).map((item, i) => (
-            <div className={`${styles.profileDetailsField}`}>
-              <div key={i} className={`${styles.label}`}>
+            <div className={`${styles.profileDetailsField}`} key={i}>
+              <div  className={`${styles.label}`}>
                 {item.charAt(0).toUpperCase() + item.slice(1)}
               </div>
               <div className={`${styles.colon}`}> : </div>
