@@ -87,7 +87,7 @@ const UserAboutTab = () => {
 
     const orgId = orgData?.[0]?.organization_id || '';
 
-    if(!orgId?.length) return ;
+    if (!orgId?.length) return;
 
     const orgDetails = await loadQueryDataAsync(
       GET_ORGANIZATIONS_DETAILS,
@@ -98,14 +98,14 @@ const UserAboutTab = () => {
     // console.log(orgDetails?.getOrganizations);
 
     const _orgDetails = orgDetails?.getOrganizations || null;
-    if(!_orgDetails) return ;
+    if (!_orgDetails) return;
     setUserAccountDetails((prevValue) => ({
       ...prevValue,
       sub_category: baseSubcategory?.[0]?.sub_category,
       learningSpace_name: lspName,
 
-      organization_name:_orgDetails?.[0]?.name,
-      user_lsp_role:userLspRole,
+      organization_name: _orgDetails?.[0]?.name,
+      user_lsp_role: userLspRole,
       ...orgData?.[0]
     }));
   }, [userDataGlobal?.preferences]);
@@ -131,7 +131,7 @@ const UserAboutTab = () => {
         userData={userData}
         updateHandle={updateAboutUser}
       />
-      {!userAccountDetails?.user_lsp_role === USER_LSP_ROLE.vendor && (
+      {!(userAccountDetails?.user_lsp_role === USER_LSP_ROLE.vendor) && (
         <>
           <SingleUserDetail
             isEditable={isEditable === 2}
