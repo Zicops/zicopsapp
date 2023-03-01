@@ -2,35 +2,38 @@ import '@reach/menu-button/styles.css';
 import Image from 'next/image';
 import { useDropDownHandle } from '../Logic/useDropDownHandle.js';
 
+import { MenuList, Paper } from '@mui/material';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import { MenuList, Paper } from '@mui/material';
 
+import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
+import useUserCourseData from '@/helper/hooks.helper.js';
+import { UserDataAtom } from '@/state/atoms/global.atom.js';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import { useContext, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import RightArrow from '../../../public/images/bigarrowright.png';
 import { userContext } from '../../../state/contexts/UserContext';
 import DropDownSubMenu from '../DropDownSubmenu/index.js';
-import { languages, preferences } from '../Logic/subMenu.helper.js';
+import { languages } from '../Logic/subMenu.helper.js';
 import styles from '../nav.module.scss';
-import useUserCourseData from '@/helper/hooks.helper.js';
-import { useRecoilState } from 'recoil';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
-import { UserDataAtom } from '@/state/atoms/global.atom.js';
 export default function LeftMenuDropdown({ isOnLearnerSide }) {
   const { isAdmin } = useContext(userContext);
   const { anchorEl, handleClick, handleClose, open, gotoAdmin, gotoUser } = useDropDownHandle();
   const { getUserPreferences } = useUserCourseData();
-  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [loading, setLoading] = useState(true);
   const [preferences, setPreferences] = useState([]);
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   useEffect(async () => {
     if (!userGlobalData?.isPrefAdded) {
       loadUserPreferences();
       return;
     }
-    if(!userGlobalData?.preferences?.length){
+    if (!userGlobalData?.preferences?.length) {
       loadUserPreferences();
       return;
     }
@@ -106,9 +109,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
         borderColor: 'var(--white)',
         fontSize: '13px'
       },
-      customClass: `${styles['dropdown_item_5']} ${
-        styles.preferenceCentreMenuItem
-      } `
+      customClass: `${styles['dropdown_item_5']} ${styles.preferenceCentreMenuItem} `
     });
     setPreferences([...prefArray], setLoading(false));
     return;
@@ -221,7 +222,8 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
           arrowpositon="right"
           submenurowdirection={false}
         />
-      )
+      ),
+      isHidden: isVendor
     },
     {
       id: 3,
@@ -284,6 +286,7 @@ export default function LeftMenuDropdown({ isOnLearnerSide }) {
             onKeyDown={handleClick}>
             {menuItemList.map((item) => {
               if (item.isAdmin && !isAdmin) return null;
+              if (item?.isHidden) return null;
 
               return (
                 <MenuItem
