@@ -1,10 +1,11 @@
-import { PRODUCT_TOUR_PATHS } from '@/helper/constants.helper';
+import { PRODUCT_TOUR_PATHS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   ActiveTourAtom,
   ProductTourIndex,
   ProductTourVisible
 } from '@/state/atoms/productTour.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
@@ -19,9 +20,13 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
   const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
   const [index, setIndex] = useRecoilState(ProductTourIndex);
   const [showProductTour, setShowProductTour] = useRecoilState(ProductTourVisible);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
   const router = useRouter();
   const lastItem = useRef();
   const [isSidebarBottomReached, setIsSidebarBottomReached] = useState(false);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const handleProductTour = () => {
     setShowProductTour(true);
@@ -72,6 +77,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
 
               if (val?.isHidden && !isDemo && !isDev) return null;
+              if (isVendor && !val?.isVendor) return null;
 
               // temp fix: Change page route for edit course later
               if (

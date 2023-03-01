@@ -1,5 +1,5 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import UserAboutTab from '../UserAboutTab';
-import UserScheduleTab from '../UserScheduleTab';
 import UserCohortTab from '../UserCohortTab';
 import CoursesTab from '../UserCohortTab/CohortPopUp/CoursesTab';
 import DetailsTab from '../UserCohortTab/CohortPopUp/DetailsTab';
@@ -8,9 +8,14 @@ import LeaderboardTab from '../UserCohortTab/CohortPopUp/LeaderboardTab';
 import MembersTab from '../UserCohortTab/CohortPopUp/MembersTab';
 import UserCoursesTab from '../UserCoursesTab';
 import UserLearningDashBoardTab from '../UserLearningDashBoardTab';
+import UserScheduleTab from '../UserScheduleTab';
 
 export const tabs = [
-  { name: 'About', comp: <UserAboutTab /> },
+  {
+    name: 'About',
+    comp: <UserAboutTab />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
   { name: 'Cohort', comp: <UserCohortTab /> },
   { name: 'Courses', comp: <UserCoursesTab /> },
   { name: 'Dashboard', comp: <UserLearningDashBoardTab />, isDemo: true },

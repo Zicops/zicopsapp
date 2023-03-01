@@ -145,11 +145,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     }
   ];
 
-  const filterOptions = [{ label: 'Saved', value: COURSE_STATUS.save }];
-
-  // remove this later
-  if (isDemo) filterOptions.push({ label: 'For Approval', value: COURSE_STATUS.approvalPending });
-  filterOptions.push({ label: 'Published', value: COURSE_STATUS.publish });
+  const filterOptions = [
+    { label: 'Saved', value: COURSE_STATUS.save },
+    { label: 'For Approval', value: COURSE_STATUS.approvalPending },
+    { label: 'Published', value: COURSE_STATUS.publish }
+  ];
 
   if (zicopsLspId == null) {
     filterOptions.push({ label: 'Expired', value: COURSE_STATUS.reject });
