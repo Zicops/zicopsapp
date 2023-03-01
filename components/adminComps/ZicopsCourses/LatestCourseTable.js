@@ -46,7 +46,8 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         {},
         userQueryClient
       );
-      courseFiltes.Owner = userOrgData?.getUserVendor?.[0]?.name;
+      courseFiltes.Owner = vendorDetail?.getUserVendor?.[0]?.name;
+      // courseFiltes.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
     }
 
     loadMyCourses({
