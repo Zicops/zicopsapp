@@ -19,7 +19,8 @@ export const courseSidebarData = {
       id: 2,
       title: 'My Courses',
       link: '/admin/course/my-courses',
-      description: ADMIN_COURSES.sidebarData.myCourses
+      description: ADMIN_COURSES.sidebarData.myCourses,
+      isVendor: true
     },
     {
       id: 3,
@@ -267,7 +268,7 @@ export default function useHandleRole() {
   const [sideBarData, setSideBarData] = useState([]);
 
   function getRoleBasedSideBarData() {
-    let initialSideBar = { ...courseSidebarData } ;
+    let initialSideBar = { ...courseSidebarData };
     const userOrgData = useRecoilValue(UsersOrganizationAtom);
     if (userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return initialSideBar;
     let sideBarArray = initialSideBar?.data?.map((data) => {

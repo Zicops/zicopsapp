@@ -1,8 +1,8 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CoursePageTabs from '../../../components/CourseBody/CoursePageTabs';
-import { tabs } from '../Logic/userBody.helper.js';
 import styles from '../learnerUserProfile.module.scss';
-import { useRouter } from 'next/router';
+import { tabs } from '../Logic/userBody.helper.js';
 
 const UserBody = () => {
   const [activeCourseTab, setActiveCourseTab] = useState(tabs[0].name);
