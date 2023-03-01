@@ -1,10 +1,25 @@
 import { GET_COHORT_COURSES, queryClient } from '@/api/Queries';
-import { ADD_USER_COHORT, ADD_USER_COURSE, UPDATE_COHORT_MAIN, UPDATE_USER_COHORT, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS, GET_USER_COURSE_PROGRESS_ID, GET_USER_LATEST_COHORTS, GET_USER_LEARNINGSPACES_DETAILS, GET_USER_ORGANIZATION_DETAIL, userQueryClient } from '@/api/UserQueries';
+import {
+  ADD_USER_COHORT,
+  ADD_USER_COURSE,
+  UPDATE_COHORT_MAIN,
+  UPDATE_USER_COHORT,
+  UPDATE_USER_COURSE,
+  userClient
+} from '@/api/UserMutations';
+import {
+  GET_USER_COURSE_MAPS,
+  GET_USER_COURSE_PROGRESS_ID,
+  GET_USER_LATEST_COHORTS,
+  GET_USER_LEARNINGSPACES_DETAILS,
+  GET_USER_ORGANIZATION_DETAIL,
+  userQueryClient
+} from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -14,8 +29,8 @@ import { cohortTabData } from './userBody.helper';
 
 export default function useHandleCohortTab() {
   const [cohortTab, setCohortTab] = useState(cohortTabData[0].name);
-  const [userOrgData,setUserOrgData] = useRecoilState(UsersOrganizationAtom);
-  const [selectedCohort , setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
+  const [selectedCohort, setSelectedCohort] = useRecoilState(SelectedCohortDataAtom);
 
   //for adding user to cohorts
 
@@ -37,10 +52,9 @@ export default function useHandleCohortTab() {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
-  const [updateUserCohort, { error : updateError }] = useMutation(UPDATE_USER_COHORT, {
+  const [updateUserCohort, { error: updateError }] = useMutation(UPDATE_USER_COHORT, {
     client: userClient
   });
-
 
   function showActiveTab(tab) {
     const index = cohortTabData.findIndex((t) => {
@@ -51,103 +65,137 @@ export default function useHandleCohortTab() {
     return cohortTabData[0].component;
   }
 
-  async function assignCourseToUser(userId=null,userLspId = null,cohort_id = null){
-    const {id} = getUserData();
+  async function assignCourseToUser(userId = null, userLspId = null, cohort_id = null) {
+    const { id } = getUserData();
     // if(!courseId) return false;
-    if(!cohort_id) return false;
-    if(!userId) return false;
-    if(!userLspId) return false;
+    if (!cohort_id) return false;
+    if (!userId) return false;
+    if (!userLspId) return false;
 
-    const userCoursesMaps = await loadQueryDataAsync(GET_USER_COURSE_MAPS,{user_id: userId,
-      publish_time: getCurrentEpochTime(),
-      pageCursor: "",
-      pageSize: 1000},{},userQueryClient);
+    const userCoursesMaps = await loadQueryDataAsync(
+      GET_USER_COURSE_MAPS,
+      { user_id: userId, publish_time: getCurrentEpochTime(), pageCursor: '', pageSize: 1000 },
+      {},
+      userQueryClient
+    );
 
-    if(userCoursesMaps?.error) return setToastMsg({ type: 'danger', message: 'Error occured while loading user course map' });
+    if (userCoursesMaps?.error)
+      return setToastMsg({
+        type: 'danger',
+        message: 'Error occured while loading user course map'
+      });
 
     //filtering the courses based on user_lsp_id
-    const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter((item) => item?.user_lsp_id === userLspId );
-      const cohortCourses = await loadQueryDataAsync(GET_COHORT_COURSES,{cohort_id:cohort_id},{},queryClient);
-      if(cohortCourses?.error) return setToastMsg({type:'danger',message:'Error while loading cohort courses!'});
-   
-      // const courseIds = cohortCourses?.getCohortCourseMaps?.length? (cohortCourses?.getCohortCourseMaps?.map((item)=> {item?.CourseId})):[];
-      const _cohortCourses = cohortCourses?.getCohortCourseMaps;
-      //console.log(_cohortCourses,'cohort courses')
-      if(_cohortCourses?.length){
-      setSelectedCohort((prevValue) => ({...prevValue , cohortCourses:[..._cohortCourses]}));}
-      
-      const addNewCourses = _cohortCourses?.filter(({CourseId:id1}) => !courses?.some(({ course_id: id2 }) => id2 === id1))
-      const oldCourses = courses?.filter(({ course_id: id1}) => _cohortCourses?.some(({ CourseId:id2 }) => id2 === id1))
-      
-      let isError = false;
-      //addding course map if user doesnt have course assigned
-      if(addNewCourses?.length){
-        for(let i = 0 ; i < addNewCourses?.length ; i++){
-          const endDate = new Date();
-          endDate.setDate(endDate.getDate()+parseInt(addNewCourses[i]?.ExpectedCompletion));
-          const sendData = {          
-            userId:userId,
-            userLspId:userLspId,
-            courseId:addNewCourses[i]?.CourseId,
-            courseType:addNewCourses[i]?.CourseType,
-            courseStatus: COURSE_MAP_STATUS.assign,
-            addedBy:JSON.stringify({user_id:id , role:'Cohort'}),
-            isMandatory:addNewCourses[i]?.isMandatory,
-            endDate:endDate
-          }
+    const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
+      (item) => item?.user_lsp_id === userLspId
+    );
 
-          const res = await addUserCourse({variables:sendData}).catch((err) => {
-            console.log(err);
-            isError = !!false;
-            // return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-            return;
+    const cohortCourses = await loadQueryDataAsync(
+      GET_COHORT_COURSES,
+      { cohort_id: cohort_id },
+      {},
+      queryClient
+    );
+    if (cohortCourses?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading cohort courses!' });
+
+    // const courseIds = cohortCourses?.getCohortCourseMaps?.length? (cohortCourses?.getCohortCourseMaps?.map((item)=> {item?.CourseId})):[];
+    const _cohortCourses = cohortCourses?.getCohortCourseMaps;
+
+    if (_cohortCourses?.length) {
+      setSelectedCohort((prevValue) => ({ ...prevValue, cohortCourses: [..._cohortCourses] }));
+    }
+
+    
+    const addNewCourses = _cohortCourses?.filter(
+      ({ CourseId: id1 }) => !courses?.some(({ course_id: id2 }) => id2 === id1)
+    );
+
+    let oldCourses = [];
+    for (let i = 0; i < courses?.length; i++) {
+      for (let j = 0; j < _cohortCourses?.length; j++) {
+        if (_cohortCourses?.[j]?.CourseId === courses?.[i]?.course_id) {
+          oldCourses.push({
+            ...courses[i],
+            cohortCourseEndDate: _cohortCourses?.[j]?.ExpectedCompletion
           });
-
-          console.log(res)
-
-          if(isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
         }
       }
+    }
 
-      // console.log(oldCourses,'oldCOurses',addNewCourses)
-      // need to update old courses. check if it is assigned by admin or cohort
-      if(oldCourses?.length){
-        for(let i = 0 ; i < oldCourses?.length ; i++){
-          let addedBy = null ;
-          try{
-            addedBy = JSON.parse(oldCourses[i]?.added_by);
-          }catch(e){
-            console.log(e,'error in try catch course assign');
+
+    let isError = false;
+    //addding course map if user doesnt have course assigned
+    if (addNewCourses?.length) {
+      for (let i = 0; i < addNewCourses?.length; i++) {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + parseInt(addNewCourses[i]?.ExpectedCompletion));
+        const sendData = {
+          userId: userId,
+          userLspId: userLspId,
+          courseId: addNewCourses[i]?.CourseId,
+          courseType: addNewCourses[i]?.CourseType,
+          courseStatus: COURSE_MAP_STATUS.assign,
+          addedBy: JSON.stringify({ user_id: id, role: 'cohort' }),
+          isMandatory: addNewCourses[i]?.isMandatory,
+          endDate: getUnixFromDate(endDate)?.toString(),
+          lspId: addNewCourses[i]?.LspId
+        };
+
+        const res = await addUserCourse({ variables: sendData }).catch((err) => {
+          console.log(err);
+          isError = !!false;
+          // return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
+          return;
+        });
+
+
+        if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
+      }
+    }
+
+    // need to update old courses. check if it is assigned by admin or cohort
+    if (oldCourses?.length) {
+      for (let i = 0; i < oldCourses?.length; i++) {
+        let addedBy = null;
+        try {
+          addedBy = JSON.parse(oldCourses[i]?.added_by);
+        } catch (e) {
+          console.log(e, 'error in try catch course assign');
+        }
+
+        if (addedBy?.role?.toLowerCase() === 'self') {
+          const progressRes = await loadQueryDataAsync(
+            GET_USER_COURSE_PROGRESS_ID,
+            {
+              userId: oldCourses[i]?.user_id,
+              userCourseId: [oldCourses[i]?.user_course_id]
+            },
+            {},
+            userClient
+          );
+          const isCourseStarted = progressRes?.getUserCourseProgressByMapId?.length > 0;
+
+          let isCompleted = false;
+
+          let courseStatus = COURSE_MAP_STATUS?.assign;
+
+          if (!!isCourseStarted) {
+            let cpLength = 0;
+            progressRes?.getUserCourseProgressByMapId?.forEach((courseProgress) => {
+              if (courseProgress?.status === COURSE_PROGRESS_STATUS[2]) {
+                cpLength++;
+              }
+            });
+            isCompleted =
+              cpLength === progressRes?.getUserCourseProgressByMapId?.length ? true : false;
+            if (isCompleted) courseStatus = COURSE_MAP_STATUS?.completed;
+            else courseStatus = COURSE_MAP_STATUS?.started;
           }
-          // console.log(addedBy,'added by')
-          if(addedBy?.role?.toLowerCase() === 'self' ){
-            const progressRes = await loadQueryDataAsync(
-              GET_USER_COURSE_PROGRESS_ID,
-              {
-                userId: oldCourses[i]?.user_id,
-                userCourseId: [oldCourses[i]?.user_course_id]
-              },
-              {},
-              userClient
-            );
-            const isCourseStarted = progressRes?.getUserCourseProgressByMapId?.length > 0;
-      
-            let isCompleted = false;
-      
-            let courseStatus = COURSE_MAP_STATUS?.assign;
-      
-            if (!!isCourseStarted) {
-              let cpLength = 0;
-              progressRes?.getUserCourseProgressByMapId?.forEach((courseProgress) => {
-                if (courseProgress?.status === COURSE_PROGRESS_STATUS[2]) {
-                  cpLength++;
-                }
-              });
-              isCompleted = cpLength === progressRes?.getUserCourseProgressByMapId?.length ? true : false;
-              if(isCompleted) courseStatus = COURSE_MAP_STATUS?.completed;
-              else courseStatus = COURSE_MAP_STATUS?.started;
-            }
-          const sendData ={
+
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + parseInt(oldCourses[i]?.cohortCourseEndDate));
+          const sendData = {
             userCourseId: oldCourses[i]?.user_course_id,
             userId: oldCourses[i]?.user_id,
             userLspId: oldCourses[i]?.user_lsp_id,
@@ -155,42 +203,46 @@ export default function useHandleCohortTab() {
             addedBy: JSON.stringify({ userId: id, role: 'cohort' }),
             courseType: oldCourses[i]?.course_type,
             isMandatory: oldCourses[i]?.is_mandatory,
-            endDate: oldCourses[i]?.end_date
-          }
+            endDate: getUnixFromDate(endDate)?.toString(),
+            lspId: oldCourses[i]?.lsp_id
+          };
 
-          sendData.courseStatus = courseStatus ; 
+          sendData.courseStatus = courseStatus;
 
-          console.log(sendData,'updateCourse send data');
-          const res = await updateUserCourse({variables:sendData}).catch((err)=>{
+
+          const res = await updateUserCourse({ variables: sendData }).catch((err) => {
             isError = !!err;
-          })
-          if(isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
-          console.log(res);
-         }
-         continue;
+          });
+          if (isError) return setToastMsg({ type: 'danger', message: 'Course Assign Error' });
         }
+        continue;
       }
+    }
 
-      if(isError) return false;
-    
-      return true;
+    if (isError) return false;
 
+    return true;
   }
 
-  async function getUserLspData(user_id=null,lsp_id=null){
-    if(!user_id) return false;
-    if(!lsp_id) return false;
+  async function getUserLspData(user_id = null, lsp_id = null) {
+    if (!user_id) return false;
+    if (!lsp_id) return false;
 
-    const resLsp = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{lsp_id:lsp_id, user_id:user_id},{},userQueryClient);
-        if(resLsp?.error) return false;
-        // console.log(resLsp?.getUserLspByLspId);
-        return resLsp?.getUserLspByLspId ;  
+    const resLsp = await loadQueryDataAsync(
+      GET_USER_LEARNINGSPACES_DETAILS,
+      { lsp_id: lsp_id, user_id: user_id },
+      {},
+      userQueryClient
+    );
+    if (resLsp?.error) return false;
+    // console.log(resLsp?.getUserLspByLspId);
+    return resLsp?.getUserLspByLspId;
   }
 
-  async function addUserToCohort(userIds = [] , cohortId = null){
+  async function addUserToCohort(userIds = [], cohortId = null) {
     // if(!userOrgData?.lsp_id && !<lsp_id>) return ;
     const lspId = sessionStorage.getItem('lsp_id');
-    if (!userOrgData?.lsp_id) setUserOrgData((prev) => ({ ...prev, lsp_id: lspId }));
+    // if (!userOrgData?.lsp_id) setUserOrgData((prev) => ({ ...prev, lsp_id: lspId }));
 
     if (!userIds?.length) return setToastMsg({ type: 'info', message: 'Make sure to add users!' });
 
@@ -308,28 +360,32 @@ export default function useHandleCohortTab() {
     return updateUserData;
   }
 
-  async function updateCohortMain(cohortData = null){
-    if(!cohortData) return ;
+  async function updateCohortMain(cohortData = null) {
+    if (!cohortData) return;
     const sendCohortData = {
       cohort_id: cohortData?.cohort_id,
       name: cohortData?.name,
       description: cohortData?.description,
-      lsp_id: cohortData?.lsp_id ,
+      lsp_id: cohortData?.lsp_id,
       code: cohortData?.code,
       status: 'SAVED',
       type: cohortData?.type,
       is_active: true,
       size: cohortData?.size
-    }
-
-    console.log(sendCohortData,'sendDCOhroshos')
+    };
 
     const resCohort = await updateCohortMainData({ variables: sendCohortData }).catch((err) => {
       // console.log(err);
       isError = !!err;
     });
   }
-  
 
-  return { cohortTab, setCohortTab, showActiveTab , addUserToCohort , getUsersOrgDetails , updateCohortMain }
+  return {
+    cohortTab,
+    setCohortTab,
+    showActiveTab,
+    addUserToCohort,
+    getUsersOrgDetails,
+    updateCohortMain
+  };
 }
