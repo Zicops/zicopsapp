@@ -93,7 +93,7 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href="/admin/user/my-users">
+            <Link href={isVendor ? '' : '/admin/user/my-users'}>
               <a>
                 <Card
                   image="/images/UserManagement.png"
