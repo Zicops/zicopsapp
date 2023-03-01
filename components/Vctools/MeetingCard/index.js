@@ -25,7 +25,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
             nameRef.current.style.display = "block"
         }
     }, [video1])
-
+    
     return (
         <div className={`${styles.Vccard}`}>
             <div className={`${styles.video1}`}>
@@ -62,6 +62,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         console.log("cliked")
                         startMeeting()
                         StopVideo(video, videoref)
+                        // console.log(startName)
                     }}>
                         Join
                     </button>
