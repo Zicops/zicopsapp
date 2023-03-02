@@ -15,16 +15,17 @@ import {
   GET_USER_ORGANIZATION_DETAIL,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync, sendNotificationWithLink } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
-import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS } from '@/helper/constants.helper';
+import { COURSE_MAP_STATUS, COURSE_PROGRESS_STATUS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { SelectedCohortDataAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { cohortTabData } from './userBody.helper';
 
 export default function useHandleCohortTab() {
@@ -34,6 +35,7 @@ export default function useHandleCohortTab() {
 
   //for adding user to cohorts
 
+  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [updateCohortMainData, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
     client: userClient
   });
@@ -221,6 +223,35 @@ export default function useHandleCohortTab() {
 
     if (isError) return false;
 
+
+    // const origin = window?.location?.origin || '';
+    // const bodyData = {
+    //   user_name: userData?.first_name || '',
+    //   lsp_name: sessionStorage?.getItem('lsp_name'),
+    //   course_name: courseName || '',
+    //   end_date: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY'),
+    //   link: `${origin}/`
+    // };
+
+    // let emailBody = {
+    //   to: [userData?.email],
+    //   sender_name: sessionStorage?.getItem('lsp_name'),
+    //   user_name: userData?.first_name || '',
+    //   body: JSON.stringify(bodyData),
+    //   template_id: ''
+    // }
+    // sendEmail(emailBody,{ context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } })
+    
+    //**IMPORTANT: need email template for later to send email and getUserDetails query needs to be called for userDetails
+    sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: 'You have been mapped to cohort. Please check out courses that have been assigned to you.',
+        user_id: [userId],
+        link: ''
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
     return true;
   }
 
