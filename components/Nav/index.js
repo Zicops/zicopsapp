@@ -89,6 +89,8 @@ export default function Nav() {
   let displayDevMode = !!isDev;
   if (getCurrentHost()?.includes('localhost')) displayDevMode = true;
 
+  let notificationCount = notifications?.filter((n) => !n?.isRead)?.length ;
+
   return (
     <div className={styles.navbar} id="navbar">
       {!!displayDevMode && (
@@ -212,9 +214,9 @@ export default function Nav() {
               <li
                 onClick={handleClickInside}
                 data-count={
-                  notifications?.filter((n) => !n?.isRead)?.length > 10
+                  notificationCount > 10
                     ? '10+'
-                    : notifications?.filter((n) => !n?.isRead)?.length
+                    : notificationCount
                 }
                 className={`${styles.notificationIcon} ${
                   !!notifications?.filter((n) => !n?.isRead)?.length &&
