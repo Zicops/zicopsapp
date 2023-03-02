@@ -3,14 +3,25 @@ export function customSelectStyles(
   isFiftyFifty = false,
   containerWidth = '100%',
   isError,
-  isReadonly
+  isReadonly,
+  customStyleObject = {}
 ) {
+  const {
+    controlStyles = {},
+    placeholderStyles = {},
+    optionStyles = {},
+    menuStyles = {},
+    dropdownIndicatorStyles = {}
+  } = customStyleObject;
   return {
     container: (provided, state) => ({
       ...provided,
       width: isFiftyFifty ? '50%' : containerWidth,
       boxShadow: state?.isFocused ? '0px 0px 10px 0px var(--primary)' : 'none'
     }),
+    placeholder: (provided) => {
+      return { ...provided, ...placeholderStyles };
+    },
     control: (provided, state) => {
       let borderStyle = '2px solid var(--dark_three)';
 
@@ -28,7 +39,8 @@ export function customSelectStyles(
         fontSize: '14px',
         '&:hover': {
           borderWidth: '2px'
-        }
+        },
+        ...controlStyles
       };
     },
     input: (provided, state) => ({ ...provided, color: 'var(--white)' }),
@@ -38,10 +50,12 @@ export function customSelectStyles(
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
-      svg: {
-        fill: isReadonly ? 'none' : ''
-      }
+      svg: { fill: isReadonly ? 'none' : '' },
+      ...dropdownIndicatorStyles
     }),
+    menu: (provided) => {
+      return { ...provided, ...menuStyles };
+    },
     menuList: (provided, state) => ({
       ...provided,
       padding: 0,
@@ -79,7 +93,8 @@ export function customSelectStyles(
       '&:hover': {
         backgroundColor: 'var(--black)',
         color: 'var(--white)'
-      }
+      },
+      ...optionStyles
     }),
     singleValue: (provided, state) => ({ ...provided, color: 'var(--white)' }),
     multiValue: (provided, state) => ({

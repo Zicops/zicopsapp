@@ -6,9 +6,11 @@ export default function LabeledDropdown({
   dropdownOptions,
   styleClass,
   isError,
+  isLoading = false,
   changeHandler,
   filterOption,
-  isFiftyFifty = false
+  isFiftyFifty = false,
+  customDropdownStyles = {}
 }) {
   let {
     inputName,
@@ -52,9 +54,16 @@ export default function LabeledDropdown({
         onChange={changeHandler}
         className={`${label ? '' : 'w-100'} ${isError ? 'headShake' : ''}`}
         menuPlacement={menuPlacement}
-        styles={customSelectStyles(isFiftyFifty, containerWidth, isError, isReadonly)}
+        styles={customSelectStyles(
+          isFiftyFifty,
+          containerWidth,
+          isError,
+          isReadonly,
+          customDropdownStyles
+        )}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
+        isLoading={isLoading}
         isOptionDisabled={(option) => option.disabled}
         noOptionsMessage={() => noOptionsMessage}
         isMulti={!!isMulti}

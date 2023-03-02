@@ -1,4 +1,5 @@
 import CustomTooltip from '@/components/common/CustomTooltip';
+import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_EXAMS } from '@/components/common/ToolTip/tooltip.helper';
@@ -13,6 +14,7 @@ export default function QuestionMaster({
   setIsBulkUpload = () => {}
 }) {
   const [visibleForm, setVisibleForm] = useState(data?.questionData?.type ? 'create' : null);
+  const [uploadQuestionType, setUploadQuestionType] = useState('MCQ');
 
   const [uploadData, setUploadData] = uploadDataState;
 
@@ -89,13 +91,33 @@ export default function QuestionMaster({
         {visibleForm === 'create' && <CreateQuestionForm isEdit={isEdit} data={data} />}
 
         {visibleForm === 'upload' && (
-          <UploadForm
-            leftGapClass={'w-12'}
-            acceptedTypes=".csv"
-            handleFileUpload={handleBulkUpload}
-            filePath={'/templates/question-bank-template.csv'}
-            handleRemove={() => setUploadData(null)}
-          />
+          <>
+            <LabeledDropdown
+              dropdownOptions={{
+                inputName: 'type',
+                label: 'Select Question Type: ',
+                placeholder: 'Select question type',
+                options: [
+                  { label: 'MCQ', value: 'MCQ' },
+                  { label: 'Descriptive', value: 'Descriptive', disabled: true }
+                ],
+                value: uploadQuestionType
+                  ? { value: uploadQuestionType, label: uploadQuestionType }
+                  : null
+              }}
+              changeHandler={(e) => setUploadQuestionType(e.value)}
+            />
+
+            <div className={styles.marginTop}>
+              <UploadForm
+                leftGapClass={'w-12'}
+                acceptedTypes=".csv"
+                handleFileUpload={handleBulkUpload}
+                filePath={'/templates/question-bank-template.csv'}
+                handleRemove={() => setUploadData(null)}
+              />
+            </div>
+          </>
         )}
       </div>
 

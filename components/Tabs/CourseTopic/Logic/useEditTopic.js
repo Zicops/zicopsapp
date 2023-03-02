@@ -465,7 +465,8 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           const quesRes = await updateQuestion({ variables: sendQuestionData }).catch((err) => {
             console.log(err);
             isError = !!err;
-            return setToastMsg({ type: 'danger', message: 'Update Question Error' });
+
+            setToastMsg({ type: 'danger', message: 'Update Question Error' });
           });
           console.log(quesRes);
 
@@ -500,7 +501,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             await updateOption({ variables: sendOptionData }).catch((err) => {
               console.log(err);
               isError = !!err;
-              return setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
+              setToastMsg({ type: 'danger', message: `Update Option (${i + 1}) Error` });
             });
           }
           // if (!isError) setToastMsg({ type: 'success', message: 'New Question Added with Options' });
@@ -538,11 +539,13 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         const isDuplicate = allQuestionsArr.some(
           (q) => q?.Description?.toLowerCase()?.trim() === quiz?.question?.toLowerCase()?.trim()
         );
-        if (isDuplicate)
-          return setToastMsg({
+        if (isDuplicate) {
+          setToastMsg({
             type: 'danger',
             message: 'Question with same name cannot be added!'
           });
+          continue;
+        }
 
         const sendQuestionData = {
           name: '',

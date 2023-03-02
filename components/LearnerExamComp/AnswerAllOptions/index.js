@@ -1,10 +1,9 @@
+import ToolTip from '@/components/common/ToolTip';
+import { Box, Grid } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import AnswerSingleOption from '../AnswerSingleOption';
 import styles from './answerAllOptions.module.scss';
-import { useEffect, useState } from 'react';
-import { Box, Grid } from '@mui/material';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import ToolTip from '@/components/common/ToolTip';
 const AnswerAllOptions = ({
   data,
   setData,
@@ -158,7 +157,7 @@ const AnswerAllOptions = ({
                 : styles.answer_all_options_button_mark
             }`}>
             {mark ? 'Unmark' : 'Mark'}
-            <span>from review</span>
+            <span>for Review</span>
           </button>
           </ToolTip>
           <ToolTip title="Go back to previous question" placement="top">

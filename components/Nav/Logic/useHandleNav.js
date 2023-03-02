@@ -28,7 +28,7 @@ export function useHandleNav(isAdmin, setAdmin) {
     const role = sessionStorage?.getItem('user_lsp_role');
     if (!role) return;
     console.log(role, 'role');
-    setAdmin(role.toLowerCase() === 'admin');
+    setAdmin(role.toLowerCase() === 'admin' || role.toLowerCase() === 'vendor');
   }, [userData?.id]);
 
   useEffect(() => {

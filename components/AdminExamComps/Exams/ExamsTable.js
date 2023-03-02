@@ -120,7 +120,10 @@ export default function ExamsTable({ isEdit = false }) {
       field: 'ScheduleType',
       headerClassName: 'course-list-header',
       headerName: 'Type',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => {
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.ScheduleType}</span>;
+      }
     },
     {
       field: 'Status',

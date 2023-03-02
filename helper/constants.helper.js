@@ -10,7 +10,7 @@ export const COURSE_MAP_STATUS = {
   completed: 'completed',
   disable: 'disable'
 };
-export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
+export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -167,7 +167,8 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
-  courseVideoSize: ONE_MB_IN_BYTES * 240
+  previewVideoSize: ONE_MB_IN_BYTES * 50,
+  topicVideoSize: ONE_MB_IN_BYTES * 500
 };
 
 export const EMAIL_TEMPLATE_IDS = {
@@ -189,7 +190,7 @@ export const COURSE_TOPIC_TYPES = {
 
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
-  'https://zicops.com',
+  'https://zicops.com'
   // 'https://myspace.zicops.com'
 ];
 
@@ -210,4 +211,12 @@ export const VENDOR_LANGUAGES = [
 
 export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
+export const VENDOR_MASTER_STATUS = {
+  active: 'active',
+  draft: 'draft'
+};
+
 //Vendor Constant End
+
+// GENERIC CONSTANTS
+export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
