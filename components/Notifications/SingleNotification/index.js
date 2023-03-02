@@ -36,7 +36,8 @@ const SingleNotification = ({
     body: description,
     user_id: JSON.parse(sessionStorage.getItem('loggedUser'))?.id,
     message_id: messageId,
-    is_read: true
+    is_read: true,
+    link: link
   };
 
   let currentNotification = {

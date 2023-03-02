@@ -1,4 +1,4 @@
-import { ADD_USER_ORGANIZATION_MAP, userClient } from '@/api/UserMutations';
+import { userClient } from '@/api/UserMutations';
 import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
@@ -8,13 +8,12 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { getUserOrgMapObject, useUpdateUserOrgData } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../userProfile.module.scss';
 
-const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData }) => {
+const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData , imageUrl = null }) => {
   const [isEditData, setIsEditData] = useState(null);
   const [isAddData , setIsAddData] = useState(false);
   const [isAddPopupOpen, setIsAddPopupOpen] = useState(false);
@@ -111,7 +110,7 @@ const ProfileOrganizationDetail = ({ currentUserData, setCurrentUserData }) => {
       <div className={`${styles.profileDetailsContainer}`}>
         <div className={`${styles.profilePicContainer}`}>
           <img
-            src={currentUserData?.photo_url || '/images/profile_picture.png'}
+            src={imageUrl || '/images/Avatars/Profile.png'}
             alt="not found"
             width={200}
           />
