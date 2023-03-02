@@ -5,6 +5,7 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getQuizObject, QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
@@ -31,6 +32,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
     setEditedQuiz
   } = useAddQuiz(courseId, topicId, isScrom);
 
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
   const quizMetaData = useRecoilValue(QuizMetaDataAtom);
   const acceptedType = ['image/png', 'image/gif', 'image/jpeg', 'image/svg+xml'];
@@ -51,7 +53,16 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
             type={
               <div className={styles.editQuizContainer}>
                 <span>{quiz?.type}</span>
-                <span className={styles.editQuiz} onClick={() => handleEditQuiz(quiz, index)}>
+                <span
+                  className={styles.editQuiz}
+                  onClick={() => {
+                    if (isQuizFormVisible)
+                      return setToastMsg({
+                        type: 'danger',
+                        message: 'Please add or cancel the current quiz form'
+                      });
+                    handleEditQuiz(quiz, index);
+                  }}>
                   <img src="/images/svg/edit-box-line.svg" alt="" />
                 </span>
 

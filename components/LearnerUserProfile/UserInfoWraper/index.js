@@ -1,6 +1,4 @@
 import Button from '@/components/common/Button';
-import { IsUpdatedAtom } from '@/state/atoms/users.atom';
-import { useRecoilState } from 'recoil';
 import styles from '../learnerUserProfile.module.scss';
 import SingleInfo from '../SingleInfo';
 // import SingleUserDetail from '../SingleUserDetail';
@@ -12,11 +10,9 @@ const UserInfoWraper = ({
   isOrg = false,
   handleUpdate = function () {}
 }) => {
-  const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
   function handleClick() {
     handleUpdate();
     toggleEditable();
-    setIsUpdate(true);
   }
   return (
     <div className={`${styles.userInfoWraper}`}>

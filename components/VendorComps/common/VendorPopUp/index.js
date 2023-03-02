@@ -18,7 +18,8 @@ export default function VendorPopUp({
   tooltipCloseBtnTitle,
   onClose = () => {},
   isAttempted = false,
-  isMarketYard = false
+  isMarketYard = false,
+  headerComps = null
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -50,6 +51,7 @@ export default function VendorPopUp({
           <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage}`}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
+              {headerComps}
               <div
                 className={`${styles.cross_img} ${closeBtn.disabled ? styles.disabled : ''}`}
                 onClick={() => {

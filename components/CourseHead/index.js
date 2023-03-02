@@ -1,13 +1,13 @@
 import { snakeCaseToTitleCase } from '@/helper/common.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Sitemap from '../common/AdminHeader/Sitemap';
 import PopUp from '../common/PopUp';
-import ToolTip from '../common/ToolTip';
 import styles from './courseHead.module.scss';
 
 export default function CourseHead({
@@ -15,10 +15,11 @@ export default function CourseHead({
   hideCourseTypeDropdown = false,
   hidePlus = false,
   handlePlusClick = null,
-  tooltipTitle = '' 
+  tooltipTitle = ''
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const router = useRouter();
   const options = Array(COURSE_TYPES?.length)
@@ -40,6 +41,8 @@ export default function CourseHead({
   function gotoAddcourse() {
     router.push('/admin/courses');
   }
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   useEffect(() => {
     localStorage.setItem('courseType', options[0].value);
@@ -75,13 +78,14 @@ export default function CourseHead({
             alt=""
             onClick={handlePlusClick ? handlePlusClick : gotoAddcourse}
           />
-          )}
-          <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
-          <img
+        )}
+        <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
+        <img
           src="/images/sitemap_icon.png"
           className="rightside_icon"
           alt=""
-          onClick={() => setShowSitemap(true)}
+          style={isVendor ? { cursor: 'not-allowed' } : {}}
+          onClick={() => (isVendor ? '' : setShowSitemap(true))}
         />
       </div>
 
