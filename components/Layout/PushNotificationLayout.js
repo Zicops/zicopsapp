@@ -145,7 +145,10 @@ export default function PushNotificationLayout({ children }) {
 
     async function setToken() {
       const _token = sessionStorage.getItem('fcm-token');
-      if (_token) return _token;
+      if (_token) {
+        setFcmToken(_token);
+        return _token;
+      }
 
       try {
         const token = await getFCMToken();
