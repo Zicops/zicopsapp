@@ -169,7 +169,8 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
     if (quizTempIndex >= 0) {
       const _quizzes = structuredClone(quizzes);
       const quizData = quizTemp[quizTempIndex];
-      if (quizData?.data && !isNaN(+quizData.index)) _quizzes[quizData?.index] = quizData?.data;
+      if (quizData?.data && !isNaN(+quizData.index))
+        _quizzes.splice(quizData?.index, 0, quizData?.data);
 
       setQuizzes(_quizzes);
     }
@@ -327,6 +328,13 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       quizzes?.some((q) => q?.name?.toLowerCase()?.trim() === newQuiz?.name?.toLowerCase()?.trim())
     )
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
+    const isDuplicate = quizMetaData?.questions.some(
+      (q) =>
+        q?.Description?.toLowerCase()?.trim() === newQuiz?.question?.toLowerCase()?.trim() &&
+        q?.id !== newQuiz?.questionId
+    );
+    if (isDuplicate)
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
 
     const _quizTemp = structuredClone(quizTemp);
     const quizTempIndex = quizTemp?.findIndex((q) => q?.data?.questionId === newQuiz?.questionId);
