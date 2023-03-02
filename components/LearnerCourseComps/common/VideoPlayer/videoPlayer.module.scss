@@ -38,6 +38,7 @@ $thumbnailWidth: 200px;
     padding: 15px;
     border-radius: 50%;
     animation: myflash 1s;
+    pointer-events: none;
 
     .centerFlashIconImg {
       opacity: 0.8;

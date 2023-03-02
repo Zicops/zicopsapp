@@ -8,7 +8,7 @@ import {
 import ButtonWithNoStyles from '../../common/ButtonWithNoStyles';
 import styles from '../../learnerCourseComps.module.scss';
 
-export default function SubtitleBox() {
+export default function SubtitleBox({ closeBox = () => {} }) {
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
 
@@ -28,7 +28,7 @@ export default function SubtitleBox() {
 
   return (
     <>
-      <div className={`${styles.subtitleBox}`}>
+      <div className={`${styles.boxContainer} ${styles.subtitleBox}`}>
         {/* for topic content language  */}
         <div>
           <h4>Audio </h4>
@@ -37,9 +37,11 @@ export default function SubtitleBox() {
             {allLanguages?.map((lang) => (
               <ButtonWithNoStyles
                 key={lang?.label}
-                handleClick={() =>
-                  setActiveCourseData({ ...activeCourseData, topicContentId: lang?.value })
-                }
+                handleClick={() => {
+                  if (lang?.value === activeCourseData?.topicContentId) return;
+                  setActiveCourseData({ ...activeCourseData, topicContentId: lang?.value });
+                  closeBox();
+                }}
                 styleClass={`${lang?.label === activeCourseData?.language ? styles.active : ''}`}>
                 {truncateToN(lang?.label, 15)}
               </ButtonWithNoStyles>
@@ -66,7 +68,11 @@ export default function SubtitleBox() {
             {allSubtitles?.map((subtitle) => (
               <ButtonWithNoStyles
                 key={subtitle?.label}
-                handleClick={() => selectSubtitle(subtitle)}
+                handleClick={() => {
+                  if (subtitle?.value === activeCourseData?.subTitle?.url) return;
+                  selectSubtitle(subtitle);
+                  closeBox();
+                }}
                 styleClass={`${
                   subtitle?.label === activeCourseData?.subTitle?.language ? styles.active : ''
                 }`}>

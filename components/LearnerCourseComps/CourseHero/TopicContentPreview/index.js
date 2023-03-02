@@ -12,6 +12,7 @@ import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
 import CourseHeroTopBar from '../CourseHeroTopBar';
 import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
+import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
 
 export default function TopicContentPreview() {
@@ -33,13 +34,13 @@ export default function TopicContentPreview() {
       id: 0,
       btnImg: '/images/svg/spatial_audio_off.svg',
       handleClick: () => toggleActiveBox(0),
-      boxComponent: <SubtitleBox />,
+      boxComponent: <SubtitleBox closeBox={() => toggleActiveBox(null)} />,
     },
     {
       id: 1,
       btnImg: '/images/svg/hub.svg',
       handleClick: () => toggleActiveBox(1),
-      boxComponent: <>Resoucrs</>,
+      boxComponent: <ResourcesList />,
     },
     {
       id: 2,

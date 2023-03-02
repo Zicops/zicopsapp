@@ -43,6 +43,7 @@ export default function VideoPlayer({
           customStyles={{
             zIndex: 1,
             position: 'absolute',
+            pointerEvents: 'none',
             backgroundColor: playerState?.isPlaying ? 'transparent' : '',
           }}
         />

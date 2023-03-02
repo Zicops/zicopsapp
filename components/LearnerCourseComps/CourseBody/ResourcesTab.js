@@ -1,6 +1,6 @@
-import { ResourcesAtom } from '@/state/atoms/module.atoms';
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
+import { TopicResourcesAtom } from '../atoms/learnerCourseComps.atom';
 import LineTextWithDescription from '../common/LineTextWithDescription';
 import ResourceFile from '../common/ResourceFile';
 import TopicDataCard from '../common/TopicDataCard';
@@ -11,12 +11,12 @@ import useHandleResourceSelection from '../Logic/useHandleResourceSelection';
 import ModuleSelection from './ModuleSelection';
 
 export default function ResourcesTab() {
-  const resources = useRecoilValue(ResourcesAtom);
+  const resources = useRecoilValue(TopicResourcesAtom);
 
   const {
     isResourcesPresent,
-    selectedResources,
-    setSelectedResources,
+    selectedTopic,
+    setSelectedTopic,
     resourceViewRef,
     currentModuleTopicIds,
   } = useHandleResourceSelection();
@@ -51,9 +51,14 @@ export default function ResourcesTab() {
                 <TopicDataCard
                   topicId={topicId}
                   isResources={true}
-                  isActive={selectedResources?.topicData?.id === topicId}
+                  isActive={selectedTopic?.topicData?.id === topicId}
                   resourceCount={res?.length}
-                  handleClick={(topicData) => setSelectedResources({ topicData, resources: res })}
+                  handleClick={(topicData) => {
+                    if (selectedTopic?.topicData?.name === topicData?.name)
+                      return setSelectedTopic(null);
+
+                    setSelectedTopic({ topicData, resources: res });
+                  }}
                 />
               );
             })}
@@ -61,23 +66,23 @@ export default function ResourcesTab() {
         )}
       </div>
 
-      {!!selectedResources?.resources && (
+      {!!selectedTopic?.resources && (
         <>
-          <LineTextWithDescription title={selectedResources?.topicData?.name} />
+          <LineTextWithDescription title={selectedTopic?.topicData?.name} />
 
           <div className={`${styles.resourcesList}`} ref={resourceViewRef}>
-            {selectedResources?.resources?.length === 0 ? (
+            {selectedTopic?.resources?.length === 0 ? (
               <div className={`${styles.resourceType}`}>No Resources Uploaded</div>
             ) : (
               <>
                 <div className={`${styles.gridThree}`}>
-                  {selectedResources?.resources.map((r, i) => (
+                  {selectedTopic?.resources.map((r, i) => (
                     <Fragment key={r.name + i}>
                       {prevType !== r.type && (
                         <h2 className={`${styles.resourceType}`}>{(prevType = r.type)}</h2>
                       )}
 
-                      <ResourceFile type={r?.type} title={r.name} resourceUrl={r?.url} />
+                      <ResourceFile type={r?.type} name={r.name} resourceUrl={r?.url} />
                     </Fragment>
                   ))}
                 </div>

@@ -1,14 +1,17 @@
-import { ResourcesAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../atoms/learnerCourseComps.atom';
+import {
+  ActiveCourseDataAtom,
+  CourseModulesAtomFamily,
+  TopicResourcesAtom,
+} from '../atoms/learnerCourseComps.atom';
 
 export default function useHandleResourceSelection() {
   const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(activeCourseData?.moduleId));
-  const resources = useRecoilValue(ResourcesAtom);
+  const resources = useRecoilValue(TopicResourcesAtom);
 
-  const [selectedResources, setSelectedResources] = useState(null);
+  const [selectedTopic, setSelectedTopic] = useState(null);
 
   const resourceViewRef = useRef();
 
@@ -24,7 +27,7 @@ export default function useHandleResourceSelection() {
   );
 
   useEffect(() => {
-    if (selectedResources?.resources) setSelectedResources(null);
+    if (selectedTopic?.resources) setSelectedTopic(null);
   }, [activeCourseData?.moduleId]);
 
   useEffect(() => {
@@ -34,13 +37,13 @@ export default function useHandleResourceSelection() {
       block: 'end',
       inline: 'nearest',
     });
-  }, [selectedResources?.resources]);
+  }, [selectedTopic?.resources]);
 
   return {
     resourceViewRef,
     isResourcesPresent,
     currentModuleTopicIds,
-    selectedResources,
-    setSelectedResources,
+    selectedTopic,
+    setSelectedTopic,
   };
 }

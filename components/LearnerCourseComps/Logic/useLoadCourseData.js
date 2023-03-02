@@ -13,7 +13,6 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
-import { ResourcesAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { sortArrByKeyInOrder } from '@/utils/array.utils';
 import { useRouter } from 'next/router';
@@ -33,6 +32,7 @@ import {
   getUserCourseMapDataObj,
   getUserTopicProgressDataObj,
   TopicQuizAtom,
+  TopicResourcesAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
 } from '../atoms/learnerCourseComps.atom';
@@ -45,7 +45,7 @@ export default function useLoadCourseData() {
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
   const [moduleIds, setModuleIds] = useRecoilState(CourseModuleIdsAtom);
   const [topicIds, setTopicIds] = useRecoilState(CourseTopcIdsAtom);
-  const [resources, setResources] = useRecoilState(ResourcesAtom);
+  const [resources, setResources] = useRecoilState(TopicResourcesAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);

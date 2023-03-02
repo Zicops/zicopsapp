@@ -49,7 +49,7 @@ export default function CourseBody() {
       {/* resource view popup */}
       {!!selectedResourceData?.url && (
         <PopUp
-          title={selectedResourceData?.title}
+          title={selectedResourceData?.name}
           popUpState={[selectedResourceData?.url, setSelectedResourceData]}
           size="large"
           positionLeft="50%"
