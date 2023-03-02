@@ -26,7 +26,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
             const isContentUrlPresent = (!!content?.id && !content?.contentUrl) || false;
 
             return (
-              <div className="content_added" key={content.language}>
+              <div className="content_added" key={content?.id + content.language}>
                 <div className="content_details">
                   <div className="content_top">
                     <span className="label">Content Type :</span>
@@ -62,21 +62,21 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     id={content?.id}
                     resKey="deleteTopicContent"
                     mutation={DELETE_COURSE_TOPIC_CONTENT}
-                    deleteCondition={() => {
-                      // const isSubsExists = !!subtitles?.length;
-                      // if (isSubsExists) {
-                      //   setToastMsg({ type: 'danger', message: 'Delete All Subtitles First' });
-                      //   return false;
-                      // }
+                    // deleteCondition={() => {
+                    //   // const isSubsExists = !!subtitles?.length;
+                    //   // if (isSubsExists) {
+                    //   //   setToastMsg({ type: 'danger', message: 'Delete All Subtitles First' });
+                    //   //   return false;
+                    //   // }
 
-                      const isQuizExists = !!quizzes?.length;
-                      if (isQuizExists) {
-                        setToastMsg({ type: 'danger', message: 'Delete All Quiz First' });
-                        return false;
-                      }
+                    //   const isQuizExists = !!quizzes?.length;
+                    //   if (isQuizExists) {
+                    //     setToastMsg({ type: 'danger', message: 'Delete All Quiz First' });
+                    //     return false;
+                    //   }
 
-                      return true;
-                    }}
+                    //   return true;
+                    // }}
                     onDelete={() => {
                       const _topicContentArr = structuredClone(topicContentArr);
                       const currentTopicIndex = _topicContentArr?.findIndex(

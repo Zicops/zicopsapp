@@ -1,6 +1,7 @@
 import CoursePageTabs from '@/components/CourseBody/CoursePageTabs';
 import AllNotifications from '@/components/Notifications/AllNotifications';
 import useHandleNotifications from '@/components/Notifications/Logic/useHandleNotifications';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -29,15 +30,20 @@ const NotificationCenter = () => {
   const tabsHeader = [
     {
       name: 'All',
-      comp: <AllNotifications data={notification} style={style} />
+      comp: <AllNotifications data={notification} style={style} />,
+      roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
     },
     {
       name: 'Unread',
-      comp: <AllNotifications data={notification.filter((items) => !items?.isRead)} style={style} />
+      comp: (
+        <AllNotifications data={notification.filter((items) => !items?.isRead)} style={style} />
+      ),
+      roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
     },
     {
       name: 'Read',
-      comp: <AllNotifications data={notification.filter((items) => items?.isRead)} style={style} />
+      comp: <AllNotifications data={notification.filter((items) => items?.isRead)} style={style} />,
+      roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
     }
   ];
 

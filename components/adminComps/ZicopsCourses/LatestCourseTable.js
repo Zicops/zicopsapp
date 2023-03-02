@@ -29,8 +29,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
   const [searchParam, setSearchParam] = useState('');
 
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
   useEffect(async () => {
     if (!userOrgData?.lsp_id) return;
+    if (isVendor && !userData?.id) return;
     const time = getUnixFromDate();
 
     const courseFiltes = {
@@ -39,7 +42,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       LspId: zicopsLspId || userOrgData?.lsp_id
     };
 
-    if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)) {
+    if (isVendor) {
       const vendorDetail = await loadQueryDataAsync(
         GET_USER_VENDORS,
         { user_id: userData?.id },
@@ -66,7 +69,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       );
       setLatestCourse(_latestCourses);
     });
-  }, [userOrgData?.lsp_id, searchParam, courseStatus, zicopsLspId, courseType]);
+  }, [userOrgData?.lsp_id, userData?.id, searchParam, courseStatus, zicopsLspId, courseType]);
 
   const columns = [
     {
@@ -145,11 +148,11 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     }
   ];
 
-  const filterOptions = [{ label: 'Saved', value: COURSE_STATUS.save }];
-
-  // remove this later
-  if (isDemo) filterOptions.push({ label: 'For Approval', value: COURSE_STATUS.approvalPending });
-  filterOptions.push({ label: 'Published', value: COURSE_STATUS.publish });
+  const filterOptions = [
+    { label: 'Saved', value: COURSE_STATUS.save },
+    { label: 'For Approval', value: COURSE_STATUS.approvalPending },
+    { label: 'Published', value: COURSE_STATUS.publish }
+  ];
 
   if (zicopsLspId == null) {
     filterOptions.push({ label: 'Expired', value: COURSE_STATUS.reject });

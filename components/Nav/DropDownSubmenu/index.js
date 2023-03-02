@@ -2,12 +2,14 @@ import { ControlledMenu, MenuItem } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
 import Image from 'next/image';
-import styles from '../nav.module.scss';
 import { useRouter } from 'next/router';
+import styles from '../nav.module.scss';
 
-import { useDropDownSubmenuHandle } from '../Logic/useDropDownSubmenuHandle';
-import { useRecoilValue } from 'recoil';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useRecoilValue } from 'recoil';
+import { useDropDownSubmenuHandle } from '../Logic/useDropDownSubmenuHandle';
 
 export default function DropDownSubMenu({
   subData,
@@ -19,6 +21,9 @@ export default function DropDownSubMenu({
   const { ref, menuProps, toggleMenu, goToRoute } = useDropDownSubmenuHandle();
   const router = useRouter();
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   return (
     <>
@@ -64,6 +69,7 @@ export default function DropDownSubMenu({
             if (elements?.isDisabled || elements?.isDemo || elements?.isDev) pageRoute = null;
             if (isDemo && elements?.isDemo) pageRoute = link;
             if (isDev && elements?.isDev) pageRoute = link;
+            if (isVendor && !elements.roleAccess?.includes(USER_LSP_ROLE.vendor)) pageRoute = null;
 
             return (
               <MenuItem

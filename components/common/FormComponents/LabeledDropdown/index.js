@@ -6,6 +6,7 @@ export default function LabeledDropdown({
   dropdownOptions,
   styleClass,
   isError,
+  isLoading = false,
   changeHandler,
   filterOption,
   isFiftyFifty = false,
@@ -62,6 +63,7 @@ export default function LabeledDropdown({
         )}
         isSearchable={!!isSearchEnable}
         isDisabled={!!isDisabled}
+        isLoading={isLoading}
         isOptionDisabled={(option) => option.disabled}
         noOptionsMessage={() => noOptionsMessage}
         isMulti={!!isMulti}

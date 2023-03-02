@@ -1,6 +1,11 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { COURSE_STATUS, VIDEO_FILE_TYPES } from '@/helper/constants.helper';
+import {
+  COURSE_STATUS,
+  LIMITS,
+  ONE_MB_IN_BYTES,
+  VIDEO_FILE_TYPES
+} from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
@@ -13,7 +18,6 @@ import LabeledRadioCheckbox from '../../common/FormComponents/LabeledRadioCheckb
 import LabeledTextarea from '../../common/FormComponents/LabeledTextarea';
 import NextButton from '../common/NextButton';
 import styles from '../courseTabs.module.scss';
-import { CourseTabAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import DragDrop from './DragAndDrop';
 
@@ -132,6 +136,14 @@ export default function CourseDetails() {
       <div className={`center-element-with-flex ${styles.marginBottom}`}>
         <label className={`w-25`}>Upload Preview of the course:</label>
         <div className={`w-25`}>
+          <small
+            style={{
+              color: styles.bgBody,
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}>
+            Max: {Math.ceil(LIMITS.previewVideoSize / ONE_MB_IN_BYTES)} Mb
+          </small>
           <BrowseAndUpload
             handleFileUpload={handleChange}
             handleRemove={() => removeSavedFile('uploadCourseVideo')}
