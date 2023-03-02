@@ -159,17 +159,11 @@ export default function CourseTabs() {
   function getSubmitBtnText() {
     if (featureFlags.isPublishCourseEditable) return 'Published (U)';
     if ([COURSE_STATUS.publish, 'EXPIRED'].includes(courseStatus)) return 'Published';
-    if (
-      fullCourse?.qa_required &&
-      userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)
-    )
-      return 'Sent For Approval';
-    if (courseStatus === COURSE_STATUS.freeze || courseStatus === COURSE_STATUS.approvalPending) {
-      if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor))
-        return 'Send For Approval';
-
-      return 'Publish';
+    if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)) {
+      if (courseStatus === COURSE_STATUS.approvalPending) return 'Sent For Approval';
+      if (fullCourse?.qa_required) return 'Send For Approval';
     }
+    if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
     if (fullCourse?.id) return 'Update';
 
     return 'Save';
