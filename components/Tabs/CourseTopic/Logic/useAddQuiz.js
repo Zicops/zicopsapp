@@ -242,9 +242,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
         updatedOption[e.target.name] = e.target.value;
       }
 
-      return setNewQuiz({
-        ...newQuiz,
-        options: _newQuiz?.options?.map((o, i) => (i === index ? updatedOption : o))
+      return setNewQuiz((prev) => {
+        return {
+          ...prev,
+          options: prev?.options?.map((o, i) => (i === index ? updatedOption : o))
+        };
       });
     }
 

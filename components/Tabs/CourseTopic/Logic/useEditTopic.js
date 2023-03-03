@@ -524,7 +524,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             isMandatory: quiz?.isMandatory || false,
             topicId: quiz?.topicId || '',
             courseId: quiz?.courseId || '',
-            questionId: questionId,
+            questionId: quiz?.questionId,
             qbId: subCatQb?.id,
             weightage: 1,
             sequence: i + 1,
