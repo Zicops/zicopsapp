@@ -57,13 +57,6 @@ export default function Layout({ children }) {
     return;
   }, []);
 
-  // can this cause infinite loop?
-  useEffect(() => {
-    if (userAboutData?.id && userAboutData?.first_name) return;
-
-    if (!userAboutData?.first_name) return loadUserData();
-  }, [userAboutData?.id, userAboutData?.first_name]);
-
   async function loadUserData() {
     const data = getUserData();
     if (data === 'User Data Not Found') return;
