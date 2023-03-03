@@ -497,6 +497,14 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
               sendOptionData.attachmentType = option.attachmentType;
             }
 
+            if (!sendOptionData?.id) {
+              await addOption({ variables: sendOptionData }).catch((err) => {
+                console.log(err);
+                isError = !!err;
+                setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+              });
+              continue;
+            }
             // console.log(sendOptionData);
             await updateOption({ variables: sendOptionData }).catch((err) => {
               console.log(err);
