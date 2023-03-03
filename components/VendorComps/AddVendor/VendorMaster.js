@@ -24,7 +24,10 @@ export default function VendorMaster() {
   const vendorId = router.query.vendorId || null;
 
   useEffect(() => {
-    setVendorData((prev) => ({ ...prev, users: [...vendorData?.users,...emails?.map((item) => item?.props?.children[0])] }));
+    setVendorData((prev) => ({
+      ...prev,
+      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]
+    }));
   }, [emails]);
 
   const socialMediaPopup = [
@@ -49,6 +52,13 @@ export default function VendorMaster() {
       value: vendorData?.linkedinURL
     }
   ];
+
+  console.info(
+    vendorId && vendorData?.vendorId !== vendorId,
+    vendorId,
+    vendorData?.vendorId,
+    vendorId
+  );
 
   if (vendorId && vendorData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
