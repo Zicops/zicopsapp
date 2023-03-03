@@ -48,6 +48,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+
   const {
     addUpdateProfile,
     addUpdateExperience,
@@ -59,6 +60,24 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+  console.log('pType', pType);
+  let getSampleFiles;
+  if (pType === 'sme') {
+    getSampleFiles = getSMESampleFiles;
+  } else if (pType === 'crt') {
+    getSampleFiles = getCRTSampleFiles;
+  } else {
+    getSampleFiles = getCDSampleFiles;
+  }
+  let fileData = [];
+  if (pType === 'sme') {
+    fileData.push(smeData?.sampleFiles);
+  } else if (pType === 'crt') {
+    fileData.push(ctData?.sampleFiles);
+  } else {
+    fileData.push(cdData?.sampleFiles);
+  }
+  console.log('fileData', fileData);
 
   const completeProfileHandler = async () => {
     await addUpdateProfile();
@@ -103,8 +122,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
 
   const addSampleFileHandler = async () => {
-    await addSampleFile();
-    getSMESampleFiles();
+    await addSampleFile(pType);
+    getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);
     setSampleData(getSampleObject());
@@ -237,20 +256,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            {!smeData?.smeSample?.length ? (
+            {!fileData[0]?.length ? (
               <IconButton
                 text="Add sample files"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => {
                   setSamplePopupState(true);
-                  getSMESampleFiles();
+                  getSampleFiles();
                 }}
               />
             ) : (
               <>
                 <div className={`${styles.showFilesMain}`}>
-                  {smeData?.smeSample?.map((file) => (
+                  {fileData[0]?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
                       {file?.name + '.' + file?.fileType}
@@ -261,7 +280,10 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setSamplePopupState(true)}
+                  handleClick={() => {
+                    setSamplePopupState(true);
+                    getSampleFiles();
+                  }}
                 />
               </>
             )}
@@ -404,7 +426,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             setSamplePopupState(false);
           }
         }}>
-        <FileManageVendor />
+        <FileManageVendor pType={pType} />
       </VendorPopUp>
       <VendorPopUp
         open={showCompleteFile}

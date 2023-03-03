@@ -1,10 +1,19 @@
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
-const SingleFile = ({ data }) => {
-  const { deleteSample, getSMESampleFiles } = useHandleVendor();
+const SingleFile = ({ data, pType }) => {
+  const { deleteSample, getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } =
+    useHandleVendor();
+  let getSampleFiles;
+  if (pType === 'sme') {
+    getSampleFiles = getSMESampleFiles;
+  } else if (pType === 'crt') {
+    getSampleFiles = getCRTSampleFiles;
+  } else {
+    getSampleFiles = getCDSampleFiles;
+  }
   const HandleDeleteFile = async () => {
-    await deleteSample(data?.sf_id);
-    getSMESampleFiles();
+    await deleteSample(data?.sf_id, pType);
+    getSampleFiles();
   };
   return (
     <div className={`${styles.singleFileContainer}`}>

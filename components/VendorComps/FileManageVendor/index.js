@@ -16,7 +16,7 @@ import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 import SingleFile from './SingleFile';
-const FileManageVendor = () => {
+const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
@@ -26,19 +26,40 @@ const FileManageVendor = () => {
     useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+  console.info('pType', pType);
+  let getSampleFiles;
+  if (pType === 'sme') {
+    getSampleFiles = getSMESampleFiles;
+  } else if (pType === 'crt') {
+    getSampleFiles = getCRTSampleFiles;
+  } else {
+    getSampleFiles = getCDSampleFiles;
+  }
+
+  let fileData = [];
+  if (pType === 'sme') {
+    fileData = smeData?.sampleFiles;
+  } else if (pType === 'crt') {
+    fileData = ctData?.sampleFiles;
+  } else {
+    fileData = cdData?.sampleFiles;
+  }
   const addNewSampleFileHendler = async () => {
-    await addSampleFile();
-    getSMESampleFiles();
+    await addSampleFile(pType);
+    getSampleFiles();
     setIsOpenAddFile(false);
     setSampleData(getSampleObject());
   };
   return (
     <div className={`${styles.vendorFileContainer}`}>
       <div className={`${styles.vendorFileMain}`}>
-        {!!smeData?.smeSample?.length &&
-          smeData?.smeSample?.map((data) => <SingleFile data={data} />)}
+        {!!fileData?.length && fileData?.map((data) => <SingleFile data={data} pType={pType} />)}
 
-        <div className={`${styles.addAnotherProfile}`} onClick={() => setIsOpenAddFile(true)}>
+        <div
+          className={`${styles.addAnotherProfile}`}
+          onClick={() => {
+            setIsOpenAddFile(true);
+          }}>
           <IconButton
             text="Add another file"
             styleClass={`${styles.button}`}

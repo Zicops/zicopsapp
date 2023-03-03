@@ -9,7 +9,7 @@ export default function AddVendorServices() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
-  const ptype = [{ SME: 'sme' }, { CRT: 'crt' }, { CD: 'cd' }];
+  const ptype = [{ SME: 'sme', CRT: 'crt', CD: 'cd' }];
   const servicesHelper = [
     {
       data: smeData,
@@ -17,7 +17,7 @@ export default function AddVendorServices() {
       title: 'Subject Matter Expertise',
       inputName: 'isApplicableSME',
       experticeName: 'Add Subject Matter Expertise',
-      ptype: ptype?.SME
+      ptype: ptype[0]?.SME
     },
     {
       data: ctData,
@@ -25,7 +25,7 @@ export default function AddVendorServices() {
       title: 'Classroom Training',
       inputName: 'isApplicableCT',
       experticeName: 'Add Classroom Training Expertise',
-      ptype: ptype?.CRT
+      ptype: ptype[0]?.CRT
     },
     {
       data: cdData,
@@ -33,7 +33,7 @@ export default function AddVendorServices() {
       title: 'Content Development',
       inputName: 'isApplicableCD',
       experticeName: 'Add Content Development Expertise',
-      ptype: ptype?.CD
+      ptype: ptype[0]?.CD
     }
   ];
 

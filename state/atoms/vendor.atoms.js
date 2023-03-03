@@ -86,8 +86,8 @@ export function getSMEServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    smeSample: data?.smeSample || [],
-    smeProfile: data?.smeProfile || []
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 
@@ -104,8 +104,8 @@ export function getCTServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    ctSample: data?.ctSample || [],
-    ctProfile: data?.ctProfile || []
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 
@@ -122,8 +122,8 @@ export function getCDServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    cdSample: data?.cdSample || [],
-    cdProfile: data?.cdProfile || []
+    sampleFiles: data?.sampleFiles || [],
+    profiles: data?.profiles || []
   };
 }
 
