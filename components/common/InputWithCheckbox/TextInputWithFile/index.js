@@ -36,7 +36,9 @@ export default function TextInputWithFile({
                   <img src="/images/attachment.png" alt="" />
                 </span>
               </div>
-              <span>{truncateToN(fileNmae, 60)}</span>
+              <span style={{ width: '100px', overflow: 'hidden' }}>
+                {truncateToN(fileNmae, 60)}
+              </span>
               <div className={styles.innerBox}>
                 <span>
                   <img src="/images/img.png" alt="" />
