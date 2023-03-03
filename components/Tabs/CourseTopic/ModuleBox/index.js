@@ -191,7 +191,7 @@ export default function ModuleBox({
                             key={topic.id}
                             type="small"
                             title={
-                              isDev ? (
+                              !isDev ? (
                                 `Topic ${++topicIndex} : ${topic.name}`
                               ) : (
                                 <>
@@ -306,7 +306,7 @@ export default function ModuleBox({
                     key={topic.id}
                     type="small"
                     title={
-                      isDev ? (
+                      !isDev ? (
                         `Topic ${++topicIndex} : ${topic.name}`
                       ) : (
                         <>
