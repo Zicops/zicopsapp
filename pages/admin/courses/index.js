@@ -3,7 +3,7 @@ import { COURSE_TYPES } from '@/helper/constants.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../../API/Mutations';
 import AdminHeader from '../../../components/common/AdminHeader';
 import MainBody from '../../../components/common/MainBody';
@@ -22,7 +22,11 @@ export default function AddCoursePage() {
   useEffect(() => {
     const type = localStorage.getItem('courseType') || COURSE_TYPES[0];
     setCourseType(type);
-    updateCourseMaster({ type, lspId: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id') });
+    updateCourseMaster({
+      type,
+      lspId: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id'),
+      is_display: true
+    });
 
     defaultLsp();
   }, []);

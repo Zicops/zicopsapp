@@ -1,3 +1,4 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import styles from '../nav.module.scss';
 export const languages = [
   {
@@ -68,7 +69,8 @@ export const preferences = [
 export const userProfile = [
   {
     title: 'About',
-    link: '/my-profile'
+    link: '/my-profile',
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
   },
   {
     title: 'Cohort',

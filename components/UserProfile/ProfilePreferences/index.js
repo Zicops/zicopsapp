@@ -1,7 +1,6 @@
 import styles from '../userProfile.module.scss';
-import { profilePreferencesData } from '../Logic/userProfile.helper';
 
-const ProfilePreferences = ({ currentUserData }) => {
+const ProfilePreferences = ({ currentUserData, imageUrl = null }) => {
   // console.log(currentUserData,'current user data');
   const preferences = currentUserData?.sub_categories?.map((item) => item?.sub_category);
   const userProfilePreferenceData = {
@@ -10,12 +9,13 @@ const ProfilePreferences = ({ currentUserData }) => {
     'sub-category_preferences': preferences?.join(', ')
   };
 
+
   return (
     <>
       <div className={`${styles.profileDetailsContainer}`}>
         <div className={`${styles.profilePicContainer}`}>
           <img
-            src={currentUserData?.photo_url || '/images/profile_picture.png'}
+            src={imageUrl || '/images/Avatars/Profile.png'}
             alt={currentUserData?.photo_url}
             width={200}
           />

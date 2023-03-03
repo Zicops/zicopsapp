@@ -524,7 +524,6 @@ export default function useHandleVendor() {
     setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
     return res;
   }
-
   async function addUpdateCd() {
     const sendData = {
       vendor_id: vendorId,

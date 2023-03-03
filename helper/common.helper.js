@@ -107,6 +107,9 @@ export function getNotificationMsg(type = '', msgObj = {}) {
     },
     demotedManager: function (msg) {
       return `Note: You are no longer Manager of Cohort ${msg?.cohortName}. Please continue your learning as a member.`;
+    },
+    unassignSelfCourse: function (msg) {
+      return `You have removed course ${msg.courseName}. Please let us know your feedback`;
     }
   };
 
