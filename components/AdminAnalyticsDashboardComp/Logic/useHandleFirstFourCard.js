@@ -14,14 +14,14 @@ export default function useHandleFirstFourCard() {
     title: 'Categories',
     image: '/images/svg/categories.svg',
     count: null,
-    caption: 'Categories'
+    caption: null
   });
   const [subCategoryCard, setSubCategoryCard] = useState({
     id: 2,
     title: 'Sub-categories',
     image: '/images/svg/workspaces.svg',
     count: null,
-    caption: 'Sub-categories'
+    caption: null
   });
   const [myCourseCard, setMyCourseCard] = useState({
     id: 3,
@@ -43,13 +43,30 @@ export default function useHandleFirstFourCard() {
     const _lspId = sessionStorage.getItem('lsp_id');
     if (!catSubCat?.cat?.length && !catSubCat?.subCat?.length) return;
 
+    const allCatCount = catSubCat?.cat?.length || 0;
+    const myLspCatCount = catSubCat?.cat?.filter((c) => c?.LspId === _lspId)?.length || 0;
+
+    const allSubCatCount = catSubCat?.subCat?.length || 0;
+    const myLspSubCatCount = catSubCat?.subCat?.filter((sc) => sc?.LspId === _lspId)?.length || 0;
     setCategoryCard((previousData) => ({
       ...previousData,
-      count: catSubCat?.cat?.filter((cat) => cat?.LspId === _lspId)?.length
+      count: allCatCount,
+      caption: (
+        <>
+          <p>Zicops Categories:{allCatCount - myLspCatCount}</p>
+          <p>My Categories: {myLspCatCount}</p>
+        </>
+      )
     }));
     setSubCategoryCard((previousData) => ({
       ...previousData,
-      count: catSubCat?.subCat?.filter((subCat) => subCat?.LspId === _lspId)?.length
+      count: allSubCatCount,
+      caption: (
+        <>
+          <p>Zicops Sub-Categories: {allSubCatCount - myLspSubCatCount}</p>
+          <p>My Sub-Categories: {myLspSubCatCount}</p>
+        </>
+      )
     }));
   }, [catSubCat?.cat?.length, catSubCat?.subCat?.length]);
 
