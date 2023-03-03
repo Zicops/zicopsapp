@@ -499,19 +499,29 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
       return allQuiz;
     }
 
+    const allQuizArr = [];
     for (let i = 0; i < topicDataLoaded.length; i++) {
       const topic = topicDataLoaded[i];
 
-      loadQuiz(topic?.id).then((newQuiz) => {
-        if (newQuiz?.length) setQuizData(newQuiz);
-        // setQuizData((prev) => {
-        //   // console.log(prev, newQuiz);
-        //   const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
+      const allTopicQuiz = loadQuiz(topic?.id);
+      allQuizArr.push(allTopicQuiz);
+      //   .then((newQuiz) => {
+      //   if (newQuiz?.length) allQuizArr.push(1);
+      //   // if (newQuiz?.length) setQuizData(newQuiz);
+      //   // setQuizData((prev) => {
+      //   //   // console.log(prev, newQuiz);
+      //   //   const filteredQuiz = newQuiz?.filter((quiz) => !prev?.find((q) => q?.id === quiz?.id));
 
-        //   return [...prev, ...filteredQuiz];
-        // });
-      });
+      //   //   return [...prev, ...filteredQuiz];
+      //   // });
+      // });
     }
+
+    Promise.allSettled(allQuizArr).then((quizArr) => {
+      const q = [];
+      quizArr?.forEach((quiz) => q.push(...(quiz.value || [])));
+      setQuizData(q);
+    });
 
     loadResourcesData({ variables: { course_id: fullCourse.id }, fetchPolicy: 'no-cache' }).then(
       ({ data }) => {
