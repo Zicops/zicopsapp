@@ -13,6 +13,7 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -28,6 +29,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
   const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [isLevelDataAdded, setIsLevelDataAdded] = useState(null);
   const [isLangDataAdded, setIsLangDataAdded] = useState(null);
@@ -322,7 +324,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
                 setIsCourseSaved(true);
                 closePopUp();
               })
-              .catch((err) => console.log(err));
+              .catch((err) => setToastMsg({ type: 'danger', message: 'Course Freeze Error!' }));
           },
           textRight: 'Cancel',
           handleClickRight: closePopUp
