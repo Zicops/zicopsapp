@@ -384,7 +384,7 @@ export default function useUserCourseData() {
         topicsStartedPercentage: progressPercent,
         scheduleDate: _courseData?.end_date,
         dataType: 'course',
-        completedOn : !!completedDate ?  moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
+        completedOn: !!completedDate ? moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
         // remove this value or below value
         // completedPercentage: progressPercent,
         // course completed percentage replace this with above value
@@ -898,10 +898,17 @@ export default function useUserCourseData() {
     if (userDataGlobal?.id) return;
     let isError = false;
 
-    const res = await userLogin().catch((err) => {
-      console.log(err);
-      isError = !!err;
-    });
+    const res = {};
+    for (let i = 0; i < 4; i++) {
+      let _res = await userLogin().catch((err) => {
+        console.log(err);
+        isError = !!err;
+      });
+      if (_res?.data?.login?.first_name) {
+        res.data = _res?.data;
+        break;
+      }
+    }
 
     if (isError) return {};
 
