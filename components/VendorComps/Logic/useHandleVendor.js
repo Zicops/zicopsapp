@@ -186,7 +186,7 @@ export default function useHandleVendor() {
   }
 
   async function getSingleVendorInfo() {
-    const vendorInfo = await loadQueryDataAsync(
+    const vendorInfo = await loadAndCacheDataAsync(
       GET_VENDOR_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -204,7 +204,7 @@ export default function useHandleVendor() {
   }
   async function getAllProfileInfo() {
     setLoading(true);
-    const profileInfo = await loadQueryDataAsync(
+    const profileInfo = await loadAndCacheDataAsync(
       GET_ALL_PROFILE_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -214,7 +214,7 @@ export default function useHandleVendor() {
     setLoading(true);
   }
   async function getSingleProfileInfo() {
-    const profileInfo = await loadQueryDataAsync(
+    const profileInfo = await loadAndCacheDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
       { vendor_id: vendorId, email: profileData?.email },
       {},
@@ -224,7 +224,7 @@ export default function useHandleVendor() {
   }
 
   async function getSampleFiles() {
-    const fileInfo = await loadQueryDataAsync(
+    const fileInfo = await loadAndCacheDataAsync(
       GET_SAMPLE_FILES,
       { vendor_id: vendorId, p_type: 'sme' },
       {},
@@ -234,7 +234,7 @@ export default function useHandleVendor() {
   }
 
   async function getSmeDetails() {
-    const fileInfo = await loadQueryDataAsync(
+    const fileInfo = await loadAndCacheDataAsync(
       GET_SME_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -254,7 +254,7 @@ export default function useHandleVendor() {
   }
 
   async function getCrtDetails() {
-    const fileInfo = await loadQueryDataAsync(
+    const fileInfo = await loadAndCacheDataAsync(
       GET_CRT_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -270,12 +270,11 @@ export default function useHandleVendor() {
       profiles: crtData?.profiles,
       expertises: crtData?.expertise
     };
-    console.info(crtData, crtDetails, fileInfo);
     setCTData(getCTServicesObject(crtDetails));
   }
 
   async function getCdDetails() {
-    const fileInfo = await loadQueryDataAsync(
+    const fileInfo = await loadAndCacheDataAsync(
       GET_CD_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -330,7 +329,27 @@ export default function useHandleVendor() {
     if (vendorData?.vendorId) {
       sendData.vendorId = vendorData?.vendorId;
 
-      await updateVendor({ variables: sendData }).catch((err) => {
+      await updateVendor({
+        variables: sendData,
+        update: (_, { data }) => {
+          handleCacheUpdate(
+            GET_VENDOR_DETAILS,
+            { vendor_id: vendorId },
+            (cachedData) => {
+              const _cachedData = structuredClone(cachedData?.getVendorDetails);
+              const _updatedCache = _cachedData?.map((vendor) => {
+                const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
+                if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
+
+                return vendor;
+              });
+
+              return { getVendorDetails: _updatedCache };
+            },
+            userQueryClient
+          );
+        }
+      }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
@@ -416,7 +435,6 @@ export default function useHandleVendor() {
         end_date: profileData?.experience[i]?.end_date || null,
         status: profileData?.experience[i]?.status
       };
-      console.info(profileData?.experience);
 
       if (profileData?.experience?.ExpId) {
         sendData.ExpId = profileData?.experience?.ExpId;
