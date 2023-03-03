@@ -5,10 +5,7 @@ import {
   GET_QUESTION_BY_ID,
   GET_QUESTION_OPTIONS
 } from '@/api/Queries';
-import {
-  acceptedFileTypes,
-  getQuestionOptionsObject
-} from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
+import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { LIMITS, ONE_MB_IN_BYTES, QUESTION_STATUS } from '@/helper/constants.helper';
 import { secondsToMinutes } from '@/helper/utils.helper';
@@ -121,7 +118,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       question && newQuiz?.difficulty && isOptionsCompleted >= 2 && isOneChecked;
 
     if (newQuiz?.questionId && newQuiz?.formType === 'create') {
-      if (newQuiz?.options?.length > isOptionsCompleted) questionRequired = false;
+      if (newQuiz?.options?.length > isOptionsCompleted) {
+        options?.forEach((option) => {
+          if (option?.id && !(option?.file || option?.option)) questionRequired = false;
+        });
+      }
     }
     setIsQuizReady(
       newQuiz.name &&
@@ -214,8 +215,8 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
     if (index != null) {
       const _newQuiz = structuredClone(newQuiz);
       let updatedOption = _newQuiz?.options[index] || null;
-      if (updatedOption == null) {
-        updatedOption = getQuestionOptionsObject();
+      if (updatedOption == null && _newQuiz?.options?.length < 4) {
+        updatedOption = { option: '', file: null, attachmentType: '', isCorrect: false };
         _newQuiz?.options?.push(updatedOption);
       }
 
@@ -334,6 +335,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       };
     }
 
+    if (_quiz?.options?.length === 2)
+      _quiz?.options?.push({ option: '', file: null, attachmentType: '', isCorrect: false });
+    if (_quiz?.options?.length === 3)
+      _quiz?.options?.push({ option: '', file: null, attachmentType: '', isCorrect: false });
+
     setNewQuiz(_quiz);
     setEditedQuiz({ ..._quiz, isEditQuiz: false });
     const _quizzes = structuredClone(quizzes);
@@ -355,7 +361,7 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       quizzes?.some((q) => q?.name?.toLowerCase()?.trim() === newQuiz?.name?.toLowerCase()?.trim())
     )
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
-    const isDuplicate = quizMetaData?.questions.some(
+    const isDuplicate = quizMetaData?.questions?.some(
       (q) =>
         q?.Description?.toLowerCase()?.trim() === newQuiz?.question?.toLowerCase()?.trim() &&
         q?.id !== newQuiz?.questionId
