@@ -1898,7 +1898,7 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     createContentDevelopment(
       input: {
@@ -1910,7 +1910,7 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        status: $Status
+        status: $status
       }
     ) {
       cd_id

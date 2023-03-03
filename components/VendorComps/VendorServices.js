@@ -20,7 +20,7 @@ export default function VendorServices({ data }) {
           <span>Expertise</span>
         </div>
         <div className={`${styles.expertisePill}`}>
-          {data.expertise.map((value, key) => {
+          {data?.expertises?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -42,7 +42,7 @@ export default function VendorServices({ data }) {
           <span>Content Format</span>
         </div>
         <div className={`${styles.contentFormatPill}`}>
-          {data?.contentFormat?.map((value, key) => {
+          {data?.formats?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -57,7 +57,6 @@ export default function VendorServices({ data }) {
           })}
         </div>
       </div>
-      {console.info(samplePopup)}
       <VendorPopUp
         popUpState={[samplePopup != null, setSamplePopup]}
         size="large"

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 export default function VendorIndividualProfiles({ data }) {
   const router = useRouter();
   const onShowProfileHandler = () => {
-    router.push(`/admin/vendor/market-yard/${data?.vendorId}/${data?.id}`);
+    router.push(`/admin/vendor/market-yard/vendor-details/profile-details/${data?.id}`);
   };
   return (
     <div className={`${styles.vendorIndividualProfilesContainer}`}>

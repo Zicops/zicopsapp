@@ -24,15 +24,21 @@ export default function EditVendor() {
     addUpdateVendor,
     getSingleVendorInfo,
     handleMail,
-    addUpdateCrt,
     addUpdateSme,
-    addUpdateCd
+    getSmeDetails,
+    addUpdateCrt,
+    getCrtDetails,
+    addUpdateCd,
+    getCdDetails
   } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 
   useEffect(() => {
     getSingleVendorInfo();
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
   }, []);
 
   const tabData = [
@@ -82,11 +88,11 @@ export default function EditVendor() {
             footerObj={{
               showFooter: true,
               handleSubmit: () => {
-                // addUpdateVendor();
-                // handleMail();
+                addUpdateVendor();
+                handleMail();
                 addUpdateSme();
-                // addUpdateCrt();
-                // addUpdateCd();
+                addUpdateCrt();
+                addUpdateCd();
               },
               status: 'DRAFT'
             }}

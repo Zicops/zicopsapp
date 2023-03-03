@@ -8,7 +8,7 @@ import {
   VENDOR_LANGUAGES,
   VENDOR_MASTER_STATUS
 } from '@/helper/constants.helper';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddVendorProfile from '../../AddVendorProfile';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
@@ -28,7 +28,7 @@ import {
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);

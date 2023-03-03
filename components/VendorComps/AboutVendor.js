@@ -7,11 +7,23 @@ import {
   classroomTraining,
   contentDevelopment
 } from './Logic/vendorComps.helper';
+import { useRecoilValue } from 'recoil';
+import { SmeServicesAtom, CtServicesAtom, CdServicesAtom } from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
+import useHandleVendor from './Logic/useHandleVendor';
 
 export default function AboutVendor({ data }) {
-  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data.id);
-  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data.id);
-  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data.id);
+  const { getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
+
+  useEffect(() => {
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
+  }, []);
+
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
 
   const accordianMarketyardDetails = [
     {
@@ -37,7 +49,7 @@ export default function AboutVendor({ data }) {
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
-        <p>{data.desc}</p>
+        <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
         {accordianMarketyardDetails.map((value, index) => {
@@ -48,7 +60,7 @@ export default function AboutVendor({ data }) {
           );
         })}
       </div>
-      <VendorDetails />
+      <VendorDetails data={data} />
     </div>
   );
 }

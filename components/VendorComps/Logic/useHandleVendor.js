@@ -23,7 +23,10 @@ import {
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_DETAILS,
-  userQueryClient
+  userQueryClient,
+  GET_SME_DETAILS,
+  GET_CRT_DETAILS,
+  GET_CD_DETAILS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -41,7 +44,10 @@ import {
   VendorExperiencesAtom,
   VendorProfileAtom,
   VendorStateAtom,
-  vendorUserInviteAtom
+  vendorUserInviteAtom,
+  getSMEServicesObject,
+  getCTServicesObject,
+  getCDServicesObject
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -278,6 +284,77 @@ export default function useHandleVendor() {
     );
     setCDData(...cdData, { cdSample: fileInfo?.getSampleFiles });
   }
+  async function getSmeDetails() {
+    const fileInfo = await loadQueryDataAsync(
+      GET_SME_DETAILS,
+      { vendor_id: vendorId },
+      {},
+      userQueryClient
+    );
+    const smeData = fileInfo?.getSmeDetails;
+    const smeDetails = {
+      isApplicableSME: smeData?.is_applicable,
+      serviceDescription: smeData?.description,
+      languages: smeData?.languages,
+      formats: smeData?.output_deliveries,
+      sampleFiles: smeData?.sample_files,
+      profiles: smeData?.profiles,
+      expertises: smeData?.expertise
+    };
+    setSMEData(getSMEServicesObject(smeDetails));
+  }
+
+  async function getCrtDetails() {
+    const fileInfo = await loadQueryDataAsync(
+      GET_CRT_DETAILS,
+      { vendor_id: vendorId },
+      {},
+      userQueryClient
+    );
+    const crtData = fileInfo?.getClassRoomTraining;
+    const crtDetails = {
+      isApplicableCT: crtData?.is_applicable,
+      serviceDescription: crtData?.description,
+      languages: crtData?.languages,
+      formats: crtData?.output_deliveries,
+      sampleFiles: crtData?.sample_files,
+      profiles: crtData?.profiles,
+      expertises: crtData?.expertise
+    };
+    console.info(crtData, crtDetails, fileInfo);
+    setCTData(getCTServicesObject(crtDetails));
+  }
+
+  async function getCdDetails() {
+    const fileInfo = await loadQueryDataAsync(
+      GET_CD_DETAILS,
+      { vendor_id: vendorId },
+      {},
+      userQueryClient
+    );
+    const cdData = fileInfo?.getContentDevelopment;
+    const cdDetails = {
+      isApplicableCD: cdData?.is_applicable,
+      serviceDescription: cdData?.description,
+      languages: cdData?.languages,
+      formats: cdData?.output_deliveries,
+      sampleFiles: cdData?.sample_files,
+      profiles: cdData?.profiles,
+      expertises: cdData?.expertise
+    };
+    setCDData(getCDServicesObject(cdDetails));
+  }
+
+  // async function getSingleExperience() {
+  //   const vendorInfo = await loadQueryDataAsync(
+  //     GET_SINGLE_EXPERIENCE_DETAILS,
+  //     { vendor_id: vendorId , pf_id: , exp_id: },
+  //     {},
+  //     userQueryClient
+  //   );
+  //   const singleData = {};
+  //   setExperiencesData(getVendorObject(singleData));
+  // }
 
   async function addUpdateVendor() {
     const sendData = {
@@ -591,6 +668,8 @@ export default function useHandleVendor() {
     handleProfilePhoto,
     getUserVendors,
     getAllVendors,
+    getCrtDetails,
+    getCdDetails,
     addUpdateProfile,
     getAllProfileInfo,
     getSingleProfileInfo,
@@ -599,6 +678,11 @@ export default function useHandleVendor() {
     getCDSampleFiles,
     getSingleExperience,
     getProfileExperience,
+    getSampleFiles,
+    getSmeDetails,
+    getCrtDetails,
+    getCdDetails,
+    profileDetails,
     addUpdateExperience,
     addSampleFile,
     addUpdateSme,

@@ -85,7 +85,9 @@ const UserAboutTab = () => {
       (orgMap) => orgMap?.user_lsp_id === userLspId
     );
 
-    const orgId = orgData?.[0]?.organization_id;
+    const orgId = orgData?.[0]?.organization_id || '';
+
+    if (!orgId?.length) return;
 
     const orgDetails = await loadQueryDataAsync(
       GET_ORGANIZATIONS_DETAILS,
