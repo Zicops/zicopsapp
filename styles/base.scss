@@ -123,6 +123,7 @@ $courseTitleSmall: 18px;
   }
   @if $state == 'disabled' {
     border: 2px solid $darkThree;
+    cursor: not-allowed !important;
   }
 
   @if $state == 'focus' {
