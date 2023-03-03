@@ -198,6 +198,7 @@ export default function CourseTabs() {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
+        isDisabled={!!isCourseUploading}
         footerObj={{
           isActive:
             fullCourse?.name &&
