@@ -190,34 +190,64 @@ export default function ModuleBox({
                           <BlackRow
                             key={topic.id}
                             type="small"
-                            title={`Topic ${++topicIndex} : ${topic.name}`}
+                            title={
+                              !isDev ? (
+                                `Topic ${++topicIndex} : ${topic.name}`
+                              ) : (
+                                <>
+                                  Topic
+                                  {
+                                    <select
+                                      className={styles.sequenceDropdown}
+                                      onChange={(e) => {
+                                        updateTopicSequnceDevMode({
+                                          id: topic?.id,
+                                          name: topic?.name?.trim(),
+                                          description: topic?.description?.trim(),
+                                          courseId: topic?.courseId,
+                                          sequence: e.target.value
+                                        });
+                                      }}>
+                                      {Array(filteredTopicModWise?.length)
+                                        .fill(null)
+                                        ?.map((obj, i) => (
+                                          <option value={i + 1} selected={topic.sequence === i + 1}>
+                                            {i + 1}
+                                          </option>
+                                        ))}
+                                    </select>
+                                  }
+                                  : {topic.name}
+                                </>
+                              )
+                            }
                             editHandler={() => activateEditTopic(topic.id)}
                             isDisabled={isDisabled}
-                            extraComp={
-                              <>
-                                {!!isDev && (
-                                  <select
-                                    className={styles.sequenceDropdown}
-                                    onChange={(e) => {
-                                      updateTopicSequnceDevMode({
-                                        id: topic?.id,
-                                        name: topic?.name?.trim(),
-                                        description: topic?.description?.trim(),
-                                        courseId: topic?.courseId,
-                                        sequence: e.target.value
-                                      });
-                                    }}>
-                                    {Array(filteredTopicModWise?.length)
-                                      .fill(null)
-                                      ?.map((obj, i) => (
-                                        <option value={i + 1} selected={topic.sequence === i + 1}>
-                                          {i + 1}
-                                        </option>
-                                      ))}
-                                  </select>
-                                )}
-                              </>
-                            }
+                            // extraComp={
+                            //   <>
+                            //     {!!isDev && (
+                            //       <select
+                            //         className={styles.sequenceDropdown}
+                            //         onChange={(e) => {
+                            //           updateTopicSequnceDevMode({
+                            //             id: topic?.id,
+                            //             name: topic?.name?.trim(),
+                            //             description: topic?.description?.trim(),
+                            //             courseId: topic?.courseId,
+                            //             sequence: e.target.value
+                            //           });
+                            //         }}>
+                            //         {Array(filteredTopicModWise?.length)
+                            //           .fill(null)
+                            //           ?.map((obj, i) => (
+                            //             <option value={i + 1} selected={topic.sequence === i + 1}>
+                            //               {i + 1}
+                            //             </option>
+                            //           ))}
+                            //       </select>
+                            //     )}
+                            //   </>
+                            // }
                             deleteProps={{
                               id: topic?.id,
                               resKey: 'deleteCourseTopic',
@@ -275,34 +305,64 @@ export default function ModuleBox({
                   <BlackRow
                     key={topic.id}
                     type="small"
-                    title={`Topic ${++topicIndex} : ${topic.name}`}
+                    title={
+                      !isDev ? (
+                        `Topic ${++topicIndex} : ${topic.name}`
+                      ) : (
+                        <>
+                          Topic
+                          {
+                            <select
+                              className={styles.sequenceDropdown}
+                              onChange={(e) => {
+                                updateTopicSequnceDevMode({
+                                  id: topic?.id,
+                                  name: topic?.name?.trim(),
+                                  description: topic?.description?.trim(),
+                                  courseId: topic?.courseId,
+                                  sequence: e.target.value
+                                });
+                              }}>
+                              {Array(filteredAndSortedData?.length)
+                                .fill(null)
+                                ?.map((obj, i) => (
+                                  <option value={i + 1} selected={topic.sequence === i + 1}>
+                                    {i + 1}
+                                  </option>
+                                ))}
+                            </select>
+                          }
+                          : {topic.name}
+                        </>
+                      )
+                    }
                     editHandler={() => activateEditTopic(topic.id)}
                     isDisabled={isDisabled}
-                    extraComp={
-                      <>
-                        {!!isDev && (
-                          <select
-                            className={styles.sequenceDropdown}
-                            onChange={(e) => {
-                              updateTopicSequnceDevMode({
-                                id: topic?.id,
-                                name: topic?.name?.trim(),
-                                description: topic?.description?.trim(),
-                                courseId: topic?.courseId,
-                                sequence: e.target.value
-                              });
-                            }}>
-                            {Array(filteredAndSortedData?.length)
-                              .fill(null)
-                              ?.map((obj, i) => (
-                                <option value={i + 1} selected={topic.sequence === i + 1}>
-                                  {i + 1}
-                                </option>
-                              ))}
-                          </select>
-                        )}
-                      </>
-                    }
+                    // extraComp={
+                    //   <>
+                    //     {!!isDev && (
+                    //       <select
+                    //         className={styles.sequenceDropdown}
+                    //         onChange={(e) => {
+                    //           updateTopicSequnceDevMode({
+                    //             id: topic?.id,
+                    //             name: topic?.name?.trim(),
+                    //             description: topic?.description?.trim(),
+                    //             courseId: topic?.courseId,
+                    //             sequence: e.target.value
+                    //           });
+                    //         }}>
+                    //         {Array(filteredAndSortedData?.length)
+                    //           .fill(null)
+                    //           ?.map((obj, i) => (
+                    //             <option value={i + 1} selected={topic.sequence === i + 1}>
+                    //               {i + 1}
+                    //             </option>
+                    //           ))}
+                    //       </select>
+                    //     )}
+                    //   </>
+                    // }
                     deleteProps={{
                       id: topic?.id,
                       resKey: 'deleteCourseTopic',

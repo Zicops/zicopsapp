@@ -1,6 +1,6 @@
 import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
 
 export async function getAllCourseCountInLsp(lspId = null, queryVariables = {}, queryOptions = {}) {
   if (!lspId) return null;
@@ -9,6 +9,7 @@ export async function getAllCourseCountInLsp(lspId = null, queryVariables = {}, 
     lsp_id: lspId,
     course_type: COURSE_TYPES[0],
     languages: LANGUAGES,
+    course_status: COURSE_STATUS.publish,
     ...queryVariables
   };
   const courseStats = loadQueryDataAsync(
