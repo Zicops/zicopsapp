@@ -1,4 +1,4 @@
-name: k6 test
+name: Zicopsapp-Integration-Test
 
 on:
   workflow_dispatch:
