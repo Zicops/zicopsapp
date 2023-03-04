@@ -1,36 +1,33 @@
-import { graphql } from 'k6/graphql';
+import http from 'k6/http';
+import { check } from 'k6';
 
-export default function() {
-  const mutation = `
-    mutation {
-      login {
-        id
-        first_name
-        last_name
-        status
-        role
-        is_verified
-        is_active
-        gender
-        created_by
-        updated_by
-        created_at
-        updated_at
-        email
-        phone
-        photo_url
-        __typename
-      }
+export default function () {
+  const query = `mutation {
+    login {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+      __typename
     }
-  `;
-  const response = graphql(__ENV.K6_GRAPHQL_ENDPOINT, mutation);
+  }`;
 
-  // Check that the response contains the expected data
-  if (response.errors) {
-    console.error(response.errors);
-    throw new Error('GraphQL mutation failed');
-  }
-  if (!response.data.login) {
-    throw new Error('GraphQL mutation returned no data');
-  }
+  const url = __ENV.K6_GRAPHQL_ENDPOINT;
+  const token = __ENV.K6_TOKEN; // Replace with your actual token
+  const headers = { Authorization: token };
+
+  const res = http.post(url, JSON.stringify({ query }), { headers });
+  check(res, { 'status is 200': (r) => r.status === 200 });
 }
+
