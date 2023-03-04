@@ -10,7 +10,7 @@ import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 export default function ManageVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,10 @@ export default function ManageVendor() {
         <AdminHeader
           title="Vendor List"
           isAddShown={true}
-          handleClickForPlus={() => setIsOpen(true)}
+          handleClickForPlus={() => {
+            setIsOpen(true);
+            setVendorData(getVendorObject());
+          }}
           isProductTooltip={false}
         />
         <MainBodyBox>

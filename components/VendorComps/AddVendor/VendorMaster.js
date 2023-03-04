@@ -81,7 +81,6 @@ export default function VendorMaster() {
       <div className={`${styles.addressImageDiv}`}>
         <div className={`${styles.input2}`}>
           <label for="vendorName">Vendor Address: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledTextarea
             inputOptions={{
               inputName: 'address',

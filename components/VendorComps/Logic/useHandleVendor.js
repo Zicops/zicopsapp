@@ -30,7 +30,7 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -92,7 +92,7 @@ export default function useHandleVendor() {
 
   useEffect(() => {
     if (!router.isReady) return;
-    setVendorData(getVendorObject());
+    // setVendorData(getVendorObject());
   }, [router.isReady]);
 
   async function handleMail() {
@@ -344,17 +344,6 @@ export default function useHandleVendor() {
     setCDData(getCDServicesObject(cdDetails));
   }
 
-  // async function getSingleExperience() {
-  //   const vendorInfo = await loadQueryDataAsync(
-  //     GET_SINGLE_EXPERIENCE_DETAILS,
-  //     { vendor_id: vendorId , pf_id: , exp_id: },
-  //     {},
-  //     userQueryClient
-  //   );
-  //   const singleData = {};
-  //   setExperiencesData(getVendorObject(singleData));
-  // }
-
   async function addUpdateVendor() {
     const sendData = {
       name: vendorData?.name?.trim() || '',
@@ -409,7 +398,24 @@ export default function useHandleVendor() {
       return;
     }
     if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
-      const res = await addNewVendor({ variables: sendData }).catch((err) => {
+      const res = await addNewVendor({
+        variables: sendData,
+        update: (_, { data }) => {
+          handleCacheUpdate(
+            GET_VENDOR_DETAILS,
+            { vendor_id: vendorId },
+            (cachedData) => {
+              const _cachedData = structuredClone(cachedData?.getVendorDetails);
+              const _updatedCache = data?.addVendor?.[0]
+                ? [data?.addVendor?.[0], ..._cachedData]
+                : _cachedData;
+
+              return { getVendorDetails: _updatedCache };
+            },
+            userQueryClient
+          );
+        }
+      }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
@@ -450,7 +456,28 @@ export default function useHandleVendor() {
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
 
-      await updateProfileVendor({ variables: sendData }).catch((err) => {
+      await updateProfileVendor({
+        variables: sendData,
+        update: (_, { data }) => {
+          handleCacheUpdate(
+            GET_SINGLE_PROFILE_DETAILS,
+            { vendor_id: vendorId, email: profileData?.email },
+            (cachedData) => {
+              const _cachedData = structuredClone(cachedData?.viewProfileVendorDetails);
+              const _updatedCache = _cachedData?.map((vendor) => {
+                const isCurrentVendorProfile =
+                  vendor?.profileId === data?.updateProfileVendor?.profileId;
+                if (isCurrentVendorProfile) return { ...vendor, ...data?.updateProfileVendor };
+
+                return vendor;
+              });
+
+              return { viewProfileVendorDetails: _updatedCache };
+            },
+            userQueryClient
+          );
+        }
+      }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
@@ -466,7 +493,24 @@ export default function useHandleVendor() {
       profileData?.email &&
       profileData?.experienceYear
     ) {
-      const res = await createProfileVendor({ variables: sendData }).catch((err) => {
+      const res = await createProfileVendor({
+        variables: sendData,
+        update: (_, { data }) => {
+          handleCacheUpdate(
+            GET_SINGLE_PROFILE_DETAILS,
+            { vendor_id: vendorId, email: profileData?.email },
+            (cachedData) => {
+              const _cachedData = structuredClone(cachedData?.viewProfileVendorDetails);
+              const _updatedCache = data?.createProfileVendor?.[0]
+                ? [data?.createProfileVendor?.[0], ..._cachedData]
+                : _cachedData;
+
+              return { viewProfileVendorDetails: _updatedCache };
+            },
+            userQueryClient
+          );
+        }
+      }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add profile Error' });
@@ -506,15 +550,16 @@ export default function useHandleVendor() {
         setToastMsg({ type: 'success', message: 'Experience Updated' });
         return;
       }
-
-      const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Experience Created' });
-      return;
+      if (profileData?.email) {
+        const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
+        });
+        if (isError) return;
+        setToastMsg({ type: 'success', message: 'Experience Created' });
+        return;
+      }
     }
     // return isError;
   }

@@ -197,7 +197,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    // getSingleExperience(exp?.PfId, exp?.ExpId);
+                    getSingleExperience(exp?.PfId, exp?.ExpId);
                   }}
                 />
               ))}
