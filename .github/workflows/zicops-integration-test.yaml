@@ -1,1 +1,29 @@
+name: Zicopsapp-Integration-Test
 
+on:
+  workflow_dispatch:
+    inputs:
+      graphql-endpoint:
+        description: 'GraphQL endpoint URL'
+        required: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run k6 test
+      uses: loadimpact/k6-github-action@v3.3.1
+      with:
+        script: ./test.js
+        env: |
+          K6_GRAPHQL_ENDPOINT=https://your.graphql.endpoint.com
+          K6_TOKEN=${{ secrets.Bearer_Token }}
+        threshold-duration: "1s"
+        summary-trend: true
