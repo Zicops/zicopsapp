@@ -23,7 +23,7 @@ jobs:
       with:
         filename: ./test.js
         env: |
-          K6_GRAPHQL_ENDPOINT=https://your.graphql.endpoint.com
+          K6_GRAPHQL_ENDPOINT=graphql-endpoint
           K6_TOKEN=${{ secrets.Bearer_Token }}
         threshold-duration: "1s"
         summary-trend: true
