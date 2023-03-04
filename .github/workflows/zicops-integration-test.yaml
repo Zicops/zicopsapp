@@ -23,9 +23,8 @@ jobs:
       with:
         script: ./test.js
         env: |
-          K6_GRAPHQL_ENDPOINT=${{ github.event.inputs.graphql-endpoint }}
-          K6_GRAPHQL_MUTATION="mutation { login { id first_name last_name status role is_verified is_active gender created_by updated_by created_at updated_at email phone photo_url __typename } }"
+          K6_GRAPHQL_ENDPOINT=https://your.graphql.endpoint.com
+          K6_TOKEN=${{ secrets.Bearer_Token }}
         threshold-duration: "1s"
         summary-trend: true
-
 
