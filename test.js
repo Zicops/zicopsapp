@@ -22,6 +22,7 @@ export default function () {
         'response body is not empty': (r) => r.body.length > 0,
     });
     
+    console.log(`The value of MY_ENV_VAR is: ${__ENV.MY_ENV_VAR}`);
     console.log('Response body:', res.body); // log the response body
 }
 
