@@ -61,7 +61,7 @@ export default function () {
     },
     });
     
-    console.log('Response body:', res1.body); // log the response body
-    console.log('Response body:', res2.body); 
+    //console.log('Response body:', res1.body); // log the response body
+    //console.log('Response body:', res2.body); 
 }
 
