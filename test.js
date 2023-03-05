@@ -22,8 +22,15 @@ export default function () {
     check(res, {
         'status is 200': (r) => r.status === 200,
         'response body is not empty': (r) => r.body.length > 0,
+        'response body contains expected string': (r) => {
+            const expectedString = 'Active';
+            if (!response.body.includes(expectedString)) {
+            fail(`Response body does not contain expected string: ${expectedString}`);
+      }
+      return true;
+    },
     });
     
-    console.log('Response body:', res.body); // log the response body
+    //console.log('Response body:', res.body); // log the response body
 }
 
