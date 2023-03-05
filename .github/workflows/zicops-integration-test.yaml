@@ -24,7 +24,7 @@ jobs:
         filename: ./test.js
         env: |
           GRAPHQL_ENDPOINT=${{ github.event.inputs.graphql-endpoint }}
-          TOKEN=${{ secrets.Bearer_Token }}
+          TOKEN=${{ secrets.BEARER_TOKEN }}
         threshold-duration: "1s"
         summary-trend: true
 
