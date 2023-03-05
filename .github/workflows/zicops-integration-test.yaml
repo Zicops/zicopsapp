@@ -19,6 +19,5 @@ jobs:
       uses: grafana/k6-action@v0.2.0
       with:
         filename: ./test.js
-        threshold-duration: "1s"
-        summary-trend: true
+        flags: --vus 1 --duration 10s
 
