@@ -1,8 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
-const BEARER_TOKEN = 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImY4NzZiNzIxNDAwYmZhZmEyOWQ0MTFmZTYwODE2YmRhZWMyM2IzODIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTmlzaGFudCBHdXB0YSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS96aWNvcHMtb25lIiwiYXVkIjoiemljb3BzLW9uZSIsImF1dGhfdGltZSI6MTY3ODA0MzEyMSwidXNlcl9pZCI6InlaVGVQYTNEWTFhZHZFcUZuZ0RrZHZEblBweDIiLCJzdWIiOiJ5WlRlUGEzRFkxYWR2RXFGbmdEa2R2RG5QcHgyIiwiaWF0IjoxNjc4MDQzMTIyLCJleHAiOjE2NzgwNDY3MjIsImVtYWlsIjoibmlzaGFudEB6aWNvcHMuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX251bWJlciI6IisxNzA1Nzk2NzY1NiIsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsicGhvbmUiOlsiKzE3MDU3OTY3NjU2Il0sImVtYWlsIjpbIm5pc2hhbnRAemljb3BzLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Q69kfYjYE3WWuSGUTFARYUc-tcc__VtfAJNJbXKMGMl7Q0zFGA0AKDq3_DSPtuevo4y1LtiDJ9M_69VynkXc0qp278layO_kzKaE6J4D0k2tFMAwphd24ibMypEg1-xdD5xxFtXIchemDZM3rlbrNTIIh5zX15Rm4dZlLyi9sJZ2bVeE43VVrrTbPfT3OfkoO4N2KHeAAMG8e9jEwJfSiMKb7-QcklPB2Aq1N9f4pQ5CkmXevHfUba1yE0VLtqDipk03kZmqnvxfAKF8oihrGklpgQEM7dEv-MSRrOoqLbkjzRUzzvjdhGyOo_HT8DmjJ4Yxq1MDnzSup1PvJXjdpw'
-
+const BEARER_TOKEN = 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImY4NzZiNzIxNDAwYmZhZmEyOWQ0MTFmZTYwODE2YmRhZWMyM2IzODIiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTmlzaGFudCBHdXB0YSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS96aWNvcHMtb25lIiwiYXVkIjoiemljb3BzLW9uZSIsImF1dGhfdGltZSI6MTY3ODA0NTQ3MSwidXNlcl9pZCI6InlaVGVQYTNEWTFhZHZFcUZuZ0RrZHZEblBweDIiLCJzdWIiOiJ5WlRlUGEzRFkxYWR2RXFGbmdEa2R2RG5QcHgyIiwiaWF0IjoxNjc4MDQ1NDcxLCJleHAiOjE2NzgwNDkwNzEsImVtYWlsIjoibmlzaGFudEB6aWNvcHMuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX251bWJlciI6IisxNzA1Nzk2NzY1NiIsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsicGhvbmUiOlsiKzE3MDU3OTY3NjU2Il0sImVtYWlsIjpbIm5pc2hhbnRAemljb3BzLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.pk-t7N_0lYBlGXBA1M5KLOdL6mjr72fH4JMuEnnSOGvY6Vxm3Zc78mycVa-LtpdlRfzY54_VqrAU1WrXQHKc7gpxiwCI7OohiC1M0Cv8fGPR8g6dknpDOI3anM7T5OYyExKcnz2SfWMiNeoYNuKY2QJytSnMsm9WgWfV18Ce1mUE7EsTKfJ4joTw-szATyBSWuSWnPGH8U_s1ftKxyNoIdO9-hPx6C8m4425kM1yBq2wGCBEa7At-ZRLSqAce1jqfcjXjk6RlEgbv5MSvlcwyh7YMwa-vKdGY9hTO3rGuTzJAgrOKIBOBePNU7iEb7WaVyyAVij1Bu6RaV7JZK63yg'
 export default function () {
      // First query
     let url1 = 'https://myspace.zicops.com/um/api/v1/query';
@@ -54,7 +53,7 @@ export default function () {
         'status is 200': (r) => r.status === 200,
         'response body is not empty': (r) => r.body.length > 0,
         'response body contains expected string': (r) => {
-            const expectedString = 'success';
+            const expectedString = 'Leadership';
             if (!res2.body.includes(expectedString)) {
             fail(`Response body does not contain expected string: ${expectedString}`);
       }
@@ -62,6 +61,6 @@ export default function () {
     },
     });
     
-    //console.log('Response body:', res.body); // log the response body
+    console.log('Response body:', res1.body); // log the response body
 }
 
