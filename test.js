@@ -21,5 +21,7 @@ export default function () {
         'status is 200': (r) => r.status === 200,
         'response body is not empty': (r) => r.body.length > 0,
     });
+    
+    console.log('Response body:', res.body); // log the response body
 }
 
