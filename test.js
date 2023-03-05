@@ -11,7 +11,7 @@ export default function () {
     let params = {
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': ${{ secrets.BEARER_TOKEN }}
+            'Authorization': __ENV.K6_TOKEN
         }
     };
 
