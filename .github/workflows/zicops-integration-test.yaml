@@ -19,5 +19,6 @@ jobs:
       uses: grafana/k6-action@v0.2.0
       with:
         filename: ./test.js
+        flags: --env TOKEN=${{ secrets.BEARER_TOKEN }}
 
 
