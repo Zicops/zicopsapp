@@ -24,7 +24,7 @@ export default function () {
         'response body is not empty': (r) => r.body.length > 0,
         'response body contains expected string': (r) => {
             const expectedString = 'Active';
-            if (!response.body.includes(expectedString)) {
+            if (!res.body.includes(expectedString)) {
             fail(`Response body does not contain expected string: ${expectedString}`);
       }
       return true;
