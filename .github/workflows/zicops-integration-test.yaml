@@ -2,10 +2,7 @@ name: Zicopsapp-Integration-Test
 
 on:
   workflow_dispatch:
-    inputs:
-      graphql-endpoint:
-        description: 'GraphQL endpoint URL'
-        required: true
+
 
 jobs:
   test:
@@ -22,9 +19,6 @@ jobs:
       uses: grafana/k6-action@v0.2.0
       with:
         filename: ./test.js
-        env: |
-          GRAPHQL_ENDPOINT=${{ github.event.inputs.graphql-endpoint }}
-          TOKEN=${{ secrets.BEARER_TOKEN }}
         threshold-duration: "1s"
         summary-trend: true
 
