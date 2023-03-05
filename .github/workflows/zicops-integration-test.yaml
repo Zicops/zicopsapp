@@ -19,5 +19,5 @@ jobs:
       uses: grafana/k6-action@v0.2.0
       with:
         filename: ./test.js
-        flags: --vus 1 --duration 10s
+
 
