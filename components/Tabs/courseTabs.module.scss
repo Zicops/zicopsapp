@@ -623,3 +623,23 @@
     color: red;
   }
 }
+
+.sequenceDropdown {
+  background-color: transparent;
+  color: $white;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid $white;
+  border-radius: 0px;
+  cursor: pointer;
+
+  &:focus-visible {
+    border-radius: 0px;
+    outline: none;
+  }
+
+  option {
+    background-color: $black;
+    color: $white;
+  }
+}

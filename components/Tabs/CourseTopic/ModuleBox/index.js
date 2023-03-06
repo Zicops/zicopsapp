@@ -10,6 +10,7 @@ import {
 import { GET_COURSE_TOPICS_CONTENT_ID } from '@/api/Queries';
 import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
 import { CUSTOM_ERROR_MESSAGE } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { Fragment, useContext } from 'react';
@@ -47,14 +48,29 @@ export default function ModuleBox({
   const moduleData = useRecoilValue(ModuleAtom);
   const chapterData = useRecoilValue(ChapterAtom);
   const topicData = useRecoilValue(TopicAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   let filteredAndSortedData = [];
+  let filteredTopicModWise = [];
   if (isChapterPresent) {
     filteredAndSortedData = filterAndSortChapter(chapterData, mod.id);
+    filteredTopicModWise = topicData.filter((t) => t.moduleId === mod.id);
   } else {
     filteredAndSortedData = filterAndSortTopics(topicData, mod.id);
+  }
+
+  async function updateTopicSequnceDevMode(sendData) {
+    await updateCourseTopic({ variables: sendData }).catch((err) => {
+      if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;
+
+      refetchDataAndUpdateRecoil('topic');
+      return setToastMsg({ type: 'danger', message: 'Sequnce Update Error' });
+    });
+
+    refetchDataAndUpdateRecoil('topic');
+    return setToastMsg({ type: 'success', message: 'Topic Sequnce Updated' });
   }
 
   async function updateSequence(arr, callbackMutation) {
@@ -174,9 +190,64 @@ export default function ModuleBox({
                           <BlackRow
                             key={topic.id}
                             type="small"
-                            title={`Topic ${++topicIndex} : ${topic.name}`}
+                            title={
+                              !isDev ? (
+                                `Topic ${++topicIndex} : ${topic.name}`
+                              ) : (
+                                <>
+                                  Topic
+                                  {
+                                    <select
+                                      className={styles.sequenceDropdown}
+                                      onChange={(e) => {
+                                        updateTopicSequnceDevMode({
+                                          id: topic?.id,
+                                          name: topic?.name?.trim(),
+                                          description: topic?.description?.trim(),
+                                          courseId: topic?.courseId,
+                                          sequence: e.target.value
+                                        });
+                                      }}>
+                                      {Array(filteredTopicModWise?.length)
+                                        .fill(null)
+                                        ?.map((obj, i) => (
+                                          <option value={i + 1} selected={topic.sequence === i + 1}>
+                                            {i + 1}
+                                          </option>
+                                        ))}
+                                    </select>
+                                  }
+                                  : {topic.name}
+                                </>
+                              )
+                            }
                             editHandler={() => activateEditTopic(topic.id)}
                             isDisabled={isDisabled}
+                            // extraComp={
+                            //   <>
+                            //     {!!isDev && (
+                            //       <select
+                            //         className={styles.sequenceDropdown}
+                            //         onChange={(e) => {
+                            //           updateTopicSequnceDevMode({
+                            //             id: topic?.id,
+                            //             name: topic?.name?.trim(),
+                            //             description: topic?.description?.trim(),
+                            //             courseId: topic?.courseId,
+                            //             sequence: e.target.value
+                            //           });
+                            //         }}>
+                            //         {Array(filteredTopicModWise?.length)
+                            //           .fill(null)
+                            //           ?.map((obj, i) => (
+                            //             <option value={i + 1} selected={topic.sequence === i + 1}>
+                            //               {i + 1}
+                            //             </option>
+                            //           ))}
+                            //       </select>
+                            //     )}
+                            //   </>
+                            // }
                             deleteProps={{
                               id: topic?.id,
                               resKey: 'deleteCourseTopic',
@@ -234,9 +305,64 @@ export default function ModuleBox({
                   <BlackRow
                     key={topic.id}
                     type="small"
-                    title={`Topic ${++topicIndex} : ${topic.name}`}
+                    title={
+                      !isDev ? (
+                        `Topic ${++topicIndex} : ${topic.name}`
+                      ) : (
+                        <>
+                          Topic
+                          {
+                            <select
+                              className={styles.sequenceDropdown}
+                              onChange={(e) => {
+                                updateTopicSequnceDevMode({
+                                  id: topic?.id,
+                                  name: topic?.name?.trim(),
+                                  description: topic?.description?.trim(),
+                                  courseId: topic?.courseId,
+                                  sequence: e.target.value
+                                });
+                              }}>
+                              {Array(filteredAndSortedData?.length)
+                                .fill(null)
+                                ?.map((obj, i) => (
+                                  <option value={i + 1} selected={topic.sequence === i + 1}>
+                                    {i + 1}
+                                  </option>
+                                ))}
+                            </select>
+                          }
+                          : {topic.name}
+                        </>
+                      )
+                    }
                     editHandler={() => activateEditTopic(topic.id)}
                     isDisabled={isDisabled}
+                    // extraComp={
+                    //   <>
+                    //     {!!isDev && (
+                    //       <select
+                    //         className={styles.sequenceDropdown}
+                    //         onChange={(e) => {
+                    //           updateTopicSequnceDevMode({
+                    //             id: topic?.id,
+                    //             name: topic?.name?.trim(),
+                    //             description: topic?.description?.trim(),
+                    //             courseId: topic?.courseId,
+                    //             sequence: e.target.value
+                    //           });
+                    //         }}>
+                    //         {Array(filteredAndSortedData?.length)
+                    //           .fill(null)
+                    //           ?.map((obj, i) => (
+                    //             <option value={i + 1} selected={topic.sequence === i + 1}>
+                    //               {i + 1}
+                    //             </option>
+                    //           ))}
+                    //       </select>
+                    //     )}
+                    //   </>
+                    // }
                     deleteProps={{
                       id: topic?.id,
                       resKey: 'deleteCourseTopic',

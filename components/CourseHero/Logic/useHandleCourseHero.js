@@ -2,10 +2,12 @@ import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync, sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
+import { getNotificationMsg } from '@/helper/common.helper';
+import { COURSE_MAP_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
 import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -44,6 +46,7 @@ export default function useHandleCourseHero(isPreview) {
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const [courseAssignData, setCourseAssignData] = useState({
     endDate: minDate,
@@ -227,6 +230,43 @@ export default function useHandleCourseHero(isPreview) {
     // });
   }
 
+  function sendCourseUnAssignNotification(){
+    const notificationBody = getNotificationMsg('unassignSelfCourse', {
+      courseName: fullCourse?.name
+    });
+
+    sendNotificationWithLink(
+      {
+        title: NOTIFICATION_TITLES?.courseUnssigned,
+        body: notificationBody,
+        user_id: [userData?.id || ''],
+        link: ''
+      },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
+    );
+    // console.log(userCourseData,'sd')
+
+    const origin = window?.location?.origin || '';
+    const userName = `${userData?.first_name || ''} ${userData?.last_name || ''}`
+    const bodyData = {
+      user_name: userName,
+      lsp_name: sessionStorage?.getItem('lsp_name'),
+      course_name: fullCourse?.name,
+      link: `${origin}/self-landing`
+    };
+    const sendMailData = {
+      to: [userData?.email],
+      sender_name: sessionStorage?.getItem('lsp_name'),
+      user_name: userName,
+      body: JSON.stringify(bodyData),
+      template_id: EMAIL_TEMPLATE_IDS?.courseUnassign
+    };
+    //#IMPORTANT : need template for course self unassign mail
+    sendEmail(sendMailData, {
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } }
+    });
+  }
+
   async function unassignCourseFromUser() {
     const { userCourseMapping } = userCourseData;
 
@@ -250,6 +290,8 @@ export default function useHandleCourseHero(isPreview) {
     setCourseAssignData({ ...courseAssignData, isCourseAssigned: false });
     setUserCourseData(getUserCourseDataObj());
     setToastMsg({ type: 'success', message: `You have removed course ${fullCourse?.name}` });
+    sendCourseUnAssignNotification();
+
     return;
   }
 

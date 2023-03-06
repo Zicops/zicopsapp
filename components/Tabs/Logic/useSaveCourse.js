@@ -138,8 +138,8 @@ export default function useSaveCourse(courseContextData) {
       status: COURSE_STATUS.save
     });
     const allCourses = [
-      ...(await savedCourseRes)?.latestCourses?.courses,
-      ...(await publishedCourseRes)?.latestCourses?.courses
+      ...((await savedCourseRes)?.latestCourses?.courses || []),
+      ...((await publishedCourseRes)?.latestCourses?.courses || [])
     ];
 
     if (

@@ -324,7 +324,6 @@ export function useHandleCohortMaster() {
       );
 
       if (activeUsers?.length) sendCohortData.size = activeUsers?.length;
-      console.log(sendCohortData);
       const res = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
         isError = !!err;
@@ -344,6 +343,9 @@ export function useHandleCohortMaster() {
 
     // console.log(sendCohortData, 'add cohortmaster');
     if (!cohortMasterData?.id) {
+        let userIds = [];
+        let userNames = [];
+        let userMails = [];
       const resCohortData = await addCohortMain({ variables: sendCohortData }).catch((err) => {
         // console.log(err);
         isError = !!err;
@@ -369,8 +371,10 @@ export function useHandleCohortMaster() {
           {},
           userClient
         );
-        // console.log(res?.getUserLspByLspId,'jh');
         const userLspData = res?.getUserLspByLspId;
+        userIds.push(cohortMasterData?.managers[i]?.id);
+        userNames.push(cohortMasterData?.managers[i]?.value);
+        userMails.push(cohortMasterData?.managers[i]?.email);
         const sendAddUserCohortData = {
           user_id: cohortMasterData?.managers[i]?.id,
           user_lsp_id: userLspData?.user_lsp_id,
@@ -380,6 +384,7 @@ export function useHandleCohortMaster() {
         };
         await addUserToCohort(sendAddUserCohortData);
       }
+      sendNotificationOfPromotion(userNames, userMails, userIds);
       setToastMsg({ type: 'success', message: 'Added cohort successfully!' });
       setIsSubmitDisable(false);
       return router.push('/admin/user/user-cohort/' + cohort_id);

@@ -1,11 +1,13 @@
+import { GET_USER_VENDORS, GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { COURSE_STATUS, LANGUAGES } from '@/helper/constants.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS, LANGUAGES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { useContext } from 'react';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '../../../helper/common.helper';
 import { courseContext } from '../../../state/contexts/CourseContext';
@@ -20,13 +22,48 @@ export default function CourseMaster() {
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
   const [courseError, setCourseError] = useRecoilState(courseErrorAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const userData = useRecoilValue(UserStateAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
+  const [ownerList, setOwnerList] = useState(null);
 
   // cat and sub cat
   // const [catAndSubCatOption, setCatAndSubCatOption] = useState({ cat: [], subCat: [] });
   // update sub cat based on cat
   // loadCatSubCat(catAndSubCatOption, setCatAndSubCatOption, fullCourse?.category);
   const { catSubCat, setActiveCatId } = useHandleCatSubCat(fullCourse?.category);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+  useEffect(() => {
+    if (isVendor && !userData?.id) return;
+
+    if (isVendor) {
+      loadQueryDataAsync(GET_USER_VENDORS, { user_id: userData?.id }, {}, userQueryClient)
+        .then((res) => {
+          const _owners = ['Zicops', res?.getUserVendor?.[0]?.name];
+          setOwnerList(_owners?.map((owner) => ({ value: owner, label: owner })));
+        })
+        .catch((err) => {
+          console.log('Error while loading user vendor', err);
+          setOwnerList([{ value: 'Zicops', label: 'Zicops' }]);
+        });
+      return;
+    }
+
+    loadQueryDataAsync(
+      GET_VENDORS_BY_LSP_FOR_TABLE,
+      { lsp_id: userOrgData?.lsp_id },
+      {},
+      userQueryClient
+    )
+      .then((res) => {
+        const _owners = ['Zicops', ...(res?.getVendors?.map((vendor) => vendor?.name) || [])];
+        setOwnerList(_owners?.filter((o) => !!o)?.map((owner) => ({ value: owner, label: owner })));
+      })
+      .catch((err) => {
+        console.log('Error while loading lsp vendors', err);
+        setOwnerList([{ value: 'Zicops', label: 'Zicops' }]);
+      });
+  }, [isVendor ? userData?.id : '']);
 
   let isDisabled = !!fullCourse?.qa_required;
   if (fullCourse?.status === COURSE_STATUS.publish) isDisabled = true;
@@ -61,13 +98,11 @@ export default function CourseMaster() {
     isDisabled: isDisabled
   };
 
-  const allOwners = [{ value: 'Zicops', label: 'Zicops' }];
-
   const ownerDropdownOptions = {
     inputName: 'owner',
     label: 'Course Owner',
     placeholder: 'Select the owner of the course',
-    options: allOwners,
+    options: ownerList || [],
     value: fullCourse?.owner ? { value: fullCourse?.owner, label: fullCourse?.owner } : null,
     isSearchEnable: true,
     isDisabled: isDisabled
@@ -131,15 +166,16 @@ export default function CourseMaster() {
       />
 
       {/* course owner */}
-      {/* <LabeledDropdown
+      <LabeledDropdown
         styleClass={styles.marginBottom}
         isError={!fullCourse?.owner?.length && courseError?.master}
         dropdownOptions={ownerDropdownOptions}
+        isLoading={ownerList === null}
         changeHandler={(e) =>
           changeHandler(e, fullCourse, updateCourseMaster, ownerDropdownOptions.inputName)
         }
-      /> */}
-      <LabeledInput
+      />
+      {/* <LabeledInput
         styleClass={`${styles.marginBottom}`}
         inputClass={!fullCourse?.owner?.length && courseError?.master ? 'error' : ''}
         inputOptions={{
@@ -151,7 +187,7 @@ export default function CourseMaster() {
           isDisabled: isDisabled
         }}
         changeHandler={handleChange}
-      />
+      /> */}
 
       {/* course publisher */}
       <LabeledInput

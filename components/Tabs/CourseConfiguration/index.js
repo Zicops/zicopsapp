@@ -2,19 +2,21 @@ import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
 import styles from '../courseTabs.module.scss';
-import { isCourseUploadingAtom } from '../Logic/tabs.helper';
+import { IsCourseSavedAtom, isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
 import FreezeConfirmation from './FreezeConfirmation';
@@ -22,18 +24,23 @@ import FreezeConfirmation from './FreezeConfirmation';
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
 
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const courseContextData = useContext(courseContext);
   const [freezeConfirmBox, setFreezeConfirmBox] = useState(null);
   const [showConfirmBox, setShowConfirmBox] = useState(null);
+  const [unFreeze, setUnFreeze] = useState(null);
+  const [disableBtn, setDisableBtn] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    setIsLoading(courseUploading ? 'UPDATING...' : null);
-  }, [courseUploading]);
+  // useEffect(() => {
+  //   setIsLoading(courseUploading ? 'UPDATING...' : null);
+  // }, [courseUploading]);
 
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
 
@@ -110,7 +117,8 @@ export default function CourseConfiguration() {
                 const isFreeze = e.target.checked;
                 if (isFreeze) return setFreezeConfirmBox(true);
 
-                updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
+                setUnFreeze(true);
+                // updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
               }
               // handleChange: () => setFreezeConfirmBox(true)
             }}
@@ -199,6 +207,36 @@ export default function CourseConfiguration() {
         </div>
       )}
       {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
+
+      {unFreeze && (
+        <ConfirmPopUp
+          title={'Are you sure about unfreezing this course?'}
+          btnObj={{
+            leftIsDisable: disableBtn,
+            rightIsDisable: disableBtn,
+            handleClickLeft: () => {
+              setDisableBtn(true);
+              const { duration, ..._fullCourse } = fullCourse;
+              const sendData = { ..._fullCourse, qa_required: false };
+
+              updateCourse({ variables: sendData })
+                .then(() => {
+                  updateCourseMaster({ ...fullCourse, qa_required: false });
+                  setFullCourseData(getFullCourseDataObj({ ...fullCourseData, qa_required: true }));
+                  setIsCourseSaved(true);
+                  setUnFreeze(false);
+                })
+                .catch((err) => {
+                  setToastMsg({ type: 'danger', message: 'Course Unfreeze Error!' });
+                })
+                .finally(() => {
+                  setDisableBtn(false);
+                });
+            },
+            handleClickRight: () => setUnFreeze(false)
+          }}
+        />
+      )}
 
       {showConfirmBox && (
         <ConfirmPopUp
