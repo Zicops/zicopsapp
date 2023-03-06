@@ -33,9 +33,9 @@ export default function PushNotificationLayout({ children }) {
   useEffect(() => {
     if (!userAboutData?.id) return;
     let lspId = sessionStorage.getItem('lsp_id');
-    if(!lspId) return;
+    if (!lspId) return;
 
-    setToken().then((token) => {  
+    setToken().then((token) => {
       if (!token) return;
       loadAllNotifications(token);
     });
@@ -45,9 +45,6 @@ export default function PushNotificationLayout({ children }) {
       setIsListnerAdded(true);
 
       navigator.serviceWorker.addEventListener('message', (event) => {
-        console.log('event for the service worker', event);
-        // loadAllNotifications(fcmToken)
-
         if (event?.data?.notification?.body) {
           setToastMsg({ type: 'info', message: event?.data?.notification?.body });
 
@@ -82,15 +79,13 @@ export default function PushNotificationLayout({ children }) {
             is_read: false,
             message_id: event?.data?.fcmMessageId
           };
-
-          // saveNotification(firstoreData, fcmToken);
         }
       });
     }
 
     async function loadAllNotifications(token) {
       //context obj added
-      let queryVariables = { prevPageSnapShot: '', pageSize: 10, isRead: false };
+      let queryVariables = { prevPageSnapShot: '', pageSize: 15, isRead: false };
       let messages = [];
       const contextObj = { context: { headers: { 'fcm-token': token } } };
       const allNotifications = await loadQueryDataAsync(
@@ -113,11 +108,11 @@ export default function PushNotificationLayout({ children }) {
           notificationClient
         );
 
-        const _readMessages = allNotifications?.getAll?.messages || [] ; 
+        const _readMessages = allNotifications?.getAll?.messages || [];
 
         messages = [..._unreadMessage, ..._readMessages];
       }
-      
+
       const allMsg =
         messages?.map((msg) =>
           getNotificationObj({
@@ -148,14 +143,13 @@ export default function PushNotificationLayout({ children }) {
       });
     }
 
-    async function saveNotification(notificationData, token) {
-      const res = await saveNotificationToFirebase({
-        variables: notificationData,
-        context: { headers: { 'fcm-token': token } }
-      });
-    }
-
     async function setToken() {
+      const _token = sessionStorage.getItem('fcm-token');
+      if (_token) {
+        setFcmToken(_token);
+        return _token;
+      }
+
       try {
         const token = await getFCMToken();
         if (!token) return null;
@@ -170,7 +164,7 @@ export default function PushNotificationLayout({ children }) {
         return null;
       }
     }
-  }, [userAboutData?.id,userOrgData?.lsp_id]);
+  }, [userAboutData?.id, userOrgData?.lsp_id]);
 
   return <>{children}</>;
 }

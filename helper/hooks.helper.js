@@ -59,6 +59,7 @@ import {
   COURSE_MAP_STATUS,
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
+  USER_LSP_ROLE,
   USER_MAP_STATUS
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
@@ -360,8 +361,15 @@ export default function useUserCourseData() {
 
       if (_courseData?.status !== COURSE_STATUS.publish) continue;
 
+      let completedDate = 0;
+      if (topicsCompleted === userProgressArr?.length)
+        userProgressArr?.forEach((courseProgress) => {
+          if (courseProgress?.updated_at > completedDate) {
+            completedDate = courseProgress?.updated_at;
+          }
+        });
+
       userCourseArray.push({
-        
         ..._courseData,
         //added same as created_at because if it might be used somewhere else so ....(dont want to break stuffs)
         addedOn: moment.unix(_courseData?.created_at).format('DD/MM/YYYY'),
@@ -375,7 +383,8 @@ export default function useUserCourseData() {
         completedPercentage: completedPercent,
         topicsStartedPercentage: progressPercent,
         scheduleDate: _courseData?.end_date,
-        dataType: 'course'
+        dataType: 'course',
+        completedOn: !!completedDate ? moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
         // remove this value or below value
         // completedPercentage: progressPercent,
         // course completed percentage replace this with above value
@@ -861,10 +870,13 @@ export default function useUserCourseData() {
       {},
       userQueryClient
     );
-
     const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
+    const _isVendor = lspRoles?.filter((lsp) => lsp?.role === USER_LSP_ROLE.vendor)?.length > 0;
     let userLspRole = 'learner';
- 
+    if (_isVendor) {
+      userLspRole = USER_LSP_ROLE.vendor;
+      return userLspRole;
+    }
     if (lspRoles?.length > 1) {
       let latestUpdatedRole = lspRoles?.sort((a, b) => a?.updated_at - b?.updated_at);
       userLspRole = latestUpdatedRole?.pop()?.role;
@@ -881,20 +893,26 @@ export default function useUserCourseData() {
     return orgData?.data;
   }
 
-  async function getLoggedUserInfo(){
-    if(!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return ;
-    if(userDataGlobal?.id) return ;
+  async function getLoggedUserInfo() {
+    if (!sessionStorage?.getItem('tokenF') && !sessionStorage.getItem('loggedUser')) return;
+    if (userDataGlobal?.id) return;
     let isError = false;
-    
-    const res = await userLogin().catch((err) => {
-      console.log(err);
-      isError = !!err;
-    });
 
-    if(isError) return {};
+    const res = {};
+    for (let i = 0; i < 4; i++) {
+      let _res = await userLogin().catch((err) => {
+        console.log(err);
+        isError = !!err;
+      });
+      if (_res?.data?.login?.first_name) {
+        res.data = _res?.data;
+        break;
+      }
+    }
+
+    if (isError) return {};
 
     return res?.data?.login || getUserObject();
-
   }
 
   return {

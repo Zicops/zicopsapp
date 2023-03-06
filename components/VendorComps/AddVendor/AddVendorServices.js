@@ -31,10 +31,6 @@ export default function AddVendorServices() {
     }
   ];
 
-  useEffect(() => {
-    console.log(smeData, ctData, cdData);
-  }, [smeData, ctData, cdData]);
-
   return (
     <div className={`${styles.addServiceContainer}`}>
       {servicesHelper.map((value, index) => {

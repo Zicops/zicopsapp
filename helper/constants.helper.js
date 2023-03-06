@@ -3,7 +3,7 @@ export const ALL_COURSE_TYPES = {
   selfPaced: 'self-paced',
   classroom: 'classroom',
   labs: 'labs',
-  testSeries: 'test-series'
+  testSeries: 'test-series',
 };
 
 export const COURSE_STATUS = {
@@ -16,7 +16,7 @@ export const COURSE_STATUS = {
   publish: 'PUBLISHED',
   reject: 'REJECTED',
   approvalPending: 'APPROVAL_PENDING',
-  hold: 'ON_HOLD'
+  hold: 'ON_HOLD',
 };
 
 // userCourseMaps status (overall user course progress)
@@ -24,7 +24,7 @@ export const COURSE_MAP_STATUS = {
   assign: 'open',
   started: 'started',
   completed: 'completed',
-  disable: 'disable'
+  disable: 'disable',
 };
 // COURSE CONSTANTS END
 
@@ -33,7 +33,7 @@ export const QUESTION_STATUS = ['Y', 'Q', 'N'];
 export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Disabled' };
 export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
 
-export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
+export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -59,7 +59,7 @@ export const PUBLIC_PATHS = [
   '/create-learning-space/org-register-form',
   '/create-learning-space/org-unit-form',
   '/homepage',
-  '/static'
+  '/static',
 ];
 export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/home',
@@ -85,7 +85,7 @@ export const HIDE_HEADER_FOOTER_FOR_ROUTE = [
   '/homepage',
   '/static',
   '/video-player',
-  '/learning-spaces'
+  '/learning-spaces',
 ];
 
 export const COURSE_PROGRESS_STATUS = ['not-started', 'in-progress', 'completed'];
@@ -100,7 +100,7 @@ export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
   phoneError: 'PHONE_NUMBER_EXISTS',
   nothingToUpdate: 'nothing to update',
-  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT'
+  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT',
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
@@ -116,7 +116,7 @@ export const SUBTITLE_LANGUAGES = [
   'Tamil',
   'Malayalam',
   'Bengali',
-  'Gujarati'
+  'Gujarati',
 ];
 
 export const TOOLTIP_IMG_SRC = '/images/svg/error_outline_dark.svg';
@@ -128,19 +128,19 @@ export const PROFILE_IMAGE_TYPE = '.jpg, .jpeg, .png, .svg';
 export const DEFAULT_VALUES = {
   image: 'default-image.jpg',
   tileImage: 'default-image.jpg',
-  previewVideo: 'default-video.mp4'
+  previewVideo: 'default-video.mp4',
 };
 
 // Default LSP is staging.zicops.com for demo and staging domains
 export const COMMON_LSPS = {
-  zicops: '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1'
+  zicops: '8ca0d540-aebc-5cb9-b7e0-a2f400b0e0c1',
   // zicops: '93f3693c-d111-51aa-86ca-b883c6dfe647'
 };
 
 export const COURSE_TOPIC_STATUS = {
   assign: 'non-started',
   started: 'in-progress',
-  completed: 'completed'
+  completed: 'completed',
 };
 
 export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
@@ -154,31 +154,33 @@ export const NOTIFICATION_TITLES = {
   courseAssign: 'Course-Assigned',
   courseUnssigned: 'Course-Unassigned',
   lspWelcome: 'Welcome-Lsp',
-  signIn: { course: 'Course-signInAssign' }
+  signIn: { course: 'Course-signInAssign' },
 };
 
 export const NOTIFICATION_MSG_LINKS = {
   firstSigin: {
     addCourses: {
       msg: 'Get started by adding courses to your learning folder',
-      link: '/self-landing'
+      link: '/self-landing',
     },
     coursesAssigned: {
       msg: 'You have courses assigned to you by your admin. Lets check them out',
-      link: 'my-profile?tabName=Courses'
+      link: 'my-profile?tabName=Courses',
     },
     cohortAssigned: {
       msg: 'You are mapped to cohorts. Learn together in cohorts. Lets check them out',
-      link: 'my-profile?tabName=Cohort'
-    }
-  }
+      link: 'my-profile?tabName=Cohort',
+    },
+  },
 };
 
 export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
-  courseVideoSize: ONE_MB_IN_BYTES * 240
+  previewVideoSize: ONE_MB_IN_BYTES * 50,
+  topicVideoSize: ONE_MB_IN_BYTES * 500,
+  questionOptionSize: ONE_MB_IN_BYTES * 250,
 };
 
 export const EMAIL_TEMPLATE_IDS = {
@@ -188,19 +190,19 @@ export const EMAIL_TEMPLATE_IDS = {
   cohortAssign: 'd-1c44165b36034b839d9b7e7a1035f19b',
   cohortUnassign: 'd-3801f540f2a948729db6019981ace2c2',
   cohortManagerAssign: 'd-c9382610d3bb46f28291bca9f5d97cd4',
-  cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714'
+  cohortManagerUnassign: 'd-8b97231c38a44b6facb05172f39cc714',
 };
 
 export const COURSE_TOPIC_TYPES = {
   content: 'Content',
   assessment: 'Assessment',
   lab: 'Lab',
-  classroom: 'Classroom'
+  classroom: 'Classroom',
 };
 
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
-  'https://zicops.com'
+  'https://zicops.com',
   // 'https://myspace.zicops.com'
 ];
 
@@ -216,9 +218,17 @@ export const VENDOR_LANGUAGES = [
   'Tamil',
   'Malayalam',
   'Bengali',
-  'Gujarati'
+  'Gujarati',
 ];
 
 export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
+export const VENDOR_MASTER_STATUS = {
+  active: 'active',
+  draft: 'draft',
+};
+
 //Vendor Constant End
+
+// GENERIC CONSTANTS
+export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];

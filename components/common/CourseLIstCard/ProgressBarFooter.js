@@ -1,5 +1,4 @@
 import { getCourseDisplayTime } from '@/helper/utils.helper';
-import moment from 'moment';
 import styles from './courseListCard.module.scss';
 
 export default function ProgressBarFooter({ courseData, isCompleted }) {
@@ -10,13 +9,13 @@ export default function ProgressBarFooter({ courseData, isCompleted }) {
           <>
             <p>
               Completed on{' '}
-              {moment.unix(courseData?.updated_at).format('DD/MM/YYYY') || '22-06-2022'}
+              {courseData?.completedOn || ''}
             </p>
           </>
         ) : (
           <>
             <p>
-              Expected Completion by {courseData?.expected_completion || '22-06-2022'}
+              Expected Completion by {courseData?.expected_completion || ''}
               <div className={`${styles.dot}`}></div>
               <span className={`${styles.mandatory}`}>
                 {courseData?.is_mandatory ? 'Mandatory' : 'Not Mandatory'}

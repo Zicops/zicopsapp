@@ -1,8 +1,10 @@
 import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
@@ -70,7 +72,10 @@ const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
 };
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   return (
     <>
@@ -88,17 +93,18 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href="/admin/user/my-users">
+            <Link href={isVendor ? '' : '/admin/user/my-users'}>
               <a>
                 <Card
                   image="/images/UserManagement.png"
                   text="User Management"
                   width="70px"
+                  isDisabled={isVendor}
                   tooltipTitle={ADMIN_HOME.userManagement}
                 />
               </a>
             </Link>
-            <Link href="/admin/course/my-courses">
+            <Link href={'/admin/course/my-courses'}>
               <a>
                 <Card
                   image="/images/CourseManagement.png"
@@ -119,25 +125,26 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-
           </div>
           <div className="new_row">
-            <Link href="/admin/administration/organization">
+            <Link href={isVendor ? '' : '/admin/administration/organization'}>
               <a>
                 <Card
                   image="/images/Administration.png"
                   text="Administration"
                   width="60px"
+                  isDisabled={isVendor}
                   tooltipTitle={ADMIN_HOME.administrationManagement}
                 />
               </a>
             </Link>
-            <Link href="/admin/exams/my-question-bank">
+            <Link href={isVendor ? '' : '/admin/exams/my-question-bank'}>
               <a>
                 <Card
                   image="/images/ExamManagement.png"
                   text="Exam Management"
                   width="80px"
+                  isDisabled={isVendor}
                   tooltipTitle={ADMIN_HOME.examsManagement}
                 />
               </a>

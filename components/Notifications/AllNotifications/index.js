@@ -1,13 +1,13 @@
 import { ReadNotificationsAtom } from '@/state/atoms/notification.atom';
 import { useRecoilValue } from 'recoil';
-import SingleNotification from '../SingleNotification';
 import styles from '../notification.module.scss';
+import SingleNotification from '../SingleNotification';
 
 const AllNotifications = ({ style, data, isNav }) => {
   const readNotification = useRecoilValue(ReadNotificationsAtom);
   const routeObj = {
     course: {
-      signinassign:{
+      signinassign: {
         text: 'Go to courses',
         routeUrl: '/my-profile?tabName=Courses',
         routeAsUrl: '/my-profile'
@@ -38,7 +38,7 @@ const AllNotifications = ({ style, data, isNav }) => {
     <div>
       {!data?.length && <strong className={`${styles.fallbackMsg}`}>No new notifications</strong>}
       {data?.map((element) => {
-        const { body, img, link, duration, route, title, fcmMessageId } = element;
+        let { body, img, link, duration, route, title, fcmMessageId } = element;
         let isRead = false;
         if (readNotification.includes(fcmMessageId)) {
           isRead = true;
@@ -48,11 +48,14 @@ const AllNotifications = ({ style, data, isNav }) => {
         const text = title?.split('-');
         let linkAndRoute =
           routeObj?.[`${text?.[0]?.toLowerCase()}`]?.[`${text?.[1]?.toLowerCase()}`];
-        if (!linkAndRoute) linkAndRoute = {};
-        if (!linkAndRoute?.routeUrl) {
-          linkAndRoute.routeAsUrl = link;
-          linkAndRoute.routeUrl = link;
-        }
+        if (!linkAndRoute) linkAndRoute = null;
+        if (!linkAndRoute?.routeUrl)
+          linkAndRoute = Object.assign({
+            text: linkAndRoute?.text,
+            routeAsUrl: link,
+            routeUrl: link
+          });
+
         return (
           <SingleNotification
             key={fcmMessageId}

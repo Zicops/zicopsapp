@@ -22,7 +22,16 @@ const InstructionPage = ({
   let learnerExamData = useRecoilValue(LearnerExamAtom);
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
-  if (!learnerExamData?.examData?.id) learnerExamData = data;
+  if (!learnerExamData?.examData?.id) {
+    const _d = data;
+    _d.examData.examStart = new Date(moment().subtract('15', 'minutes').seconds(0));
+    _d.examData.examEnd = new Date(
+      moment()
+        .add(_d.examData.duration + _d.examData.bufferTime, 'minutes')
+        .seconds(0)
+    );
+    learnerExamData = data;
+  }
 
   const [isType, setIsType] = useState({
     schedule: true,

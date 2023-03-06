@@ -1,11 +1,11 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, DEFAULT_VALUES } from '@/helper/constants.helper';
+import { COURSE_STATUS, DEFAULT_VALUES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -48,6 +48,7 @@ export default function useSaveCourse(courseContextData) {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
@@ -137,8 +138,8 @@ export default function useSaveCourse(courseContextData) {
       status: COURSE_STATUS.save
     });
     const allCourses = [
-      ...(await savedCourseRes)?.latestCourses?.courses,
-      ...(await publishedCourseRes)?.latestCourses?.courses
+      ...((await savedCourseRes)?.latestCourses?.courses || []),
+      ...((await publishedCourseRes)?.latestCourses?.courses || [])
     ];
 
     if (
@@ -185,10 +186,16 @@ export default function useSaveCourse(courseContextData) {
       status: isPublishing ? COURSE_STATUS.publish : COURSE_STATUS.save,
       approvers: []
     };
-    console.log('var', sendData);
     if (isPublishing) {
       sendData.publish_date = getUnixFromDate();
       sendData.approvers = [userData?.email];
+    }
+
+    if (
+      fullCourse?.qa_required &&
+      userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)
+    ) {
+      sendData.status = COURSE_STATUS.approvalPending;
     }
 
     const courseUpdateResponse = await updateCourse({ variables: sendData })?.catch((err) => {
