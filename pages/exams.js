@@ -1,9 +1,13 @@
 import {
   GET_COURSE_TOPICS,
   GET_EXAM_INSTRUCTION,
+  GET_EXAM_INSTRUCTION_BY_EXAMID,
   GET_EXAM_META,
   GET_EXAM_SCHEDULE,
+  GET_EXAM_SCHEDULE_BY_EXAMID,
+  GET_TOPICS_BY_COURSEIDS,
   GET_TOPIC_EXAMS,
+  GET_TOPIC_EXAMS_BY_COURSEID,
   queryClient
 } from '@/api/Queries';
 import { GET_USER_EXAM_ATTEMPTS, GET_USER_EXAM_RESULTS, userQueryClient } from '@/api/UserQueries';
@@ -226,14 +230,14 @@ export default function LearnerExams() {
 
   useEffect(() => {
     console.log(examResults, 'examresult');
-    if (!examResults?.length) return;
+    if (!examResults?.length) return setLoading(false);
 
     //loop to finally add results and course name
     const examFinalResult = [];
     if (examCourseMapping?.scheduleExam?.length) {
       for (let i = 0; i < examResults?.length; i++) {
         // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-  
+
         for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
           if (examResults[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
             examFinalResult.push({ ...examResults[i], ...examCourseMapping?.scheduleExam[j] });
@@ -284,6 +288,7 @@ export default function LearnerExams() {
       }
     });
     setExamResultTableData([...filteredData]);
+
     // setExamResultTableData([...examsResult]);
     return;
   }, [examResults, inputText, examCourseMapping?.scheduleExam, examCourseMapping?.takeAnyTime]);
@@ -292,7 +297,7 @@ export default function LearnerExams() {
     // console.log(screen.width);
     setLoading(true);
     loadUserAttemptsAndResults();
-    loadExamData();
+    // loadExamData();
   }, []);
   const courseFromPrefernces = latestCourses?.filter(
     (c) => !!activeSubcatArr?.find((pref) => pref?.sub_category === c?.sub_category)
@@ -452,13 +457,27 @@ export default function LearnerExams() {
     return resAttempts?.getUserExamAttempts;
   }
 
-  async function getTopics(courseId = null) {
+  // async function getTopics(courseId = null) {
+  //   //return an empty array in case of error
+
+  //   if (!courseId) return [];
+  //   const topicRes = await loadQueryDataAsync(
+  //     GET_TOPICS_BY_COURSEIDS,
+  //     { course_id: courseId },
+  //     {},
+  //     queryClient
+  //   );
+  //   if (topicRes?.error) return [];
+  //   if (!topicRes?.getTopics?.length) return [];
+  //   return [...topicRes?.getTopics];
+  // }
+  async function getTopics(courseIds = []) {
     //return an empty array in case of error
 
-    if (!courseId) return [];
+    if (!courseIds) return [];
     const topicRes = await loadQueryDataAsync(
-      GET_COURSE_TOPICS,
-      { course_id: courseId },
+      GET_TOPICS_BY_COURSEIDS,
+      { course_ids: courseIds },
       {},
       queryClient
     );
@@ -467,11 +486,11 @@ export default function LearnerExams() {
     return [...topicRes?.getTopics];
   }
 
-  async function getTopicExams(topicId = null) {
+  async function getTopicExams(courseIds = []) {
     if (!topicId) return [];
     const examRes = await loadQueryDataAsync(
-      GET_TOPIC_EXAMS,
-      { topic_id: topicId },
+      GET_TOPIC_EXAMS_BY_COURSEID,
+      { course_ids: courseIds },
       {},
       queryClient
     );
@@ -493,11 +512,11 @@ export default function LearnerExams() {
     return [...examMetaRes?.getExamsMeta];
   }
 
-  async function getExamSchedule(examId = null) {
-    if (!examId) return [];
+  async function getExamSchedule(exam_ids = null) {
+    if (!exam_ids) return [];
     const examSchedule = await loadQueryDataAsync(
-      GET_EXAM_SCHEDULE,
-      { exam_id: examId },
+      GET_EXAM_SCHEDULE_BY_EXAMID,
+      { exam_ids: exam_ids },
       {},
       queryClient
     );
@@ -506,11 +525,11 @@ export default function LearnerExams() {
     return [...examSchedule?.getExamSchedule];
   }
 
-  async function getExamInstruction(examId = null) {
-    if (!examId) return [];
+  async function getExamInstruction(examIds = []) {
+    if (!examIds) return [];
     const examInstruction = await loadQueryDataAsync(
-      GET_EXAM_INSTRUCTION,
-      { exam_id: examId },
+      GET_EXAM_INSTRUCTION_BY_EXAMID,
+      { exam_ids: examIds },
       {},
       queryClient
     );
@@ -519,221 +538,220 @@ export default function LearnerExams() {
     return [...examInstruction?.getExamInstruction];
   }
 
-  async function loadExamData() {
-    // userCourseMap -> topics => examsmetas => userExamAttempts =>
-    // for schedule exams => exam schedule
-    // for anytime exam -> userExamReuslts
+  // async function loadExamData() {
+  //   // userCourseMap -> topics => examsmetas => userExamAttempts =>
+  //   // for schedule exams => exam schedule
+  //   // for anytime exam -> userExamReuslts
 
-    // await loadUserAttemptsAndResults();
+  //   // await loadUserAttemptsAndResults();
 
-    const topicCourseMap = [];
-    const courseData = await getUserCourseData(30);
-    if (!courseData?.length) return setLoading(false);
-    //filtering course data if id doesnt exist
-    const _courseData = courseData?.filter((course) => !!course?.id);
-    console.log('_courseData', _courseData);
-    // let courseId = []
-    // const courseIds = _courseData?.map((course) => course?.id);
+  //   const topicCourseMap = [];
+  //   const courseData = await getUserCourseData(30);
+  //   if (!courseData?.length) return setLoading(false);
+  //   //filtering course data if id doesnt exist
+  //   const _courseData = courseData?.filter((course) => !!course?.id);
+  //   console.log('_courseData', _courseData);
+  //   // let courseId = []
+  //   const courseIds = _courseData?.map((course) => course?.id);
+  //   const courseTopics = await getTopics(courseIds);
+  //   let assessmentTopics = [];
+  //   // need later for courses down exam
+  //   let assessmentCourses = [];
+  //   for (let i = 0; i < _courseData?.length; i++) {
+  //     if (!courseTopics?.length) continue;
+  //     const filteredTopics = courseTopics?.filter(
+  //       (topic) => topic?.type?.toLowerCase() === 'assessment'
+  //     );
+  //     if (!filteredTopics?.length) continue;
+  //     assessmentTopics = assessmentTopics.concat(filteredTopics);
+  //     assessmentCourses = assessmentCourses.concat(_courseData[i]);
+  //     // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
+  //     for (let j = 0; j < filteredTopics?.length; j++) {
+  //       topicCourseMap.push({
+  //         [`${filteredTopics[j]?.id}`]: {
+  //           courseName: _courseData[i]?.name,
+  //           tileImage: _courseData[i]?.tileImage,
+  //           type: _courseData[i]?.type,
+  //           topicId: filteredTopics[j]?.id,
+  //           courseId: _courseData[i]?.id
+  //         }
+  //       });
+  //     }
+  //   }
 
-    let assessmentTopics = [];
-    // need later for courses down exam
-    let assessmentCourses = [];
-    for (let i = 0; i < _courseData?.length; i++) {
-      const courseTopics = await getTopics(_courseData[i]?.id);
-      if (!courseTopics?.length) continue;
-      const filteredTopics = courseTopics?.filter(
-        (topic) => topic?.type?.toLowerCase() === 'assessment'
-      );
-      if (!filteredTopics?.length) continue;
-      assessmentTopics = assessmentTopics.concat(filteredTopics);
-      assessmentCourses = assessmentCourses.concat(_courseData[i]);
-      // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
-      for (let j = 0; j < filteredTopics?.length; j++) {
-        topicCourseMap.push({
-          [`${filteredTopics[j]?.id}`]: {
-            courseName: _courseData[i]?.name,
-            tileImage: _courseData[i]?.tileImage,
-            type: _courseData[i]?.type,
-            topicId: filteredTopics[j]?.id,
-            courseId: _courseData[i]?.id
-          }
-        });
-      }
-    }
+  //   // console.log(assessmentTopics,'assasas',topicDataData)
+  //   if (!assessmentTopics?.length) return setLoading(false);
 
-    // console.log(assessmentTopics,'assasas',topicDataData)
-    if (!assessmentTopics?.length) return setLoading(false);
+  //   const examCourseMap = [];
 
-    const examCourseMap = [];
+  //   // load topic exams
+  //   let exams = [];
+  //   const topicExams = await getTopicExams(courseIds);
+  //   for (let i = 0; i < assessmentTopics?.length; i++) {
+  //     if (!topicExams?.length) continue;
+  //     examCourseMap.push({
+  //       [`${topicExams[0]?.examId}`]: {
+  //         courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
+  //         tileImage: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.tileImage,
+  //         type: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.type,
+  //         examId: topicExams[0]?.examId,
+  //         topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
+  //         courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
+  //       }
+  //     });
+  //     exams = exams.concat(topicExams);
+  //   }
+  //   console.log('examCourseMap', examCourseMap);
+  //   //loop to take exam related data in one piece
 
-    // load topic exams
-    let exams = [];
-    for (let i = 0; i < assessmentTopics?.length; i++) {
-      const topicExams = await getTopicExams(assessmentTopics[i]?.id);
-      if (!topicExams?.length) continue;
-      examCourseMap.push({
-        [`${topicExams[0]?.examId}`]: {
-          courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
-          tileImage: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.tileImage,
-          type: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.type,
-          examId: topicExams[0]?.examId,
-          topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
-          courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
-        }
-      });
-      exams = exams.concat(topicExams);
-    }
-    console.log('examCourseMap', examCourseMap);
-    //loop to take exam related data in one piece
+  //   if (!exams?.length) return setLoading(false);
 
-    if (!exams?.length) return setLoading(false);
+  //   // to get exam metas
+  //   const examsIds = exams?.map((exam) => exam?.examId);
+  //   const examMetas = await getExamsMeta(examsIds);
 
-    // to get exam metas
-    const examsIds = exams?.map((exam) => exam?.examId);
-    const examMetas = await getExamsMeta(examsIds);
+  //   //to load exam instructions
+  //   for (let i = 0; i < examMetas?.length; i++) {
+  //     const examInstruction = await getExamInstruction(examMetas[i]?.id);
+  //     if (!examInstruction?.length) continue;
+  //     examMetas[i] = {
+  //       ...examMetas[i],
+  //       instructionId: examInstruction[0]?.id,
+  //       passingCriteria: examInstruction[0]?.PassingCriteria,
+  //       noAttempts: examInstruction[0]?.NoAttempts
+  //     };
+  //   }
+  //   const allAttempts = [];
+  //   for (let i = 0; i < examMetas?.length; i++) {
+  //     const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
+  //     console.log('examAttempt', examAttempt);
+  //     if (!examAttempt?.length) continue;
+  //     allAttempts.push(...examAttempt);
+  //     console.log('allAttempts', allAttempts);
+  //   }
 
-    //to load exam instructions
-    for (let i = 0; i < examMetas?.length; i++) {
-      const examInstruction = await getExamInstruction(examMetas[i]?.id);
-      if (!examInstruction?.length) continue;
-      examMetas[i] = {
-        ...examMetas[i],
-        instructionId: examInstruction[0]?.id,
-        passingCriteria: examInstruction[0]?.PassingCriteria,
-        noAttempts: examInstruction[0]?.NoAttempts
-      };
-    }
-    const allAttempts = [];
-    for (let i = 0; i < examMetas?.length; i++) {
-      const examAttempt = await loadUserAttemptsAndResults(examMetas[i]?.id);
-      console.log('examAttempt', examAttempt);
-      if (!examAttempt?.length) continue;
-      allAttempts.push(...examAttempt);
-      console.log('allAttempts', allAttempts);
-    }
+  //   setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
 
-    setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
+  //   const onGoingAttempts = allAttempts?.filter(
+  //     (attemp) => attemp?.attempt_status?.toLowerCase() === 'started'
+  //   );
 
-    const onGoingAttempts = allAttempts?.filter(
-      (attemp) => attemp?.attempt_status?.toLowerCase() === 'started'
-    );
+  //   setOnGoingExam([...onGoingAttempts]);
+  //   console.log('onGoingAttempts', onGoingAttempts);
+  //   const completedAttempts = allAttempts?.filter((attemp) => {
+  //     console.log(
+  //       attemp?.attempt_status?.toLowerCase(),
+  //       attemp?.attempt_status?.toLowerCase() === 'completed'
+  //     );
+  //     return attemp?.attempt_status?.toLowerCase() === 'completed';
+  //   });
+  //   console.log('completedAttempts', completedAttempts);
+  //   let newCompleteAttempts = [];
+  //   if (!userData?.id) return [];
+  //   const id = userData?.id;
+  //   for (let i = 0; i < completedAttempts?.length; i++) {
+  //     // if (!completedAttempts[i]?.user_ea_id) return;
+  //     const results = await loadQueryDataAsync(
+  //       GET_USER_EXAM_RESULTS,
+  //       { user_ea_details: [{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }] },
+  //       {},
+  //       userQueryClient
+  //     );
+  //     if (results?.getUserExamResults) {
+  //       console.log('results?.getUserExamResults', results?.getUserExamResults);
+  //       console.log('completedAttempts', completedAttempts);
+  //       completedAttempts?.map((r) => {
+  //         if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
+  //           console.log('index', results?.getUserExamResults[0]?.results[0]?.user_score);
+  //           newCompleteAttempts.push({
+  //             ...r,
+  //             total: JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status)
+  //               .totalMarks,
+  //             score: results?.getUserExamResults[0]?.results[0]?.user_score
+  //           });
+  //         }
+  //       });
+  //     }
 
-    setOnGoingExam([...onGoingAttempts]);
-    console.log('onGoingAttempts', onGoingAttempts);
-    const completedAttempts = allAttempts?.filter((attemp) => {
-      console.log(
-        attemp?.attempt_status?.toLowerCase(),
-        attemp?.attempt_status?.toLowerCase() === 'completed'
-      );
-      return attemp?.attempt_status?.toLowerCase() === 'completed';
-    });
-    console.log('completedAttempts', completedAttempts);
-    let newCompleteAttempts = [];
-    if (!userData?.id) return [];
-    const id = userData?.id;
-    for (let i = 0; i < completedAttempts?.length; i++) {
-      // if (!completedAttempts[i]?.user_ea_id) return;
-      const results = await loadQueryDataAsync(
-        GET_USER_EXAM_RESULTS,
-        { user_ea_details: [{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }] },
-        {},
-        userQueryClient
-      );
-      if (results?.getUserExamResults) {
-        console.log('results?.getUserExamResults', results?.getUserExamResults);
-        console.log('completedAttempts', completedAttempts);
-        completedAttempts?.map((r) => {
-          if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
-            console.log('index', results?.getUserExamResults[0]?.results[0]?.user_score);
-            newCompleteAttempts.push({
-              ...r,
-              total: JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status)
-                .totalMarks,
-              score: results?.getUserExamResults[0]?.results[0]?.user_score
-            });
-          }
-        });
-      }
+  //     console.log('newCompleteAttempts', newCompleteAttempts);
+  //   }
+  //   const UniqueCompleteAttempts = newCompleteAttempts.reduce((acc, curr) => {
+  //     if (!acc[curr.user_ea_id]) {
+  //       acc[curr.user_ea_id] = curr;
+  //     }
+  //     return acc;
+  //   }, {});
 
-      console.log('newCompleteAttempts', newCompleteAttempts);
-    }
-    const UniqueCompleteAttempts = newCompleteAttempts.reduce((acc, curr) => {
-      if (!acc[curr.user_ea_id]) {
-        acc[curr.user_ea_id] = curr;
-      }
-      return acc;
-    }, {});
+  //   const uniquAttemps = Object.values(UniqueCompleteAttempts);
+  //   console.log('uniquAttemps', uniquAttemps);
+  //   if (newCompleteAttempts?.length) {
+  //     setExamResults([...uniquAttemps]);
+  //   }
 
-    const uniquAttemps = Object.values(UniqueCompleteAttempts);
-    console.log('uniquAttemps', uniquAttemps);
-    if (newCompleteAttempts?.length) {
-      setExamResults([...uniquAttemps]);
-    }
+  //   let scheduleExams = [];
+  //   let takeAnyTimeExams = [];
 
-    let scheduleExams = [];
-    let takeAnyTimeExams = [];
+  //   //adding course name to each of them
 
-    //adding course name to each of them
+  //   examMetas?.forEach((exam, index) => {
+  //     if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
+  //       scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
+  //       return;
+  //     }
+  //     takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
+  //     return;
+  //   });
 
-    examMetas?.forEach((exam, index) => {
-      if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
-        scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
-        return;
-      }
-      takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
-      return;
-    });
+  //   // scheduleExam:[],takeAnyTime:[]
+  //   setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
 
-    // scheduleExam:[],takeAnyTime:[]
-    setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
+  //   if (scheduleExams.length) {
+  //     for (let i = 0; i < scheduleExams?.length; i++) {
+  //       const schedule = await getExamSchedule(scheduleExams[i]?.id);
+  //       if (!schedule?.length) continue;
+  //       scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
+  //     }
+  //   }
+  //   // console.log(takeAnyTimeExams, scheduleExams);
+  //   // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
 
-    if (scheduleExams.length) {
-      for (let i = 0; i < scheduleExams?.length; i++) {
-        const schedule = await getExamSchedule(scheduleExams[i]?.id);
-        if (!schedule?.length) continue;
-        scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
-      }
-    }
-    // console.log(takeAnyTimeExams, scheduleExams);
-    // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
+  //   let currentTime = getUnixFromDate();
 
-    let currentTime = getUnixFromDate();
+  //   let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
 
-    let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
+  //   setScheduleExamsData(
+  //     sExams?.map((exam) => ({
+  //       examData: [
+  //         exam?.Name,
+  //         exam?.courseName,
+  //         moment.unix(exam?.Start).format('LLL')
+  //         // examTime:
+  //       ],
+  //       examId: exam?.id,
+  //       courseId: exam?.courseId,
+  //       topicId: exam?.topicId
+  //     })),
+  //     setLoading(false)
+  //   );
 
-    setScheduleExamsData(
-      sExams?.map((exam) => ({
-        examData: [
-          exam?.Name,
-          exam?.courseName,
-          moment.unix(exam?.Start).format('LLL')
-          // examTime:
-        ],
-        examId: exam?.id,
-        courseId: exam?.courseId,
-        topicId: exam?.topicId
-      })),
-      setLoading(false)
-    );
+  //   // setScheduleExamsData(
+  //   //   sExams?.map((exam) => ({
+  //   //     id: exam?.examId,
+  //   //     examName: exam?.Name,
+  //   //     courseName: exam?.courseName,
+  //   //     examStartDate: moment.unix(exam?.Start).format('LLL'),
+  //   //     // examTime:
+  //   //   }))
+  //   // );
 
-    // setScheduleExamsData(
-    //   sExams?.map((exam) => ({
-    //     id: exam?.examId,
-    //     examName: exam?.Name,
-    //     courseName: exam?.courseName,
-    //     examStartDate: moment.unix(exam?.Start).format('LLL'),
-    //     // examTime:
-    //   }))
-    // );
+  //   // new Date(+exam?.Start * 1000).toDateString()
 
-    // new Date(+exam?.Start * 1000).toDateString()
-
-    // const scheduleExamsWithAttempt = scheduleExams?.filter(
-    //   (exam) => parseInt(exam?.noAttempts) > 0
-    // );
-    // setTake;
-    //for takeanytime exam check for a state to make sure if exams are loaded or not
-  }
+  //   // const scheduleExamsWithAttempt = scheduleExams?.filter(
+  //   //   (exam) => parseInt(exam?.noAttempts) > 0
+  //   // );
+  //   // setTake;
+  //   //for takeanytime exam check for a state to make sure if exams are loaded or not
+  // }
 
   const [showTable, setShowTable] = useState('');
 
