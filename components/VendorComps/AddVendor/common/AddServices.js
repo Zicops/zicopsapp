@@ -60,7 +60,6 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
-  console.log('pType', pType);
   let getSampleFiles;
   if (pType === 'sme') {
     getSampleFiles = getSMESampleFiles;
@@ -77,7 +76,6 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   } else {
     fileData.push(cdData?.sampleFiles);
   }
-  console.log('fileData', fileData);
 
   const completeProfileHandler = async () => {
     await addUpdateProfile();
@@ -272,7 +270,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   {fileData[0]?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
-                      {file?.name + '.' + file?.fileType}
+                      {typeof file === 'string' ? file : file?.name + '.' + file?.fileType}
                     </div>
                   ))}
                 </div>

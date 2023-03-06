@@ -293,12 +293,12 @@ export default function useHandleVendor() {
     );
     const smeData = fileInfo?.getSmeDetails;
     const smeDetails = {
+      sme_id: smeData?.sme_id,
       isApplicableSME: smeData?.is_applicable,
       serviceDescription: smeData?.description,
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
       sampleFiles: smeData?.sample_files,
-      profiles: smeData?.profiles,
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
@@ -313,12 +313,12 @@ export default function useHandleVendor() {
     );
     const crtData = fileInfo?.getClassRoomTraining;
     const crtDetails = {
+      crt_id: crtData?.crt_id,
       isApplicableCT: crtData?.is_applicable,
       serviceDescription: crtData?.description,
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
       sampleFiles: crtData?.sample_files,
-      profiles: crtData?.profiles,
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
@@ -333,12 +333,12 @@ export default function useHandleVendor() {
     );
     const cdData = fileInfo?.getContentDevelopment;
     const cdDetails = {
+      cd_id: cdData?.cd_id,
       isApplicableCD: cdData?.is_applicable,
       serviceDescription: cdData?.description,
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
       sampleFiles: cdData?.sample_files,
-      profiles: cdData?.profiles,
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
@@ -540,7 +540,7 @@ export default function useHandleVendor() {
       if (profileData?.experience?.ExpId) {
         sendData.ExpId = profileData?.experience?.ExpId;
 
-        await updateVendor({ variables: sendData }).catch((err) => {
+        const res = await updateVendor({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Update Experience Error' });
@@ -548,7 +548,7 @@ export default function useHandleVendor() {
 
         if (isError) return;
         setToastMsg({ type: 'success', message: 'Experience Updated' });
-        return;
+        return res;
       }
       if (profileData?.email) {
         const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
@@ -558,7 +558,7 @@ export default function useHandleVendor() {
         });
         if (isError) return;
         setToastMsg({ type: 'success', message: 'Experience Created' });
-        return;
+        return res;
       }
     }
     // return isError;
@@ -597,12 +597,10 @@ export default function useHandleVendor() {
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
       sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      profiles: profileDetails?.map((pro) => pro?.first_name + '&' + pro?.email) || [],
       Status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
-
     if (smeData?.sme_id) {
       sendData.sme_id = smeData?.sme_id;
 
@@ -637,7 +635,6 @@ export default function useHandleVendor() {
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
       sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      profiles: profileDetails?.map((pro) => pro?.first_name + '&' + pro?.email) || [],
       Status: VENDOR_MASTER_STATUS.active
     };
 
@@ -677,7 +674,6 @@ export default function useHandleVendor() {
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
       sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      profiles: profileDetails?.map((pro) => pro?.first_name + '&' + pro?.email) || [],
       Status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;

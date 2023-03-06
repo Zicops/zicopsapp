@@ -73,6 +73,11 @@ export function getExperiencesObject(data) {
   };
 }
 
+export const VendorAllExperiencesAtom = atom({
+  key: 'vendorAllExperiences',
+  default: []
+});
+
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
   default: getSMEServicesObject()
@@ -86,8 +91,7 @@ export function getSMEServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || [],
-    profiles: data?.profiles || []
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
@@ -104,8 +108,7 @@ export function getCTServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || [],
-    profiles: data?.profiles || []
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
@@ -122,8 +125,7 @@ export function getCDServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || [],
-    profiles: data?.profiles || []
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
