@@ -1019,7 +1019,6 @@ export const GET_SME_DETAILS = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       created_at
       created_by
       updated_at
@@ -1040,7 +1039,6 @@ export const GET_CRT_DETAILS = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       created_at
       created_by
       updated_at
@@ -1061,7 +1059,6 @@ export const GET_CD_DETAILS = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       created_at
       created_by
       updated_at

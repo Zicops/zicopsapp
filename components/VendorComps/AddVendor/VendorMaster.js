@@ -53,12 +53,12 @@ export default function VendorMaster() {
     }
   ];
 
-  console.info(
-    vendorId && vendorData?.vendorId !== vendorId,
-    vendorId,
-    vendorData?.vendorId,
-    vendorId
-  );
+  // console.info(
+  //   vendorId && vendorData?.vendorId !== vendorId,
+  //   vendorId,
+  //   vendorData?.vendorId,
+  //   vendorId
+  // );
 
   if (vendorId && vendorData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
@@ -81,7 +81,6 @@ export default function VendorMaster() {
       <div className={`${styles.addressImageDiv}`}>
         <div className={`${styles.input2}`}>
           <label for="vendorName">Vendor Address: </label>
-          {/*<input type="text" id="vendorName" name="vendorname" placeholder="Enter vendor address" />*/}
           <LabeledTextarea
             inputOptions={{
               inputName: 'address',

@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './vendorComps.module.scss';
 import { months, years } from '@/helper/utils.helper';
+import useHandleVendor from './Logic/useHandleVendor';
 
 const optionEmploymentTypeArray = [
   'Full-time',
@@ -38,7 +39,8 @@ const optionYearArray = _years.map((val) => ({
 
 const AddExpriences = () => {
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-
+  // const { getProfileExperience } = useHandleVendor();
+  // console.log(getProfileExperience);
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>

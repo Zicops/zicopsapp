@@ -6,7 +6,7 @@ import { courseSidebarData } from '../../../components/common/Sidebar/Logic/side
 import CourseHead from '../../../components/CourseHead';
 
 const MyCourses = () => {
-  const {getRoleBasedSideBarData} = useHandleRole();
+  const { getRoleBasedSideBarData } = useHandleRole();
   let sideBarData = getRoleBasedSideBarData();
   return (
     <div>

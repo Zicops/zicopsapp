@@ -11,6 +11,7 @@ import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helpe
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import {
+  getExperiencesObject,
   VendorAllExperiencesAtom,
   VendorExperiencesAtom,
   VendorProfileAtom
@@ -35,9 +36,10 @@ const AddVendorProfile = ({ data = {} }) => {
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
 
-  const { handleProfilePhoto } = useHandleVendor();
+  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+  console.info('experiencesData', profileData?.experience);
   const completeExperienceHandler = () => {
     const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
     const start_date = new Date(StartDate);
@@ -57,18 +59,16 @@ const AddVendorProfile = ({ data = {} }) => {
       end_date: end_timestamp || null,
       status: VENDOR_MASTER_STATUS.active
     };
-    // setAllExperiences([...allExperiences, experienceData]);
-    // setAllExperiences(null);
-    console.info('profileData', profileData);
     setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
     setIsOpenExpriences(false);
+    setExperiencesData(getExperiencesObject());
   };
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
       setSelectedLanguages([...selectedLanguages, value]);
     } else {
-      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
+      setSelectedLanguages(selectedLanguages?.filter((lang) => lang !== value));
     }
   };
 
@@ -98,7 +98,6 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Last name: </label>
-
           <LabeledInput
             inputOptions={{
               inputName: 'lastName',
@@ -122,7 +121,6 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Contact number: </label>
-
           <LabeledInput
             inputOptions={{
               inputName: 'contactNumber',
@@ -197,7 +195,10 @@ const AddVendorProfile = ({ data = {} }) => {
                   }
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
-                  handleClick={() => setIsOpenExpriences(true)}
+                  handleClick={() => {
+                    setIsOpenExpriences(true);
+                    getSingleExperience(exp?.PfId, exp?.ExpId);
+                  }}
                 />
               ))}
               <IconButton
@@ -319,7 +320,7 @@ const AddVendorProfile = ({ data = {} }) => {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}
         isFooterVisible={true}>
-        {VENDOR_LANGUAGES.map((data, index) => {
+        {VENDOR_LANGUAGES?.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`} key={index}>
               <LabeledRadioCheckbox
@@ -327,7 +328,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 label={data}
                 value={data}
                 isChecked={
-                  selectedLanguages.includes(data) || profileData?.languages.includes(data)
+                  selectedLanguages?.includes(data) || profileData?.languages?.includes(data)
                 }
                 changeHandler={handleLanguageSelection}
               />

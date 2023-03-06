@@ -1402,6 +1402,7 @@ export const UPDATE_VENDOR = gql`
     $vendorId: String
     $level: String
     $type: String
+    $name: String
     $photo: Upload
     $address: String
     $website: String
@@ -1418,6 +1419,7 @@ export const UPDATE_VENDOR = gql`
         vendor_id: $vendorId
         level: $level
         type: $type
+        name: $name
         photo: $photo
         address: $address
         website: $website
@@ -1463,9 +1465,13 @@ export const CREATE_PROFILE_VENDOR = gql`
     $languages: [String]
     $SME_expertise: [String]
     $Classroom_expertise: [String]
+    $content_development: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
+    $sme: Boolean
+    $crt: Boolean
+    $cd: Boolean
     $status: String!
   ) {
     createProfileVendor(
@@ -1478,11 +1484,15 @@ export const CREATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_expertise: $SME_expertise
-        Classroom_expertise: $Classroom_expertise
+        sme_expertise: $SME_expertise
+        classroom_expertise: $Classroom_expertise
+        content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
+        sme: $sme
+        crt: $crt
+        cd: $cd
         status: $status
       }
     ) {
@@ -1497,8 +1507,12 @@ export const CREATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      experience_years
       experience
       is_speaker
+      sme
+      crt
+      cd
       created_at
       created_by
       updated_at
@@ -1520,9 +1534,13 @@ export const UPDATE_PROFILE_VENDOR = gql`
     $languages: [String]
     $SME_Expertise: [String]
     $Classroom_Expertise: [String]
+    $content_development: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
+    $sme: Boolean
+    $crt: Boolean
+    $cd: Boolean
     $status: String!
   ) {
     updateProfileVendor(
@@ -1535,11 +1553,15 @@ export const UPDATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        SME_expertise: $SME_Expertise
-        Classroom_expertise: $Classroom_Expertise
+        sme_expertise: $SME_Expertise
+        classroom_expertise: $Classroom_Expertise
+        content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
+        sme: $sme
+        crt: $crt
+        cd: $cd
         status: $status
       }
     ) {
@@ -1557,6 +1579,9 @@ export const UPDATE_PROFILE_VENDOR = gql`
       experience
       experience_years
       is_speaker
+      sme
+      crt
+      cd
       created_at
       created_by
       updated_at
@@ -1707,7 +1732,6 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $profiles: [String]
     $Status: String
   ) {
     createSubjectMatterExpertise(
@@ -1720,7 +1744,6 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        profiles: $profiles
         Status: $Status
       }
     ) {
@@ -1732,7 +1755,6 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       created_at
       created_by
       updated_at
@@ -1752,7 +1774,6 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $profiles: [String]
     $Status: String
   ) {
     updateSubjectMatterExpertise(
@@ -1765,7 +1786,6 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        profiles: $profiles
         Status: $Status
       }
     ) {
@@ -1777,7 +1797,6 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       created_at
       created_by
       updated_at
@@ -1797,7 +1816,6 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $profiles: [String]
     $is_expertise_online: Boolean
     $status: String
   ) {
@@ -1811,7 +1829,6 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        profiles: $profiles
         is_expertise_online: $is_expertise_online
         status: $status
       }
@@ -1824,7 +1841,6 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       is_expertise_online
       created_at
       created_by
@@ -1845,9 +1861,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $profiles: [String]
     $is_expertise_online: Boolean
-    $Status: String
+    $status: String
   ) {
     updateClassRoomTraining(
       input: {
@@ -1859,9 +1874,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        profiles: $profiles
         is_expertise_online: $is_expertise_online
-        Status: $Status
+        status: $status
       }
     ) {
       crt_id
@@ -1872,7 +1886,6 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      profiles
       is_expertise_online
       created_at
       created_by
@@ -1969,6 +1982,6 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
 
 export const DELETE_SAMPLE_FILE = gql`
   mutation deleteSampleFile($sfId: String!, $vendor_id: String!, $p_type: String!) {
-    deleteSampleFile(input: { sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type })
+    deleteSampleFile(sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type)
   }
 `;

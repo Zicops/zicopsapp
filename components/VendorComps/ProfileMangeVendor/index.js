@@ -20,8 +20,9 @@ const ProfileManageVendor = () => {
   };
 
   const completeProfileHandler = async () => {
-    addUpdateExperience();
-    addUpdateProfile();
+    await addUpdateExperience();
+    await addUpdateProfile();
+    await getAllProfileInfo();
     setCompleteProfile(true);
     setIsOpenProfile(false);
     setProfileData(getProfileObject());

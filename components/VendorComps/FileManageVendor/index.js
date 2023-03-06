@@ -1,6 +1,13 @@
 import IconButton from '@/components/common/IconButton';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { allSampleFilesAtom, getSampleObject, SampleAtom } from '@/state/atoms/vendor.atoms';
+import {
+  allSampleFilesAtom,
+  CdServicesAtom,
+  CtServicesAtom,
+  getSampleObject,
+  SampleAtom,
+  SmeServicesAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -9,27 +16,36 @@ import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 import SingleFile from './SingleFile';
-const FileManageVendor = () => {
+const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
-  const [allSampleData, setAllSampleData] = useRecoilState(allSampleFilesAtom);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
-  const { getSampleFiles, addSampleFile } = useHandleVendor();
+  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
+  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
+  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
+    useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+  console.info('pType', pType);
+  let getSampleFiles;
+  if (pType === 'sme') {
+    getSampleFiles = getSMESampleFiles;
+  } else if (pType === 'crt') {
+    getSampleFiles = getCRTSampleFiles;
+  } else {
+    getSampleFiles = getCDSampleFiles;
+  }
+
+  let fileData = [];
+  if (pType === 'sme') {
+    fileData = smeData?.sampleFiles;
+  } else if (pType === 'crt') {
+    fileData = ctData?.sampleFiles;
+  } else {
+    fileData = cdData?.sampleFiles;
+  }
   const addNewSampleFileHendler = async () => {
-    // setAllSampleData([
-    //   ...allSampleData,
-    //   {
-    //     vendorId: vendorId,
-    //     name: sampleData?.sampleName || '',
-    //     description: sampleData?.description || '',
-    //     pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
-    //     file: sampleData?.sampleFile || null,
-    //     fileType: sampleData?.fileType || '',
-    //     status: VENDOR_MASTER_STATUS.active
-    //   }
-    // ]);
-    await addSampleFile();
+    await addSampleFile(pType);
     getSampleFiles();
     setIsOpenAddFile(false);
     setSampleData(getSampleObject());
@@ -37,9 +53,13 @@ const FileManageVendor = () => {
   return (
     <div className={`${styles.vendorFileContainer}`}>
       <div className={`${styles.vendorFileMain}`}>
-        {!!allSampleData?.length && allSampleData?.map((data) => <SingleFile data={data} />)}
+        {!!fileData?.length && fileData?.map((data) => <SingleFile data={data} pType={pType} />)}
 
-        <div className={`${styles.addAnotherProfile}`} onClick={() => setIsOpenAddFile(true)}>
+        <div
+          className={`${styles.addAnotherProfile}`}
+          onClick={() => {
+            setIsOpenAddFile(true);
+          }}>
           <IconButton
             text="Add another file"
             styleClass={`${styles.button}`}

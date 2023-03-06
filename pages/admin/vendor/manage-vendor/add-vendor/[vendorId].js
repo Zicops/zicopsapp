@@ -73,8 +73,9 @@ export default function EditVendor() {
         <AdminHeader
           title={
             <>
-              {vendorData?.name || 'Edit Vendor'}{' '}
-              <p className={`${styles.subHeader}`}>{vendorData?.type}</p>
+              {vendorData?.name || 'Edit Vendor'}
+              <p style={{ color: 'var(--primary)', fontSize: '18px' }}>[ {vendorData?.type} ]</p>
+              {/* <p className={`${styles.subHeader}`}>{vendorData?.type}</p> */}
             </>
           }
         />

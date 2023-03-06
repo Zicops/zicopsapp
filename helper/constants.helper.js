@@ -218,7 +218,6 @@ export const VENDOR_MASTER_STATUS = {
 };
 
 //Vendor Constant End
-//Vendor Constant End
 
 // GENERIC CONSTANTS
 export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
