@@ -1,3 +1,4 @@
+import TopicPdfViews from '@/components/CourseComps/TopicPdfViews';
 import { ApolloProvider } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -8,7 +9,11 @@ import CourseHero from '../../components/CourseHero';
 import CustomVideo from '../../components/CustomVideoPlayer';
 import ExamLanding from '../../components/Exams/ExamLanding';
 import CardSlider from '../../components/medium/CardSlider';
-import { getTopicExamObj, TopicExamAtom } from '../../state/atoms/module.atoms';
+import {
+  getTopicExamObj,
+  TopicExamAtom,
+  TopicFileViewDataAtom
+} from '../../state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
 import CourseContextProvider from '../../state/contexts/CourseContext';
 import ModuleContextProvider from '../../state/contexts/ModuleContext';
@@ -16,6 +21,7 @@ import ModuleContextProvider from '../../state/contexts/ModuleContext';
 export default function PreviewCourse() {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+  const [topicFileViewData, setTopicFileViewData] = useRecoilState(TopicFileViewDataAtom);
   const startPlayer = videoData.startPlayer;
 
   function setStartPlayer(val) {
@@ -29,6 +35,7 @@ export default function PreviewCourse() {
     setVideoData(getVideoObject());
     setStartPlayer(false);
     setTopicExamData(getTopicExamObj());
+    if (!topicFileViewData) setTopicFileViewData(null);
   }, []);
 
   return (
@@ -46,9 +53,11 @@ export default function PreviewCourse() {
             }}>
             {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
+            {!!topicFileViewData?.topicContent && <TopicPdfViews />}
+
             {startPlayer && <CustomVideo set={setStartPlayer} isPreview={true} />}
 
-            {!startPlayer && !topicExamData?.id && (
+            {!startPlayer && !topicExamData?.id && !topicFileViewData && (
               <CourseHero set={setStartPlayer} isPreview={true} />
             )}
 

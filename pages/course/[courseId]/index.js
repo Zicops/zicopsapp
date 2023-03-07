@@ -101,7 +101,7 @@ export default function Course() {
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
-          {!!topicFileViewData && <TopicPdfViews />}
+          {!!topicFileViewData?.topicContent && <TopicPdfViews />}
 
           {!startPlayer && !topicExamData?.id && !topicFileViewData && (
             <CourseHero set={setStartPlayer} />
