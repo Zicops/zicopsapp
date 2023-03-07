@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DocumentViewer } from 'react-documents';
 import styles from './viewDoc.module.scss';
 
-export default function ViewDoc({ url }) {
+export default function ViewDoc({ url, customStyles = {} }) {
   const [isLoaded, setIsLoaded] = useState(null);
 
   return (
@@ -15,7 +15,9 @@ export default function ViewDoc({ url }) {
 
       <DocumentViewer
         style={
-          isLoaded ? { minHeight: '60vh', width: '100%' } : { opacity: 0, height: 0, width: 0 }
+          isLoaded
+            ? { minHeight: '60vh', width: '100%', ...customStyles }
+            : { opacity: 0, height: 0, width: 0 }
         }
         url={url}
         queryParams="hl=en"

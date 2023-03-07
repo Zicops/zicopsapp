@@ -1,0 +1,18 @@
+.topicPdfView {
+  margin-top: $headerHeight;
+
+  position: relative;
+
+  height: 80vh;
+  width: 100%;
+  background-color: $darkOne;
+
+  .backBtn {
+    position: absolute;
+    left: 50px;
+    top: 6vh;
+
+    cursor: pointer;
+    z-index: 1;
+  }
+}

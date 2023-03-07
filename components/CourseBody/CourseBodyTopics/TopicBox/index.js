@@ -24,7 +24,8 @@ import {
   QuizAtom,
   TopicAtom,
   TopicContentAtom,
-  TopicExamAtom
+  TopicExamAtom,
+  TopicFileViewDataAtom
 } from '../../../../state/atoms/module.atoms';
 import {
   getVideoObject,
@@ -76,6 +77,7 @@ export default function TopicBox({
   const isLoading = useRecoilValue(isLoadingAtom);
   const allModuleOptions = getModuleOptions();
 
+  const [topicFileViewData, setTopicFileViewData] = useRecoilState(TopicFileViewDataAtom);
   const bookmarkStartTime = useRecoilValue(BookmarkStartTimeAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
@@ -483,6 +485,10 @@ export default function TopicBox({
 
           // if (type === 'Content') {
           if (!topicContent.length) return console.log('no topic content found');
+
+          // for viewing pdf
+          if (topicContent?.[0]?.type === 'pdf')
+            return setTopicFileViewData({ topic, topicContent });
 
           setTopicExamData(getTopicExamObj());
           updateVideoData(
