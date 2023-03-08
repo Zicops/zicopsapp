@@ -79,11 +79,6 @@ export const CourseTypeAtom = atom({
   default: COURSE_TYPES[0]
 });
 
-export const TopicFileViewDataAtom = atom({
-  key: 'TopicFileViewData',
-  default: null
-});
-
 // object structures which can be used  for reset or immutable new object
 export function getModuleObject(data) {
   return {

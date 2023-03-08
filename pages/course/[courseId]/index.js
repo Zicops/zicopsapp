@@ -1,12 +1,11 @@
 import CourseBody from '@/components/CourseBody';
-import TopicPdfViews from '@/components/CourseComps/TopicPdfViews';
 import CourseHero from '@/components/CourseHero';
 import CustomVideo from '@/components/CustomVideoPlayer';
 import ExamLanding from '@/components/Exams/ExamLanding';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getTopicExamObj, TopicExamAtom, TopicFileViewDataAtom } from '@/state/atoms/module.atoms';
+import { getTopicExamObj, TopicExamAtom } from '@/state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import ModuleContextProvider from '@/state/contexts/ModuleContext';
@@ -20,7 +19,6 @@ export default function Course() {
   const { fullCourse } = useContext(courseContext);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
-  const [topicFileViewData, setTopicFileViewData] = useRecoilState(TopicFileViewDataAtom);
   const startPlayer = videoData.startPlayer;
 
   const [ongoingCourses, setOngoingCourses] = useState([]);
@@ -43,7 +41,6 @@ export default function Course() {
     setVideoData(getVideoObject());
     setStartPlayer(false);
     setTopicExamData(getTopicExamObj());
-    if (!topicFileViewData) setTopicFileViewData(null);
   }, []);
 
   useEffect(async () => {
@@ -101,11 +98,7 @@ export default function Course() {
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
-          {!!topicFileViewData?.topicContent && <TopicPdfViews />}
-
-          {!startPlayer && !topicExamData?.id && !topicFileViewData && (
-            <CourseHero set={setStartPlayer} />
-          )}
+          {!startPlayer && !topicExamData?.id && <CourseHero set={setStartPlayer} />}
 
           <CourseBody />
           {/* <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />

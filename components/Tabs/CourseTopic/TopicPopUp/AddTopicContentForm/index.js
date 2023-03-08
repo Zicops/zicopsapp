@@ -46,7 +46,7 @@ export default function AddTopicContentForm({
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
   const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
-  if (isDev) types.push('pdf');
+  if (isDev) types.push('document');
 
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
@@ -127,7 +127,7 @@ export default function AddTopicContentForm({
                 }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={newTopicContent?.type === 'pdf' ? '.pdf' : acceptedFiles}
+                acceptedTypes={newTopicContent?.type === 'document' ? '.pdf' : acceptedFiles}
                 hidePreviewBtns={true}
               />
             </div>

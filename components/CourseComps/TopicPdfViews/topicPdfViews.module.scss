@@ -1,18 +1,13 @@
 .topicPdfView {
-  margin-top: $headerHeight;
+  position: absolute;
 
-  position: relative;
-
-  height: 80vh;
+  height: 85vh;
   width: 100%;
   background-color: $darkOne;
 
-  .backBtn {
-    position: absolute;
-    left: 50px;
-    top: 6vh;
-
-    cursor: pointer;
-    z-index: 1;
+  .fallBackMsg {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
   }
 }
