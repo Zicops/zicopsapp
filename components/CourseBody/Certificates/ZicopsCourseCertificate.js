@@ -1,11 +1,8 @@
-import { UserStateAtom } from '@/state/atoms/users.atom';
-import { Document, Image, Page, PDFViewer, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { useRecoilValue } from 'recoil';
+import { Document, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import styles from '../courseBody.module.scss';
 
 // Create styles
 const customStyles = StyleSheet.create({
-  container: { height: '600px', width: '100%' },
   page: {
     flexDirection: 'row',
     height: '500px',
@@ -24,25 +21,39 @@ const customStyles = StyleSheet.create({
 });
 
 export default function ZicopsCourseCertificate({ courseName = '', to = '', completionDate = '' }) {
-  const userData = useRecoilValue(UserStateAtom);
-
   return (
     <>
-      <PDFViewer style={customStyles.container}>
-        <Document>
-          <Page size="A5" orientation="landscape" style={customStyles.page}>
-            <View style={customStyles.section}>
-              <Image src={'/templates/zicops-certificate-template.png'} />
-            </View>
-            <View style={customStyles.dynamicContent}>
-              <Text style={customStyles.name}>{to}</Text>
-              <Text style={customStyles.courseName}>
-                In appreciation of completing {courseName} ({completionDate}) with Zicops.
-              </Text>
-            </View>
-          </Page>
-        </Document>
-      </PDFViewer>
+      <Document>
+        <Page size="A5" orientation="landscape" style={customStyles.page}>
+          <View style={customStyles.section}>
+            <Image src={'/templates/zicops-certificate-template.png'} />
+          </View>
+          <View style={customStyles.dynamicContent}>
+            <Text style={customStyles.name}>{to}</Text>
+            <Text style={customStyles.courseName}>
+              In appreciation of completing {courseName} ({completionDate}) with Zicops.
+            </Text>
+          </View>
+        </Page>
+      </Document>
     </>
   );
 }
+
+// export default function ZicopsCourseCertificate({ courseName = '', to = '', completionDate = '' }) {
+//   return (
+//     <>
+//       <div className={`${styles.zicopsCourseCertificate}`}>
+//         <div>
+//           <img src={'/templates/zicops-certificate-template.png'} />
+//         </div>
+//         <div className={`${styles.dynamicContent}`}>
+//           <p className={`${styles.userName}`}>{to}</p>
+//           <p>
+//             In appreciation of completing {courseName} ({completionDate}) with Zicops.
+//           </p>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
