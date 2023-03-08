@@ -306,3 +306,19 @@
     gap: 20px;
   }
 }
+
+.certificate {
+  height: 100%;
+  width: 100%;
+
+  padding: 2em;
+}
+
+.fallBackMsg {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  color: $white;
+  margin: 3em;
+}

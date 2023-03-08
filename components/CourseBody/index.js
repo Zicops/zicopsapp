@@ -1,3 +1,4 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { getUserCourseDataObj, UserCourseDataAtom } from '@/state/atoms/video.atom';
 import { useRouter } from 'next/router';
@@ -7,6 +8,7 @@ import { courseContext } from '../../state/contexts/CourseContext';
 import AlertBox from '../common/AlertBox';
 import ConfirmPopUp from '../common/ConfirmPopUp';
 import BottomTabsMenu from '../small/BottomTabsMenu';
+import Certificates from './Certificates';
 import {
   coursebody,
   navbarOverrideElement,
@@ -37,6 +39,14 @@ export default function CourseBody({ isPreview = false }) {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
+  if (!isDev && !tabs?.find((tab) => tab?.name === 'Certificates')) {
+    tabs.push({
+      name: 'Certificates',
+      comp: <Certificates />,
+      roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    });
+  }
 
   useEffect(() => {
     setActiveCourseTab(tabs[0].name);
