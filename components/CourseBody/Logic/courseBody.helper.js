@@ -1,6 +1,7 @@
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
+import Certificates from '../Certificates';
 import CourseBodyAbout from '../CourseBodyAbout';
 import CourseBodyDiscussion from '../CourseBodyDiscussion';
 import CourseBodyNotes from '../CourseBodyNotes';
@@ -32,6 +33,12 @@ export const tabs = [
   {
     name: 'About',
     comp: <CourseBodyAbout />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
+  {
+    name: 'Certificates',
+    comp: <Certificates />,
+    isHidden: true,
     roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
   }
 ];
