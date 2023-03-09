@@ -1,7 +1,8 @@
 import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { courseContext } from '../../../../../state/contexts/CourseContext';
 import Button from '../../../../common/Button';
@@ -24,6 +25,7 @@ export default function AddTopicContentForm({
   const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   // to set state based on if topic content is present or not
   useEffect(() => {
@@ -44,6 +46,8 @@ export default function AddTopicContentForm({
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
   const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
+  if (isDev) types.push('document');
+
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
 
@@ -88,6 +92,7 @@ export default function AddTopicContentForm({
           value: { value: newTopicContent.type, label: newTopicContent.type }
         }}
         changeHandler={(e) => handleTopicContentInput(e, 'type')}
+        customDropdownStyles={{ menuList: { maxHeight: '150px' } }}
       />
 
       {newTopicContent?.type && newTopicContent?.language && (
@@ -122,7 +127,7 @@ export default function AddTopicContentForm({
                 }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={acceptedFiles}
+                acceptedTypes={newTopicContent?.type === 'document' ? '.pdf' : acceptedFiles}
                 hidePreviewBtns={true}
               />
             </div>

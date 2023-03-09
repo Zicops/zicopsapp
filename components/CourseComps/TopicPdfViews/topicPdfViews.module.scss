@@ -1,0 +1,13 @@
+.topicPdfView {
+  position: absolute;
+
+  height: 85vh;
+  width: 100%;
+  background-color: $darkOne;
+
+  .fallBackMsg {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
