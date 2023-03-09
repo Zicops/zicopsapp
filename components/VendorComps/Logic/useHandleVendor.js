@@ -26,7 +26,8 @@ import {
   userQueryClient,
   GET_SME_DETAILS,
   GET_CRT_DETAILS,
-  GET_CD_DETAILS
+  GET_CD_DETAILS,
+  GET_VENDOR_EXPERIENCES
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -46,7 +47,8 @@ import {
   vendorUserInviteAtom,
   getSMEServicesObject,
   getCTServicesObject,
-  getCDServicesObject
+  getCDServicesObject,
+  VendorAllExperiencesAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -82,6 +84,7 @@ export default function useHandleVendor() {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -241,6 +244,7 @@ export default function useHandleVendor() {
     );
 
     setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
+    setProfileExperience(experienceInfo.getVendorExperience);
   }
 
   async function getSingleExperience(pfId, expId) {
@@ -447,7 +451,10 @@ export default function useHandleVendor() {
         ) || [],
       experienceYear: profileData?.experienceYear,
       is_speaker: profileData?.isSpeaker || false,
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      sme: true,
+      crt: false,
+      cd: false
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 
@@ -751,6 +758,7 @@ export default function useHandleVendor() {
     addUpdateCd,
     handleMail,
     deleteSample,
-    setLoading
+    setLoading,
+    vendorDetails
   };
 }

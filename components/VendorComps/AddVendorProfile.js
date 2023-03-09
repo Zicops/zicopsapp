@@ -1,5 +1,5 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
@@ -33,13 +33,12 @@ const AddVendorProfile = ({ data = {} }) => {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
-
-  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
+  const { handleProfilePhoto, getSingleExperience, getProfileExperience } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
-  console.info('experiencesData', profileData?.experience);
   const completeExperienceHandler = () => {
     const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
     const start_date = new Date(StartDate);
@@ -63,6 +62,7 @@ const AddVendorProfile = ({ data = {} }) => {
     setIsOpenExpriences(false);
     setExperiencesData(getExperiencesObject());
   };
+
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -71,6 +71,8 @@ const AddVendorProfile = ({ data = {} }) => {
       setSelectedLanguages(selectedLanguages?.filter((lang) => lang !== value));
     }
   };
+
+  console.info('ayush123', profileExperience);
 
   const addLanguagesHandler = () => {
     setProfileData({ ...profileData, languages: [...selectedLanguages] });
@@ -188,7 +190,7 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileData?.experience?.map((exp) => (
+              {profileExperience?.map((exp) => (
                 <IconButton
                   text={
                     typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
@@ -197,7 +199,8 @@ const AddVendorProfile = ({ data = {} }) => {
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    getSingleExperience(exp?.PfId, exp?.ExpId);
+                    getProfileExperience(profileData.profileId);
+                    getSingleExperience(exp.PfId, exp.ExpId);
                   }}
                 />
               ))}
