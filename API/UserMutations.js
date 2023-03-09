@@ -1469,9 +1469,6 @@ export const CREATE_PROFILE_VENDOR = gql`
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
-    $sme: Boolean
-    $crt: Boolean
-    $cd: Boolean
     $status: String!
   ) {
     createProfileVendor(
@@ -1490,9 +1487,6 @@ export const CREATE_PROFILE_VENDOR = gql`
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
-        sme: $sme
-        crt: $crt
-        cd: $cd
         status: $status
       }
     ) {
@@ -1507,6 +1501,7 @@ export const CREATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience_years
       experience
       is_speaker
@@ -1538,9 +1533,6 @@ export const UPDATE_PROFILE_VENDOR = gql`
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
-    $sme: Boolean
-    $crt: Boolean
-    $cd: Boolean
     $status: String!
   ) {
     updateProfileVendor(
@@ -1559,9 +1551,6 @@ export const UPDATE_PROFILE_VENDOR = gql`
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
-        sme: $sme
-        crt: $crt
-        cd: $cd
         status: $status
       }
     ) {
@@ -1576,6 +1565,7 @@ export const UPDATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker

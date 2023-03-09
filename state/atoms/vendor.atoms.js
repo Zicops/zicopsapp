@@ -42,7 +42,10 @@ export function getProfileObject(data) {
     crt_expertises: data?.crt_expertises || [],
     content_development: data?.content_development || [],
     experience: data?.experience || [],
-    isSpeaker: data?.isSpeaker || false
+    isSpeaker: data?.isSpeaker || false,
+    sme: data?.sme || false,
+    crt: data?.crt || false,
+    cd: data?.cd || false
   };
 }
 

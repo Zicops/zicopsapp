@@ -27,7 +27,8 @@ const SingleProfile = ({ data }) => {
       profileImage: editProfileData[0]?.photo_url,
       languages: editProfileData[0]?.language,
       sme_expertises: editProfileData[0]?.sme_expertise,
-      crt_expertises: editProfileData[0]?.crt_expertise,
+      crt_expertises: editProfileData[0]?.classroom_expertise,
+      content_development: editProfileData[0]?.content_development,
       experience: editProfileData[0]?.experience,
       experienceYear: editProfileData[0]?.experience_years,
       isSpeaker: editProfileData[0]?.is_speaker
