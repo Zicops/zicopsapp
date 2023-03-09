@@ -3,20 +3,10 @@ import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { getAllCourseCountBasedOnExpertises } from './adminAnalyticsDashboardComp.helper';
+import styles from '../adminAnalyticsDashboard.module.scss';
 
 export default function useHandleExpertises() {
   const courseType = useRecoilValue(CourseTypeAtom);
-
-  const [hindiCourses, setHindiCourses] = useState({
-    language: 'Hindi',
-    totalLangCourses: null,
-    progressPercent: 0
-  });
-  const [englishCourses, setEnglishCourses] = useState({
-    language: 'English',
-    totalLangCourses: null,
-    progressPercent: 0
-  });
   const [vennDiagramData, setVennDiagramData] = useState(null);
 
   useEffect(() => {

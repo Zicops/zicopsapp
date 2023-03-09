@@ -1,4 +1,5 @@
 import { Gradient, VennArc, VennDiagram, VennLabel, VennOuterLabel, VennSeries } from 'reaviz';
+import styles from './dashboardComponents.module.scss';
 
 // use this with dynamic import
 export default function ZicopsVennDiagram({ isEuler = false, data = [] }) {
@@ -14,6 +15,8 @@ export default function ZicopsVennDiagram({ isEuler = false, data = [] }) {
         <VennSeries
           colorScheme={(d, index) => {
             if (data?.[index]?.color) return data?.[index]?.color;
+
+            return styles.primary;
           }}
           arc={<VennArc strokeWidth={0} gradient={<Gradient />} />}
           label={<VennLabel labelType={'value'} showAll={true} fill={'#fff'} />}

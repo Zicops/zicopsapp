@@ -1,4 +1,5 @@
 import SwitchButton from '@/components/common/FormComponents/SwitchButton';
+import Spinner from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import styles from '../adminAnalyticsDashboard.module.scss';
@@ -25,7 +26,11 @@ export default function ExpertiseAvailability() {
       </div>
 
       {/* <VennDiagram data={data} /> */}
-      <ZicopsVennDiagram data={vennDiagramData || []} isEuler={isEuler} />
+      {vennDiagramData == null ? (
+        <Spinner />
+      ) : (
+        <ZicopsVennDiagram data={vennDiagramData || []} isEuler={isEuler} />
+      )}
     </div>
   );
 }
