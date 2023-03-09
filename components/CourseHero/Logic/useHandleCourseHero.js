@@ -2,9 +2,19 @@ import { GET_COURSE } from '@/api/Queries';
 import { ADD_USER_COURSE, UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
 import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
-import { loadAndCacheDataAsync, loadQueryDataAsync, sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
+import { ActiveCourseTabAtom, tabs } from '@/components/CourseBody/Logic/courseBody.helper';
+import {
+  loadAndCacheDataAsync,
+  loadQueryDataAsync,
+  sendEmail,
+  sendNotificationWithLink
+} from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
-import { COURSE_MAP_STATUS, EMAIL_TEMPLATE_IDS, NOTIFICATION_TITLES } from '@/helper/constants.helper';
+import {
+  COURSE_MAP_STATUS,
+  EMAIL_TEMPLATE_IDS,
+  NOTIFICATION_TITLES
+} from '@/helper/constants.helper';
 import { getMinCourseAssignDate } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
@@ -40,6 +50,7 @@ export default function useHandleCourseHero(isPreview) {
     useContext(courseContext);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
 
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabAtom);
   const userDataGlobal = useRecoilValue(UserDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -105,7 +116,9 @@ export default function useHandleCourseHero(isPreview) {
     if (mapRes?.error && !mapRes?.error?.message?.includes('no user course found'))
       return setToastMsg({ type: 'danger', message: 'user course maps load error' });
 
-    const _mapRes = mapRes?.data?.getUserCourseMapByCourseID?.filter((course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable);
+    const _mapRes = mapRes?.data?.getUserCourseMapByCourseID?.filter(
+      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable
+    );
 
     const userCourseMapping = _mapRes?.[0] || {};
 
@@ -222,6 +235,7 @@ export default function useHandleCourseHero(isPreview) {
 
     // return;
     setUserCourseData({ ...userCourseData, ...data, switchModule: true });
+    if (activeCourseTab !== tabs?.[0]?.name) setActiveCourseTab(tabs?.[0]?.name);
     // setVideoData({
     //   ...videoData,
     //   videoSrc: validTopicContent?.contentUrl,
@@ -230,7 +244,7 @@ export default function useHandleCourseHero(isPreview) {
     // });
   }
 
-  function sendCourseUnAssignNotification(){
+  function sendCourseUnAssignNotification() {
     const notificationBody = getNotificationMsg('unassignSelfCourse', {
       courseName: fullCourse?.name
     });
@@ -247,7 +261,7 @@ export default function useHandleCourseHero(isPreview) {
     // console.log(userCourseData,'sd')
 
     const origin = window?.location?.origin || '';
-    const userName = `${userData?.first_name || ''} ${userData?.last_name || ''}`
+    const userName = `${userData?.first_name || ''} ${userData?.last_name || ''}`;
     const bodyData = {
       user_name: userName,
       lsp_name: sessionStorage?.getItem('lsp_name'),

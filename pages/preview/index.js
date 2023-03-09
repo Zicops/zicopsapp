@@ -1,13 +1,11 @@
 import { ApolloProvider } from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { sliderImages } from '../../API/DemoSliderData';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../API/Mutations';
 import CourseBody from '../../components/CourseBody';
 import CourseHero from '../../components/CourseHero';
 import CustomVideo from '../../components/CustomVideoPlayer';
 import ExamLanding from '../../components/Exams/ExamLanding';
-import CardSlider from '../../components/medium/CardSlider';
 import { getTopicExamObj, TopicExamAtom } from '../../state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '../../state/atoms/video.atom';
 import CourseContextProvider from '../../state/contexts/CourseContext';
