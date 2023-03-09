@@ -11,6 +11,7 @@ export function customSelectStyles(
     placeholderStyles = {},
     optionStyles = {},
     menuStyles = {},
+    menuList = {},
     dropdownIndicatorStyles = {}
   } = customStyleObject;
   return {
@@ -80,7 +81,8 @@ export function customSelectStyles(
         '&:hover': {
           background: '#555'
         }
-      }
+      },
+      ...menuList
     }),
     option: (provided, state) => ({
       ...provided,

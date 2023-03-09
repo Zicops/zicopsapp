@@ -78,8 +78,12 @@ const SingleNotification = ({
         <div className={`${styles.notification_info}`}>
           <p className={`${styles.notification_info_duration}`}>{duration}</p>
           <a
-            onClick={() => {
+            onClick={async() => {
               // setReadNotifications((prev) => [...prev, messageId]);
+              const res = await saveNotificationToFirebase({
+                variables: firstoreData,
+                context: { headers: { 'fcm-token': fcmToken } }
+              });
               const updatedNotifications = notification?.filter(
                 (msg) => msg?.fcmMessageId !== messageId
               );

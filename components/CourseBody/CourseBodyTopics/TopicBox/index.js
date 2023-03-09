@@ -8,12 +8,11 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { SwitchToTopicAtom } from '@/state/atoms/utils.atoms';
 import { Skeleton } from '@mui/material';
-import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { GET_TOPIC_EXAMS, GET_TOPIC_QUIZ } from '../../../../API/Queries';
+import { GET_TOPIC_EXAMS } from '../../../../API/Queries';
 import { loadQueryDataAsync } from '../../../../helper/api.helper';
 import {
   filterAndSortTopicsBasedOnModuleId,
@@ -427,7 +426,16 @@ export default function TopicBox({
   function displayDuration(duration) {
     if (duration <= 60) return `${duration} seconds`;
 
-    return `${Math.floor(duration / 60)}:${moment.utc(duration * 1000).format('ss')} mins `;
+    const hours = ('0' + Math.floor(duration / (60 * 60))).substr(-2) || '00';
+
+    const divisor_for_minutes = duration % (60 * 60);
+    const minutes = ('0' + Math.floor(divisor_for_minutes / 60)).substr(-2) || '00';
+
+    const divisor_for_seconds = divisor_for_minutes % 60;
+    const seconds = ('0' + Math.ceil(divisor_for_seconds)).substr(-2) || '00';
+
+    if (hours == '00') return `${minutes}:${seconds} mins`;
+    return `${hours}:${minutes}:${seconds}`;
   }
 
   return (
