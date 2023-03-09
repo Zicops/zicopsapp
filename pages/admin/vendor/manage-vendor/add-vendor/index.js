@@ -14,7 +14,8 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 
 export default function VendorInfo() {
-  const { addUpdateVendor, addUpdateSme, handleMail, addUpdateCrt, addUpdateCd } = useHandleVendor();
+  const { addUpdateVendor, addUpdateSme, handleMail, addUpdateCrt, addUpdateCd } =
+    useHandleVendor();
   const tabData = [
     {
       name: 'Master',

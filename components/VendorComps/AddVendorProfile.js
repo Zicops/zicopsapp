@@ -20,11 +20,7 @@ import { changeHandler } from '@/helper/common.helper';
 import VendorPopUp from './common/VendorPopUp';
 import AddExpertise from './AddVendor/common/AddExpertise';
 import useHandleVendor from './Logic/useHandleVendor';
-
-const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
-  label: val,
-  value: val
-}));
+import { optionYearArray } from './Logic/vendorComps.helper';
 
 const AddVendorProfile = ({ data = {} }) => {
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
@@ -68,6 +64,7 @@ const AddVendorProfile = ({ data = {} }) => {
     setIsOpenExpriences(false);
     setExperiencesData(getExperiencesObject());
   };
+
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {

@@ -26,7 +26,7 @@ const FileManageVendor = ({ pType }) => {
     useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
-  console.info('pType', pType);
+
   let getSampleFiles;
   if (pType === 'sme') {
     getSampleFiles = getSMESampleFiles;
