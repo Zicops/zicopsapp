@@ -929,6 +929,7 @@ export const GET_SINGLE_PROFILE_DETAILS = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker
@@ -954,6 +955,7 @@ export const GET_ALL_PROFILE_DETAILS = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker

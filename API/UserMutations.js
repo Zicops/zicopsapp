@@ -1507,6 +1507,7 @@ export const CREATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience_years
       experience
       is_speaker
@@ -1576,6 +1577,7 @@ export const UPDATE_PROFILE_VENDOR = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker
