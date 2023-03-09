@@ -1,4 +1,5 @@
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
+import { useRouter } from 'next/dist/client/router';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../state/atoms/video.atom';
@@ -21,7 +22,7 @@ export default function CustomVideo({ set }) {
   const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   // const [showQuiz, setShowQuiz] = useRecoilState(ShowQuizAtom);
 
-  const { isPreview, topicContent, currentTopicContentIndex } = videoData;
+  const { topicContent, currentTopicContentIndex } = videoData;
   const [showBingeButtons, setShowBingeButtons] = useState(false);
   const [showSkipIntroButtons, setShowSkipIntroButtons] = useState(false);
   const [showSubtitles, setShowSubtitles] = useState(true);
@@ -30,6 +31,9 @@ export default function CustomVideo({ set }) {
 
   const videoElement = useRef(null);
   const videoContainer = useRef(null);
+
+  const router = useRouter();
+  const isPreview = router?.asPath?.includes('preview');
 
   const {
     playerState,
@@ -269,7 +273,7 @@ export default function CustomVideo({ set }) {
         )}
 
         {/* scorm complete btn */}
-        {videoData?.type !== 'mp4' && (
+        {videoData?.type !== 'mp4' && !isPreview && (
           <>
             <SkipButtons
               nextBtnObj={{ isVisible: false }}

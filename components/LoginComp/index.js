@@ -47,7 +47,7 @@ const LoginComp = () => {
             />
           )}
         </div>
-        {!orgData?.user_lsp_role === USER_LSP_ROLE.vendor && (
+        {!(orgData?.user_lsp_role === USER_LSP_ROLE.vendor) && (
           <div className={`${styles.progress_container}`}>
             <div className={`${styles.progress_circle_selected}`} />
             <div
