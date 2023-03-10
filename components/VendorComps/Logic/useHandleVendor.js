@@ -28,7 +28,8 @@ import {
   GET_SME_DETAILS,
   GET_CRT_DETAILS,
   GET_CD_DETAILS,
-  GET_VENDOR_EXPERIENCES
+  GET_VENDOR_EXPERIENCES,
+  GET_VENDOR_ADMINS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -91,6 +92,7 @@ export default function useHandleVendor() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [vendorAdminUsers, setVendorAdminUsers] = useState([]);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
@@ -188,6 +190,22 @@ export default function useHandleVendor() {
     const _sortedData = sortArrByKeyInOrder(res?.getUserVendor || [], 'updated_at', false);
 
     setVendorDetails(_sortedData);
+    setLoading(false);
+  }
+
+  async function getVendorAdmins() {
+    if (!userData?.id) return;
+    // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
+    setLoading(true);
+    const res = await loadQueryDataAsync(
+      GET_VENDOR_ADMINS,
+      { vendor_id: vendorId },
+      {},
+      userClient
+    );
+    const _sortedData = sortArrByKeyInOrder(res?.getVendorAdmins || [], 'updated_at', false);
+
+    setVendorAdminUsers(_sortedData);
     setLoading(false);
   }
 
@@ -759,6 +777,9 @@ export default function useHandleVendor() {
     handleMail,
     deleteSample,
     setLoading,
-    vendorDetails
+    vendorDetails,
+    vendorData,
+    getVendorAdmins,
+    vendorAdminUsers
   };
 }

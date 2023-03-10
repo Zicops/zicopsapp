@@ -8,12 +8,12 @@ import { useEffect } from 'react';
 import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox';
 
 const VendorUsers = () => {
-  const { getUserVendors, vendorDetails, loading } = useHandleVendor();
-  console.log('vendorDetails', vendorDetails);
-  const router = useRouter();
+  const { vendorAdminUsers, loading, getVendorAdmins } = useHandleVendor();
+  console.info('vendorData', vendorAdminUsers);
   useEffect(() => {
-    const users = getUserVendors();
+    getVendorAdmins();
   }, []);
+
   const columns = [
     {
       field: 'email',
@@ -106,6 +106,7 @@ const VendorUsers = () => {
       }
     }
   ];
+
   return (
     <>
       <ZicopsTable
@@ -114,7 +115,8 @@ const VendorUsers = () => {
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         loading={loading}
-        data={vendorDetails}
+        data={vendorAdminUsers}
+        customId="id"
       />
     </>
   );

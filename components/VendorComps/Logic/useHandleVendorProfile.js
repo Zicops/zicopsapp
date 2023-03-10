@@ -38,18 +38,12 @@ export default function useHandleVendorProfile() {
         ) || [],
       experienceYear: profileData?.experienceYear,
       is_speaker: profileData?.isSpeaker || false,
-      status: VENDOR_MASTER_STATUS.active,
-      sme: true,
-      crt: false,
-      cd: false
+      status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
-
     let isError = false;
-
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
-
       await updateProfileVendor({
         variables: sendData,
         update: (_, { data }) => {
@@ -62,10 +56,8 @@ export default function useHandleVendorProfile() {
                 const isCurrentVendorProfile =
                   vendor?.profileId === data?.updateProfileVendor?.profileId;
                 if (isCurrentVendorProfile) return { ...vendor, ...data?.updateProfileVendor };
-
                 return vendor;
               });
-
               return { viewProfileVendorDetails: _updatedCache };
             },
             userQueryClient
@@ -76,7 +68,6 @@ export default function useHandleVendorProfile() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
       });
-
       if (isError) return;
       setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
       return;
@@ -98,7 +89,6 @@ export default function useHandleVendorProfile() {
               const _updatedCache = data?.createProfileVendor?.[0]
                 ? [data?.createProfileVendor?.[0], ..._cachedData]
                 : _cachedData;
-
               return { viewProfileVendorDetails: _updatedCache };
             },
             userQueryClient
@@ -114,6 +104,5 @@ export default function useHandleVendorProfile() {
       return res;
     }
   }
-
   return { addUpdateProfile };
 }
