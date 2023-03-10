@@ -42,7 +42,6 @@ const AddVendorProfile = ({ data = {} }) => {
   const [selectedSmeExpertise, setSelectedSmeExpertise] = useState([]);
   const [selectedCrtExpertise, setSelectedCrtExpertise] = useState([]);
 
-  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
   console.info('experiencesData', profileData?.experience);
