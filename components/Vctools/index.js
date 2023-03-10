@@ -1,15 +1,20 @@
 import styles from './vctoolMain.module.scss';
 import MeetingCard from './MeetingCard';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import MainToolbar from './Toolbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { StartMeeting, GenerateString } from "./help/vctool.helper"
+import { breakoutList, participantRole, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 const VcMaintool = () => {
+  const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
+  const totalBreakoutrooms = useRecoilValue(totalRoomno)
+  const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList).sort()
+  const allUserinfo = useRecoilValue(vctoolAlluserinfo)
   const userData = useRecoilValue(UserStateAtom)
   const [isStarted, setisStarted] = useState(false)
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const containerRef = useRef(null)
   const [toolbar, settoobar] = useState(false);
   const [hidecard, sethidecard] = useState(false)
@@ -33,12 +38,20 @@ const VcMaintool = () => {
       {toolbar && (
         <MainToolbar
           setAudio={() => {
-            settoggleAudio(!toggleAudio);
-            api.executeCommand('toggleAudio');
+            api.isAudioAvailable().then(available => {
+              if (available) {
+                settoggleAudio(!toggleAudio);
+                api.executeCommand('toggleAudio');
+              }
+            });
           }}
           setVideo={() => {
-            settoggleVideo(!toggleVideo);
-            api.executeCommand('toggleVideo');
+            api.isVideoAvailable().then(available => {
+              if (available) {
+                settoggleVideo(!toggleVideo);
+                api.executeCommand('toggleVideo');
+              }
+            });
           }}
           audiotoggle={toggleAudio}
           videotoggle={toggleVideo}
@@ -49,7 +62,7 @@ const VcMaintool = () => {
             localStorage.removeItem("canvasimg");
 
             document.exitFullscreen().then((data => {
-           
+
             })).catch((e) => {
             })
             setFullscreen(false)
@@ -70,48 +83,56 @@ const VcMaintool = () => {
             }
             else {
               fullScreenRef.current.requestFullscreen().catch((e) => {
-        
+
               })
 
             }
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
+            // console.log(breakoutListarr)
             api.getRoomsInfo().then(rooms => {
+              setbreakoutListarr(rooms.rooms)
               setuserinfo(rooms.rooms[0].participants)
+              setallInfo(rooms.rooms[0].participants)
             })
-
+            // console.log(userinfo)
+            // console.log(breakoutListarr,userinfo)
+            //  allUserinfo
+            // userinfo
             userinfo.forEach((data) => {
-              api.executeCommand('overwriteNames', [{
-                id: data?.id,
-                name: startName// The new name.
-              }]
-              );
-              if (userData.email.includes("@zicops")) {
+              if ([api.getEmail(data?.id)].toString().includes("@zicops")) {
                 api.executeCommand('grantModerator', data.id);
-              }
-              else {
-                // console.log("not a modarator")
+                console.log("moderator")
               }
             })
-
-          
-
           }}
 
 
           fullscreen={Fullscreen}
-          getUesrId={userinfo}
+          // getUesrId={userinfo}
           isStarted={isStarted}
           startAdvertisement={() => {
             api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
           }}
-        
-          stopAdvertisement={()=>
-          {
+
+          stopAdvertisement={() => {
+            // 
             api.executeCommand('stopShareVideo');
+
           }}
-        />
+          CreateBreakoutroomlist={() => {
+            for (let i = 0; i < totalBreakoutrooms; i++) {
+              api.executeCommand('addBreakoutRoom');
+            }
+
+
+          }} autoAssignRoom={() => {
+  
+      //         participantId: "bd6f680b",
+      // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
+      //         }  );
+          }}/>
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.main_div}`}>
@@ -119,9 +140,9 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("standup", startName, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               setisStarted(true)
-              sethidecard(!hidecard) 
+              sethidecard(!hidecard)
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

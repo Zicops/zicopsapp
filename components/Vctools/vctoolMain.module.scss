@@ -111,10 +111,10 @@
 }
 
 // Styling footertool
-#changeBackground
-{
+#changeBackground {
     background: #7d7d7d;
 }
+
 .toolBar {
     // opacity: 0;
     transition: opacity 1s;
@@ -689,6 +689,485 @@
     display: none;
 }
 
+.moderatorBreakoutroom {
+    width: 276px;
+    height: 90%;
+}
+
+.moderatorAddroom {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.moderatorAddroom>div {
+    width: 276px;
+    height: 28px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+.moderatorAddroom>p {
+    width: 276px;
+    height: 24px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #747474;
+}
+
+.addBreakoutroombtn {
+    width: 296px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.breakoutRoomdetails {
+    width: 296px;
+    height: 90%;
+    padding-top: 10px;
+}
+
+.breakoutRoomdetailshead {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #FFFFFF;
+    margin-top: 8px;
+}
+
+.breakoutLable {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoominputbox {
+    margin-top: 10px;
+}
+
+.breakoutRoominputbox>input {
+    width: 296px;
+    height: 40px;
+    background-color: #1A1D21;
+    border: 1px solid #292F2F;
+    outline: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.breakoutRoomnumbers {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.breakoutRoomnumbers>button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-radius: 2px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    background-color: #292F2F;
+
+}
+
+.breakoutRoomnumbers>div {
+    width: 210px;
+    height: 40px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 40px;
+    color: #ACACAC;
+    border: 1px solid #292F2F;
+    background-color: #1A1D21;
+}
+
+.participantBreakoutroomsetting {
+    display: flex;
+    margin-top: 16px;
+}
+
+.participantBreakoutroomsetting>input {
+    width: 20.5px;
+    height: 20.5px;
+    margin-right: 10px;
+}
+
+.participantBreakoutroomsetting>p {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #747474;
+}
+
+.breakoutRoomsaveinfobtn {
+    width: 296px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.breakoutcancelinfo {
+    width: 140px;
+    height: 48px;
+    color: white;
+    background-color: #26292C;
+    border: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.breakoutsaveinfo {
+    width: 140px;
+    height: 48px;
+    color: rgb(0, 0, 0);
+    background: #6BCFCF;
+    border-radius: 4px;
+    border: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.manageRooms {
+    width: 296px;
+    height: 90%;
+}
+
+.manageRoomshead {
+    display: flex;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.manageRoomshead>div {
+    width: 90%;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.manageRoombtns {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.manageRoombtn1 {
+    width: 140px;
+    height: 40px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #6BCFCF;
+}
+
+.manageRoombtn2 {
+    width: 140px;
+    height: 40px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0B0C0D;
+}
+
+.availableRoomcontainerhead {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.availableRoomcontainer {
+    width: 296px;
+    height: 82%;
+    overflow: scroll;
+}
+
+.availableRoomcontainer::-webkit-scrollbar {
+    display: none;
+}
+
+.breakoutRoomcard {
+    width: 296px;
+    height: 40px;
+    display: flex;
+    margin-top: 5px;
+}
+
+.breakoutRoomcardleft {
+    display: flex;
+    width: 70%;
+    justify-content: left;
+    align-items: center;
+    color: white;
+}
+
+.breakoutRoomcardleftheading {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    margin-left: 8px;
+    color: #FFFFFF;
+}
+
+.breakoutRoomcardicon {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #2B60EA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.breakoutRoomcardright {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.breakoutRoomcardright>button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+
+.BreakoutRoomtootips {
+    position: absolute;
+    width: 147px;
+    height: 130px;
+    left: 130px;
+    // top: 208px;
+    background: #0B0C0D;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+}
+
+.BreakoutRoomtootips>button {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.breakoutRoomparticipants {
+    width: 296px;
+    height: auto;
+}
+
+.breakoutRoomparticipants>button {
+    width: 290px;
+    margin: 6px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid #292F2F;
+    height: 40px;
+}
+
+.breakoutRoomparticipantheading {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoomparticipantscreen {
+    width: 296px;
+    height: 30vh;
+    overflow: scroll;
+}
+
+.breakoutRoomparticipantscreen::-webkit-scrollbar {
+    display: none;
+}
+
+.addParticipantpopup {
+    height: 482px;
+    width: 510px;
+    position: absolute;
+    top: 15%;
+    right: 30%;
+    // bottom: 20%;
+    padding: 14px;
+    background: #1A1D21;
+}
+
+.addParticipantpopuphead {
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    // padding-left: 24px;
+    width: 440px;
+    padding-bottom: 14px;
+    margin: auto;
+    border-bottom: 1px solid #292F2F;
+}
+
+.addParticipantsubhead {
+    width: 440px;
+    display: flex;
+    color: #ACACAC;
+    padding-top: 14px;
+    font-weight: 400;
+    font-size: 18px;
+    margin: auto;
+}
+
+.addParticipantsubhead>div {
+    width: 90%;
+}
+
+.addParticipantpopupscreen {
+    width: 440px;
+    height: 65%;
+    margin: auto;
+    padding-top: 12px;
+    // background-color: #6BCFCF;
+    border-bottom: 1px solid #292F2F;
+    overflow: scroll;
+}
+.addParticipantpopupscreen::-webkit-scrollbar
+{
+    display: none;
+}
+
+.addParticipantbtn {
+    padding-top: 12px;
+    width: 440px;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
+
+.addParticipantbtn1 {
+    width: 209px;
+    height: 48px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.addParticipantbtn2 {
+    width: 209px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000000;
+}
+
+// styling participantFrame
+.participantFrame {
+    width: 440px;
+    height: 40px;
+    display: flex;
+    margin-top: 8px;
+    align-items: centerS;
+}
+
+.participantFrameicon {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.participantFramename {
+    margin-left: 12px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+}
+
+.participantFrame>div {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.participantFrame>input {
+    width: 24px;
+    height: 24px;
+    line-height: 40px;
+}
+
 // styling resources page
 .resourceBar {
     z-index: 1020;
@@ -699,6 +1178,7 @@
     padding-left: 17px;
     right: 0;
     background-color: #1A1D21;
+    color: black;
 }
 
 .resourceHead {
@@ -741,6 +1221,7 @@
     font-size: 14px;
     line-height: 24px;
     color: #ACACAC;
+    box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
 }
 
 //styling about page
@@ -844,15 +1325,15 @@
     right: 0;
     background-color: #1A1D21;
     // height: 88vh;
-    
+
 }
-.quizScreen
-{
+
+.quizScreen {
     overflow: scroll;
     height: 90%;
 }
-.quizScreen::-webkit-scrollbar
-{
+
+.quizScreen::-webkit-scrollbar {
     display: none;
 }
 
@@ -908,20 +1389,53 @@
     display: flex;
     justify-content: right;
 }
-.quizeExpand>img 
-{
+
+.quizeExpand>img {
     width: 12px;
 }
-.questionScreen
-{
+
+.questionScreen {
     height: 60vh;
     margin-top: 7px;
     background-color: #121212;
-   
+
 }
-.quizeExpand>button
-{
+
+.quizeExpand>button {
     background-color: transparent;
     outline: none;
     border: none;
+}
+
+// styling create BreakoutRoom
+.createRoom {
+    width: 296px;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.createRoomhead {
+    font-size: 14px;
+    color: white;
+    font-weight: 400;
+    width: 40%;
+}
+
+.createRoombtns {
+    display: flex;
+    height: 44px;
+    width: 65%;
+    justify-content: right;
+    align-items: center;
+}
+
+.createRoombtns>button {
+    width: 80px;
+    height: 25px;
+    font-size: 10px;
+    margin-left: 6px;
+    background-color: #2B60EA;
+    color: white;
 }

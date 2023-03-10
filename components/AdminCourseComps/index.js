@@ -1,28 +1,36 @@
 import { useState } from 'react';
 import TabContainer from '../common/TabContainer';
+import About from './About';
+import Configuration from './Configuration';
+import Topics from './Topics';
+import Commercials from './Commercials';
 import CourseMaster from './CourseMaster';
-
+import Details from './Details';
 const tabData = [
   {
     name: 'Course Master',
-    component: <CourseMaster />
+    component: <CourseMaster/>
   },
   {
     name: 'Details',
-    component: '<CourseDetails />'
+    component: <Details/>
   },
   {
     name: 'About',
-    component: '<CourseAbout />'
+    component: <About/>
   },
   {
     name: 'Topics',
-    component: '<CourseTopic />'
+    component: <Topics/>
+  },
+  {
+    name:'Commercials',
+    component:<Commercials/>
   },
   {
     name: 'Configuration',
-    component: '<CourseConfiguration />'
-  }
+    component:<Configuration/>
+  },
 ];
 
 export default function AdminCourseComps() {
