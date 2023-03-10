@@ -1,8 +1,10 @@
+import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import {
   getExperiencesObject,
   VendorExperiencesAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -19,6 +21,9 @@ export default function useProfile() {
   const [selectedCrtExpertise, setSelectedCrtExpertise] = useState([]);
   const [selectedCdExpertise, setSelectedCdExpertise] = useState([]);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
+
+  const router = useRouter();
+  const vendorId = router.query.vendorId || '0';
 
   const completeExperienceHandler = () => {
     const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);

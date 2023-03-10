@@ -61,8 +61,8 @@ import { useRecoilState } from 'recoil';
 export default function useHandleVendor() {
   // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   // const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
-  // const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
-  // const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
+  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
