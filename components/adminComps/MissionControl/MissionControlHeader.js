@@ -1,5 +1,6 @@
 import ToolTip from '@/components/common/ToolTip';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import Image from 'next/image';
@@ -19,6 +20,7 @@ export default function MissionControlHeader() {
   const [viewButtons, setViewButtons] = useState(false);
   const [viewProductTour, setViewProductTour] = useRecoilState(ProductTourVisible);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -164,7 +166,7 @@ export default function MissionControlHeader() {
                   alt=""
                   height={'40px'}
                   width={'40px'}
-                  onClick={() => setViewButtons(!viewButtons)}
+                  onClick={() => !!isDev && setViewButtons(!viewButtons)}
                 />
               </span>
             </ToolTip>
@@ -193,14 +195,13 @@ export default function MissionControlHeader() {
             </div>
           </ToolTip>
           <ToolTip title="Sitemap" placement="right-start">
-            <div className="rightside_icon">
+            <div className="rightside_icon" style={isVendor ? { cursor: 'not-allowed' } : {}}>
               <Image
                 src="/images/hiararchy.png"
                 className="rightside_icon"
                 alt=""
                 height={'40px'}
                 width={'50px'}
-                style={isVendor ? { cursor: 'not-allowed' } : {}}
                 onClick={() => (isVendor ? '' : setShowSitemap(true))}
               />
             </div>

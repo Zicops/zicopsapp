@@ -44,7 +44,7 @@ const OrgHomepage = ({ data }) => {
     if (!checkEmail) return setToastMsg({ type: 'danger', message: 'Enter valid email!!' });
 
     if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
-    let _email = email?.toLowerCase();
+    let _email = email?.toLowerCase()?.trim();
 
     const userData = await signIn(_email, password);
 

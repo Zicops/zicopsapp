@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../../API/Mutations';
+
 export default function Course() {
   const { fullCourse } = useContext(courseContext);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
@@ -91,7 +92,7 @@ export default function Course() {
             backgroundColor: 'var(--tile-bg)',
             margin: 0,
             padding: '0 0 20px 0',
-            overflowX: 'clip',
+            overflowX: 'clip'
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 

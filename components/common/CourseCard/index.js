@@ -1,7 +1,9 @@
 import { truncateToN } from '@/helper/common.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getCourseDisplayTime } from '@/helper/utils.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
 import styles from './courseCard.module.scss';
 
 export default function CourseCard({
@@ -13,8 +15,11 @@ export default function CourseCard({
   notext = false,
   showAssignSymbol = true
 }) {
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const router = useRouter();
+
   if (!courseData?.name) return null;
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   function handleMouseEnter(e, start = 0, end = 0) {
     if (e.currentTarget.parentNode.dataset.index === start.toString()) {
@@ -32,6 +37,8 @@ export default function CourseCard({
     e.currentTarget.parentNode.style.margin = '';
   }
   const gotoCourse = () => {
+    if (isVendor) return router.push(`/preview?courseId=${courseData.id}`);
+
     if (!courseData?.examId) {
       router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
     } else {

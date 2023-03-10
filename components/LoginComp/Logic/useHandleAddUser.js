@@ -409,7 +409,7 @@ export default function useHandleAddUserDetails() {
     const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
       (item) =>
         item?.user_lsp_id === userLspId &&
-        utem?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
+        item?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
     );
     if (!!courses?.length) {
     sendNotificationWithLink(
