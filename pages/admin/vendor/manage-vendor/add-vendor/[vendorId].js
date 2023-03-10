@@ -16,21 +16,24 @@ import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
+import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
 
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
 
   const {
-    addUpdateVendor,
     getSingleVendorInfo,
     handleMail,
-    addUpdateSme,
+
     getSmeDetails,
-    addUpdateCrt,
+
     getCrtDetails,
-    addUpdateCd,
+
     getCdDetails
   } = useHandleVendor();
+  const { addUpdateVendor } = useHandleVendorMaster();
+  const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0'; //Change the 0 to null
 

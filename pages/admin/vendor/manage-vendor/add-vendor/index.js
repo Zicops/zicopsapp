@@ -12,9 +12,13 @@ import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
+import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
+import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
 
 export default function VendorInfo() {
-  const { addUpdateVendor, addUpdateSme, handleMail, addUpdateCrt, addUpdateCd } = useHandleVendor();
+  const { handleMail } = useHandleVendor();
+  const { addUpdateVendor } = useHandleVendorMaster();
+  const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
   const tabData = [
     {
       name: 'Master',
