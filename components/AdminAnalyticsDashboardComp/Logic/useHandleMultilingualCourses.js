@@ -1,3 +1,4 @@
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -27,10 +28,12 @@ export default function useHandleMultilingualCourses() {
     async function loadAndSetMultilingualData() {
       const hindiCourseCount = getAllCourseCountInLsp(_lspId, {
         course_type: courseType,
+        course_status: COURSE_STATUS.publish,
         languages: [hindiCourses.language]
       });
       const englishCourseCount = getAllCourseCountInLsp(_lspId, {
         course_type: courseType,
+        course_status: COURSE_STATUS.publish,
         languages: [englishCourses.language]
       });
 

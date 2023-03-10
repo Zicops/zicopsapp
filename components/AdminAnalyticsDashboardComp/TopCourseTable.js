@@ -76,6 +76,9 @@ export default function TopCourseTable() {
           rowsPerPageOptions={[3]}
           tableHeight={`${pageSize === 5 ? 53 : 147}vh`}
           loading={isLoading}
+          customStyles={{
+            padding: '10px 0'
+          }}
           customPaginationUiComp={
             <span
               className={`${styles.seeMore}`}
