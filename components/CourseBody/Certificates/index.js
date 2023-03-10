@@ -16,17 +16,10 @@ export default function Certificates() {
   const userCourseData = useRecoilValue(UserCourseDataAtom);
 
   const isCourseCompleted =
-    userCourseData?.userCourseMapping?.course_status !== COURSE_MAP_STATUS.completed;
+    userCourseData?.userCourseMapping?.course_status === COURSE_MAP_STATUS.completed;
 
   if (!userCourseData?.userCourseMapping?.course_status)
     return <Loader customStyles={{ backgroundColor: 'transparent', height: '500px' }} />;
-
-  if (!isCourseCompleted)
-    return (
-      <div className={`${styles.fallBackMsg}`}>
-        Certificate will be available after Course Completion
-      </div>
-    );
 
   // Dec 5, 2022 to Feb 28, 2023
   const startDate = moment(userCourseData?.userCourseMapping?.created_at * 1000).format(
@@ -49,12 +42,18 @@ export default function Certificates() {
           <ZicopsCourseCertificate {...pdfProps} />
         </PDFViewer>
 
-        <PDFDownloadLink
-          fileName={`${fullCourse?.name?.toLowerCase()?.replaceAll(' ', '-')}-certificate.pdf`}
-          document={<ZicopsCourseCertificate {...pdfProps} />}
-          className={styles.downloadBtn}>
-          Download
-        </PDFDownloadLink>
+        {!isCourseCompleted ? (
+          <button className={styles.downloadBtn} disabled="disabled" >
+            Download
+          </button>
+        ) : (
+          <PDFDownloadLink
+            fileName={`${fullCourse?.name?.toLowerCase()?.replaceAll(' ', '-')}-certificate.pdf`}
+            document={<ZicopsCourseCertificate {...pdfProps} />}
+            className={styles.downloadBtn}>
+            Download
+          </PDFDownloadLink>
+        )}
       </div>
     </>
   );

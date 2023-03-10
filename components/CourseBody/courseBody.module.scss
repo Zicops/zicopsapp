@@ -367,6 +367,11 @@
     font-size: 1.3rem;
 
     cursor: pointer;
+
+    &:disabled {
+      background-color: $darkThree;
+      cursor: not-allowed;
+    }
   }
 }
 
