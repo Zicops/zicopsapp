@@ -789,6 +789,7 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
     }
   }
 `;
+
 // VENDOR QUERIES START
 
 export const GET_VENDORS_BY_LSP = gql`
@@ -1061,6 +1062,45 @@ export const GET_CD_DETAILS = gql`
       languages
       output_deliveries
       sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ALL_ORDERS = gql`
+  query getAllOrders($lsp_id: String) {
+    getAllOrders(lsp_id: $lsp_id) {
+      order_id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ORDER_SERVICES = gql`
+  query getOrderServices($order_id: [String]) {
+    getOrderServices(order_id: $order_id) {
+      service_id
+      order_id
+      service_type
+      description
+      unit
+      currency
+      rate
+      quantity
+      total
       created_at
       created_by
       updated_at

@@ -1,18 +1,7 @@
 import { useState } from 'react';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
+import { optionServiceArray, optionVendorArray } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
-
-const optionVendorArray = ['Organisation', 'Individual/Freelancer'].map((val) => ({
-  label: val,
-  value: val
-}));
-
-const optionServiceArray = ['Subject Matter', 'Classroom Training', 'Content Development'].map(
-  (val) => ({
-    label: val,
-    value: val
-  })
-);
 
 const customDropdownStyleObj = {
   controlStyles: { backgroundColor: 'transparent', border: '2px solid var(--white)' },

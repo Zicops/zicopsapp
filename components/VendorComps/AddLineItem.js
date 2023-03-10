@@ -10,9 +10,6 @@ const AddLineItem = () => {
   const [addLine, setAddLine] = useState(1);
 
   const addAnotherItemHandler = () => setAddLine(addLine + 1);
-  console.info(addLine);
-  console.info(Array(addLine));
-
   return (
     <div>
       <div className={`${styles.checkBoxLabel}`}>

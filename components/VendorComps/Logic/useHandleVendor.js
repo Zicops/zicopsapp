@@ -10,6 +10,7 @@ import {
   INVITE_USERS_WITH_ROLE,
   UPDATE_CLASS_ROOM_TRANING,
   UPDATE_CONTENT_DEVELOPMENT,
+  UPDATE_EXPERIENCE_VENDOR,
   UPDATE_PROFILE_VENDOR,
   UPDATE_SUBJECT_MATTER_EXPERTISE,
   UPDATE_VENDOR,
@@ -61,6 +62,7 @@ export default function useHandleVendor() {
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
+  const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
   // const [createSme] = useMutation(CREATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
   // const [updateSme] = useMutation(UPDATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
@@ -542,10 +544,10 @@ export default function useHandleVendor() {
         status: profileData?.experience[i]?.status
       };
 
-      if (profileData?.experience?.ExpId) {
-        sendData.ExpId = profileData?.experience?.ExpId;
+      if (profileData?.experience[i]?.ExpId) {
+        sendData.ExpId = profileData?.experience[i]?.ExpId;
 
-        const res = await updateVendor({ variables: sendData }).catch((err) => {
+        const res = await updateExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Update Experience Error' });
@@ -555,7 +557,11 @@ export default function useHandleVendor() {
         setToastMsg({ type: 'success', message: 'Experience Updated' });
         return res;
       }
-      if (profileData?.email) {
+      if (
+        profileData?.email &&
+        profileData?.experience[i]?.title &&
+        profileData?.experience[i]?.company_name
+      ) {
         const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
