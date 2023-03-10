@@ -1339,6 +1339,8 @@ export const UPDATE_ORGAINIZATION_UNIT_DETAILS = gql`
     }
   }
 `;
+
+// START VENDOR MUTATIONS
 export const ADD_VENDOR = gql`
   mutation addVendor(
     $lsp_id: String
@@ -1973,5 +1975,167 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
 export const DELETE_SAMPLE_FILE = gql`
   mutation deleteSampleFile($sfId: String!, $vendor_id: String!, $p_type: String!) {
     deleteSampleFile(sfId: $sfId, vendor_id: $vendor_id, p_type: $p_type)
+  }
+`;
+
+export const ADD_ORDER = gql`
+  mutation addOrder(
+    $order_id: String
+    $vendor_id: String
+    $lsp_id: String
+    $total: Int
+    $tax: Int
+    $grand_total: Int
+    $status: String
+  ) {
+    addOrder(
+      input: {
+        order_id: $order_id
+        vendor_id: $vendor_id
+        lsp_id: $lsp_id
+        total: $total
+        tax: tax
+        grand_total: grand_total
+        status: $Status
+      }
+    ) {
+      order_id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_ORDER = gql`
+  mutation updateOrder(
+    $order_id: String
+    $vendor_id: String
+    $lsp_id: String
+    $total: Int
+    $tax: Int
+    $grand_total: Int
+    $status: String
+  ) {
+    updateOrder(
+      input: {
+        order_id: $order_id
+        vendor_id: $vendor_id
+        lsp_id: $lsp_id
+        total: $total
+        tax: tax
+        grand_total: grand_total
+        status: $Status
+      }
+    ) {
+      order_id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const ADD_ORDER_SERVICES = gql`
+  mutation addOrderServies(
+    $service_id: String
+    $order_id: String
+    $service_type: String
+    $description: String
+    $unit: String
+    $currency: String
+    $rate: Int
+    $quantity: Int
+    $total: Int
+    $status: String
+  ) {
+    addOrderServies(
+      input: {
+        service_id: $service_id
+        order_id: $order_id
+        service_type: $service_type
+        description: $description
+        unit: $unit
+        currency: $currency
+        rate: $rate
+        quantity: $quantity
+        total: $total
+        status: $status
+      }
+    ) {
+      service_id
+      order_id
+      service_type
+      description
+      unit
+      currency
+      rate
+      quantity
+      total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_ORDER_SERVICES = gql`
+  mutation updateOrderServices(
+    $service_id: String
+    $order_id: String
+    $service_type: String
+    $description: String
+    $unit: String
+    $currency: String
+    $rate: Int
+    $quantity: Int
+    $total: Int
+    $status: String
+  ) {
+    updateOrderServices(
+      input: {
+        service_id: $service_id
+        order_id: $order_id
+        service_type: $service_type
+        description: $description
+        unit: $unit
+        currency: $currency
+        rate: $rate
+        quantity: $quantity
+        total: $total
+        status: $status
+      }
+    ) {
+      service_id
+      order_id
+      service_type
+      description
+      unit
+      currency
+      rate
+      quantity
+      total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
   }
 `;
