@@ -57,10 +57,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
-  const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
-  const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
-  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
-  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
+  // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
+  // const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
+  // const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  // const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
@@ -348,89 +348,89 @@ export default function useHandleVendor() {
     setCDData(getCDServicesObject(cdDetails));
   }
 
-  async function addUpdateVendor() {
-    const sendData = {
-      name: vendorData?.name?.trim() || '',
-      level: vendorData?.level?.trim() || '',
-      type: vendorData?.type?.trim() || '',
-      photo: vendorData?.vendorProfileImage || null,
-      address: vendorData?.address?.trim() || '',
-      website: vendorData?.website?.trim() || '',
-      facebook_url: vendorData?.facebookURL?.trim() || '',
-      instagram_url: vendorData?.instagramURL?.trim() || '',
-      twitter_url: vendorData?.twitterURL?.trim() || '',
-      linkedin_url: vendorData?.linkedinURL?.trim() || '',
-      users: vendorData?.users || [],
-      description: vendorData?.description?.trim() || '',
-      status: VENDOR_MASTER_STATUS.active
-    };
+  // async function addUpdateVendor() {
+  //   const sendData = {
+  //     name: vendorData?.name?.trim() || '',
+  //     level: vendorData?.level?.trim() || '',
+  //     type: vendorData?.type?.trim() || '',
+  //     photo: vendorData?.vendorProfileImage || null,
+  //     address: vendorData?.address?.trim() || '',
+  //     website: vendorData?.website?.trim() || '',
+  //     facebook_url: vendorData?.facebookURL?.trim() || '',
+  //     instagram_url: vendorData?.instagramURL?.trim() || '',
+  //     twitter_url: vendorData?.twitterURL?.trim() || '',
+  //     linkedin_url: vendorData?.linkedinURL?.trim() || '',
+  //     users: vendorData?.users || [],
+  //     description: vendorData?.description?.trim() || '',
+  //     status: VENDOR_MASTER_STATUS.active
+  //   };
 
-    let uniqEmails = [...new Set(vendorData?.users)];
-    sendData.users = uniqEmails;
-    let isError = false;
-    if (vendorData?.vendorId) {
-      sendData.vendorId = vendorData?.vendorId;
+  //   let uniqEmails = [...new Set(vendorData?.users)];
+  //   sendData.users = uniqEmails;
+  //   let isError = false;
+  //   if (vendorData?.vendorId) {
+  //     sendData.vendorId = vendorData?.vendorId;
 
-      await updateVendor({
-        variables: sendData,
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => {
-              const _cachedData = structuredClone(cachedData?.getVendorDetails);
-              const _updatedCache = _cachedData?.map((vendor) => {
-                const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
-                if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
+  //     await updateVendor({
+  //       variables: sendData,
+  //       update: (_, { data }) => {
+  //         handleCacheUpdate(
+  //           GET_VENDOR_DETAILS,
+  //           { vendor_id: vendorId },
+  //           (cachedData) => {
+  //             const _cachedData = structuredClone(cachedData?.getVendorDetails);
+  //             const _updatedCache = _cachedData?.map((vendor) => {
+  //               const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
+  //               if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
 
-                return vendor;
-              });
+  //               return vendor;
+  //             });
 
-              return { getVendorDetails: _updatedCache };
-            },
-            userQueryClient
-          );
-        }
-      }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-      });
+  //             return { getVendorDetails: _updatedCache };
+  //           },
+  //           userQueryClient
+  //         );
+  //       }
+  //     }).catch((err) => {
+  //       console.log(err);
+  //       isError = !!err;
+  //       return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
+  //     });
 
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Vendor Updated' });
-      return;
-    }
-    if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
-      const res = await addNewVendor({
-        variables: sendData,
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => {
-              const _cachedData = structuredClone(cachedData?.getVendorDetails);
-              const _updatedCache = data?.addVendor?.[0]
-                ? [data?.addVendor?.[0], ..._cachedData]
-                : _cachedData;
+  //     if (isError) return;
+  //     setToastMsg({ type: 'success', message: 'Vendor Updated' });
+  //     return;
+  //   }
+  //   if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
+  //     const res = await addNewVendor({
+  //       variables: sendData,
+  //       update: (_, { data }) => {
+  //         handleCacheUpdate(
+  //           GET_VENDOR_DETAILS,
+  //           { vendor_id: vendorId },
+  //           (cachedData) => {
+  //             const _cachedData = structuredClone(cachedData?.getVendorDetails);
+  //             const _updatedCache = data?.addVendor?.[0]
+  //               ? [data?.addVendor?.[0], ..._cachedData]
+  //               : _cachedData;
 
-              return { getVendorDetails: _updatedCache };
-            },
-            userQueryClient
-          );
-        }
-      }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
-      });
-      if (isError) return;
+  //             return { getVendorDetails: _updatedCache };
+  //           },
+  //           userQueryClient
+  //         );
+  //       }
+  //     }).catch((err) => {
+  //       console.log(err);
+  //       isError = !!err;
+  //       return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+  //     });
+  //     if (isError) return;
 
-      const _id = res.data.addVendor.vendorId;
-      router.push(`/admin/vendor/manage-vendor/add-vendor/${_id}`);
-      return res;
-    }
-  }
+  //     const _id = res.data.addVendor.vendorId;
+  //     router.push(`/admin/vendor/manage-vendor/add-vendor/${_id}`);
+  //     return res;
+  //   }
+  // }
 
   async function addUpdateProfile() {
     const sendData = {
@@ -759,7 +759,6 @@ export default function useHandleVendor() {
     handleMail,
     deleteSample,
     setLoading,
-    vendorDetails,
-    addUpdateVendor
+    vendorDetails
   };
 }
