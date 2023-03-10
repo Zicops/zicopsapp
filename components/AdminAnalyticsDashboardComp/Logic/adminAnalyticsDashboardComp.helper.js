@@ -32,7 +32,12 @@ export async function getAllCourseCountBasedOnExpertises(
 ) {
   if (!lspId) return null;
 
-  const queryVariables = { lsp_id: lspId, course_type: type, expertise_level: expertises };
+  const queryVariables = {
+    lsp_id: lspId,
+    course_type: type,
+    expertise_level: expertises,
+    course_status: COURSE_STATUS.publish
+  };
   const courseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
     input: queryVariables
   });

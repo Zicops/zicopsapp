@@ -103,7 +103,7 @@ export function getNotificationMsg(type = '', msgObj = {}) {
       return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`;
     },
     promotedManager: function (msg) {
-      return `Your have been designated as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
+      return `You have been assigned as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
     },
     demotedManager: function (msg) {
       return `Note: You are no longer Manager of Cohort ${msg?.cohortName}. Please continue your learning as a member.`;
@@ -124,13 +124,13 @@ function sanitizeStr(s) {
 }
 
 export function sanitizeFormData(_object) {
-  let object = structuredClone(_object)
+  let object = structuredClone(_object);
   Object.keys(object).forEach(function (k) {
-      if (object[k] && typeof object[k] === 'object') {
-        sanitizeFormData(object[k]);
-          return;
-      }
-      object[k] = sanitizeStr(object[k]);
-  })
+    if (object[k] && typeof object[k] === 'object') {
+      sanitizeFormData(object[k]);
+      return;
+    }
+    object[k] = sanitizeStr(object[k]);
+  });
   return object;
 }
