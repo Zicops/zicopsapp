@@ -27,7 +27,6 @@ import {
   SmeServicesAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
-import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
@@ -58,8 +57,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     getCRTSampleFiles,
     getCDSampleFiles
   } = useHandleVendor();
-  const router = useRouter();
-  const vendorId = router.query.vendorId || '0';
+
   let getSampleFiles;
   if (pType === 'sme') {
     getSampleFiles = getSMESampleFiles;

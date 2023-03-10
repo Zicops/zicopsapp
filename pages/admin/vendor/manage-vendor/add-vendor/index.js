@@ -10,6 +10,7 @@ import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
+import VendorUsers from '@/components/VendorComps/VendorUsers';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
@@ -39,6 +40,10 @@ export default function VendorInfo() {
     {
       name: 'Orders',
       component: <VendorOrders />
+    },
+    {
+      name: 'Users',
+      component: <VendorUsers />
     }
   ];
 

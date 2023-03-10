@@ -12,6 +12,7 @@ import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
+import VendorUsers from '@/components/VendorComps/VendorUsers';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -64,6 +65,10 @@ export default function EditVendor() {
     {
       name: 'Orders',
       component: <VendorOrders />
+    },
+    {
+      name: 'Users',
+      component: <VendorUsers />
     }
   ];
 

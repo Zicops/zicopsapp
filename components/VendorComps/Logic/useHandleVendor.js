@@ -179,7 +179,7 @@ export default function useHandleVendor() {
     if (!userData?.id) return;
     // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
     setLoading(true);
-    const res = await loadAndCacheDataAsync(
+    const res = await loadQueryDataAsync(
       GET_USER_VENDORS,
       { user_id: userData?.id },
       {},
