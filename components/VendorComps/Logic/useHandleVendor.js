@@ -47,7 +47,8 @@ import {
   vendorUserInviteAtom,
   getSMEServicesObject,
   getCTServicesObject,
-  getCDServicesObject
+  getCDServicesObject,
+  getProfileObject
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -113,6 +114,7 @@ export default function useHandleVendor() {
     let sendEmails = emails?.map((email) => email?.toLowerCase());
     let isError = false;
     let errorMsg;
+
     const resEmail = await inviteUsers({
       variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
     }).catch((err) => {
@@ -757,6 +759,7 @@ export default function useHandleVendor() {
     addUpdateCd,
     handleMail,
     deleteSample,
-    setLoading
+    setLoading,
+    vendorData
   };
 }
