@@ -827,7 +827,7 @@ export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
 `;
 
 export const GET_VENDOR_ADMINS = gql`
-  query getVendorAdmins($vendor_id: String) {
+  query getVendorAdmins($vendor_id: String!) {
     getVendorAdmins(vendor_id: $vendor_id) {
       id
       first_name

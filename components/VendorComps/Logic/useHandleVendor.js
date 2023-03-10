@@ -50,7 +50,8 @@ import {
   getSMEServicesObject,
   getCTServicesObject,
   getCDServicesObject,
-  getProfileObject
+  getProfileObject,
+  VendorAllExperiencesAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
