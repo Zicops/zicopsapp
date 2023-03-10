@@ -3,20 +3,11 @@ import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { getAllCourseCountBasedOnExpertises } from './adminAnalyticsDashboardComp.helper';
+import styles from '../adminAnalyticsDashboard.module.scss';
 
 export default function useHandleExpertises() {
   const courseType = useRecoilValue(CourseTypeAtom);
-
-  const [hindiCourses, setHindiCourses] = useState({
-    language: 'Hindi',
-    totalLangCourses: null,
-    progressPercent: 0
-  });
-  const [englishCourses, setEnglishCourses] = useState({
-    language: 'English',
-    totalLangCourses: null,
-    progressPercent: 0
-  });
+  const [vennDiagramData, setVennDiagramData] = useState(null);
 
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
@@ -60,6 +51,23 @@ export default function useHandleExpertises() {
         COURSE_EXPERTISES[2]
       );
 
+      setVennDiagramData([
+        {
+          key: ['Beginner'],
+          data: await beginnerCount,
+          color: '#6BCFCF'
+        },
+        { key: ['Competent'], data: await competentCount, color: '#856BCF' },
+        { key: ['Proficient'], data: await proficientCount, color: '#6BCF75' },
+        { key: ['Beginner', 'Competent'], data: await beginnerCompetentCount },
+        { key: ['Competent', 'Proficient'], data: await competentProficientCount },
+        { key: ['Beginner', 'Proficient'], data: await beginnerProficientCount },
+        {
+          key: ['Beginner', 'Competent', 'Proficient'],
+          data: await allExpertiseCount,
+          color: '#242630'
+        }
+      ]);
       console.table([
         [COURSE_EXPERTISES[0], await beginnerCount],
         [COURSE_EXPERTISES[1], await competentCount],
@@ -72,5 +80,5 @@ export default function useHandleExpertises() {
     }
   }, [courseType]);
 
-  return [hindiCourses, englishCourses];
+  return { vennDiagramData };
 }
