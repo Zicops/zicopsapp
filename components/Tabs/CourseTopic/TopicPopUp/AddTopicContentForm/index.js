@@ -25,7 +25,7 @@ export default function AddTopicContentForm({
   const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   // to set state based on if topic content is present or not
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function AddTopicContentForm({
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
   const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
-  if (isDev) types.push('document');
+  if (isDemo) types.push('document');
 
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));

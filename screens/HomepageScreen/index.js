@@ -1,4 +1,5 @@
 import { GET_LATEST_COURSES } from '@/api/Queries';
+import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
 import HomeSlider from '@/components/HomeSlider';
 import BigCardSlider from '@/components/medium/BigCardSlider';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
@@ -7,13 +8,14 @@ import {
   COMMON_LSPS,
   COURSE_MAP_STATUS,
   COURSE_STATUS,
-  LANGUAGES
+  LANGUAGES,
+  USER_LSP_ROLE
 } from '@/helper/constants.helper';
 import { getUserAssignCourses, sortArrByKeyInOrder } from '@/helper/data.helper';
 import useUserCourseData, { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { getUnixTimeAt } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -26,11 +28,13 @@ let timer = null;
 
 export default function HomepageScreen() {
   const userData = useRecoilValue(UserDataAtom);
+  const userDetails = useRecoilValue(UserStateAtom);
 
   const router = useRouter();
 
   const { getUserCourseData, getUserPreferences } = useUserCourseData();
   const userOrg = useRecoilValue(UsersOrganizationAtom);
+
   const [baseSubcategory, setBaseSubcategory] = useState('');
   const [parentOfBaseSubcategory, setParentOfBaseSubcategory] = useState('');
   const [activeSubcatArr, setActiveSubcatArr] = useState([...Array(skeletonCardCount)]);
@@ -121,25 +125,33 @@ export default function HomepageScreen() {
   }
 
   const pageSize = 28;
+  const isVendor = userOrg?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
+  function clearLoadingState() {
+    setActiveSubcatArr([]);
+    setOngoingCourses([]);
+    setLearningFolderCourses([]);
+    setLatestCourses((prev) => (prev.every((val) => val == null) ? [] : prev));
+    setLearningSpaceCourses([]);
+    setBaseSubcategoryCourses([]);
+    setParentOfBaseSubcategoryCourses([]);
+    setQuickCourses([]);
+    setSlowCourses([]);
+    setSubCategory0Courses([]);
+    setSubCategory1Courses([]);
+    setSubCategory2Courses([]);
+    setSubCategory3Courses([]);
+    setSubCategory4Courses([]);
+    setIsLoading(false);
+  }
+
   useEffect(() => {
+    if (isVendor) return clearLoadingState();
+
     setIsLoading(true);
     if (!userData?.preferences?.length) {
       timer = setTimeout(() => {
-        setActiveSubcatArr([]);
-        setOngoingCourses([]);
-        setLearningFolderCourses([]);
-        setLatestCourses([]);
-        setLearningSpaceCourses([]);
-        setBaseSubcategoryCourses([]);
-        setParentOfBaseSubcategoryCourses([]);
-        setQuickCourses([]);
-        setSlowCourses([]);
-        setSubCategory0Courses([]);
-        setSubCategory1Courses([]);
-        setSubCategory2Courses([]);
-        setSubCategory3Courses([]);
-        setSubCategory4Courses([]);
-        setIsLoading(false);
+        clearLoadingState();
         return clearTimeout(timer);
       }, 3000);
       return;
@@ -330,7 +342,26 @@ export default function HomepageScreen() {
     loadAndSetHomePageRows();
 
     return () => clearTimeout(timer);
-  }, [userData?.preferences]);
+  }, [userData?.preferences, isVendor]);
+
+  useEffect(async () => {
+    if (!isVendor) return;
+    if (!userDetails?.id) return;
+    if (!userOrg?.lsp_id) return;
+    const courseFilters = { LspId: userOrg?.lsp_id };
+
+    const vendorDetail = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userDetails?.id },
+      {},
+      userQueryClient
+    );
+    courseFilters.Owner = vendorDetail?.getUserVendor?.[1]?.name;
+    // courseFiltes.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
+
+    const getLatestCourses = await getLatestCoursesByFilters(courseFilters, pageSize);
+    setLatestCourses(getLatestCourses?.latestCourses?.courses?.filter((c) => c?.is_active) || []);
+  }, [isVendor, userOrg?.lsp_id, userDetails?.id]);
 
   const [lspId, setLspId] = useState(null);
   useEffect(() => {
@@ -377,9 +408,13 @@ export default function HomepageScreen() {
 
       {!!latestCourses?.length && (
         <ZicopsCarousel
-          title="Latest Courses"
+          title={isVendor ? 'My Courses' : 'Latest Courses'}
           data={latestCourses}
-          handleTitleClick={() => router.push('/search-page')}
+          handleTitleClick={() => {
+            if (isVendor) return;
+
+            router.push('/search-page');
+          }}
         />
       )}
 

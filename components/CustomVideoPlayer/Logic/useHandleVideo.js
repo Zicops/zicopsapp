@@ -503,9 +503,10 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const timestamp = (e.pageX / screen.width) * videoDuration;
 
     // for time display below thumb image
-    const timeObj = secondsToMinutes(timestamp);
-    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
-    setSeek(`${timeObj.minute} : ${timeObj.second}`);
+    const timeObj = secondsToHMS(timestamp);
+    // if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
+    // setSeek(`${timeObj.minute} : ${timeObj.second}`);
+    setSeek(timeObj);
 
     if (isScrubbing) {
       e.preventDefault();
@@ -766,9 +767,9 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const tooltipPos = (time / videoElement.current.duration) * screen.width;
     // setTooltipPosition(tooltipPos);
 
-    const timeObj = secondsToMinutes(time);
-    if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
-    setSeek(`${timeObj.minute}: ${timeObj.second}`);
+    const timeObj = secondsToHMS(time);
+    // if (isNaN(timeObj.minute) && isNaN(timeObj.second)) return;
+    setSeek(timeObj);
   }
 
   /* View in fullscreen */
