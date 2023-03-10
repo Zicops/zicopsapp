@@ -21,32 +21,12 @@ const VendorUsers = () => {
       flex: 2,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
-          <LabeledRadioCheckbox type="checkbox" changeHandler={() => {}} />
+          {/* <LabeledRadioCheckbox type="checkbox" changeHandler={() => {}} /> */}
           Email Id
         </div>
       ),
       renderCell: (params) => {
-        return (
-          <div className="center-elements-with-flex">
-            <LabeledRadioCheckbox
-              type="checkbox"
-              //   isChecked={selectedUser?.find((u) => u?.id === params.id)}
-              //   changeHandler={(e) => {
-              //     const userList = [...selectedUser];
-
-              //     if (e.target.checked) {
-              //       userList.push(params?.row);
-              //     } else {
-              //       const index = userList.findIndex((u) => u?.id === params.id);
-              //       userList.splice(index, 1);
-              //     }
-
-              //     setSelectedUser(userList);
-              //   }}
-            />
-            {params.row?.email}
-          </div>
-        );
+        return <div className="center-elements-with-flex">{params.row?.email}</div>;
       }
     },
     {
@@ -116,6 +96,7 @@ const VendorUsers = () => {
         rowsPerPageOptions={[3]}
         loading={loading}
         data={vendorAdminUsers}
+        customStyles={{ paddingLeft: '0px', paddingRight: '0px' }}
         customId="id"
       />
     </>
