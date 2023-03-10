@@ -437,6 +437,7 @@ export default function TopicBox({
     if (hours == '00') return `${minutes}:${seconds} mins`;
     return `${hours}:${minutes}:${seconds}`;
   }
+  const isDocument = topicContent?.[0]?.type === 'document';
 
   return (
     <>
@@ -559,13 +560,15 @@ export default function TopicBox({
 
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
-              <div className={`${styles.progress_bar}`}>
-                <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
-                  {/* <img src="images/progressTriangle.png" alt="" /> */}
+              {!isDocument && (
+                <div className={`${styles.progress_bar}`}>
+                  <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
+                    {/* <img src="images/progressTriangle.png" alt="" /> */}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className={`${styles.details}`}>
-                <div>e-Content</div>
+                <div>{isDocument ? 'Document' : 'e-Content'}</div>
                 <div>
                   {!!totalQuiz && (
                     <>
@@ -583,7 +586,7 @@ export default function TopicBox({
                         width={100}
                       />
                     ) : duration ? (
-                      `Duration : ${displayDuration(duration)}`
+                      `${isDocument ? 'Read Time' : 'Duration'} : ${displayDuration(duration)}`
                     ) : (
                       'N/A'
                     )}

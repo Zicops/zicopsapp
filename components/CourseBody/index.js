@@ -36,7 +36,7 @@ export default function CourseBody({ isPreview = false }) {
   useLoadUserData(isPreview, setSelectedModule, getModuleOptions);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
-  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const i = tabs?.findIndex((tab) => tab?.name === 'Certificates');
   if (i >= 0) tabs[i].isHidden = !isDemo;
