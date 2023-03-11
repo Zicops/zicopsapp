@@ -15,40 +15,9 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
 import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
+import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
 
 export default function VendorInfo() {
-  const { handleMail } = useHandleVendor();
-  const { addUpdateVendor } = useHandleVendorMaster();
-  const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
-  const tabData = [
-    {
-      name: 'Master',
-      component: <VendorMaster />
-    },
-    {
-      name: 'Services',
-      component: <AddVendorServices />
-    },
-    {
-      name: 'Profiles',
-      component: <ProfileManageVendor />
-    },
-    {
-      name: 'Courses',
-      component: <AddVendorCourses />
-    },
-    {
-      name: 'Orders',
-      component: <VendorOrders />
-    },
-    {
-      name: 'Users',
-      component: <VendorUsers />
-    }
-  ];
-
-  const [tab, setTab] = useState(tabData[0].name);
-
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
@@ -56,24 +25,7 @@ export default function VendorInfo() {
         <AdminHeader title="Add Vendor" />
 
         <MainBodyBox>
-          <TabContainer
-            tabData={tabData}
-            tab={tab}
-            setTab={setTab}
-            footerObj={{
-              showFooter: true,
-              handleSubmit: () => {
-                addUpdateVendor();
-                handleMail();
-                addUpdateSme();
-                addUpdateCrt();
-                addUpdateCd();
-              },
-              status: VENDOR_MASTER_STATUS.draft.toUpperCase()
-            }}
-            customStyles={
-              ['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}
-            }></TabContainer>
+          <ManageVendorTabs />
         </MainBodyBox>
       </MainBody>
     </>

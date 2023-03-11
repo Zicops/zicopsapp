@@ -97,11 +97,6 @@ export default function useHandleVendor() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  useEffect(() => {
-    if (!router.isReady) return;
-    // setVendorData(getVendorObject());
-  }, [router.isReady]);
-
   async function handleMail() {
     // if (loading) return;
     if (emailId.length === 0)
@@ -765,8 +760,6 @@ export default function useHandleVendor() {
     getSingleVendorInfo,
     handlePhotoInput,
     handleProfilePhoto,
-    getUserVendors,
-    getAllVendors,
     getCrtDetails,
     getCdDetails,
     getAllProfileInfo,

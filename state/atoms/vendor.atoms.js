@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
 export const VendorStateAtom = atom({
   key: 'vendorState',
@@ -19,7 +20,8 @@ export function getVendorObject(data) {
     linkedinURL: data?.linkedinURL || '',
     twitterURL: data?.twitterURL || '',
     description: data?.description || '',
-    users: data?.users || []
+    users: data?.users || [],
+    status: data?.status || VENDOR_MASTER_STATUS.draft
   };
 }
 export const VendorProfileAtom = atom({
