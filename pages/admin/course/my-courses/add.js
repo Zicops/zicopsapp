@@ -4,7 +4,7 @@ import MainBody from '@/components/common/MainBody';
 import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-
+import { RecoilRoot } from "recoil";
 export default function AddCoursePage() {
   function getPageTitle() {
     // if (courseType === COURSE_TYPES[0]) return 'Add New Course';
@@ -22,7 +22,10 @@ export default function AddCoursePage() {
 
         <MainBodyBox>
           {/* <CourseTabs /> */}
-          <AdminCourseComps />
+          <RecoilRoot>
+            <AdminCourseComps />
+          </RecoilRoot>
+
         </MainBodyBox>
       </MainBody>
     </>

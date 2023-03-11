@@ -19,7 +19,7 @@ const Commercials=()=>
 {
     return(
         <div>
-                  {/* <LabeledInput
+                  <LabeledInput
                 inputOptions={{
                     inputName: 'name',
                     label: 'Name :',
@@ -175,7 +175,8 @@ const Commercials=()=>
                     // handleChange: () => setFreezeConfirmBox(true)
                 }}
             /> */}
-         
+            {/* <SwitchBox/> */}
+
         </div>
     )
 };

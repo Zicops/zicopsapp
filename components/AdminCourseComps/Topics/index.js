@@ -13,12 +13,45 @@ import DropdownSelect from '@/components/Tabs/common/DropdownSelect';
 import SwitchButton from '@/common/FormComponents/SwitchButton';
 import InputTimePicker from '@/common/FormComponents/InputTimePicker';
 import InputDatePicker from '@/common/InputDatePicker';
-const Topics=()=>
-{
-    return(
-        <div>
-            
-        </div>
-    )
+import IconButton from '../../common/IconButton';
+import ModulePopUp from './ModulePopup';
+import PopUp from '@/components/common/PopUp';
+import BlackRow from '@/components/common/BlackRow';
+import BlackBox from '@/components/common/BlackBox';
+import ModuleBox from './ModuleBox';
+// import BlackRow from '/common/BlackRow';
+const Topics = () => {
+  const boxPopup = [{
+    name: "module1",
+    level: "Begginer",
+    descriptioon: "this is module1"
+  },
+  {
+    name: "module2",
+    level: "Competent",
+    descriptioon: "this is module2"
+  }
+  ]
+  return (
+    <>
+      {
+        boxPopup.map((mod) => {
+          return (
+            <ModuleBox />
+          )
+        })
+      }
+      <div className={`${styles.addModuleBtn}`}>
+        <IconButton
+          text="Add Module"
+          //   isDisabled={isDisabled}
+          styleClass="btnBlack"
+        //   handleClick={handleModuleClick}
+        />
+      </div>
+      <ModulePopUp  />
+
+    </>
+  )
 };
- export default Topics
+export default Topics

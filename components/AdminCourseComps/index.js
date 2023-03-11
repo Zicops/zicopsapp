@@ -6,6 +6,7 @@ import Topics from './Topics';
 import Commercials from './Commercials';
 import CourseMaster from './CourseMaster';
 import Details from './Details';
+
 const tabData = [
   {
     name: 'Course Master',
