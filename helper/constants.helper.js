@@ -217,6 +217,8 @@ export const VENDOR_MASTER_STATUS = {
   draft: 'draft'
 };
 
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
+
 //Vendor Constant End
 
 // GENERIC CONSTANTS

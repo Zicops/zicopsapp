@@ -3,14 +3,36 @@ import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.hel
 import MainBody from '@/components/common/MainBody';
 import MarketYardHeroSection from '@/components/VendorComps/MarketYardHeroSection';
 import MarketYardData from '@/components/VendorComps/MarketYardData';
+import { useState } from 'react';
+import { serviceOptions } from '@/components/VendorComps/Logic/vendorComps.helper';
 
 export default function MarketYard() {
+  const [vendorType, setVendorType] = useState(null);
+  const [vendorService, setVendorService] = useState(null);
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
       <MainBody customStyles={{ overflowX: 'clip', padding: '0' }}>
-        <MarketYardHeroSection />
-        <MarketYardData />
+        <MarketYardHeroSection
+          vendorType={vendorType}
+          setVendorType={setVendorType}
+          vendorService={vendorService}
+          setVendorService={setVendorService}
+        />
+        <MarketYardData
+          vendorType={vendorType?.value}
+          displayRows={{
+            isSmeDisplayed: vendorService?.value
+              ? serviceOptions?.sme === vendorService?.value
+              : true,
+            isCdDisplayed: vendorService?.value
+              ? serviceOptions?.cd === vendorService?.value
+              : true,
+            isCrtDisplayed: vendorService?.value
+              ? serviceOptions?.crt === vendorService?.value
+              : true
+          }}
+        />
       </MainBody>
     </>
   );

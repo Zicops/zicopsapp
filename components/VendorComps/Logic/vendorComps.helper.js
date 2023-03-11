@@ -760,16 +760,10 @@ export const statusTypeServie = [
   { label: 'Services', value: 'SME, Content Development' }
 ];
 
-export const optionVendorArray = ['Organisation', 'Individual/Freelancer'].map((val) => ({
-  label: val,
-  value: val
-}));
+export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
 
-export const optionServiceArray = [
-  'Subject Matter',
-  'Classroom Training',
-  'Content Development'
-].map((val) => ({
-  label: val,
-  value: val
-}));
+export const serviceOptions = {
+  sme: 'Subject Matter',
+  crt: 'Classroom Training',
+  cd: 'Content Development'
+};

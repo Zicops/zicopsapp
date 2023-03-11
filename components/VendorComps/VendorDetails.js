@@ -2,18 +2,17 @@ import styles from './vendorComps.module.scss';
 
 export default function VendorDetails({ data }) {
   const socialMediaData = [
-    { label: 'LinkedIn', value: data.linkedinURL },
-    { label: 'Twitter', value: data.twitterURL },
-    { label: 'Facebook', value: data.facebookURL },
-    { label: 'Instagram', value: data.instagramURL }
+    { label: 'LinkedIn', value: data.linkedinURL || 'NA' },
+    { label: 'Twitter', value: data.twitterURL || 'NA' },
+    { label: 'Facebook', value: data.facebookURL || 'NA' },
+    { label: 'Instagram', value: data.instagramURL || 'NA' }
   ];
 
-
   const vendorDetails = [
-    { label: 'Name', value: data.name },
-    { label: 'Address', value: data.address },
-    { label: 'Website', value: data.website },
-    { label: 'Type', value: data.type }
+    { label: 'Name', value: data.name || 'NA' },
+    { label: 'Address', value: data.address || 'NA' },
+    { label: 'Website', value: data.website || 'NA' },
+    { label: 'Type', value: data.type || 'NA' }
   ];
   return (
     <div className={`${styles.vendorDetailsContainer}`}>

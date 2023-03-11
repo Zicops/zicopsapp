@@ -10,20 +10,22 @@ export default function VendorIndividualProfiles({ data }) {
     <div className={`${styles.vendorIndividualProfilesContainer}`}>
       <div className={`${styles.leftSide}`}>
         <div className={`${styles.profileImage}`}>
-          <img src={data?.image} />
+          <img src={data?.photo_url} />
         </div>
         <div className={`${styles.profileDetails}`}>
-          <p className={`${styles.profileName}`}>{data?.name}</p>
+          <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
 
           <p className={`${styles.profileServices}`}>
-            {data?.expertise?.map((expert, index) => (
+            {data?.sme_expertise?.map((expert, index) => (
               <span>
                 {expert}
                 {index + 1 !== data?.expertise?.length ? ' | ' : ''}
               </span>
             ))}
           </p>
-          <p className={`${styles.profileExperience}`}>{data?.experience} years of experience</p>
+          <p className={`${styles.profileExperience}`}>
+            {data?.experience_years} years of experience
+          </p>
         </div>
       </div>
       <div className={`${styles.leftSide}`}>
