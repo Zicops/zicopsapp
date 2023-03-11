@@ -152,7 +152,7 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileData?.experience?.map((exp) => (
+              {profileExperience?.map((exp) => (
                 <IconButton
                   text={
                     typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
@@ -161,7 +161,8 @@ const AddVendorProfile = ({ data = {} }) => {
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    getSingleExperience(exp?.PfId, exp?.ExpId);
+                    getProfileExperience(profileData.profileId);
+                    getSingleExperience(exp.PfId, exp.ExpId);
                   }}
                 />
               ))}

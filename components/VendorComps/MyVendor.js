@@ -4,18 +4,27 @@ import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor.js';
+import useLoadVendorData from './Logic/useLoadVendorData.js';
 
 const MyVendor = () => {
-  const { vendorDetails, getAllVendors, getUserVendors, loading } = useHandleVendor();
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const [vendorList, setVendorList] = useState(null);
+
+  const { vendorDetails, getAllVendors, loading } = useHandleVendor();
+  const { getLspVendors, getUserVendors, getVendorsTable } = useLoadVendorData();
+
+  const [vendorTableData, setVendorTableData] = useState([]);
+
   useEffect(() => {
     if (!vendorDetails?.length) {
       // getAllVendors();
       if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
-      return getAllVendors();
+
+      getVendorsTable().then((data) => setVendorTableData(data));
     }
   }, []);
 
@@ -45,10 +54,13 @@ const MyVendor = () => {
       flex: 0.5,
       renderCell: (params) => {
         const buttonArr = [
-          { handleClick: () => {} },
+          {
+            text: 'View',
+            handleClick: () => Router.push(`manage-vendor/view-vendor/${params.row.vendorId}`)
+          },
           {
             text: 'Edit',
-            handleClick: () => Router.push(`manage-vendor/add-vendor/${params.row.vendorId}`)
+            handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
             text: 'Disable'
@@ -76,7 +88,7 @@ const MyVendor = () => {
   return (
     <>
       <ZicopsTable
-        data={vendorDetails}
+        data={vendorTableData}
         columns={columns}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}

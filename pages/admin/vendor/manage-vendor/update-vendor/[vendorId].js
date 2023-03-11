@@ -19,52 +19,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
 import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
+import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
 
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
-
-  const { getSingleVendorInfo, handleMail, getSmeDetails, getCrtDetails, getCdDetails } =
-    useHandleVendor();
-  const { addUpdateVendor } = useHandleVendorMaster();
-  const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
-  const router = useRouter();
-  const vendorId = router.query.vendorId || '0'; //Change the 0 to null
-
-  useEffect(() => {
-    getSingleVendorInfo();
-    getSmeDetails();
-    getCrtDetails();
-    getCdDetails();
-  }, []);
-
-  const tabData = [
-    {
-      name: 'Master',
-      component: <VendorMaster />
-    },
-    {
-      name: 'Services',
-      component: <AddVendorServices />
-    },
-    {
-      name: 'Profiles',
-      component: <ProfileManageVendor />
-    },
-    {
-      name: 'Courses',
-      component: <AddVendorCourses />
-    },
-    {
-      name: 'Orders',
-      component: <VendorOrders />
-    },
-    {
-      name: 'Users',
-      component: <VendorUsers />
-    }
-  ];
-
-  const [tab, setTab] = useState(tabData[0].name);
 
   return (
     <>
@@ -81,32 +39,7 @@ export default function EditVendor() {
         />
 
         <MainBodyBox>
-          <TabContainer
-            tabData={tabData}
-            tab={tab}
-            setTab={setTab}
-            footerObj={{
-              showFooter: true,
-              handleSubmit: () => {
-                addUpdateVendor();
-                handleMail();
-                addUpdateSme();
-                addUpdateCrt();
-                addUpdateCd();
-              },
-              status: 'DRAFT'
-            }}
-            customStyles={['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}}>
-            <div className={`${styles.previewButtonContainer}`}>
-              <Button
-                clickHandler={async () => {
-                  // await saveCourseData(false, 0, false);
-                  // router.push(`/preview?courseId=${fullCourse.id}`);
-                }}
-                text="View Page"
-              />
-            </div>
-          </TabContainer>
+          <ManageVendorTabs />
         </MainBodyBox>
       </MainBody>
     </>

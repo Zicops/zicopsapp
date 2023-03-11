@@ -56,24 +56,7 @@ export default function VendorInfo() {
         <AdminHeader title="Add Vendor" />
 
         <MainBodyBox>
-          <TabContainer
-            tabData={tabData}
-            tab={tab}
-            setTab={setTab}
-            footerObj={{
-              showFooter: true,
-              handleSubmit: () => {
-                addUpdateVendor();
-                handleMail();
-                addUpdateSme();
-                addUpdateCrt();
-                addUpdateCd();
-              },
-              status: VENDOR_MASTER_STATUS.draft.toUpperCase()
-            }}
-            customStyles={
-              ['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}
-            }></TabContainer>
+          <ManageVendorTabs />
         </MainBodyBox>
       </MainBody>
     </>

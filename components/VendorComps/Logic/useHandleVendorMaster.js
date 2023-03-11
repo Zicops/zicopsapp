@@ -97,7 +97,7 @@ export default function useHandleVendorMaster() {
       if (isError) return;
 
       const _id = res.data.addVendor.vendorId;
-      router.push(`/admin/vendor/manage-vendor/add-vendor/${_id}`);
+      router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
       return res;
     }
   }
