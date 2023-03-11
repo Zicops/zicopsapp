@@ -23,16 +23,8 @@ import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVen
 export default function EditVendor() {
   const vendorData = useRecoilValue(VendorStateAtom);
 
-  const {
-    getSingleVendorInfo,
-    handleMail,
-
-    getSmeDetails,
-
-    getCrtDetails,
-
-    getCdDetails
-  } = useHandleVendor();
+  const { getSingleVendorInfo, handleMail, getSmeDetails, getCrtDetails, getCdDetails } =
+    useHandleVendor();
   const { addUpdateVendor } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
   const router = useRouter();

@@ -1994,8 +1994,8 @@ export const ADD_ORDER = gql`
         vendor_id: $vendor_id
         lsp_id: $lsp_id
         total: $total
-        tax: tax
-        grand_total: grand_total
+        tax: $tax
+        grand_total: $grand_total
         status: $Status
       }
     ) {
@@ -2013,7 +2013,6 @@ export const ADD_ORDER = gql`
     }
   }
 `;
-
 export const UPDATE_ORDER = gql`
   mutation updateOrder(
     $order_id: String
@@ -2030,8 +2029,8 @@ export const UPDATE_ORDER = gql`
         vendor_id: $vendor_id
         lsp_id: $lsp_id
         total: $total
-        tax: tax
-        grand_total: grand_total
+        tax: $tax
+        grand_total: $grand_total
         status: $Status
       }
     ) {

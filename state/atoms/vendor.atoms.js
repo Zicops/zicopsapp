@@ -157,3 +157,19 @@ export const vendorUserInviteAtom = atom({
   key: 'vendorUserInviteState',
   default: []
 });
+
+export const OrderAtom = atom({
+  key: 'orderState',
+  default: getOrderObject()
+});
+export function getOrderObject(data) {
+  return {
+    order_id: data?.order_id || '',
+    vendor_id: data?.vendor_id || '',
+    lsp_id: data?.lsp_id || '',
+    total: data?.total || 0,
+    tax: data?.tax || 0,
+    grand_total: data?.grand_total || 0,
+    status: data?.status || ''
+  };
+}
