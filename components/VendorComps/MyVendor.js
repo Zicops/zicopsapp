@@ -14,17 +14,24 @@ const MyVendor = () => {
 
   const [vendorList, setVendorList] = useState(null);
 
-  const { vendorDetails, getAllVendors, loading } = useHandleVendor();
-  const { getLspVendors, getUserVendors, getVendorsTable } = useLoadVendorData();
+  const { vendorDetails, getAllVendors, loading, disableVendor } = useHandleVendor();
+  const {
+    getLspVendors,
+    getUserVendors,
+    getVendorsTable,
+    getPaginatedVendors
+  } = useLoadVendorData();
 
   const [vendorTableData, setVendorTableData] = useState([]);
+
+  const pageSize = 100;
 
   useEffect(() => {
     if (!vendorDetails?.length) {
       // getAllVendors();
       if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
 
-      getVendorsTable().then((data) => setVendorTableData(data));
+      getPaginatedVendors(pageSize).then((data) => setVendorTableData(data));
     }
   }, []);
 
@@ -48,6 +55,12 @@ const MyVendor = () => {
       flex: 1
     },
     {
+      field: 'status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1
+    },
+    {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
@@ -63,7 +76,8 @@ const MyVendor = () => {
             handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
-            text: 'Disable'
+            text: 'Disable',
+            handleClick: () => disableVendor(params.row, () => {})
           }
         ];
 
@@ -79,11 +93,11 @@ const MyVendor = () => {
     }
   ];
 
-  const options = [
-    { label: 'Email', value: 'email' },
-    { label: 'First Name', value: 'first_name' },
-    { label: 'Last Name', value: 'last_name' }
-  ];
+  // const options = [
+  //   { label: 'Email', value: 'email' },
+  //   { label: 'First Name', value: 'first_name' },
+  //   { label: 'Last Name', value: 'last_name' }
+  // ];
 
   return (
     <>

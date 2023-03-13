@@ -822,6 +822,7 @@ export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
       type
       name
       updated_at
+      status
     }
   }
 `;
@@ -1106,6 +1107,49 @@ export const GET_ORDER_SERVICES = gql`
       updated_at
       updated_by
       status
+    }
+  }
+`;
+
+export const GET_PAGINATED_VENDORS = gql`
+  query getPaginatedVendors(
+    $lsp_id: String
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+    $filters: VendorFilters
+  ) {
+    getPaginatedVendors(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+      filters: $filters
+    ) {
+      vendors {
+          vendorId
+          type
+          level
+          name
+          description
+          photo_url
+          address
+          users
+          website
+          facebook_url
+          instagram_url
+          twitter_url
+          linkedin_url
+          services
+          created_at
+          created_by
+          updated_at
+          updated_by
+          status
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;
