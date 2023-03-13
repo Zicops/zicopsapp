@@ -10,7 +10,7 @@ export default function VendorIndividualProfiles({ data }) {
     <div className={`${styles.vendorIndividualProfilesContainer}`}>
       <div className={`${styles.leftSide}`}>
         <div className={`${styles.profileImage}`}>
-          <img src={data?.photo_url} />
+          <img src={data?.photo_url || '/images/Avatars/Profile.png'} />
         </div>
         <div className={`${styles.profileDetails}`}>
           <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>

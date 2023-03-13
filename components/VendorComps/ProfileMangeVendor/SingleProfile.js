@@ -49,7 +49,7 @@ const SingleProfile = ({ data }) => {
     <div className={`${styles.singleProfileContainer}`}>
       <div className={`${styles.singleProfileMain}`}>
         <div className={`${styles.singleProfileImage}`}>
-          <img src={data?.photo_url} alt="" />
+          <img src={data?.photo_url || '/images/Avatars/Profile.png'} alt="" />
         </div>
         <div className={`${styles.singleProfileDetails}`}>
           <div>
