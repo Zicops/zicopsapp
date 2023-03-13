@@ -274,8 +274,23 @@ export function getUnixTimeAt(hours = 7, minutes = 0, seconds = 0) {
   return unixTimestamp;
 }
 
+export function getDateTimeFromUnix(unixTimestamp) {
+  if (!+unixTimestamp) return '';
+  // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript#:~:text=let%20unix_timestamp%20%3D%201549312452,console.log(formattedTime)%3B
+  const d = new Date(unixTimestamp * 1000);
+
+  return `${d.toLocaleString()}`;
+}
+
 export function isWordIncluded(sentence = '', word = '') {
   return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
+}
+
+export function isWordSame(firstWord = '', secondWord = '') {
+  if (!firstWord) return false;
+  if (!secondWord) return false;
+
+  return firstWord?.trim()?.toLowerCase() === secondWord?.trim()?.toLowerCase();
 }
 
 export function getMinCourseAssignDate(durationInSec = null) {

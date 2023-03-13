@@ -125,6 +125,23 @@ export async function deleteData(
   return response?.data || {};
 }
 
+export async function mutateData(
+  MUTATION,
+  variableObj = {},
+  options = {},
+  client = mutationClient
+) {
+  const response = await client
+    .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Mutation error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
 export async function sendNotification(variableObj = {}, options = {}) {
   const response = await notificationClient
     .mutate({ mutation: SEND_NOTIFICATIONS, variables: variableObj, ...options })

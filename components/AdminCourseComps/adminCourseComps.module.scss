@@ -1,0 +1,61 @@
+// Course Page Title
+.courseName {
+  display: block;
+  line-height: 1.1em;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.courseType {
+  color: $primary;
+  font-size: 1.1rem;
+}
+
+// Admin Course Tabs
+$gapBetweenInputAndLabel: 0.5em;
+$marginBetweenInputs: 1em;
+
+.makeLabelInputColumnWise {
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  input {
+    width: 100%;
+  }
+}
+
+.twoColumnDisplay {
+  display: flex;
+  gap: $marginBetweenInputs;
+
+  > div {
+    flex: 1;
+  }
+}
+
+.marginBetweenInputs {
+  margin: $marginBetweenInputs auto;
+}
+
+// course master
+.expertiseContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.courseSettings {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: $gapBetweenInputAndLabel;
+  }
+}

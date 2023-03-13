@@ -1,201 +1,225 @@
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import styles from "./adminCourse.module.scss"
+import { COURSE_EXPERTISE_LEVEL, COURSE_TYPES } from '@/constants/course.constants';
+import { LANGUAGES } from '@/helper/constants.helper';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { useRecoilValue } from 'recoil';
+import styles from './adminCourseComps.module.scss';
+import NextBtn from './NextBtn';
+import { courseTabs } from './Logic/adminCourseComps.helper';
+import useHandleCourseData from './Logic/useHandleCourseData';
 
 export default function CourseMaster() {
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const { ownerList, handleChange, handleExpertise } = useHandleCourseData();
+  const { catSubCat, setActiveCatId } = useHandleCatSubCat();
+
+  const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
+
   return (
     <>
-      {/* input lable */}
+      {/* course name */}
       <LabeledInput
         inputOptions={{
           inputName: 'name',
           label: 'Name :',
           placeholder: 'Enter name of the course',
-          value: '',
-
+          value: courseMetaData?.name
         }}
-        styleClass={`${styles.inputName}`}
-      // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+        styleClass={`${styles.makeLabelInputColumnWise}`}
+        changeHandler={(e) => handleChange({ name: e?.target?.value })}
       />
 
       {/* category and subcategory */}
-
-      <div className={`${styles.lableDropdown}`}>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>Category :</label>
-          <br />
-          <LabeledDropdown
-            dropdownOptions={{
-              inputName: 'percentage',
-              // label: "Category",
-              placeholder: 'Select category',
-            }}
-            styleClass={`${styles.lableInput}`}
-          />
-        </div>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>Sub-categoty :</label>
-          <LabeledDropdown
-            data={['Accounting', 'Bussiness', 'Developement', 'Engg']}
-            dropdownOptions={{
-              inputName: 'percentage',
-              // label: 'Sub-categoty :',
-              placeholder: 'Select sub-category',
-            }}
-            styleClass={`${styles.lableInput}`}
-          />
-        </div>
-      </div>
-
-      {/* expertise part */}
-
-      <div className={`${styles.expertiseHead}`}>Level of Expertise</div>
-      <div className={`${styles.expertise}`}>
-        <LabeledRadioCheckbox
-          type="checkbox"
-          label="Beginner"
-          value={""}
-          isChecked={""}
-          styleClass={`${styles.radioBox}`}
-        // changeHandler={}
+      <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'category',
+            label: 'Category :',
+            placeholder: 'Select category',
+            isSearchEnable: true,
+            options: catSubCat.cat,
+            value: courseMetaData?.category
+              ? { value: courseMetaData?.category, label: courseMetaData?.category }
+              : null
+          }}
+          isLoading={!catSubCat?.isDataLoaded}
+          isFullWidth={true}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => {
+            setActiveCatId(e);
+            handleChange({ category: e?.value, subCategory: '' });
+          }}
         />
 
-
-        <LabeledRadioCheckbox
-          type="checkbox"
-          label="Competent"
-          value={""}
-          isChecked={""}
-          styleClass={`${styles.radioBox}`}
-        // changeHandler={}
-        />
-        <LabeledRadioCheckbox
-          type="checkbox"
-          label="Proficient"
-          value={""}
-          isChecked={""}
-          styleClass={`${styles.radioBox}`}
-        // changeHandler={}
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'subCategory',
+            label: 'Sub Category:',
+            placeholder: 'Select Sub Category',
+            isSearchEnable: true,
+            options: catSubCat.subCat,
+            value: courseMetaData?.subCategory
+              ? { value: courseMetaData?.subCategory, label: courseMetaData?.subCategory }
+              : null
+          }}
+          isFullWidth={true}
+          isLoading={!catSubCat?.isDataLoaded}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleChange({ subCategory: e?.value })}
         />
       </div>
 
+      {/* expertise level */}
+      <div className={`${styles.expertiseContainer} ${styles.marginBetweenInputs}`}>
+        <p>Level of Expertise</p>
+
+        <div className={`${styles.expertise}`}>
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label={COURSE_EXPERTISE_LEVEL.beginner}
+            value={COURSE_EXPERTISE_LEVEL.beginner}
+            isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.beginner)}
+            changeHandler={handleExpertise}
+          />
+
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label={COURSE_EXPERTISE_LEVEL.competent}
+            value={COURSE_EXPERTISE_LEVEL.competent}
+            isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.competent)}
+            changeHandler={handleExpertise}
+          />
+          <LabeledRadioCheckbox
+            type="checkbox"
+            label={COURSE_EXPERTISE_LEVEL.proficient}
+            value={COURSE_EXPERTISE_LEVEL.proficient}
+            isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.proficient)}
+            changeHandler={handleExpertise}
+          />
+        </div>
+      </div>
 
       {/* Owner and Provisioner */}
+      <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'owner',
+            label: 'Owner :',
+            placeholder: 'Select Owner',
+            isSearchEnable: true,
+            options: ownerList,
+            value: courseMetaData?.owner
+              ? { value: courseMetaData?.owner, label: courseMetaData?.owner }
+              : null
+          }}
+          isFullWidth={true}
+          isLoading={ownerList === null}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleChange({ owner: e?.value })}
+        />
 
-      <div className={`${styles.lableDropdown}`}>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>Owner :</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              placeholder: 'Enter owners name',
-            }}
-            styleClass={`${styles.lableInput}`}
-          />
-        </div>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>Provisioner :</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              // inputName: 'percentage',
-              // label: 'Provisioner :',
-              placeholder: 'Enter provisioner name',
-              value: ''
-            }}
-            styleClass={`${styles.lableInput}`}
-          />
-        </div>
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'publisher',
+            label: 'Provisioner :',
+            placeholder: 'Select Provisioner',
+            isSearchEnable: true,
+            options: [{ value: 'Zicops', label: 'Zicops' }],
+            value: courseMetaData?.publisher
+              ? { value: courseMetaData?.publisher, label: courseMetaData?.publisher }
+              : null
+          }}
+          isFullWidth={true}
+          // isLoading={ownerList === null}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleChange({ publisher: e?.value })}
+        />
       </div>
-
 
       {/* language and no of leaner */}
-      <div className={`${styles.lableDropdown}`}>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>Language :</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              // inputName: 'percentage',
-              // label: 'Language :',
-              placeholder: 'Select Language',
-              value: '',
-            }}
-            styleClass={`${styles.lableInput}`}
-          />
-        </div>
-        <div className={`${styles.lableSubDropdown}`}>
-          <label>No.of Learners : </label>
+      <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+        <LabeledDropdown
+          dropdownOptions={{
+            inputName: 'language',
+            label: 'Language :',
+            placeholder: 'Select multiple languages for the course',
+            isSearchEnable: true,
+            menuPlacement: 'top',
+            isMulti: true,
+            options: LANGUAGES?.map((lang) => ({ label: lang, value: lang })),
+            value: !!courseMetaData?.language?.length
+              ? courseMetaData?.language?.map((lang) => ({ label: lang, value: lang }))
+              : null
+          }}
+          isFullWidth={true}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleChange({ language: e?.map((item) => item?.value) })}
+        />
+
+        {!!isClassroomCourse && (
           <LabeledInput
             inputOptions={{
-              inputName: 'name',
+              inputName: 'noOfLearner',
+              label: 'No.of Learners :',
               placeholder: '00',
-              value: '',
-              isAutoComplete: true
-
+              value: ''
             }}
-            styleClass={`${styles.lableInputNum}`}
-          // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            styleClass={`${styles.makeLabelInputColumnWise}`}
+            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
-        </div>
+        )}
       </div>
 
+      {/* course level and is display */}
+      <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+        <div className={`${styles.courseSettings}`}>
+          <p>Privacy Settings :</p>
 
-      {/* setting and controls */}
-
-      <div className={`${styles.settingControls}`}>
-        <div>
-          <div className={`${styles.settingControlHead}`}>Privacy settings :</div>
-          <div className={`${styles.settingControlsInput}`}>
+          <div>
             <LabeledRadioCheckbox
               type="radio"
-              label="Organization Level"
-              value={""}
-              isChecked={""}
-              styleClass={`${styles.radioBox}`}
-            // changeHandler={}
+              label={'Organization Level'}
+              isChecked={courseMetaData?.lspId === userOrgData?.defaultLsp}
+              changeHandler={(e) => handleChange({ lspId: userOrgData?.defaultLsp })}
             />
-          </div>
-          <div className={`${styles.settingControlsInput}`}>
+
             <LabeledRadioCheckbox
               type="radio"
-              label="Learning space Level"
-              value={""}
-              isChecked={""}
-              styleClass={`${styles.radioBox}`}
-            // changeHandler={}
+              label={'Learning space Level'}
+              isChecked={courseMetaData?.lspId === userOrgData?.lsp_id}
+              changeHandler={(e) => handleChange({ lspId: userOrgData?.lsp_id })}
             />
           </div>
-
         </div>
 
-        <div>
-          <div className={`${styles.settingControlHead}`}>Access Control :</div>
-          <div className={`${styles.settingControlsInput}`}>
+        <div className={`${styles.courseSettings}`}>
+          <p>Access Control :</p>
+
+          <div>
             <LabeledRadioCheckbox
               type="radio"
-              label="Open"
-              value={""}
-              isChecked={""}
-              styleClass={`${styles.radioBox}`}
-            // changeHandler={}
+              label={'Open'}
+              isChecked={courseMetaData?.isDisplay}
+              changeHandler={() => handleChange({ isDisplay: true })}
             />
-          </div>
-          <div className={`${styles.settingControlsInput}`}>
+
             <LabeledRadioCheckbox
               type="radio"
-              label="Closed"
-              value={""}
-              isChecked={""}
-              styleClass={`${styles.radioBox}`}
-            // changeHandler={}
+              label={'Closed'}
+              isChecked={!courseMetaData?.isDisplay}
+              changeHandler={() => handleChange({ isDisplay: false })}
             />
           </div>
         </div>
       </div>
 
-      <div className={`${styles.courseMasterBtn}`}>
-        <button>Next</button>
-      </div>
-
+      <NextBtn />
     </>
   );
 }

@@ -1,0 +1,29 @@
+.zicopsButton {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: $primary;
+  background-color: transparent;
+  border: 2px solid $primary;
+
+  max-height: 4em;
+
+  cursor: pointer;
+
+  &.active,
+  &:hover {
+    background-color: $primary;
+    color: $black;
+  }
+
+  &.shrink {
+    width: fit-content;
+  }
+
+  &.error {
+    border-color: $error;
+  }
+}

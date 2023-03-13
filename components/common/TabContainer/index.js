@@ -103,7 +103,7 @@ export default function TabContainer({
             )}
           </div>
 
-          {children}
+          <div className={`${styles.centerSlot}`}>{children}</div>
 
           <div className={`${styles.rightText}`}>
             <ToolTip title={cancelButtonTitle} placement="left">
