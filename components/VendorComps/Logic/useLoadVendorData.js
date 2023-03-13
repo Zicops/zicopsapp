@@ -2,7 +2,8 @@ import {
   GET_VENDORS_BY_LSP,
   userQueryClient,
   GET_VENDORS_BY_LSP_FOR_TABLE,
-  GET_USER_VENDORS
+  GET_USER_VENDORS,
+  GET_PAGINATED_VENDORS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
@@ -52,6 +53,25 @@ export default function useLoadVendorData() {
     return sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
   }
 
+  async function getPaginatedVendors(pageSize) {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    if (!lspId) return [];
+
+    const vendorList = await loadAndCacheDataAsync(
+      GET_PAGINATED_VENDORS,
+      { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: pageSize, filters: {} },
+      {},
+      userQueryClient
+    ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }));
+
+    if (vendorList.error) {
+      setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' });
+      return [];
+    }
+
+    return sortArrByKeyInOrder(vendorList?.getPaginatedVendors?.vendors || [], 'updated_at', false);
+  }
+
   async function getUserVendors() {
     if (!userData?.id) return;
     // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
@@ -69,5 +89,5 @@ export default function useLoadVendorData() {
     return sortArrByKeyInOrder(res?.getUserVendor || [], 'updated_at', false);
   }
 
-  return { getLspVendors, getVendorsTable, getUserVendors };
+  return { getLspVendors, getVendorsTable, getUserVendors, getPaginatedVendors };
 }

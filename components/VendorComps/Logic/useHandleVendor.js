@@ -61,8 +61,9 @@ import { useRecoilState } from 'recoil';
 export default function useHandleVendor() {
   // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   // const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
-  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
-  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
+  const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
+  // const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  // const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
@@ -760,6 +761,41 @@ export default function useHandleVendor() {
     return res;
   }
 
+  async function disableVendor(vendorTableData, onSuccess = () => {}) {
+    const sendData = {
+      ...vendorTableData,
+      status: VENDOR_MASTER_STATUS.disable
+    };
+
+    let isError = false;
+
+    const res = await updateVendor({
+      variables: sendData,
+      update: (_, { data }) => {
+        handleCacheUpdate(
+          GET_VENDOR_DETAILS,
+          { vendor_id: vendorId },
+          (cachedData) => {
+            const _cachedData = structuredClone(cachedData?.getVendorDetails);
+            const _updatedCache = _cachedData?.map((vendor) => {
+              const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
+              if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
+
+              return vendor;
+            });
+
+            return { getVendorDetails: _updatedCache };
+          },
+          userQueryClient
+        );
+      }
+    }).catch((err) => console.info('Error'));
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Vendor Disabled' });
+    onSuccess();
+    return res;
+  }
+
   return {
     getSingleVendorInfo,
     handlePhotoInput,
@@ -786,6 +822,7 @@ export default function useHandleVendor() {
     vendorDetails,
     vendorData,
     getVendorAdmins,
-    vendorAdminUsers
+    vendorAdminUsers,
+    disableVendor
   };
 }
