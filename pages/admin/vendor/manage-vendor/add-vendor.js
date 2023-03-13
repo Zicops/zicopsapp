@@ -15,11 +15,9 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
 import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
 import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
+import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
 
 export default function VendorInfo() {
-  const { handleMail } = useHandleVendor();
-  const { addUpdateVendor } = useHandleVendorMaster();
-  const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
   const tabData = [
     {
       name: 'Master',

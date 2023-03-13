@@ -2066,7 +2066,7 @@ export const ADD_ORDER_SERVICES = gql`
     $status: String
   ) {
     addOrderServies(
-      input: {
+      input: [{
         service_id: $service_id
         order_id: $order_id
         service_type: $service_type
@@ -2077,7 +2077,7 @@ export const ADD_ORDER_SERVICES = gql`
         quantity: $quantity
         total: $total
         status: $status
-      }
+      }]
     ) {
       service_id
       order_id

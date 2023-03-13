@@ -175,3 +175,21 @@ export function getOrderObject(data) {
     status: data?.status || ''
   };
 }
+export const SevicesAtom = atom({
+  key: 'servicesState',
+  default: getServicesObject()
+});
+export function getServicesObject(data) {
+  return {
+    service_id: data?.service_id || '',
+    order_id: data?.order_id || '',
+    service_type: data?.service_type || '',
+    description: data?.description || '',
+    unit: data?.unit || 0,
+    currency: data?.currency || '',
+    rate: data?.rate || 0,
+    quantity: data?.quantity || 0,
+    total: data?.total || 0,
+    status: data?.status || ''
+  };
+}
