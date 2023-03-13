@@ -17,21 +17,9 @@ export const GET_FCM_TOKEN = gql`
   }
 `;
 export const ADD_NOTIFICATION_TO_FIRESTORE = gql`
-  mutation (
-    $title: String!
-    $body: String!
-    $is_read: Boolean!
-    $message_id: String!
-  ){
+  mutation ($title: String!, $body: String!, $is_read: Boolean!, $message_id: String!) {
     addToFirestore(
-      message: [
-        { 
-          title: $title, 
-          body: $body, 
-          is_read: $is_read, 
-          message_id: $message_id 
-        }
-      ]
+      message: [{ title: $title, body: $body, is_read: $is_read, message_id: $message_id }]
     )
   }
 `;
@@ -53,6 +41,21 @@ export const GET_ALL_NOTIFICATIONS = gql`
   }
 `;
 
+export const GET_PAGINATED_NOTIFICATIONS = gql`
+  query getAllPaginatedNotifications($pageIndex: Int!, $pageSize: Int!, $isRead: Boolean) {
+    getAllPaginatedNotifications(pageIndex: $pageIndex, pageSize: $pageSize, is_read: $isRead) {
+      title
+      body
+      created_at
+      user_id
+      message_id
+      is_read
+      link
+      lsp_id
+    }
+  }
+`;
+
 export const SEND_NOTIFICATIONS = gql`
   mutation sendNotification($title: String!, $body: String!, $user_id: [String]!) {
     sendNotification(notification: { title: $title, body: $body, user_id: $user_id }) {
@@ -62,8 +65,16 @@ export const SEND_NOTIFICATIONS = gql`
 `;
 
 export const SEND_NOTIFICATIONS_WITH_LINK = gql`
-  mutation sendNotificationWithLink($title: String!, $body: String!, $user_id: [String]! , $link:String!) {
-    sendNotificationWithLink(notification: { title: $title, body: $body, user_id: $user_id } ,link:$link) {
+  mutation sendNotificationWithLink(
+    $title: String!
+    $body: String!
+    $user_id: [String]!
+    $link: String!
+  ) {
+    sendNotificationWithLink(
+      notification: { title: $title, body: $body, user_id: $user_id }
+      link: $link
+    ) {
       statuscode
     }
   }

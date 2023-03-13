@@ -37,10 +37,17 @@ export default function BarChart({
   function getArrForLongName(name = '', length = 10) {
     if (name?.length <= length) return name;
 
-    const firstHalf = name.substring(0, length);
-    const secondHalf = name.substring(length);
+    const nameArr = name?.split('');
+    const spaceIndex = nameArr?.findIndex((val) => val === ' ');
+
+    if (spaceIndex > 0 && spaceIndex < length + 2 && name?.length <= length + 2) return [name];
+    const _length = spaceIndex > 0 && spaceIndex < length + 2 ? spaceIndex : length;
+
+    const firstHalf = name.substring(0, _length);
+    const secondHalf = name.substring(_length);
 
     let isSpaceInBetween = firstHalf?.[firstHalf?.length - 1] === ' ';
+
     if (!isSpaceInBetween) isSpaceInBetween = secondHalf?.[0] === ' ';
 
     const firstHalfValue = `${firstHalf}${isSpaceInBetween ? '' : '-'}`;

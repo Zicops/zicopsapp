@@ -3,7 +3,7 @@
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
 import ZicopsTable from '@/components/common/ZicopsTable';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen, getUnixFromDate } from '@/helper/utils.helper';
@@ -43,7 +43,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     };
 
     if (isVendor) {
-      const vendorDetail = await loadQueryDataAsync(
+      const vendorDetail = await loadAndCacheDataAsync(
         GET_USER_VENDORS,
         { user_id: userData?.id },
         {},

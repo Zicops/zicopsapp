@@ -89,6 +89,8 @@ export default function Nav() {
   let displayDevMode = !!isDev;
   if (getCurrentHost()?.includes('localhost')) displayDevMode = true;
 
+  let notificationCount = notifications?.filter((n) => !n?.isRead)?.length ;
+
   return (
     <div className={styles.navbar} id="navbar">
       {!!displayDevMode && (
@@ -211,7 +213,11 @@ export default function Nav() {
             <ToolTip title="Show Notifications" placement="right">
               <li
                 onClick={handleClickInside}
-                data-count={notifications?.filter((n) => !n?.isRead)?.length}
+                data-count={
+                  notificationCount > 10
+                    ? '10+'
+                    : notificationCount
+                }
                 className={`${styles.notificationIcon} ${
                   !!notifications?.filter((n) => !n?.isRead)?.length &&
                   styles.activeNotificationIcon

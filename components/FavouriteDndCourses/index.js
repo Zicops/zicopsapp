@@ -469,6 +469,7 @@ export default function FavouriteDndCourses({ isLoading }) {
         setIsAssignPopUpOpen={setIsAssignPopUpOpen}
         courseId={selectedCourse?.id}
         courseType={selectedCourse?.type}
+        courseName={selectedCourse?.name}
         suggestedCompletionDays={selectedCourse?.expected_completion}
         lspId={selectedCourse?.lspId}
         popUpProps={{

@@ -135,6 +135,7 @@ export default function CourseConsumptionStatistics() {
       <ZicopsTable
         columns={columns}
         data={tableData}
+        customId={'courseId'}
         pageSize={5}
         rowsPerPageOptions={[3]}
         tableHeight="55vh"

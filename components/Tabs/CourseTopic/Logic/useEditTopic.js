@@ -354,7 +354,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           file: videoData?.file
         };
 
-        if (sendContentData?.type === 'mp4' && sendVideoData?.file) {
+        if (['mp4', 'document']?.includes(sendContentData?.type) && sendVideoData?.file) {
           await uploadCourseContentVideo({
             variables: sendVideoData,
             context: {
@@ -497,6 +497,14 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
               sendOptionData.attachmentType = option.attachmentType;
             }
 
+            if (!sendOptionData?.id) {
+              await addOption({ variables: sendOptionData }).catch((err) => {
+                console.log(err);
+                isError = !!err;
+                setToastMsg({ type: 'danger', message: `Add Option (${i + 1}) Error` });
+              });
+              continue;
+            }
             // console.log(sendOptionData);
             await updateOption({ variables: sendOptionData }).catch((err) => {
               console.log(err);
@@ -516,7 +524,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
             isMandatory: quiz?.isMandatory || false,
             topicId: quiz?.topicId || '',
             courseId: quiz?.courseId || '',
-            questionId: questionId,
+            questionId: quiz?.questionId,
             qbId: subCatQb?.id,
             weightage: 1,
             sequence: i + 1,

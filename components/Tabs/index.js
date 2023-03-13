@@ -163,7 +163,8 @@ export default function CourseTabs() {
       if (courseStatus === COURSE_STATUS.approvalPending) return 'Sent For Approval';
       if (fullCourse?.qa_required) return 'Send For Approval';
     }
-    if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
+    if ([COURSE_STATUS.freeze, COURSE_STATUS.approvalPending]?.includes(courseStatus))
+      return 'Publish';
     if (fullCourse?.id) return 'Update';
 
     return 'Save';
@@ -198,6 +199,7 @@ export default function CourseTabs() {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
+        isDisabled={!!isCourseUploading}
         footerObj={{
           isActive:
             fullCourse?.name &&

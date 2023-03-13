@@ -357,6 +357,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
         <IconButton
           styleClass="btnBlack"
           text="Add Quiz"
+          isDisabled={isQuizFormVisible}
           handleClick={() => {
             setNewQuiz(getQuizObject({ courseId, topicId }));
             toggleQuizForm();

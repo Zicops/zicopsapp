@@ -1,22 +1,6 @@
-import { userClient } from '@/api/UserMutations';
-import {
-  GET_ORGANIZATIONS_DETAILS,
-  GET_USER_DETAIL,
-  GET_USER_LEARNINGSPACES,
-  GET_USER_LEARNINGSPACES_DETAILS,
-  GET_USER_LSP_ROLES,
-  GET_USER_ORGANIZATION_DETAIL,
-  GET_USER_PREFERENCES,
-  GET_USER_PREFERENCES_DETAILS,
-  userQueryClient
-} from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { parseJson } from '@/helper/utils.helper';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import useHandleCurrentUser from '@/components/UserProfile/Logic/useHandleCurrentUser';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -29,100 +13,15 @@ import LearningDashboardAccordian from '../../../../components/UserProfile/Learn
 import styles from '../user.module.scss';
 
 export default function UserProfilePage() {
-  const [currentUserData, setCurrentUserData] = useState(null);
-  const adminData = useRecoilValue(UsersOrganizationAtom);
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const { loadCurrentUserData, currentUserDetails, setCurrentUserDetails } = useHandleCurrentUser();
 
   const router = useRouter();
   const currentUserId = router?.query?.userId;
 
-
-  useEffect(async () => {
+  useEffect(() => {
     if (!currentUserId) return;
-    // const userIds = [];
-    // userIds.push(currentUserId);
-    const _lspId = sessionStorage?.getItem('lsp_id');
-    const lspId = _lspId? _lspId : adminData?.lsp_id;
-
-    if(!lspId) return ;
-    
-    const detailsRes = await loadQueryDataAsync(
-      GET_USER_DETAIL,
-      { user_id: [currentUserId] },
-      {},
-      userClient
-    );
-    if (detailsRes?.error)
-      return setToastMsg({ type: 'danger', message: 'User Details Load Error' });
-    const userDetails = detailsRes?.getUserDetails[0];
-    // console.log(userIds, userDetails, detailsRes);
-
-    setCurrentUserData({ ...userDetails });
-    
-    
-    const userLearningSpaceData = await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id: currentUserId , lsp_id:lspId},{},userQueryClient)
-    if (userLearningSpaceData?.error) return setToastMsg({ type: 'danger', message: 'User Load Error' });
-    
-    const user_lsp_id  = userLearningSpaceData?.getUserLspByLspId?.user_lsp_id;
-    
-    if(!user_lsp_id) return ;
-    
-    setCurrentUserData((prev) => ({ ...prev, userLspId:  user_lsp_id })) ;
-
-    const userRole = await loadQueryDataAsync(GET_USER_LSP_ROLES,{user_id:currentUserId , user_lsp_ids:[user_lsp_id]},{},userQueryClient);
-
-    setCurrentUserData((prev) => ({ ...prev, role:  userRole?.getUserLspRoles?.[0]?.role })) ;
-
-    const detailOrg = await loadQueryDataAsync(
-      GET_USER_ORGANIZATION_DETAIL,
-      { user_id: currentUserId, user_lsp_id: user_lsp_id },
-      {},
-      userClient
-    );
-    if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
-    const userOrg = detailOrg?.getUserOrgDetails;
-
-    if(!userOrg) return ;
-
-    setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
-  
-
-    
-    if(!userDetails?.is_verified) return ;
-
-    const detailPref = await loadQueryDataAsync(
-      GET_USER_PREFERENCES,
-      { user_id: currentUserId },
-      {},
-      userClient
-    );
-    if (detailPref?.error) return setToastMsg({ type: 'danger', message: 'User Pref Load Error' });
-    const userPref = detailPref?.getUserPreferences;
-    if (userPref.length) setCurrentUserData((prev) => ({ ...prev, ...userPref[0] }));
-    // console.log(detailPref,'pref')
-    const prefArr = userPref?.filter(
-      (item) => item?.user_lsp_id === user_lsp_id && item?.is_active
-    );
-
-    const base = prefArr?.filter((item) => item?.is_base);
-    setCurrentUserData((prev) => ({
-      ...prev,
-      sub_categories: [...prefArr],
-      sub_category: base[0]?.sub_category
-    }));
-
-    
-
-    // const detailOrg = await loadQueryDataAsync(
-    //   GET_USER_ORGANIZATION_DETAIL,
-    //   { user_id: currentUserId, user_lsp_id: user_lsp_id },
-    //   {},
-    //   userClient
-    // );
-    // if (detailOrg?.error) return setToastMsg({ type: 'danger', message: 'User Org Load Error' });
-    // const userOrg = detailOrg?.getUserOrgDetails;
-    // console.log(userOrg);
-    // if (userPref?.length) setCurrentUserData((prev) => ({ ...prev, ...userOrg }));
+    loadCurrentUserData(currentUserId);
   }, [currentUserId]);
 
   return (
@@ -134,7 +33,11 @@ export default function UserProfilePage() {
             <div>
               <img src="" alt="" />
               <div>
-                <p>{`${currentUserData?.first_name} ${currentUserData?.last_name}`}</p>
+                <p>
+                  {!currentUserDetails
+                    ? ''
+                    : `${currentUserDetails?.first_name} ${currentUserDetails?.last_name}`}
+                </p>
                 {/* <p>Description</p> */}
               </div>
             </div>
@@ -150,11 +53,14 @@ export default function UserProfilePage() {
         />
 
         <MainBodyBox customStyle={{ minHeight: 'auto', maxHeight: 'none', height: 'min-content' }}>
-          <UserProfile currentUserData={currentUserData} setCurrentUserData={setCurrentUserData} />
+          <UserProfile
+            currentUserData={currentUserDetails}
+            setCurrentUserData={setCurrentUserDetails}
+          />
         </MainBodyBox>
         <div className={`${styles.accordianContainer}`}>
-          <CoursesAccordian currentUserData={currentUserData}/>
-          <CohortAccordian currentUserData={currentUserData}/>
+          <CoursesAccordian currentUserData={currentUserDetails} />
+          <CohortAccordian currentUserData={currentUserDetails} />
           <LearningDashboardAccordian />
         </div>
       </MainBody>
