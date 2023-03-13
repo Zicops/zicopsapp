@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
 import { useRouter } from 'next/router';
 import CoursesVendor from '@/components/VendorComps/CoursesVendor';
-
 import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
@@ -24,10 +23,10 @@ import styles from '../../../../../components/VendorComps/vendorComps.module.scs
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { allProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
-
+  const vendorProfiles = useRecoilValue(allProfileAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -85,16 +84,16 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+  const vendorId = router.query.vendorId || null; //Change the 1 to null
   // console.info(router.query.vendorId);
 
-  const { getSingleVendorInfo } = useHandleVendor();
+  const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
 
   useEffect(() => {
-    getSingleVendorInfo();
+    getAllProfileInfo();
+    getSingleVendorInfo(vendorId);
   }, []);
-
-  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
+  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
 
   const tabData = [
     {
@@ -125,7 +124,7 @@ export default function VendorInfo() {
           footerObj={{
             showFooter: false
           }}
-          customStyles={{ height: '100%', overflow: 'unset' }}
+          customStyles={{ height: 'fit-content', overflow: 'unset' }}
         />
       </MainBody>
       <VendorPopUp

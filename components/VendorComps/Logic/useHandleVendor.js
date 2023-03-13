@@ -50,6 +50,7 @@ import {
   getSMEServicesObject,
   getCTServicesObject,
   getCDServicesObject,
+  getProfileObject,
   VendorAllExperiencesAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
@@ -59,6 +60,7 @@ import { useRecoilState } from 'recoil';
 
 export default function useHandleVendor() {
   // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
+  // const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   // const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   // const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
@@ -111,6 +113,7 @@ export default function useHandleVendor() {
     let sendEmails = emails?.map((email) => email?.toLowerCase());
     let isError = false;
     let errorMsg;
+
     const resEmail = await inviteUsers({
       variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
     }).catch((err) => {
@@ -237,10 +240,11 @@ export default function useHandleVendor() {
       return { ...data, experience: experience };
     });
     setProfileDetails(sanetizeProfiles);
-    setLoading(true);
+    setLoading(false);
   }
 
   async function getSingleProfileInfo() {
+    setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
       { vendor_id: vendorId, email: profileData?.email },
@@ -248,6 +252,7 @@ export default function useHandleVendor() {
       userQueryClient
     );
     setProfileData(getProfileObject(profileInfo));
+    setLoading(false);
   }
 
   async function getProfileExperience(pfId) {
@@ -787,7 +792,7 @@ export default function useHandleVendor() {
     }).catch((err) => console.info('Error'));
     if (isError) return;
     setToastMsg({ type: 'success', message: 'Vendor Disabled' });
-    onSuccess()
+    onSuccess();
     return res;
   }
 
@@ -807,6 +812,8 @@ export default function useHandleVendor() {
     getSmeDetails,
     getCrtDetails,
     getCdDetails,
+    getAllVendors,
+    getUserVendors,
     addUpdateExperience,
     addSampleFile,
     handleMail,

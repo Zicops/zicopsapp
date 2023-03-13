@@ -159,3 +159,37 @@ export const vendorUserInviteAtom = atom({
   key: 'vendorUserInviteState',
   default: []
 });
+
+export const OrderAtom = atom({
+  key: 'orderState',
+  default: getOrderObject()
+});
+export function getOrderObject(data) {
+  return {
+    order_id: data?.order_id || '',
+    vendor_id: data?.vendor_id || '',
+    lsp_id: data?.lsp_id || '',
+    total: data?.total || 0,
+    tax: data?.tax || 0,
+    grand_total: data?.grand_total || 0,
+    status: data?.status || ''
+  };
+}
+export const SevicesAtom = atom({
+  key: 'servicesState',
+  default: getServicesObject()
+});
+export function getServicesObject(data) {
+  return {
+    service_id: data?.service_id || '',
+    order_id: data?.order_id || '',
+    service_type: data?.service_type || '',
+    description: data?.description || '',
+    unit: data?.unit || 0,
+    currency: data?.currency || '',
+    rate: data?.rate || 0,
+    quantity: data?.quantity || 0,
+    total: data?.total || 0,
+    status: data?.status || ''
+  };
+}

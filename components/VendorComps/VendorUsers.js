@@ -21,32 +21,12 @@ const VendorUsers = () => {
       flex: 2,
       renderHeader: (params) => (
         <div className="center-elements-with-flex">
-          <LabeledRadioCheckbox type="checkbox" changeHandler={() => {}} />
+          {/* <LabeledRadioCheckbox type="checkbox" changeHandler={() => {}} /> */}
           Email Id
         </div>
       ),
       renderCell: (params) => {
-        return (
-          <div className="center-elements-with-flex">
-            <LabeledRadioCheckbox
-              type="checkbox"
-              isChecked={selectedUser?.find((u) => u?.id === params.id)}
-              changeHandler={(e) => {
-                const userList = [...selectedUser];
-
-                if (e.target.checked) {
-                  userList.push(params?.row);
-                } else {
-                  const index = userList.findIndex((u) => u?.id === params.id);
-                  userList.splice(index, 1);
-                }
-
-                setSelectedUser(userList);
-              }}
-            />
-            {params.row?.email}
-          </div>
-        );
+        return <div className="center-elements-with-flex">{params.row?.email}</div>;
       }
     },
     {
@@ -60,51 +40,51 @@ const VendorUsers = () => {
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
       flex: 0.8
-    },
-    {
-      field: 'role',
-      headerClassName: 'course-list-header',
-      headerName: 'Role',
-      flex: 0.5,
-      renderCell: (params) => {
-        let isLearner = false;
-        let isAdmin = false;
-        isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-        isLearner = !isAdmin;
-        if (adminLearnerList?.admins?.includes(params?.row?.id)) {
-          isLearner = false;
-          isAdmin = true;
-        }
-        if (adminLearnerList?.learners?.includes(params?.row?.id)) {
-          isLearner = true;
-          isAdmin = false;
-        }
-
-        return (
-          <span style={{ textTransform: 'capitalize' }}>{isLearner ? 'Learner' : 'Admin'}</span>
-        );
-      }
-    },
-    {
-      field: 'status',
-      headerClassName: 'course-list-header',
-      headerName: 'Status',
-      flex: 0.5,
-      renderCell: (params) => {
-        let status = '';
-        // let lspStatus = '';
-        if (disabledUserList?.includes(params?.row?.id)) status = USER_MAP_STATUS?.disable;
-        if (invitedUsers?.includes(params?.row?.id)) status = 'invited';
-
-        let lspStatus = !status?.length ? params?.row?.lsp_status : status;
-
-        return (
-          <span style={{ textTransform: 'capitalize' }}>
-            {lspStatus?.trim()?.length ? lspStatus : 'Invited'}
-          </span>
-        );
-      }
     }
+    // {
+    //   field: 'role',
+    //   headerClassName: 'course-list-header',
+    //   headerName: 'Role',
+    //   flex: 0.5,
+    //   renderCell: (params) => {
+    //     let isLearner = false;
+    //     let isAdmin = false;
+    //     isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
+    //     isLearner = !isAdmin;
+    //     if (adminLearnerList?.admins?.includes(params?.row?.id)) {
+    //       isLearner = false;
+    //       isAdmin = true;
+    //     }
+    //     if (adminLearnerList?.learners?.includes(params?.row?.id)) {
+    //       isLearner = true;
+    //       isAdmin = false;
+    //     }
+
+    //     return (
+    //       <span style={{ textTransform: 'capitalize' }}>{isLearner ? 'Learner' : 'Admin'}</span>
+    //     );
+    //   }
+    // },
+    // {
+    //   field: 'status',
+    //   headerClassName: 'course-list-header',
+    //   headerName: 'Status',
+    //   flex: 0.5,
+    //   renderCell: (params) => {
+    //     let status = '';
+    //     // let lspStatus = '';
+    //     if (disabledUserList?.includes(params?.row?.id)) status = USER_MAP_STATUS?.disable;
+    //     if (invitedUsers?.includes(params?.row?.id)) status = 'invited';
+
+    //     let lspStatus = !status?.length ? params?.row?.lsp_status : status;
+
+    //     return (
+    //       <span style={{ textTransform: 'capitalize' }}>
+    //         {lspStatus?.trim()?.length ? lspStatus : 'Invited'}
+    //       </span>
+    //     );
+    //   }
+    // }
   ];
 
   return (
@@ -116,6 +96,7 @@ const VendorUsers = () => {
         rowsPerPageOptions={[3]}
         loading={loading}
         data={vendorAdminUsers}
+        customStyles={{ paddingLeft: '0px', paddingRight: '0px' }}
         customId="id"
       />
     </>

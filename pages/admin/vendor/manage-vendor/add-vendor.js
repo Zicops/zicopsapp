@@ -18,6 +18,35 @@ import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVen
 import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
 
 export default function VendorInfo() {
+  const tabData = [
+    {
+      name: 'Master',
+      component: <VendorMaster />
+    },
+    {
+      name: 'Services',
+      component: <AddVendorServices />
+    },
+    {
+      name: 'Profiles',
+      component: <ProfileManageVendor />
+    },
+    {
+      name: 'Courses',
+      component: <AddVendorCourses />
+    },
+    {
+      name: 'Orders',
+      component: <VendorOrders />
+    },
+    {
+      name: 'Users',
+      component: <VendorUsers />
+    }
+  ];
+
+  const [tab, setTab] = useState(tabData[0].name);
+
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />

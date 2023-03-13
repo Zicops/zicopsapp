@@ -218,6 +218,8 @@ export const VENDOR_MASTER_STATUS = {
   disable: 'disable'
 };
 
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
+
 //Vendor Constant End
 
 // GENERIC CONSTANTS

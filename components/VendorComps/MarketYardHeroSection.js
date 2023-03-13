@@ -1,6 +1,7 @@
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { useState } from 'react';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
-import { optionServiceArray, optionVendorArray } from './Logic/vendorComps.helper';
+import { serviceOptions } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
 
 const customDropdownStyleObj = {
@@ -24,10 +25,12 @@ const customDropdownStyleObj = {
   }
 };
 
-export default function MarketYardHeroSection() {
-  const [vendorType, setVendorType] = useState(null);
-  const [vendorService, setVendorService] = useState(null);
-
+export default function MarketYardHeroSection({
+  vendorType,
+  setVendorType,
+  vendorService,
+  setVendorService
+}) {
   return (
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
@@ -37,9 +40,12 @@ export default function MarketYardHeroSection() {
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'Vendor Type',
-                placeholder: 'Vendor Type',
+                placeholder: 'All Types',
                 value: vendorType,
-                options: optionVendorArray
+                options: [
+                  { label: 'All', value: null },
+                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({ label: val, value: val }))
+                ]
               }}
               changeHandler={(val) => setVendorType(val)}
               styleClass={`${styles.vendorDropDown}`}
@@ -49,9 +55,12 @@ export default function MarketYardHeroSection() {
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'Service',
-                placeholder: 'Service',
+                placeholder: 'All Services',
                 value: vendorService,
-                options: optionServiceArray
+                options: [
+                  { label: 'All', value: null },
+                  ...Object.values(serviceOptions)?.map((val) => ({ label: val, value: val }))
+                ]
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}

@@ -3,27 +3,18 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import { useState } from 'react';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { currency, unit } from '../Logic/vendorComps.helper';
+import { SevicesAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { changeHandler } from '@/helper/common.helper';
 
 export default function AddLineItemComp() {
-  const [lineUnit, setLineUnit] = useState(null);
-  const [lineCurrency, setLineCurrency] = useState(null);
-  const [lineDescription, setLineDescription] = useState('');
-  const [rate, setRate] = useState('');
-  const [count, setCount] = useState(0);
+  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
   const [isExpertise, setIsExpertise] = useState(true);
-  const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
-    label: val,
-    value: val
-  }));
 
   const decrementHandler = () => {
-    if (count > 0) {
-      setCount(count - 1);
+    if (servicesData?.quantity > 0) {
+      setServicesData(servicesData?.quantity - 1);
     }
   };
   return (
@@ -33,13 +24,13 @@ export default function AddLineItemComp() {
         <LabeledTextarea
           styleClass={styles?.inputStyle}
           inputOptions={{
-            inputName: 'summary',
+            inputName: 'description',
             placeholder: 'Line item description (in 60 chars)',
             rows: 3,
             maxLength: 60,
-            value: lineDescription
+            value: servicesData?.description
           }}
-          changeHandler={(e) => setLineDescription(e.target.value)}
+          changeHandler={(e) => changeHandler(e, servicesData, setServicesData)}
         />
       </div>
       <div>
@@ -48,22 +39,28 @@ export default function AddLineItemComp() {
           dropdownOptions={{
             inputName: 'unit',
             placeholder: '/hour',
-            value: lineUnit,
+            value: {
+              label: servicesData?.unit,
+              value: servicesData?.unit
+            },
             options: unit
           }}
-          changeHandler={(val) => setLineUnit(val)}
+          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'unit')}
         />
       </div>
       <div>
         <p className={`${styles.heading}`}>Currency</p>
         <LabeledDropdown
           dropdownOptions={{
-            inputName: 'unit',
+            inputName: 'currency',
             placeholder: 'INR',
-            value: lineCurrency,
+            value: {
+              label: servicesData?.currency,
+              value: servicesData?.currency
+            },
             options: currency
           }}
-          changeHandler={(val) => setLineCurrency(val)}
+          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'currency')}
         />
       </div>
       <div>
@@ -71,25 +68,31 @@ export default function AddLineItemComp() {
         <LabeledInput
           inputOptions={{
             inputName: 'rate',
-            placeholder: '5000',
-            value: rate
+            placeholder: '0000',
+            value: servicesData?.rate
           }}
           inputClass={`${styles.lineInput}`}
-          changeHandler={(e) => setRate(e.target.value)}
+          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'rate')}
         />
       </div>
       <div>
         <p className={`${styles.heading}`}>Quantity</p>
         <div className={`${styles.quantity}`}>
           <span onClick={decrementHandler}>-</span>
-          <p>{count}</p>
-          <span onClick={() => setCount(count + 1)}>+</span>
+          <p>{servicesData?.quantity}</p>
+
+          <span
+            onClick={() =>
+              setServicesData({ ...servicesData, quantity: servicesData?.quantity + 1 })
+            }>
+            +
+          </span>
         </div>
       </div>
       <div>
         <p className={`${styles.heading}`}>Total</p>
         <div className={`${styles.total}`}>
-          <p>1</p>
+          <p>{servicesData?.total}</p>
         </div>
       </div>
     </div>

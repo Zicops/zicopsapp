@@ -792,15 +792,19 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
 
 // VENDOR QUERIES START
 
+// {status: String , service: String}
+
 export const GET_VENDORS_BY_LSP = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       level
       name
+      description
       photo_url
       address
+      users
       website
       facebook_url
       instagram_url
@@ -816,8 +820,8 @@ export const GET_VENDORS_BY_LSP = gql`
 `;
 
 export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       name
