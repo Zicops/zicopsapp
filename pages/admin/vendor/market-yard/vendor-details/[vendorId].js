@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
 import { useRouter } from 'next/router';
 import CoursesVendor from '@/components/VendorComps/CoursesVendor';
-
 import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
@@ -85,13 +84,14 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
+  const vendorId = router.query.vendorId || null; //Change the 1 to null
   // console.info(router.query.vendorId);
 
-  const { getAllProfileInfo } = useHandleVendor();
+  const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
 
   useEffect(() => {
     getAllProfileInfo();
+    getSingleVendorInfo(vendorId);
   }, []);
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
 

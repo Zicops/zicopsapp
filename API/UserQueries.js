@@ -792,6 +792,8 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
 
 // VENDOR QUERIES START
 
+// {status: String , service: String}
+
 export const GET_VENDORS_BY_LSP = gql`
   query getVendors($lsp_id: String, $filters: VendorFilters) {
     getVendors(lsp_id: $lsp_id, filters: $filters) {

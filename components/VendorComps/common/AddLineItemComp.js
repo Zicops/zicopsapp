@@ -69,10 +69,7 @@ export default function AddLineItemComp() {
           inputOptions={{
             inputName: 'rate',
             placeholder: '0000',
-            value: {
-              label: servicesData?.rate,
-              value: servicesData?.rate
-            }
+            value: servicesData?.rate
           }}
           inputClass={`${styles.lineInput}`}
           changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'rate')}
@@ -83,7 +80,13 @@ export default function AddLineItemComp() {
         <div className={`${styles.quantity}`}>
           <span onClick={decrementHandler}>-</span>
           <p>{servicesData?.quantity}</p>
-          <span onClick={() => setServicesData(servicesData?.quantity + 1)}>+</span>
+
+          <span
+            onClick={() =>
+              setServicesData({ ...servicesData, quantity: servicesData?.quantity + 1 })
+            }>
+            +
+          </span>
         </div>
       </div>
       <div>

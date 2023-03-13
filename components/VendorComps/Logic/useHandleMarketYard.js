@@ -29,6 +29,7 @@ export default function useHandleMarketYard() {
   const [orderDetails, setOrderDetails] = useState([]);
   const [servicesDetails, setServicesDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+
   async function getLspVendors(lspId, isDataReturn = false) {
     setLoading(true);
     const vendorList = await loadAndCacheDataAsync(
@@ -37,6 +38,7 @@ export default function useHandleMarketYard() {
       {},
       userQueryClient
     );
+    // filters: { status: 'Active', service: service }
     const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
     if (isDataReturn) {
       setLoading(false);
@@ -45,6 +47,7 @@ export default function useHandleMarketYard() {
     setVendorDetails(_sortedData);
     setLoading(false);
   }
+
   async function getAllOrders(lspId, isDataReturn = false) {
     setLoading(true);
     const orderList = await loadAndCacheDataAsync(
@@ -61,6 +64,7 @@ export default function useHandleMarketYard() {
     setOrderDetails(_sortedData);
     setLoading(false);
   }
+
   async function getOrderServices(orderId, isDataReturn = false) {
     setLoading(true);
     const servicesData = await loadAndCacheDataAsync(
@@ -115,6 +119,7 @@ export default function useHandleMarketYard() {
     return res;
     // }
   }
+
   async function addUpdateServices() {
     const sendData = {
       service_id: servicesData?.service_id || '',
@@ -151,6 +156,7 @@ export default function useHandleMarketYard() {
     return res;
     // }
   }
+
   return {
     getLspVendors,
     vendorDetails,

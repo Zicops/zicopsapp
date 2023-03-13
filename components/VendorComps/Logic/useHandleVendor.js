@@ -239,10 +239,11 @@ export default function useHandleVendor() {
       return { ...data, experience: experience };
     });
     setProfileDetails(sanetizeProfiles);
-    setLoading(true);
+    setLoading(false);
   }
 
   async function getSingleProfileInfo() {
+    setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
       { vendor_id: vendorId, email: profileData?.email },
@@ -250,6 +251,7 @@ export default function useHandleVendor() {
       userQueryClient
     );
     setProfileData(getProfileObject(profileInfo));
+    setLoading(false);
   }
 
   async function getProfileExperience(pfId) {
@@ -774,6 +776,8 @@ export default function useHandleVendor() {
     getSmeDetails,
     getCrtDetails,
     getCdDetails,
+    getAllVendors,
+    getUserVendors,
     addUpdateExperience,
     addSampleFile,
     handleMail,
