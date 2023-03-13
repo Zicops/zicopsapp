@@ -8,14 +8,14 @@ import CreateBreakoutRoom from "./CreateBreakoutRoom";
 import ManageRoom from "./ManageRoom";
 const BreakoutRoom = ({ showHide = false, createRooms }) => {
     const allUserdata = useRecoilValue(vctoolAlluserinfo)
-    const [isModerator, setisModerator] = useState(true)
+    const [isModerator, setIsModerator] = useState(true)
     const userdata = useRecoilValue(UserStateAtom)
     const breakoutRoomlist = useRecoilValue(breakoutList)
     const [title1, settitle] = useState("")
     useEffect(() => {
 
         if ([userData.email].toString().includes("@zicops")) {
-            setisModerator(true)
+            setIsModerator(true)
         }
     })
     function showData(titles) {
@@ -33,7 +33,7 @@ const BreakoutRoom = ({ showHide = false, createRooms }) => {
             settitle("ManageRoom")
         }} 
         />}</>;
-        const arr = showComponent.find(data => data.title === titles)
+        const arr = showComponent.find(data => data?.title === titles)
         return arr.component;
     }
 
@@ -89,11 +89,7 @@ const BreakoutRoom = ({ showHide = false, createRooms }) => {
                         <img src="/images/svg/vctool/close.svg" />
                     </button>
                 </div>
-                <div style={{
-                    width: "296px",
-                    height: "90%",
-                    overflow: "scroll"
-                }} className={`${styles.breakoutRoomscreen}`}>
+                <div className={`${styles.breakoutRoomscreen}`}>
                     {
                         isModerator ? (<>{showData(title1)}</>) : <h1>not moderator</h1>
                     }

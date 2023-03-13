@@ -6,7 +6,7 @@ const ParticipantFrame=({frameName})=>
 {
 
     const [checked,setchecked]=useState(true)
-    var [breakoutRoomselectedparticipantarr,setbreakoutRoomselectedparticipantarr]=useRecoilState(breakoutRoomselectedparticipant)
+    var [breakoutRoomSelectedParticipantArr,setbreakoutRoomSelectedParticipantArr]=useRecoilState(breakoutRoomselectedparticipant)
     return (
         <div className={`${styles.participantFrame}`}>
          <div>
@@ -18,16 +18,16 @@ const ParticipantFrame=({frameName})=>
 
         if(checked)
         {
-            setbreakoutRoomselectedparticipantarr([...breakoutRoomselectedparticipantarr,frameName])
+            setbreakoutRoomSelectedParticipantArr([...breakoutRoomSelectedParticipantArr,frameName])
         }
         else
         {
-            // let datas=breakoutRoomselectedparticipantarr.indexOf(frameName)
-                   breakoutRoomselectedparticipantarr.forEach((data,index)=>
+            // let datas=breakoutRoomSelectedParticipantArr.indexOf(frameName)
+                   breakoutRoomSelectedParticipantArr.forEach((data,index)=>
             {
-                if(breakoutRoomselectedparticipantarr[index]===frameName)
+                if(breakoutRoomSelectedParticipantArr[index]===frameName)
                 {
-                 setbreakoutRoomselectedparticipantarr(breakoutRoomselectedparticipantarr.filter((removeData,removeIndex)=>
+                 setbreakoutRoomSelectedParticipantArr(breakoutRoomSelectedParticipantArr.filter((removeData,removeIndex)=>
                  {
                     return removeIndex!==index
                  }))

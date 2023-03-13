@@ -1,6 +1,6 @@
 @import '../../styles/base.scss';
 
-.main_div {
+.mainCard {
     width: 100vw;
     height: 85vh;
     display: flex;
@@ -9,14 +9,14 @@
     flex-direction: column;
 }
 
-.Vccard {
+.vcCard {
     width: 480px;
     height: 366px;
     border: 1px solid #484848;
     border-radius: 8px;
 }
 
-.video1 {
+.videoPlayer {
     width: 100%;
     height: 270px;
 
@@ -42,11 +42,11 @@
 
 }
 
-#btns_bg1 {
+#btnsBg1 {
     background-color: #202222;
 }
 
-#btns_bg2 {
+#btnsBg2 {
     background-Color: #F53D41;
 }
 
@@ -73,7 +73,7 @@
     cursor: pointer;
 }
 
-.join_btn {
+.joinBtn {
     width: 100%;
     display: flex;
     justify-content: right;
@@ -81,7 +81,7 @@
     padding-right: 10px;
 }
 
-.join_btn>button {
+.joinBtn>button {
     width: 81px;
     height: 48px;
     border-radius: 3rem;
@@ -169,7 +169,7 @@
     width: 100vw;
 }
 
-.toolBarfooter {
+.toolBarFooter {
     // opacity: 0;
     transition: opacity 1s;
     position: absolute;
@@ -288,7 +288,7 @@
     background-color: #1A1D21;
 }
 
-.chatbar_head {
+.chatbarHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -305,13 +305,13 @@
     padding-bottom: 20px;
 }
 
-.chatbar_head>button {
+.chatbarHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.chatbar_Screen {
+.chatbarScreen {
     width: 300px;
     height: 72%;
     overflow: scroll;
@@ -319,11 +319,11 @@
     border-bottom: 1px solid #292F2F;
 }
 
-.chatbar_Screen::-webkit-scrollbar {
+.chatbarScreen::-webkit-scrollbar {
     display: none;
 }
 
-.chatbar_input {
+.chatbarInput {
     margin-top: 20px;
     height: 15%;
     width: 300px;
@@ -335,7 +335,7 @@
     flex-direction: column;
 }
 
-.chatbar_input>input {
+.chatbarInput>input {
     width: 270px;
     font-size: 16px;
     height: 24px;
@@ -346,13 +346,13 @@
 
 }
 
-.chatsendfile {
+.chatSendFile {
     width: 276px;
     display: flex;
     justify-content: space-between;
 }
 
-.chatsendfile>input {
+.chatSendFile>input {
     color: white;
     background-color: #1A1D21;
     outline: none;
@@ -375,7 +375,7 @@
     background-color: #1A1D21;
 }
 
-.qaBarhead {
+.qaBarHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -392,24 +392,24 @@
     padding-bottom: 20px;
 }
 
-.qaBarhead>button {
+.qaBarHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.qaBarscreen {
+.qaBarScreen {
     width: 300px;
     height: 75%;
     overflow: scroll;
     // padding-bottom: 20px;
 }
 
-.qaBarscreen::-webkit-scrollbar {
+.qaBarScreen::-webkit-scrollbar {
     display: none;
 }
 
-.qaBarinput {
+.qaBarInput {
     // margin-top: 20px;
     height: 15%;
     width: 300px;
@@ -421,7 +421,7 @@
     flex-direction: column;
 }
 
-.qaBarinput>input {
+.qaBarInput>input {
     width: 270px;
     font-size: 16px;
     height: 20px;
@@ -432,13 +432,13 @@
 
 }
 
-.qaSendfile {
+.qaSendFile {
     width: 276px;
     display: flex;
     justify-content: space-between;
 }
 
-.qaSendfile>input {
+.qaSendFile>input {
     color: white;
     background-color: #1A1D21;
     outline: none;
@@ -448,7 +448,14 @@
 .qaBtn>input> ::placeholder {
     color: #747474;
 }
-
+.qabarBtnContainer
+{
+    height: 86px;
+    width: 300px;
+    display: flex;
+    justify-content: right;
+    margin-top: 55px;
+}
 .qaBtn {
     width: 161px;
     height: 48px;
@@ -680,7 +687,12 @@
     outline: none;
     border: none;
 }
-
+.breakoutRoomscreen
+{
+    width: 296px;
+    height: 90%;
+    overflow:scrol;
+}
 .breakoutRoomscreen::-webkit-scrollbar {
     display: none;
 }
@@ -693,6 +705,16 @@
     width: 276px;
     height: 90%;
 }
+.breakouRoomIcon
+{
+    width: 40px;
+    height: 40px;
+    border: solid #292F2F 1px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
 
 .moderatorAddroom {
     width: 296px;
@@ -703,7 +725,7 @@
     flex-direction: column;
 }
 
-.moderatorAddroom>div {
+.breakoutRoomAvailableHead {
     width: 276px;
     height: 28px;
     font-family: 'Poppins';
@@ -739,13 +761,13 @@
     line-height: 24px;
 }
 
-.breakoutRoomdetails {
+.breakoutRoomDetails {
     width: 296px;
     height: 90%;
     padding-top: 10px;
 }
 
-.breakoutRoomdetailshead {
+.breakoutRoomDetailsHead {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -936,14 +958,14 @@
     display: none;
 }
 
-.breakoutRoomcard {
+.breakoutRoomCard {
     width: 296px;
     height: 40px;
     display: flex;
     margin-top: 5px;
 }
 
-.breakoutRoomcardleft {
+.breakoutRoomCardLeft {
     display: flex;
     width: 70%;
     justify-content: left;
@@ -951,7 +973,7 @@
     color: white;
 }
 
-.breakoutRoomcardleftheading {
+.breakoutRoomCardLeftHeading {
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -961,7 +983,7 @@
     color: #FFFFFF;
 }
 
-.breakoutRoomcardicon {
+.breakoutRoomCardIcon {
     width: 40px;
     height: 40px;
     border-radius: 3px;
@@ -971,14 +993,14 @@
     align-items: center;
 }
 
-.breakoutRoomcardright {
+.breakoutRoomCardRight {
     width: 30%;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-.breakoutRoomcardright>button {
+.breakoutRoomCardRight>button {
     outline: none;
     background-color: transparent;
     border: none;
@@ -1028,24 +1050,24 @@
     height: 40px;
 }
 
-.breakoutRoomparticipantheading {
+.breakoutRoomParticipantHeading {
     font-weight: 400;
     font-size: 14px;
     line-height: 24px;
     color: #ACACAC;
 }
 
-.breakoutRoomparticipantscreen {
+.breakoutRoomParticipantScreen {
     width: 296px;
     height: 30vh;
     overflow: scroll;
 }
 
-.breakoutRoomparticipantscreen::-webkit-scrollbar {
+.breakoutRoomParticipantScreen::-webkit-scrollbar {
     display: none;
 }
 
-.addParticipantpopup {
+.addParticipantPopup {
     height: 482px;
     width: 510px;
     position: absolute;
@@ -1056,7 +1078,7 @@
     background: #1A1D21;
 }
 
-.addParticipantpopuphead {
+.addParticipantPopupHead {
     color: white;
     font-weight: 500;
     font-size: 20px;
@@ -1067,7 +1089,7 @@
     border-bottom: 1px solid #292F2F;
 }
 
-.addParticipantsubhead {
+.addParticipantSubHead {
     width: 440px;
     display: flex;
     color: #ACACAC;
@@ -1077,11 +1099,11 @@
     margin: auto;
 }
 
-.addParticipantsubhead>div {
+.addParticipantSubHead>div {
     width: 90%;
 }
 
-.addParticipantpopupscreen {
+.addParticipantPopupScreen {
     width: 440px;
     height: 65%;
     margin: auto;
@@ -1090,7 +1112,7 @@
     border-bottom: 1px solid #292F2F;
     overflow: scroll;
 }
-.addParticipantpopupscreen::-webkit-scrollbar
+.addParticipantPopupScreen::-webkit-scrollbar
 {
     display: none;
 }
@@ -1221,7 +1243,7 @@
     font-size: 14px;
     line-height: 24px;
     color: #ACACAC;
-    box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
 }
 
 //styling about page
@@ -1235,7 +1257,23 @@
     right: 0;
     background-color: #1A1D21;
 }
-
+.aboutScreenHeading
+{
+    margin-top: 15px;
+    padding-top: 10px;
+    width: 276px;
+    height: 56px;
+    font-size: 18xp;
+    line-height: 28px;
+    color: white;
+}
+.aboutScreenSessionHead
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    font-size: 14px;
+}
 .aboutHead {
     padding-top: 20px;
     width: 296px;
@@ -1286,11 +1324,11 @@
     font-size: 14px;
 }
 
-.aboutscreen {
+.aboutScreen {
     height: 88%;
 }
 
-.aboutmeetinginfo {
+.aboutMeetingInfo {
     display: flex;
     width: 276px;
     justify-content: baseline;
@@ -1300,7 +1338,7 @@
     padding-bottom: 10px;
 }
 
-.aboutmeetinglogo {
+.aboutMeetingLogo {
     height: 40px;
     width: 40px;
     border: solid #292F2F 1px;
@@ -1309,7 +1347,7 @@
     align-items: center;
 }
 
-.aboutmeetinglogo>img {
+.aboutMeetingLogo>img {
     height: 20px;
     width: 22.1px;
 }
@@ -1327,7 +1365,12 @@
     // height: 88vh;
 
 }
-
+.quizeAttemtpsHead
+{
+    padding-top: 12px;
+    color: #ACACAC;
+    font-size: 14px;
+}
 .quizScreen {
     overflow: scroll;
     height: 90%;

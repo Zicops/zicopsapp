@@ -265,7 +265,7 @@ const MainToolbar = ({
           {getClickedComponent(participantPopuppanel.roomId)}</>
       </div>
 
-      <div className={`${styles.toolBarfooter}`}
+      <div className={`${styles.toolBarFooter}`}
         id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
           setfade1(true);
         }}>

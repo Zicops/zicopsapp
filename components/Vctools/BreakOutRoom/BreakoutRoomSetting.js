@@ -4,19 +4,20 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
 const BreakoutRoomSetting = ({cancelRoom,listTheroom}) => {
     const totalRoom=useRecoilValue(totalRoomno)
-    const [totalRooms, settotalRooma] = useRecoilState(totalRoomno)
+    const [totalRooms, setTotalRooms] = useRecoilState(totalRoomno)
     const reduce = () => {
         if (totalRooms > 1) {
-            settotalRooma(totalRooms - 1)
+            setTotalRooms(totalRooms - 1)
         }
     }
     const add = () => {
-        settotalRooma(totalRooms+1)
+        setTotalRooms(totalRooms+1)
     }
+    // /setTotalRooms
     return (
         <>
-            <div className={`${styles.breakoutRoomdetails}`}>
-                <div className={`${styles.breakoutRoomdetailshead}`}>CREATE ROOMS</div>
+            <div className={`${styles.breakoutRoomDetails}`}>
+                <div className={`${styles.breakoutRoomDetailsHead}`}>CREATE ROOMS</div>
 
                 <div className={`${styles.breakoutRoominputbox}`}>
                     <label className={`${styles.breakoutLable}`}>Number of rooms :</label>
