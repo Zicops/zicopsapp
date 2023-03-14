@@ -77,6 +77,7 @@ export default function VendorMaster() {
             inputName: 'name',
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
+            maxLength: 60,
             value: vendorData?.name,
             isDisabled: vendorData?.vendorId
           }}
@@ -91,6 +92,7 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'address',
               placeholder: 'Enter Vendor Address',
+              maxLength: 160,
               value: vendorData?.address
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -119,6 +121,7 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'website',
               placeholder: 'https://website_abc.com',
+              maxLength: 60,
               value: vendorData?.website
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -146,6 +149,7 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
+            maxLength: 160,
             value: vendorData?.description
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}

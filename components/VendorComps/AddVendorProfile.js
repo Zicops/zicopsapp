@@ -55,6 +55,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
+              maxLength: 60,
               value: profileData.firstName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
@@ -66,6 +67,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
+              maxLength: 60,
               value: profileData.lastName
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
@@ -89,6 +91,8 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
+              maxLength: 12,
+              isNumericOnly: true,
               value: profileData.contactNumber
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
