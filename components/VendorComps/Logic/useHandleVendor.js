@@ -222,7 +222,8 @@ export default function useHandleVendor() {
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
       linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
-      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url
+      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url,
+      vendorProfileImageUrl: vendorInfo?.getVendorDetails?.photo_url
     };
     setVendorData(getVendorObject(singleData));
   }
@@ -374,186 +375,6 @@ export default function useHandleVendor() {
     setCDData(getCDServicesObject(cdDetails));
   }
 
-  // async function addUpdateVendor() {
-  //   const sendData = {
-  //     name: vendorData?.name?.trim() || '',
-  //     level: vendorData?.level?.trim() || '',
-  //     type: vendorData?.type?.trim() || '',
-  //     photo: vendorData?.vendorProfileImage || null,
-  //     address: vendorData?.address?.trim() || '',
-  //     website: vendorData?.website?.trim() || '',
-  //     facebook_url: vendorData?.facebookURL?.trim() || '',
-  //     instagram_url: vendorData?.instagramURL?.trim() || '',
-  //     twitter_url: vendorData?.twitterURL?.trim() || '',
-  //     linkedin_url: vendorData?.linkedinURL?.trim() || '',
-  //     users: vendorData?.users || [],
-  //     description: vendorData?.description?.trim() || '',
-  //     status: VENDOR_MASTER_STATUS.active
-  //   };
-
-  //   let uniqEmails = [...new Set(vendorData?.users)];
-  //   sendData.users = uniqEmails;
-  //   let isError = false;
-  //   if (vendorData?.vendorId) {
-  //     sendData.vendorId = vendorData?.vendorId;
-
-  //     await updateVendor({
-  //       variables: sendData,
-  //       update: (_, { data }) => {
-  //         handleCacheUpdate(
-  //           GET_VENDOR_DETAILS,
-  //           { vendor_id: vendorId },
-  //           (cachedData) => {
-  //             const _cachedData = structuredClone(cachedData?.getVendorDetails);
-  //             const _updatedCache = _cachedData?.map((vendor) => {
-  //               const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
-  //               if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
-
-  //               return vendor;
-  //             });
-
-  //             return { getVendorDetails: _updatedCache };
-  //           },
-  //           userQueryClient
-  //         );
-  //       }
-  //     }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
-  //     });
-
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'Vendor Updated' });
-  //     return;
-  //   }
-  //   if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
-  //     const res = await addNewVendor({
-  //       variables: sendData,
-  //       update: (_, { data }) => {
-  //         handleCacheUpdate(
-  //           GET_VENDOR_DETAILS,
-  //           { vendor_id: vendorId },
-  //           (cachedData) => {
-  //             const _cachedData = structuredClone(cachedData?.getVendorDetails);
-  //             const _updatedCache = data?.addVendor?.[0]
-  //               ? [data?.addVendor?.[0], ..._cachedData]
-  //               : _cachedData;
-
-  //             return { getVendorDetails: _updatedCache };
-  //           },
-  //           userQueryClient
-  //         );
-  //       }
-  //     }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
-  //     });
-  //     if (isError) return;
-
-  //     const _id = res.data.addVendor.vendorId;
-  //     router.push(`/admin/vendor/manage-vendor/add-vendor/${_id}`);
-  //     return res;
-  //   }
-  // }
-
-  // async function addUpdateProfile() {
-  //   const sendData = {
-  //     vendor_id: vendorId || '',
-  //     first_name: profileData?.firstName?.trim() || '',
-  //     last_name: profileData?.lastName?.trim() || '',
-  //     email: profileData?.email?.trim() || '',
-  //     phone: profileData?.contactNumber.trim() || '',
-  //     photo: profileData?.profileImage || null,
-  //     description: profileData?.description.trim() || '',
-  //     languages: profileData?.languages || [],
-  //     SME_expertise: profileData?.sme_expertises || [],
-  //     Classroom_expertise: profileData?.crt_expertises || [],
-  //     content_development: profileData?.content_development || [],
-  //     experience:
-  //       profileData?.experience?.map((exp) =>
-  //         typeof exp === 'string' ? exp : exp?.title + '@' + exp?.company_name
-  //       ) || [],
-  //     experienceYear: profileData?.experienceYear,
-  //     is_speaker: profileData?.isSpeaker || false,
-  //     status: VENDOR_MASTER_STATUS.active,
-  //     sme: true,
-  //     crt: false,
-  //     cd: false
-  //   };
-  //   if (typeof sendData?.photo === 'string') sendData.photo = null;
-
-  //   let isError = false;
-
-  //   if (profileData?.profileId) {
-  //     sendData.profileId = profileData?.profileId;
-
-  //     await updateProfileVendor({
-  //       variables: sendData,
-  //       update: (_, { data }) => {
-  //         handleCacheUpdate(
-  //           GET_SINGLE_PROFILE_DETAILS,
-  //           { vendor_id: vendorId, email: profileData?.email },
-  //           (cachedData) => {
-  //             const _cachedData = structuredClone(cachedData?.viewProfileVendorDetails);
-  //             const _updatedCache = _cachedData?.map((vendor) => {
-  //               const isCurrentVendorProfile =
-  //                 vendor?.profileId === data?.updateProfileVendor?.profileId;
-  //               if (isCurrentVendorProfile) return { ...vendor, ...data?.updateProfileVendor };
-
-  //               return vendor;
-  //             });
-
-  //             return { viewProfileVendorDetails: _updatedCache };
-  //           },
-  //           userQueryClient
-  //         );
-  //       }
-  //     }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
-  //     });
-
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
-  //     return;
-  //   }
-  //   if (
-  //     profileData?.firstName &&
-  //     profileData?.lastName &&
-  //     profileData?.email &&
-  //     profileData?.experienceYear
-  //   ) {
-  //     const res = await createProfileVendor({
-  //       variables: sendData,
-  //       update: (_, { data }) => {
-  //         handleCacheUpdate(
-  //           GET_SINGLE_PROFILE_DETAILS,
-  //           { vendor_id: vendorId, email: profileData?.email },
-  //           (cachedData) => {
-  //             const _cachedData = structuredClone(cachedData?.viewProfileVendorDetails);
-  //             const _updatedCache = data?.createProfileVendor?.[0]
-  //               ? [data?.createProfileVendor?.[0], ..._cachedData]
-  //               : _cachedData;
-
-  //             return { viewProfileVendorDetails: _updatedCache };
-  //           },
-  //           userQueryClient
-  //         );
-  //       }
-  //     }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Add profile Error' });
-  //     });
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
-  //     return res;
-  //   }
-  // }
-
   async function addUpdateExperience() {
     let isError = false;
     for (let i = 0; i < profileData?.experience?.length; i++) {
@@ -625,123 +446,6 @@ export default function useHandleVendor() {
     return res;
   }
 
-  // async function addUpdateSme() {
-  //   const sendData = {
-  //     vendor_id: vendorId,
-  //     description: smeData?.serviceDescription || '',
-  //     is_applicable: smeData?.isApplicableSME || false,
-  //     expertise: smeData?.expertises || [],
-  //     languages: smeData?.languages || [],
-  //     output_deliveries: smeData?.formats || [],
-  //     sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-  //     Status: VENDOR_MASTER_STATUS.active
-  //   };
-
-  //   let isError = false;
-  //   if (smeData?.sme_id) {
-  //     sendData.sme_id = smeData?.sme_id;
-
-  //     await updateSme({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update SME Error' });
-  //     });
-
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'SME Updated' });
-  //     return;
-  //   }
-  //   if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
-  //     const res = await createSme({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Add SME Error' });
-  //     });
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'SME Created' });
-  //     return res;
-  //   }
-  // }
-
-  // async function addUpdateCrt() {
-  //   const sendData = {
-  //     vendor_id: vendorId,
-  //     description: ctData?.serviceDescription || '',
-  //     is_applicable: ctData?.isApplicableCT || false,
-  //     expertise: ctData?.expertises || [],
-  //     languages: ctData?.languages || [],
-  //     output_deliveries: ctData?.formats || [],
-  //     sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-  //     Status: VENDOR_MASTER_STATUS.active
-  //   };
-
-  //   let isError = false;
-
-  //   if (ctData?.crt_id) {
-  //     sendData.crt_id = ctData?.crt_id;
-
-  //     await updateCrt({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update CRT Error' });
-  //     });
-
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'CRT Updated' });
-  //     return;
-  //   }
-  //   if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
-  //     const res = await createCrt({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
-  //     });
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'CRT Created' });
-  //     return res;
-  //   }
-  // }
-
-  // async function addUpdateCd() {
-  //   const sendData = {
-  //     vendor_id: vendorId,
-  //     description: cdData?.serviceDescription || '',
-  //     is_applicable: cdData?.isApplicableCD || false,
-  //     expertise: cdData?.expertises || [],
-  //     languages: cdData?.languages || [],
-  //     output_deliveries: cdData?.formats || [],
-  //     sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-  //     Status: VENDOR_MASTER_STATUS.active
-  //   };
-  //   if (typeof sendData?.photo === 'string') sendData.photo = null;
-
-  //   let isError = false;
-
-  //   if (cdData?.cd_id) {
-  //     sendData.cd_id = cdData?.cd_id;
-
-  //     await updateCd({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'Update CD Error' });
-  //     });
-
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'CD Updated' });
-  //     return;
-  //   }
-  //   if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {
-  //     const res = await createCd({ variables: sendData }).catch((err) => {
-  //       console.log(err);
-  //       isError = !!err;
-  //       return setToastMsg({ type: 'danger', message: 'CD Created Error' });
-  //     });
-  //     if (isError) return;
-  //     setToastMsg({ type: 'success', message: 'CD Created' });
-  //     return res;
-  //   }
-  // }
-
   async function deleteSample(sfid, pType) {
     const sendData = {
       vendor_id: vendorId,
@@ -761,10 +465,10 @@ export default function useHandleVendor() {
     return res;
   }
 
-  async function disableVendor(vendorTableData, onSuccess = () => {}) {
+  async function disableVendor(vendorTableData, isEnabled, onSuccess = () => {}) {
     const sendData = {
       ...vendorTableData,
-      status: VENDOR_MASTER_STATUS.disable
+      status: isEnabled ? VENDOR_MASTER_STATUS.disable : VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
@@ -791,8 +495,12 @@ export default function useHandleVendor() {
       }
     }).catch((err) => console.info('Error'));
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Vendor Disabled' });
+
     onSuccess();
+
+    let msg = isEnabled ? 'Vendor Disabled' : 'Vendor Activated';
+    setToastMsg({ type: 'success', message: msg });
+
     return res;
   }
 

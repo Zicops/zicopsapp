@@ -103,7 +103,7 @@ export default function VendorMaster() {
           <label for="vendorName">Update vendor profile image: </label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title={vendorData?.vendorProfileImage?.name || 'Drag & Drop'}
+            title={vendorData?.vendorProfileImage?.name || 'Drag & Drop'} //image name is not setting here because we are getting an url
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilValue } from 'recoil';
+import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { manageVendorTabData } from './Logic/vendorComps.helper';
 import useHandleVendorMaster from './Logic/useHandleVendorMaster';
 import useHandleVendor from './Logic/useHandleVendor';
@@ -12,9 +12,10 @@ import Button from '../CustomVideoPlayer/Button';
 
 export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
+  const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   const { handleMail } = useHandleVendor();
-  const { addUpdateVendor } = useHandleVendorMaster();
+  const { addUpdateVendor, loading } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const { getSingleVendorInfo, getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
@@ -24,7 +25,7 @@ export default function ManageVendorTabs() {
   const isViewPage = router.asPath?.includes('view-vendor');
 
   useEffect(() => {
-    if (!vendorId) return;
+    if (!vendorId) return setEmailId([]);
     getSingleVendorInfo();
     getSmeDetails();
     getCrtDetails();
@@ -51,7 +52,7 @@ export default function ManageVendorTabs() {
           addUpdateCd(tab === tabData[1].name);
         },
         status: vendorData?.status?.toUpperCase(),
-        disableSubmit: isViewPage,
+        disableSubmit: isViewPage || loading,
         handleCancel: () => router.push('/admin/vendor/manage-vendor')
       }}
       customStyles={['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}}>

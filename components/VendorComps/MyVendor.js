@@ -1,6 +1,6 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
-import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
+import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper.js';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
@@ -26,6 +26,9 @@ const MyVendor = () => {
 
   const pageSize = 100;
 
+  const [disabledVendors, setDisabledVendors] = useState([]);
+  const [enabledVendors, setEnabledVendors] = useState([]);
+
   useEffect(() => {
     if (!vendorDetails?.length) {
       // getAllVendors();
@@ -34,6 +37,20 @@ const MyVendor = () => {
       getPaginatedVendors(pageSize).then((data) => setVendorTableData(data));
     }
   }, []);
+
+  // useEffect(() => {
+  //   console.info(disabledVendors, enabledVendors);
+  // }, [disabledVendors, enabledVendors]);
+
+  const onSuccess = (params, isEnabled) => {
+    let updatedList = structuredClone(disabledVendors);
+    if (params.row.status.toLowerCase() === VENDOR_MASTER_STATUS.disable) {
+      setDisabledVendors([...updatedList, params.row.vendorId]);
+    } else {
+      const notDisabledVendor = updatedList.filter((vendorId) => vendorId !== params.row.vendorId);
+      setDisabledVendors(notDisabledVendor);
+    }
+  };
 
   const columns = [
     {
@@ -58,7 +75,17 @@ const MyVendor = () => {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => {
+        let isEnabled = params?.row?.status?.toLowerCase() === VENDOR_MASTER_STATUS?.active;
+        if (disabledVendors.includes(params?.row?.vendorId)) isEnabled = false;
+
+        // if (enabledVendors.includes(params?.row?.vendorId)) isEnabled = true;
+
+        const statusText = isEnabled ? 'Active' : 'Disable';
+
+        return <>{statusText}</>;
+      }
     },
     {
       field: 'action',
@@ -66,6 +93,13 @@ const MyVendor = () => {
       headerName: 'Action',
       flex: 0.5,
       renderCell: (params) => {
+        let isEnabled = params?.row?.status?.toLowerCase() === VENDOR_MASTER_STATUS?.active;
+        if (disabledVendors.includes(params?.row?.vendorId)) isEnabled = false;
+
+        // if (enabledVendors.includes(params?.row?.vendorId)) isEnabled = true;
+
+        const btnText = isEnabled ? 'Disable' : 'Enable';
+
         const buttonArr = [
           {
             text: 'View',
@@ -76,14 +110,10 @@ const MyVendor = () => {
             handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
-            text: 'Disable',
-            handleClick: () => disableVendor(params.row, () => {})
+            text: btnText,
+            handleClick: () => disableVendor(params.row, isEnabled, onSuccess(params, isEnabled))
           }
         ];
-
-        // if(params?.row?.role?.toLowerCase() === 'learner'){
-        //   buttonArr.push({text:'Demote Admin', handleClick:()=>{setIsMakeAdminAlert(true),updateUserRole(params?.row)}})
-        // }
         return (
           <>
             <EllipsisMenu buttonArr={buttonArr} />
