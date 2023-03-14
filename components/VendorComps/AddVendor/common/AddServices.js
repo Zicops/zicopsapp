@@ -144,6 +144,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               inputOptions={{
                 inputName: 'serviceDescription',
                 placeholder: 'Describe your service in 160 characters',
+                maxLength: 160,
                 value: data.serviceDescription
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}

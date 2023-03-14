@@ -71,7 +71,13 @@ export default function useHandleVendorMaster() {
       if (displayToaster) setToastMsg({ type: 'success', message: 'Vendor Updated' });
       return;
     }
-    if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
+    if (
+      vendorData?.name &&
+      vendorData?.level &&
+      vendorData?.type &&
+      vendorData?.address &&
+      vendorData?.website
+    ) {
       const res = await addNewVendor({
         variables: sendData,
         update: (_, { data }) => {
@@ -95,7 +101,7 @@ export default function useHandleVendorMaster() {
         return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
       });
       if (isError) return;
-
+      setToastMsg({ type: 'success', message: 'Added vendor successfully' });
       const _id = res.data.addVendor.vendorId;
       router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
       return res;
