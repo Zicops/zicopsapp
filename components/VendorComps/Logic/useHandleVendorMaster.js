@@ -18,7 +18,7 @@ export default function useHandleVendorMaster() {
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
-  async function addUpdateVendor() {
+  async function addUpdateVendor(displayToaster = true) {
     const sendData = {
       name: vendorData?.name?.trim() || '',
       level: vendorData?.level?.trim() || '',
@@ -68,7 +68,7 @@ export default function useHandleVendorMaster() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Vendor Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Vendor Updated' });
       return;
     }
     if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {

@@ -42,13 +42,13 @@ export default function ManageVendorTabs() {
       setTab={setTab}
       footerObj={{
         showFooter: true,
-        submitDisplay: vendorData.vendorId ? 'Update' : 'Add',
+        submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
         handleSubmit: () => {
-          addUpdateVendor();
-          handleMail();
-          addUpdateSme();
-          addUpdateCrt();
-          addUpdateCd();
+          addUpdateVendor(tab === tabData[0].name);
+          handleMail(tab === tabData[0].name);
+          addUpdateSme(tab === tabData[1].name);
+          addUpdateCrt(tab === tabData[1].name);
+          addUpdateCd(tab === tabData[1].name);
         },
         status: vendorData?.status?.toUpperCase(),
         disableSubmit: isViewPage,

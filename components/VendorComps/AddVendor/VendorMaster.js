@@ -72,7 +72,8 @@ export default function VendorMaster() {
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
             value: vendorData?.name,
-            isDisabled: vendorData?.vendorId
+            isDisabled: vendorData?.vendorId,
+            maxLength: 60
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}

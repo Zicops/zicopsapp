@@ -54,7 +54,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SME Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
@@ -93,7 +93,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CRT Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
@@ -133,7 +133,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CD Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {
