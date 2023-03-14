@@ -16,14 +16,14 @@ export default function AdminCourseTabs() {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const courseCurrentState = useRecoilValue(CourseCurrentStateAtom);
   const router = useRouter();
-  const courseId = router.query.courseId;
+  const courseId = router.query.courseId || null;
 
   const { activeCourseTab, setActiveCourseTab, saveCourseMeta } = useSaveCourseData();
   const { isDataPresent } = useHandleCourseData();
 
   const tabData = Object.keys(courseTabs).map((key) => ({
     name: courseTabs[key].name,
-    component: courseMetaData?.id !== courseId ? <Spinner /> : courseTabs[key].component
+    component: !!courseId && courseMetaData.id !== courseId ? <Spinner /> : courseTabs[key].component
   }));
 
   function getTabFooterObj() {

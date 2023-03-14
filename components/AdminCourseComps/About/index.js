@@ -4,9 +4,11 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RTE from '@/components/common/FormComponents/RTE';
-import styles from "../adminCourse.module.scss"
+// import styles from "../adminCourse.module.scss"
+import styles from '../adminCourseComps.module.scss';
 import InputDatePicker from '@/common/InputDatePicker';
 import { useState } from 'react';
+import NextBtn from '../NextBtn';
 
 const About = () => {
     // const listModerator = ["internal", "Externar"]
@@ -38,8 +40,8 @@ const About = () => {
     return (
         <>
             <div className={`${styles.aboutHead}`}>Course overview</div>
-            <div className={`${styles.aboutInputTrainerModerator}`}>
-                <div className={`${styles.aboutTrainer1}`}>
+            <div className={`${styles.aboutInputTrainerModerator} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+                <div className={`${styles.aboutTrainer}`}>
                     <lable>Trainer :</lable>
                     <LabeledDropdown
                         dropdownOptions={{
@@ -59,8 +61,8 @@ const About = () => {
                         <label>To be Decided</label>
                     </div>
                 </div>
-                <div>
-                    <div className={`${styles.aboutTrainer2}`}>
+                <div className={`${styles.aboutModerator}`}>
+                    <div className={`${styles.aboutTrainerType}` }>
                         <lable>Moderator :</lable>
                         <div className={`${styles.moderatorDropdown}`}>
                             <div>{typeMOderator}</div>
@@ -91,7 +93,7 @@ const About = () => {
                 </div>
             </div>
 
-            <div className={`${styles.aboutDatePicker}`}>
+            <div className={`${styles.aboutDatePicker} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <div>
                     <label>Course Start date :</label>
                     <InputDatePicker
@@ -156,7 +158,7 @@ const About = () => {
             </div>
 
 
-            <div className={`${styles.totalDurationLable}`}>
+            <div className={`${styles.totalDurationLable} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <div>
                     <label className={`${styles.durationLabel}`}>Total Duration :</label>
                     <LabeledInput
@@ -191,7 +193,7 @@ const About = () => {
 
 
             <div className={`${styles.courseDiscription}`}>
-                <label>Course discription :</label>
+                <p>Course discription :</p>
 
                 <LabeledTextarea
                     inputOptions={{
@@ -206,7 +208,7 @@ const About = () => {
             </div>
 
             <div className={`${styles.courseOutcome}`}>
-                <label>Course Outcomes :</label>
+                <p>Course Outcomes :</p>
                 <LabeledInput
                     inputOptions={{
                         inputName: 'name',
@@ -235,9 +237,9 @@ const About = () => {
                 />
             </div>
 
-            <div className={`${styles.aboutInputContainer}`}>
+            <div className={`${styles.aboutInputContainer} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <div>
-                    <label>Pre-requisites:</label>
+                    <p>Pre-requisites:</p>
                     <LabeledInput
                         inputOptions={{
                             inputName: 'name',
@@ -251,7 +253,7 @@ const About = () => {
                     />
                 </div>
                 <div>
-                    <label>Related skills:</label>
+                    <p>Related skills:</p>
                     <LabeledInput
                         inputOptions={{
                             inputName: 'name',
@@ -266,9 +268,9 @@ const About = () => {
                 </div>
             </div>
 
-            <div className={`${styles.aboutInputContainer}`}>
+            <div className={`${styles.aboutInputContainer} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <div>
-                    <label>Good for:</label>
+                    <p>Good for:</p>
                     <LabeledInput
                         inputOptions={{
                             inputName: 'name',
@@ -282,7 +284,7 @@ const About = () => {
                     />
                 </div>
                 <div>
-                    <label>Good for:</label>
+                    <p>Good for:</p>
                     <LabeledInput
                         inputOptions={{
                             inputName: 'name',
@@ -298,8 +300,9 @@ const About = () => {
             </div>
 
             <div className={`${styles.aboutCurriculum}`}>
-                <label>Curriculum:</label>
-                <RTE
+               <div>
+               <p>Curriculum:</p>
+               <RTE
                     changeHandler={(e) => {
                         // if (examId && examTabData?.id !== examId) return;
                         // if (!examId && examTabData?.id) return;
@@ -309,11 +312,11 @@ const About = () => {
 
                     placeholder="Enter instructions in less than 300 characters."
                 // value={examTabData?.instructions}
+
                 />
+               </div>
             </div>
-            <div className={`${styles.aboutNextBtn}`}>
-                <button>Next</button>
-            </div>
+            <NextBtn />
         </>
     )
 };
