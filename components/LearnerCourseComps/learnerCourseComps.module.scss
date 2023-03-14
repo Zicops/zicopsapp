@@ -341,9 +341,10 @@ $heroSectionPadding: 2em;
 
 .boxContainer {
   color: $white;
-  padding: 0.1em;
+  padding: 0.2em;
 
   height: 10em;
+  width: 18em;
 
   overflow: hidden auto;
   background-color: rgba($bgContent, 0.6);
@@ -356,8 +357,6 @@ $heroSectionPadding: 2em;
   &.subtitleBox {
     display: grid;
     grid-template-columns: 1fr 1fr;
-
-    width: 18em;
 
     > div {
       width: 100%;
@@ -416,22 +415,26 @@ $heroSectionPadding: 2em;
     }
   }
 
-  .resourceBtn {
-    margin: 0.3em;
-    padding: 5px 10px;
+  &.resourceBox {
+    width: fit-content;
 
-    width: 18em;
-    font-size: 13px;
+    .resourceBtn {
+      margin: 0.2em 0;
+      padding: 5px 10px;
 
-    background-color: transparent;
-    border: 1px solid $primary;
-    color: $primary;
+      width: 18em;
+      font-size: 14px;
 
-    cursor: pointer;
+      background-color: transparent;
+      border: 1px solid $primary;
+      color: $primary;
 
-    &:hover {
-      background-color: $primary;
-      color: $bgContent;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $primary;
+        color: $bgContent;
+      }
     }
   }
 }

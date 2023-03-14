@@ -18,7 +18,7 @@ export default function ResourcesList() {
 
   return (
     <>
-      <div className={`${styles.boxContainer}`}>
+      <div className={`${styles.boxContainer} ${styles.resourceBox}`}>
         <section className="h-95">
           {!!filteredResources?.length ? (
             filteredResources?.map((resource) => (

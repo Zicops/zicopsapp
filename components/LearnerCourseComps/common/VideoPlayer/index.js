@@ -11,6 +11,7 @@ export default function VideoPlayer({
   videoData = {
     src: '',
     isAutoPlay: true,
+    pauseVideo: null,
     isSubtitleShown: false,
     subtitleUrl: null,
     startFrom: 0,
@@ -18,6 +19,7 @@ export default function VideoPlayer({
     handlePreviousClick: null,
   },
   containerRef,
+  getVideoData = () => {},
 }) {
   const {
     videoRef,
@@ -32,7 +34,7 @@ export default function VideoPlayer({
     toggleMute,
     handleVolume,
     isBuffering,
-  } = useHandleVideo(videoData, containerRef);
+  } = useHandleVideo(videoData, containerRef, getVideoData);
 
   if (!videoData?.src) return <div className={`${styles.noVideoPresent}`}>No Video URL Found</div>;
 

@@ -10,7 +10,11 @@ import {
   videoStateChangeList,
 } from './videoPlayer.helper';
 
-export default function useHandleVideo(videoData = {}, containerRef = null) {
+export default function useHandleVideo(
+  videoData = {},
+  containerRef = null,
+  getVideoData = () => {},
+) {
   const [playerState, dispatch] = useReducer(playerStateReducer, getPlayerState());
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -18,6 +22,10 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
   const [isBuffering, setIsBuffering] = useState(false);
 
   const [videoStateChange, setVideoStateChange] = useRecoilState(VideoStateChangeAtom);
+
+  useEffect(() => {
+    getVideoData(playerState);
+  }, [playerState]);
 
   // initial video load setup
   useEffect(() => {
@@ -89,6 +97,13 @@ export default function useHandleVideo(videoData = {}, containerRef = null) {
 
     playerState?.isPlaying ? videoRef?.current?.play() : videoRef?.current?.pause();
   }, [playerState?.isPlaying, videoRef?.current?.paused]);
+
+  // play pause video based on props
+  useEffect(() => {
+    if (videoData?.pauseVideo == null) return;
+
+    toggleIsPlaying(videoData?.pauseVideo);
+  }, [videoData?.pauseVideo]);
 
   // sync volume and video
   useEffect(() => {

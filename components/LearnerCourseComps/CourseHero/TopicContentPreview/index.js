@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   CourseMetaDataAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
+  SelectedResourceDataAtom,
 } from '../../atoms/learnerCourseComps.atom';
 import VideoPlayer from '../../common/VideoPlayer';
 import styles from '../../learnerCourseComps.module.scss';
 import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
+import useHandleTopicView from '../../Logic/useHandleTopicView';
 import CourseHeroTopBar from '../CourseHeroTopBar';
 import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
@@ -21,13 +23,8 @@ export default function TopicContentPreview() {
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
-  const [activeBox, setActiveBox] = useState(null);
-
   const { containerRef, selectedTopicContent, videoStartTime } = useHandleTopicProgress();
-
-  function toggleActiveBox(id) {
-    setActiveBox((prev) => (prev === id ? null : id));
-  }
+  const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
 
   const toolbarItems = [
     {
@@ -107,10 +104,12 @@ export default function TopicContentPreview() {
           videoData={{
             src: selectedTopicContent?.contentUrl || '',
             isAutoPlay: true,
+            pauseVideo: videoState?.shouldPlay,
             startFrom: videoStartTime,
             isSubtitleShown: activeCourseData?.subTitle != null,
             subtitleUrl: activeCourseData?.subTitle,
           }}
+          getVideoData={getVideoData}
         />
       </div>
     </>
