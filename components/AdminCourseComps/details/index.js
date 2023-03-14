@@ -12,10 +12,20 @@ import styles from '../adminCourseComps.module.scss';
 import Dropdown from '@/components/common/Dropdown';
 import DragDrop from './DragAndDrop';
 import NextBtn from '../NextBtn';
+import { useRecoilValue } from 'recoil';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import useHandleCourseData from '../Logic/useHandleCourseData';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 // import DropdownSelect from '../Tabs/common/DropdownSelect';
 // import TwoRowCarousel from '../common/TwoRowCarousel';
 // import DropdownSelect from '../../Tabs/common/DropdownSelect';
 const Details = () => {
+    const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+    const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  
+    const { ownerList, handleChange, handleExpertise } = useHandleCourseData();
+    const { catSubCat, setActiveCatId } = useHandleCatSubCat();
     return (
         <>
             <div className={`${styles.courseSubcategory}`}>
@@ -25,45 +35,15 @@ const Details = () => {
                         dropdownOptions={{
                             isSearchEnable: true,
                             inputName: 'percentage',
-                            placeholder: 'Development'
+                            placeholder: 'Development',
+                            value: courseMetaData?.subCategories?
+                            {value:courseMetaData?.subCategories,label:courseMetaData?.subCategories}
+                            :null
                         }}
+                        changeHandler={(e)=>handleChange({})}
                     />
                 </div>
             </div>
-
-            {/* <div className={`${styles.additionalsubCategory} ${styles.twoColumnDisplay}`}>
-        <div className={`${styles.detailsSearchDropdown}`}>
-          <label>Additional sub-category</label>
-          <LabeledDropdown
-            dropdownOptions={{
-              isSearchEnable: true,
-              inputName: 'percentage',
-              placeholder: 'Search'
-            }}
-          />
-        </div>
-
-        <div className={`${styles.detailDropDown}`}>
-          <img src="/images/svg/adminCourse/swipe-right.svg" />
-          <div>Drag & Drop!</div>
-        </div>
-
-        <div className={`${styles.detailDropdownSection}`}>
-          <BrowseAndUpload
-            styleClassBtn={`${styles.button1}`}
-            title="Drop here !"
-            // handleFileUpload={handlePhotoInput}
-            // handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
-            // previewData={{
-            //   fileName: vendorData?.vendorProfileImage?.name,
-            //   filePath: vendorData?.vendorProfileImage
-            // }}
-            // inputName="vendorProfileImage"
-            // isActive={vendorData?.vendorProfileImage}
-            hidePreviewBtns={true}
-            styleClass={`${styles.detailDropDownfile}`} />
-        </div>
-      </div> */}
             <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <DragDrop />
             </div>
@@ -77,9 +57,11 @@ const Details = () => {
                             placeholder: 'Privide an outline of the course in less then 500 charactor',
                             rows: 4,
                             maxLength: 500,
-                            value: ""
+                            value: courseMetaData?.summary 
                         }}
                     // changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+                    changeHandler={(e)=>handleChange({...CourseMetaDataAtom, summary:e.target?.value})}
+                    // handleChange({ category: e?.value, subCategory: '' });
                     />
                 </div>
             </div>
@@ -131,7 +113,7 @@ const Details = () => {
                         styleClass={`${styles.uploadCoursePreviewImage}`}
                         styleClassBtn={`${styles.uploadCourseButton}`}
                         title="Browse and upload"
-                        
+
                     // handleFileUpload={handleProfilePhoto}
                     // handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
                     // previewData={{
@@ -141,11 +123,11 @@ const Details = () => {
                     // inputName="profileImage"
                     // hideRemoveBtn={true}
                     // isActive={profileData?.profileImage}
-                    
+
                     />
                 </div>
             </div>
-            <NextBtn/>
+            <NextBtn />
         </>
 
     )
