@@ -30,7 +30,7 @@ export const allPartcipantinfo = atom({    //  use to display present room numbe
 })
 export const breakoutRoomselectedparticipant = atom({
     key: "breakoutRoomselectedparticipant",
-    default: []
+    default:[]
 })
 export const breakoutRoomId=atom({
     key:"breakoutRoomId",

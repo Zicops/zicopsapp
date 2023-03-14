@@ -71,6 +71,8 @@
     padding: 15px;
     margin-left: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .joinBtn {
@@ -87,6 +89,8 @@
     border-radius: 3rem;
     background-color: #6BCFCF;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .meet {
@@ -197,6 +201,11 @@
     background-color: white;
 
 }
+.footerLeft>div
+{
+    outline: none;
+    border: none;
+}
 
 .footerLeft>button {
     display: flex;
@@ -216,6 +225,8 @@
     margin-right: 10px;
     border-radius: 50px;
     cursor: pointer;
+    outline: none;
+    border: none;
 }
 
 .footerRight {
@@ -241,6 +252,8 @@
     margin-right: 10px;
     border-radius: 50px;
     cursor: pointer;
+    outline: none;
+    border: none;
 }
 
 .canselBtn {
@@ -448,14 +461,15 @@
 .qaBtn>input> ::placeholder {
     color: #747474;
 }
-.qabarBtnContainer
-{
+
+.qabarBtnContainer {
     height: 86px;
     width: 300px;
     display: flex;
     justify-content: right;
     margin-top: 55px;
 }
+
 .qaBtn {
     width: 161px;
     height: 48px;
@@ -687,12 +701,13 @@
     outline: none;
     border: none;
 }
-.breakoutRoomscreen
-{
+
+.breakoutRoomscreen {
     width: 296px;
     height: 90%;
-    overflow:scrol;
+    overflow: scrol;
 }
+
 .breakoutRoomscreen::-webkit-scrollbar {
     display: none;
 }
@@ -705,12 +720,12 @@
     width: 276px;
     height: 90%;
 }
-.breakouRoomIcon
-{
+
+.breakouRoomIcon {
     width: 40px;
     height: 40px;
     border: solid #292F2F 1px;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 6px;
@@ -1112,8 +1127,8 @@
     border-bottom: 1px solid #292F2F;
     overflow: scroll;
 }
-.addParticipantPopupScreen::-webkit-scrollbar
-{
+
+.addParticipantPopupScreen::-webkit-scrollbar {
     display: none;
 }
 
@@ -1257,8 +1272,8 @@
     right: 0;
     background-color: #1A1D21;
 }
-.aboutScreenHeading
-{
+
+.aboutScreenHeading {
     margin-top: 15px;
     padding-top: 10px;
     width: 276px;
@@ -1267,13 +1282,14 @@
     line-height: 28px;
     color: white;
 }
-.aboutScreenSessionHead
-{
+
+.aboutScreenSessionHead {
     padding-top: 10px;
     padding-bottom: 10px;
     color: white;
     font-size: 14px;
 }
+
 .aboutHead {
     padding-top: 20px;
     width: 296px;
@@ -1365,12 +1381,13 @@
     // height: 88vh;
 
 }
-.quizeAttemtpsHead
-{
+
+.quizeAttemtpsHead {
     padding-top: 12px;
     color: #ACACAC;
     font-size: 14px;
 }
+
 .quizScreen {
     overflow: scroll;
     height: 90%;

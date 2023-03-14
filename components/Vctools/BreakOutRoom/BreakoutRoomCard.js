@@ -9,7 +9,7 @@ const BreakoutRoomCard = ({ roomNumber, showAddparticipantpopup, roomLength }) =
     const breakoutRoomlist = useRecoilValue(breakoutList)
     function showTooltips(title) {
         if (title === "") return <></>
-        const obj = cards?.find(data => data.title === title);
+        const obj = cards?.find(data => data?.title === title);
         return obj.components;
     }
     const cards = [{

@@ -13,13 +13,13 @@ const AddParticipantpopup= ({ presetRoom, totalRooms,autoAssignRoom }) => {
             <div className={`${styles.addParticipantPopupHead}`}>Add participants-Room ({presetRoom}/{totalRooms})</div>
             <div className={`${styles.addParticipantSubHead}`}>
                 <div>Selected Participants</div>
-                <p>({breakoutRoomSelectedParticipantArr?.length || ""})</p>
+                <p>({breakoutRoomSelectedParticipantArr?.length || 0 })</p>
             </div>
             <div className={`${styles.addParticipantPopupScreen}`}>
            {
               participantName.map((data)=>
               { 
-                return (data?.role!=="moderator")&& <ParticipantFrame frameName={data.displayName}/>
+                return (data?.role!=="moderator")&& <ParticipantFrame frameName={data?.displayName}/>
               })
            }
             </div>

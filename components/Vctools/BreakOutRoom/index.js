@@ -14,7 +14,7 @@ const BreakoutRoom = ({ showHide = false, createRooms }) => {
     const [title1, settitle] = useState("")
     useEffect(() => {
 
-        if ([userData.email].toString().includes("@zicops")) {
+        if ([userData?.email]?.toString()?.includes("@zicops")) {
             setIsModerator(true)
         }
     })
