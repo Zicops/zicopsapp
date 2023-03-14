@@ -40,7 +40,7 @@ export default function useHandleVendorServices() {
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
       sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
@@ -78,7 +78,7 @@ export default function useHandleVendorServices() {
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
       sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
@@ -117,7 +117,7 @@ export default function useHandleVendorServices() {
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
       sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 

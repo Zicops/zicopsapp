@@ -1727,7 +1727,7 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     createSubjectMatterExpertise(
       input: {
@@ -1739,7 +1739,7 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        Status: $status
       }
     ) {
       vendor_id
@@ -1769,7 +1769,7 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     updateSubjectMatterExpertise(
       input: {
@@ -1781,7 +1781,7 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        Status: $status
       }
     ) {
       vendor_id
@@ -1943,7 +1943,7 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     updateContentDevelopment(
       input: {
@@ -1955,7 +1955,7 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        status: $status
       }
     ) {
       cd_id
@@ -2066,18 +2066,20 @@ export const ADD_ORDER_SERVICES = gql`
     $status: String
   ) {
     addOrderServies(
-      input: [{
-        service_id: $service_id
-        order_id: $order_id
-        service_type: $service_type
-        description: $description
-        unit: $unit
-        currency: $currency
-        rate: $rate
-        quantity: $quantity
-        total: $total
-        status: $status
-      }]
+      input: [
+        {
+          service_id: $service_id
+          order_id: $order_id
+          service_type: $service_type
+          description: $description
+          unit: $unit
+          currency: $currency
+          rate: $rate
+          quantity: $quantity
+          total: $total
+          status: $status
+        }
+      ]
     ) {
       service_id
       order_id
