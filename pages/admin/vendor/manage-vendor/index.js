@@ -10,7 +10,8 @@ import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 export default function ManageVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +24,10 @@ export default function ManageVendor() {
         <AdminHeader
           title="Vendor List"
           isAddShown={true}
-          handleClickForPlus={() => setIsOpen(true)}
+          handleClickForPlus={() => {
+            setIsOpen(true);
+            setVendorData(getVendorObject());
+          }}
           isProductTooltip={false}
         />
         <MainBodyBox>
@@ -45,13 +49,13 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorData?.type === 'individual',
+                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorData?.type === 'company',
+                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />

@@ -1,5 +1,4 @@
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import React, { useState } from 'react';
 import styles from './vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
@@ -8,79 +7,44 @@ import IconButton from '@/components/common/IconButton';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import AddExpriences from './AddExpriences';
 import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
-import {
-  VendorAllExperiencesAtom,
-  VendorExperiencesAtom,
-  VendorProfileAtom
-} from '@/state/atoms/vendor.atoms';
 import { changeHandler } from '@/helper/common.helper';
 import VendorPopUp from './common/VendorPopUp';
 import AddExpertise from './AddVendor/common/AddExpertise';
 import useHandleVendor from './Logic/useHandleVendor';
-
-const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
-  label: val,
-  value: val
-}));
+import { optionYearArray } from './Logic/vendorComps.helper';
+import useProfile from './Logic/useProfile';
 
 const AddVendorProfile = ({ data = {} }) => {
-  const [isOpenExpriences, setIsOpenExpriences] = useState(false);
-  const [isOpenLanguage, setIsOpenLanguage] = useState(false);
-  const [isOpenExpertise, setOpenExpertise] = useState(false);
-  const [expertiseSearch, setExpertiseSearch] = useState('');
-  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-  const [selectedExpertise, setSelectedExpertise] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
-
-  const { handleProfilePhoto } = useHandleVendor();
-  const router = useRouter();
-  const vendorId = router.query.vendorId || '0';
-  const completeExperienceHandler = () => {
-    const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
-    const start_date = new Date(StartDate);
-    const start_timestamp = start_date.getTime() / 1000;
-    const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
-    const end_date = new Date(EndDate);
-    const end_timestamp = end_date.getTime() / 1000;
-    const experienceData = {
-      vendor_id: vendorId || '',
-      title: experiencesData?.title || '',
-      email: profileData?.email || '',
-      company_name: experiencesData?.companyName || '',
-      employement_type: experiencesData?.employeeType || '',
-      location: experiencesData?.location || '',
-      location_type: experiencesData?.locationType || '',
-      start_date: start_timestamp || null,
-      end_date: end_timestamp || null,
-      status: VENDOR_MASTER_STATUS.active
-    };
-    // setAllExperiences([...allExperiences, experienceData]);
-    // setAllExperiences(null);
-    console.info('profileData', profileData);
-    setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
-    setIsOpenExpriences(false);
-  };
-  const handleLanguageSelection = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSelectedLanguages([...selectedLanguages, value]);
-    } else {
-      setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
-    }
-  };
-
-  const addLanguagesHandler = () => {
-    setProfileData({ ...profileData, languages: [...selectedLanguages] });
-    setIsOpenLanguage(false);
-  };
-
-  const handleAddExpertise = () => {
-    setProfileData({ ...profileData, sme_expertises: [...selectedExpertise] });
-    setOpenExpertise(false);
-  };
+  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
+  const {
+    completeExperienceHandler,
+    handleLanguageSelection,
+    addLanguagesHandler,
+    handleAddSmeExpertise,
+    handleAddCrtExpertise,
+    handleAddCdExpertise,
+    isOpenExpriences,
+    setIsOpenExpriences,
+    isOpenLanguage,
+    setIsOpenLanguage,
+    isOpenSmeExpertise,
+    setOpenSmeExpertise,
+    isOpenCrtExpertise,
+    setOpenCrtExpertise,
+    isOpenCdExpertise,
+    setOpenCdExpertise,
+    expertiseSearch,
+    setExpertiseSearch,
+    profileData,
+    setProfileData,
+    selectedSmeExpertise,
+    setSelectedSmeExpertise,
+    selectedCrtExpertise,
+    setSelectedCrtExpertise,
+    selectedCdExpertise,
+    setSelectedCdExpertise,
+    selectedLanguages
+  } = useProfile();
 
   return (
     <div className={`${styles.inputMain}`}>
@@ -98,7 +62,6 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Last name: </label>
-
           <LabeledInput
             inputOptions={{
               inputName: 'lastName',
@@ -122,7 +85,6 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.input1}`}>
           <label for="vendorName">Contact number: </label>
-
           <LabeledInput
             inputOptions={{
               inputName: 'contactNumber',
@@ -190,14 +152,18 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileData?.experience?.map((exp) => (
+              {profileExperience?.map((exp) => (
                 <IconButton
                   text={
                     typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
                   }
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
-                  handleClick={() => setIsOpenExpriences(true)}
+                  handleClick={() => {
+                    setIsOpenExpriences(true);
+                    getProfileExperience(profileData.profileId);
+                    getSingleExperience(exp.PfId, exp.ExpId);
+                  }}
                 />
               ))}
               <IconButton
@@ -249,7 +215,7 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add subject matter expertise"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setOpenExpertise(true)}
+              handleClick={() => setOpenSmeExpertise(true)}
             />
           ) : (
             <>
@@ -269,7 +235,71 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setOpenExpertise(true)}
+                handleClick={() => setOpenSmeExpertise(true)}
+              />
+            </>
+          )}
+        </div>
+        <div className={`${styles.addExpertise}`}>
+          <label for="serviceDescription">Classroom Training Expertise:</label>
+          {!profileData?.crt_expertises?.length ? (
+            <IconButton
+              text="Add classroom training expertise"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setOpenCrtExpertise(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {profileData?.crt_expertises?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setOpenCrtExpertise(true)}
+              />
+            </>
+          )}
+        </div>
+        <div className={`${styles.addExpertise}`}>
+          <label for="serviceDescription">Content Development Expertise:</label>
+          {!profileData?.content_development?.length ? (
+            <IconButton
+              text="Add content development expertise"
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              handleClick={() => setOpenCdExpertise(true)}
+            />
+          ) : (
+            <>
+              <div className={`${styles.languages}`}>
+                {profileData?.content_development?.map((data, index) => (
+                  <div className={`${styles.singleLanguage}`} key={index}>
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      label={data}
+                      value={data}
+                      isChecked={true}
+                    />
+                  </div>
+                ))}
+              </div>
+              <IconButton
+                text="Add more"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setOpenCdExpertise(true)}
               />
             </>
           )}
@@ -297,18 +327,48 @@ const AddVendorProfile = ({ data = {} }) => {
       </VendorPopUp>
       <div className={`${styles.hr}`}></div>
       <VendorPopUp
-        open={isOpenExpertise}
+        open={isOpenSmeExpertise}
         title="Add Subject matter expertise"
-        popUpState={[isOpenExpertise, setOpenExpertise]}
+        popUpState={[isOpenSmeExpertise, setOpenSmeExpertise]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: handleAddExpertise }}
+        submitBtn={{ name: 'Add', handleClick: handleAddSmeExpertise }}
         isFooterVisible={true}>
         <AddExpertise
           expertiseValue={expertiseSearch}
           setExpertise={setExpertiseSearch}
-          selectedExpertise={selectedExpertise}
-          setSelectedExpertise={setSelectedExpertise}
+          selectedExpertise={selectedSmeExpertise}
+          setSelectedExpertise={setSelectedSmeExpertise}
+        />
+      </VendorPopUp>
+      <VendorPopUp
+        open={isOpenCrtExpertise}
+        title="Add Classroom Training Expertise"
+        popUpState={[isOpenCrtExpertise, setOpenCrtExpertise]}
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Add', handleClick: handleAddCrtExpertise }}
+        isFooterVisible={true}>
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedCrtExpertise}
+          setSelectedExpertise={setSelectedCrtExpertise}
+        />
+      </VendorPopUp>
+      <VendorPopUp
+        open={isOpenCdExpertise}
+        title="Add Content Development Expertise"
+        popUpState={[isOpenCdExpertise, setOpenCdExpertise]}
+        size="large"
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Add', handleClick: handleAddCdExpertise }}
+        isFooterVisible={true}>
+        <AddExpertise
+          expertiseValue={expertiseSearch}
+          setExpertise={setExpertiseSearch}
+          selectedExpertise={selectedCdExpertise}
+          setSelectedExpertise={setSelectedCdExpertise}
         />
       </VendorPopUp>
       <VendorPopUp
@@ -319,7 +379,7 @@ const AddVendorProfile = ({ data = {} }) => {
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}
         isFooterVisible={true}>
-        {VENDOR_LANGUAGES.map((data, index) => {
+        {VENDOR_LANGUAGES?.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`} key={index}>
               <LabeledRadioCheckbox
@@ -327,7 +387,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 label={data}
                 value={data}
                 isChecked={
-                  selectedLanguages.includes(data) || profileData?.languages.includes(data)
+                  selectedLanguages?.includes(data) || profileData?.languages?.includes(data)
                 }
                 changeHandler={handleLanguageSelection}
               />

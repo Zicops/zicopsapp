@@ -1,59 +1,86 @@
+//DON'T DELETE THIS
+
+import VendorMaster from '../AddVendor/VendorMaster';
+import AddVendorServices from '../AddVendor/AddVendorServices';
+import AddVendorCourses from '../AddVendor/AddVendorCourses';
+import VendorOrders from '../VendorOrders';
+import VendorUsers from '../VendorUsers';
+import ProfileManageVendor from '../ProfileMangeVendor';
+
+export const manageVendorTabData = [
+  { name: 'Master', component: <VendorMaster /> },
+  { name: 'Services', component: <AddVendorServices /> },
+  { name: 'Profiles', component: <ProfileManageVendor /> },
+  { name: 'Courses', component: <AddVendorCourses /> },
+  { name: 'Orders', component: <VendorOrders /> },
+  { name: 'Users', component: <VendorUsers /> }
+];
+
+//Delete later
 export const myVendors = [
   {
     id: '0',
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '1',
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '2',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '3',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '4',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '5',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '6',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '7',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   }
 ];
 
@@ -707,4 +734,63 @@ export const sampleFiles = [
 export const MarketYardHeroData = {
   companyName: 'ABC Learning Technology Pvt. Ltd.',
   expart: ['SME', 'Classroom Training', 'Content Development']
+};
+
+export const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const acceptedFiles = ['.zip', '.rar', '.pdf', '.ppt'].join(', ');
+
+export const optionEmploymentTypeArray = [
+  'Full-time',
+  'Part-time',
+  'Self employed',
+  'Freelance',
+  'Internship',
+  'Trainee'
+].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const dateNameID = [
+  { label: 'Date', value: '23/02/2023' },
+  { label: 'Vendor Name', value: 'ABC Pvt. Ltd.' },
+  { label: 'Order ID', value: '#111' }
+];
+
+export const statusTypeServie = [
+  { label: 'Status', value: 'Added' },
+  { label: 'Vendor Type', value: 'Organisation' },
+  { label: 'Services', value: 'SME, Content Development' }
+];
+
+export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
+
+export const serviceOptions = {
+  sme: 'Subject Matter',
+  crt: 'Classroom Training',
+  cd: 'Content Development'
 };

@@ -144,8 +144,8 @@ const CardSlider = ({
                   key={index}
                   sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
                   variant="rectangular"
-                  width={220}
-                  height={120}
+                  width={type === 'vendor' ? 200 : 220}
+                  height={type === 'vendor' ? 200 : 120}
                 />
               );
 
