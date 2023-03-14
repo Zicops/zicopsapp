@@ -7,11 +7,10 @@ import {
   serviceType
 } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
 import { useRouter } from 'next/router';
 import CoursesVendor from '@/components/VendorComps/CoursesVendor';
-
 import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
@@ -22,7 +21,12 @@ import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
 import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
+import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { allProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 export default function VendorInfo() {
+  const vendorData = useRecoilValue(VendorStateAtom);
+  const vendorProfiles = useRecoilValue(allProfileAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -80,12 +84,21 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || '0'; //Change the 1 to null
-  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendorId === vendorId);
+  const vendorId = router.query.vendorId || null; //Change the 1 to null
+  // console.info(router.query.vendorId);
+
+  const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
+
+  useEffect(() => {
+    getAllProfileInfo();
+    getSingleVendorInfo(vendorId);
+  }, []);
+  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
+
   const tabData = [
     {
       name: 'About',
-      component: <AboutVendor data={myVendors[vendorId]} />
+      component: <AboutVendor data={vendorData} />
     },
     {
       name: 'Courses',
@@ -111,7 +124,7 @@ export default function VendorInfo() {
           footerObj={{
             showFooter: false
           }}
-          customStyles={{ height: '100%', overflow: 'unset' }}
+          customStyles={{ height: 'fit-content', overflow: 'unset' }}
         />
       </MainBody>
       <VendorPopUp

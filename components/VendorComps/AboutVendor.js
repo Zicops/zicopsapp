@@ -7,11 +7,32 @@ import {
   classroomTraining,
   contentDevelopment
 } from './Logic/vendorComps.helper';
+import { useRecoilValue } from 'recoil';
+import {
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom,
+  VendorStateAtom
+} from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
+import useHandleVendor from './Logic/useHandleVendor';
+import Loader from '../common/Loader';
+import { useRouter } from 'next/router';
 
 export default function AboutVendor({ data }) {
-  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data.id);
-  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data.id);
-  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data.id);
+  const { getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
+
+  useEffect(() => {
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
+  }, []);
+  const vendorData = useRecoilValue(VendorStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const router = useRouter();
+  const vendorId = router.query.vendorId || null;
 
   const accordianMarketyardDetails = [
     {
@@ -33,11 +54,12 @@ export default function AboutVendor({ data }) {
       serviceData: ctData
     }
   ];
-
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
-        <p>{data.desc}</p>
+        <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
         {accordianMarketyardDetails.map((value, index) => {
@@ -48,7 +70,7 @@ export default function AboutVendor({ data }) {
           );
         })}
       </div>
-      <VendorDetails />
+      <VendorDetails data={data} />
     </div>
   );
 }

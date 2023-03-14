@@ -1,31 +1,14 @@
 import { changeHandler } from '@/helper/common.helper';
 import { SampleAtom } from '@/state/atoms/vendor.atoms';
-import React from 'react';
 import { useRecoilState } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
+import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
 const AddSample = () => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
-
-  const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
-    label: val,
-    value: val
-  }));
-
-  let acceptedFiles = ['.zip', '.rar', '.pdf', '.ppt'].join(', ');
   return (
     <div>
       <div style={{ padding: '10px' }}>

@@ -10,11 +10,14 @@ import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
+import VendorUsers from '@/components/VendorComps/VendorUsers';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useState } from 'react';
+import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
+import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
+import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
 
 export default function VendorInfo() {
-  const { addUpdateVendor, addUpdateSme, handleMail } = useHandleVendor();
   const tabData = [
     {
       name: 'Master',
@@ -35,6 +38,10 @@ export default function VendorInfo() {
     {
       name: 'Orders',
       component: <VendorOrders />
+    },
+    {
+      name: 'Users',
+      component: <VendorUsers />
     }
   ];
 
@@ -47,22 +54,7 @@ export default function VendorInfo() {
         <AdminHeader title="Add Vendor" />
 
         <MainBodyBox>
-          <TabContainer
-            tabData={tabData}
-            tab={tab}
-            setTab={setTab}
-            footerObj={{
-              showFooter: true,
-              handleSubmit: () => {
-                addUpdateVendor();
-                handleMail();
-                // addUpdateSme();
-              },
-              status: VENDOR_MASTER_STATUS.draft.toUpperCase()
-            }}
-            customStyles={
-              ['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}
-            }></TabContainer>
+          <ManageVendorTabs />
         </MainBodyBox>
       </MainBody>
     </>
