@@ -21,8 +21,7 @@ const MyVendor = () => {
 
   const [vendorTableData, setVendorTableData] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
-
-  const pageSize = 100;
+  const [pageCursor, setPageCursor] = useState(null);
 
   useEffect(() => {
     if (vendorDetails?.length) return;
@@ -30,7 +29,10 @@ const MyVendor = () => {
     // getAllVendors();
     if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
 
-    getPaginatedVendors(pageSize).then((data) => setVendorTableData(data));
+    getPaginatedVendors().then((data) => {
+      setPageCursor(data?.pageCursor || null);
+      setVendorTableData(data?.vendors || []);
+    });
   }, []);
 
   const columns = [
@@ -95,17 +97,26 @@ const MyVendor = () => {
   //   { label: 'First Name', value: 'first_name' },
   //   { label: 'Last Name', value: 'last_name' }
   // ];
+  const pageSize = getPageSizeBasedOnScreen();
 
   return (
     <>
       <ZicopsTable
         data={vendorTableData}
         columns={columns}
-        pageSize={getPageSizeBasedOnScreen()}
+        pageSize={pageSize}
         rowsPerPageOptions={[3]}
         loading={loading}
         tableHeight="70vh"
         customId="vendorId"
+        onPageChange={(currentPage) => {
+          if (vendorTableData?.length / pageSize - currentPage < 3 && pageCursor) {
+            getPaginatedVendors(pageCursor).then((data) => {
+              setPageCursor(data?.pageCursor || null);
+              setVendorTableData((prev) => [...(prev || []), ...(data?.vendors || [])]);
+            });
+          }
+        }}
       />
 
       {!!selectedVendor?.vendorId && (
