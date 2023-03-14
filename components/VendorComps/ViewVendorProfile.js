@@ -4,11 +4,11 @@ const ViewVendorProfile = ({ data }) => {
     <div className={`${styles.viewProfilesContainer}`}>
       <div className={`${styles.viewProfileTop}`}>
         <div className={`${styles.viewProfileImage}`}>
-          <img src={data?.image} alt="" />
+          <img src={data?.photo_url} alt="" />
         </div>
         <div className={`${styles.profileDetails}`}>
-          <p className={`${styles.profileName}`}>{data?.name}</p>
-          {data?.expertise?.map((expert, index) => (
+          <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
+          {data?.sme_expertise?.map((expert, index) => (
             <span>
               {expert} {index + 1 !== data?.expertise?.length ? ' | ' : ''}
             </span>
