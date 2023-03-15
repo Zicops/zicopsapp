@@ -50,13 +50,15 @@ export default function ManageVendor() {
                 label: 'Individual/Freelancer',
                 value: 'individual',
                 isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
+                isDisabled: true
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
                 isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
+                isDisabled: true
               }}
             />
             <AddVendor
@@ -65,13 +67,15 @@ export default function ManageVendor() {
                 label: 'Organization',
                 value: 'organization',
                 isChecked: vendorData?.level === 'organization',
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
+                isDisabled: true
               }}
               checkboxProps2={{
                 label: 'Learning space Level',
                 value: 'lsp',
                 isChecked: vendorData?.level === 'lsp',
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
+                isDisabled: true
               }}
               inputName="level"
             />
