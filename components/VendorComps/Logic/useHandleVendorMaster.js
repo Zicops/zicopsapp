@@ -7,23 +7,26 @@ import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { handleCacheUpdate } from '@/helper/data.helper';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export default function useHandleVendorMaster() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
 
+  const [loading, setLoading] = useState(false);
+
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
-  async function addUpdateVendor() {
+  async function addUpdateVendor(displayToaster = true) {
+    setLoading(true);
     const sendData = {
       name: vendorData?.name?.trim() || '',
       level: vendorData?.level?.trim() || '',
       type: vendorData?.type?.trim() || '',
-      photo: vendorData?.vendorProfileImage || null,
       address: vendorData?.address?.trim() || '',
       website: vendorData?.website?.trim() || '',
       facebook_url: vendorData?.facebookURL?.trim() || '',
@@ -34,6 +37,9 @@ export default function useHandleVendorMaster() {
       description: vendorData?.description?.trim() || '',
       status: VENDOR_MASTER_STATUS.active
     };
+
+    if (typeof vendorData?.vendorProfileImage === 'object')
+      sendData.photo = vendorData?.vendorProfileImage;
 
     let uniqEmails = [...new Set(vendorData?.users)];
     sendData.users = uniqEmails;
@@ -66,9 +72,11 @@ export default function useHandleVendorMaster() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Error' });
       });
+      setLoading(false);
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Vendor Updated' });
+
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Vendor Updated' });
       return;
     }
     if (
@@ -100,7 +108,9 @@ export default function useHandleVendorMaster() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
       });
+      setLoading(false);
       if (isError) return;
+
       setToastMsg({ type: 'success', message: 'Added vendor successfully' });
       const _id = res.data.addVendor.vendorId;
       router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
@@ -108,5 +118,5 @@ export default function useHandleVendorMaster() {
     }
   }
 
-  return { addUpdateVendor };
+  return { addUpdateVendor, loading };
 }

@@ -79,7 +79,8 @@ export default function VendorMaster() {
             placeholder: 'Enter Vendor Name',
             maxLength: 60,
             value: vendorData?.name,
-            isDisabled: vendorData?.vendorId
+            isDisabled: vendorData?.vendorId,
+            maxLength: 60
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -102,7 +103,7 @@ export default function VendorMaster() {
           <label for="vendorName">Update vendor profile image: </label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title="Drag & Drop"
+            title={vendorData?.vendorProfileImage?.name || 'Drag & Drop'} //image name is not setting here because we are getting an url
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
