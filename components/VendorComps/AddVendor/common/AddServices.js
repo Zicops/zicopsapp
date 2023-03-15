@@ -151,8 +151,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 placeholder: 'Describe your service in 160 characters',
                 maxLength: 160,
                 value: data.serviceDescription,
-                isDisabled: isViewPage || !data?.isApplicable,
-                value: data.serviceDescription
+                isDisabled: isViewPage || !data?.isApplicable
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />

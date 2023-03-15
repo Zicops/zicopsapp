@@ -13,20 +13,16 @@ import useLoadVendorData from './Logic/useLoadVendorData.js';
 const MyVendor = () => {
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const [vendorList, setVendorList] = useState(null);
+  const { disableVendor } = useHandleVendor();
+  const { getUserVendors, getPaginatedVendors } = useLoadVendorData();
 
-  const { vendorDetails, getAllVendors, loading, disableVendor } = useHandleVendor();
-  const { getLspVendors, getUserVendors, getVendorsTable, getPaginatedVendors } =
-    useLoadVendorData();
-
-  const [vendorTableData, setVendorTableData] = useState([]);
+  const [vendorTableData, setVendorTableData] = useState(null);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [pageCursor, setPageCursor] = useState(null);
 
   useEffect(() => {
-    if (vendorDetails?.length) return;
+    if (vendorTableData?.length) return;
 
-    // getAllVendors();
     if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
 
     getPaginatedVendors().then((data) => {
@@ -91,12 +87,6 @@ const MyVendor = () => {
       }
     }
   ];
-
-  // const options = [
-  //   { label: 'Email', value: 'email' },
-  //   { label: 'First Name', value: 'first_name' },
-  //   { label: 'Last Name', value: 'last_name' }
-  // ];
   const pageSize = getPageSizeBasedOnScreen();
 
   return (
@@ -106,7 +96,7 @@ const MyVendor = () => {
         columns={columns}
         pageSize={pageSize}
         rowsPerPageOptions={[3]}
-        loading={loading}
+        loading={vendorTableData == null}
         tableHeight="70vh"
         customId="vendorId"
         onPageChange={(currentPage) => {
