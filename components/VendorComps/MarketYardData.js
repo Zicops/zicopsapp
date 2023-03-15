@@ -56,9 +56,9 @@ export default function MarketYardData({ vendorType, displayRows = {} }) {
       {displayRows?.isCrtDisplayed && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={lspVendors} type="vendor" />
       )}
-      {displayRows?.isSpeakerDisplayed && (
-        <ZicopsCarousel title="Speakers Marketplace" data={lspVendors} type="vendor" />
-      )}
+      {/* {displayRows?.isSpeakerDisplayed && ( */}
+      <ZicopsCarousel title="Speakers Marketplace" data={lspVendors} type="vendor" />
+      {/* )} */}
     </>
   );
 }

@@ -151,7 +151,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 placeholder: 'Describe your service in 160 characters',
                 maxLength: 160,
                 value: data.serviceDescription,
-                isDisabled: isViewPage
+                isDisabled: isViewPage || !data?.isApplicable,
+                value: data.serviceDescription
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
@@ -164,6 +165,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text={experticeName}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => setExpertisePopupState(true)}
                 isDisabled={isViewPage}
               />
@@ -199,6 +201,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add language"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => setLanguagePopupState(true)}
                 isDisabled={isViewPage}
               />
@@ -232,6 +235,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add O/P deliverable formats"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => setOPDeliverablePopupState(true)}
                 isDisabled={isViewPage}
               />
@@ -267,6 +271,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add sample files"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => {
                   setSamplePopupState(true);
                   getSampleFiles();
@@ -302,6 +307,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add profiles"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => {
                   setProfileData(getProfileObject());
                   setIsOpenProfile(true);
