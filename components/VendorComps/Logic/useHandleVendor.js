@@ -10,18 +10,18 @@ import {
 } from '@/api/UserMutations';
 import {
   GET_ALL_PROFILE_DETAILS,
+  GET_CD_DETAILS,
+  GET_CRT_DETAILS,
   GET_SAMPLE_FILES,
   GET_SINGLE_EXPERIENCE_DETAILS,
   GET_SINGLE_PROFILE_DETAILS,
+  GET_SME_DETAILS,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_VENDOR_ADMINS,
   GET_VENDOR_DETAILS,
-  userQueryClient,
-  GET_SME_DETAILS,
-  GET_CRT_DETAILS,
-  GET_CD_DETAILS,
   GET_VENDOR_EXPERIENCES,
-  GET_VENDOR_ADMINS
+  userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
@@ -34,22 +34,22 @@ import {
   allProfileAtom,
   CdServicesAtom,
   CtServicesAtom,
+  getCDServicesObject,
+  getCTServicesObject,
+  getProfileObject,
+  getSMEServicesObject,
   getVendorObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorAllExperiencesAtom,
   VendorExperiencesAtom,
   VendorProfileAtom,
   VendorStateAtom,
-  vendorUserInviteAtom,
-  getSMEServicesObject,
-  getCTServicesObject,
-  getCDServicesObject,
-  getProfileObject,
-  VendorAllExperiencesAtom
+  vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendor() {
@@ -88,14 +88,14 @@ export default function useHandleVendor() {
   const time = getUnixFromDate();
 
   async function handleMail() {
-    // if (loading) return;
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
-    let emails = emailId?.map((item) => item?.props?.children[0]);
-    // console.log(emails, emailId);
+    let emails = emailId?.map((item) => item?.props?.children[0])?.filter((e) => !!e);
+
     //for removing duplicate email ids
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
-    // console.log(emails);
+
+    if (!emails?.length) return;
 
     // send lowercase email only.
     let sendEmails = emails?.map((email) => email?.toLowerCase());
@@ -103,7 +103,20 @@ export default function useHandleVendor() {
     let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor },
+      update: (_, { data }) => {
+        handleCacheUpdate(
+          GET_VENDOR_DETAILS,
+          { vendor_id: vendorData?.vendorId },
+          (cachedData) => ({
+            getVendorDetails: {
+              ...cachedData?.getVendorDetails,
+              users: [...cachedData?.getVendorDetails?.users, ...emails]
+            }
+          }),
+          userQueryClient
+        );
+      }
     }).catch((err) => {
       console.log('error', err);
       errorMsg = err.message;
@@ -111,7 +124,7 @@ export default function useHandleVendor() {
       isError = !!err;
     });
 
-    if (isError) return setToastMsg({ type: 'danger', message: isError });
+    if (isError) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
     // if (isError) {
     //   // const message = JSON.parse(errorMsg?.split('body:')[1]);
     //   if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
@@ -210,8 +223,7 @@ export default function useHandleVendor() {
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
       linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
-      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url,
-      vendorProfileImageUrl: vendorInfo?.getVendorDetails?.photo_url
+      photoUrl: vendorInfo?.getVendorDetails?.photo_url
     };
     setVendorData(getVendorObject(singleData));
 
@@ -505,8 +517,14 @@ export default function useHandleVendor() {
           userQueryClient
         );
       }
-    }).catch((err) => console.log('Error'));
-    if (isError) return;
+    }).catch((err) => {
+      console.log('Error', err);
+      isError = true;
+    });
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Vendor Status Update Error' });
+      return false;
+    }
 
     onSuccess();
 
