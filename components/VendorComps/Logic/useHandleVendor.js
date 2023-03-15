@@ -1,3 +1,4 @@
+import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
   ADD_VENDOR,
   CREATE_CLASS_ROOM_TRANING,
@@ -32,8 +33,10 @@ import {
   GET_VENDOR_ADMINS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -56,7 +59,7 @@ import {
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendor() {
   // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
@@ -78,6 +81,7 @@ export default function useHandleVendor() {
     client: userClient
   });
 
+  const skeletonCardCount = 6;
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
@@ -90,14 +94,17 @@ export default function useHandleVendor() {
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
+  const courseType = useRecoilValue(CourseTypeAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vendorAdminUsers, setVendorAdminUsers] = useState([]);
+  const [vendorCourses, setVendorCourses] = useState([[...Array(skeletonCardCount)]]);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+  const time = getUnixFromDate();
 
   async function handleMail() {
     // if (loading) return;
@@ -372,6 +379,28 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+  }
+
+  async function getVendorCourses() {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    const courseInfo = await loadQueryDataAsync(
+      GET_MY_COURSES,
+      {
+        publish_time: time,
+        pageSize: 1000,
+        pageCursor: '',
+        status: COURSE_STATUS.publish,
+        filters: {
+          Type: courseType,
+          SearchText: '',
+          LspId: lspId || userOrgData?.lsp_id,
+          Owner: vendorData?.name
+        }
+      },
+      {},
+      queryClient
+    );
+    setVendorCourses(courseInfo?.latestCourses?.courses);
   }
 
   // async function addUpdateVendor() {
@@ -823,6 +852,8 @@ export default function useHandleVendor() {
     vendorData,
     getVendorAdmins,
     vendorAdminUsers,
-    disableVendor
+    disableVendor,
+    getVendorCourses,
+    vendorCourses
   };
 }

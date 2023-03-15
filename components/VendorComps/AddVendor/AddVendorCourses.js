@@ -1,10 +1,18 @@
-import { addVendorCourse } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
+import { useEffect } from 'react';
+import useHandleVendor from '../Logic/useHandleVendor';
 
 export default function AddVendorCourses() {
+  const { getVendorCourses, vendorCourses } = useHandleVendor();
+  console.info('vendorCourses', vendorCourses);
+
+  useEffect(() => {
+    getVendorCourses();
+  }, []);
+
   return (
     <div>
-      <ZicopsCarousel title="Draft Courses" type="small" data={addVendorCourse} />
+      <ZicopsCarousel title="Draft Courses" type="small" data={vendorCourses} />
     </div>
   );
 }
