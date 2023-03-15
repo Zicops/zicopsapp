@@ -210,8 +210,7 @@ export default function useHandleVendor() {
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
       linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
-      vendorProfileImage: vendorInfo?.getVendorDetails?.photo_url,
-      vendorProfileImageUrl: vendorInfo?.getVendorDetails?.photo_url
+      photoUrl: vendorInfo?.getVendorDetails?.photo_url
     };
     setVendorData(getVendorObject(singleData));
 

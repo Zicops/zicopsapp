@@ -3,7 +3,8 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
-import { changeHandler } from '@/helper/common.helper';
+import { changeHandler, truncateToN } from '@/helper/common.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -21,7 +22,6 @@ export default function VendorMaster() {
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
   const { handlePhotoInput } = useHandleVendor();
-  console.info('emails', emails);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -65,6 +65,13 @@ export default function VendorMaster() {
   if (vendorId && vendorData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
+  function getFileName() {
+    return truncateToN(
+      vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
+      45
+    );
+  }
+
   return (
     <div className={`${styles.vendorMasterContainer}`}>
       <div className={`${styles.input1}`}>
@@ -97,18 +104,19 @@ export default function VendorMaster() {
           />
         </div>
         <div className={`${styles.input2}`}>
-          <label for="vendorName">Update vendor profile image: </label>
+          <label for="vendorName">Update vendor profile image:</label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title={vendorData?.vendorProfileImage?.name || 'Drag & Drop'} //image name is not setting here because we are getting an url
+            title={getFileName() || 'Drag & Drop'} //image name is not setting here because we are getting an url
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
-              fileName: vendorData?.vendorProfileImage?.name,
-              filePath: vendorData?.vendorProfileImage
+              fileName: getFileName(),
+              filePath: vendorData?.vendorProfileImage || vendorData?.photoUrl
             }}
+            filePreview={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             inputName="vendorProfileImage"
-            isActive={vendorData?.vendorProfileImage}
+            isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             isDisabled={isViewPage}
           />
         </div>

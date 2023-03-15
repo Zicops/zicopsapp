@@ -14,6 +14,7 @@ export function getVendorObject(data) {
     level: data?.level || 'lsp',
     address: data?.address || '',
     vendorProfileImage: data?.vendorProfileImage || null,
+    photoUrl: data?.photoUrl || null,
     website: data?.website || '',
     facebookURL: data?.facebookURL || '',
     instagramURL: data?.instagramURL || '',

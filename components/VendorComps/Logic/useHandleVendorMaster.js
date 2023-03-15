@@ -38,8 +38,7 @@ export default function useHandleVendorMaster() {
       status: VENDOR_MASTER_STATUS.active
     };
 
-    if (typeof vendorData?.vendorProfileImage === 'object')
-      sendData.photo = vendorData?.vendorProfileImage;
+    if (vendorData?.vendorProfileImage) sendData.photo = vendorData?.vendorProfileImage;
 
     let uniqEmails = [...new Set(vendorData?.users)];
     sendData.users = uniqEmails;
