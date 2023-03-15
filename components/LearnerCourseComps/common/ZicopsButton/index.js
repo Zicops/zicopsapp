@@ -11,6 +11,8 @@ export default function ZicopsButton({
   isLoading,
 
   padding,
+  paddingX,
+  paddingY,
   color,
   backgroundColor,
   border,
@@ -27,6 +29,10 @@ export default function ZicopsButton({
         } ${isLoading ? styles.loading : ''}`}
         style={{
           padding,
+          paddingLeft: paddingX,
+          paddingRight: paddingX,
+          paddingTop: paddingY,
+          paddingBottom: paddingY,
           color,
           backgroundColor,
           border,

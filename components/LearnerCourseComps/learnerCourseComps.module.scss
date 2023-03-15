@@ -341,7 +341,7 @@ $heroSectionPadding: 2em;
 
 .boxContainer {
   color: $white;
-  padding: 0.2em;
+  padding: 0.1em;
 
   height: 10em;
   width: 18em;
@@ -417,6 +417,7 @@ $heroSectionPadding: 2em;
 
   &.resourceBox {
     width: fit-content;
+    min-width: 15em;
 
     .resourceBtn {
       margin: 0.2em 0;
@@ -430,12 +431,11 @@ $heroSectionPadding: 2em;
       color: $primary;
 
       cursor: pointer;
-
-      &:hover {
-        background-color: $primary;
-        color: $bgContent;
-      }
     }
+  }
+
+  &.quizBox {
+    width: 12em;
   }
 }
 // TOP BAR ICONS END

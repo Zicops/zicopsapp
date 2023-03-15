@@ -30,4 +30,9 @@
   &.error {
     border-color: $error;
   }
+
+  &:hover {
+    background-color: $primary;
+    color: $bgContent;
+  }
 }

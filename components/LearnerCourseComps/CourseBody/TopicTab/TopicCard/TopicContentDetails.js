@@ -27,7 +27,7 @@ export default function TopicContentDetails({
 
   const currentTopicQuiz = topicQuiz?.filter((quiz) => quiz?.topicId === topicId);
   let currentTopicQuizAttempts = 0;
-  topicQuiz?.forEach((quiz) => {
+  currentTopicQuiz?.forEach((quiz) => {
     const isQuizAttempted = topicQuizAttempt?.find((qa) => qa?.quizId === quiz?.id);
     if (isQuizAttempted) ++currentTopicQuizAttempts;
   });

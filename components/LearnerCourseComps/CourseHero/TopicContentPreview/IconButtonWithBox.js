@@ -33,7 +33,7 @@ export default function IconButtonWithBox({
           </ButtonWithNoStyles>
 
           {/* subtitle and language element */}
-          {!!isBoxActive && boxComponent && <div className={styles.boxComp}>{boxComponent}</div>}
+          {!!(isBoxActive && boxComponent) && <div className={styles.boxComp}>{boxComponent}</div>}
         </div>
       </ToolTip>
     </>
