@@ -13,6 +13,7 @@ import AddExpertise from './AddVendor/common/AddExpertise';
 import useHandleVendor from './Logic/useHandleVendor';
 import { optionYearArray } from './Logic/vendorComps.helper';
 import useProfile from './Logic/useProfile';
+import { useRouter } from 'next/router';
 
 const AddVendorProfile = ({ data = {} }) => {
   const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
@@ -46,6 +47,9 @@ const AddVendorProfile = ({ data = {} }) => {
     selectedLanguages
   } = useProfile();
 
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
+
   return (
     <div className={`${styles.inputMain}`}>
       <div className={`${styles.inputContainer}`}>
@@ -56,7 +60,8 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'firstName',
               placeholder: 'Enter First Name',
               maxLength: 60,
-              value: profileData.firstName
+              value: profileData.firstName,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -68,7 +73,8 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
               maxLength: 60,
-              value: profileData.lastName
+              value: profileData.lastName,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -80,7 +86,8 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: profileData.email
+              value: profileData.email,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -93,7 +100,8 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Enter contact number',
               maxLength: 12,
               isNumericOnly: true,
-              value: profileData.contactNumber
+              value: profileData.contactNumber,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -107,7 +115,8 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: profileData.description
+              value: profileData.description,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -127,6 +136,7 @@ const AddVendorProfile = ({ data = {} }) => {
             inputName="profileImage"
             // hideRemoveBtn={true}
             isActive={profileData?.profileImage}
+            isDisabled={isViewPage}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -139,7 +149,8 @@ const AddVendorProfile = ({ data = {} }) => {
                 label: profileData.experienceYear,
                 value: profileData.experienceYear
               },
-              options: optionYearArray
+              options: optionYearArray,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData, 'experienceYear')}
             styleClass={styles.dropDownMain}
@@ -153,6 +164,7 @@ const AddVendorProfile = ({ data = {} }) => {
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
               handleClick={() => setIsOpenExpriences(true)}
+              isDisabled={isViewPage}
             />
           ) : (
             <>
@@ -168,6 +180,7 @@ const AddVendorProfile = ({ data = {} }) => {
                     getProfileExperience(profileData.profileId);
                     getSingleExperience(exp.PfId, exp.ExpId);
                   }}
+                  isDisabled={isViewPage}
                 />
               ))}
               <IconButton
@@ -175,6 +188,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setIsOpenExpriences(true)}
+                isDisabled={isViewPage}
               />
             </>
           )}
@@ -188,6 +202,7 @@ const AddVendorProfile = ({ data = {} }) => {
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
               handleClick={() => setIsOpenLanguage(true)}
+              isDisabled={isViewPage}
             />
           ) : (
             <>
@@ -207,6 +222,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setIsOpenLanguage(true)}
               />
             </>
@@ -219,6 +235,7 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add subject matter expertise"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage}
               handleClick={() => setOpenSmeExpertise(true)}
             />
           ) : (
@@ -239,6 +256,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setOpenSmeExpertise(true)}
               />
             </>
@@ -251,6 +269,7 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add classroom training expertise"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage}
               handleClick={() => setOpenCrtExpertise(true)}
             />
           ) : (
@@ -271,6 +290,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setOpenCrtExpertise(true)}
               />
             </>
@@ -283,6 +303,7 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add content development expertise"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage}
               handleClick={() => setOpenCdExpertise(true)}
             />
           ) : (
@@ -303,6 +324,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setOpenCdExpertise(true)}
               />
             </>
@@ -316,6 +338,7 @@ const AddVendorProfile = ({ data = {} }) => {
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
           changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+          isDisabled={isViewPage}
         />
       </div>
 

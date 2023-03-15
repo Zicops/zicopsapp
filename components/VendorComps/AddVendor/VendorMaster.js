@@ -25,6 +25,8 @@ export default function VendorMaster() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
+  const isViewPage = router.asPath?.includes('view-vendor');
+
   useEffect(() => {
     setVendorData((prev) => ({
       ...prev,
@@ -87,7 +89,8 @@ export default function VendorMaster() {
               inputName: 'address',
               placeholder: 'Enter Vendor Address',
               maxLength: 160,
-              value: vendorData?.address
+              value: vendorData?.address,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -105,6 +108,7 @@ export default function VendorMaster() {
             }}
             inputName="vendorProfileImage"
             isActive={vendorData?.vendorProfileImage}
+            isDisabled={isViewPage}
           />
         </div>
       </div>
@@ -116,7 +120,8 @@ export default function VendorMaster() {
               inputName: 'website',
               placeholder: 'https://website_abc.com',
               maxLength: 60,
-              value: vendorData?.website
+              value: vendorData?.website,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -144,7 +149,8 @@ export default function VendorMaster() {
             inputName: 'description',
             placeholder: 'Say Something...',
             maxLength: 160,
-            value: vendorData?.description
+            value: vendorData?.description,
+            isDisabled: isViewPage
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
