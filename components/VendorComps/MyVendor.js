@@ -6,6 +6,7 @@ import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import ConfirmPopUp from '../common/ConfirmPopUp/index.js';
 import useHandleVendor from './Logic/useHandleVendor.js';
 import useLoadVendorData from './Logic/useLoadVendorData.js';
 
@@ -15,42 +16,24 @@ const MyVendor = () => {
   const [vendorList, setVendorList] = useState(null);
 
   const { vendorDetails, getAllVendors, loading, disableVendor } = useHandleVendor();
-  const {
-    getLspVendors,
-    getUserVendors,
-    getVendorsTable,
-    getPaginatedVendors
-  } = useLoadVendorData();
+  const { getLspVendors, getUserVendors, getVendorsTable, getPaginatedVendors } =
+    useLoadVendorData();
 
   const [vendorTableData, setVendorTableData] = useState([]);
-
-  const pageSize = 100;
-
-  const [disabledVendors, setDisabledVendors] = useState([]);
-  const [enabledVendors, setEnabledVendors] = useState([]);
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [pageCursor, setPageCursor] = useState(null);
 
   useEffect(() => {
-    if (!vendorDetails?.length) {
-      // getAllVendors();
-      if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+    if (vendorDetails?.length) return;
 
-      getPaginatedVendors(pageSize).then((data) => setVendorTableData(data));
-    }
+    // getAllVendors();
+    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+
+    getPaginatedVendors().then((data) => {
+      setPageCursor(data?.pageCursor || null);
+      setVendorTableData(data?.vendors || []);
+    });
   }, []);
-
-  // useEffect(() => {
-  //   console.info(disabledVendors, enabledVendors);
-  // }, [disabledVendors, enabledVendors]);
-
-  const onSuccess = (params, isEnabled) => {
-    let updatedList = structuredClone(disabledVendors);
-    if (params.row.status.toLowerCase() === VENDOR_MASTER_STATUS.disable) {
-      setDisabledVendors([...updatedList, params.row.vendorId]);
-    } else {
-      const notDisabledVendor = updatedList.filter((vendorId) => vendorId !== params.row.vendorId);
-      setDisabledVendors(notDisabledVendor);
-    }
-  };
 
   const columns = [
     {
@@ -77,14 +60,7 @@ const MyVendor = () => {
       headerName: 'Status',
       flex: 1,
       renderCell: (params) => {
-        let isEnabled = params?.row?.status?.toLowerCase() === VENDOR_MASTER_STATUS?.active;
-        if (disabledVendors.includes(params?.row?.vendorId)) isEnabled = false;
-
-        // if (enabledVendors.includes(params?.row?.vendorId)) isEnabled = true;
-
-        const statusText = isEnabled ? 'Active' : 'Disable';
-
-        return <>{statusText}</>;
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.status}</span>;
       }
     },
     {
@@ -93,13 +69,6 @@ const MyVendor = () => {
       headerName: 'Action',
       flex: 0.5,
       renderCell: (params) => {
-        let isEnabled = params?.row?.status?.toLowerCase() === VENDOR_MASTER_STATUS?.active;
-        if (disabledVendors.includes(params?.row?.vendorId)) isEnabled = false;
-
-        // if (enabledVendors.includes(params?.row?.vendorId)) isEnabled = true;
-
-        const btnText = isEnabled ? 'Disable' : 'Enable';
-
         const buttonArr = [
           {
             text: 'View',
@@ -110,8 +79,8 @@ const MyVendor = () => {
             handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
-            text: btnText,
-            handleClick: () => disableVendor(params.row, isEnabled, onSuccess(params, isEnabled))
+            text: params?.row?.status === VENDOR_MASTER_STATUS?.active ? 'Disable' : 'Enable',
+            handleClick: () => setSelectedVendor(params.row)
           }
         ];
         return (
@@ -128,18 +97,53 @@ const MyVendor = () => {
   //   { label: 'First Name', value: 'first_name' },
   //   { label: 'Last Name', value: 'last_name' }
   // ];
+  const pageSize = getPageSizeBasedOnScreen();
 
   return (
     <>
       <ZicopsTable
         data={vendorTableData}
         columns={columns}
-        pageSize={getPageSizeBasedOnScreen()}
+        pageSize={pageSize}
         rowsPerPageOptions={[3]}
         loading={loading}
         tableHeight="70vh"
         customId="vendorId"
+        onPageChange={(currentPage) => {
+          if (vendorTableData?.length / pageSize - currentPage < 3 && pageCursor) {
+            getPaginatedVendors(pageCursor).then((data) => {
+              setPageCursor(data?.pageCursor || null);
+              setVendorTableData((prev) => [...(prev || []), ...(data?.vendors || [])]);
+            });
+          }
+        }}
       />
+
+      {!!selectedVendor?.vendorId && (
+        <ConfirmPopUp
+          title={`Do you want to ${
+            selectedVendor?.status === VENDOR_MASTER_STATUS.active ? 'disable' : 'enable'
+          } ${selectedVendor.name || ''} vendor?`}
+          btnObj={{
+            handleClickLeft: async (e) => {
+              const isEnabled = selectedVendor?.status === VENDOR_MASTER_STATUS.active;
+
+              e.currentTarget.disabled = true;
+              disableVendor(selectedVendor, isEnabled, () => {
+                setVendorTableData((prev) => {
+                  const _data = structuredClone(prev);
+                  const index = _data?.findIndex((v) => v?.vendorId === selectedVendor?.vendorId);
+                  if (index >= 0) _data[index].status = !isEnabled ? 'active' : 'disable';
+
+                  return _data;
+                });
+                setSelectedVendor(null);
+              });
+            },
+            handleClickRight: () => setSelectedVendor(null)
+          }}
+        />
+      )}
     </>
   );
 };
