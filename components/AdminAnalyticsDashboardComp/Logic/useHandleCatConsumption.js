@@ -1,6 +1,6 @@
 import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { COMMON_LSPS } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
@@ -23,6 +23,7 @@ export default function useHandleCatConsumption(isCategory = false) {
       setIsLoading(true);
       const queryVariables = {
         lsp_id: _lspId,
+        course_status: COURSE_STATUS.publish,
         course_type: courseType,
         categories: catSubCat?.cat?.map((s) => s?.Name)
       };
@@ -66,6 +67,7 @@ export default function useHandleCatConsumption(isCategory = false) {
       const queryVariables = {
         lsp_id: _lspId,
         course_type: courseType,
+        course_status: COURSE_STATUS.publish,
         sub_categories: catSubCat?.subCat?.map((s) => s?.Name)
       };
       const myCourseStatsRes = await loadQueryDataAsync(GET_BASIC_COURSES_STATS, {

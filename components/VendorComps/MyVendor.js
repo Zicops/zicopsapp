@@ -4,18 +4,34 @@ import { USER_LSP_ROLE } from '@/helper/constants.helper.js';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor.js';
+import useLoadVendorData from './Logic/useLoadVendorData.js';
 
 const MyVendor = () => {
-  const { vendorDetails, getAllVendors, getUserVendors, loading } = useHandleVendor();
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const [vendorList, setVendorList] = useState(null);
+
+  const { vendorDetails, getAllVendors, loading, disableVendor } = useHandleVendor();
+  const {
+    getLspVendors,
+    getUserVendors,
+    getVendorsTable,
+    getPaginatedVendors
+  } = useLoadVendorData();
+
+  const [vendorTableData, setVendorTableData] = useState([]);
+
+  const pageSize = 100;
+
   useEffect(() => {
     if (!vendorDetails?.length) {
       // getAllVendors();
       if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
-      return getAllVendors();
+
+      getPaginatedVendors(pageSize).then((data) => setVendorTableData(data));
     }
   }, []);
 
@@ -39,19 +55,29 @@ const MyVendor = () => {
       flex: 1
     },
     {
+      field: 'status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1
+    },
+    {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
       flex: 0.5,
       renderCell: (params) => {
         const buttonArr = [
-          { handleClick: () => {} },
           {
-            text: 'Edit',
-            handleClick: () => Router.push(`manage-vendor/add-vendor/${params.row.vendorId}`)
+            text: 'View',
+            handleClick: () => Router.push(`manage-vendor/view-vendor/${params.row.vendorId}`)
           },
           {
-            text: 'Disable'
+            text: 'Edit',
+            handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
+          },
+          {
+            text: 'Disable',
+            handleClick: () => disableVendor(params.row, () => {})
           }
         ];
 
@@ -67,16 +93,16 @@ const MyVendor = () => {
     }
   ];
 
-  const options = [
-    { label: 'Email', value: 'email' },
-    { label: 'First Name', value: 'first_name' },
-    { label: 'Last Name', value: 'last_name' }
-  ];
+  // const options = [
+  //   { label: 'Email', value: 'email' },
+  //   { label: 'First Name', value: 'first_name' },
+  //   { label: 'Last Name', value: 'last_name' }
+  // ];
 
   return (
     <>
       <ZicopsTable
-        data={vendorDetails}
+        data={vendorTableData}
         columns={columns}
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}

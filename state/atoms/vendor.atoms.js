@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
 export const VendorStateAtom = atom({
   key: 'vendorState',
@@ -19,7 +20,8 @@ export function getVendorObject(data) {
     linkedinURL: data?.linkedinURL || '',
     twitterURL: data?.twitterURL || '',
     description: data?.description || '',
-    users: data?.users || []
+    users: data?.users || [],
+    status: data?.status || VENDOR_MASTER_STATUS.draft
   };
 }
 export const VendorProfileAtom = atom({
@@ -40,8 +42,12 @@ export function getProfileObject(data) {
     languages: data?.languages || [],
     sme_expertises: data?.sme_expertises || [],
     crt_expertises: data?.crt_expertises || [],
+    content_development: data?.content_development || [],
     experience: data?.experience || [],
-    isSpeaker: data?.isSpeaker || false
+    isSpeaker: data?.isSpeaker || false,
+    sme: data?.sme || false,
+    crt: data?.crt || false,
+    cd: data?.cd || false
   };
 }
 
@@ -58,6 +64,7 @@ export const VendorExperiencesAtom = atom({
 export function getExperiencesObject(data) {
   return {
     expId: data?.expId || '',
+    pfId: data?.pfId || '',
     title: data?.title || '',
     companyName: data?.companyName || '',
     location: data?.location || '',
@@ -71,6 +78,11 @@ export function getExperiencesObject(data) {
   };
 }
 
+export const VendorAllExperiencesAtom = atom({
+  key: 'vendorAllExperiences',
+  default: []
+});
+
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
   default: getSMEServicesObject()
@@ -78,11 +90,13 @@ export const SmeServicesAtom = atom({
 
 export function getSMEServicesObject(data) {
   return {
+    sme_id: data?.sme_id || '',
     isApplicableSME: data?.isApplicableSME || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
@@ -93,11 +107,13 @@ export const CtServicesAtom = atom({
 
 export function getCTServicesObject(data) {
   return {
+    crt_id: data?.crt_id || '',
     isApplicableCT: data?.isApplicableCT || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
@@ -108,11 +124,13 @@ export const CdServicesAtom = atom({
 
 export function getCDServicesObject(data) {
   return {
+    cd_id: data?.cd_id || '',
     isApplicableCD: data?.isApplicableCD || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
-    formats: data?.formats || []
+    formats: data?.formats || [],
+    sampleFiles: data?.sampleFiles || []
   };
 }
 
@@ -141,3 +159,37 @@ export const vendorUserInviteAtom = atom({
   key: 'vendorUserInviteState',
   default: []
 });
+
+export const OrderAtom = atom({
+  key: 'orderState',
+  default: getOrderObject()
+});
+export function getOrderObject(data) {
+  return {
+    order_id: data?.order_id || '',
+    vendor_id: data?.vendor_id || '',
+    lsp_id: data?.lsp_id || '',
+    total: data?.total || 0,
+    tax: data?.tax || 0,
+    grand_total: data?.grand_total || 0,
+    status: data?.status || ''
+  };
+}
+export const SevicesAtom = atom({
+  key: 'servicesState',
+  default: getServicesObject()
+});
+export function getServicesObject(data) {
+  return {
+    service_id: data?.service_id || '',
+    order_id: data?.order_id || '',
+    service_type: data?.service_type || '',
+    description: data?.description || '',
+    unit: data?.unit || 0,
+    currency: data?.currency || '',
+    rate: data?.rate || 0,
+    quantity: data?.quantity || 0,
+    total: data?.total || 0,
+    status: data?.status || ''
+  };
+}

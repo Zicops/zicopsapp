@@ -17,6 +17,8 @@ const CoursePageTabs = forwardRef(
           <div className="tabs">
             <ul>
               {tabData.map((tab) => {
+                if (tab?.isHidden) return null;
+                
                 let isDisabled = false;
                 if (tab?.isDisabled || tab?.isDemo || tab?.isDev) isDisabled = true;
                 if (isDemo && tab?.isDemo) isDisabled = false;

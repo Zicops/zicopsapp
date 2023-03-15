@@ -30,7 +30,7 @@ const CourseHero = ({ set }) => {
           <div className="course-header-text">
             <div className="heading">
               <div className="col_75">
-                <div className='header'>
+                <div className="header">
                   <h1>{data?.title || 'Fundamentals Of Design Thinking'}</h1>
                   {/* <h1> 'Fundamentals Of Design Thinking Fundamentals Of Design Thinking Fundamentals Of Design Thinking'</h1> */}
 
@@ -40,7 +40,7 @@ const CourseHero = ({ set }) => {
                         options={floorOptions}
                         handleChange={(e) => setFloor(e)}
                         value={floor}
-                        customStyles={{marginBottom:'20px',padding:'0',height:'20px'}}
+                        customStyles={{ marginBottom: '20px', padding: '0', height: '20px' }}
                       />
                       <img src="/images/svg/favorite.svg" alt="" />
                     </div>
@@ -51,8 +51,8 @@ const CourseHero = ({ set }) => {
                 </p>
 
                 <ul>
-                  <li>eContent</li>
-                  <li>Self learning</li>
+                  <li>VILT</li>
+                  <li>Classroom Training</li>
                   <li>Duration: 120 mins</li>
                 </ul>
               </div>
@@ -151,21 +151,21 @@ const CourseHero = ({ set }) => {
           }
           .header {
             display: flex;
-            flex-direction:row;
-            align-items:center;
+            flex-direction: row;
+            align-items: center;
             justify-content: space-between;
             width: 85vw;
           }
           .header div {
             display: flex;
-            flex-direction:row !important;
+            flex-direction: row !important;
             justify-content: center;
             flex-direction: column;
             align-items: center;
           }
-          .header div img{
-            height:38px;
-            margin-left:20px;
+          .header div img {
+            height: 38px;
+            margin-left: 20px;
           }
           .back_btn {
             position: absolute;

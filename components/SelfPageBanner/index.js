@@ -11,7 +11,7 @@ const SelfPageBanner = ({ data }) => {
       <div className={`${styles.imgContainer}`}>
         <img src={`${data.bgImage}`} alt="" />
       </div>
-      <div className={`${styles.classroomText}`}>
+      {/* <div className={`${styles.classroomText}`}>
         <div className={`${styles.level}`}>
           <span>{data.org} presents</span>
         </div>
@@ -41,7 +41,7 @@ const SelfPageBanner = ({ data }) => {
             </button>
           </ToolTip>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
