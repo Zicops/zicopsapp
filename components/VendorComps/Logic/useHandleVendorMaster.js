@@ -1,13 +1,13 @@
 import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
 import { GET_VENDOR_DETAILS, userQueryClient } from '@/api/UserQueries';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useRecoilState } from 'recoil';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { handleCacheUpdate } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 export default function useHandleVendorMaster() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
@@ -53,17 +53,9 @@ export default function useHandleVendorMaster() {
           handleCacheUpdate(
             GET_VENDOR_DETAILS,
             { vendor_id: vendorId },
-            (cachedData) => {
-              const _cachedData = structuredClone(cachedData?.getVendorDetails);
-              const _updatedCache = _cachedData?.map((vendor) => {
-                const isCurrentVendor = vendor?.vendorId === data?.updateVendor?.vendorId;
-                if (isCurrentVendor) return { ...vendor, ...data?.updateVendor };
-
-                return vendor;
-              });
-
-              return { getVendorDetails: _updatedCache };
-            },
+            (cachedData) => ({
+              getVendorDetails: { ...cachedData?.getVendorDetails, ...data?.updateVendor }
+            }),
             userQueryClient
           );
         }
