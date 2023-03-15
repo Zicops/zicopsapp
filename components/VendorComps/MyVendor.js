@@ -103,7 +103,19 @@ const MyVendor = () => {
           if (vendorTableData?.length / pageSize - currentPage < 3 && pageCursor) {
             getPaginatedVendors(pageCursor).then((data) => {
               setPageCursor(data?.pageCursor || null);
-              setVendorTableData((prev) => [...(prev || []), ...(data?.vendors || [])]);
+              const _tableData = structuredClone(vendorTableData || []);
+
+              data?.vendors?.forEach((v) => {
+                const isSameVendorPresent = _tableData?.find(
+                  (vendor) => vendor?.vendorId === v?.vendorId
+                );
+
+                if (isSameVendorPresent) return;
+
+                _tableData?.push(v);
+              });
+
+              setVendorTableData(_tableData);
             });
           }
         }}
