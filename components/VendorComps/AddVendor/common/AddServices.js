@@ -29,8 +29,10 @@ import {
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isOpenProflie, setIsOpenProfile] = useState(false);
   const [expertisePopupState, setExpertisePopupState] = useState(false);
   const [languagePopupState, setLanguagePopupState] = useState(false);
@@ -312,39 +314,41 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               </>
             )}
           </div>
-          <div className={`${styles.addProfiles}`}>
-            <label for="profiles">Add profiles: </label>
-            {!profileDetails?.length ? (
-              <IconButton
-                text="Add profiles"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
-                handleClick={() => {
-                  setProfileData(getProfileObject());
-                  setIsOpenProfile(true);
-                }}
-              />
-            ) : (
-              <>
-                <div className={`${styles.showFilesMain}`}>
-                  {profileDetails?.map((data) => (
-                    <div className={`${styles.showFiles}`}>
-                      <img src="/images/svg/account_circle.svg" alt="" />
-                      {data?.first_name + '&' + data?.email}
-                    </div>
-                  ))}
-                </div>
+          {!!isDev && (
+            <div className={`${styles.addProfiles}`}>
+              <label for="profiles">Add profiles: </label>
+              {!profileDetails?.length ? (
                 <IconButton
-                  text="Add more"
+                  text="Add profiles"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setIsOpenProfile(true)}
-                  isDisabled={isViewPage}
+                  isDisabled={!data?.isApplicable}
+                  handleClick={() => {
+                    setProfileData(getProfileObject());
+                    setIsOpenProfile(true);
+                  }}
                 />
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <div className={`${styles.showFilesMain}`}>
+                    {profileDetails?.map((data) => (
+                      <div className={`${styles.showFiles}`}>
+                        <img src="/images/svg/account_circle.svg" alt="" />
+                        {data?.first_name + '&' + data?.email}
+                      </div>
+                    ))}
+                  </div>
+                  <IconButton
+                    text="Add more"
+                    styleClass={`${styles.button}`}
+                    imgUrl="/images/svg/add_circle.svg"
+                    handleClick={() => setIsOpenProfile(true)}
+                    isDisabled={isViewPage}
+                  />
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <VendorPopUp
