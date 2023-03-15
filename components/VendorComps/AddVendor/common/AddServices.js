@@ -129,6 +129,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     setSampleData(getSampleObject());
   };
 
+  // console.info(data.expertises, 'ayush1234');
+
   return (
     <>
       <div className={`${styles.addServiceContainer}`}>
@@ -164,9 +166,10 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text={experticeName}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
-                handleClick={() => setExpertisePopupState(true)}
-                isDisabled={isViewPage}
+                handleClick={() => {
+                  setExpertisePopupState(true);
+                }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -186,7 +189,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setExpertisePopupState(true)}
+                  handleClick={() => {
+                    setExpertisePopupState(true);
+                    setSelectedExpertise([...data?.expertises]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -200,9 +207,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add language"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
                 handleClick={() => setLanguagePopupState(true)}
-                isDisabled={isViewPage}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -222,7 +228,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setLanguagePopupState(true)}
+                  handleClick={() => {
+                    setLanguagePopupState(true);
+                    setSelectedLanguages([...data?.languages]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -234,9 +244,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add O/P deliverable formats"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
                 handleClick={() => setOPDeliverablePopupState(true)}
-                isDisabled={isViewPage}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -256,7 +265,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setOPDeliverablePopupState(true)}
+                  handleClick={() => {
+                    setOPDeliverablePopupState(true);
+                    setSelectedFormats([...data?.formats]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -270,12 +283,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add sample files"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
                 handleClick={() => {
                   setSamplePopupState(true);
                   getSampleFiles();
                 }}
-                isDisabled={isViewPage}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -295,6 +307,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
