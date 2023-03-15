@@ -4,11 +4,14 @@ import { useRouter } from 'next/router';
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import MainBody from '@/components/common/MainBody';
-import { vendorProfiles } from '@/components/VendorComps/Logic/vendorComps.helper';
+import { allProfileAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilValue } from 'recoil';
+
 const ViewProfile = () => {
   const router = useRouter();
-  const profileId = router.query.profileId || '0';
-  const viewProfileData = vendorProfiles?.filter((data) => data?.id === profileId);
+  const profileId = router.query.profileId || null;
+  const vendorProfiles = useRecoilValue(allProfileAtom);
+  const viewProfileData = vendorProfiles?.filter((data) => data?.pf_id === profileId);
   return (
     <div>
       <Sidebar sidebarItemsArr={vendorSideBarData} />

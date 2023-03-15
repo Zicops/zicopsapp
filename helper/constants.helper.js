@@ -214,8 +214,11 @@ export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
 export const VENDOR_MASTER_STATUS = {
   active: 'active',
-  draft: 'draft'
+  draft: 'draft',
+  disable: 'disable'
 };
+
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
 //Vendor Constant End
 

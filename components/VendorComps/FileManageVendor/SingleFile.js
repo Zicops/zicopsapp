@@ -1,6 +1,20 @@
-import React from 'react';
+import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
-const SingleFile = ({ data }) => {
+const SingleFile = ({ data, pType }) => {
+  const { deleteSample, getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } =
+    useHandleVendor();
+  let getSampleFiles;
+  if (pType === 'sme') {
+    getSampleFiles = getSMESampleFiles;
+  } else if (pType === 'crt') {
+    getSampleFiles = getCRTSampleFiles;
+  } else {
+    getSampleFiles = getCDSampleFiles;
+  }
+  const HandleDeleteFile = async () => {
+    await deleteSample(data?.sf_id, pType);
+    getSampleFiles();
+  };
   return (
     <div className={`${styles.singleFileContainer}`}>
       <div className={`${styles.singleProfileMain}`}>
@@ -12,7 +26,7 @@ const SingleFile = ({ data }) => {
           <div className={`${styles.hr}`}></div>
           <div className={`${styles.filePrice}`}>
             <div className={`${styles.rate}`}>{data?.price}</div>
-            <div className={`${styles.deleteIcon}`} onClick={() => {}}>
+            <div className={`${styles.deleteIcon}`} onClick={() => HandleDeleteFile()}>
               <img src="/images/svg/delete.svg" alt="" />
             </div>
           </div>

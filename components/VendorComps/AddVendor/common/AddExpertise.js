@@ -19,7 +19,20 @@ const AddExpertise = ({
       setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
     }
   };
-  console.info('selectedExpertise', selectedExpertise);
+
+  // const handleQuery = (event) => {
+  //   const query = event.target.value;
+  //   // setSearchQuery(query)
+  //   if (query.length > 0) {
+  //     setSearched(true);
+  //     setSearchedData([]);
+  //     const temp = subCat.filter((obj) => {
+  //       return obj.Name.toLowerCase().includes(query.toLowerCase());
+  //     });
+  //     setSearchedData(temp);
+  //   } else setSearched(false);
+  // };
+
   return (
     <div>
       <SearchBar

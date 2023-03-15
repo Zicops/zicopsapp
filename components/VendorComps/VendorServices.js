@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { CdServicesAtom, CtServicesAtom, SmeServicesAtom } from '@/state/atoms/vendor.atoms';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import VendorPopUp from './common/VendorPopUp';
+import useHandleVendor from './Logic/useHandleVendor';
 import { sampleFiles } from './Logic/vendorComps.helper';
+// import { sampleFiles } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
 import {
   ContentFormatIcon,
@@ -11,6 +15,14 @@ import {
 export default function VendorServices({ data }) {
   const [samplePopup, setSamplePopup] = useState(null);
   const [sampleDetails, setSampleDetails] = useState(false);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } = useHandleVendor();
+
+  useEffect(() => {
+    getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles;
+  }, []);
 
   return (
     <div className={`${styles.vendorTypeContainer}`}>
@@ -20,7 +32,7 @@ export default function VendorServices({ data }) {
           <span>Expertise</span>
         </div>
         <div className={`${styles.expertisePill}`}>
-          {data.expertise.map((value, key) => {
+          {data?.expertises?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -42,7 +54,7 @@ export default function VendorServices({ data }) {
           <span>Content Format</span>
         </div>
         <div className={`${styles.contentFormatPill}`}>
-          {data?.contentFormat?.map((value, key) => {
+          {data?.formats?.map((value, key) => {
             return <p>{value}</p>;
           })}
         </div>
@@ -57,7 +69,6 @@ export default function VendorServices({ data }) {
           })}
         </div>
       </div>
-      {console.info(samplePopup)}
       <VendorPopUp
         popUpState={[samplePopup != null, setSamplePopup]}
         size="large"
