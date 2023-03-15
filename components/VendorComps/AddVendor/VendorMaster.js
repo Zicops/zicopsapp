@@ -28,13 +28,6 @@ export default function VendorMaster() {
 
   const isViewPage = router.asPath?.includes('view-vendor');
 
-  useEffect(() => {
-    setVendorData((prev) => ({
-      ...prev,
-      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]
-    }));
-  }, [emails]);
-
   const socialMediaPopup = [
     {
       title: 'Facebook',

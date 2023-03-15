@@ -103,12 +103,24 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
     })
   };
 
+  const val = items?.map((e) => {
+    if (typeof e !== 'string') return { label: e, value: e };
+
+    return {
+      label: (
+        <p>
+          {e} <span>{type}</span>
+        </p>
+      ),
+      value: e
+    };
+  });
   return (
     <>
       <div style={{ position: 'relative' }}>
         <Select
-          options={items?.map((e) => ({ label: e, value: e }))}
-          value={items?.map((e) => ({ label: e, value: e }))}
+          options={val}
+          value={val}
           name="email"
           placeholder="Enter email and enter"
           className="w-100"
