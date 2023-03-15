@@ -119,7 +119,7 @@ const MyVendor = () => {
               const isEnabled = selectedVendor?.status === VENDOR_MASTER_STATUS.active;
 
               e.currentTarget.disabled = true;
-              disableVendor(selectedVendor, isEnabled, () => {
+              const isVendorStatusUpdated = await disableVendor(selectedVendor, isEnabled, () => {
                 setVendorTableData((prev) => {
                   const _data = structuredClone(prev);
                   const index = _data?.findIndex((v) => v?.vendorId === selectedVendor?.vendorId);
@@ -129,6 +129,8 @@ const MyVendor = () => {
                 });
                 setSelectedVendor(null);
               });
+
+              if (!isVendorStatusUpdated) setSelectedVendor(null);
             },
             handleClickRight: () => setSelectedVendor(null)
           }}

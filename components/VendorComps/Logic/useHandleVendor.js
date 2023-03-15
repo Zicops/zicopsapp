@@ -505,8 +505,14 @@ export default function useHandleVendor() {
           userQueryClient
         );
       }
-    }).catch((err) => console.info('Error'));
-    if (isError) return;
+    }).catch((err) => {
+      console.log('Error', err);
+      isError = true;
+    });
+    if (isError) {
+      setToastMsg({ type: 'danger', message: 'Vendor Status Update Error' });
+      return false;
+    }
 
     onSuccess();
 
