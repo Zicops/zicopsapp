@@ -1,19 +1,10 @@
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
-  ADD_VENDOR,
-  CREATE_CLASS_ROOM_TRANING,
-  CREATE_CONTENT_DEVELOPMENT,
   CREATE_EXPERIENCE_VENDOR,
-  CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
-  CREATE_SUBJECT_MATTER_EXPERTISE,
   DELETE_SAMPLE_FILE,
   INVITE_USERS_WITH_ROLE,
-  UPDATE_CLASS_ROOM_TRANING,
-  UPDATE_CONTENT_DEVELOPMENT,
   UPDATE_EXPERIENCE_VENDOR,
-  UPDATE_PROFILE_VENDOR,
-  UPDATE_SUBJECT_MATTER_EXPERTISE,
   UPDATE_VENDOR,
   userClient
 } from '@/api/UserMutations';
@@ -62,20 +53,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendor() {
-  // const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
-  // const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
-  // const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
-  // const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [createExperienceVendor] = useMutation(CREATE_EXPERIENCE_VENDOR, { client: userClient });
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
-  // const [createSme] = useMutation(CREATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
-  // const [updateSme] = useMutation(UPDATE_SUBJECT_MATTER_EXPERTISE, { client: userClient });
-  // const [createCrt] = useMutation(CREATE_CLASS_ROOM_TRANING, { client: userClient });
-  // const [updateCrt] = useMutation(UPDATE_CLASS_ROOM_TRANING, { client: userClient });
-  // const [createCd] = useMutation(CREATE_CONTENT_DEVELOPMENT, { client: userClient });
-  // const [updateCd] = useMutation(UPDATE_CONTENT_DEVELOPMENT, { client: userClient });
   const [deleteFile] = useMutation(DELETE_SAMPLE_FILE, { client: userClient });
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
@@ -233,6 +214,8 @@ export default function useHandleVendor() {
       vendorProfileImageUrl: vendorInfo?.getVendorDetails?.photo_url
     };
     setVendorData(getVendorObject(singleData));
+
+    setEmailId(vendorInfo?.getVendorDetails?.users || []);
   }
 
   async function getAllProfileInfo() {
