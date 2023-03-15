@@ -505,7 +505,7 @@ export default function useHandleVendor() {
           userQueryClient
         );
       }
-    }).catch((err) => console.info('Error'));
+    }).catch((err) => console.log('Error'));
     if (isError) return;
 
     onSuccess();

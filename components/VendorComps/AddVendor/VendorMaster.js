@@ -21,7 +21,6 @@ export default function VendorMaster() {
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
   const { handlePhotoInput } = useHandleVendor();
-  console.info('emails', emails);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;

@@ -4,7 +4,6 @@ import useHandleVendor from '../Logic/useHandleVendor';
 
 export default function AddVendorCourses() {
   const { getVendorCourses, vendorCourses } = useHandleVendor();
-  console.info('vendorCourses', vendorCourses);
 
   useEffect(() => {
     getVendorCourses();
