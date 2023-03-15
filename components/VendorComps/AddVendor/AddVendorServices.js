@@ -15,7 +15,7 @@ export default function AddVendorServices() {
       data: smeData,
       setData: setSMEData,
       title: 'Subject Matter Expertise',
-      inputName: 'isApplicableSME',
+      inputName: 'isApplicable',
       experticeName: 'Add Subject Matter Expertise',
       ptype: ptype[0]?.SME
     },
@@ -23,7 +23,7 @@ export default function AddVendorServices() {
       data: ctData,
       setData: setCTData,
       title: 'Classroom Training',
-      inputName: 'isApplicableCT',
+      inputName: 'isApplicable',
       experticeName: 'Add Classroom Training Expertise',
       ptype: ptype[0]?.CRT
     },
@@ -31,7 +31,7 @@ export default function AddVendorServices() {
       data: cdData,
       setData: setCDData,
       title: 'Content Development',
-      inputName: 'isApplicableCD',
+      inputName: 'isApplicable',
       experticeName: 'Add Content Development Expertise',
       ptype: ptype[0]?.CD
     }

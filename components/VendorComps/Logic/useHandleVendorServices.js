@@ -35,7 +35,7 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: smeData?.serviceDescription || '',
-      is_applicable: smeData?.isApplicableSME || false,
+      is_applicable: smeData?.isApplicable || false,
       expertise: smeData?.expertises || [],
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
@@ -73,7 +73,7 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: ctData?.serviceDescription || '',
-      is_applicable: ctData?.isApplicableCT || false,
+      is_applicable: ctData?.isApplicable || false,
       expertise: ctData?.expertises || [],
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
@@ -112,7 +112,7 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: cdData?.serviceDescription || '',
-      is_applicable: cdData?.isApplicableCD || false,
+      is_applicable: cdData?.isApplicable || false,
       expertise: cdData?.expertises || [],
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
