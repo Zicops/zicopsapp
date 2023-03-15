@@ -1,13 +1,16 @@
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
 import { getQueryData } from '../../../helper/api.helper';
 
 export default function useHandleDragDrop(courseContextData) {
     const course=[]
-//   const { fullCourse, updateCourseMaster } = courseContextData;
-  const { catSubCat } = useHandleCatSubCat();
-
+  // const { fullCourse, updateCourseMaster } = courseContextData;
+const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+const { catSubCat, setActiveCatId } = useHandleCatSubCat();
+// fullCourse?.sub_category
   const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
   const [droplist, updateDroplist] = useState(course || []);

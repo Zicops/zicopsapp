@@ -7,7 +7,7 @@ import Topics from '../Topics';
 
 export const courseTabs = {
   courseMaster: { name: 'Course Master', component: <CourseMaster /> },
-  details: { name: 'Details', component: <Details/>},
+  details: { name: 'Details', component:<Details/>},
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
   commercials: { name: 'Commercials', component: <Commercials /> },

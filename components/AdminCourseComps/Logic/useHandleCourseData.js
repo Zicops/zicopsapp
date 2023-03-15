@@ -113,5 +113,36 @@ export default function useHandleCourseData() {
     setCourseMetaData(_courseMetaData);
   }
 
-  return { ownerList, handleChange, handleExpertise, isDataPresent };
+  function handlePreviewVideo(e) {
+    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
+    if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
+      setCourseMetaData({
+        ...courseMetaData,
+        previewVideo: e.target.files[0]
+      });
+    }
+    e.target.value = '';
+  }
+  function handleImage(e) {
+    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
+    if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
+      setCourseMetaData({
+        ...courseMetaData,
+        image: e.target.files[0]
+      })
+    }
+    e.target.value = '';
+  }
+
+  function handleTileImage(e) {
+    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
+    if (e.target.value && acceptedType.includes(e.target.files[0]?.type)) {
+      setCourseMetaData({
+        ...courseMetaData,
+        tileImage: e.target.files[0]
+      })
+    }
+    e.target.value = '';
+  }
+  return { ownerList, handleChange, handleExpertise, isDataPresent, handlePreviewVideo ,handleImage,handleTileImage};
 }

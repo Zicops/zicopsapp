@@ -1,3 +1,4 @@
+@import '../../styles/base.scss';
 // Course Page Title
 .courseName {
   display: block;
@@ -302,8 +303,8 @@ $marginBetweenInputs: 1em;
   line-height: 24px;
   color: #484848;
 }
-.courseDiscription
-{
+
+.courseDiscription {
   display: flex;
   flex-direction: column;
   gap: $gapBetweenInputAndLabel;
@@ -313,8 +314,9 @@ $marginBetweenInputs: 1em;
     gap: $marginBetweenInputs;
   }
 }
-.courseOutcome,.courseHighlights
-{
+
+.courseOutcome,
+.courseHighlights {
   margin-top: $marginBetweenInputs;
   display: flex;
   flex-direction: column;
@@ -325,8 +327,26 @@ $marginBetweenInputs: 1em;
     gap: $marginBetweenInputs;
   }
 }
-.aboutInputContainer>div
+.bulletPoint >input
 {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid $darkThree;
+  background-color: $darkTwo;
+  color: $secondaryBlack;
+  font-size: 13px;
+  border-radius: 0px;
+  font-family: 'Poppins';
+  caret-color: $white;
+  color: $white;
+}
+// .bulletPoint >button
+// {
+//   outline: none;
+//   border: none;
+// }
+
+.aboutInputContainer>div {
   display: flex;
   flex-direction: column;
   gap: $gapBetweenInputAndLabel;
@@ -336,9 +356,9 @@ $marginBetweenInputs: 1em;
     gap: $marginBetweenInputs;
   }
 }
-.aboutCurriculum
-{
-  
+
+.aboutCurriculum {
+
   display: flex;
   flex-direction: column;
   // gap: $gapBetweenInputAndLabel;
@@ -348,3 +368,49 @@ $marginBetweenInputs: 1em;
     gap: $marginBetweenInputs;
   }
 }
+
+.bulletPointInputContainer  {
+  align-items: flex-start;
+  font-size: 13px;
+  word-break: break-all;
+
+  &.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+
+    input {
+      width: 25%;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+  }
+
+}
+
+.bullets {
+  display: flex;
+  justify-content: space-between;
+
+  border-radius: 5px;
+  font-size: inherit;
+  color: $darkThree;
+
+  background-color: $tertiaryBlack;
+  border: 1px solid $darkThree;
+  padding: 3px 10px;
+  margin: 5px auto;
+
+  &:last-child {
+    margin-bottom: 10px;
+  }
+}
+.bullets >button
+{
+  border: none;
+  outline: none;
+  background-color: $tertiaryBlack;
+  color: white;
+}
+

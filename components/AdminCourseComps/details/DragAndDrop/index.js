@@ -7,7 +7,7 @@ import useHandleDragDrop from '../../Logic/useHandleDragAndDrop';
 // import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 // TODO: update this component later
 const DragDrop = ({ data, contextData, isError = false, isFreezed = false }) => {
-  const { fullCourse } = useContext(courseContext);
+  // const { fullCourse } = useContext(courseContext);
   const {
     draglist,
     droplist,
@@ -94,7 +94,7 @@ const DragDrop = ({ data, contextData, isError = false, isFreezed = false }) => 
                   }`}
                   {...provided.droppableProps}
                   ref={provided.innerRef}>
-                  {droplist.map(({ dragOrder, name, rank }, index) => {
+                  {droplist?.map(({ dragOrder, name, rank }, index) => {
                     // console.log(dragOrder, name, index);
                     return (
                       <Draggable

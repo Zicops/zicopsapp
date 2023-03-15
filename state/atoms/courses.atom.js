@@ -38,6 +38,8 @@ export function getCourseMetaDataObj(data = {}) {
     summary: data?.summary || '',
 
     // course about
+    Trainers:data?.Trainers || [],
+    Moderators:data?.Moderators || [],
     description: data?.description || '',
     outcomes: data?.outcomes || [],
     benefits: data?.benefits || [], // highlights
@@ -45,6 +47,7 @@ export function getCourseMetaDataObj(data = {}) {
     relatedSkills: data?.relatedSkills || [],
     goodFor: data?.goodFor || [],
     mustFor: data?.mustFor || [],
+    Curriculum:data?.Curriculum || '',
 
     // course topics
     duration: data?.duration || 0,

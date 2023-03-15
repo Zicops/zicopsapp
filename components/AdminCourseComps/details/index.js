@@ -1,30 +1,21 @@
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-// import UploadForm from '../common/FormComponents/UploadForm';
-import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import InputWithCheckbox from '@/common/InputWithCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import RTE from '@/components/common/FormComponents/RTE';
 // import styles from "./adminCourse.module.scss"
 import styles from '../adminCourseComps.module.scss';
-// import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
-import Dropdown from '@/components/common/Dropdown';
 import DragDrop from './DragAndDrop';
 import NextBtn from '../NextBtn';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-// import DropdownSelect from '../Tabs/common/DropdownSelect';
-// import TwoRowCarousel from '../common/TwoRowCarousel';
-// import DropdownSelect from '../../Tabs/common/DropdownSelect';
 const Details = () => {
-    const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+    // const courseMetaData = useRecoilValue(CourseMetaDataAtom);
     const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  
-    const { ownerList, handleChange, handleExpertise } = useHandleCourseData();
+    const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+    const { ownerList, handleChange, handleExpertise, handlePreviewVideo, handleImage, handleTileImage } = useHandleCourseData();
     const { catSubCat, setActiveCatId } = useHandleCatSubCat();
     return (
         <>
@@ -36,11 +27,9 @@ const Details = () => {
                             isSearchEnable: true,
                             inputName: 'percentage',
                             placeholder: 'Development',
-                            value: courseMetaData?.subCategories?
-                            {value:courseMetaData?.subCategories,label:courseMetaData?.subCategories}
-                            :null
+                            value: { value: courseMetaData?.subCategory, label: courseMetaData?.subCategory }
                         }}
-                        changeHandler={(e)=>handleChange({})}
+                        changeHandler={(e) => handleChange({ subCategories: courseMetaData.subCategory })}
                     />
                 </div>
             </div>
@@ -57,11 +46,9 @@ const Details = () => {
                             placeholder: 'Privide an outline of the course in less then 500 charactor',
                             rows: 4,
                             maxLength: 500,
-                            value: courseMetaData?.summary 
+                            value: courseMetaData?.summary
                         }}
-                    // changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-                    changeHandler={(e)=>handleChange({...CourseMetaDataAtom, summary:e.target?.value})}
-                    // handleChange({ category: e?.value, subCategory: '' });
+                        changeHandler={(e) => handleChange({ summary: e.target?.value })}
                     />
                 </div>
             </div>
@@ -75,15 +62,15 @@ const Details = () => {
                         styleClass={`${styles.uploadCoursePreviewImage}`}
                         styleClassBtn={`${styles.uploadCourseButton}`}
                         title="Browse and upload"
-                    // handleFileUpload={handleProfilePhoto}
-                    // handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
-                    // previewData={{
-                    //   fileName: profileData?.profileImage?.name,
-                    //   filePath: profileData?.profileImage
-                    // }}
-                    // inputName="profileImage"
-                    // hideRemoveBtn={true}
-                    // isActive={profileData?.profileImage}
+                        handleFileUpload={handlePreviewVideo}
+                        handleRemove={() => setCourseMetaData({ ...courseMetaData, previewVideo: null })}
+                        previewData={{
+                            fileName: courseMetaData?.previewVideo?.name,
+                            filePath: courseMetaData?.previewVideo
+                        }}
+                        inputName="previewVideo"
+                        // hideRemoveBtn={true}
+                        isActive={courseMetaData?.previewVideo}
                     />
                 </div>
             </div>
@@ -96,15 +83,15 @@ const Details = () => {
                         styleClass={`${styles.uploadCoursePreviewImage}`}
                         styleClassBtn={`${styles.uploadCourseButton}`}
                         title="Browse and upload"
-                    // handleFileUpload={handleProfilePhoto}
-                    // handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
-                    // previewData={{
-                    //   fileName: profileData?.profileImage?.name,
-                    //   filePath: profileData?.profileImage
-                    // }}
-                    // inputName="profileImage"
-                    // hideRemoveBtn={true}
-                    // isActive={profileData?.profileImage}
+                        handleFileUpload={handleImage}
+                        handleRemove={() => setCourseMetaData({ ...courseMetaData, image: null })}
+                        previewData={{
+                            fileName: courseMetaData?.image?.name,
+                            filePath: courseMetaData?.image
+                        }}
+                        inputName="image"
+                        // hideRemoveBtn={true}
+                        isActive={courseMetaData?.image}
                     />
                 </div>
                 <div className={`${styles.courseTitleImag}  ${styles.marginBetweenInputs} `}>
@@ -114,16 +101,15 @@ const Details = () => {
                         styleClassBtn={`${styles.uploadCourseButton}`}
                         title="Browse and upload"
 
-                    // handleFileUpload={handleProfilePhoto}
-                    // handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
-                    // previewData={{
-                    //   fileName: profileData?.profileImage?.name,
-                    //   filePath: profileData?.profileImage
-                    // }}
-                    // inputName="profileImage"
-                    // hideRemoveBtn={true}
-                    // isActive={profileData?.profileImage}
-
+                        handleFileUpload={handleTileImage}
+                        handleRemove={() => setCourseMetaData({ ...courseMetaData, tileImage: null })}
+                        previewData={{
+                            fileName: courseMetaData?.tileImage?.name,
+                            filePath: courseMetaData?.tileImage
+                        }}
+                        inputName="tileImage"
+                        // hideRemoveBtn={true}
+                        isActive={courseMetaData?.tileImage}
                     />
                 </div>
             </div>
