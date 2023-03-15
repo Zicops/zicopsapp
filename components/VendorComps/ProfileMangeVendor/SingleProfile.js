@@ -10,11 +10,13 @@ import {
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
+import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
 const SingleProfile = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const { addUpdateProfile, addUpdateExperience, getAllProfileInfo } = useHandleVendor();
+  const { addUpdateExperience, getAllProfileInfo } = useHandleVendor();
+  const { addUpdateProfile } = useHandleVendorProfile();
   const editProfileData = profileDetails?.filter((e) => e?.pf_id === data?.pf_id);
   const editProfilehandler = () => {
     const profileInfo = {

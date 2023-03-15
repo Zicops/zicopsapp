@@ -59,13 +59,6 @@ export default function VendorMaster() {
     }
   ];
 
-  // console.info(
-  //   vendorId && vendorData?.vendorId !== vendorId,
-  //   vendorId,
-  //   vendorData?.vendorId,
-  //   vendorId
-  // );
-
   if (vendorId && vendorData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 

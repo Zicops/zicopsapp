@@ -1,6 +1,6 @@
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { handleCacheUpdate } from '@/helper/data.helper';
-import { userQueryClient } from '@/api/UserQueries';
+import { GET_SINGLE_PROFILE_DETAILS, userQueryClient } from '@/api/UserQueries';
 import { CREATE_PROFILE_VENDOR, UPDATE_PROFILE_VENDOR, userClient } from '@/api/UserMutations';
 import { useRecoilState } from 'recoil';
 import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
@@ -64,7 +64,7 @@ export default function useHandleVendorProfile() {
           );
         }
       }).catch((err) => {
-        console.log(err);
+        console.info(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
       });
@@ -95,9 +95,9 @@ export default function useHandleVendorProfile() {
           );
         }
       }).catch((err) => {
-        console.log(err);
+        console.info(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add profile Error' });
+        return setToastMsg({ type: 'danger', message: 'Add Vendor profile Error' });
       });
       if (isError) return;
       setToastMsg({ type: 'success', message: 'Vendor Profile Created' });

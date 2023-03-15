@@ -117,7 +117,7 @@ const AddVendorProfile = ({ data = {} }) => {
           <BrowseAndUpload
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
-            title="Drag and drop"
+            title={profileData?.profileImage?.name || 'Drag & Drop'}
             handleFileUpload={handleProfilePhoto}
             handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
             previewData={{
@@ -156,7 +156,7 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileExperience?.map((exp) => (
+              {profileData?.experience?.map((exp) => (
                 <IconButton
                   text={
                     typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name

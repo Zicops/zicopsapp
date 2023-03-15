@@ -84,7 +84,11 @@ export default function useHandleVendorMaster() {
       vendorData?.level &&
       vendorData?.type &&
       vendorData?.address &&
-      vendorData?.website
+      vendorData?.website &&
+      (vendorData?.facebookURL ||
+        vendorData?.instagramURL ||
+        vendorData?.twitterURL ||
+        vendorData?.linkedinURL)
     ) {
       const res = await addNewVendor({
         variables: sendData,
