@@ -18,6 +18,8 @@ import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
 import { OrderAtom, SevicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 export default function useHandleMarketYard() {
   const [addOrder] = useMutation(ADD_ORDER, { client: userClient });
   const [updateOrder] = useMutation(UPDATE_ORDER, { client: userClient });
@@ -25,10 +27,14 @@ export default function useHandleMarketYard() {
   const [updateServices] = useMutation(UPDATE_ORDER_SERVICES, { client: userClient });
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
   const [servicesDetails, setServicesDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+  const vendorId = router.query.vendorId || null;
 
   async function getLspVendors(lspId, isDataReturn = false) {
     setLoading(true);
@@ -87,10 +93,10 @@ export default function useHandleMarketYard() {
   }
 
   async function addUpdateOrder() {
+    const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
-      order_id: orderData?.order_id,
-      vendor_id: orderData?.vendor_id,
-      lsp_id: orderData?.lsp_id,
+      vendor_id: vendorId,
+      lsp_id: lspId,
       total: orderData?.total,
       tax: orderData?.tax,
       grand_total: orderData?.grand_total,
@@ -130,8 +136,8 @@ export default function useHandleMarketYard() {
       currency: servicesData?.currency || '',
       rate: servicesData?.rate || 0,
       quantity: servicesData?.quantity || 0,
-      total: servicesData?.total || 0,
-      Status: VENDOR_MASTER_STATUS.active
+      total: servicesData?.rate * servicesData?.quantity || 0,
+      status: VENDOR_MASTER_STATUS.active
     };
     let isError = false;
     if (servicesData?.service_id) {

@@ -17,6 +17,7 @@ const AddExpriences = () => {
           inputOptions={{
             inputName: 'title',
             placeholder: 'Enter title',
+            maxLength: 60,
             value: experiencesData?.title
           }}
           changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -29,6 +30,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'companyName',
               placeholder: 'Enter company name',
+              maxLength: 60,
               value: experiencesData?.companyName
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -58,6 +60,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'location',
               placeholder: 'Ex. Pune, Maharashtra',
+              maxLength: 160,
               value: experiencesData?.location
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}

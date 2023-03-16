@@ -14,6 +14,7 @@ export function getVendorObject(data) {
     level: data?.level || 'lsp',
     address: data?.address || '',
     vendorProfileImage: data?.vendorProfileImage || null,
+    photoUrl: data?.photoUrl || null,
     website: data?.website || '',
     facebookURL: data?.facebookURL || '',
     instagramURL: data?.instagramURL || '',
@@ -38,6 +39,7 @@ export function getProfileObject(data) {
     contactNumber: data?.contactNumber || '',
     description: data?.description || '',
     profileImage: data?.profileImage || null,
+    photoUrl: data?.photoUrl || null,
     experienceYear: data?.experienceYear || null,
     languages: data?.languages || [],
     sme_expertises: data?.sme_expertises || [],
@@ -91,7 +93,7 @@ export const SmeServicesAtom = atom({
 export function getSMEServicesObject(data) {
   return {
     sme_id: data?.sme_id || '',
-    isApplicableSME: data?.isApplicableSME || false,
+    isApplicable: data?.isApplicable || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
@@ -108,7 +110,7 @@ export const CtServicesAtom = atom({
 export function getCTServicesObject(data) {
   return {
     crt_id: data?.crt_id || '',
-    isApplicableCT: data?.isApplicableCT || false,
+    isApplicable: data?.isApplicable || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],
@@ -125,7 +127,7 @@ export const CdServicesAtom = atom({
 export function getCDServicesObject(data) {
   return {
     cd_id: data?.cd_id || '',
-    isApplicableCD: data?.isApplicableCD || false,
+    isApplicable: data?.isApplicable || false,
     serviceDescription: data?.serviceDescription || '',
     languages: data?.languages || [],
     expertises: data?.expertises || [],

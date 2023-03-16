@@ -9,7 +9,7 @@ import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox'
 
 const VendorUsers = () => {
   const { vendorAdminUsers, loading, getVendorAdmins } = useHandleVendor();
-  console.info('vendorData', vendorAdminUsers);
+
   useEffect(() => {
     getVendorAdmins();
   }, []);

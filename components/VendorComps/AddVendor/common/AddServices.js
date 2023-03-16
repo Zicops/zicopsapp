@@ -28,6 +28,7 @@ import {
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -47,6 +48,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
 
   const {
     addUpdateProfile,
@@ -134,6 +138,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             type="checkbox"
             name={inputName}
             isChecked={data[`${inputName}`]}
+            isDisabled={isViewPage}
             changeHandler={(e) => changeHandler(e, data, setData)}
           />
         </div>
@@ -144,7 +149,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               inputOptions={{
                 inputName: 'serviceDescription',
                 placeholder: 'Describe your service in 160 characters',
-                value: data.serviceDescription
+                maxLength: 160,
+                value: data.serviceDescription,
+                isDisabled: isViewPage || !data?.isApplicable
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
@@ -157,7 +164,10 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text={experticeName}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setExpertisePopupState(true)}
+                handleClick={() => {
+                  setExpertisePopupState(true);
+                }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -177,7 +187,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setExpertisePopupState(true)}
+                  handleClick={() => {
+                    setExpertisePopupState(true);
+                    setSelectedExpertise([...data?.expertises]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -192,6 +206,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setLanguagePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -211,7 +226,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setLanguagePopupState(true)}
+                  handleClick={() => {
+                    setLanguagePopupState(true);
+                    setSelectedLanguages([...data?.languages]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -224,6 +243,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setOPDeliverablePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -243,7 +263,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setOPDeliverablePopupState(true)}
+                  handleClick={() => {
+                    setOPDeliverablePopupState(true);
+                    setSelectedFormats([...data?.formats]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -261,6 +285,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   setSamplePopupState(true);
                   getSampleFiles();
                 }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -280,6 +305,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -291,6 +317,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text="Add profiles"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={!data?.isApplicable}
                 handleClick={() => {
                   setProfileData(getProfileObject());
                   setIsOpenProfile(true);
@@ -311,6 +338,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
                   handleClick={() => setIsOpenProfile(true)}
+                  isDisabled={isViewPage}
                 />
               </>
             )}

@@ -9,6 +9,8 @@ import { allProfileAtom, getProfileObject, VendorProfileAtom } from '@/state/ato
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
 import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
+import { useRouter } from 'next/router';
+
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
@@ -16,6 +18,10 @@ const ProfileManageVendor = () => {
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const { addUpdateExperience, getAllProfileInfo } = useHandleVendor();
   const { addUpdateProfile } = useHandleVendorProfile();
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
+
   const addProfileHandler = () => {
     setProfileData(getProfileObject());
     setIsOpenProfile(true);
@@ -47,6 +53,7 @@ const ProfileManageVendor = () => {
             text="Add another profile"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
+            isDisabled={isViewPage}
           />
         </div>
       </div>

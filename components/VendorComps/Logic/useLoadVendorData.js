@@ -5,7 +5,7 @@ import {
   GET_USER_VENDORS,
   GET_PAGINATED_VENDORS
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -53,13 +53,13 @@ export default function useLoadVendorData() {
     return sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
   }
 
-  async function getPaginatedVendors(pageSize) {
+  async function getPaginatedVendors(pageCursor = '') {
     const lspId = sessionStorage?.getItem('lsp_id');
     if (!lspId) return [];
 
-    const vendorList = await loadAndCacheDataAsync(
+    const vendorList = await loadQueryDataAsync(
       GET_PAGINATED_VENDORS,
-      { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: pageSize, filters: {} },
+      { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: {} },
       {},
       userQueryClient
     ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }));
@@ -69,7 +69,12 @@ export default function useLoadVendorData() {
       return [];
     }
 
-    return sortArrByKeyInOrder(vendorList?.getPaginatedVendors?.vendors || [], 'updated_at', false);
+    vendorList.getPaginatedVendors.vendors = sortArrByKeyInOrder(
+      vendorList?.getPaginatedVendors?.vendors || [],
+      'updated_at',
+      false
+    );
+    return vendorList?.getPaginatedVendors;
   }
 
   async function getUserVendors() {

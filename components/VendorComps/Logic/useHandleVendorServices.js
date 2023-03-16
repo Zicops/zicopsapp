@@ -35,12 +35,12 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: smeData?.serviceDescription || '',
-      is_applicable: smeData?.isApplicableSME || false,
+      is_applicable: smeData?.isApplicable || false,
       expertise: smeData?.expertises || [],
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
       sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
@@ -54,7 +54,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SME Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
@@ -73,12 +73,12 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: ctData?.serviceDescription || '',
-      is_applicable: ctData?.isApplicableCT || false,
+      is_applicable: ctData?.isApplicable || false,
       expertise: ctData?.expertises || [],
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
       sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
@@ -93,7 +93,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CRT Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
@@ -112,12 +112,12 @@ export default function useHandleVendorServices() {
     const sendData = {
       vendor_id: vendorId,
       description: cdData?.serviceDescription || '',
-      is_applicable: cdData?.isApplicableCD || false,
+      is_applicable: cdData?.isApplicable || false,
       expertise: cdData?.expertises || [],
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
       sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      Status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 
@@ -133,7 +133,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CD Updated' });
+      setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {

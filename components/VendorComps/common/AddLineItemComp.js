@@ -10,11 +10,10 @@ import { changeHandler } from '@/helper/common.helper';
 
 export default function AddLineItemComp() {
   const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
-  const [isExpertise, setIsExpertise] = useState(true);
 
   const decrementHandler = () => {
     if (servicesData?.quantity > 0) {
-      setServicesData(servicesData?.quantity - 1);
+      setServicesData({ ...servicesData, quantity: servicesData?.quantity - 1 });
     }
   };
   return (
@@ -68,11 +67,11 @@ export default function AddLineItemComp() {
         <LabeledInput
           inputOptions={{
             inputName: 'rate',
-            placeholder: '0000',
+            placeholder: '',
             value: servicesData?.rate
           }}
           inputClass={`${styles.lineInput}`}
-          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'rate')}
+          changeHandler={(e) => changeHandler(e, servicesData, setServicesData)}
         />
       </div>
       <div>
@@ -92,7 +91,7 @@ export default function AddLineItemComp() {
       <div>
         <p className={`${styles.heading}`}>Total</p>
         <div className={`${styles.total}`}>
-          <p>{servicesData?.total}</p>
+          <p>{servicesData?.rate * servicesData?.quantity}</p>
         </div>
       </div>
     </div>
