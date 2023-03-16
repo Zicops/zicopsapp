@@ -1131,30 +1131,61 @@ export const GET_PAGINATED_VENDORS = gql`
       filters: $filters
     ) {
       vendors {
-          vendorId
-          type
-          level
-          name
-          description
-          photo_url
-          address
-          users
-          website
-          facebook_url
-          instagram_url
-          twitter_url
-          linkedin_url
-          services
-          created_at
-          created_by
-          updated_at
-          updated_by
-          status
+        vendorId
+        type
+        level
+        name
+        description
+        photo_url
+        address
+        users
+        website
+        facebook_url
+        instagram_url
+        twitter_url
+        linkedin_url
+        services
+        created_at
+        created_by
+        updated_at
+        updated_by
+        status
       }
       pageCursor
       direction
       pageSize
     }
+  }
+`;
+
+export const GET_SPEAKERS = gql`
+  query getSpeakers($lspId: String) {
+    getSpeakers(lsp_id: $lspId) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      services
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_VENDOR_SERVICES = gql`
+  query getVendorServices($vendorId: String) {
+    getVendorServices(vendor_id: $vendorId)
   }
 `;
 
