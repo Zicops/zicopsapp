@@ -59,3 +59,21 @@ $marginBetweenInputs: 1em;
     gap: $gapBetweenInputAndLabel;
   }
 }
+
+.buttonGap {
+  margin: 0.5em;
+}
+
+.addTopicForm {
+  margin: 1.5em 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.addTopicFormBtns {
+  display: flex;
+  gap: 1em;
+
+  justify-content: center;
+}

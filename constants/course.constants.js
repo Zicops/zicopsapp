@@ -20,3 +20,10 @@ export const COURSE_STATUS = {
   approvalPending: 'APPROVAL_PENDING',
   hold: 'ON_HOLD'
 };
+
+export const TOPIC_TYPES = {
+  content: 'Content',
+  lab: 'Lab',
+  assessment: 'Assessment',
+  classroom: 'Classroom'
+};

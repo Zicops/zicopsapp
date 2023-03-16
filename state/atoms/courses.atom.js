@@ -72,3 +72,8 @@ export function getCourseCurrentStateObj(data = {}) {
     isSaved: data?.isSaved || false
   };
 }
+
+export const AllCourseModulesDataAtom = atom({
+  key: 'AllCourseModulesData',
+  default: null
+});

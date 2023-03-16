@@ -4,13 +4,11 @@ import { getDateTimeFromUnix } from '@/helper/utils.helper';
 import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import ZicopsButton from '../common/ZicopsButton';
+import Button from '../common/Button';
+import Spinner from '../common/Spinner';
 import { courseTabs } from './Logic/adminCourseComps.helper';
 import useHandleCourseData from './Logic/useHandleCourseData';
 import useSaveCourseData from './Logic/useSaveCourseData';
-import styles from './adminCourseComps.module.scss';
-import Button from '../common/Button';
-import Spinner from '../common/Spinner';
 
 export default function AdminCourseTabs() {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);

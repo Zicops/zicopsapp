@@ -13,3 +13,17 @@ export const courseTabs = {
   commercials: { name: 'Commercials', component: <Commercials /> },
   configuration: { name: 'Configuration', component: <Configuration /> }
 };
+
+export function getTopicDataObj(data) {
+  return {
+    courseId: data?.courseId || null,
+    moduleId: data?.moduleId || null,
+    chapterId: data?.chapterId || null,
+    id: data?.id || null,
+
+    sequence: data?.sequence || 1,
+    name: data?.name || '',
+    description: data?.description || '',
+    type: data?.type || ''
+  };
+}
