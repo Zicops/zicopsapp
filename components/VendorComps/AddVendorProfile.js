@@ -44,7 +44,9 @@ const AddVendorProfile = ({ data = {} }) => {
     setSelectedCrtExpertise,
     selectedCdExpertise,
     setSelectedCdExpertise,
-    selectedLanguages
+    selectedLanguages,
+    setSelectedLanguages,
+    getFileName
   } = useProfile();
 
   const router = useRouter();
@@ -126,16 +128,16 @@ const AddVendorProfile = ({ data = {} }) => {
           <BrowseAndUpload
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
-            title={profileData?.profileImage?.name || 'Drag & Drop'}
+            title={getFileName() || 'Drag & Drop'}
             handleFileUpload={handleProfilePhoto}
             handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
             previewData={{
-              fileName: profileData?.profileImage?.name,
-              filePath: profileData?.profileImage
+              fileName: getFileName(),
+              filePath: profileData?.profileImage || profileData?.photoUrl
             }}
             inputName="profileImage"
-            // hideRemoveBtn={true}
-            isActive={profileData?.profileImage}
+            filePreview={profileData?.profileImage || profileData?.photoUrl}
+            isActive={profileData?.profileImage || profileData?.photoUrl}
             isDisabled={isViewPage}
           />
         </div>
@@ -223,7 +225,10 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 isDisabled={isViewPage}
-                handleClick={() => setIsOpenLanguage(true)}
+                handleClick={() => {
+                  setIsOpenLanguage(true);
+                  setSelectedLanguages([...profileData?.languages]);
+                }}
               />
             </>
           )}
@@ -236,7 +241,9 @@ const AddVendorProfile = ({ data = {} }) => {
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
               isDisabled={isViewPage}
-              handleClick={() => setOpenSmeExpertise(true)}
+              handleClick={() => {
+                setOpenSmeExpertise(true);
+              }}
             />
           ) : (
             <>
@@ -257,7 +264,10 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 isDisabled={isViewPage}
-                handleClick={() => setOpenSmeExpertise(true)}
+                handleClick={() => {
+                  setOpenSmeExpertise(true);
+                  setSelectedSmeExpertise([...profileData?.sme_expertises]);
+                }}
               />
             </>
           )}
@@ -291,7 +301,10 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 isDisabled={isViewPage}
-                handleClick={() => setOpenCrtExpertise(true)}
+                handleClick={() => {
+                  setOpenCrtExpertise(true);
+                  setSelectedCrtExpertise([...profileData?.crt_expertises]);
+                }}
               />
             </>
           )}
@@ -325,7 +338,10 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 isDisabled={isViewPage}
-                handleClick={() => setOpenCdExpertise(true)}
+                handleClick={() => {
+                  setOpenCdExpertise(true);
+                  setSelectedCdExpertise([...profileData?.content_development]);
+                }}
               />
             </>
           )}
@@ -413,9 +429,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 type="checkbox"
                 label={data}
                 value={data}
-                isChecked={
-                  selectedLanguages?.includes(data) || profileData?.languages?.includes(data)
-                }
+                isChecked={selectedLanguages?.includes(data)}
                 changeHandler={handleLanguageSelection}
               />
             </div>

@@ -1,4 +1,6 @@
+import { truncateToN } from '@/helper/common.helper';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import {
   getExperiencesObject,
   VendorExperiencesAtom,
@@ -75,6 +77,13 @@ export default function useProfile() {
     setOpenCdExpertise(false);
   };
 
+  function getFileName() {
+    return truncateToN(
+      profileData?.profileImage?.name || getEncodedFileNameFromUrl(profileData?.photoUrl),
+      45
+    );
+  }
+
   return {
     completeExperienceHandler,
     handleLanguageSelection,
@@ -105,6 +114,7 @@ export default function useProfile() {
     selectedCdExpertise,
     setSelectedCdExpertise,
     selectedLanguages,
-    setSelectedLanguages
+    setSelectedLanguages,
+    getFileName
   };
 }
