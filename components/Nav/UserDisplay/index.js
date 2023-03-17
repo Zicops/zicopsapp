@@ -52,13 +52,15 @@ const UserDisplay = () => {
   useEffect(() => {
     if (userProfileData?.email) return;
     const isLoginPage = router.asPath.includes('login');
+
+    if (!auth?.currentUser?.accessToken && !isLoginPage) return router.push('/login');
     loginUser();
 
     async function loginUser() {
-      if (!auth?.currentUser?.accessToken && !isLoginPage) return router.push('/login');
-
       for (let i = 0; i < 4; i++) {
         let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
         const res = await userLogin({
           context: {
             headers: {
