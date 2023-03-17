@@ -201,8 +201,8 @@
     background-color: white;
 
 }
-.footerLeft>div
-{
+
+.footerLeft>div {
     outline: none;
     border: none;
 }
@@ -510,7 +510,7 @@
 }
 
 .pollScreen {
-    height: 75%;
+    height: 91%;
     width: 296px;
 }
 
@@ -520,6 +520,427 @@
     border: none;
 }
 
+.moderatorPoll {
+    width: 276px;
+    height: 90%;
+}
+
+.moderatorAddPoll {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pollModeratorScree {
+    width: 296px;
+    height: 99%;
+
+}
+
+
+
+.pollIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.pollAvailableHead {
+    width: 276px;
+    height: 28px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+.pollAvailablesubHead {
+    width: 276px;
+    height: 24px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    margin-top: 8px;
+    color: #747474;
+}
+
+// .pollAvailableHead> {
+//     width: 276px;
+//     height: 24px;
+//     font-family: 'Poppins';
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+//     text-align: center;
+//     color: #747474;
+// }
+
+.addPollBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.addPollBtn>div {
+    width: 15px;
+    height: 23px;
+    font-size: 1.5rem;
+    margin-right: 14px;
+}
+
+// PollQA component
+
+.pollQA {
+    width: 296px;
+    height: 100%;
+    overflow: scroll;
+
+}
+
+.pollQA::-webkit-scrollbar {
+    display: none;
+}
+
+.pollQA>p {
+    width: 276px;
+    height: 24px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-style: normal;
+    line-height: 24px;
+    display: flex;
+    justify-content: left;
+    color: white;
+    margin-top: 10px;
+}
+
+.pollQaScreen {
+    width: 296px;
+    height: 100%;
+}
+
+.pollQuestion {
+    width: 296px;
+    height: 210px;
+    background-color: #26292C;
+    margin-top: 12px;
+}
+
+.pollName {
+    width: 276px;
+    padding-top: 1px;
+    // padding-left: 10px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    input {
+        width: 276px;
+        height: 40px;
+        border: none;
+        outline: none;
+        margin: auto 10px;
+        background-color: #1A1D21;
+        padding: 5px;
+        color: white;
+    }
+}
+
+.pollInput {
+    width: 276px;
+    height: 40px;
+    border: none;
+    outline: none;
+    margin-left: auto 10px;
+    background-color: #1A1D21;
+    padding: 5px;
+    color: white;
+}
+
+.pollOption {
+    width: 296px;
+    height: 130px;
+    padding-top: 2px;
+    background-color: #26292C;
+    // margin: 7px 0 7px 0;
+    border-radius: 4px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    div {
+        width: 276px;
+        height: 76px;
+        background-color: #1A1D21;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin: auto 10px;
+
+        input {
+            width: 276px;
+            height: 40px;
+            border: none;
+            outline: none;
+            background-color: #1A1D21;
+            padding: 5px;
+            color: white;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            margin: 6px 0 6px 10px;
+        }
+    }
+}
+
+.pollOptionLabel {
+    margin: 10px 0 10px 10px;
+    width: 276px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.pollOptionContainer {
+    width: 290px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pollAddOptionBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1A1D21;
+    border-radius: 4px;
+    border: solid #262626 2px;
+    border-radius: 4px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+
+    div {
+        width: 15px;
+        height: 23px;
+        font-size: 1.5rem;
+        margin-right: 14px;
+    }
+}
+
+.pollSaveBtns {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    button {
+        width: 140px;
+        height: 48px;
+        border-radius: 4px;
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        outline: none;
+        border: none;
+    }
+}
+
+.pollCancelBtn {
+    background-color: #26292C;
+    color: white;
+}
+
+.pollSaveBtn {
+    background-color: #6BCFCF;
+    color: black;
+}
+
+.pollScreenContainer {
+    width: 100%;
+    height: 63vh;
+    overflow: scroll;
+}
+
+.pollScreenContainer::-webkit-scrollbar {
+    display: none;
+}
+
+
+.pollQuestionScreen {
+    width: 100%;
+    height: 50vh;
+    margin-top: 7px;
+    background-color: #121212;
+    padding-left: 10px;
+    // overflow: scroll;
+
+}
+
+.pollQuestionhead {
+    display: flex;
+    width: 276px;
+}
+
+.pollLable {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+}
+
+.publishPollHead {
+    margin-right: 24px;
+    color: #6BCFCF;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.pollQuestions {
+    width: 100%;
+    height: auto;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: white;
+    background-color: #121212;
+
+}
+
+.pollSavedLabel {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #F6AC3C;
+    margin-bottom: 12px;
+    margin-top: 6px;
+}
+
+.pollBoxOptions {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-right: 8px;
+    // height: 50%;
+}
+
+.pollBoxOptions>div {
+    width: 100%;
+    height: 50px;
+    border: solid #ACACAC .5px;
+    border-radius: 4px;
+    margin-top: 12px;
+    color: white;
+
+}
+
+.pollBoxBtns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+
+}
+
+.pollBoxEditBnt {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.pollBoxBtns>button {
+    width: 130px;
+    height: 40px;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    background: #292F2F;
+    margin-right: 10px;
+    margin-top: 15px;
+}
+
+.pollBoxDeleteBnt {
+    color:#F53D41;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+// .publishPoll
+// {
+//     width: 100%;
+//     color: red;
+//     font-family: 'Poppins';
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+// }
 // styling Participants bar
 .participantsBar {
     z-index: 1020;
@@ -721,15 +1142,18 @@
     height: 90%;
 }
 
+
 .breakouRoomIcon {
-    width: 40px;
-    height: 40px;
+    width: 55px;
+    height: 55px;
     border: solid #292F2F 1px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 6px;
 }
+
+
 
 .moderatorAddroom {
     width: 296px;
@@ -739,6 +1163,7 @@
     align-items: center;
     flex-direction: column;
 }
+
 
 .breakoutRoomAvailableHead {
     width: 276px;
@@ -752,6 +1177,8 @@
     color: #ACACAC;
 }
 
+
+
 .moderatorAddroom>p {
     width: 276px;
     height: 24px;
@@ -760,6 +1187,8 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+    margin-top: 8px;
+
     text-align: center;
     color: #747474;
 }

@@ -36,6 +36,15 @@ export const breakoutRoomId=atom({
     key:"breakoutRoomId",
     default:''
 })
+
+export const pollArray=atom({
+    key:"pollArray",
+    default:[{
+        pollName :'',
+        pollQuestion:'',
+        pollOptions :[]
+    }]
+})
 // export const alluserdata = atom({
 //     key: "alldata",
 //     default: {

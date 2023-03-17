@@ -6,9 +6,10 @@ import MainToolbar from './Toolbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { StartMeeting, GenerateString } from "./help/vctool.helper"
-import { breakoutList, participantRole, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { breakoutList, participantRole, pollArray, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 const VcMaintool = () => {
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
+  const [pollInfo,setPollInfo]=useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList)
   const allUserinfo = useRecoilValue(vctoolAlluserinfo)
@@ -90,7 +91,7 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
-          
+            // console.info(pollInfo)
             api.getRoomsInfo().then(rooms => {
               setbreakoutListarr(rooms.rooms)
               setuserinfo(rooms.rooms[0].participants)

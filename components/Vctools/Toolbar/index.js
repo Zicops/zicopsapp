@@ -13,7 +13,8 @@ import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup } from '@/state/atoms/vctool.atoms';
+import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray } from '@/state/atoms/vctool.atoms';
+
 const MainToolbar = ({
   audiotoggle,
   videotoggle,
@@ -32,28 +33,19 @@ const MainToolbar = ({
   stopAdvertisement,
   autoAssignRoom
 }) => {
+
   const [breakoutRoomparticipant,setbreakoutRoomparticipant]=useRecoilState(breakoutRoomselectedparticipant)
   const [breakoutRoompopup,setbreakoutRoompopup]=useRecoilState(particiantPopup)
   const [fade1, setfade1] = useState(false);
   const [hand, sethand] = useState(true);
   const [showQAbtn, setshowQAbtn] = useState(false);
-  // const [showWhiteBoard, setshowWhiteBoard] = useState(true);
-  // const [popupBtn, setpopupBtn] = useState('')
-  // const [showresourcePage, setresourcePage] = useState(false);
-  // const [showAbout, setshowAbout] = useState(false);
-  // const [showQuiz, setshowQuiz] = useState(false);
-  // const [IsStarted,setIsStarted]=useState(true)
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
   const participantPopuppanel=useRecoilValue(particiantPopup)
   const breakoutRoomtotalno=useRecoilValue(allPartcipantinfo)
-  // function AddParticipantpopupFun(title)
-  // {
-  //     if(title==="") return <></>
-  //     const myobj=toolBarData?.find(data=>data.title===title)
-  //     return myobj.component;
-  // }
+  const [pollInfo,setPollInfo]=useRecoilState(pollArray)
+
   function getClickedComponent(title) {
     if (title === '') return <></>;
     const compObj = toolBarData?.find((obj) => obj.title === title);
