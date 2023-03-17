@@ -149,13 +149,12 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
+            <Link href={'/admin/vendor/manage-vendor'}>
               <a>
                 <Card
                   image="/images/VendorManagement.png"
                   text="Vendor Management"
                   width="80px"
-                  isDisabled={!isDev}
                   tooltipTitle={ADMIN_HOME.vendorManagement}
                 />
               </a>

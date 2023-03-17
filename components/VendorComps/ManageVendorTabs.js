@@ -9,9 +9,11 @@ import useHandleVendorServices from './Logic/useHandleVendorServices';
 import TabContainer from '../common/TabContainer';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import Button from '../CustomVideoPlayer/Button';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   const { handleMail } = useHandleVendor();
@@ -33,6 +35,9 @@ export default function ManageVendorTabs() {
   }, [vendorId]);
 
   const tabData = manageVendorTabData;
+
+  tabData[2].isHidden = !isDev;
+  tabData[4].isHidden = !isDev;
 
   const [tab, setTab] = useState(tabData[0].name);
 
