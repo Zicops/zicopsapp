@@ -82,13 +82,12 @@ const MissionControlCards = () => {
       <div className="mission_control_body">
         <div className="contain_icons">
           <div className={`new_row`}>
-            <Link href={isDev ? '/admin/analytics/course-dashboard' : ''}>
+            <Link href={'/admin/analytics/course-dashboard'}>
               <a>
                 <Card
                   image="/images/Analytics.png"
                   text="Analytics"
                   width="70px"
-                  isDisabled={!isDev}
                   tooltipTitle={ADMIN_HOME.analytics}
                 />
               </a>
