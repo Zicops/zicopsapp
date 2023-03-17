@@ -281,6 +281,17 @@ export default function useHandleVendor() {
     setExperiencesData(experienceInfo);
   }
 
+  async function getSampleFiles(p_type = 'sme') {
+    const fileInfo = await loadQueryDataAsync(
+      GET_SAMPLE_FILES,
+      { vendor_id: vendorId, p_type },
+      {},
+      userQueryClient
+    );
+    return fileInfo?.getSampleFiles;
+  }
+
+  // delete below function later
   async function getSMESampleFiles() {
     const fileInfo = await loadQueryDataAsync(
       GET_SAMPLE_FILES,
@@ -542,6 +553,7 @@ export default function useHandleVendor() {
     getCdDetails,
     getAllProfileInfo,
     getSingleProfileInfo,
+    getSampleFiles,
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,

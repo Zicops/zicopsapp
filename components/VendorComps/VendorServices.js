@@ -1,10 +1,9 @@
 import { CdServicesAtom, CtServicesAtom, SmeServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
+import ViewDoc from '../common/ViewDoc';
 import VendorPopUp from './common/VendorPopUp';
 import useHandleVendor from './Logic/useHandleVendor';
-import { sampleFiles } from './Logic/vendorComps.helper';
-// import { sampleFiles } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
 import {
   ContentFormatIcon,
@@ -12,16 +11,30 @@ import {
   LanguagesIcon
 } from '/components/common/ZicopsIcons/index.js';
 
-export default function VendorServices({ data }) {
+export default function VendorServices({ data, type = 'sme' }) {
+  const [sampleFiles, setSampleFiles] = useState([]);
   const [samplePopup, setSamplePopup] = useState(null);
   const [sampleDetails, setSampleDetails] = useState(false);
   const smeData = useRecoilValue(SmeServicesAtom);
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
-  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } = useHandleVendor();
+  const { getSampleFiles } = useHandleVendor();
 
   useEffect(() => {
-    getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles;
+    if (!type) return;
+
+    getSampleFiles(type).then((fileData) => {
+      setSampleFiles(
+        fileData?.map((file, i) => ({
+          id: i,
+          title: file?.name,
+          fileUrl: file?.file_url,
+          fileType: file?.fileType,
+          status: file?.status,
+          rate: file?.price
+        }))
+      );
+    });
   }, []);
 
   return (
@@ -65,7 +78,12 @@ export default function VendorServices({ data }) {
         </div>
         <div className={`${styles.sampleFiles}`}>
           {sampleFiles.map((data, index) => {
-            return <img src={data.previewImage} onClick={() => setSamplePopup(+data.id)} />;
+            // return <img src={data.previewImage} onClick={() => setSamplePopup(+data.id)} />;
+            return (
+              <div className={styles.sampleFile} onClick={() => setSamplePopup(+data.id)}>
+                {data?.title}
+              </div>
+            );
           })}
         </div>
       </div>
@@ -85,7 +103,12 @@ export default function VendorServices({ data }) {
         isFooterVisible={false}>
         <div className={`${styles.samplePopupContainer}`}>
           <div className={`${styles.sampleFilePreview}`}>
-            <img src="/images/Cohort-Mapped.jpg" />
+            {['PDF', 'PPT']?.includes(sampleFiles?.[samplePopup]?.fileType) && (
+              <ViewDoc url={sampleFiles?.[samplePopup]?.fileUrl} />
+            )}
+            {['Image']?.includes(sampleFiles?.[samplePopup]?.fileType) && (
+              <img src={sampleFiles?.[samplePopup]?.fileUrl} />
+            )}
           </div>
 
           <div className={`${styles.samplePopupFooter}`}>

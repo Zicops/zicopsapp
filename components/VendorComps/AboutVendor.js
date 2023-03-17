@@ -38,17 +38,20 @@ export default function AboutVendor({ data }) {
     {
       title: 'Subject Matter Expertise',
       description: smeData.serviceDescription,
-      serviceData: smeData
+      serviceData: smeData,
+      type: 'sme'
     },
     {
       title: 'Classroom Training',
       description: ctData.serviceDescription,
-      serviceData: ctData
+      serviceData: ctData,
+      type: 'crt'
     },
     {
       title: 'Content Development',
       description: cdData.serviceDescription,
-      serviceData: cdData
+      serviceData: cdData,
+      type: 'cd'
     }
   ];
   if (vendorId && vendorData?.vendorId !== vendorId)
@@ -62,7 +65,7 @@ export default function AboutVendor({ data }) {
         {accordianMarketyardDetails.map((value, index) => {
           return (
             <ZicopsAccordian title={value.title} description={value.description}>
-              <VendorServices data={value.serviceData} />
+              <VendorServices data={value.serviceData} type={value?.type} />
             </ZicopsAccordian>
           );
         })}

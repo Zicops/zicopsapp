@@ -104,6 +104,23 @@
     width: 100%;
     display: flex;
     gap: 15px;
+
+    div {
+      border: 2px solid $primary;
+      background-color: $darkTwo;
+      width: 8em;
+      height: 8em;
+      padding: 10px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      cursor: pointer;
+    }
     img {
       width: 20%;
       cursor: pointer;
@@ -118,6 +135,7 @@
   position: relative;
 
   .sampleFilePreview {
+    min-height: 40vh;
     object-fit: contain;
     height: 100%;
     width: 100%;
@@ -600,7 +618,7 @@
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 8px;
- 
+
         .singleLanguage {
           background: $bgTile;
           padding: 12px 16px;
@@ -635,18 +653,18 @@
         cursor: pointer;
       }
     }
-        .languages {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-    
-          .singleLanguage {
-            background: $bgTile;
-            padding: 12px 16px;
-            border-radius: 4px;
-          }
-        }
+    .languages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+
+      .singleLanguage {
+        background: $bgTile;
+        padding: 12px 16px;
+        border-radius: 4px;
+      }
+    }
 
     .addOPFormat {
       width: 50%;
@@ -696,13 +714,12 @@
         cursor: pointer;
       }
     }
-    .showFilesMain{
+    .showFilesMain {
       display: flex;
       flex-direction: column;
       gap: 5px;
-      
 
-      .showFiles{
+      .showFiles {
         display: flex;
         gap: 10px;
         width: fit-content;
@@ -710,7 +727,7 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img{
+        img {
           width: 30px;
           height: 30px;
         }
@@ -1001,31 +1018,30 @@
       margin-top: 8px;
       cursor: pointer;
     }
-        .exButton {
-          background-color: $bgTile !important;
-          width: max-content;
-          flex-direction: row;
-          span{
-            display: flex;
-            align-items: center;
-            img{
-              width: 24px;
-              height: 24px;
-            }
-
-          }
-        }
-  }
-  .languages{
+    .exButton {
+      background-color: $bgTile !important;
+      width: max-content;
+      flex-direction: row;
+      span {
         display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-          .singleLanguage{
-                background: $bgTile;
-                  padding: 12px 16px;
-                  border-radius: 4px;
-          }
+        align-items: center;
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+    .singleLanguage {
+      background: $bgTile;
+      padding: 12px 16px;
+      border-radius: 4px;
+    }
   }
 }
 
@@ -1111,7 +1127,8 @@
 .dropDownMain {
   margin-top: 8px;
 }
-.singleProfileContainer , .singleFileContainer{
+.singleProfileContainer,
+.singleFileContainer {
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
@@ -1156,37 +1173,38 @@
   .editIcon {
     cursor: pointer;
   }
-  .singleFileDetails{
+  .singleFileDetails {
     display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 70%;
-      color: $white;
-      .fileName{
-        font-size: 20px;
-      }
-      .filePrice{
-        display: flex;
-          width: 100%;
-          font-size: 18px;
-          justify-content: space-between;
-          align-items: center;
-          color: $bgBody;
-      }
-  }
-    .deleteIcon {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-     width: 20px;
-    height: 20px;
-      img {
-       width: 100%;
-       height: 100%;
-      }
+    flex-direction: column;
+    justify-content: space-between;
+    width: 70%;
+    color: $white;
+    .fileName {
+      font-size: 20px;
     }
+    .filePrice {
+      display: flex;
+      width: 100%;
+      font-size: 18px;
+      justify-content: space-between;
+      align-items: center;
+      color: $bgBody;
+    }
+  }
+  .deleteIcon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
-.manageVendorProfileMain , .vendorFileMain {
+.manageVendorProfileMain,
+.vendorFileMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
