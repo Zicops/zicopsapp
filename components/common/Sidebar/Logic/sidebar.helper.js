@@ -174,7 +174,8 @@ export const vendorSideBarData = {
     {
       id: 2,
       title: 'Manage Vendor',
-      link: '/admin/vendor/manage-vendor'
+      link: '/admin/vendor/manage-vendor',
+      isVendor: true
     },
     {
       id: 3,

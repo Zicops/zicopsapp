@@ -1,16 +1,16 @@
+import { userClient } from '@/api/UserMutations';
 import {
-  GET_VENDORS_BY_LSP,
-  userQueryClient,
-  GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_PAGINATED_VENDORS,
   GET_USER_VENDORS,
-  GET_PAGINATED_VENDORS
+  GET_VENDORS_BY_LSP,
+  GET_VENDORS_BY_LSP_FOR_TABLE,
+  userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { useState } from 'react';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useRecoilState } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { useRecoilState } from 'recoil';
 
 export default function useLoadVendorData() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -91,7 +91,7 @@ export default function useLoadVendorData() {
       setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' });
       return [];
     }
-    return sortArrByKeyInOrder(res?.getUserVendor || [], 'updated_at', false);
+    return sortArrByKeyInOrder(vendorList?.getUserVendor || [], 'updated_at', false);
   }
 
   return { getLspVendors, getVendorsTable, getUserVendors, getPaginatedVendors };
