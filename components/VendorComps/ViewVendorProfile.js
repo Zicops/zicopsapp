@@ -3,7 +3,6 @@ import { useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
 const ViewVendorProfile = ({ data }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
-  console.info('vendorData', vendorData);
   return (
     <div className={`${styles.viewProfilesContainer}`}>
       <div className={`${styles.viewProfileTop}`}>

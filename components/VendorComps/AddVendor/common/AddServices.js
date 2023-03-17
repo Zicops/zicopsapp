@@ -131,8 +131,6 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     setSampleData(getSampleObject());
   };
 
-  // console.info(data.expertises, 'ayush1234');
-
   return (
     <>
       <div className={`${styles.addServiceContainer}`}>

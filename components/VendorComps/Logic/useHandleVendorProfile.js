@@ -64,7 +64,7 @@ export default function useHandleVendorProfile() {
           );
         }
       }).catch((err) => {
-        console.info(err);
+        console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
       });
@@ -95,7 +95,7 @@ export default function useHandleVendorProfile() {
           );
         }
       }).catch((err) => {
-        console.info(err);
+        console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Vendor profile Error' });
       });

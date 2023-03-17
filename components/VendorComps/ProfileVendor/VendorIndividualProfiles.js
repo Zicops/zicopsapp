@@ -2,7 +2,6 @@ import styles from '../vendorComps.module.scss';
 import { DownArrowIcon } from '@/components/common/ZicopsIcons';
 import { useRouter } from 'next/router';
 export default function VendorIndividualProfiles({ data }) {
-  console.info('data', data);
   const router = useRouter();
   const onShowProfileHandler = () => {
     router.push(`/admin/vendor/market-yard/vendor-details/profile-details/${data?.pf_id}`);

@@ -39,6 +39,7 @@ export function getProfileObject(data) {
     contactNumber: data?.contactNumber || '',
     description: data?.description || '',
     profileImage: data?.profileImage || null,
+    photoUrl: data?.photoUrl || null,
     experienceYear: data?.experienceYear || null,
     languages: data?.languages || [],
     sme_expertises: data?.sme_expertises || [],

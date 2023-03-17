@@ -19,7 +19,7 @@ export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 //need to delete chorot later
 export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
-
+export const VC_TOOL_ROLE =['moderator','instructor','participant']
 export const PUBLIC_PATHS = [
   '/login',
   '/auth-verify',
