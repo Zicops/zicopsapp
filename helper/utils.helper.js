@@ -15,8 +15,8 @@ export const months = [
   'December'
 ];
 
-export const years = Array.from(Array(new Date().getFullYear() - 1979), (_, i) =>
-  (i + 1980).toString()
+export const years = Array.from(Array(new Date().getFullYear() - 1969), (_, i) =>
+  (i + 1970).toString()
 );
 
 export function displayUnixDate(unixTime) {

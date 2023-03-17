@@ -42,12 +42,6 @@ const ViewVendorProfile = ({ data }) => {
           </div>
           <div className={`${styles.vendorSocialMedia}`}>
             <p>Social Media</p>
-            <div className={`${styles.socialMediaImage}`}>
-              <img src="/images/svg/Facebook.svg" alt="" />
-              <img src="/images/svg/Instagram.svg" alt="" />
-              <img src="/images/svg/Linkedin.svg" alt="" />
-              <img src="/images/svg/Twitter.svg" alt="" />
-            </div>
           </div>
         </div>
         <div className={`${styles.vendorExpertiseContainer}`}>
