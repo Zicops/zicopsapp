@@ -6,6 +6,10 @@ export default function VendorIndividualProfiles({ data }) {
   const onShowProfileHandler = () => {
     router.push(`/admin/vendor/market-yard/vendor-details/profile-details/${data?.pf_id}`);
   };
+  if (data?.is_speaker) {
+    const speaker = data?.is_speaker;
+  }
+
   return (
     <div className={`${styles.vendorIndividualProfilesContainer}`}>
       <div className={`${styles.leftSide}`}>
@@ -16,12 +20,10 @@ export default function VendorIndividualProfiles({ data }) {
           <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
 
           <p className={`${styles.profileServices}`}>
-            {data?.sme_expertise?.map((expert, index) => (
-              <span>
-                {expert}
-                {index + 1 !== data?.expertise?.length ? ' | ' : ''}
-              </span>
-            ))}
+            {data?.is_speaker ? 'Speaker' + ' ' + '|' + ' ' : ''}
+            {data?.sme_expertise?.length ? 'SME' + ' ' + '|' + ' ' : ''}
+            {data?.classroom_expertise?.length ? 'CRT' + ' ' + '|' + ' ' : ''}
+            {data?.content_development?.length ? 'CD' : ''}
           </p>
           <p className={`${styles.profileExperience}`}>
             {data?.experience_years} years of experience
@@ -31,7 +33,13 @@ export default function VendorIndividualProfiles({ data }) {
       <div className={`${styles.leftSide}`}>
         <div className={`${styles.servicesPillContainer}`}>
           <div className={`${styles.servicesPill}`}>
-            {data?.services?.map((expert) => (
+            {data?.sme_expertise?.map((expert) => (
+              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            ))}
+            {data?.classroom_expertise?.map((expert) => (
+              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            ))}
+            {data?.content_development?.map((expert) => (
               <p className={`${styles.vendorExpertise}`}>{expert}</p>
             ))}
           </div>

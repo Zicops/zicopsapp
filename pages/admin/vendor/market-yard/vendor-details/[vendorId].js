@@ -23,10 +23,12 @@ import styles from '../../../../../components/VendorComps/vendorComps.module.scs
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { allProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { allProfileAtom, SevicesAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
+  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -34,6 +36,7 @@ export default function VendorInfo() {
   const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
   const router = useRouter();
+  const { addUpdateServices } = useHandleMarketYard();
   const onOpenPopup = () => {
     setShowPopup(true);
   };
@@ -56,6 +59,7 @@ export default function VendorInfo() {
   const addRateHandler = () => {
     setAddTax(true);
     setAddRate(false);
+    addUpdateServices();
   };
 
   const backAddOrderHandler = () => {

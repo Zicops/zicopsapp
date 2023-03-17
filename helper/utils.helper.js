@@ -240,6 +240,12 @@ export function getFileNameFromUrl(fileUrl) {
   return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
 }
 
+export function getEncodedFileNameFromUrl(fileUrl) {
+  if (!fileUrl) return '';
+
+  return Buffer.from(decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop()), 'base64').toString();
+}
+
 // https://stackoverflow.com/a/23013574
 export function downloadFileFromURI(uri, downloadFileName) {
   var link = document.createElement('a');

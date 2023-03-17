@@ -3,7 +3,8 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
-import { changeHandler } from '@/helper/common.helper';
+import { changeHandler, truncateToN } from '@/helper/common.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -14,54 +15,55 @@ import styles from '../vendorComps.module.scss';
 import AddUrl from './common/AddUrl';
 
 export default function VendorMaster() {
-  const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+
+  const [openSocialMedia, setOpenSocialMedia] = useState(null);
+  const [socialMediaInput, setSocialMediaInput] = useState('');
 
   const { handlePhotoInput } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  useEffect(() => {
-    setVendorData((prev) => ({
-      ...prev,
-      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]
-    }));
-  }, [emails]);
+  const isViewPage = router.asPath?.includes('view-vendor');
 
   const socialMediaPopup = [
     {
       title: 'Facebook',
       inputName: 'facebookURL',
-      value: vendorData?.facebookURL
+      value: vendorData?.facebookURL,
+      imageUrl: vendorData?.facebookURL ? '/images/svg/Facebook.svg' : '/images/Facebook1.png'
     },
     {
       title: 'Instagram',
       inputName: 'instagramURL',
-      value: vendorData?.instagramURL
+      value: vendorData?.instagramURL,
+      imageUrl: vendorData?.instagramURL ? '/images/svg/Instagram.svg' : '/images/Instagram1.png'
     },
     {
       title: 'Twitter',
       inputName: 'twitterURL',
-      value: vendorData?.twitterURL
+      value: vendorData?.twitterURL,
+      imageUrl: vendorData?.twitterURL ? '/images/svg/Twitter.svg' : '/images/Twitter1.png'
     },
     {
       title: 'LinkedIn',
       inputName: 'linkedinURL',
-      value: vendorData?.linkedinURL
+      value: vendorData?.linkedinURL,
+      imageUrl: vendorData?.linkedinURL ? '/images/svg/Linkedin.svg' : '/images/Linkedin1.png'
     }
   ];
 
-  // console.info(
-  //   vendorId && vendorData?.vendorId !== vendorId,
-  //   vendorId,
-  //   vendorData?.vendorId,
-  //   vendorId
-  // );
-
   if (vendorId && vendorData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+
+  function getFileName() {
+    return truncateToN(
+      vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
+      45
+    );
+  }
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -71,8 +73,10 @@ export default function VendorMaster() {
             inputName: 'name',
             label: 'Vendor Name',
             placeholder: 'Enter Vendor Name',
+            maxLength: 60,
             value: vendorData?.name,
-            isDisabled: vendorData?.vendorId
+            isDisabled: vendorData?.vendorId,
+            maxLength: 60
           }}
           styleClass={`${styles.input5}`}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -85,24 +89,28 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'address',
               placeholder: 'Enter Vendor Address',
-              value: vendorData?.address
+              maxLength: 160,
+              value: vendorData?.address,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
         </div>
         <div className={`${styles.input2}`}>
-          <label for="vendorName">Update vendor profile image: </label>
+          <label for="vendorName">Update vendor profile image:</label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title="Drag & Drop"
+            title={getFileName() || 'Drag & Drop'} //image name is not setting here because we are getting an url
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
-              fileName: vendorData?.vendorProfileImage?.name,
-              filePath: vendorData?.vendorProfileImage
+              fileName: getFileName(),
+              filePath: vendorData?.vendorProfileImage || vendorData?.photoUrl
             }}
+            filePreview={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             inputName="vendorProfileImage"
-            isActive={vendorData?.vendorProfileImage}
+            isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
+            isDisabled={isViewPage}
           />
         </div>
       </div>
@@ -113,7 +121,9 @@ export default function VendorMaster() {
             inputOptions={{
               inputName: 'website',
               placeholder: 'https://website_abc.com',
-              value: vendorData?.website
+              maxLength: 60,
+              value: vendorData?.website,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
           />
@@ -121,28 +131,15 @@ export default function VendorMaster() {
         <div className={`${styles.input3}`}>
           <label for="vendorName">Add URL of social media pages: </label>
           <div className={`${styles.icons}`}>
-            <img
-              src={`${
-                vendorData?.facebookURL ? '/images/svg/Facebook.svg' : '/images/Facebook1.png'
-              }`}
-              onClick={() => setOpenSocialMedia(0)}
-            />
-            <img
-              src={`${
-                vendorData?.instagramURL ? '/images/svg/Instagram.svg' : '/images/Instagram1.png'
-              }`}
-              onClick={() => setOpenSocialMedia(1)}
-            />
-            <img
-              src={`${vendorData?.twitterURL ? '/images/svg/Twitter.svg' : '/images/Twitter1.png'}`}
-              onClick={() => setOpenSocialMedia(2)}
-            />
-            <img
-              src={`${
-                vendorData?.linkedinURL ? '/images/svg/Linkedin.svg' : '/images/Linkedin1.png'
-              }`}
-              onClick={() => setOpenSocialMedia(3)}
-            />
+            {socialMediaPopup?.map((media, i) => (
+              <img
+                src={`${media?.imageUrl}`}
+                onClick={() => {
+                  setSocialMediaInput(media?.value);
+                  setOpenSocialMedia(i);
+                }}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -153,7 +150,9 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            value: vendorData?.description
+            maxLength: 160,
+            value: vendorData?.description,
+            isDisabled: isViewPage
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
@@ -170,22 +169,24 @@ export default function VendorMaster() {
           size="small"
           closeBtn={{
             name: 'Cancel',
+            handleClick: () => setOpenSocialMedia(null)
+          }}
+          submitBtn={{
+            name: 'Done',
             handleClick: () => {
-              setVendorData({ ...vendorData, [socialMediaPopup[openSocialMedia].inputName]: '' });
+              setVendorData({
+                ...vendorData,
+                [socialMediaPopup[openSocialMedia].inputName]: socialMediaInput
+              });
               setOpenSocialMedia(null);
             }
           }}
-          submitBtn={{ name: 'Done', handleClick: () => setOpenSocialMedia(null) }}
-          onCloseWithCross={() => {
-            setVendorData({ ...vendorData, [socialMediaPopup[openSocialMedia].inputName]: '' });
-            setOpenSocialMedia(null);
-          }}
+          onCloseWithCross={() => setOpenSocialMedia(null)}
           isFooterVisible={true}>
           <AddUrl
             inputName={socialMediaPopup[openSocialMedia].inputName}
-            urlData={vendorData}
-            setUrlData={setVendorData}
-            Value={socialMediaPopup[openSocialMedia].value}
+            urlData={socialMediaInput}
+            setUrlData={setSocialMediaInput}
           />
         </VendorPopUp>
       )}
