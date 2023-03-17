@@ -6,6 +6,7 @@ import RangeSlider from '@/components/common/FormComponents/RangeSlider';
 import UploadForm from '@/components/common/FormComponents/UploadForm';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getQuizObject, QuizAtom, QuizMetaDataAtom } from '../../../../../state/atoms/module.atoms';
 import Bar from '../../../../common/Bar';
@@ -18,7 +19,7 @@ import TextInputWithFile from '../../../../common/InputWithCheckbox/TextInputWit
 import styles from '../../../courseTabs.module.scss';
 import useAddQuiz from '../../Logic/useAddQuiz';
 
-export default function QuizForm({ courseId, topicId, isScrom = false }) {
+export default function QuizForm({ courseId, topicId, isScrom = false, isFormOpen = () => {} }) {
   const {
     newQuiz,
     setNewQuiz,
@@ -27,10 +28,12 @@ export default function QuizForm({ courseId, topicId, isScrom = false }) {
     isQuizFormVisible,
     toggleQuizForm,
     isQuizReady,
-    handleEditQuiz,
-    editedQuiz,
-    setEditedQuiz
+    handleEditQuiz
   } = useAddQuiz(courseId, topicId, isScrom);
+
+  useEffect(() => {
+    isFormOpen(isQuizFormVisible);
+  }, [isQuizFormVisible]);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [quizzes, setQuizzes] = useRecoilState(QuizAtom);
