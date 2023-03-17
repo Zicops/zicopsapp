@@ -33,7 +33,7 @@ export default function VendorServices({ data, type = 'sme' }) {
           status: file?.status,
           rate: file?.price
         }))
-      );
+      ) || [];
     });
   }, []);
 
@@ -77,7 +77,7 @@ export default function VendorServices({ data, type = 'sme' }) {
           <span>Sample</span>
         </div>
         <div className={`${styles.sampleFiles}`}>
-          {sampleFiles.map((data, index) => {
+          {sampleFiles?.map((data, index) => {
             // return <img src={data.previewImage} onClick={() => setSamplePopup(+data.id)} />;
             return (
               <div className={styles.sampleFile} onClick={() => setSamplePopup(+data.id)}>
@@ -85,6 +85,7 @@ export default function VendorServices({ data, type = 'sme' }) {
               </div>
             );
           })}
+          <small>{!sampleFiles?.length && 'No Sample Files Available'}</small>
         </div>
       </div>
       <VendorPopUp
