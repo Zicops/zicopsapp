@@ -50,41 +50,44 @@ const UserDisplay = () => {
   }, [userProfileData]);
 
   useEffect(() => {
-    if (userProfileData?.first_name && userProfileData?.last_name) return;
+    if (userProfileData?.email) return;
 
     loginUser();
 
     async function loginUser() {
       if (!auth?.currentUser?.accessToken) return router.push('/login');
 
-      sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
-      let isError = false;
-      const res = await userLogin({
-        context: {
-          headers: {
-            Authorization: auth?.currentUser?.accessToken
-              ? `Bearer ${auth?.currentUser?.accessToken}`
-              : ''
+      for (let i = 0; i < 4; i++) {
+        sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
+        let isError = false;
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
           }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          console.log(sessionStorage.getItem('tokenF'));
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) break;
+
+        if (res?.data?.login?.status === USER_STATUS.disable) {
+          router.push('/login');
+          setToastMsg({ type: 'danger', message: 'Something went wrong' });
+          break;
         }
-      }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        console.log(sessionStorage.getItem('tokenF'));
-        return setToastMsg({ type: 'danger', message: 'Login Error' });
-      });
 
-      if (isError) return;
+        setUserProfileData(getUserObject(res?.data?.login));
+        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
 
-      if (res?.data?.login?.status === USER_STATUS.disable) {
-        router.push('/login');
-        return setToastMsg({ type: 'danger', message: 'Something went wrong' });
+        if (!!res?.data?.login?.is_verified) break;
       }
-
-      setUserProfileData(getUserObject(res?.data?.login));
-      sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-
-      if (!!res?.data?.login?.is_verified) return router.push('/learning-spaces');
     }
   }, [userProfileData?.first_name, userProfileData?.last_name]);
 
