@@ -37,7 +37,7 @@ export const courseSidebarData = {
     {
       id: 5,
       title: 'Dashboard',
-      link: '/admin',
+      link: '/admin/analytics/course-dashboard',
       description: ADMIN_COURSES.sidebarData.dashboard,
       isHidden: true
     }
@@ -196,7 +196,7 @@ export const analyticsSideBarData = {
   data: [
     {
       id: 1,
-      title: 'Quam',
+      title: 'User Dashboard',
       link: ''
       // description: ADMIN_USERS.sidebarData.myUsers
     },
@@ -208,19 +208,19 @@ export const analyticsSideBarData = {
     },
     {
       id: 3,
-      title: 'Parturient Lorem',
+      title: 'Exam Dashboard',
       link: ''
       // description: ADMIN_USERS.sidebarData.myUsers
     },
     {
       id: 4,
-      title: 'Parturient Lorem Is',
+      title: 'Vendor Dashboard',
       link: ''
       // description: ADMIN_USERS.sidebarData.myUsers
     },
     {
       id: 5,
-      title: 'Quam Hujs',
+      title: 'Training Dashboard',
       link: ''
       // description: ADMIN_USERS.sidebarData.myUsers
     }
