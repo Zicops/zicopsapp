@@ -314,7 +314,7 @@ export default function useHandleVendor() {
   async function getSmeDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_SME_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -323,7 +323,7 @@ export default function useHandleVendor() {
     const smeData = fileInfo?.getSmeDetails;
     const smeDetails = {
       sme_id: smeData?.sme_id,
-      isApplicableSME: smeData?.is_applicable,
+      isApplicable: smeData?.is_applicable,
       serviceDescription: smeData?.description,
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
@@ -336,7 +336,7 @@ export default function useHandleVendor() {
   async function getCrtDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_CRT_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -345,7 +345,7 @@ export default function useHandleVendor() {
     const crtData = fileInfo?.getClassRoomTraining;
     const crtDetails = {
       crt_id: crtData?.crt_id,
-      isApplicableCT: crtData?.is_applicable,
+      isApplicable: crtData?.is_applicable,
       serviceDescription: crtData?.description,
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
@@ -358,7 +358,7 @@ export default function useHandleVendor() {
   async function getCdDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_CD_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -367,7 +367,7 @@ export default function useHandleVendor() {
     const cdData = fileInfo?.getContentDevelopment;
     const cdDetails = {
       cd_id: cdData?.cd_id,
-      isApplicableCD: cdData?.is_applicable,
+      isApplicable: cdData?.is_applicable,
       serviceDescription: cdData?.description,
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
