@@ -1,3 +1,4 @@
+@import '../../styles/base.scss';
 // Course Page Title
 .courseName {
   display: block;
@@ -5,6 +6,7 @@
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .courseType {
   color: $primary;
   font-size: 1.1rem;
@@ -76,4 +78,349 @@ $marginBetweenInputs: 1em;
   gap: 1em;
 
   justify-content: center;
+}
+// course detail
+.courseSubcategory {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.courseSummery {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.UploadCoursePreview {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.coursePageImg,
+.courseTitleImag {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+// configuration
+.configurationHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.cofigurationSettingLabel {
+  margin-top: $gapBetweenInputAndLabel;
+  color: #acacac;
+}
+
+.configurationCourseContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.configSettingContainer {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.registrationBox,
+.bookingBox {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  // div {
+  //   // display: flex;
+  //   gap: $marginBetweenInputs;
+  // }
+}
+
+.registrationBox > label,
+.bookingBox > label {
+  width: 100%;
+  margin: 0;
+}
+
+.configurationDetailHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.configDetailContainer {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.configurationDetailHead {
+  margin-top: $gapBetweenInputAndLabel;
+}
+
+// styling details box of configuration
+.detailsBoxContainer {
+  display: flex;
+  height: 40px;
+  width: 500px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.detailsImgBox {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  border: solid #484848 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailsInfo > label {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #acacac;
+}
+
+// About
+.aboutTrainer,
+.aboutModerator {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.moderatorDropdown > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.aboutTrainerType {
+  display: flex;
+  justify-content: space-between;
+}
+
+.moderatorDropdown {
+  display: flex;
+}
+
+.aboutHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.droper {
+  display: flex;
+  flex-direction: column;
+  width: 95px;
+  height: 96px;
+  position: absolute;
+  top: 130px;
+  right: 80px;
+  justify-content: space-around;
+  z-index: 1000;
+  background-color: black;
+}
+
+.droper > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: white;
+}
+
+.aboutDatePicker > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.datePicker {
+  display: flex;
+  flex-direction: column;
+}
+
+.totalDurationLable > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.durationDiscription {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #484848;
+}
+
+.courseDiscription {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.courseOutcome,
+.courseHighlights {
+  margin-top: $marginBetweenInputs;
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+.bulletPoint > input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid $darkThree;
+  background-color: $darkTwo;
+  color: $secondaryBlack;
+  font-size: 13px;
+  border-radius: 0px;
+  font-family: 'Poppins';
+  caret-color: $white;
+  color: $white;
+}
+// .bulletPoint >button
+// {
+//   outline: none;
+//   border: none;
+// }
+
+.aboutInputContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.aboutCurriculum {
+  display: flex;
+  flex-direction: column;
+  // gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.bulletPointInputContainer {
+  align-items: flex-start;
+  font-size: 13px;
+  word-break: break-all;
+
+  &.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+
+    input {
+      width: 25%;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.bullets {
+  display: flex;
+  justify-content: space-between;
+
+  border-radius: 5px;
+  font-size: inherit;
+  color: $darkThree;
+
+  background-color: $tertiaryBlack;
+  border: 1px solid $darkThree;
+  padding: 3px 10px;
+  margin: 5px auto;
+
+  &:last-child {
+    margin-bottom: 10px;
+  }
+}
+.bullets > button {
+  border: none;
+  outline: none;
+  background-color: $tertiaryBlack;
+  color: white;
 }

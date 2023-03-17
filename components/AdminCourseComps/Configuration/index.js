@@ -1,4 +1,4 @@
-import styles from "../adminCourse.module.scss"
+// import styles from "../adminCourse.module.scss"
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 // import UploadForm from '../common/FormComponents/UploadForm';
@@ -10,58 +10,59 @@ import RTE from '@/components/common/FormComponents/RTE';
 import Dropdown from '@/components/common/Dropdown';
 import DetailsBox from "./DetailsBox";
 import SwitchBox from "@/components/Tabs/common/SwitchBox";
+import styles from '../adminCourseComps.module.scss';
 const Configuration = () => {
     const detailsInfo = [
-        { 
-            id:1,
+        {
+            id: 1,
             src: "/images/svg/adminCourse/edit-calendar.svg",
             head: "Created on",
             detail: "12.04.2023"
         },
         {
-            id:2,
+            id: 2,
             src: "/images/svg/adminCourse/account-box.svg",
             head: "created by",
             detail: "Abhishek Ghosh"
         },
         {
-            id:3,
+            id: 3,
             src: "/images/svg/adminCourse/event-available.svg",
             head: "Published for registration on",
             detail: "24.04.2023"
         },
         {
-            id:4,
+            id: 4,
             src: "/images/svg/adminCourse/how-to-reg.svg",
             head: "Published for registration by",
             detail: "Harshad Gholap"
         },
         {
-            id:5,
+            id: 5,
             src: "/images/svg/adminCourse/confirmation-number.svg",
             head: "Published for booking on",
             detail: "26.04.2023"
         },
         {
-            id:6,
+            id: 6,
             src: "/images/svg/adminCourse/publish.svg",
             head: "Published for booking by",
             detail: "ABC vendor"
         },
         {
-            id:7,
+            id: 7,
             src: "/images/svg/adminCourse/event.svg",
             head: "Registration start date",
             detail: "30.04.2023"
         },
-        { 
-            id:8,
+        {
+            id: 8,
             src: "/images/svg/adminCourse/sensors.svg",
             head: "Booking start date",
             detail: "28.04.2023"
         },
         {
-            id:9,
+            id: 9,
             src: "/images/svg/adminCourse/event-busy.svg",
             head: "Expired on",
             detail: "30.05.2023"
@@ -71,13 +72,14 @@ const Configuration = () => {
         <div className={`${styles.configurationContainer}`}>
             <div className={`${styles.configurationHead}`}>Genaral</div>
             <div className={`${styles.cofigurationSettingLabel}`}>these settings are applicable after completion of course</div>
-            <div className={`${styles.configurationCourseContainer}`}>
+            <div className={`${styles.configurationCourseContainer} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
                 <div>
-                    <label>Course recording availble upto :</label>
+                    <p>Course recording availble upto :</p>
                     <LabeledDropdown
                         dropdownOptions={{
                             inputName: 'percentage',
-                            placeholder: 'Select no. of days'
+                            placeholder: 'Select no. of days',
+
                         }}
                     />
                 </div>
@@ -93,7 +95,7 @@ const Configuration = () => {
             </div>
 
 
-            <div className={`${styles.configSettingContainer}`}>
+            <div className={`${styles.configSettingContainer}  ${styles.marginBetweenInputs}  ${styles.twoColumnDisplay}`}>
                 <div className={` ${styles.registrationBox}`}>
                     <label>Registrations</label>
                     <SwitchBox
@@ -138,7 +140,7 @@ const Configuration = () => {
 
 
             </div>
-            <div className={` ${styles.frizeCourse}`}>
+            {/* <div className={` ${styles.frizeCourse}`}>
                 <label>Ready for Publish</label>
                 <SwitchBox
                     labeledInputProps={{
@@ -157,9 +159,9 @@ const Configuration = () => {
                         // handleChange: () => setFreezeConfirmBox(true)
                     }}
                 />
-            </div>
+            </div> */}
 
-            <label className={`${styles.configurationDetailhead}`}>Details</label>
+            <p className={`${styles.configurationDetailHead}`}>Details</p>
             <div className={`${styles.configDetailContainer}`}>
                 {
                     detailsInfo.map((data) => {

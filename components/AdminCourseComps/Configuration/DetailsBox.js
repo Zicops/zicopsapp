@@ -1,4 +1,4 @@
-import styles from "../adminCourse.module.scss"
+import styles from '../adminCourseComps.module.scss';
 const DetailsBox = ({ imgSrc, head, detail }) => {
     return (
         <div className={`${styles.detailsBoxContainer}`}>
