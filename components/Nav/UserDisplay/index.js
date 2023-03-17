@@ -51,9 +51,8 @@ const UserDisplay = () => {
 
   useEffect(() => {
     if (userProfileData?.email) return;
-    const isLoginPage = router.asPath.includes('login');
 
-    if (!auth?.currentUser?.accessToken && !isLoginPage) return router.push('/login');
+    if (!auth?.currentUser?.accessToken) return;
     loginUser();
 
     async function loginUser() {
@@ -78,11 +77,7 @@ const UserDisplay = () => {
 
         if (isError) break;
 
-        if (res?.data?.login?.status === USER_STATUS.disable && !isLoginPage) {
-          router.push('/login');
-          setToastMsg({ type: 'danger', message: 'Something went wrong' });
-          break;
-        }
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
 
         if (!!res?.data?.login?.is_verified) {
           setUserProfileData(getUserObject(res?.data?.login));
