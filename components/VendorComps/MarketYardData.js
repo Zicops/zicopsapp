@@ -30,7 +30,7 @@ export default function MarketYardData({ vendorType, displayRows = {} }) {
     setCdVendors(cdVendorList);
 
     const orgLspId = LEARNING_SPACE_ID;
-    const vendorList2 = await getLspSpeakers(orgLspId, {}, true);
+    const vendorList2 = await getLspVendors(orgLspId, {}, true);
     setOrgVendors(vendorList2);
 
     const speakerList = await getLspSpeakers(lspId, true);
