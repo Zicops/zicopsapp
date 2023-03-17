@@ -89,7 +89,7 @@ const UserDisplay = () => {
         if (!!res?.data?.login?.is_verified) break;
       }
     }
-  }, [userProfileData?.first_name, userProfileData?.last_name]);
+  }, [userProfileData?.email]);
 
   // async function loadAndSetUserData() {
   //   const userData = await getLoggedUserInfo();
