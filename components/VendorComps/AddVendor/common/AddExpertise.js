@@ -5,6 +5,7 @@ import { VendorAllExpertise } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
 const AddExpertise = ({
   expertiseValue,
   setExpertise,
@@ -19,6 +20,8 @@ const AddExpertise = ({
       setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
     }
   };
+
+  const { catSubCat } = useHandleCatSubCat();
 
   // const handleQuery = (event) => {
   //   const query = event.target.value;
@@ -46,11 +49,11 @@ const AddExpertise = ({
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
-      {cat.map((data, index) => {
+      {catSubCat?.cat?.map((data, index) => {
         return (
           <div className={`${styles.expertise1}`}>
             <h3>{data.Name}</h3>
-            {subCat.map((value, index) => {
+            {catSubCat?.subCat?.map((value) => {
               if (value.CatId === data.id)
                 return (
                   <div className={`${styles.expertiseCheckbox}`}>

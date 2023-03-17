@@ -37,21 +37,18 @@ export default function AboutVendor({ data }) {
   const accordianMarketyardDetails = [
     {
       title: 'Subject Matter Expertise',
-      description:
-        'With a talented pool of individuals, we provide subject matter expertise in various topics. The expertise can be used for further content development or consultancy into the same.',
+      description: smeData.serviceDescription,
       serviceData: smeData
     },
     {
       title: 'Classroom Training',
-      description:
-        'We have a history of conducting highly immersive and interactive trainings for corporate upskilling their teams.',
-      serviceData: cdData
+      description: ctData.serviceDescription,
+      serviceData: ctData
     },
     {
       title: 'Content Development',
-      description:
-        'We develop immersive animated content keeping our content engaging for learners. Quick delivery and cost-effectively transform your static content into a dynamic anf engaging course.',
-      serviceData: ctData
+      description: cdData.serviceDescription,
+      serviceData: cdData
     }
   ];
   if (vendorId && vendorData?.vendorId !== vendorId)

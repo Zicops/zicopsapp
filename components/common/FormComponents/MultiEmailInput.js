@@ -3,7 +3,12 @@ import { useState } from 'react';
 import Select from 'react-select';
 import { customSelectStyles } from '../../common/FormComponents/Logic/formComponents.helper';
 
-export default function MultiEmailInput({ type = 'Internal', items = [], setItems }) {
+export default function MultiEmailInput({
+  type = 'Internal',
+  items = [],
+  setItems,
+  isDisabled = false
+}) {
   const [error, setError] = useState(null);
   const [value, setValue] = useState('');
 
@@ -56,13 +61,22 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
     return items.includes(email);
   }
 
-  const defaultStyles = customSelectStyles();
+  const defaultStyles = customSelectStyles(false, '100%', false, false, {
+    controlStyles: {
+      '&:hover': isDisabled
+        ? {
+            cursor: 'no-drop'
+          }
+        : {}
+    }
+  });
   const customStyles = {
     ...defaultStyles,
     container: () => ({
       ...defaultStyles.container,
       margin: '10px auto'
     }),
+
     multiValue: (styles, { data }) => ({
       ...defaultStyles.multiValue,
       display: 'flex',
@@ -127,6 +141,7 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
           styles={customStyles}
           isMulti={true}
           isClearable={false}
+          isDisabled={isDisabled}
           backspaceRemovesValue
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}

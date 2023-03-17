@@ -1,14 +1,23 @@
-import { changeHandler } from '@/helper/common.helper';
+import { changeHandler, truncateToN } from '@/helper/common.helper';
 import { SampleAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
 const AddSample = () => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+
+  function getFileName() {
+    return truncateToN(
+      sampleData?.sampleFile?.name || getEncodedFileNameFromUrl(sampleData?.photoUrl),
+      45
+    );
+  }
+
   return (
     <div>
       <div style={{ padding: '10px' }}>
@@ -38,15 +47,19 @@ const AddSample = () => {
             <label>Add sample file: </label>
             <BrowseAndUpload
               styleClassBtn={`${styles.button}`}
-              title="Drag & Drop"
+              title={getFileName() || 'Drag and Drop'}
               handleFileUpload={(e) => {
                 const file = e.target.files?.[0];
                 setSampleData({ ...sampleData, sampleFile: file });
               }}
+              handleRemove={() => setSampleData({ ...sampleData, sampleFile: null })}
+              previewData={{
+                fileName: getFileName(),
+                filePath: sampleData?.sampleFile
+              }}
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
               acceptedTypes={acceptedFiles}
-              hidePreviewBtns={true}
             />
           </div>
         </div>
