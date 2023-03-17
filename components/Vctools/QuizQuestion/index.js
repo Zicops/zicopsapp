@@ -9,27 +9,26 @@ const QuizQuestion = () => {
                 <div className={`${styles.quizLable}`}>
                     <img src="/images/svg/vctool/quiz.svg" />
                     <div style={{
-                        color:"white",
-                        fontSize:"14px"
+                        color: "white",
+                        fontSize: "14px"
                     }}>Quiz</div>
                 </div>
                 <div className={`${styles.quizeExpand}`}>
-                    <button onClick={()=>{
+                    <button onClick={() => {
                         setexpand(!expand)
                     }}>
                         {
-                            expand ? <img src="/images/svg/vctool/expand-more.svg" />
-                                : <img src="/images/svg/vctool/expand-less.svg" />
+                            <img src={expand ? "/images/svg/vctool/expand-more.svg" : "/images/svg/vctool/expand-less.svg"} />
                         }
                     </button>
                 </div>
             </div>
-         
-          <div>
-            {
-                !expand ?    <div className={`${styles.questionScreen}`} ></div> :""
-            }
-          </div>
+
+            <div>
+                {
+                    !expand ? <div className={`${styles.questionScreen}`} ></div> : ""
+                }
+            </div>
         </div>
     )
 };

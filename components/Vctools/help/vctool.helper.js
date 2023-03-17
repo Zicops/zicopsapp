@@ -20,7 +20,6 @@ export const StartMeeting = (givenName, startingName, containerRef, email, toggl
       TOOLBAR_BUTTONS: []
     },
     onload: function () {
-      console.log('onload');
       setToobar(true)
     }
   };
@@ -55,7 +54,6 @@ export function OnVideo(video, videoref) {
       video.srcObject = stream;
       video.play()
     }).catch((err) => {
-      console.log(err)
     })
 }
 
@@ -73,7 +71,7 @@ export function StopVideo(video, videoref) {
     video.srcObject = null;
   }
   catch (e) {
-    console.log(e)
+
   }
 }
 

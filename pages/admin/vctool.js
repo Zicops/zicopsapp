@@ -1,10 +1,11 @@
 import VcMaintool from "@/components/Vctools"
-
-const Vctool=()=>
-{
-    return(
+import { RecoilRoot } from "recoil"
+const Vctool = () => {
+    return (
         <>
-        <VcMaintool/>
+            <RecoilRoot>
+                <VcMaintool />
+            </RecoilRoot>
         </>
     )
 };
