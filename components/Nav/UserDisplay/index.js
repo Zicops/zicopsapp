@@ -51,15 +51,16 @@ const UserDisplay = () => {
 
   useEffect(() => {
     if (userProfileData?.email) return;
+    const isLoginPage = router.asPath.includes('login');
 
+    if (!auth?.currentUser?.accessToken && !isLoginPage) return router.push('/login');
     loginUser();
 
     async function loginUser() {
-      if (!auth?.currentUser?.accessToken) return router.push('/login');
-
       for (let i = 0; i < 4; i++) {
-        sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
         let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
         const res = await userLogin({
           context: {
             headers: {
@@ -77,19 +78,20 @@ const UserDisplay = () => {
 
         if (isError) break;
 
-        if (res?.data?.login?.status === USER_STATUS.disable) {
+        if (res?.data?.login?.status === USER_STATUS.disable && !isLoginPage) {
           router.push('/login');
           setToastMsg({ type: 'danger', message: 'Something went wrong' });
           break;
         }
 
-        setUserProfileData(getUserObject(res?.data?.login));
-        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-
-        if (!!res?.data?.login?.is_verified) break;
+        if (!!res?.data?.login?.is_verified) {
+          setUserProfileData(getUserObject(res?.data?.login));
+          sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+          break;
+        }
       }
     }
-  }, [userProfileData?.first_name, userProfileData?.last_name]);
+  }, [userProfileData?.email]);
 
   // async function loadAndSetUserData() {
   //   const userData = await getLoggedUserInfo();
