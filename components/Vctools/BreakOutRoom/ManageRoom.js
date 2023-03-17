@@ -7,8 +7,8 @@ const ManageRoom = ({ addAgain }) => {
     // breakoutList
     const breakoutLists = useRecoilValue(breakoutList)
     const participantbreakoutpopup = useRecoilValue(particiantPopup)
-    const [isParticipantpanel, setisParticipantpanel] = useRecoilState(particiantPopup)
-    const [participantBreakoutroompanel, setparticipantBreakoutroompanel] = useRecoilState(particiantPopup)
+    const [isParticipantpanel, setIsParticipantpanel] = useRecoilState(particiantPopup)
+    const [participantBreakoutRoomPanel, setParticipantBreakoutRoomPanel] = useRecoilState(particiantPopup)
     const [totalRoomno, settotalRoomno] = useRecoilState(allPartcipantinfo)
     return (
         <>
@@ -29,28 +29,28 @@ const ManageRoom = ({ addAgain }) => {
 
                     {
                         breakoutLists.map((data, index) => {
-                            return (data.isMainRoom) ?<></>:
+                            return (data?.isMainRoom)?<></>:
 // participants
-                            <BreakoutRoomCard num={index} showAddparticipantpopup={() => {
+                            <BreakoutRoomCard roomNumber={index} showAddparticipantpopup={() => {
 
                                 settotalRoomno({
                                     totalRoomno: breakoutLists.length-1,
                                     presentRoom: index 
                                 })
                                 
-                                setparticipantBreakoutroompanel({
-                                    isRoom:!participantbreakoutpopup.isRoom   //toggle between true and false
+                                setParticipantBreakoutRoomPanel({
+                                    isRoom:!participantbreakoutpopup?.isRoom   //toggle between true and false
                                 })
 
-                                isParticipantpanel.isRoom===true ? setparticipantBreakoutroompanel({
+                                isParticipantpanel?.isRoom===true ? setParticipantBreakoutRoomPanel({
                                     roomId: "",
                                     isRoom: false
                                 }) :
-                                    setparticipantBreakoutroompanel({
+                                    setParticipantBreakoutRoomPanel({
                                         roomId: "AddParticipantpopup",
                                         isRoom: true
                                     })
-                            }} roomLength={data.participants.length}/>
+                            }} roomLength={data?.participants?.length}/>
                         })
                     }
                 </div>

@@ -27,15 +27,15 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
     }, [video1])
     
     return (
-        <div className={`${styles.Vccard}`}>
-            <div className={`${styles.video1}`}>
+        <div className={`${styles.vcCard}`}>
+            <div className={`${styles.videoPlayer}`}>
                 <div className={`${styles.subvideo}`}>
 
                     <video className={`${styles.videoplay}`} id="video" ref={videoref} autoPlay="true">
 
 
                     </video>
-                    <div ref={nameRef} className={`${styles.subvideo1}`}>
+                    <div ref={nameRef} className={`${styles.subVideo}`}>
                         <h1>{startName}</h1>
                     </div>
 
@@ -45,21 +45,20 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                 <VctoolButton onClickfun={() => {
                     startAudioenableFun()
                     setaudio1(!audio1)
-                }} customId={audio1 ? `${styles.btns_bg1}` : `${styles.btns_bg2}`}
+                }} customId={audio1 ? `${styles.btnsBg1}` : `${styles.btnsBg2}`}
                     toggle={audio1} trueSrc={"/images/svg/vctool/mic-on.svg"} falseSrc={"/images/svg/vctool/mic-off.svg"} />
 
 
                 <VctoolButton onClickfun={() => {
                     startVideoenableFun()
                     setvideo1(!video1)
-                }} customId={video1 ? `${styles.btns_bg1}` : `${styles.btns_bg2}`}
+                }} customId={video1 ? `${styles.btnsBg1}` : `${styles.btnsBg2}`}
                     trueSrc={"/images/svg/vctool/videocam-on.svg"} falseSrc={"/images/svg/vctool/videocam-off.svg"} toggle={video1} />
 
                 <button><img src="/images/svg/vctool/settings.svg" /> </button>
 
-                <div className={`${styles.join_btn}`}>
+                <div className={`${styles.joinBtn}`}>
                     <button onClick={() => {
-                        console.log("cliked")
                         startMeeting()
                         StopVideo(video, videoref)
                         // console.log(startName)

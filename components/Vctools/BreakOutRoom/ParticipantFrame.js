@@ -2,40 +2,36 @@ import { breakoutRoomselectedparticipant } from "@/state/atoms/vctool.atoms";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styles from "../vctoolMain.module.scss"
-const ParticipantFrame=({frameName})=>
-{
+const ParticipantFrame = ({ frameName }) => {
 
-    const [checked,setchecked]=useState(true)
-    var [breakoutRoomselectedparticipantarr,setbreakoutRoomselectedparticipantarr]=useRecoilState(breakoutRoomselectedparticipant)
+    const [checked, setchecked] = useState(false)
+    var [breakoutRoomSelectedParticipantArr, setbreakoutRoomSelectedParticipantArr] = useRecoilState(breakoutRoomselectedparticipant)
+
     return (
         <div className={`${styles.participantFrame}`}>
-         <div>
-            <div className={`${styles.participantFrameicon}`}>{frameName.slice(0,2)}</div>
-            <div className={`${styles.participantFramename}`}>{frameName}</div>
-         </div>
-      <input type="checkbox" onClick={()=>
-    { setchecked(!checked)
+            <div>
+                <div className={`${styles.participantFrameicon}`}>{frameName?.slice(0, 2)}</div>
+                <div className={`${styles.participantFramename}`}>{frameName}</div>
+            </div>
+            <input type="checkbox" onClick={() => {
+                setchecked(!checked)
 
-        if(checked)
-        {
-            setbreakoutRoomselectedparticipantarr([...breakoutRoomselectedparticipantarr,frameName])
-        }
-        else
-        {
-            // let datas=breakoutRoomselectedparticipantarr.indexOf(frameName)
-                   breakoutRoomselectedparticipantarr.forEach((data,index)=>
-            {
-                if(breakoutRoomselectedparticipantarr[index]===frameName)
-                {
-                 setbreakoutRoomselectedparticipantarr(breakoutRoomselectedparticipantarr.filter((removeData,removeIndex)=>
-                 {
-                    return removeIndex!==index
-                 }))
+                if (!checked) {
+                    setbreakoutRoomSelectedParticipantArr([...breakoutRoomSelectedParticipantArr, frameName])
+                    // alert(frameName)
                 }
-            })
-        }
-     
-    }}/>
+                else  {
+                    // let datas=breakoutRoomSelectedParticipantArr.indexOf(frameName)
+                    breakoutRoomSelectedParticipantArr?.forEach((data, index) => {
+                        if (breakoutRoomSelectedParticipantArr[index] === frameName) {
+                            setbreakoutRoomSelectedParticipantArr(breakoutRoomSelectedParticipantArr.filter((removeData, removeIndex) => {
+                                return removeIndex !== index
+                            }))
+                        }
+                    })
+                }
+
+            }} />
         </div>
     )
 };

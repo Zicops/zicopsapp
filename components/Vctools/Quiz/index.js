@@ -13,21 +13,13 @@ const QuizPage = ({ showHide=false }) => {
             </div>
 
             <div className={`${styles.quizScreen}`}>
-                <div style={{
-                    paddingTop: "12px",
-                    color: "#ACACAC",
-                    fontSize: "14px"
-                }}>Un-attempted</div>
+                <div className={`${styles.quizeAttemtpsHead}`}>Un-attempted</div>
                 <div className={`${styles.quizUnattempted}`}>
                     <QuizQuestion />
                     <QuizQuestion />
                     <QuizQuestion />
                 </div>
-                <div style={{
-                    paddingTop: "12px",
-                    color: "#ACACAC",
-                    fontSize: "14px"
-                }}>Attempted</div>
+                <div className={`${styles.quizeAttemtpsHead}`}>Attempted</div>
                 <div className={`${styles.quizAttempted}`}>
                     <QuizQuestion />
                 </div>

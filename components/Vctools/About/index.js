@@ -11,22 +11,9 @@ const About = ({ showHide=false}) => {
                 </button>
             </div>
 
-            <div className={`${styles.aboutHeadscreen}`}>
-                <div style={{
-                    marginTop: "15px",
-                    paddingTop: "10px",
-                    width: "276px",
-                    heigth: "56px",
-                    fontSize: "18px",
-                    lineHeight: "28px",
-                    color: "white"
-                }}>Classroom session on the sub introduction to PM</div>
-                <div style={{
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    color: "white",
-                    fontSize: "14px"
-                }}>sessions :2</div>
+            <div className={`${styles.aboutHeadScreen}`}>
+                <div className={`${styles.aboutScreenHeading}`}>Classroom session on the sub introduction to PM</div>
+                <div className={`${styles.aboutScreenSessionHead}`} >sessions :2</div>
                 <div className={`${styles.aboutInstructor}`}>
                     <div className={`${styles.aboutInstructorlogo}`}></div>
                     <div className={`${styles.intructorInfo}`}>
@@ -40,9 +27,9 @@ const About = ({ showHide=false}) => {
                 </div>
                 {/* info */}
                 {/* /images/svg/vctool/insert-chart.svg */}
-                <div className={`${styles.aboutscreen}`}>
-                    <div className={`${styles.aboutmeetinginfo}`}>
-                        <div className={`${styles.aboutmeetinglogo}`}>
+                <div className={`${styles.aboutScreen}`}>
+                    <div className={`${styles.aboutMeetingInfo}`}>
+                        <div className={`${styles.aboutMeetingLogo}`}>
                             <img src="/images/svg/vctool/translate.svg" />
                         </div>
                         <div className={`${styles.intructorInfo}`}>
@@ -55,8 +42,8 @@ const About = ({ showHide=false}) => {
                         </div>
                     </div>
 
-                    <div className={`${styles.aboutmeetinginfo}`}>
-                        <div className={`${styles.aboutmeetinglogo}`}>
+                    <div className={`${styles.aboutMeetingInfo}`}>
+                        <div className={`${styles.aboutMeetingLogo}`}>
                             <img src="/images/svg/vctool/supervisor-account.svg" />
                         </div>
                         <div className={`${styles.intructorInfo}`}>
@@ -70,8 +57,8 @@ const About = ({ showHide=false}) => {
                     </div>
 
 
-                    <div className={`${styles.aboutmeetinginfo}`}>
-                        <div className={`${styles.aboutmeetinglogo}`}>
+                    <div className={`${styles.aboutMeetingInfo}`}>
+                        <div className={`${styles.aboutMeetingLogo}`}>
                             <img src="/images/svg/vctool/calendar-month.svg" />
                         </div>
                         <div className={`${styles.intructorInfo}`}>
@@ -84,8 +71,8 @@ const About = ({ showHide=false}) => {
                         </div>
                     </div>
 
-                    <div className={`${styles.aboutmeetinginfo}`}>
-                        <div className={`${styles.aboutmeetinglogo}`}>
+                    <div className={`${styles.aboutMeetingInfo}`}>
+                        <div className={`${styles.aboutMeetingLogo}`}>
                             <img src="/images/svg/vctool/schedule.svg" />
                         </div>
                         <div className={`${styles.intructorInfo}`}>
@@ -97,8 +84,8 @@ const About = ({ showHide=false}) => {
                             }}>02:00 PM(Indian standard time)</div>
                         </div>
                     </div>
-                    <div className={`${styles.aboutmeetinginfo}`}>
-                        <div className={`${styles.aboutmeetinglogo}`}>
+                    <div className={`${styles.aboutMeetingInfo}`}>
+                        <div className={`${styles.aboutMeetingLogo}`}>
                             <img src="/images/svg/vctool/timelapse.svg" />
                         </div>
                         <div className={`${styles.intructorInfo}`}>
