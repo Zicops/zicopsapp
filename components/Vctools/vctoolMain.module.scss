@@ -121,7 +121,7 @@
 
 .toolBar {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 1010;
     width: 100%;
     height: 100vh;
@@ -132,7 +132,7 @@
 
 .toolBarnav {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 1010;
     // z-index: 1010;
     width: 100vw;
@@ -150,7 +150,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -175,7 +175,7 @@
 
 .toolBarFooter {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     position: absolute;
     bottom: 0;
     z-index: 1010;
@@ -211,7 +211,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -240,7 +240,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -264,7 +264,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -280,7 +280,7 @@
 
 #fadein1 {
     opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 999;
 }
 
@@ -308,7 +308,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -395,7 +395,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -474,7 +474,7 @@
     width: 161px;
     height: 48px;
     background: #6BCFCF;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -499,7 +499,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -555,7 +555,7 @@
 .pollAvailableHead {
     width: 276px;
     height: 28px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -567,7 +567,7 @@
 .pollAvailablesubHead {
     width: 276px;
     height: 24px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -580,7 +580,7 @@
 // .pollAvailableHead> {
 //     width: 276px;
 //     height: 24px;
-//     font-family: 'Poppins';
+    
 //     font-style: normal;
 //     font-weight: 400;
 //     font-size: 16px;
@@ -597,7 +597,7 @@
     align-items: center;
     background: #6BCFCF;
     border-radius: 4px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -628,7 +628,7 @@
     width: 276px;
     height: 24px;
     font-size: 16px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     line-height: 24px;
     display: flex;
@@ -741,7 +741,7 @@
 .pollOptionLabel {
     margin: 10px 0 10px 10px;
     width: 276px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -765,7 +765,7 @@
     border-radius: 4px;
     border: solid #262626 2px;
     border-radius: 4px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -791,7 +791,7 @@
         width: 140px;
         height: 48px;
         border-radius: 4px;
-        font-family: 'Poppins';
+        // 
         font-style: normal;
         font-weight: 400;
         font-size: 16px;
@@ -845,7 +845,7 @@
 .publishPollHead {
     margin-right: 24px;
     color: #6BCFCF;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -855,7 +855,7 @@
 .pollQuestions {
     width: 100%;
     height: auto;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -866,7 +866,7 @@
 }
 
 .pollSavedLabel {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -905,7 +905,7 @@
 }
 
 .pollBoxEditBnt {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -925,7 +925,7 @@
 
 .pollBoxDeleteBnt {
     color:#F53D41;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -935,7 +935,7 @@
 // {
 //     width: 100%;
 //     color: red;
-//     font-family: 'Poppins';
+    
 //     font-style: normal;
 //     font-weight: 400;
 //     font-size: 16px;
@@ -960,7 +960,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -988,7 +988,7 @@
 }
 
 .participantsScreenhead {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -999,7 +999,7 @@
 .allInstructors {
     width: 276px;
     height: auto;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1107,7 +1107,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -1168,7 +1168,7 @@
 .breakoutRoomAvailableHead {
     width: 276px;
     height: 28px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -1182,7 +1182,7 @@
 .moderatorAddroom>p {
     width: 276px;
     height: 24px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1198,7 +1198,7 @@
     height: 48px;
     background: #6BCFCF;
     border-radius: 4px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -1212,7 +1212,7 @@
 }
 
 .breakoutRoomDetailsHead {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1222,7 +1222,7 @@
 }
 
 .breakoutLable {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1240,7 +1240,7 @@
     background-color: #1A1D21;
     border: 1px solid #292F2F;
     outline: none;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1290,7 +1290,7 @@
 }
 
 .participantBreakoutroomsetting>p {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1310,7 +1310,7 @@
     color: white;
     background-color: #26292C;
     border: none;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -1325,7 +1325,7 @@
     background: #6BCFCF;
     border-radius: 4px;
     border: none;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -1346,7 +1346,7 @@
 
 .manageRoomshead>div {
     width: 90%;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1418,7 +1418,7 @@
 }
 
 .breakoutRoomCardLeftHeading {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1464,7 +1464,7 @@
 }
 
 .BreakoutRoomtootips>button {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1483,7 +1483,7 @@
 .breakoutRoomparticipants>button {
     width: 290px;
     margin: 6px;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1614,7 +1614,7 @@
 
 .participantFramename {
     margin-left: 12px;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1654,7 +1654,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -1681,7 +1681,7 @@
 }
 
 .resourceScreenhead {
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -1726,7 +1726,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -1833,7 +1833,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;

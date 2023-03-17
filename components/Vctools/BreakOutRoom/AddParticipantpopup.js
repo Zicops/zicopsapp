@@ -1,3 +1,4 @@
+import { VC_TOOL_ROLE } from "@/helper/constants.helper";
 import { breakoutRoomselectedparticipant, particiantPopup, vctoolAlluserinfo } from "@/state/atoms/vctool.atoms";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -19,7 +20,7 @@ const AddParticipantpopup= ({ presetRoom, totalRooms,autoAssignRoom }) => {
            {
               participantName.map((data)=>
               { 
-                return (data?.role!=="moderator")&& <ParticipantFrame frameName={data?.displayName}/>
+                return (data?.role!== VC_TOOL_ROLE[0])&& <ParticipantFrame frameName={data?.displayName}/>
               })
            }
             </div>
