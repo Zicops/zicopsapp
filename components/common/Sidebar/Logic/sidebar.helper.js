@@ -185,7 +185,8 @@ export const vendorSideBarData = {
     {
       id: 4,
       title: 'Orders',
-      link: '/admin/vendor/orders'
+      link: '/admin/vendor/orders',
+      isHidden: true
     }
   ]
 };
