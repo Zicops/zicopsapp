@@ -23,9 +23,10 @@ const MyVendor = () => {
   useEffect(() => {
     if (vendorTableData?.length) return;
 
-    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor)
+      return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
-    getPaginatedVendors().then((data) => {
+    getPaginatedVendors()?.then((data) => {
       setPageCursor(data?.pageCursor || null);
       setVendorTableData(data?.vendors || []);
     });
@@ -103,7 +104,19 @@ const MyVendor = () => {
           if (vendorTableData?.length / pageSize - currentPage < 3 && pageCursor) {
             getPaginatedVendors(pageCursor).then((data) => {
               setPageCursor(data?.pageCursor || null);
-              setVendorTableData((prev) => [...(prev || []), ...(data?.vendors || [])]);
+              const _tableData = structuredClone(vendorTableData || []);
+
+              data?.vendors?.forEach((v) => {
+                const isSameVendorPresent = _tableData?.find(
+                  (vendor) => vendor?.vendorId === v?.vendorId
+                );
+
+                if (isSameVendorPresent) return;
+
+                _tableData?.push(v);
+              });
+
+              setVendorTableData(_tableData);
             });
           }
         }}

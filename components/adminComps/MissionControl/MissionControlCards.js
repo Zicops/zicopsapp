@@ -73,7 +73,7 @@ const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -82,13 +82,13 @@ const MissionControlCards = () => {
       <div className="mission_control_body">
         <div className="contain_icons">
           <div className={`new_row`}>
-            <Link href={isDev ? '/admin/analytics/course-dashboard' : ''}>
+            <Link href={isDemo ? '/admin/analytics/course-dashboard' : ''}>
               <a>
                 <Card
                   image="/images/Analytics.png"
                   text="Analytics"
                   width="70px"
-                  isDisabled={!isDev}
+                  isDisabled={!isDemo}
                   tooltipTitle={ADMIN_HOME.analytics}
                 />
               </a>
@@ -149,13 +149,12 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href={isDev ? '/admin/vendor/manage-vendor' : ''}>
+            <Link href={'/admin/vendor/manage-vendor'}>
               <a>
                 <Card
                   image="/images/VendorManagement.png"
                   text="Vendor Management"
                   width="80px"
-                  isDisabled={!isDev}
                   tooltipTitle={ADMIN_HOME.vendorManagement}
                 />
               </a>

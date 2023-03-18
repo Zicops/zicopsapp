@@ -1,22 +1,26 @@
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import styles from './vendorComps.module.scss';
-import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import IconButton from '@/components/common/IconButton';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddExpriences from './AddExpriences';
-import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import VendorPopUp from './common/VendorPopUp';
-import AddExpertise from './AddVendor/common/AddExpertise';
-import useHandleVendor from './Logic/useHandleVendor';
-import { optionYearArray } from './Logic/vendorComps.helper';
-import useProfile from './Logic/useProfile';
+import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import { getExperiencesObject, VendorExperiencesAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import AddExpriences from './AddExpriences';
+import AddExpertise from './AddVendor/common/AddExpertise';
+import VendorPopUp from './common/VendorPopUp';
+import useHandleVendor from './Logic/useHandleVendor';
+import useProfile from './Logic/useProfile';
+import { optionYearArray } from './Logic/vendorComps.helper';
+import styles from './vendorComps.module.scss';
 
 const AddVendorProfile = ({ data = {} }) => {
-  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+
+  const { handleProfilePhoto, getSingleExperience, getProfileExperience } = useHandleVendor();
   const {
     completeExperienceHandler,
     handleLanguageSelection,
@@ -160,7 +164,7 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Experience: </label>
-          {!profileData?.experience?.length ? (
+          {!profileData?.experienceData?.length ? (
             <IconButton
               text="Add experiences"
               styleClass={`${styles.button}`}
@@ -170,17 +174,14 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileData?.experience?.map((exp) => (
+              {profileData?.experienceData?.map((exp) => (
                 <IconButton
-                  text={
-                    typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
-                  }
+                  text={`${exp?.title} @ ${exp?.companyName}`}
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    getProfileExperience(profileData.profileId);
-                    getSingleExperience(exp.PfId, exp.ExpId);
+                    setExperiencesData(getExperiencesObject(exp));
                   }}
                   isDisabled={isViewPage}
                 />
@@ -349,7 +350,7 @@ const AddVendorProfile = ({ data = {} }) => {
       </div>
       <div className={`${styles.addProfileContainer}`}>
         <LabeledRadioCheckbox
-          label="is Speaker"
+          label="Is Speaker"
           type="checkbox"
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
@@ -360,7 +361,7 @@ const AddVendorProfile = ({ data = {} }) => {
 
       <VendorPopUp
         open={isOpenExpriences}
-        title="Add experience"
+        title={`${experiencesData?.expId ? 'Edit' : 'Add'} Experience`}
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}

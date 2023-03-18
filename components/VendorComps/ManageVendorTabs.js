@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { manageVendorTabData } from './Logic/vendorComps.helper';
-import useHandleVendorMaster from './Logic/useHandleVendorMaster';
-import useHandleVendor from './Logic/useHandleVendor';
-import useHandleVendorServices from './Logic/useHandleVendorServices';
-import TabContainer from '../common/TabContainer';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import TabContainer from '../common/TabContainer';
 import Button from '../CustomVideoPlayer/Button';
+import useHandleVendor from './Logic/useHandleVendor';
+import useHandleVendorMaster from './Logic/useHandleVendorMaster';
+import useHandleVendorServices from './Logic/useHandleVendorServices';
+import { manageVendorTabData } from './Logic/vendorComps.helper';
 
 export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   const { handleMail } = useHandleVendor();
@@ -33,6 +35,8 @@ export default function ManageVendorTabs() {
   }, [vendorId]);
 
   const tabData = manageVendorTabData;
+
+  tabData[4].isHidden = !isDev;
 
   const [tab, setTab] = useState(tabData[0].name);
 
