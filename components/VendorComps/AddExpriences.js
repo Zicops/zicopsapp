@@ -87,7 +87,7 @@ const AddExpriences = () => {
       </div>
       <div className={`${styles.checkBoxRole}`}>
         <LabeledRadioCheckbox
-          label="Curranty working in this role"
+          label="currently working in this role"
           type="checkbox"
           name="isWorking"
           isChecked={experiencesData?.isWorking}
