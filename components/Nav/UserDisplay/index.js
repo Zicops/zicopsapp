@@ -52,14 +52,14 @@ const UserDisplay = () => {
   useEffect(() => {
     if (userProfileData?.email) return;
 
+    if (!auth?.currentUser?.accessToken) return;
     loginUser();
 
     async function loginUser() {
-      if (!auth?.currentUser?.accessToken) return router.push('/login');
-
       for (let i = 0; i < 4; i++) {
-        sessionStorage.setItem('tokenF', auth?.currentUser?.accessToken);
         let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
         const res = await userLogin({
           context: {
             headers: {
@@ -77,19 +77,16 @@ const UserDisplay = () => {
 
         if (isError) break;
 
-        if (res?.data?.login?.status === USER_STATUS.disable) {
-          router.push('/login');
-          setToastMsg({ type: 'danger', message: 'Something went wrong' });
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+
+        if (!!res?.data?.login?.is_verified) {
+          setUserProfileData(getUserObject(res?.data?.login));
+          sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
           break;
         }
-
-        setUserProfileData(getUserObject(res?.data?.login));
-        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
-
-        if (!!res?.data?.login?.is_verified) break;
       }
     }
-  }, [userProfileData?.first_name, userProfileData?.last_name]);
+  }, [userProfileData?.email]);
 
   // async function loadAndSetUserData() {
   //   const userData = await getLoggedUserInfo();
