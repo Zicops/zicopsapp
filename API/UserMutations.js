@@ -1585,28 +1585,28 @@ export const UPDATE_PROFILE_VENDOR = gql`
 
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $title: String
     $email: String!
-    $company_name: String
-    $employement_type: String
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     createExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {
@@ -1631,30 +1631,30 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
 
 export const UPDATE_EXPERIENCE_VENDOR = gql`
   mutation updateExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $expId: String
     $title: String
-    $email: String
-    $company_name: String
-    $employement_type: String
+    $email: String!
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     updateExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         exp_id: $expId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {

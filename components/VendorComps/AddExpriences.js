@@ -5,10 +5,13 @@ import { changeHandler } from '@/helper/common.helper';
 import styles from './vendorComps.module.scss';
 import { optionEmploymentTypeArray, optionLocationTypeArray } from './Logic/vendorComps.helper';
 import useExperience from './Logic/useExperience';
+import { useRecoilState } from 'recoil';
+import { VendorExperiencesAtom } from '@/state/atoms/vendor.atoms';
 
 const AddExpriences = () => {
-  const { experiencesData, setExperiencesData, optionMonthArray, optionYearArray } =
-    useExperience();
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const { optionMonthArray, optionYearArray } = useExperience();
+
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -136,6 +139,7 @@ const AddExpriences = () => {
                 inputName: 'endMonth',
                 placeholder: 'Month',
                 options: optionMonthArray,
+                isSearchEnable: true,
                 value: {
                   label: experiencesData?.endMonth,
                   value: experiencesData?.endMonth
@@ -152,6 +156,7 @@ const AddExpriences = () => {
                 inputName: 'endYear',
                 placeholder: 'year',
                 options: optionYearArray,
+                isSearchEnable: true,
                 value: {
                   label: experiencesData?.endYear,
                   value: experiencesData?.endYear

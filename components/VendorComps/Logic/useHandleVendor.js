@@ -259,6 +259,8 @@ export default function useHandleVendor() {
   }
 
   async function getProfileExperience(pfId) {
+    if (!vendorId || !pfId) return [];
+
     const experienceInfo = await loadQueryDataAsync(
       GET_VENDOR_EXPERIENCES,
       { vendor_id: vendorId, pf_id: pfId },
@@ -266,11 +268,14 @@ export default function useHandleVendor() {
       userQueryClient
     );
 
-    setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
-    setProfileExperience(experienceInfo.getVendorExperience);
+    // setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
+    // setProfileExperience(experienceInfo.getVendorExperience);
+    return experienceInfo.getVendorExperience || [];
   }
 
   async function getSingleExperience(pfId, expId) {
+    if (!vendorId || !pfId || !expId) return;
+
     const experienceInfo = await loadQueryDataAsync(
       GET_SINGLE_EXPERIENCE_DETAILS,
       { vendor_id: vendorId, pf_id: pfId, exp_id: expId },
@@ -412,22 +417,31 @@ export default function useHandleVendor() {
 
   async function addUpdateExperience() {
     let isError = false;
-    for (let i = 0; i < profileData?.experience?.length; i++) {
+    for (let i = 0; i < profileData?.experienceData?.length; i++) {
+      const exp = profileData?.experienceData?.[i];
+      const startDate = exp?.startMonth?.concat('-', exp?.startYear);
+      const start_date = new Date(startDate);
+      const start_timestamp = start_date.getTime() / 1000;
+
+      const endDate = exp?.endMonth?.concat('-', exp?.endYear);
+      const end_date = new Date(endDate);
+      const end_timestamp = end_date.getTime() / 1000;
+
       let sendData = {
-        vendor_id: vendorId || '',
-        title: profileData?.experience[i]?.title?.trim() || '',
+        vendorId: vendorId || '',
+        title: exp?.title?.trim() || '',
         email: profileData?.email?.trim() || '',
-        company_name: profileData?.experience[i]?.company_name?.trim() || '',
-        employement_type: profileData?.experience[i]?.employement_type?.trim() || '',
-        location: profileData?.experience[i]?.location?.trim() || '',
-        location_type: profileData?.experience[i]?.locationType?.trim() || '',
-        start_date: profileData?.experience[i]?.start_date || null,
-        end_date: profileData?.experience[i]?.end_date || null,
-        status: profileData?.experience[i]?.status
+        companyName: exp?.companyName?.trim() || '',
+        employeeType: exp?.employeeType?.trim() || '',
+        location: exp?.location?.trim() || '',
+        locationType: exp?.locationType?.trim() || '',
+        startDate: start_timestamp || null,
+        endDate: end_timestamp || null,
+        status: exp?.status
       };
 
-      if (profileData?.experience[i]?.ExpId) {
-        sendData.ExpId = profileData?.experience[i]?.ExpId;
+      if (exp?.expId) {
+        sendData.expId = exp?.expId;
 
         const res = await updateExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
@@ -435,23 +449,20 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Update Experience Error' });
         });
 
-        if (isError) return;
+        if (isError) continue;
         setToastMsg({ type: 'success', message: 'Experience Updated' });
-        return res;
+        continue;
       }
-      if (
-        profileData?.email &&
-        profileData?.experience[i]?.title &&
-        profileData?.experience[i]?.company_name
-      ) {
+
+      if (profileData?.email && exp?.title && exp?.companyName) {
         const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
-        if (isError) return;
+        if (isError) continue;
         setToastMsg({ type: 'success', message: 'Experience Created' });
-        return res;
+        continue;
       }
     }
     // return isError;
