@@ -994,15 +994,15 @@ transition: All 0.3s ease;
 }
 
 .card_ietms:hover{
-  transform: scale(1.1); 
-  transition: transform 0.2s ease-out 0.0s;
+  /* transform: scale(1.1);  */
+  /* transition: transform 0.2s ease-out 0.6s; */
   /* max-height: 200px; */
   /* width: 350px; */
-  background-color: var(--header-bg);
+  /* background-color: var(--header-bg); */
 
-  padding: 0;
-  border: 0px solid var(--primary);
-  box-shadow: 0 0 20px 0 var(--black);
+  /* padding: 0; */
+  /* border: 2px solid var(--primary); */
+  /* box-shadow: 0 0 20px 0 var(--black); */
 
   z-index: 99;
 }

@@ -22,19 +22,38 @@ export default function CourseCard({
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   function handleMouseEnter(e, start = 0, end = 0) {
-    if (e.currentTarget.parentNode.dataset.index === start.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '15px';
-      e.currentTarget.parentNode.style.marginRight = '-15px';
+    const firstLastCardOffset = 13;
+    const pageOffset = 100;
+    const mouseOffset = window.innerHeight / 2;
+
+    console.info('Info', e.clientY, mouseOffset )
+    if (
+      e.clientY > mouseOffset &&
+      document.body.scrollHeight - window.pageYOffset < window.innerHeight + pageOffset
+    ) {
+      e.currentTarget?.firstChild?.style.marginTop = '-55%';
+    } else {
+      e.currentTarget?.firstChild?.style.marginTop = '-25%';
     }
 
-    if (e.currentTarget.parentNode.dataset.index === end.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '-15px';
-      e.currentTarget.parentNode.style.marginRight = '15px';
+    if (e.currentTarget?.parentNode?.dataset?.index === start.toString()) {
+      e.currentTarget?.parentNode?.style.marginLeft = `${firstLastCardOffset}px`;
+      e.currentTarget?.parentNode?.style.marginRight = `${-firstLastCardOffset}px`;
     }
+
+    if (e.currentTarget?.parentNode?.dataset?.index === end.toString()) {
+      e.currentTarget?.parentNode?.style.marginLeft = `${-firstLastCardOffset}px`;
+      e.currentTarget?.parentNode?.style.marginRight = `${firstLastCardOffset}px`;
+    }
+
+    e.currentTarget?.parentNode?.style.transitionDelay = '0.6s';
+    e.currentTarget?.parentNode?.style.transitionTime = '0.2s';
   }
 
   function handleMouseLeave(e) {
-    e.currentTarget.parentNode.style.margin = '';
+    e.currentTarget?.firstChild?.style.marginTop = '0';
+    e.currentTarget?.parentNode?.style.margin = '0';
+    e.currentTarget?.parentNode?.style.transitionDelay = '0s';
   }
   const gotoCourse = () => {
     if (isVendor) return router.push(`/preview?courseId=${courseData.id}`);
