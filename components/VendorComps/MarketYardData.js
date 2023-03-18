@@ -1,14 +1,12 @@
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors } from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
-import { LEARNING_SPACE_ID, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
-export default function MarketYardData({ vendorType, displayRows = {} }) {
+export default function MarketYardData({ vendorType = null, displayRows = {} }) {
   const skeletonCardCount = 6;
   const { vendorDetails, getLspVendors, loading, getLspSpeakers, speakerDetails } =
     useHandleMarketYard();
-  const [orgVendors, setOrgVendors] = useState([...Array(skeletonCardCount)]);
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
@@ -17,25 +15,29 @@ export default function MarketYardData({ vendorType, displayRows = {} }) {
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList1 = await getLspVendors(lspId, {}, true);
-    setLspVendors(vendorList1);
+    const zicopsLsp = COMMON_LSPS.zicops;
 
-    const smeVendorList = await getLspVendors(lspId, { service: 'sme' }, true);
+    const myVendors = await getLspVendors(lspId, {}, true);
+    setLspVendors(myVendors);
+
+    const filters = { service: 'sme' };
+    if (vendorType) filters.type = vendorType;
+
+    const smeVendorList = await getLspVendors(zicopsLsp, filters, true);
     setSmeVendors(smeVendorList);
 
-    const crtVendorList = await getLspVendors(lspId, { service: 'crt' }, true);
+    filters.service = 'crt';
+    const crtVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCrtVendors(crtVendorList);
 
-    const cdVendorList = await getLspVendors(lspId, { service: 'cd' }, true);
+    filters.service = 'cd';
+    const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCdVendors(cdVendorList);
 
-    const orgLspId = LEARNING_SPACE_ID;
-    const vendorList2 = await getLspVendors(orgLspId, {}, true);
-    setOrgVendors(vendorList2);
-
-    const speakerList = await getLspSpeakers(lspId, true);
+    const speakerList = await getLspSpeakers(zicopsLsp, filters, true);
     setSpeakerVendors(speakerList);
-  }, []);
+  }, [vendorType]);
+
   return (
     <>
       <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
@@ -52,9 +54,9 @@ export default function MarketYardData({ vendorType, displayRows = {} }) {
       {displayRows?.isCrtDisplayed && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-      {/* {displayRows?.isSpeakerDisplayed && ( */}
-      <ZicopsCarousel title="Speakers Marketplace" data={speakerVendors} type="vendor" />
-      {/* )} */}
+      {displayRows?.isSpeakerDisplayed && (
+        <ZicopsCarousel title="Speakers Marketplace" data={speakerVendors} type="vendor" />
+      )}
     </>
   );
 }
