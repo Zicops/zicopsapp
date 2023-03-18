@@ -332,7 +332,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     {profileDetails?.map((data) => (
                       <div className={`${styles.showFiles}`}>
                         <img src="/images/svg/account_circle.svg" alt="" />
-                        {data?.first_name + '&' + data?.email}
+                        {data?.first_name + '(' + data?.email + ')'}
                       </div>
                     ))}
                   </div>

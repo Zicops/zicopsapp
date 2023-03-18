@@ -70,17 +70,7 @@ export default function useHandleVendorMaster() {
       if (displayToaster) setToastMsg({ type: 'success', message: 'Vendor Updated' });
       return;
     }
-    if (
-      vendorData?.name &&
-      vendorData?.level &&
-      vendorData?.type &&
-      vendorData?.address &&
-      vendorData?.website
-      // (vendorData?.facebookURL ||
-      //   vendorData?.instagramURL ||
-      //   vendorData?.twitterURL ||
-      //   vendorData?.linkedinURL)
-    ) {
+    if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
       const res = await addNewVendor({
         variables: sendData,
         update: (_, { data }) => {

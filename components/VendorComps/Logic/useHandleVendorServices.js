@@ -65,7 +65,7 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'Add SME Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SME Created' });
+      setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }
@@ -104,7 +104,7 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CRT Created' });
+      setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }
@@ -144,7 +144,7 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'CD Created Error' });
       });
       if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'CD Created' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }

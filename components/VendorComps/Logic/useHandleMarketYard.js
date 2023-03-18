@@ -4,7 +4,8 @@ import {
   GET_SPEAKERS,
   GET_VENDORS_BY_LSP,
   GET_VENDOR_SERVICES,
-  userQueryClient
+  userQueryClient,
+  GET_PAGINATED_VENDORS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
@@ -43,15 +44,21 @@ export default function useHandleMarketYard() {
   async function getLspVendors(lspId, filters, isDataReturn = false) {
     setLoading(true);
     const vendorList = await loadAndCacheDataAsync(
-      GET_VENDORS_BY_LSP,
+      // GET_VENDORS_BY_LSP,
+      GET_PAGINATED_VENDORS,
       { lsp_id: lspId, filters: filters },
       {},
       userQueryClient
     );
     // filters: { status: 'Active', service: service }
-    const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
+    const _sortedData = sortArrByKeyInOrder(
+      vendorList?.getPaginatedVendors?.vendors || [],
+      'updated_at',
+      false
+    );
     if (isDataReturn) {
       setLoading(false);
+      console.info(_sortedData);
       return _sortedData;
     }
     setVendorDetails(_sortedData);

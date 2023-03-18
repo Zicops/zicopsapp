@@ -349,7 +349,7 @@ const AddVendorProfile = ({ data = {} }) => {
       </div>
       <div className={`${styles.addProfileContainer}`}>
         <LabeledRadioCheckbox
-          label="is Speaker"
+          label="Is Speaker"
           type="checkbox"
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
