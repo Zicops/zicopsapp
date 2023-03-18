@@ -44,9 +44,12 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [newOPFormat, setNewOPFormat] = useState('');
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  const [displayFormats, setDisplayFormats] = useState(VENDOR_FILE_FORMATS);
 
   const {
     addUpdateProfile,
@@ -400,7 +403,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
         <h4>Select Format</h4>
-        {VENDOR_FILE_FORMATS.map((data, index) => {
+        {displayFormats.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
               <LabeledRadioCheckbox
@@ -418,15 +421,22 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <LabeledInput
           inputOptions={{
             inputName: 'fileFormat',
-            placeholder: 'Enter O/P deliverable format name'
+            placeholder: 'Enter O/P deliverable format name',
+            value: newOPFormat
           }}
           styleClass={`${styles.opdInput}`}
+          changeHandler={(e) => setNewOPFormat(e.target.value)}
         />
         <IconButton
           text="Create"
           imgUrl="/images/edit.png"
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
+          handleClick={() => {
+            setDisplayFormats([...displayFormats, newOPFormat]);
+            setSelectedFormats([...selectedFormats, newOPFormat]);
+            setNewOPFormat();
+          }}
         />
       </VendorPopUp>
       <VendorPopUp
