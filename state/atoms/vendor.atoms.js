@@ -46,6 +46,7 @@ export function getProfileObject(data) {
     crt_expertises: data?.crt_expertises || [],
     content_development: data?.content_development || [],
     experience: data?.experience || [],
+    experienceData: data?.experienceData || [],
     isSpeaker: data?.isSpeaker || false,
     sme: data?.sme || false,
     crt: data?.crt || false,

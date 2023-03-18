@@ -28,6 +28,15 @@ export default function VendorMaster() {
 
   const isViewPage = router.asPath?.includes('view-vendor');
 
+  useEffect(() => {
+    setVendorData((prev) => ({
+      ...prev,
+      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]?.filter(
+        (e) => !!e
+      )
+    }));
+  }, [emails]);
+
   const socialMediaPopup = [
     {
       title: 'Facebook',
@@ -100,7 +109,7 @@ export default function VendorMaster() {
           <label for="vendorName">Update vendor profile image:</label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title={getFileName() || 'Drag & Drop'} //image name is not setting here because we are getting an url
+            title={getFileName() || 'Drag & Drop'}
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
@@ -159,7 +168,12 @@ export default function VendorMaster() {
       </div>
       <div className={`${styles.input1}`}>
         <label for="users">Add User: </label>
-        <MultiEmailInput type="External" items={emails} setItems={setEmails} />
+        <MultiEmailInput
+          type="External"
+          items={emails}
+          setItems={setEmails}
+          isDisabled={isViewPage}
+        />
       </div>
 
       {!!socialMediaPopup?.[openSocialMedia]?.title && (

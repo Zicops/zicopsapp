@@ -29,7 +29,9 @@ const ViewVendorProfile = ({ data }) => {
           <button>Add to my Vendors</button>
         </div>
       </div>
+
       <div className={`${styles.hr}`}></div>
+
       <div className={`${styles.viewProfileButtom}`}>
         <div className={`${styles.vendorAddressType}`}>
           <div className={`${styles.vendorAddress}`}>
@@ -39,15 +41,6 @@ const ViewVendorProfile = ({ data }) => {
           <div className={`${styles.vendorType}`}>
             <p>Vendor Type</p>
             <span>{vendorData?.type}</span>
-          </div>
-          <div className={`${styles.vendorSocialMedia}`}>
-            <p>Social Media</p>
-            <div className={`${styles.socialMediaImage}`}>
-              <img src="/images/svg/Facebook.svg" alt="" />
-              <img src="/images/svg/Instagram.svg" alt="" />
-              <img src="/images/svg/Linkedin.svg" alt="" />
-              <img src="/images/svg/Twitter.svg" alt="" />
-            </div>
           </div>
         </div>
         <div className={`${styles.vendorExpertiseContainer}`}>
