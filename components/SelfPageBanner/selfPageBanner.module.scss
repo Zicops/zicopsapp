@@ -13,6 +13,9 @@
         width: 100%;
         opacity: 1;
         overflow: hidden;
+        img{
+            object-fit: contain;
+        }
     }
     .classroomText{
         width: 50%;

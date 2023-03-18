@@ -19,7 +19,7 @@ export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 //need to delete chorot later
 export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
-
+export const VC_TOOL_ROLE =['moderator','instructor','participant']
 export const PUBLIC_PATHS = [
   '/login',
   '/auth-verify',
@@ -214,8 +214,11 @@ export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
 export const VENDOR_MASTER_STATUS = {
   active: 'active',
-  draft: 'draft'
+  draft: 'draft',
+  disable: 'disable'
 };
+
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
 //Vendor Constant End
 

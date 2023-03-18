@@ -10,11 +10,13 @@ import {
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
+import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
 const SingleProfile = ({ data }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const { addUpdateProfile, addUpdateExperience } = useHandleVendor();
+  const { addUpdateExperience, getAllProfileInfo } = useHandleVendor();
+  const { addUpdateProfile } = useHandleVendorProfile();
   const editProfileData = profileDetails?.filter((e) => e?.pf_id === data?.pf_id);
   const editProfilehandler = () => {
     const profileInfo = {
@@ -27,7 +29,8 @@ const SingleProfile = ({ data }) => {
       profileImage: editProfileData[0]?.photo_url,
       languages: editProfileData[0]?.language,
       sme_expertises: editProfileData[0]?.sme_expertise,
-      crt_expertises: editProfileData[0]?.crt_expertise,
+      crt_expertises: editProfileData[0]?.classroom_expertise,
+      content_development: editProfileData[0]?.content_development,
       experience: editProfileData[0]?.experience,
       experienceYear: editProfileData[0]?.experience_years,
       isSpeaker: editProfileData[0]?.is_speaker
@@ -36,9 +39,10 @@ const SingleProfile = ({ data }) => {
     setIsOpen(true);
   };
 
-  const completeProfileHandler = () => {
-    addUpdateProfile();
-    addUpdateExperience();
+  const completeProfileHandler = async () => {
+    await addUpdateProfile();
+    await addUpdateExperience();
+    await getAllProfileInfo();
     setIsOpen(false);
     setProfileData(getProfileObject());
   };
@@ -47,7 +51,7 @@ const SingleProfile = ({ data }) => {
     <div className={`${styles.singleProfileContainer}`}>
       <div className={`${styles.singleProfileMain}`}>
         <div className={`${styles.singleProfileImage}`}>
-          <img src={data?.photo_url} alt="" />
+          <img src={data?.photo_url || '/images/Avatars/Profile.png'} alt="" />
         </div>
         <div className={`${styles.singleProfileDetails}`}>
           <div>

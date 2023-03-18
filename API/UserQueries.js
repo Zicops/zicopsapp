@@ -789,17 +789,22 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
     }
   }
 `;
+
 // VENDOR QUERIES START
 
+// {status: String , service: String}
+
 export const GET_VENDORS_BY_LSP = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       level
       name
+      description
       photo_url
       address
+      users
       website
       facebook_url
       instagram_url
@@ -815,18 +820,19 @@ export const GET_VENDORS_BY_LSP = gql`
 `;
 
 export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       name
       updated_at
+      status
     }
   }
 `;
 
 export const GET_VENDOR_ADMINS = gql`
-  query getVendorAdmins($vendor_id: String) {
+  query getVendorAdmins($vendor_id: String!) {
     getVendorAdmins(vendor_id: $vendor_id) {
       id
       first_name
@@ -929,6 +935,7 @@ export const GET_SINGLE_PROFILE_DETAILS = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker
@@ -954,6 +961,7 @@ export const GET_ALL_PROFILE_DETAILS = gql`
       language
       sme_expertise
       classroom_expertise
+      content_development
       experience
       experience_years
       is_speaker
@@ -1004,6 +1012,148 @@ export const GET_USER_VENDORS = gql`
       updated_at
       updated_by
       status
+    }
+  }
+`;
+
+export const GET_SME_DETAILS = gql`
+  query getSmeDetails($vendor_id: String!) {
+    getSmeDetails(vendor_id: $vendor_id) {
+      vendor_id
+      sme_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CRT_DETAILS = gql`
+  query getClassRoomTraining($vendor_id: String!) {
+    getClassRoomTraining(vendor_id: $vendor_id) {
+      vendor_id
+      crt_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CD_DETAILS = gql`
+  query getContentDevelopment($vendor_id: String!) {
+    getContentDevelopment(vendor_id: $vendor_id) {
+      vendor_id
+      cd_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ALL_ORDERS = gql`
+  query getAllOrders($lsp_id: String) {
+    getAllOrders(lsp_id: $lsp_id) {
+      order_id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ORDER_SERVICES = gql`
+  query getOrderServices($order_id: [String]) {
+    getOrderServices(order_id: $order_id) {
+      service_id
+      order_id
+      service_type
+      description
+      unit
+      currency
+      rate
+      quantity
+      total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_PAGINATED_VENDORS = gql`
+  query getPaginatedVendors(
+    $lsp_id: String
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+    $filters: VendorFilters
+  ) {
+    getPaginatedVendors(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+      filters: $filters
+    ) {
+      vendors {
+          vendorId
+          type
+          level
+          name
+          description
+          photo_url
+          address
+          users
+          website
+          facebook_url
+          instagram_url
+          twitter_url
+          linkedin_url
+          services
+          created_at
+          created_by
+          updated_at
+          updated_by
+          status
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;

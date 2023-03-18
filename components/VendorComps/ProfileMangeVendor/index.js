@@ -8,20 +8,29 @@ import useHandleVendor from '../Logic/useHandleVendor';
 import { allProfileAtom, getProfileObject, VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { useEffect } from 'react';
+import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
+import { useRouter } from 'next/router';
+
 const ProfileManageVendor = () => {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
-  const { addUpdateProfile, addUpdateExperience, getAllProfileInfo } = useHandleVendor();
+  const { addUpdateExperience, getAllProfileInfo } = useHandleVendor();
+  const { addUpdateProfile } = useHandleVendorProfile();
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
+
   const addProfileHandler = () => {
     setProfileData(getProfileObject());
     setIsOpenProfile(true);
   };
 
   const completeProfileHandler = async () => {
-    addUpdateExperience();
-    addUpdateProfile();
+    await addUpdateExperience();
+    await addUpdateProfile();
+    await getAllProfileInfo();
     setCompleteProfile(true);
     setIsOpenProfile(false);
     setProfileData(getProfileObject());
@@ -44,6 +53,7 @@ const ProfileManageVendor = () => {
             text="Add another profile"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
+            isDisabled={isViewPage}
           />
         </div>
       </div>

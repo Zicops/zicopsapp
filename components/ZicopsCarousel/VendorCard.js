@@ -5,16 +5,16 @@ const VendorCard = ({ data }) => {
   const router = useRouter();
 
   const handleclick = () => {
-    if (!data.id) return;
+    if (!data.vendorId) return;
 
-    return router.push(`/admin/vendor/market-yard/${data.id}`);
+    return router.push(`/admin/vendor/market-yard/vendor-details/${data.vendorId}`);
   };
 
   return (
     <div className={`${styles.cardVendorContainer}`} onClick={handleclick}>
       <div className={`${styles.cardInnerVendorContainer}`}>
         <div className={`${styles.vendorImage}`}>
-          <img src={data.image || '/images/discord_logo.png'} alt="not found" />
+          <img src={data.photo_url || '/images/Rectangle 55 (2).png'} alt="not found" />
         </div>
         <div className={`${styles.vendorDetails}`}>
           <div className={`${styles.vendorTitle}`}>{data.name}</div>

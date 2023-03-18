@@ -2,6 +2,7 @@ import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import React from 'react';
+import { useRouter } from 'next/router';
 const data = [
   {
     id: '1001',
@@ -76,7 +77,9 @@ const data = [
     status: 'Added'
   }
 ];
+
 const VendorOrders = () => {
+  const router = useRouter();
   const columns = [
     {
       field: 'order_id',
@@ -134,9 +137,10 @@ const VendorOrders = () => {
         // }
 
         const buttonArr = [
-          { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
+          // { handleClick: () => router.push(`/edit-order`) },
           {
-            text: 'Edit'
+            text: 'Edit',
+            handleClick: () => router.push(`/admin/vendor/orders/edit-order`)
           },
           {
             text: 'Disable'

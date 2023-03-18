@@ -2,43 +2,13 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { changeHandler } from '@/helper/common.helper';
-import { VendorExperiencesAtom } from '@/state/atoms/vendor.atoms';
-import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
 import styles from './vendorComps.module.scss';
-import { months, years } from '@/helper/utils.helper';
-
-const optionEmploymentTypeArray = [
-  'Full-time',
-  'Part-time',
-  'Self employed',
-  'Freelance',
-  'Internship',
-  'Trainee'
-].map((val) => ({
-  label: val,
-  value: val
-}));
-
-const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
-  label: val,
-  value: val
-}));
-
-const optionMonthArray = months.map((val) => ({
-  label: val,
-  value: val
-}));
-
-const _years = years;
-const optionYearArray = _years.map((val) => ({
-  label: val,
-  value: val
-}));
+import { optionEmploymentTypeArray, optionLocationTypeArray } from './Logic/vendorComps.helper';
+import useExperience from './Logic/useExperience';
 
 const AddExpriences = () => {
-  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-
+  const { experiencesData, setExperiencesData, optionMonthArray, optionYearArray } =
+    useExperience();
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -47,6 +17,7 @@ const AddExpriences = () => {
           inputOptions={{
             inputName: 'title',
             placeholder: 'Enter title',
+            maxLength: 60,
             value: experiencesData?.title
           }}
           changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -59,6 +30,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'companyName',
               placeholder: 'Enter company name',
+              maxLength: 60,
               value: experiencesData?.companyName
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -88,6 +60,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'location',
               placeholder: 'Ex. Pune, Maharashtra',
+              maxLength: 160,
               value: experiencesData?.location
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
