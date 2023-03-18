@@ -23,9 +23,10 @@ const MyVendor = () => {
   useEffect(() => {
     if (vendorTableData?.length) return;
 
-    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor)
+      return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
-    getPaginatedVendors().then((data) => {
+    getPaginatedVendors()?.then((data) => {
       setPageCursor(data?.pageCursor || null);
       setVendorTableData(data?.vendors || []);
     });
