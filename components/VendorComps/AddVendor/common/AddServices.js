@@ -309,36 +309,30 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
 
           <div className={`${styles.addProfiles}`}>
             <label for="profiles">Add profiles: </label>
-            {!profileDetails?.length ? (
-              <IconButton
-                text="Add profiles"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
-                handleClick={() => {
-                  setProfileData(getProfileObject());
-                  setIsOpenProfile(true);
-                }}
-              />
-            ) : (
-              <>
-                <div className={`${styles.showFilesMain}`}>
-                  {profileDetails?.map((data) => (
-                    <div className={`${styles.showFiles}`}>
-                      <img src="/images/svg/account_circle.svg" alt="" />
-                      {data?.first_name + '(' + data?.email + ')'}
-                    </div>
-                  ))}
-                </div>
-                <IconButton
-                  text="Add more"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setIsOpenProfile(true)}
-                  isDisabled={isViewPage}
-                />
-              </>
-            )}
+            <div className={`${styles.showFilesMain}`}>
+              {profileDetails?.map((data) => {
+                if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                if (pType === 'cd' && !data?.content_development?.length) return null;
+
+                return (
+                  <div className={`${styles.showFiles}`}>
+                    <img src="/images/svg/account_circle.svg" alt="" />
+                    {data?.first_name + '(' + data?.email + ')'}
+                  </div>
+                );
+              })}
+            </div>
+            <IconButton
+              text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || !data?.isApplicable}
+              handleClick={() => {
+                if (!profileDetails?.length) setProfileData(getProfileObject());
+                setIsOpenProfile(true);
+              }}
+            />
           </div>
         </div>
       </div>
