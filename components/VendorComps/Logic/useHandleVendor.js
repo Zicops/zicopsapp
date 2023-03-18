@@ -459,15 +459,26 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-
-    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-    });
-    if (isError) return;
-    setToastMsg({ type: 'success', message: 'Sample File Created' });
-    return res;
+    if (
+      sampleData?.sampleName &&
+      sampleData?.description &&
+      sampleData?.sampleFile &&
+      sampleData?.fileType &&
+      sampleData?.rate &&
+      sampleData?.currency &&
+      sampleData?.unit
+    ) {
+      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+      });
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Sample File Created' });
+      return res;
+    } else {
+      return setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+    }
   }
 
   async function deleteSample(sfid, pType) {
