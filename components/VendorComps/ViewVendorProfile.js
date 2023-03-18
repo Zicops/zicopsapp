@@ -40,9 +40,9 @@ const ViewVendorProfile = ({ data }) => {
             <p>Vendor Type</p>
             <span>{vendorData?.type}</span>
           </div>
-          <div className={`${styles.vendorSocialMedia}`}>
+          {/* <div className={`${styles.vendorSocialMedia}`}>
             <p>Social Media</p>
-          </div>
+          </div> */}
         </div>
         <div className={`${styles.vendorExpertiseContainer}`}>
           <p>Expertise :</p>

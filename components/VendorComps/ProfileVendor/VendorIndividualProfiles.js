@@ -20,10 +20,10 @@ export default function VendorIndividualProfiles({ data }) {
           <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
 
           <p className={`${styles.profileServices}`}>
-            {data?.is_speaker ? 'Speaker' + ' ' + '|' + ' ' : ''}
-            {data?.sme_expertise?.length ? 'SME' + ' ' + '|' + ' ' : ''}
-            {data?.classroom_expertise?.length ? 'CRT' + ' ' + '|' + ' ' : ''}
-            {data?.content_development?.length ? 'CD' : ''}
+            {data?.is_speaker ? 'Speaker' : ''}
+            {data?.sme_expertise?.length ? ' ' + '|' + ' ' + 'SME' : ''}
+            {data?.classroom_expertise?.length ? ' ' + '|' + ' ' + 'CRT' : ''}
+            {data?.content_development?.length ? ' ' + 'CD' : ''}
           </p>
           <p className={`${styles.profileExperience}`}>
             {data?.experience_years} years of experience

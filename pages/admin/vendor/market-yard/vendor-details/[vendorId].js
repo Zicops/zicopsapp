@@ -105,17 +105,15 @@ export default function VendorInfo() {
     {
       name: 'Courses',
       component: <CoursesVendor courseImage={coursesVendor[vendorId]?.courseImage} />
-      
     },
     {
       name: 'Profile',
       component: <ProfileVendor profileData={vendorProfileData} />
-    
-    },
-    {
-      name: 'Experience',
-      component: <MarketYardExperience profileData={vendorProfileData} />
     }
+    // {
+    //   name: 'Experience',
+    //   component: <MarketYardExperience profileData={vendorProfileData} />
+    // }
   ];
 
   const [tab, setTab] = useState(tabData[0].name);
