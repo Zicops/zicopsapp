@@ -58,7 +58,6 @@ export default function useHandleMarketYard() {
     );
     if (isDataReturn) {
       setLoading(false);
-      console.info(_sortedData);
       return _sortedData;
     }
     setVendorDetails(_sortedData);

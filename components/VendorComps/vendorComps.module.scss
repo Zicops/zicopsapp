@@ -1498,3 +1498,30 @@
     }
   }
 }
+
+.experienceContainer {
+  color: $white;
+  height: 300px;
+  background-color: $darkTwo;
+
+  .individualExperience {
+    .individualExperienceContainer {
+      display: flex;
+      align-items: center;
+
+      .companyLogo {
+        width: 15%;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .details {
+        .dates {
+          color: $bgBody;
+        }
+      }
+    }
+  }
+}

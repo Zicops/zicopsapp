@@ -9,18 +9,18 @@ export default function VendorDetails({ data }) {
   // ];
 
   const vendorDetails = [
-    { label: 'Name', value: data.name || 'NA' },
-    { label: 'Address', value: data.address || 'NA' },
-    { label: 'Website', value: data.website || 'NA' },
-    { label: 'Type', value: data.type || 'NA' }
+    { label: 'Name', value: data?.name || 'NA' },
+    { label: 'Address', value: data?.address || 'NA' },
+    { label: 'Website', value: data?.website || 'NA' },
+    { label: 'Type', value: data?.type || 'NA' }
   ];
 
   const socialMediaData = [
     {
       title: 'Facebook',
       inputName: 'facebookURL',
-      value: data.facebookURL,
-      imageUrl: data.facebookURL ? '/images/svg/Facebook.svg' : ''
+      value: data?.facebookURL,
+      imageUrl: data?.facebookURL ? '/images/svg/Facebook.svg' : ''
     },
     {
       title: 'Instagram',
@@ -59,6 +59,7 @@ export default function VendorDetails({ data }) {
           {socialMediaData?.map((media, i) => (
             <img src={`${media?.imageUrl}`} />
           ))}
+          <small>{!socialMediaData?.value && 'No Social Media Available'}</small>
         </div>
       </div>
     </div>
