@@ -236,16 +236,16 @@ export const FILE_TYPES = {
     '.doc',
     '.docx',
     '.xls',
-    'xlsx',
-    'txt',
-    'srt',
-    'vtt',
-    'jpg',
-    'jpeg',
-    'png',
-    'gif',
-    'mp3',
-    'mp4',
-    'webm'
+    '.xlsx',
+    '.txt',
+    '.srt',
+    '.vtt',
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.mp3',
+    '.mp4',
+    '.webm'
   ].join(', ')
 };
