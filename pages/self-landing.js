@@ -190,7 +190,7 @@ export default function Self() {
         backgroundColor: 'var(--tile-bg)',
         overflowX: 'clip',
         margin: 0,
-        padding: '70px 0 0 0'
+        padding: '70px 0 20px 0'
       }}>
       {isLoading && <HomePageLoader heroHeight={550} />}
 
