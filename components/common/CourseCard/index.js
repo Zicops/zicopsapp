@@ -26,34 +26,33 @@ export default function CourseCard({
     const pageOffset = 100;
     const mouseOffset = window.innerHeight / 2;
 
-    console.info('Info', e.clientY, mouseOffset )
     if (
       e.clientY > mouseOffset &&
       document.body.scrollHeight - window.pageYOffset < window.innerHeight + pageOffset
     ) {
-      e.currentTarget?.firstChild?.style.marginTop = '-55%';
+      e.currentTarget.firstChild.style.marginTop = '-55%';
     } else {
-      e.currentTarget?.firstChild?.style.marginTop = '-25%';
+      e.currentTarget.firstChild.style.marginTop = '-25%';
     }
 
-    if (e.currentTarget?.parentNode?.dataset?.index === start.toString()) {
-      e.currentTarget?.parentNode?.style.marginLeft = `${firstLastCardOffset}px`;
-      e.currentTarget?.parentNode?.style.marginRight = `${-firstLastCardOffset}px`;
+    if (e.currentTarget.parentNode.dataset?.index === start.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = `${firstLastCardOffset}px`;
+      e.currentTarget.parentNode.style.marginRight = `${-firstLastCardOffset}px`;
     }
 
-    if (e.currentTarget?.parentNode?.dataset?.index === end.toString()) {
-      e.currentTarget?.parentNode?.style.marginLeft = `${-firstLastCardOffset}px`;
-      e.currentTarget?.parentNode?.style.marginRight = `${firstLastCardOffset}px`;
+    if (e.currentTarget.parentNode.dataset?.index === end.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = `${-firstLastCardOffset}px`;
+      e.currentTarget.parentNode.style.marginRight = `${firstLastCardOffset}px`;
     }
 
-    e.currentTarget?.parentNode?.style.transitionDelay = '0.6s';
-    e.currentTarget?.parentNode?.style.transitionTime = '0.2s';
+    e.currentTarget.parentNode.style.transitionDelay = '0.6s';
+    e.currentTarget.parentNode.style.transitionTime = '0.2s';
   }
 
   function handleMouseLeave(e) {
-    e.currentTarget?.firstChild?.style.marginTop = '0';
-    e.currentTarget?.parentNode?.style.margin = '0';
-    e.currentTarget?.parentNode?.style.transitionDelay = '0s';
+    e.currentTarget.firstChild.style.marginTop = '0';
+    e.currentTarget.parentNode.style.margin = '0';
+    e.currentTarget.parentNode.style.transitionDelay = '0s';
   }
   const gotoCourse = () => {
     if (isVendor) return router.push(`/preview?courseId=${courseData.id}`);
