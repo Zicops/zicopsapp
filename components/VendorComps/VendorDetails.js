@@ -59,7 +59,7 @@ export default function VendorDetails({ data }) {
           {socialMediaData?.map((media, i) => (
             <img src={`${media?.imageUrl}`} />
           ))}
-          // <small>{!socialMediaData?.value && 'No Social Media Available'}</small>
+          {/* <small>{!socialMediaData?.value && 'No Social Media Available'}</small> */}
         </div>
       </div>
     </div>
