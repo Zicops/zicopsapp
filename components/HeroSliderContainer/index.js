@@ -39,7 +39,7 @@ const HeroSliderContainer = ({ children }) => {
           responsive={responsive}
           ssr={false} // means to render carousel on server-side.
           infinite={true}
-          autoPlay={false}
+          autoPlay={true}
           autoPlaySpeed={5000}
           keyBoardControl={true}
           customTransition="all 1s"
