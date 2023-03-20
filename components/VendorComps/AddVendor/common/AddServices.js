@@ -454,7 +454,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         }}>
         <FileManageVendor pType={pType} />
       </VendorPopUp>
-      <VendorPopUp
+      {/*<VendorPopUp
         open={showCompleteFile}
         popUpState={[showCompleteFile, setShowCompleteFile]}
         title="Add Sample"
@@ -465,7 +465,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
           handleClick: addSampleFileHandler
         }}>
         <AddSample />
-      </VendorPopUp>
-    </>
+      </VendorPopUp> */}
+    
+      </>
   );
 }
