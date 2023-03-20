@@ -1499,27 +1499,51 @@
   }
 }
 
-.experienceContainer {
+.merketExprienceContainer{
+  background-color: $darkOne;
+  border-radius: 8px;
+  padding: 24px;
   color: $white;
-  height: 300px;
-  background-color: $darkTwo;
-
-  .individualExperience {
-    .individualExperienceContainer {
-      display: flex;
-      align-items: center;
-
-      .companyLogo {
-        width: 15%;
-
-        img {
-          width: 100%;
-        }
+  .experienceHeading{
+    padding-bottom: 10px;
+    font-size: 18px;
+  }
+  .experienceLine{
+    border: 1px solid #292F2F;
+  }
+  .experienceMain{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    .companyImage{
+      width: 80px;
+      height: 80px;
+      
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
       }
-
-      .details {
-        .dates {
-          color: $bgBody;
+    }
+    .companyExperienceDetails{
+      .companyPosition{
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .companyName{
+        font-size: 16px;
+      }
+      .companyExperiencDate{
+        font-size: 16px;
+        color: #ACACAC;
+        .dot{
+            height: 3px;
+              width: 3px;
+              margin: 4px;
+              background-color: $white;
+              border-radius: 50%;
+              display: inline-block;
         }
       }
     }

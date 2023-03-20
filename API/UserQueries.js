@@ -1159,22 +1159,27 @@ export const GET_PAGINATED_VENDORS = gql`
 `;
 
 export const GET_SPEAKERS = gql`
-  query getSpeakers($lspId: String) {
-    getSpeakers(lsp_id: $lspId) {
-      vendorId
-      type
-      level
-      name
-      description
+  query getSpeakers($lspId: String, $service: String) {
+    getSpeakers(lsp_id: $lspId, service: $service) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
       photo_url
-      address
-      users
-      website
-      facebook_url
-      instagram_url
-      twitter_url
-      linkedin_url
-      services
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      content_development
+      experience
+      experience_years
+      sme
+      crt
+      cd
+      is_speaker
+      lsp_id
       created_at
       created_by
       updated_at

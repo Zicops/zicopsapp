@@ -1,11 +1,6 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import {
-  myVendors,
-  coursesVendor,
-  vendorProfiles,
-  serviceType
-} from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { coursesVendor, serviceType } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
@@ -25,10 +20,13 @@ import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { allProfileAtom, SevicesAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
+import MarketYardExperience from '@/components/VendorComps/MarketYardExperience';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -111,6 +109,10 @@ export default function VendorInfo() {
       name: 'Profile',
       component: <ProfileVendor profileData={vendorProfileData} />
     }
+    // {
+    //   name: 'Experience',
+    //   component: <MarketYardExperience profileData={vendorProfileData} />
+    // }
   ];
 
   const [tab, setTab] = useState(tabData[0].name);
