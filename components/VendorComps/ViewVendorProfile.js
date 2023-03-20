@@ -29,7 +29,9 @@ const ViewVendorProfile = ({ data }) => {
           <button>Add to my Vendors</button>
         </div>
       </div>
+
       <div className={`${styles.hr}`}></div>
+
       <div className={`${styles.viewProfileButtom}`}>
         <div className={`${styles.vendorAddressType}`}>
           <div className={`${styles.vendorAddress}`}>

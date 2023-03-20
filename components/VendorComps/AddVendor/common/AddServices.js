@@ -3,20 +3,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import {
-  VENDOR_FILE_FORMATS,
-  VENDOR_LANGUAGES,
-  VENDOR_MASTER_STATUS
-} from '@/helper/constants.helper';
-import { useState, useEffect } from 'react';
-import AddVendorProfile from '../../AddVendorProfile';
-import ProfileManageVendor from '../../ProfileMangeVendor';
-import styles from '../../vendorComps.module.scss';
-import VendorPopUp from '../../common/VendorPopUp';
-import AddExpertise from './AddExpertise';
-import useHandleVendor from '../../Logic/useHandleVendor';
-import AddSample from '../../AddSample';
-import FileManageVendor from '../../FileManageVendor';
+import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import {
   allProfileAtom,
   CdServicesAtom,
@@ -27,12 +14,19 @@ import {
   SmeServicesAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
-import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import AddSample from '../../AddSample';
+import AddVendorProfile from '../../AddVendorProfile';
+import VendorPopUp from '../../common/VendorPopUp';
+import FileManageVendor from '../../FileManageVendor';
+import useHandleVendor from '../../Logic/useHandleVendor';
+import ProfileManageVendor from '../../ProfileMangeVendor';
+import styles from '../../vendorComps.module.scss';
+import AddExpertise from './AddExpertise';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isOpenProflie, setIsOpenProfile] = useState(false);
   const [expertisePopupState, setExpertisePopupState] = useState(false);
   const [languagePopupState, setLanguagePopupState] = useState(false);
@@ -50,9 +44,12 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [newOPFormat, setNewOPFormat] = useState('');
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  const [displayFormats, setDisplayFormats] = useState(VENDOR_FILE_FORMATS);
 
   const {
     addUpdateProfile,
@@ -312,41 +309,34 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               </>
             )}
           </div>
-          {!!isDev && (
-            <div className={`${styles.addProfiles}`}>
-              <label for="profiles">Add profiles: </label>
-              {!profileDetails?.length ? (
-                <IconButton
-                  text="Add profiles"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  isDisabled={!data?.isApplicable}
-                  handleClick={() => {
-                    setProfileData(getProfileObject());
-                    setIsOpenProfile(true);
-                  }}
-                />
-              ) : (
-                <>
-                  <div className={`${styles.showFilesMain}`}>
-                    {profileDetails?.map((data) => (
-                      <div className={`${styles.showFiles}`}>
-                        <img src="/images/svg/account_circle.svg" alt="" />
-                        {data?.first_name + '(' + data?.email + ')'}
-                      </div>
-                    ))}
+
+          <div className={`${styles.addProfiles}`}>
+            <label for="profiles">Add profiles: </label>
+            <div className={`${styles.showFilesMain}`}>
+              {profileDetails?.map((data) => {
+                if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                if (pType === 'cd' && !data?.content_development?.length) return null;
+
+                return (
+                  <div className={`${styles.showFiles}`}>
+                    <img src="/images/svg/account_circle.svg" alt="" />
+                    {data?.first_name + '(' + data?.email + ')'}
                   </div>
-                  <IconButton
-                    text="Add more"
-                    styleClass={`${styles.button}`}
-                    imgUrl="/images/svg/add_circle.svg"
-                    handleClick={() => setIsOpenProfile(true)}
-                    isDisabled={isViewPage}
-                  />
-                </>
-              )}
+                );
+              })}
             </div>
-          )}
+            <IconButton
+              text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || !data?.isApplicable}
+              handleClick={() => {
+                if (!profileDetails?.length) setProfileData(getProfileObject());
+                setIsOpenProfile(true);
+              }}
+            />
+          </div>
         </div>
       </div>
       <VendorPopUp
@@ -413,7 +403,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
         <h4>Select Format</h4>
-        {VENDOR_FILE_FORMATS.map((data, index) => {
+        {displayFormats.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
               <LabeledRadioCheckbox
@@ -431,15 +421,22 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <LabeledInput
           inputOptions={{
             inputName: 'fileFormat',
-            placeholder: 'Enter O/P deliverable format name'
+            placeholder: 'Enter O/P deliverable format name',
+            value: newOPFormat
           }}
           styleClass={`${styles.opdInput}`}
+          changeHandler={(e) => setNewOPFormat(e.target.value)}
         />
         <IconButton
           text="Create"
           imgUrl="/images/edit.png"
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
+          handleClick={() => {
+            setDisplayFormats([...displayFormats, newOPFormat]);
+            setSelectedFormats([...selectedFormats, newOPFormat]);
+            setNewOPFormat();
+          }}
         />
       </VendorPopUp>
       <VendorPopUp

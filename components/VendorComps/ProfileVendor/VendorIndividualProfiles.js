@@ -1,10 +1,16 @@
 import styles from '../vendorComps.module.scss';
 import { DownArrowIcon } from '@/components/common/ZicopsIcons';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
 export default function VendorIndividualProfiles({ data }) {
   const router = useRouter();
+
   const onShowProfileHandler = () => {
-    router.push(`/admin/vendor/market-yard/vendor-details/profile-details/${data?.pf_id}`);
+    router.push(
+      `/admin/vendor/market-yard/vendor-details/${data?.vendor_id}/profile-details/${data?.pf_id}`
+    );
   };
   if (data?.is_speaker) {
     const speaker = data?.is_speaker;

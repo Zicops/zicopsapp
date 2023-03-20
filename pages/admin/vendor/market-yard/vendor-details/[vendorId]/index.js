@@ -14,7 +14,7 @@ import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
 import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
-import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
+import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -86,8 +86,7 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || null; //Change the 1 to null
-  // console.info(router.query.vendorId);
+  const vendorId = router.query.vendorId || null;
 
   const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
 
