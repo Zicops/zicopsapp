@@ -15,9 +15,6 @@ export default function VendorServices({ data, type = 'sme' }) {
   const [sampleFiles, setSampleFiles] = useState([]);
   const [samplePopup, setSamplePopup] = useState(null);
   const [sampleDetails, setSampleDetails] = useState(false);
-  const smeData = useRecoilValue(SmeServicesAtom);
-  const ctData = useRecoilValue(CtServicesAtom);
-  const cdData = useRecoilValue(CdServicesAtom);
   const { getSampleFiles } = useHandleVendor();
 
   useEffect(() => {

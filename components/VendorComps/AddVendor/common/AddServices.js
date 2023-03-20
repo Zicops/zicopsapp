@@ -44,9 +44,12 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [newOPFormat, setNewOPFormat] = useState('');
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  const [displayFormats, setDisplayFormats] = useState(VENDOR_FILE_FORMATS);
 
   const {
     addUpdateProfile,
@@ -309,36 +312,30 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
 
           <div className={`${styles.addProfiles}`}>
             <label for="profiles">Add profiles: </label>
-            {!profileDetails?.length ? (
-              <IconButton
-                text="Add profiles"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={!data?.isApplicable}
-                handleClick={() => {
-                  setProfileData(getProfileObject());
-                  setIsOpenProfile(true);
-                }}
-              />
-            ) : (
-              <>
-                <div className={`${styles.showFilesMain}`}>
-                  {profileDetails?.map((data) => (
-                    <div className={`${styles.showFiles}`}>
-                      <img src="/images/svg/account_circle.svg" alt="" />
-                      {data?.first_name + '(' + data?.email + ')'}
-                    </div>
-                  ))}
-                </div>
-                <IconButton
-                  text="Add more"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setIsOpenProfile(true)}
-                  isDisabled={isViewPage}
-                />
-              </>
-            )}
+            <div className={`${styles.showFilesMain}`}>
+              {profileDetails?.map((data) => {
+                if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                if (pType === 'cd' && !data?.content_development?.length) return null;
+
+                return (
+                  <div className={`${styles.showFiles}`}>
+                    <img src="/images/svg/account_circle.svg" alt="" />
+                    {data?.first_name + '(' + data?.email + ')'}
+                  </div>
+                );
+              })}
+            </div>
+            <IconButton
+              text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || !data?.isApplicable}
+              handleClick={() => {
+                if (!profileDetails?.length) setProfileData(getProfileObject());
+                setIsOpenProfile(true);
+              }}
+            />
           </div>
         </div>
       </div>
@@ -406,7 +403,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
         <h4>Select Format</h4>
-        {VENDOR_FILE_FORMATS.map((data, index) => {
+        {displayFormats.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
               <LabeledRadioCheckbox
@@ -424,15 +421,22 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <LabeledInput
           inputOptions={{
             inputName: 'fileFormat',
-            placeholder: 'Enter O/P deliverable format name'
+            placeholder: 'Enter O/P deliverable format name',
+            value: newOPFormat
           }}
           styleClass={`${styles.opdInput}`}
+          changeHandler={(e) => setNewOPFormat(e.target.value)}
         />
         <IconButton
           text="Create"
           imgUrl="/images/edit.png"
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
+          handleClick={() => {
+            setDisplayFormats([...displayFormats, newOPFormat]);
+            setSelectedFormats([...selectedFormats, newOPFormat]);
+            setNewOPFormat();
+          }}
         />
       </VendorPopUp>
       <VendorPopUp
