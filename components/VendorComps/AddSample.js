@@ -8,8 +8,11 @@ import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
+import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 const AddSample = () => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   function getFileName() {
     return truncateToN(
@@ -50,6 +53,13 @@ const AddSample = () => {
               title={getFileName() || 'Drag and Drop'}
               handleFileUpload={(e) => {
                 const file = e.target.files?.[0];
+                if (file?.size > LIMITS.vendorSampleSize) {
+                  fileErrMsg = `File Size limit is ${Math.ceil(
+                    LIMITS.vendorSampleSize / ONE_MB_IN_BYTES
+                  )} mb`;
+                  isValid = false;
+                  setToastMsg({ type: 'Danger', message: fileErrMsg });
+                }
                 setSampleData({ ...sampleData, sampleFile: file });
               }}
               handleRemove={() => setSampleData({ ...sampleData, sampleFile: null })}
@@ -59,7 +69,7 @@ const AddSample = () => {
               }}
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
-              acceptedTypes={acceptedFiles}
+              acceptedTypes={FILE_TYPES.vendorSampleFiles}
             />
           </div>
         </div>
