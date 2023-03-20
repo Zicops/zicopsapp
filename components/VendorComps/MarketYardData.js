@@ -11,7 +11,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
   const [cdVendors, setCdVendors] = useState([...Array(skeletonCardCount)]);
-  const [speakerVendors, setSpeakerVendors] = useState([...Array(skeletonCardCount)]);
+  // const [speakerVendors, setSpeakerVendors] = useState([...Array(skeletonCardCount)]);
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
@@ -33,10 +33,22 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
     filters.service = 'cd';
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCdVendors(cdVendorList);
-
-    const speakerList = await getLspSpeakers(zicopsLsp, filters, true);
-    setSpeakerVendors(speakerList);
   }, [vendorType]);
+
+  useEffect(async () => {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    if (displayRows?.isSpeakerDisplayed === 'Subject Matter') {
+      await getLspSpeakers(lspId, 'sme', false);
+    } else if (displayRows?.isSpeakerDisplayed === 'Classroom Training') {
+      await getLspSpeakers(lspId, 'crt', false);
+    } else if (displayRows?.isSpeakerDisplayed === 'Content Development') {
+      await getLspSpeakers(lspId, 'cd', false);
+    } else {
+      await getLspSpeakers(lspId, null, false);
+    }
+  }, [displayRows?.isSpeakerDisplayed]);
+
+  console.info('speakerDetails', speakerDetails);
 
   return (
     <>
@@ -54,9 +66,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
       {displayRows?.isCrtDisplayed && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-      {displayRows?.isSpeakerDisplayed && (
-        <ZicopsCarousel title="Speakers Marketplace" data={speakerVendors} type="vendor" />
-      )}
+      {/* <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" /> */}
     </>
   );
 }

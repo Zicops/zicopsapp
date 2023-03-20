@@ -12,6 +12,8 @@ const AddExpriences = () => {
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const { optionMonthArray, optionYearArray } = useExperience();
 
+  console.info(experiencesData?.isWorking);
+
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -142,7 +144,7 @@ const AddExpriences = () => {
                 isSearchEnable: true,
                 value: {
                   label: experiencesData?.endMonth,
-                  value: experiencesData?.endMonth
+                  value: !experiencesData?.isWorking ? experiencesData?.endMonth : null
                 },
                 isDisabled: experiencesData?.isWorking ? true : false
               }}
@@ -159,7 +161,7 @@ const AddExpriences = () => {
                 isSearchEnable: true,
                 value: {
                   label: experiencesData?.endYear,
-                  value: experiencesData?.endYear
+                  value: !experiencesData?.isWorking ? experiencesData?.endYear : null
                 },
                 isDisabled: experiencesData?.isWorking ? true : false
               }}

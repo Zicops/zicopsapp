@@ -31,7 +31,7 @@ export default function MarketYard() {
             isCrtDisplayed: vendorService?.value
               ? serviceOptions?.crt === vendorService?.value
               : true,
-            isSpeakerDisplayed: !vendorService?.value
+            isSpeakerDisplayed: vendorService?.value
           }}
         />
       </MainBody>
