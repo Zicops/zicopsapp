@@ -3,7 +3,6 @@ import { COURSE_TYPES } from '@/constants/course.constants';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -57,7 +56,7 @@ export default function useHandleCourseData() {
     }
   }, [isVendor ? userData?.id : '']);
 
-  function isDataPresent(tabsToValidate = []) {
+  function isDataPresent(tabsToValidate = [], isUpdateState = true) {
     if (!tabsToValidate?.length) return false;
 
     const errorList = [];
@@ -88,7 +87,8 @@ export default function useHandleCourseData() {
       tabDataList.forEach((key) => !courseMetaData?.[key]?.length && errorList.push(key));
     });
 
-    return errorList;
+    if (isUpdateState) setCourseCurrentState({ ...courseCurrentState, error: errorList });
+    return !errorList?.length;
   }
 
   function handleChange(toBeUpdatedKeyValue = {}) {
@@ -129,7 +129,7 @@ export default function useHandleCourseData() {
       setCourseMetaData({
         ...courseMetaData,
         image: e.target.files[0]
-      })
+      });
     }
     e.target.value = '';
   }
@@ -140,9 +140,17 @@ export default function useHandleCourseData() {
       setCourseMetaData({
         ...courseMetaData,
         tileImage: e.target.files[0]
-      })
+      });
     }
     e.target.value = '';
   }
-  return { ownerList, handleChange, handleExpertise, isDataPresent, handlePreviewVideo ,handleImage,handleTileImage};
+  return {
+    ownerList,
+    handleChange,
+    handleExpertise,
+    isDataPresent,
+    handlePreviewVideo,
+    handleImage,
+    handleTileImage
+  };
 }

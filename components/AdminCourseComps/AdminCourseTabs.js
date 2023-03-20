@@ -1,9 +1,13 @@
 import TabContainer from '@/common/TabContainer';
 import { COURSE_STATUS } from '@/constants/course.constants';
 import { getDateTimeFromUnix } from '@/helper/utils.helper';
-import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import {
+  ActiveCourseTabNameAtom,
+  CourseCurrentStateAtom,
+  CourseMetaDataAtom
+} from '@/state/atoms/courses.atom';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Button from '../common/Button';
 import Spinner from '../common/Spinner';
 import { courseTabs } from './Logic/adminCourseComps.helper';
@@ -11,21 +15,26 @@ import useHandleCourseData from './Logic/useHandleCourseData';
 import useSaveCourseData from './Logic/useSaveCourseData';
 
 export default function AdminCourseTabs() {
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const courseCurrentState = useRecoilValue(CourseCurrentStateAtom);
   const router = useRouter();
   const courseId = router.query.courseId || null;
 
-  const { activeCourseTab, setActiveCourseTab, saveCourseMeta } = useSaveCourseData();
+  const { saveCourseMeta } = useSaveCourseData();
   const { isDataPresent } = useHandleCourseData();
+
+  // set course master as default if state is empty
+  if (!activeCourseTab) setActiveCourseTab(courseTabs.courseMaster.name);
 
   const tabData = Object.keys(courseTabs).map((key) => ({
     name: courseTabs[key].name,
-    component: !!courseId && courseMetaData.id !== courseId ? <Spinner /> : courseTabs[key].component
+    component:
+      !!courseId && courseMetaData.id !== courseId ? <Spinner /> : courseTabs[key].component
   }));
 
   function getTabFooterObj() {
-    const isCourseMasterDataFilled = isDataPresent([courseTabs.courseMaster.name])?.length;
+    const isCourseMasterDataFilled = isDataPresent([courseTabs.courseMaster.name], false);
     const displayCourseStatus = () => {
       if (courseCurrentState.isUpdating) return 'UPDATING...';
 
@@ -42,7 +51,7 @@ export default function AdminCourseTabs() {
     const getIsSubmitBtnDisabled = () => {
       if (courseCurrentState?.isUpdating) return true;
 
-      return isCourseMasterDataFilled;
+      return !isCourseMasterDataFilled;
     };
     const getSubmitBtnText = () => {
       if (!!courseId) return 'Update';

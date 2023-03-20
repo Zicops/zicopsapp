@@ -5,7 +5,7 @@ import { courseTabs } from './Logic/adminCourseComps.helper';
 import useHandleCourseData from './Logic/useHandleCourseData';
 import useSaveCourseData from './Logic/useSaveCourseData';
 
-export default function NextBtn() {
+export default function NextBtn({ switchTabName = null }) {
   const courseCurrentState = useRecoilValue(CourseCurrentStateAtom);
 
   const { saveCourseMeta } = useSaveCourseData();
@@ -15,12 +15,12 @@ export default function NextBtn() {
     <>
       <ZicopsButton
         display="Next"
-        handleClick={() => saveCourseMeta()}
+        handleClick={() => saveCourseMeta({ validateCurrentForm: true, switchTabName })}
         isDisabled={courseCurrentState?.isUpdating}
         fontSize="1rem"
         padding="0.4em 0.5em"
         float="right"
-        isActive={!isDataPresent([courseTabs.courseMaster.name]).length}
+        isActive={isDataPresent([courseTabs.courseMaster.name], false)}
       />
     </>
   );

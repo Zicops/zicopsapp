@@ -26,4 +26,8 @@
   &.error {
     border-color: $error;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

@@ -1,6 +1,11 @@
 import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
 import { atom } from 'recoil';
 
+export const ActiveCourseTabNameAtom = atom({
+  key: 'ActiveCourseTabName',
+  default: null
+});
+
 export const CourseMetaDataAtom = atom({
   key: 'CourseMetaData',
   default: getCourseMetaDataObj()
@@ -38,8 +43,9 @@ export function getCourseMetaDataObj(data = {}) {
     summary: data?.summary || '',
 
     // course about
-    Trainers:data?.Trainers || [],
-    Moderators:data?.Moderators || [],
+    // Trainers:data?.Trainers || [],
+    // Moderators:data?.Moderators || [],
+    // Curriculum:data?.Curriculum || '',
     description: data?.description || '',
     outcomes: data?.outcomes || [],
     benefits: data?.benefits || [], // highlights
@@ -47,7 +53,6 @@ export function getCourseMetaDataObj(data = {}) {
     relatedSkills: data?.relatedSkills || [],
     goodFor: data?.goodFor || [],
     mustFor: data?.mustFor || [],
-    Curriculum:data?.Curriculum || '',
 
     // course topics
     duration: data?.duration || 0,

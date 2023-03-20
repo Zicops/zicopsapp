@@ -161,6 +161,118 @@ export const ADD_NEW_COURSE = gql`
   }
 `;
 
+export const UPDATE_COURSE_DATA = gql`
+  mutation updateCourse(
+    $id: ID
+    $name: String
+    $description: String
+    $summary: String
+    $instructor: String
+    $image: String
+    $previewVideo: String
+    $tileImage: String
+    $owner: String
+    $publisher: String
+    $duration: Int
+    $expertiseLevel: String
+    $language: [String]
+    $benefits: [String]
+    $outcomes: [String]
+    $type: String
+    $prequisites: [String]
+    $goodFor: [String]
+    $mustFor: [String]
+    $relatedSkills: [String]
+    $publishDate: String
+    $expiryDate: String
+    $expectedCompletion: String
+    $qaRequired: Boolean
+    $approvers: [String]
+    $status: Status
+    $isActive: Boolean
+    $isDisplay: Boolean
+    $category: String
+    $subCategory: String
+    $subCategories: [sub_categories_input]
+  ) {
+    updateCourse(
+      course: {
+        id: $id
+        name: $name
+        description: $description
+        summary: $summary
+        instructor: $instructor
+        image: $image
+        previewVideo: $previewVideo
+        tileImage: $tileImage
+        owner: $owner
+        publisher: $publisher
+        duration: $duration
+        expertise_level: $expertiseLevel
+        language: $language
+        benefits: $benefits
+        outcomes: $outcomes
+        type: $type
+        prequisites: $prequisites
+        goodFor: $goodFor
+        mustFor: $mustFor
+        related_skills: $relatedSkills
+        publish_date: $publishDate
+        expiry_date: $expiryDate
+        expected_completion: $expectedCompletion
+        qa_required: $qaRequired
+        approvers: $approvers
+        status: $status
+        is_active: $isActive
+        is_display: $isDisplay
+        category: $category
+        sub_category: $subCategory
+        sub_categories: $subCategories
+      }
+    ) {
+      id
+      name
+      lspId
+      description
+      summary
+      instructor
+      image
+      previewVideo
+      tileImage
+      owner
+      publisher
+      duration
+      expertise_level
+      language
+      benefits
+      outcomes
+      created_at
+      updated_at
+      type
+      prequisites
+      goodFor
+      mustFor
+      related_skills
+      publish_date
+      expiry_date
+      expected_completion
+      qa_required
+      approvers
+      created_by
+      updated_by
+      status
+      is_active
+      is_display
+      category
+      sub_category
+      sub_categories {
+        name
+        rank
+      }
+    }
+  }
+`;
+
 export const ADD_COURSE = gql`
   mutation addCourse(
     $name: String

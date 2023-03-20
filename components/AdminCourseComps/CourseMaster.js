@@ -4,7 +4,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import { COURSE_EXPERTISE_LEVEL, COURSE_TYPES } from '@/constants/course.constants';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRecoilValue } from 'recoil';
 import styles from './adminCourseComps.module.scss';
@@ -13,6 +13,7 @@ import { courseTabs } from './Logic/adminCourseComps.helper';
 import useHandleCourseData from './Logic/useHandleCourseData';
 
 export default function CourseMaster() {
+  const { error } = useRecoilValue(CourseCurrentStateAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
@@ -25,6 +26,7 @@ export default function CourseMaster() {
     <>
       {/* course name */}
       <LabeledInput
+        inputClass={!courseMetaData?.name?.length && error?.includes('name') ? 'error' : ''}
         inputOptions={{
           inputName: 'name',
           label: 'Name :',
@@ -38,6 +40,7 @@ export default function CourseMaster() {
       {/* category and subcategory */}
       <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
         <LabeledDropdown
+          isError={!courseMetaData?.category?.length && error?.includes('category')}
           dropdownOptions={{
             inputName: 'category',
             label: 'Category :',
@@ -58,6 +61,7 @@ export default function CourseMaster() {
         />
 
         <LabeledDropdown
+          isError={!courseMetaData?.subCategory?.length && error?.includes('subCategory')}
           dropdownOptions={{
             inputName: 'subCategory',
             label: 'Sub Category:',
@@ -82,6 +86,7 @@ export default function CourseMaster() {
         <div className={`${styles.expertise}`}>
           <LabeledRadioCheckbox
             type="checkbox"
+            isError={!courseMetaData?.expertiseLevel?.length && error?.includes('expertiseLevel')}
             label={COURSE_EXPERTISE_LEVEL.beginner}
             value={COURSE_EXPERTISE_LEVEL.beginner}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.beginner)}
@@ -90,6 +95,7 @@ export default function CourseMaster() {
 
           <LabeledRadioCheckbox
             type="checkbox"
+            isError={!courseMetaData?.expertiseLevel?.length && error?.includes('expertiseLevel')}
             label={COURSE_EXPERTISE_LEVEL.competent}
             value={COURSE_EXPERTISE_LEVEL.competent}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.competent)}
@@ -97,6 +103,7 @@ export default function CourseMaster() {
           />
           <LabeledRadioCheckbox
             type="checkbox"
+            isError={!courseMetaData?.expertiseLevel?.length && error?.includes('expertiseLevel')}
             label={COURSE_EXPERTISE_LEVEL.proficient}
             value={COURSE_EXPERTISE_LEVEL.proficient}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.proficient)}
@@ -108,6 +115,7 @@ export default function CourseMaster() {
       {/* Owner and Provisioner */}
       <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
         <LabeledDropdown
+          isError={!courseMetaData?.owner?.length && error?.includes('owner')}
           dropdownOptions={{
             inputName: 'owner',
             label: 'Owner :',
@@ -125,6 +133,7 @@ export default function CourseMaster() {
         />
 
         <LabeledDropdown
+          isError={!courseMetaData?.publisher?.length && error?.includes('publisher')}
           dropdownOptions={{
             inputName: 'publisher',
             label: 'Provisioner :',
@@ -145,6 +154,7 @@ export default function CourseMaster() {
       {/* language and no of leaner */}
       <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
         <LabeledDropdown
+          isError={!courseMetaData?.language?.length && error?.includes('language')}
           dropdownOptions={{
             inputName: 'language',
             label: 'Language :',
@@ -164,6 +174,7 @@ export default function CourseMaster() {
 
         {!!isClassroomCourse && (
           <LabeledInput
+            // inputClass={!courseMetaData?.name?.length && error?.includes('name') ? 'error' : ''}
             inputOptions={{
               inputName: 'noOfLearner',
               label: 'No.of Learners :',
@@ -184,6 +195,7 @@ export default function CourseMaster() {
           <div>
             <LabeledRadioCheckbox
               type="radio"
+              isError={!courseMetaData?.lspId?.length && error?.includes('lspId')}
               label={'Organization Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.defaultLsp}
               changeHandler={(e) => handleChange({ lspId: userOrgData?.defaultLsp })}
@@ -191,6 +203,7 @@ export default function CourseMaster() {
 
             <LabeledRadioCheckbox
               type="radio"
+              isError={!courseMetaData?.lspId?.length && error?.includes('lspId')}
               label={'Learning space Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.lsp_id}
               changeHandler={(e) => handleChange({ lspId: userOrgData?.lsp_id })}
@@ -219,7 +232,7 @@ export default function CourseMaster() {
         </div>
       </div>
 
-      <NextBtn />
+      <NextBtn switchTabName={courseTabs?.details?.name} />
     </>
   );
 }
