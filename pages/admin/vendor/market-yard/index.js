@@ -22,16 +22,10 @@ export default function MarketYard() {
         <MarketYardData
           vendorType={vendorType?.value}
           displayRows={{
-            isSmeDisplayed: vendorService?.value
-              ? serviceOptions?.sme === vendorService?.value
-              : true,
-            isCdDisplayed: vendorService?.value
-              ? serviceOptions?.cd === vendorService?.value
-              : true,
-            isCrtDisplayed: vendorService?.value
-              ? serviceOptions?.crt === vendorService?.value
-              : true,
-            isSpeakerDisplayed: vendorService?.value
+            isSmeDisplayed: vendorService?.value ? 'sme' === vendorService?.value : true,
+            isCdDisplayed: vendorService?.value ? 'cd' === vendorService?.value : true,
+            isCrtDisplayed: vendorService?.value ? 'crt' === vendorService?.value : true,
+            speakerType: vendorService?.value
           }}
         />
       </MainBody>

@@ -37,16 +37,8 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    if (displayRows?.isSpeakerDisplayed === 'Subject Matter') {
-      await getLspSpeakers(lspId, 'sme', false);
-    } else if (displayRows?.isSpeakerDisplayed === 'Classroom Training') {
-      await getLspSpeakers(lspId, 'crt', false);
-    } else if (displayRows?.isSpeakerDisplayed === 'Content Development') {
-      await getLspSpeakers(lspId, 'cd', false);
-    } else {
-      await getLspSpeakers(lspId, null, false);
-    }
-  }, [displayRows?.isSpeakerDisplayed]);
+    await getLspSpeakers(lspId, displayRows?.speakerType || null, false);
+  }, [displayRows?.speakerType]);
 
   return (
     <>

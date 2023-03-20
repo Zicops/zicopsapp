@@ -57,10 +57,7 @@ export default function MarketYardHeroSection({
                 inputName: 'Service',
                 placeholder: 'All Services',
                 value: vendorService,
-                options: [
-                  { label: 'All', value: null },
-                  ...Object.values(serviceOptions)?.map((val) => ({ label: val, value: val }))
-                ]
+                options: [{ label: 'All', value: null }, ...serviceOptions]
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}
