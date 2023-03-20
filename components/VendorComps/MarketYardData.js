@@ -48,8 +48,6 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
     }
   }, [displayRows?.isSpeakerDisplayed]);
 
-  console.info('speakerDetails', speakerDetails);
-
   return (
     <>
       <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
@@ -66,7 +64,9 @@ export default function MarketYardData({ vendorType = null, displayRows = {} }) 
       {displayRows?.isCrtDisplayed && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-      {/* <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" /> */}
+      {speakerDetails?.length && (
+        <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
+      )}
     </>
   );
 }
