@@ -1,6 +1,8 @@
 import { formLabelClasses } from "@mui/material";
+import { useState } from "react";
 import styles from "../vctoolMain.module.scss";
-const QAbar = ({showQAbtn,showBtnFun,showHide=false}) => {
+const QAbar = ({showHide=false}) => {
+    const [showQAbtn,setshowQAbtn]=useState(false)
        return (
         <div className={`${styles.qaBar}`}>
             <div className={`${styles.qaBarHead}`}>
@@ -27,7 +29,8 @@ const QAbar = ({showQAbtn,showBtnFun,showHide=false}) => {
                     <div className={`${styles.qabarBtnContainer}`} >
                         <button
                             onClick={() => {
-                                showBtnFun()
+                                setshowQAbtn(!showQAbtn)
+                               
                             }} className={`${styles.qaBtn}`}>
                             Ask a Question?
                         </button>

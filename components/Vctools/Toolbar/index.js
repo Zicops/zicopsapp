@@ -40,7 +40,6 @@ const MainToolbar = ({
   const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup)
   const [fade1, setfade1] = useState(false);
   const [hand, sethand] = useState(true);
-  const [showQAbtn, setshowQAbtn] = useState(false);
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
@@ -111,10 +110,6 @@ const MainToolbar = ({
       title: 'qaBar',
       component: (
         <QAbar
-          showQAbtn={showQAbtn}
-          showBtnFun={() => {
-            setshowQAbtn(true);
-          }}
           showHide={() => {
             selectedButton === 'qaBar' ? setSelectedButton('') : setSelectedButton('qaBar');
           }}

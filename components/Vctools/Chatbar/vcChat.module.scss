@@ -1,0 +1,59 @@
+
+.chatBox
+{
+  width: 296px;
+  height:auto;
+  margin-top: 10px;
+}
+.profileImg
+{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  img 
+  {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
+.personName
+{
+  font-weight: 400;
+  font-size: 14px;
+  color: #acacac;
+}
+.iconName
+{
+  width: 25%;
+  display: flex;
+  justify-content: space-between;
+}
+.messageTime
+{
+  width: 75%;
+  display: flex;
+  justify-content: flex-end;
+  color: #ACACAC;
+}
+.messageHead
+{
+  width: 100%;
+  display: flex;
+  // justify-content: space-between;
+  align-items: center;
+}
+.mainMessage
+{
+  width: 100%;
+  min-height: 30px;
+  max-height: 100%;
+  div 
+  {
+    width: 255px;
+    height: 100%;
+    color: white;
+    // height: max-content;
+    float: right;
+  }
+}

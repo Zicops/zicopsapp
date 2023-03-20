@@ -92,11 +92,9 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
-            console.log(api)
             api.getRoomsInfo().then(rooms => {
-              setbreakoutListarr(rooms.rooms)
               setuserinfo(rooms.rooms[0].participants)
-
+              setbreakoutListarr(rooms.rooms)
               setallInfo(rooms.rooms[0].participants)
               setVctoolInfo(
                 {
@@ -140,12 +138,11 @@ const VcMaintool = () => {
             //         participantId: "bd6f680b",
             // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
             //         }  );
-          }} 
-          showSettingFunc={()=>
-          {
+          }}
+          showSettingFunc={() => {
             api.executeCommand('toggleVirtualBackgroundDialog');
-            
-          }}/>
+
+          }} />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.mainCard}`}>

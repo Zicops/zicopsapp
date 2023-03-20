@@ -279,14 +279,13 @@
 }
 
 #fadein1 {
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 999;
+    visibility: hidden;
+    transition: visibility 0.2s;
+    // z-index: 999;
 }
-
 #fadeout1 {
-    opacity: 1011;
-    z-index: 1010;
+    visibility:visible;
+    transition: visibility 0.2s;
 }
 
 // /styling chatbar
@@ -431,6 +430,7 @@
     justify-content: space-around;
     align-items: center;
     border-radius: 6px;
+    border-top: solid #ecdede 1px;
     flex-direction: column;
 }
 
