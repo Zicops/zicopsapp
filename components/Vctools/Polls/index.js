@@ -13,8 +13,7 @@ const Poll = ({ showHide = false }) => {
     const pollComponent = [
         {
             title: 'pollQA',
-            component: (<PollQA ShowPoll={()=>
-            {
+            component: (<PollQA ShowPoll={() => {
                 setPollTitle("showPoll")
             }} />)
         },
@@ -25,11 +24,10 @@ const Poll = ({ showHide = false }) => {
             }} />)
         },
         {
-            title :"showPoll",
-            component:(<ShowPoll setPollTitle={()=>
-            {
+            title: "showPoll",
+            component: (<ShowPoll setPollTitle={() => {
                 setPollTitle("pollQA")
-            }}/>)
+            }} />)
         }
     ]
     return (
@@ -45,18 +43,7 @@ const Poll = ({ showHide = false }) => {
 
             <div className={`${styles.pollScreen}`}>
                 {showPollPopup(polltitle)}
-
-                {/* <CreatePOll /> */}
-                {/* <PollQA/> */}
             </div>
-            {/* 
-            <div className={`${styles.Poll_input}`}>
-                <input type="text" placeholder="Type message here" />
-                <div className={`${styles.chatsendfile}`}>
-                    <img src="/images/svg/vctool/image.svg" />
-                    <img src="/images/svg/vctool/send.svg" />
-                </div>
-            </div> */}
         </div>
     )
 };

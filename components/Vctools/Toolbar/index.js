@@ -14,6 +14,7 @@ import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray } from '@/state/atoms/vctool.atoms';
+import ManageAccount from '../ManageAccount';
 
 const MainToolbar = ({
   audiotoggle,
@@ -31,7 +32,8 @@ const MainToolbar = ({
   isStarted,
   startAdvertisement,
   stopAdvertisement,
-  autoAssignRoom
+  autoAssignRoom,
+  showSettingFunc
 }) => {
 
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(breakoutRoomselectedparticipant)
@@ -45,6 +47,7 @@ const MainToolbar = ({
   const participantPopuppanel = useRecoilValue(particiantPopup)
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
+  const [showSetting, setShowSetting] = useState(false)
 
   function getClickedComponent(title) {
     if (title === '') return <></>;
@@ -166,7 +169,15 @@ const MainToolbar = ({
         <AddParticipantpopup presetRoom={breakoutRoomtotalno.presentRoom} totalRooms={breakoutRoomtotalno.totalRoomno}
           autoAssignRoom={autoAssignRoom} />
       )
-    }
+    },
+    {
+      title: 'manageAccount',
+      component: (
+        <ManageAccount showHide={() => {
+          selectedButton === 'manageAccount' ? setSelectedButton('') : setSelectedButton('manageAccount')
+        }} />
+      )
+    },
   ];
   const clearTime = () => {
     setTimeout(() => {
@@ -229,9 +240,9 @@ const MainToolbar = ({
           customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
         />
 
-        <button>
+        {/* <button>
           <img src="/images/svg/vctool/dashboard.svg" />
-        </button>
+        </button> */}
         <VctoolButton
           onClickfun={() => {
 
@@ -244,6 +255,20 @@ const MainToolbar = ({
           falseSrc={'/images/svg/vctool/info.svg'}
           customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
         />
+
+        <VctoolButton
+          onClickfun={() => {
+
+            selectedButton === 'manageAccount'
+              ? setSelectedButton('')
+              : setSelectedButton('manageAccount');
+          }}
+          toggle={selectedButton === 'manageAccount'}
+          trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
+          falseSrc={'/images/svg/vctool/manage-accounts.svg'}
+          customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+        />
+
       </div>
       <div
         className={`${styles.screen}`}
@@ -378,10 +403,16 @@ const MainToolbar = ({
             customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
             toggle={selectedButton === 'breakOutRoom'}
           />
-
-          <button>
-            <img src="/images/svg/vctool/settings.svg" />{' '}
-          </button>
+          <VctoolButton
+            onClickfun={() => {
+              setShowSetting(!showSetting)
+              showSettingFunc()
+            }}
+            trueSrc={'/images/svg/vctool/settings.svg'}
+            falseSrc={'/images/svg/vctool/settings.svg'}
+            customId={showSetting ? `${styles.changeBackground}` : ''}
+            toggle={showSetting}
+          />
 
           <VctoolButton
             onClickfun={() => {

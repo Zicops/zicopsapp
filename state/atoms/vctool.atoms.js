@@ -30,20 +30,33 @@ export const allPartcipantinfo = atom({    //  use to display present room numbe
 })
 export const breakoutRoomselectedparticipant = atom({
     key: "breakoutRoomselectedparticipant",
-    default:[]
+    default: []
 })
-export const breakoutRoomId=atom({
-    key:"breakoutRoomId",
-    default:''
+export const breakoutRoomId = atom({
+    key: "breakoutRoomId",
+    default: ''
 })
 
-export const pollArray=atom({
-    key:"pollArray",
-    default:[{
-        pollName :'',
-        pollQuestion:'',
-        pollOptions :[]
+export const pollArray = atom({
+    key: "pollArray",
+    default: [{
+        pollName: '',
+        pollQuestion: '',
+        pollOptions: []
     }]
+})
+
+export const quizArray=atom({
+    key:"quizArray",
+    default:[
+        {
+            quizName:'',
+            quizQuestion:'',
+            difficultyLevel:1,
+            hint:'',
+            options:[]
+        }
+    ]
 })
 // export const alluserdata = atom({
 //     key: "alldata",
@@ -62,3 +75,31 @@ export const pollArray=atom({
 //         breakoutRoomSelectedParticipant:[]
 //     }
 // })
+
+ export const vctoolMetaData = atom({
+    key: "vctoolMetaData",
+    default: getVctoolMetaData()
+})
+
+export function getVctoolMetaData(data) {
+    return {
+        // all roominfo
+        allRoomInfo: data?.allRoomInfo || [],
+
+        // breakoutRoom List
+        breakoutRoomLIst: data?.breakoutRoomLIst || [],
+
+        //totalRoom counter
+        totalRoomNo: data?.totalRoomno || 1,
+
+        //  show and hide participant list popup to join breakout room
+        particiantPopup: data?.particiantPopup || {
+            roomId: "",
+            isRoom: false
+        }
+
+
+    }
+}
+
+

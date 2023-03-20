@@ -9,7 +9,7 @@ const CreatePOll = ({ addPoll, setPollTitle }) => {
     return (
         <div className={`${styles.moderatorPoll}`}>
 
-            <div className={`${styles.pollModeratorScree}`}>
+            <div className={`${styles.pollModeratorScreen}`}>
                 <div className={`${styles.moderatorAddPoll}`}>
                     <div className={styles.pollIcon}><img src='/images/svg/vctool/insert-chart.svg' /></div>
                     <div className={`${styles.pollAvailableHead}`}>No Polls added !</div>

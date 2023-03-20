@@ -6,10 +6,11 @@ import MainToolbar from './Toolbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { StartMeeting, GenerateString } from "./help/vctool.helper"
-import { breakoutList, participantRole, pollArray, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { breakoutList, getVctoolMetaData, participantRole, pollArray, totalRoomno, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
 const VcMaintool = () => {
+  const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
-  const [pollInfo,setPollInfo]=useRecoilState(pollArray)
+  const [pollInfo, setPollInfo] = useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList)
   const allUserinfo = useRecoilValue(vctoolAlluserinfo)
@@ -91,24 +92,27 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
-            // console.info(pollInfo)
+            console.log(api)
             api.getRoomsInfo().then(rooms => {
               setbreakoutListarr(rooms.rooms)
               setuserinfo(rooms.rooms[0].participants)
+
               setallInfo(rooms.rooms[0].participants)
+              setVctoolInfo(
+                {
+                  ...vctoolInfo,
+                  allRoomInfo: rooms.rooms[0].participants
+                })
+              // console.info(rooms.rooms[0].participants)
             })
             //  allUserinfo
             // userinfo
-            api.executeCommand('displayName', userData.first_name);
             userinfo.forEach((data) => {
-             
-              if ([api.getEmail(data?.id)].toString().includes("@zicops")) {
-                api.executeCommand('grantModerator', data.id);
-              }
+              // api.executeCommand('grantModerator', data?.id);
+              // if ([api.getEmail(data?.id)].toString().includes("1000")) {
+              //   api.executeCommand('grantModerator', data?.id);
+              // }
             })
-          //     api.listBreakoutRooms().then(breakoutRooms => {
-          //     console.log(breakoutRooms)
-          // });
           }}
 
 
@@ -126,6 +130,7 @@ const VcMaintool = () => {
           }}
           CreateBreakoutroomlist={() => {
             for (let i = 0; i < totalBreakoutrooms; i++) {
+
               api.executeCommand('addBreakoutRoom');
             }
 
@@ -135,7 +140,12 @@ const VcMaintool = () => {
             //         participantId: "bd6f680b",
             // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
             //         }  );
-          }} />
+          }} 
+          showSettingFunc={()=>
+          {
+            api.executeCommand('toggleVirtualBackgroundDialog');
+            
+          }}/>
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.mainCard}`}>
@@ -143,10 +153,10 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              StartMeeting("standup", startName, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               setisStarted(true)
               sethidecard(!hidecard)
-         
+
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

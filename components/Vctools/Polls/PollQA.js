@@ -10,7 +10,7 @@ const PollQA = ({ ShowPoll }) => {
     const [options, setOptions] = useState([])
 
     function optionInputHandler(e, index) {
-        e.preventDefault()
+        e.preventDefault();
         let tempArr = options;
         tempArr[index].value = e.target.value;
         setOptions(tempArr)
@@ -62,7 +62,7 @@ const PollQA = ({ ShowPoll }) => {
                         }}>cancel</button>
                     <button className={`${styles.pollSaveBtn}`}
                         onClick={() => {
-                            if (pollName !== "" && pollQuestion !== null && options!==null) {
+                            if (pollName !== "" && pollQuestion !== '' && options!=="") {
                                 setPollInfo([
                                     ...pollInfo,
                                     {

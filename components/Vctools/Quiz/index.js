@@ -1,5 +1,7 @@
 import styles from "../vctoolMain.module.scss"
 import QuizQuestion from "../QuizQuestion";
+import CreateQuiz from "./CreateQuiz";
+import QuizQA from "./QuizQA";
 const QuizPage = ({ showHide=false }) => {
     return (
         <div className={`${styles.quiz}`}>
@@ -13,7 +15,7 @@ const QuizPage = ({ showHide=false }) => {
             </div>
 
             <div className={`${styles.quizScreen}`}>
-                <div className={`${styles.quizeAttemtpsHead}`}>Un-attempted</div>
+                {/* <div className={`${styles.quizeAttemtpsHead}`}>Un-attempted</div>
                 <div className={`${styles.quizUnattempted}`}>
                     <QuizQuestion />
                     <QuizQuestion />
@@ -22,7 +24,9 @@ const QuizPage = ({ showHide=false }) => {
                 <div className={`${styles.quizeAttemtpsHead}`}>Attempted</div>
                 <div className={`${styles.quizAttempted}`}>
                     <QuizQuestion />
-                </div>
+                </div> */}
+                {/* <CreateQuiz/> */}
+                <QuizQA/>
             </div>
         </div>
     )
