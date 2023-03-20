@@ -433,6 +433,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
           handleClick={() => {
+            if (!newOPFormat?.trim()?.length) return;
             setDisplayFormats([...displayFormats, newOPFormat]);
             setSelectedFormats([...selectedFormats, newOPFormat]);
             setNewOPFormat();
