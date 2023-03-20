@@ -781,8 +781,8 @@ export const statusTypeServie = [
 
 export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
 
-export const serviceOptions = {
-  sme: 'Subject Matter',
-  crt: 'Classroom Training',
-  cd: 'Content Development'
-};
+export const serviceOptions = [
+  { label: 'Subject Matter', value: 'sme' },
+  { label: 'Classroom Training', value: 'crt' },
+  { label: 'Content Development', value: 'cd' }
+];
