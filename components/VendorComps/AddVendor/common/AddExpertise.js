@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import Loader from '@/components/common/Loader';
 const AddExpertise = ({
   expertiseValue,
   setExpertise,
@@ -35,6 +36,9 @@ const AddExpertise = ({
   //     setSearchedData(temp);
   //   } else setSearched(false);
   // };
+
+  if (!catSubCat.isDataLoaded)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div>

@@ -9,7 +9,6 @@ export default function ProfileVendor({ profileData }) {
       {profileData?.map((data) => (
         <VendorIndividualProfiles data={data} />
       ))}
-      <div></div>
     </div>
   );
 }

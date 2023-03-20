@@ -150,7 +150,8 @@ export default function VendorMaster() {
               />
             ))}
           </div>
-        </div>
+        
+          </div>
       </div>
 
       <div className={`${styles.input4}`}>

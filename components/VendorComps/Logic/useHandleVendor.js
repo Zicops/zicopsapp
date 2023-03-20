@@ -246,11 +246,11 @@ export default function useHandleVendor() {
     setLoading(false);
   }
 
-  async function getSingleProfileInfo() {
+  async function getSingleProfileInfo(email) {
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
-      { vendor_id: vendorId, email: profileData?.email },
+      { vendor_id: vendorId, email: email },
       {},
       userQueryClient
     );

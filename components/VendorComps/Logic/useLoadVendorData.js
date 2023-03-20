@@ -57,12 +57,13 @@ export default function useLoadVendorData() {
     const lspId = sessionStorage?.getItem('lsp_id');
     if (!lspId) return [];
 
-    const vendorList = await loadQueryDataAsync(
-      GET_PAGINATED_VENDORS,
-      { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: {} },
-      {},
-      userQueryClient
-    ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }));
+    const vendorList =
+      (await loadQueryDataAsync(
+        GET_PAGINATED_VENDORS,
+        { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: {} },
+        {},
+        userQueryClient
+      ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }))) || {};
 
     if (vendorList.error) {
       setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' });

@@ -61,7 +61,6 @@ const SingleProfile = ({ data }) => {
         isSpeaker: editProfileData[0]?.is_speaker
       };
 
-      console.info(profileInfo);
       setProfileData(profileInfo);
       setIsOpen(true);
     });
