@@ -412,9 +412,9 @@
 
 .qaBarScreen {
     width: 300px;
-    height: 75%;
+    height: 76%;
     overflow: scroll;
-    // padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .qaBarScreen::-webkit-scrollbar {
@@ -422,7 +422,7 @@
 }
 
 .qaBarInput {
-    // margin-top: 20px;
+    margin-top: 5px;
     height: 15%;
     width: 300px;
     border: 1px solid #292F2F;
@@ -430,7 +430,6 @@
     justify-content: space-around;
     align-items: center;
     border-radius: 6px;
-    border-top: solid #ecdede 1px;
     flex-direction: column;
 }
 
@@ -466,20 +465,76 @@
     height: 86px;
     width: 300px;
     display: flex;
-    justify-content: right;
-    margin-top: 55px;
+    justify-content: center;
+    align-items: end;
+    // margin-top: 25px;
 }
 
 .qaBtn {
-    width: 161px;
+    width: 100%;
     height: 48px;
     background: #6BCFCF;
-    // 
+    border-radius: 4px;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
 }
 
+.moderatorQA {
+    width: 296px;
+    height: 99%;
+}
+
+
+.qaRoomIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+
+
+.qaAddQuestion {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.qaQuetionAvailableAvailableHead {
+    width: 276px;
+    height: 28px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+
+
+.qaAddQuestion>p {
+    width: 276px;
+    height: 24px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 8px;
+
+    text-align: center;
+    color: #747474;
+}
 // Stylling Polls
 .pollBar {
     z-index: 1020;
@@ -1141,9 +1196,12 @@
     display: none;
 }
 
+
+
+
 .moderatorBreakoutroom {
-    width: 276px;
-    height: 90%;
+    width: 296px;
+    height: 99%;
 }
 
 

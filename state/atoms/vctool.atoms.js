@@ -58,17 +58,17 @@ export const quizArray=atom({
         }
     ]
 })
-export const DiscussionMessageAtom = atom({
-    key: 'singleMessage',
+export const VcChatMessageAtom = atom({
+    key: 'VcChatMessageAtom',
     default: getMesaageObj()
   });
-  export const DiscussionReplyAtom = atom({
-    key: 'singleObject',
+  export const VcChatReplyAtom = atom({
+    key: 'VcChatReplyAtom',
     default: getMesaageObj()
   });
   
   export const DiscussionAtom = atom({
-    key: 'vendorDiscussion',
+    key: 'DiscussionAtom',
     default: []
   });
   
@@ -90,6 +90,20 @@ export const DiscussionMessageAtom = atom({
       ReplyCount: data?.replyCount || 0
     };
   }
+
+
+  export const VcQAMessageAtom = atom({
+    key: 'VcQAMessageAtom',
+    default: getMesaageObj()
+  });
+  export const VcQAReplyAtom = atom({
+    key: 'VcQAReplyAtom',
+    default: getMesaageObj()
+  });
+  export const AQChatAtom = atom({
+    key: 'AQChatAtom',
+    default: []
+  });
 // export const alluserdata = atom({
 //     key: "alldata",
 //     default: {

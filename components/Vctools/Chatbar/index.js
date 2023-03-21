@@ -29,7 +29,10 @@ const ChatBar = ({ showHide = false }) => {
     };
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            sendMessageHandler();
+            if (message !== '') {
+                sendMessageHandler();
+            }
+
         }
     };
 
