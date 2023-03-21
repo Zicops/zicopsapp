@@ -4,7 +4,7 @@ import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.hel
 import TabContainer from '@/components/common/TabContainer';
 import AboutProfile from '@/components/VendorComps/AboutProfile';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
-import MarketYardHero from '@/components/VendorComps/MarketYardHero';
+import ProfileMarketYardHero from '@/components/VendorComps/ProfileMarketYardHero';
 import { allProfileAtom } from '@/state/atoms/vendor.atoms';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -36,7 +36,7 @@ const ViewProfile = () => {
     <div>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
       <MainBody customStyles={{ padding: '0px' }}>
-        <MarketYardHero />
+        <ProfileMarketYardHero />
         <TabContainer
           tabData={tabData}
           tab={tab}
