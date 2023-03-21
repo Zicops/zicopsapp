@@ -110,7 +110,8 @@ const AddExpriences = () => {
                 label: experiencesData?.startMonth,
                 value: experiencesData?.startMonth
               },
-              options: optionMonthArray
+              options: optionMonthArray,
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startMonth')
@@ -125,7 +126,8 @@ const AddExpriences = () => {
               value: {
                 label: experiencesData?.startYear,
                 value: experiencesData?.startYear
-              }
+              },
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startYear')
@@ -146,6 +148,7 @@ const AddExpriences = () => {
                   label: experiencesData?.endMonth,
                   value: !experiencesData?.isWorking ? experiencesData?.endMonth : null
                 },
+                menuPlacement: 'top',
                 isDisabled: experiencesData?.isWorking ? true : false
               }}
               changeHandler={(e) =>
@@ -163,6 +166,7 @@ const AddExpriences = () => {
                   label: experiencesData?.endYear,
                   value: !experiencesData?.isWorking ? experiencesData?.endYear : null
                 },
+                menuPlacement: 'top',
                 isDisabled: experiencesData?.isWorking ? true : false
               }}
               changeHandler={(e) =>
