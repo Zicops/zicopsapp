@@ -66,7 +66,8 @@ const SingleProfile = ({ data }) => {
     });
   }
 
-  const completeProfileHandler = async () => {
+  const completeProfileHandler = async (e) => {
+    e.target.disabled = true;
     await addUpdateProfile();
     await addUpdateExperience();
     await getAllProfileInfo();
