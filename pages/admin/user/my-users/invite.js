@@ -1,13 +1,15 @@
+import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import PopUp from '@/components/common/PopUp';
 import InviteUserEmails from '@/components/UserComps/MyUser/InviteUserEmails';
 import { parseJson } from '@/helper/utils.helper';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersEmailIdAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
-import { INVITE_USERS, userClient } from 'API/UserMutations';
+import { INVITE_USERS_WITH_ROLE, userClient } from 'API/UserMutations';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
@@ -16,12 +18,15 @@ import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sid
 import TabContainer from '../../../../components/common/TabContainer';
 import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
-import { CUSTOM_ERROR_MESSAGE } from '../../../../helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE, USER_LSP_ROLE } from '../../../../helper/constants.helper';
 
 export default function MyUserPage() {
-  const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS, {
+  const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
+  const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -54,7 +59,7 @@ export default function MyUserPage() {
     let isError = false;
     let errorMsg;
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id }
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.learner }
     }).catch((err) => {
       errorMsg = err.message;
       isError = !!err;
@@ -70,6 +75,20 @@ export default function MyUserPage() {
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
 
+    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
+      user_id: user?.user_id,
+      user_lsp_id: user?.user_lsp_id
+    }));
+
+    const resTags = await addUserTags({
+      variables: { ids: userLspMaps, tags: [userType] },
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+    }).catch((err) => {
+      isError = true;
+    });
+    
+    if(isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' })
+    
     setToastMsg({ type: 'success', message: `Emails sent successfully!` });
 
     return setIsOpen(true);
