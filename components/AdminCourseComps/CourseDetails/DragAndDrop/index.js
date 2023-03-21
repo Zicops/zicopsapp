@@ -1,9 +1,7 @@
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
-import { courseContext } from '@/state/contexts/CourseContext';
-import React, { useContext } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import useHandleDragDrop from '../../Logic/useHandleDragAndDrop';
+import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 // import useHandleDragDrop from '../../Logic/useHandleDragDrop';
 // TODO: update this component later
 const DragDrop = ({ data, contextData, isError = false, isFreezed = false }) => {

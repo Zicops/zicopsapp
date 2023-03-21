@@ -59,8 +59,12 @@ export default function BrowseAndUpload({
             let fileTypes = acceptedTypes
               ?.split(', ')
               ?.map((t) => t?.trim()?.replace(/(\r\n|\n|\r)/gm, ''));
-
-            if (e.target.value && !fileTypes?.some((t) => e.target.value?.includes(t))) {
+            if (
+              !(
+                (e.target.value && fileTypes?.some((t) => e.target.value?.includes(t))) ||
+                acceptedTypes?.includes(e?.target?.files?.[0]?.type)
+              )
+            ) {
               return setToastMsg({
                 type: 'danger',
                 message: `Accepted file types are ${acceptedTypes}`

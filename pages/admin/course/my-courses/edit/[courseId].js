@@ -41,8 +41,6 @@ export default function EditCoursePage() {
               subCategory: _courseDataRes?.sub_category,
               subCategories: _courseDataRes?.sub_categories,
               expertiseLevel: _courseDataRes?.expertise_level,
-              previewVideo: _courseDataRes?.preview_video,
-              tileImage: _courseDataRes?.tile_image,
               relatedSkills: _courseDataRes?.related_skills,
               publishDate: _courseDataRes?.publish_date,
               expiryDate: _courseDataRes?.expiry_date,

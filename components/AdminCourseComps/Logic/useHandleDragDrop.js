@@ -2,18 +2,14 @@ import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { GET_CATS_N_SUB_CATS } from '../../../API/Queries';
-import { getQueryData } from '../../../helper/api.helper';
 
-export default function useHandleDragDrop(courseContextData) {
-    const course=[]
-  // const { fullCourse, updateCourseMaster } = courseContextData;
-const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
-const { catSubCat, setActiveCatId } = useHandleCatSubCat();
-// fullCourse?.sub_category
+export default function useHandleDragDrop() {
+  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+  const { catSubCat } = useHandleCatSubCat();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [draglist, updateDraglist] = useState([]);
-  const [droplist, updateDroplist] = useState(course || []);
+  const [droplist, updateDroplist] = useState(courseMetaData.subCategories || []);
   const [isDropListUpdated, setIsDropListUpdated] = useState(false);
   const [isDragOn, setIsDragOn] = useState(0);
 
@@ -27,9 +23,12 @@ const { catSubCat, setActiveCatId } = useHandleCatSubCat();
     const data = { allSubCategories: catSubCat?.subCat || [] };
     if (data?.allSubCategories?.length) {
       data.allSubCategories.forEach(function (e, i) {
-        // if (
-        //     // course?.toLowerCase()?.trim()?.includes(e?.Name?.toLowerCase()?.trim())
-        // )
+        if (
+          courseMetaData?.subCategory
+            ?.toLowerCase()
+            ?.trim()
+            ?.includes(e?.Name?.toLowerCase()?.trim())
+        )
           return;
 
         newDraglist.push({ dragOrder: i, name: e?.Name });
@@ -38,7 +37,7 @@ const { catSubCat, setActiveCatId } = useHandleCatSubCat();
       // remove selected categories
       const selectedItems = [];
       newDraglist = newDraglist.filter((item) => {
-        const index =course?.findIndex(
+        const index = courseMetaData?.subCategories?.findIndex(
           (selected) => selected.name === item.name
         );
         const isSelected = index < 0;
@@ -68,16 +67,16 @@ const { catSubCat, setActiveCatId } = useHandleCatSubCat();
     }
   }, [catSubCat?.subCat]);
 
-//   useEffect(() => {
-//     if (!isDropListUpdated) return;
+  useEffect(() => {
+    if (!isDropListUpdated) return;
 
-//     updateCourseMaster({
-//       ...fullCourse,
-//       sub_categories: droplist.map((item) => {
-//         return { name: item.name, rank: item.rank };
-//       })
-//     });
-//   }, [isDropListUpdated, droplist]);
+    setCourseMetaData({
+      ...courseMetaData,
+      subCategories: droplist.map((item) => {
+        return { name: item.name, rank: item.rank };
+      })
+    });
+  }, [isDropListUpdated, droplist]);
 
   function handleOnDragEnd(result) {
     setIsDragOn(2);

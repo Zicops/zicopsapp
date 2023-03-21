@@ -1,4 +1,10 @@
-import { ADD_NEW_COURSE, UPDATE_COURSE_DATA } from '@/api/Mutations';
+import {
+  ADD_NEW_COURSE,
+  UPDATE_COURSE_DATA,
+  UPLOAD_COURSE_IMAGE,
+  UPLOAD_COURSE_PREVIEW,
+  UPLOAD_COURSE_TILE_IMAGE
+} from '@/api/Mutations';
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
@@ -13,7 +19,6 @@ import {
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
 import useHandleCourseData from './useHandleCourseData';
@@ -24,11 +29,11 @@ export default function useSaveCourseData() {
   });
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const router = useRouter();
 
   const { isDataPresent } = useHandleCourseData();
@@ -73,12 +78,12 @@ export default function useSaveCourseData() {
     return isDuplicate;
   }
 
-  async function addNewCourse() {
+  async function addNewCourse(_courseMetaData = null) {
+    if (!courseMetaData) return;
     if (!isDataPresent([courseTabs.courseMaster.name]))
       return setToastMessage('Complete Course Master Data to create new course');
 
     const _courseCurrentState = structuredClone(courseCurrentState);
-    const _courseMetaData = structuredClone(courseMetaData);
 
     const { id, duration, status, ..._sendData } = _courseMetaData;
 
@@ -100,11 +105,10 @@ export default function useSaveCourseData() {
     router.push(`/admin/course/my-courses/edit/${addCourseData?.id}`);
   }
 
-  async function updateCourse() {
+  async function updateCourse(_courseMetaData = null) {
+    if (!_courseMetaData) return;
     if (!courseCurrentState?.isUpdating)
       setCourseCurrentState({ ...courseCurrentState, isUpdating: true });
-
-    const _courseMetaData = structuredClone(courseMetaData);
 
     const { duration, status, approvers, ..._sendData } = _courseMetaData;
     const sendData = sanitizeFormData({ ..._sendData, status: COURSE_STATUS.save, approvers: [] });
@@ -143,8 +147,6 @@ export default function useSaveCourseData() {
       subCategory: _updatedCourseData?.sub_category,
       subCategories: _updatedCourseData?.sub_categories,
       expertiseLevel: _updatedCourseData?.expertise_level,
-      previewVideo: _updatedCourseData?.preview_video,
-      tileImage: _updatedCourseData?.tile_image,
       relatedSkills: _updatedCourseData?.related_skills,
       publishDate: _updatedCourseData?.publish_date,
       expiryDate: _updatedCourseData?.expiry_date,
@@ -176,7 +178,6 @@ export default function useSaveCourseData() {
       ...configObj
     };
 
-    console.info(_configObj, 2, _configObj?.validateCurrentForm, isDataPresent([activeCourseTab]));
     if (_configObj?.validateCurrentForm && !isDataPresent([activeCourseTab])) return;
 
     // update current state
@@ -186,17 +187,67 @@ export default function useSaveCourseData() {
     const isDuplicate = await isCourseNameDuplicate();
     if (isDuplicate) return setCourseCurrentState({ ...courseCurrentState, isUpdating: false });
 
+    const _courseMetaData = structuredClone(courseMetaData);
+
     // add course if no id is present
-    if (!courseMetaData.id) return addNewCourse();
+    if (!courseMetaData.id) return addNewCourse(_courseMetaData);
+
+    await uploadCourseFiles(_courseMetaData);
 
     // update course
-    updateCourse().then((res) => {
+    updateCourse(_courseMetaData).then((res) => {
       setCourseCurrentState({ ...courseCurrentState, isUpdating: false, isSaved: true });
       if (!res?.id) return;
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
     });
+  }
+
+  async function uploadCourseFiles(_courseMetaData = null) {
+    if (!_courseMetaData) return;
+
+    // course preview video upload
+    if (!!_courseMetaData?.previewVideo?.name) {
+      const coursePreviewRes = await mutateData(UPLOAD_COURSE_PREVIEW, {
+        file: _courseMetaData?.previewVideo,
+        courseId: _courseMetaData?.id
+      });
+
+      if (!!coursePreviewRes?.uploadCoursePreviewVideo?.url) {
+        _courseMetaData.previewVideo = coursePreviewRes?.uploadCoursePreviewVideo?.url;
+      } else {
+        setToastMessage('Failed to Upload Preview Video');
+      }
+    }
+
+    // course display image upload
+    if (!!_courseMetaData?.image?.name) {
+      const coursePreviewRes = await mutateData(UPLOAD_COURSE_IMAGE, {
+        file: _courseMetaData?.image,
+        courseId: _courseMetaData?.id
+      });
+
+      if (!!coursePreviewRes?.uploadCourseImage?.url) {
+        _courseMetaData.image = coursePreviewRes?.uploadCourseImage?.url;
+      } else {
+        setToastMessage('Failed to Upload Display Image');
+      }
+    }
+
+    // course tile image upload
+    if (!!_courseMetaData?.tileImage?.name) {
+      const coursePreviewRes = await mutateData(UPLOAD_COURSE_TILE_IMAGE, {
+        file: _courseMetaData?.tileImage,
+        courseId: _courseMetaData?.id
+      });
+
+      if (!!coursePreviewRes?.uploadCourseTileImage?.url) {
+        _courseMetaData.tileImage = coursePreviewRes?.uploadCourseTileImage?.url;
+      } else {
+        setToastMessage('Failed to Upload Tile Image');
+      }
+    }
   }
 
   return { saveCourseMeta };

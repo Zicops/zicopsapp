@@ -1,16 +1,26 @@
 import { GET_USER_VENDORS, GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
 import { COURSE_TYPES } from '@/constants/course.constants';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
-import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE } from '@/helper/constants.helper';
+import {
+  ActiveCourseTabNameAtom,
+  CourseCurrentStateAtom,
+  CourseMetaDataAtom
+} from '@/state/atoms/courses.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
 
 export default function useHandleCourseData() {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
+
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const userData = useRecoilValue(UserStateAtom);
 
@@ -20,6 +30,7 @@ export default function useHandleCourseData() {
 
   useEffect(() => {
     if (isVendor && !userData?.id) return;
+    if (!isVendor && !userOrgData?.lsp_id) return;
     if (isVendor) return loadCurrentVendorName();
 
     loadLspVendorNames();
@@ -54,7 +65,7 @@ export default function useHandleCourseData() {
           setOwnerList([{ value: 'Zicops', label: 'Zicops' }]);
         });
     }
-  }, [isVendor ? userData?.id : '']);
+  }, [isVendor ? userData?.id : '', userOrgData?.lsp_id]);
 
   function isDataPresent(tabsToValidate = [], isUpdateState = true) {
     if (!tabsToValidate?.length) return false;
@@ -73,11 +84,12 @@ export default function useHandleCourseData() {
     if (courseMetaData?.type === COURSE_TYPES.classroom) courseMasterList.push('noOfLearner');
 
     // add list for details, about
+    const courseDetailsList = ['subCategories', 'summary', 'previewVideo', 'image', 'tileImage'];
 
     const lists = {
       [courseTabs.courseMaster.name]: courseMasterList,
       [courseTabs.about.name]: [],
-      [courseTabs.details.name]: []
+      [courseTabs.details.name]: courseDetailsList
     };
 
     tabsToValidate?.forEach((tab) => {
@@ -113,44 +125,29 @@ export default function useHandleCourseData() {
     setCourseMetaData(_courseMetaData);
   }
 
-  function handlePreviewVideo(e) {
-    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
-    if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
-      setCourseMetaData({
-        ...courseMetaData,
-        previewVideo: e.target.files[0]
-      });
+  function handleFileInput(e) {
+    if (!courseMetaData.id) {
+      setActiveCourseTab(courseTabs?.courseMaster?.name);
+      setToastMessage('Add Course Master First');
+      return;
     }
-    e.target.value = '';
-  }
-  function handleImage(e) {
-    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
-    if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
-      setCourseMetaData({
-        ...courseMetaData,
-        image: e.target.files[0]
-      });
+    const inputName = e?.target?.name;
+    const file = e?.target?.files?.[0];
+
+    if (+LIMITS?.[inputName] && file?.size > LIMITS?.[inputName]) {
+      return setToastMessage(
+        `File Size limit is ${Math.ceil(LIMITS?.[inputName] / ONE_MB_IN_BYTES)} mb`
+      );
     }
-    e.target.value = '';
+
+    setCourseMetaData({ ...courseMetaData, [inputName]: file });
   }
 
-  function handleTileImage(e) {
-    const acceptedType = ['image/jpg', 'image/jpeg', 'image/png'];
-    if (e.target.value && acceptedType.includes(e.target.files[0]?.type)) {
-      setCourseMetaData({
-        ...courseMetaData,
-        tileImage: e.target.files[0]
-      });
-    }
-    e.target.value = '';
-  }
   return {
     ownerList,
     handleChange,
     handleExpertise,
     isDataPresent,
-    handlePreviewVideo,
-    handleImage,
-    handleTileImage
+    handleFileInput
   };
 }

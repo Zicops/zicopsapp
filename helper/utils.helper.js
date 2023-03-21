@@ -242,8 +242,15 @@ export function getFileNameFromUrl(fileUrl) {
 
 export function getEncodedFileNameFromUrl(fileUrl) {
   if (!fileUrl) return '';
+  const fileName = fileUrl?.split('?')?.[0]?.split('/')?.pop();
 
-  return Buffer.from(decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop()), 'base64').toString();
+  const decodedString = Buffer.from(decodeURI(fileName), 'base64')?.toString();
+  const encodedString = Buffer.from(decodedString)?.toString('base64');
+
+  // return decoded value if it is base64 encoded
+  if (fileName === encodedString) return decodedString;
+
+  return fileName;
 }
 
 // https://stackoverflow.com/a/23013574

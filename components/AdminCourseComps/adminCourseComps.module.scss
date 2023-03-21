@@ -17,6 +17,7 @@ $gapBetweenInputAndLabel: 0.5em;
 $marginBetweenInputs: 1em;
 
 .makeLabelInputColumnWise {
+  display: flex;
   flex-direction: column;
   gap: $gapBetweenInputAndLabel;
 
@@ -59,69 +60,6 @@ $marginBetweenInputs: 1em;
     display: flex;
     flex-direction: column;
     gap: $gapBetweenInputAndLabel;
-  }
-}
-
-.buttonGap {
-  margin: 0.5em;
-}
-
-.addTopicForm {
-  margin: 1.5em 4em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-.addTopicFormBtns {
-  display: flex;
-  gap: 1em;
-
-  justify-content: center;
-}
-// course detail
-.courseSubcategory {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
-  }
-}
-
-.courseSummery {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
-  }
-}
-
-.UploadCoursePreview {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
-  }
-}
-
-.coursePageImg,
-.courseTitleImag {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
   }
 }
 
@@ -423,4 +361,22 @@ $marginBetweenInputs: 1em;
   outline: none;
   background-color: $tertiaryBlack;
   color: white;
+}
+
+.buttonGap {
+  margin: 0.5em;
+}
+
+.addTopicForm {
+  margin: 1.5em 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.addTopicFormBtns {
+  display: flex;
+  gap: 1em;
+
+  justify-content: center;
 }

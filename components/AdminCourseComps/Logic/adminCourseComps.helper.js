@@ -1,13 +1,13 @@
 import About from '../About';
 import Commercials from '../Commercials';
 import Configuration from '../Configuration';
+import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
-import Details from '../Details';
 import Topics from '../Topics';
 
 export const courseTabs = {
   courseMaster: { name: 'Course Master', component: <CourseMaster /> },
-  details: { name: 'Details', component: <Details /> },
+  details: { name: 'Details', component: <CourseDetails /> },
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
   commercials: { name: 'Commercials', component: <Commercials /> },
