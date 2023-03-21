@@ -261,17 +261,6 @@
   }
 }
 
-.courseVendorContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 30%);
-  gap: 15px;
-
-  img {
-    width: 100%;
-  }
-}
-
 .profileVendorContainer {
   width: 100%;
 
@@ -1597,4 +1586,17 @@
       }
     }
   }
+}
+
+.fallback {
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  text-align: center;
+  margin: 2em;
+
+  color: $white;
+}
+.vendorCourseTab {
+  padding: 2em;
 }

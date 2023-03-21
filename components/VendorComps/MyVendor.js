@@ -22,11 +22,11 @@ const MyVendor = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCol, setFilterCol] = useState('name');
 
+  const isVendor = userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor;
   useEffect(() => {
     if (vendorTableData?.length) return;
 
-    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor)
-      return getUserVendors()?.then((data) => setVendorTableData(data || []));
+    if (isVendor) return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
     getPaginatedVendors()?.then((data) => {
       setPageCursor(data?.pageCursor || null);
@@ -45,7 +45,10 @@ const MyVendor = () => {
       field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>
+      )
     },
     {
       field: 'services',
