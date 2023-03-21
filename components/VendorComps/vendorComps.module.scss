@@ -1406,6 +1406,7 @@
         background-repeat: no-repeat;
         background-position: 5% 50%;
         outline: none;
+        color: $white;
       }
 
       ::placeholder {
@@ -1599,4 +1600,23 @@
 }
 .vendorCourseTab {
   padding: 2em;
+}
+
+.downloadBtn {
+  text-align: center;
+
+  button {
+    background-color: transparent;
+    color: $primary;
+    border: 2px solid $primary;
+    padding: 0.5em 1em;
+    margin: 1em;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary;
+      color: $black;
+    }
+  }
 }
