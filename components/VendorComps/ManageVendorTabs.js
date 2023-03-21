@@ -20,7 +20,15 @@ export default function ManageVendorTabs() {
   const { addUpdateVendor, loading } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
-  const { getSingleVendorInfo, getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
+  const {
+    getSingleVendorInfo,
+    getSmeDetails,
+    getCrtDetails,
+    getCdDetails,
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles
+  } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -32,6 +40,9 @@ export default function ManageVendorTabs() {
     getSmeDetails();
     getCrtDetails();
     getCdDetails();
+    getSMESampleFiles();
+    getCRTSampleFiles();
+    getCDSampleFiles();
   }, [vendorId]);
 
   const tabData = manageVendorTabData;
