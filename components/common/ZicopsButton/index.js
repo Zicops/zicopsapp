@@ -11,6 +11,7 @@ export default function ZicopsButton({
   isError,
   isLoading,
 
+  customClass,
   width,
   padding,
   color,
@@ -28,7 +29,7 @@ export default function ZicopsButton({
       <button
         className={`${styles.zicopsButton} ${!!padding ? styles.shrink : ''} ${
           isError ? styles.error : ''
-        } ${isActive ? styles.active : ''}`}
+        } ${isActive ? styles.active : ''} ${customClass}`}
         style={{
           width,
           padding,
@@ -64,6 +65,7 @@ ZicopsButton.defaultProps = {
   fontWeight: null,
   float: null,
 
+  customClass: '',
   isDisabled: false,
   isError: false,
   isActive: false,
@@ -85,6 +87,7 @@ ZicopsButton.propTypes = {
   fontWeight: PropTypes.string,
   float: PropTypes.string,
 
+  customClass: PropTypes.string,
   isDisabled: PropTypes.bool,
   isError: PropTypes.bool,
   isActive: PropTypes.bool,

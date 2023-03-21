@@ -24,6 +24,7 @@ $marginBetweenInputs: 1em;
   label,
   input {
     width: 100%;
+    padding: 8px;
   }
 }
 
@@ -341,8 +342,216 @@ $marginBetweenInputs: 1em;
   color: white;
 }
 
-.buttonGap {
-  margin: 0.5em;
+// topic tab
+// module and chapter box
+.boxContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 200px;
+
+  border-radius: 5px;
+  border: 1px solid $primary;
+  background-color: $tertiaryBlack;
+  padding: 0.8em;
+  margin-bottom: 1em;
+
+  .boxHeader {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    margin-bottom: 0.5em;
+
+    img {
+      cursor: pointer;
+    }
+  }
+
+  &.chapterBox {
+    background-color: $darkTwo;
+    border: 0px;
+  }
+}
+
+// add topic, chapter, module btn
+.addCourseContentBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+  border: 1px solid $primary;
+  background-color: $darkOne;
+  color: $primary;
+  margin: 1em auto;
+
+  img {
+    display: block;
+  }
+
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+// single topic row
+.topicRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+
+  width: 100%;
+  margin: 5px 10px 5px auto;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  padding: 10px 20px;
+  color: $secondaryBlack;
+
+  .title {
+    flex: 1;
+    color: $white;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .editImg {
+    img {
+      width: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+// topic accoridon
+.topicAccordianContainer {
+  width: 100%;
+
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  border: 1px solid $darkTwo;
+  background-color: $tertiaryBlack;
+
+  .header {
+    cursor: pointer;
+
+    .title {
+      color: $white;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .imgContainer {
+      height: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      .minus {
+        background-color: $primary;
+        height: 0.15em;
+        width: 1em;
+      }
+    }
+  }
+
+  .body {
+    padding-top: 20px;
+  }
+}
+
+.editTopicAccordianContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  overflow: auto;
+  overflow-y: overlay;
+
+  height: 40vh;
+
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+// module pop up
+.popUpFormContainer {
+  padding: 20px 50px;
+
+  > div {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .resourceType {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+
+  .isChapterWiseLabelContainer {
+    margin-left: 25%;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 0;
+
+    .isChapterWiseLabel {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+
+      span {
+        color: $darkThree;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// extra
+.vcSetting {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  margin: 1em 0.5em;
+}
+
+.switchRadioBox {
+  display: flex;
+  padding: 10px 15px;
+  // margin: 15px;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  width: 100%;
+
+  .label {
+    font-weight: bold;
+  }
+  .description {
+    color: $darkThree;
+  }
+
+  &.active {
+    border-color: $primary;
+  }
 }
 
 .addTopicForm {

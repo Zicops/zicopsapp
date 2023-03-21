@@ -14,7 +14,23 @@ export const courseTabs = {
   configuration: { name: 'Configuration', component: <Configuration /> }
 };
 
-export function getTopicDataObj(data) {
+export function getModuleDataObject(data = {}) {
+  return {
+    id: data?.id || null,
+    courseId: data?.courseId || null,
+    sequence: data?.sequence || 1,
+    name: data?.name || '',
+    description: data?.description || '',
+    level: data?.level || '',
+    isChapter: data?.isChapter || false,
+
+    duration: data?.duration || 0,
+
+    owner: data?.owner || '',
+    setGlobal: data?.setGlobal || false
+  };
+}
+export function getTopicDataObj(data = {}) {
   return {
     courseId: data?.courseId || null,
     moduleId: data?.moduleId || null,

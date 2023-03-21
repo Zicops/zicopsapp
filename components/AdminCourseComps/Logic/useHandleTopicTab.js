@@ -8,7 +8,9 @@ import { useRecoilState } from 'recoil';
 
 export default function useHandleTopicTab() {
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
-  const [displayPopUp, setDisplayPopUp] = useState({ isDisplay: null, data: null, type: null });
+  const [displayPopUp, setDisplayPopUp] = useState({ data: null, type: null });
+
+  const popUpTypes = { module: 'module', chapter: 'chapter', topic: 'topic' };
 
   const router = useRouter();
   const courseId = router?.query?.courseId || null;
@@ -34,38 +36,11 @@ export default function useHandleTopicTab() {
     const _allModules = [];
 
     sortedModuleDataArr?.forEach((mod) => {
-      if (!mod?.chapters) mod.chapters = [];
+      mod.chapters = [];
+      mod.topics = [];
 
-      // if no chapters are present in whole course, filter topics by module id
-      if (!allChapters?.length) {
-        const chapterData = { generatedId: Math.random(), topicIds: [], topics: [] };
-
-        allTopics = getFilteredTopicData(allTopics, mod?.id, null, chapterData);
-
-        mod?.chapters?.push(chapterData);
-      }
-
-      allChapters = allChapters?.filter((chap) => {
-        const isChapterMatched = chap?.moduleId === mod?.id;
-        let chapterData = {};
-
-        // chapter wise
-        if (isChapterMatched) {
-          chapterData = { ...chap, topicIds: [], topics: [] };
-          allTopics = getFilteredTopicData(allTopics, mod?.id, chap?.id, chapterData);
-        }
-
-        // non chapter wise
-        if (!isChapterMatched) {
-          chapterData = { generatedId: Math.random(), topicIds: [], topics: [] };
-
-          allTopics = getFilteredTopicData(allTopics, mod?.id, null, chapterData);
-        }
-
-        mod?.chapters?.push(chapterData);
-
-        return !isChapterMatched;
-      });
+      allChapters?.forEach((chap) => chap?.moduleId === mod?.id && mod?.chapters?.push(chap));
+      allTopics?.forEach((topic) => topic?.moduleId === mod?.id && mod?.topics?.push(topic));
 
       _allModules.push(mod);
     });
@@ -87,5 +62,5 @@ export default function useHandleTopicTab() {
     });
   }
 
-  return { displayPopUp, setDisplayPopUp };
+  return { displayPopUp, setDisplayPopUp, popUpTypes };
 }

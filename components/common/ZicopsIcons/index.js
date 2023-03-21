@@ -81,3 +81,20 @@ export function ContentFormatIcon() {
     </svg>
   );
 }
+
+export function PlusIcon({ color = '#ACACAC' }) {
+  return (
+    <svg
+      width="39"
+      height="38"
+      viewBox="0 0 39 38"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ height: '100%', width: '100%' }}>
+      <path
+        d="M16.8334 16.3333V0.333313H22.1667V16.3333H38.1667V21.6666H22.1667V37.6666H16.8334V21.6666H0.833374V16.3333H16.8334Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
