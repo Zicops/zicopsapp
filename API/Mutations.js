@@ -258,8 +258,6 @@ export const UPDATE_COURSE_DATA = gql`
       expected_completion
       qa_required
       approvers
-      created_by
-      updated_by
       status
       is_active
       is_display

@@ -30,7 +30,6 @@ export default function useSaveCourseData() {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
@@ -99,6 +98,7 @@ export default function useSaveCourseData() {
     }
 
     _courseCurrentState.isSaved = true;
+    _courseCurrentState.error = [];
     setCourseCurrentState(_courseCurrentState);
     setCourseMetaData(getCourseMetaDataObj({ ..._courseMetaData, ...addCourseData }));
     setToastMessage('Course Created Successfully');
@@ -128,7 +128,7 @@ export default function useSaveCourseData() {
     });
     if (isError || updateCourse?.error || !updatedCourseRes?.updateCourse) {
       setCourseCurrentState({ ...courseCurrentState, isUpdating: false });
-      setToastMsg({ type: 'danger', message: 'Course Update Error' });
+      setToastMessage('Course Update Error');
       return null;
     }
 
@@ -147,6 +147,7 @@ export default function useSaveCourseData() {
       subCategory: _updatedCourseData?.sub_category,
       subCategories: _updatedCourseData?.sub_categories,
       expertiseLevel: _updatedCourseData?.expertise_level,
+      expectedCompletion: _updatedCourseData?.expected_completion,
       relatedSkills: _updatedCourseData?.related_skills,
       publishDate: _updatedCourseData?.publish_date,
       expiryDate: _updatedCourseData?.expiry_date,
@@ -154,9 +155,7 @@ export default function useSaveCourseData() {
       status: _updatedCourseData?.status || sendData?.status,
 
       createdAt: _updatedCourseData?.created_at,
-      updatedAt: _updatedCourseData?.updated_at,
-      createdBy: _updatedCourseData?.created_by,
-      updatedBy: _updatedCourseData?.updated_by
+      updatedAt: _updatedCourseData?.updated_at
     });
 
     setCourseMetaData(updatedCourseData);
@@ -196,7 +195,7 @@ export default function useSaveCourseData() {
 
     // update course
     updateCourse(_courseMetaData).then((res) => {
-      setCourseCurrentState({ ...courseCurrentState, isUpdating: false, isSaved: true });
+      setCourseCurrentState({ ...courseCurrentState, isUpdating: false, isSaved: true, error: [] });
       if (!res?.id) return;
 
       setToastMessage('Course Updated', 'success');

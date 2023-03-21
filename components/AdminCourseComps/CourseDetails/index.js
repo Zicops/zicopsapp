@@ -1,9 +1,10 @@
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import { COURSE_TYPES } from '@/constants/course.constants';
 import { truncateToN } from '@/helper/common.helper';
 import { FILE_TYPES } from '@/helper/constants.helper';
-// import styles from "./adminCourse.module.scss"
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -18,12 +19,7 @@ export default function CourseDetails() {
   const { error } = useRecoilValue(CourseCurrentStateAtom);
   const { handleChange, handleFileInput } = useHandleCourseData();
 
-  function getFileNameI(fileKey = '', urlKey = '', limit = 45) {
-    return truncateToN(
-      courseMetaData?.[fileKey]?.name || getEncodedFileNameFromUrl(courseMetaData?.[urlKey]),
-      limit
-    );
-  }
+  const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
   function getFileName(key = '', limit = 45) {
     return truncateToN(
       courseMetaData?.[key]?.name || getEncodedFileNameFromUrl(courseMetaData?.[key]),
@@ -47,6 +43,26 @@ export default function CourseDetails() {
         isFullWidth={true}
         styleClass={`${styles.makeLabelInputColumnWise}`}
       />
+
+      {!isClassroomCourse && (
+        <LabeledInput
+          inputClass={
+            +courseMetaData?.expectedCompletion === 0 && error?.includes('expectedCompletion')
+              ? 'error'
+              : ''
+          }
+          inputOptions={{
+            inputName: 'expectedCompletion',
+            label:
+              'Suggested Duration: (Total time ideally to be taken to complete the course. - In days)',
+            placeholder: 'Enter Suggested Duration in days',
+            isNumericOnly: true,
+            value: +courseMetaData?.expectedCompletion || null
+          }}
+          styleClass={`${styles.makeLabelInputColumnWise} ${styles.marginBetweenInputs}`}
+          changeHandler={(e) => handleChange({ expectedCompletion: e?.target?.value || null })}
+        />
+      )}
 
       <div
         className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs} ${

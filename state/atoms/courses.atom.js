@@ -37,6 +37,7 @@ export function getCourseMetaDataObj(data = {}) {
 
     // course details
     subCategories: data?.subCategories || [], // should take sub cat id?
+    expectedCompletion: data?.expectedCompletion || null,
     image: data?.image || null,
     previewVideo: data?.previewVideo || null,
     tileImage: data?.tileImage || null,

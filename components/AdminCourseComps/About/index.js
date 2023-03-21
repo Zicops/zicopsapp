@@ -1,15 +1,13 @@
+import InputDatePicker from '@/common/InputDatePicker';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-// import UploadForm from '../common/FormComponents/UploadForm';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import RTE from '@/components/common/FormComponents/RTE';
-// import styles from "../adminCourse.module.scss"
-import InputDatePicker from '@/common/InputDatePicker';
 import { COURSE_TYPES } from '@/constants/course.constants';
 import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styles from '../adminCourseComps.module.scss';
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
@@ -17,7 +15,7 @@ import BulletPointInput from './BulletPointInput';
 
 export default function About() {
   const { error } = useRecoilValue(CourseCurrentStateAtom);
-  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const { handleChange } = useHandleCourseData();
 
   const [title, settitle] = useState('');

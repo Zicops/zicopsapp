@@ -84,7 +84,14 @@ export default function useHandleCourseData() {
     if (courseMetaData?.type === COURSE_TYPES.classroom) courseMasterList.push('noOfLearner');
 
     // add list for details, about
-    const courseDetailsList = ['subCategories', 'summary', 'previewVideo', 'image', 'tileImage'];
+    const courseDetailsList = [
+      'expectedCompletion',
+      'subCategories',
+      'summary',
+      'previewVideo',
+      'image',
+      'tileImage'
+    ];
     const courseAboutList = [
       'description',
       'outcomes',
