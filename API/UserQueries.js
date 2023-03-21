@@ -823,6 +823,7 @@ query getPaginatedLspUsersWithRoles($lsp_id:String!,$role:[String],$pageCursor:S
         user_role_id
         role
       }
+      status
     }
     pageCursor
     direction

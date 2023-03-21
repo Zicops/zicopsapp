@@ -112,6 +112,7 @@ export default function useAdminQuery() {
           last_name: singleUser?.user?.last_name,
           full_name: `${singleUser?.user?.first_name} ${singleUser?.user?.last_name}`,
           user_lsp_id: roleData?.user_lsp_id,
+          lsp_status: singleUser?.status,
           type: roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor ? 'external' : 'internal'
         };
       }

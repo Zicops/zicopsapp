@@ -72,9 +72,6 @@ export default function MyUserPage() {
       return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     }
 
-    // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
-    // console.log(resEmail);
-
     const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
       user_id: user?.user_id,
       user_lsp_id: user?.user_lsp_id

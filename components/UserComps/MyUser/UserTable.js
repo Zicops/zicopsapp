@@ -22,7 +22,10 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import useAdminQuery, { getUsersForAdmin } from '../Logic/getUsersForAdmin';
 
 const MyUserTable = forwardRef(
-  ({ getUser, isAdministration = false, customStyle = {}, userType = USER_TYPE?.internal }, ref) => {
+  (
+    { getUser, isAdministration = false, customStyle = {}, userType = USER_TYPE?.internal },
+    ref
+  ) => {
     const [selectedUser, setSelectedUser] = useState([]);
     const [data, setData] = useState([]);
     const [disableAlert, setDisableAlert] = useState(false);
@@ -232,16 +235,10 @@ const MyUserTable = forwardRef(
         headerName: 'Status',
         flex: 0.5,
         renderCell: (params) => {
-          let status = '';
-          // let lspStatus = '';
-          if (disabledUserList?.includes(params?.row?.id)) status = USER_MAP_STATUS?.disable;
-          if (invitedUsers?.includes(params?.row?.id)) status = 'invited';
-
-          let lspStatus = !status?.length ? params?.row?.lsp_status : status;
-
+          let _lspStatus = params?.row?.lsp_status;
           return (
             <span style={{ textTransform: 'capitalize' }}>
-              {lspStatus?.trim()?.length ? lspStatus : 'Invited'}
+              {_lspStatus?.trim()?.length ? _lspStatus : 'Invited'}
             </span>
           );
         }
@@ -254,35 +251,14 @@ const MyUserTable = forwardRef(
         headerName: 'Action',
         flex: 0.5,
         renderCell: (params) => {
-          let status = '';
-          if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
           let _lspStatus = params?.row?.lsp_status;
-          if (status === 'disable') {
-            _lspStatus = USER_MAP_STATUS.disable;
-          }
-
-          let isLearner = false;
-          let isAdmin = false;
-          isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-          isLearner = !isAdmin;
-
-          if (adminLearnerList?.admins?.includes(params?.row?.id)) {
-            isLearner = false;
-            isAdmin = true;
-          }
-          if (adminLearnerList?.learners?.includes(params?.row?.id)) {
-            isLearner = true;
-            isAdmin = false;
-          }
-
           const buttonArr = [
             { handleClick: () => router.push(`/admin/user/my-users/${params.id}`) },
             {
               text: _lspStatus === USER_MAP_STATUS.disable ? 'Enable' : 'Disable',
               handleClick: () => {
-                const lspStatus = _lspStatus;
                 const isDisabled =
-                  lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
+                  _lspStatus?.toLowerCase() === USER_MAP_STATUS.disable?.toLowerCase();
                 setNewUserAboutData(
                   // TODO: delete user here
                   getUserAboutObject({
@@ -291,8 +267,7 @@ const MyUserTable = forwardRef(
                     status: isDisabled ? USER_MAP_STATUS.activate : USER_MAP_STATUS.disable
                   })
                 );
-
-                if (isDisabled) setCurrentDisabledUser(params?.row?.id);
+                setCurrentSelectedUser(params?.row);
                 setDisableAlert(true);
               },
               isDisabled: userData?.id === params.id
@@ -361,6 +336,24 @@ const MyUserTable = forwardRef(
                 const a = await updateUserLsp();
                 setDisableAlert(false);
                 if (a) {
+                  setData((prevUsers) => {
+                    const _data = structuredClone(prevUsers);
+                    console.log(newUserAboutData,'sfhso');
+                    const index = _data?.findIndex((user) => user?.id === currentSelectedUser?.id);
+                    if (index >= 0) _data[index].lsp_status = newUserAboutData?.status;
+                    console.log(_data,'data',index);
+                    return _data;
+                  });
+
+                  setCurrentDisabledUser(null);
+
+                  return setToastMsg({
+                    type: 'success',
+                    message: `Successfully ${isDisabled ? 'disable' : 'enable'} ${
+                      newUserAboutData?.email
+                    }`
+                  });
+                  return;
                   const isDisabled = newUserAboutData?.status === USER_MAP_STATUS?.disable;
 
                   if (isDisabled) {
