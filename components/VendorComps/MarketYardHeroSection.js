@@ -29,7 +29,9 @@ export default function MarketYardHeroSection({
   vendorType,
   setVendorType,
   vendorService,
-  setVendorService
+  setVendorService,
+  searchText = '',
+  setSearchText = () => {}
 }) {
   return (
     <>
@@ -66,7 +68,13 @@ export default function MarketYardHeroSection({
               styleClass={`${styles.vendorDropDown}`}
               customDropdownStyles={customDropdownStyleObj}
             />
-            <input type="text" placeholder="Search" className={`${styles.vendorSearch}`} />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className={`${styles.vendorSearch}`}
+            />
           </div>
 
           <div className={`${styles.vendorTextContainer}`}>
