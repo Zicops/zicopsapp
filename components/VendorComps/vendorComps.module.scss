@@ -106,25 +106,40 @@
     display: flex;
     gap: 15px;
 
-    div {
-      border: 2px solid $primary;
+    .sampleFile {
+      border: 1px solid $secondary;
       background-color: $darkTwo;
-      width: 8em;
-      height: 8em;
-      padding: 10px;
+      width: 20em;
+      height: 7em;
+      padding: 15px;
 
       display: flex;
-      justify-content: center;
       align-items: center;
 
       overflow: hidden;
       text-overflow: ellipsis;
 
       cursor: pointer;
-    }
-    img {
-      width: 20%;
-      cursor: pointer;
+
+      .sampleFileImage {
+        width: 30%;
+        background-color: $secondary;
+        img {
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+
+      .sampleFileDetails {
+        display: flex;
+        flex-direction: column;
+        padding: 0 15px;
+        gap: 15px;
+
+        .sampleFileRate {
+          color: $bgBody;
+        }
+      }
     }
   }
 }

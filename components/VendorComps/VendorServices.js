@@ -34,6 +34,13 @@ export default function VendorServices({ data, type = 'sme' }) {
     });
   }, []);
 
+  function getFileType(fileType = null) {
+    if (fileType === 'PDF') return '/image/pdf-icon1.png';
+    if (fileType === 'PPT') return '/image/ppt-icon1.png';
+
+    return '/image/default-document.png';
+  }
+
   return (
     <div className={`${styles.vendorTypeContainer}`}>
       <div className={`${styles.expertise}`}>
@@ -78,7 +85,13 @@ export default function VendorServices({ data, type = 'sme' }) {
             // return <img src={data.previewImage} onClick={() => setSamplePopup(+data.id)} />;
             return (
               <div className={styles.sampleFile} onClick={() => setSamplePopup(+data.id)}>
-                {data?.title}
+                <div className={styles.sampleFileImage}>
+                  <img src={getFileType(data?.fileType)} />
+                </div>
+                <div className={styles.sampleFileDetails}>
+                  <div>{`${data?.title}.${data?.fileType?.toLowerCase()}`}</div>
+                  <div className={styles.sampleFileRate}>{data.rate}</div>
+                </div>
               </div>
             );
           })}
