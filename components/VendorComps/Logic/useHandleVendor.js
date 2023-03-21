@@ -498,7 +498,10 @@ export default function useHandleVendor() {
       pType: ptype,
       name: sampleData?.sampleName || '',
       description: sampleData?.description || '',
-      pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+      pricing: '',
+      rate: sampleData?.rate || 0,
+      currency: sampleData?.currency || '',
+      unit: sampleData?.unit || '',
       file: sampleData?.sampleFile || null,
       fileType: sampleData?.fileType || '',
       status: VENDOR_MASTER_STATUS.active

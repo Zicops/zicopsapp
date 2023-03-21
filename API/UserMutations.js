@@ -1689,6 +1689,9 @@ export const CREATE_SAMPLE_FILE = gql`
     $pricing: String!
     $file: Upload!
     $fileType: String
+    $rate: Int
+    $currency: String
+    $unit: String
     $status: String
   ) {
     uploadSampleFile(
@@ -1700,6 +1703,9 @@ export const CREATE_SAMPLE_FILE = gql`
         pricing: $pricing
         file: $file
         fileType: $fileType
+        rate: $rate
+        currency: $currency
+        unit: $unit
         status: $status
       }
     ) {
@@ -1708,6 +1714,9 @@ export const CREATE_SAMPLE_FILE = gql`
       fileType
       price
       file_url
+      rate
+      currency
+      unit
       created_at
       created_by
       updated_at
