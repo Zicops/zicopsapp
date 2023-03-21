@@ -20,7 +20,6 @@ import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { allProfileAtom, SevicesAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
-import MarketYardExperience from '@/components/VendorComps/MarketYardExperience';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -109,10 +108,6 @@ export default function VendorInfo() {
       name: 'Profile',
       component: <ProfileVendor profileData={vendorProfileData} />
     }
-    // {
-    //   name: 'Experience',
-    //   component: <MarketYardExperience profileData={vendorProfileData} />
-    // }
   ];
 
   const [tab, setTab] = useState(tabData[0].name);

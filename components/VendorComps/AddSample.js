@@ -1,6 +1,11 @@
 import { changeHandler, truncateToN } from '@/helper/common.helper';
-import { SampleAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
+import {
+  SampleAtom,
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom
+} from '@/state/atoms/vendor.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../common/FormComponents/LabeledInput';
@@ -10,9 +15,15 @@ import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorCo
 import styles from './vendorComps.module.scss';
 import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-const AddSample = () => {
+const AddSample = ({ pType }) => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const smeServices = useRecoilValue(SmeServicesAtom);
+  const crtServices = useRecoilValue(CtServicesAtom);
+  const cdServices = useRecoilValue(CdServicesAtom);
+
+  console.info(pType, smeServices, crtServices, cdServices, sampleData);
 
   function getFileName() {
     return truncateToN(
@@ -20,6 +31,17 @@ const AddSample = () => {
       45
     );
   }
+
+  const fileType = [];
+
+  if (pType === 'sme') fileType = smeServices.formats;
+  if (pType === 'crt') fileType = crtServices.formats;
+  if (pType === 'cd') fileType = cdServices.formats;
+
+  const fileFormatArray = fileType.map((val) => ({
+    label: val,
+    value: val
+  }));
 
   return (
     <div>
@@ -80,10 +102,11 @@ const AddSample = () => {
               inputName: 'fileType',
               placeholder: 'Select File Type',
               value: {
-                label: sampleData?.fileType,
-                value: sampleData?.fileType
+                label: sampleData.fileType,
+                value: sampleData.fileType
               },
-              options: fileFormatArray
+              options: fileFormatArray,
+              menuPlacement: 'top'
             }}
             changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'fileType')}
             styleClass={`${styles.fileFormatDropDown}`}
@@ -111,7 +134,8 @@ const AddSample = () => {
                   label: sampleData?.currency,
                   value: sampleData?.currency
                 },
-                options: currency
+                options: currency,
+                menuPlacement: 'top'
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'currency')}
               styleClass={`${styles.currencyDropDown}`}
@@ -127,7 +151,8 @@ const AddSample = () => {
                   label: sampleData?.unit,
                   value: sampleData?.unit
                 },
-                options: unit
+                options: unit,
+                menuPlacement: 'top'
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'unit')}
               styleClass={`${styles.unitDropDown}`}

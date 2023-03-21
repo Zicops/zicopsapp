@@ -22,8 +22,12 @@ const FileManageVendor = ({ pType }) => {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
-  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
-    useHandleVendor();
+  const {
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles,
+    addSampleFile
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -78,7 +82,7 @@ const FileManageVendor = ({ pType }) => {
           handleClick: addNewSampleFileHendler
         }}
         isFooterVisible={true}>
-        <AddSample />
+        <AddSample pType={pType} />
       </VendorPopUp>
     </div>
   );
