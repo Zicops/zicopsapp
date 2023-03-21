@@ -790,6 +790,47 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
   }
 `;
 
+
+export const GET_LSP_USERS_WITH_ROLE = gql`
+query getPaginatedLspUsersWithRoles($lsp_id:String!,$role:[String],$pageCursor:String,$pageSize:Int){
+  getPaginatedLspUsersWithRoles(
+    lsp_id: $lsp_id
+    pageCursor: $pageCursor
+    Direction: ""
+    pageSize: $pageSize
+    role: $role
+  ) {
+    data {
+      user{
+        id
+        first_name
+        last_name
+        status
+        role
+        is_verified
+        is_active
+        gender
+        created_by
+        updated_by
+        created_at
+        updated_at
+        email
+        phone
+        photo_url
+      }
+      roles{
+        user_lsp_id
+        user_role_id
+        role
+      }
+    }
+    pageCursor
+    direction
+    pageSize
+  }
+}
+`
+
 // VENDOR QUERIES START
 
 // {status: String , service: String}

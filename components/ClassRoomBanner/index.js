@@ -11,7 +11,7 @@ const ClassRoomBanner = ({ data }) => {
       <div className={`${styles.imgContainer}`}>
         <img src={`${data.bgImage}`} alt="" />
       </div>
-      <div className={`${styles.classroomText}`}>
+      {/* <div className={`${styles.classroomText}`}>
         <div className={`${styles.classroomLogo}`}>
           <img src={`${data.logo}`} alt="" />
         </div>
@@ -50,7 +50,7 @@ const ClassRoomBanner = ({ data }) => {
             {data.time}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

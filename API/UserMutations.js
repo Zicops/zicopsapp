@@ -94,6 +94,9 @@ export const INVITE_USERS_WITH_ROLE = gql`
     inviteUsersWithRole(emails: $emails, lsp_id: $lsp_id, role: $role) {
       email
       message
+      user_id
+      user_lsp_id
+      message
     }
   }
 `;

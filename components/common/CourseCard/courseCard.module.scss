@@ -2,7 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 $selfPacedBorder: $primary;
-$testSeriesBorder: $warning;
+$testSeriesBorder: $zicopsPink;
+$classroomBorder: $warning;
+$eventBorder: $zicopsSky;
 
 .smallCardWrapper {
   .smallCard {
@@ -35,6 +37,16 @@ $testSeriesBorder: $warning;
   &.test-series {
     .banner {
       background-color: $testSeriesBorder;
+    }
+  }
+  &.classroom {
+    .banner {
+      background-color: $classroomBorder;
+    }
+  }
+  &.event {
+    .banner {
+      background-color: $eventBorder;
     }
   }
 
@@ -147,6 +159,18 @@ $testSeriesBorder: $warning;
       .smallCard,
       .smallCardContent {
         border-color: $testSeriesBorder;
+      }
+    }
+    &.classroom {
+      .smallCard,
+      .smallCardContent {
+        border-color: $classroomBorder;
+      }
+    }
+    &.event {
+      .smallCard,
+      .smallCardContent {
+        border-color: $eventBorder;
       }
     }
   }
