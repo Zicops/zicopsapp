@@ -8,6 +8,7 @@ import styles from '../adminCourseComps.module.scss';
 import useHandleTopicTab from '../Logic/useHandleTopicTab';
 import BoxContainer from './BoxContainer';
 import TopicRow from './BoxContainer/TopicRow';
+import ChapterPopUp from './ChapterPopUp';
 import ModulePopUp from './ModulePopUp';
 import TopicPopUp from './TopicPopUp';
 
@@ -29,6 +30,7 @@ export default function Topics() {
       {allModules?.map((mod) => {
         return (
           <BoxContainer
+            key={mod?.id}
             title={`Module ${mod.sequence} : ${mod.name}`}
             editHandler={() => setDisplayPopUp({ data: mod, type: popUpTypes.module })}>
             {mod?.isChapter ? (
@@ -38,8 +40,15 @@ export default function Topics() {
                   return (
                     <>
                       <BoxContainer
+                        key={chapter?.id}
                         title={`Chapter ${chapter.sequence} : ${chapter.name}`}
-                        isChapter={true}>
+                        isChapter={true}
+                        editHandler={() =>
+                          setDisplayPopUp({
+                            data: { mod, chap: chapter },
+                            type: popUpTypes.chapter
+                          })
+                        }>
                         {/* topic */}
                         {mod?.topics?.map((topic) => {
                           if (chapter?.id !== topic?.chapterId) return;
@@ -70,7 +79,9 @@ export default function Topics() {
                 <IconButton
                   text="Add Chapter"
                   styleClasses={styles.addCourseContentBtn}
-                  handleClick={() => setDisplayPopUp({ data: null, type: popUpTypes.chapter })}
+                  handleClick={() =>
+                    setDisplayPopUp({ data: { mod, chap: null }, type: popUpTypes.chapter })
+                  }
                 />
               </>
             ) : (
@@ -111,6 +122,7 @@ export default function Topics() {
         }}
       />
 
+      {/* add edit module */}
       {displayPopUp?.type === popUpTypes.module && (
         <ModulePopUp
           modData={displayPopUp?.data}
@@ -118,6 +130,17 @@ export default function Topics() {
           popUpState={[displayPopUp?.type, setDisplayPopUp]}
         />
       )}
+
+      {/* add edit chapter */}
+      {displayPopUp?.type === popUpTypes.chapter && (
+        <ChapterPopUp
+          modData={displayPopUp?.data?.mod}
+          chapData={displayPopUp?.data?.chap}
+          closePopUp={() => setDisplayPopUp({ data: null, type: null })}
+          popUpState={[displayPopUp?.type, setDisplayPopUp]}
+        />
+      )}
+
       {displayPopUp?.type === 'topic' && (
         <TopicPopUp topic={displayPopUp?.data} popUpState={[displayPopUp, setDisplayPopUp]} />
       )}

@@ -30,6 +30,18 @@ export function getModuleDataObject(data = {}) {
     setGlobal: data?.setGlobal || false
   };
 }
+
+export function getChapterDataObject(data = {}) {
+  return {
+    id: data?.id || null,
+    courseId: data?.courseId || null,
+    moduleId: data?.moduleId || null,
+    sequence: data?.sequence || 1,
+    name: data?.name || '',
+    description: data?.description || ''
+  };
+}
+
 export function getTopicDataObj(data = {}) {
   return {
     courseId: data?.courseId || null,
