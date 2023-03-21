@@ -41,6 +41,7 @@ const SingleProfile = ({ data }) => {
         experienceData: res?.map((exp) => {
           const startDate = moment(exp?.StartDate * 1000);
           const endDate = moment(exp?.EndDate * 1000);
+          const isCurrentlyWorking = +exp?.EndDate === 0;
 
           return getExperiencesObject({
             expId: exp?.ExpId,
@@ -48,13 +49,13 @@ const SingleProfile = ({ data }) => {
             title: exp?.Title,
             companyName: exp?.CompanyName,
             location: exp?.Location,
-            isWorking: exp?.IsWorking,
+            isWorking: isCurrentlyWorking,
             employeeType: exp?.EmployementType,
             locationType: exp?.LocationType,
             startMonth: startDate?.format('MMMM'),
             startYear: startDate?.format('YYYY'),
-            endMonth: endDate?.format('MMMM'),
-            endYear: endDate?.format('YYYY')
+            endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
+            endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
           });
         }),
         experienceYear: editProfileData[0]?.experience_years,
@@ -66,7 +67,8 @@ const SingleProfile = ({ data }) => {
     });
   }
 
-  const completeProfileHandler = async () => {
+  const completeProfileHandler = async (e) => {
+    e.target.disabled = true;
     await addUpdateProfile();
     await addUpdateExperience();
     await getAllProfileInfo();
