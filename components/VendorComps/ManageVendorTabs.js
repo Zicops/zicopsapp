@@ -27,7 +27,8 @@ export default function ManageVendorTabs() {
     getCdDetails,
     getSMESampleFiles,
     getCRTSampleFiles,
-    getCDSampleFiles
+    getCDSampleFiles,
+    getAllProfileInfo
   } = useHandleVendor();
 
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function ManageVendorTabs() {
     getSMESampleFiles();
     getCRTSampleFiles();
     getCDSampleFiles();
+    getAllProfileInfo();
   }, [vendorId]);
 
   const tabData = manageVendorTabData;

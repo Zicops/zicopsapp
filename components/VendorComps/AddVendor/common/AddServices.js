@@ -101,6 +101,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     }
   };
 
+  const handleRemoveLanguage = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+  };
+
+  const handleRemoveExpertise = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, expertises: [...data?.expertises?.filter((lang) => lang !== value)] });
+  };
+
+  const handleRemoveFormats = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, formats: [...data?.formats?.filter((lang) => lang !== value)] });
+  };
   const addLanguagesHandler = () => {
     setData({ ...data, languages: [...selectedLanguages] });
     setLanguagePopupState(false);
@@ -177,7 +191,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={expert}
                         value={expert}
-                        isChecked={true}
+                        isChecked={data?.expertises?.includes(expert)}
+                        changeHandler={handleRemoveExpertise}
                       />
                     </div>
                   ))}
@@ -216,7 +231,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={lang}
                         value={lang}
-                        isChecked={true}
+                        isChecked={data?.languages?.includes(lang)}
+                        changeHandler={handleRemoveLanguage}
                       />
                     </div>
                   ))}
@@ -253,7 +269,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={format}
                         value={format}
-                        isChecked={true}
+                        isChecked={data?.formats?.includes(format)}
+                        changeHandler={handleRemoveFormats}
                       />
                     </div>
                   ))}
@@ -400,8 +417,18 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[opdeliverablePopupState, setOPDeliverablePopupState]}
         size="medium"
         title="Add O/P deliverable formats"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
+        closeBtn={{
+          name: 'Cancel',
+          handleClick: () => {
+            setNewOPFormat('');
+            setOPDeliverablePopupState(false);
+          }
+        }}
+        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}
+        onCloseWithCross={() => {
+          setNewOPFormat('');
+          setOPDeliverablePopupState(false);
+        }}>
         <h4>Select Format</h4>
         {displayFormats.map((data, index) => {
           return (
