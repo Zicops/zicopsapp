@@ -16,7 +16,7 @@ import DragDrop from './DragAndDrop';
 
 export default function CourseDetails() {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
-  const { error } = useRecoilValue(CourseCurrentStateAtom);
+  const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
   const { handleChange, handleFileInput } = useHandleCourseData();
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
@@ -57,7 +57,8 @@ export default function CourseDetails() {
               'Suggested Duration: (Total time ideally to be taken to complete the course. - In days)',
             placeholder: 'Enter Suggested Duration in days',
             isNumericOnly: true,
-            value: +courseMetaData?.expectedCompletion || null
+            value: +courseMetaData?.expectedCompletion || null,
+            isDisabled: isDisabled
           }}
           styleClass={`${styles.makeLabelInputColumnWise} ${styles.marginBetweenInputs}`}
           changeHandler={(e) => handleChange({ expectedCompletion: e?.target?.value || null })}
@@ -68,7 +69,7 @@ export default function CourseDetails() {
         className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs} ${
           error?.includes('subCategories') ? 'error' : ''
         }`}>
-        <DragDrop />
+        <DragDrop isFreezed={isDisabled} />
       </div>
 
       <LabeledTextarea
@@ -78,7 +79,8 @@ export default function CourseDetails() {
           placeholder: 'Provide an outline of the course in less then 500 charactor',
           rows: 4,
           maxLength: 500,
-          value: courseMetaData?.summary
+          value: courseMetaData?.summary,
+          isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
         changeHandler={(e) => handleChange({ summary: e?.target?.value })}
@@ -99,7 +101,8 @@ export default function CourseDetails() {
             }}
             acceptedTypes={FILE_TYPES.coursePreviewVideo}
             inputName="previewVideo"
-            // hideRemoveBtn={true}
+            hideRemoveBtn={isDisabled}
+            isDisabled={isDisabled}
             isError={!courseMetaData?.previewVideo && error?.includes('previewVideo')}
             isActive={courseMetaData?.previewVideo}
           />
@@ -120,7 +123,8 @@ export default function CourseDetails() {
             }}
             acceptedTypes={FILE_TYPES.courseDisplayImage}
             inputName="image"
-            // hideRemoveBtn={true}
+            hideRemoveBtn={isDisabled}
+            isDisabled={isDisabled}
             isError={!courseMetaData?.image && error?.includes('image')}
             isActive={courseMetaData?.image}
           />
@@ -139,7 +143,8 @@ export default function CourseDetails() {
             }}
             acceptedTypes={FILE_TYPES.courseTileImage}
             inputName="tileImage"
-            // hideRemoveBtn={true}
+            hideRemoveBtn={isDisabled}
+            isDisabled={isDisabled}
             isError={!courseMetaData?.tileImage && error?.includes('tileImage')}
             isActive={courseMetaData?.tileImage}
           />

@@ -314,7 +314,10 @@ export default function Configuration() {
 
               e.currentTarget.disabled = true;
               mutateData(UPDATE_COURSE_DATA, sendData)
-                .then(() => setCourseMetaData({ ...courseMetaData, qaRequired: false }))
+                .then(() => {
+                  setCourseMetaData({ ...courseMetaData, qaRequired: false });
+                  setCourseCurrentState({ ...courseCurrentState, isDisabled: false });
+                })
                 .catch((err) => setToastMessage('Course Unfreeze Error!'))
                 .finally(() => setUnFreeze(false));
             },

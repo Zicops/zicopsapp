@@ -78,7 +78,8 @@ export function getCourseCurrentStateObj(data = {}) {
   return {
     error: data?.error || [],
     isUpdating: data?.isUpdating || false,
-    isSaved: data?.isSaved || false
+    isSaved: data?.isSaved || false,
+    isDisabled: data?.isDisabled || false
   };
 }
 

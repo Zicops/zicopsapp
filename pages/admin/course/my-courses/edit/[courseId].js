@@ -7,6 +7,7 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
@@ -14,16 +15,21 @@ import {
   getCourseMetaDataObj
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function EditCoursePage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
   const router = useRouter();
   const courseId = router?.query?.courseId;
+
+  const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   // load course data
   useEffect(() => {
@@ -53,7 +59,10 @@ export default function EditCoursePage() {
               updatedBy: _courseDataRes?.updated_by
             })
           );
-          setCourseCurrentState(getCourseCurrentStateObj({ isSaved: true }));
+          const isCourseDisabled = !!_courseDataRes?.qa_required;
+          setCourseCurrentState(
+            getCourseCurrentStateObj({ isSaved: true, isDisabled: isCourseDisabled })
+          );
         })
         .catch((err) => {
           console.log(`Course Data Load Error: `, err);

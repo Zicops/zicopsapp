@@ -13,7 +13,7 @@ import { courseTabs } from './Logic/adminCourseComps.helper';
 import useHandleCourseData from './Logic/useHandleCourseData';
 
 export default function CourseMaster() {
-  const { error } = useRecoilValue(CourseCurrentStateAtom);
+  const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
@@ -31,7 +31,8 @@ export default function CourseMaster() {
           inputName: 'name',
           label: 'Name :',
           placeholder: 'Enter name of the course',
-          value: courseMetaData?.name
+          value: courseMetaData?.name,
+          isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
         changeHandler={(e) => handleChange({ name: e?.target?.value })}
@@ -49,7 +50,8 @@ export default function CourseMaster() {
             options: catSubCat.cat,
             value: courseMetaData?.category
               ? { value: courseMetaData?.category, label: courseMetaData?.category }
-              : null
+              : null,
+            isDisabled: isDisabled
           }}
           isLoading={!catSubCat?.isDataLoaded}
           isFullWidth={true}
@@ -70,7 +72,8 @@ export default function CourseMaster() {
             options: catSubCat.subCat,
             value: courseMetaData?.subCategory
               ? { value: courseMetaData?.subCategory, label: courseMetaData?.subCategory }
-              : null
+              : null,
+            isDisabled: isDisabled
           }}
           isFullWidth={true}
           isLoading={!catSubCat?.isDataLoaded}
@@ -91,6 +94,7 @@ export default function CourseMaster() {
             value={COURSE_EXPERTISE_LEVEL.beginner}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.beginner)}
             changeHandler={handleExpertise}
+            isDisabled={isDisabled}
           />
 
           <LabeledRadioCheckbox
@@ -100,6 +104,7 @@ export default function CourseMaster() {
             value={COURSE_EXPERTISE_LEVEL.competent}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.competent)}
             changeHandler={handleExpertise}
+            isDisabled={isDisabled}
           />
           <LabeledRadioCheckbox
             type="checkbox"
@@ -108,6 +113,7 @@ export default function CourseMaster() {
             value={COURSE_EXPERTISE_LEVEL.proficient}
             isChecked={courseMetaData?.expertiseLevel?.includes(COURSE_EXPERTISE_LEVEL.proficient)}
             changeHandler={handleExpertise}
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -124,7 +130,8 @@ export default function CourseMaster() {
             options: ownerList,
             value: courseMetaData?.owner
               ? { value: courseMetaData?.owner, label: courseMetaData?.owner }
-              : null
+              : null,
+            isDisabled: isDisabled
           }}
           isFullWidth={true}
           isLoading={ownerList === null}
@@ -142,7 +149,8 @@ export default function CourseMaster() {
             options: [{ value: 'Zicops', label: 'Zicops' }],
             value: courseMetaData?.publisher
               ? { value: courseMetaData?.publisher, label: courseMetaData?.publisher }
-              : null
+              : null,
+            isDisabled: isDisabled
           }}
           isFullWidth={true}
           // isLoading={ownerList === null}
@@ -165,7 +173,8 @@ export default function CourseMaster() {
             options: LANGUAGES?.map((lang) => ({ label: lang, value: lang })),
             value: !!courseMetaData?.language?.length
               ? courseMetaData?.language?.map((lang) => ({ label: lang, value: lang }))
-              : null
+              : null,
+            isDisabled: isDisabled
           }}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
@@ -179,7 +188,8 @@ export default function CourseMaster() {
               inputName: 'noOfLearner',
               label: 'No.of Learners :',
               placeholder: '00',
-              value: ''
+              value: '',
+              isDisabled: isDisabled
             }}
             styleClass={`${styles.makeLabelInputColumnWise}`}
             // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -199,6 +209,8 @@ export default function CourseMaster() {
               label={'Organization Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.defaultLsp}
               changeHandler={(e) => handleChange({ lspId: userOrgData?.defaultLsp })}
+              isDisabled={true}
+              // isDisabled={isDisabled}
             />
 
             <LabeledRadioCheckbox
@@ -207,6 +219,8 @@ export default function CourseMaster() {
               label={'Learning space Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.lsp_id}
               changeHandler={(e) => handleChange({ lspId: userOrgData?.lsp_id })}
+              isDisabled={true}
+              // isDisabled={isDisabled}
             />
           </div>
         </div>
@@ -220,6 +234,7 @@ export default function CourseMaster() {
               label={'Open'}
               isChecked={courseMetaData?.isDisplay}
               changeHandler={() => handleChange({ isDisplay: true })}
+              isDisabled={isDisabled}
             />
 
             <LabeledRadioCheckbox
@@ -227,6 +242,7 @@ export default function CourseMaster() {
               label={'Closed'}
               isChecked={!courseMetaData?.isDisplay}
               changeHandler={() => handleChange({ isDisplay: false })}
+              isDisabled={isDisabled}
             />
           </div>
         </div>

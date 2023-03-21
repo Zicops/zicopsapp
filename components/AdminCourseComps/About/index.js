@@ -14,7 +14,7 @@ import NextBtn from '../NextBtn';
 import BulletPointInput from './BulletPointInput';
 
 export default function About() {
-  const { error } = useRecoilValue(CourseCurrentStateAtom);
+  const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const { handleChange } = useHandleCourseData();
 
@@ -107,7 +107,8 @@ export default function About() {
                         label: trainee,
                         value: trainee
                       }))
-                    : null
+                    : null,
+                  isDisabled: isDisabled
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
@@ -120,6 +121,7 @@ export default function About() {
                   label={''}
                   value={''}
                   isChecked={''}
+                  isDisabled={isDisabled}
                   // changeHandler={}
                 />
                 <label>To be Decided</label>
@@ -151,7 +153,8 @@ export default function About() {
                   // options: Moderators?.map((trainee) => ({ label: trainee, value: trainee })),
                   value: !!courseMetaData?.Moderators?.length
                     ? courseMetaData?.Moderators?.map((mod) => ({ label: mod, value: mod }))
-                    : null
+                    : null,
+                  isDisabled: isDisabled
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
@@ -164,6 +167,7 @@ export default function About() {
                   label={''}
                   value={''}
                   isChecked={''}
+                  isDisabled={isDisabled}
                   // changeHandler={}
                 />
                 <label>To be Decided</label>
@@ -190,7 +194,7 @@ export default function About() {
                 //     });
                 //   }}
                 //   isDisabled={isPreview}
-                isDisabled={false}
+                isDisabled={isDisabled}
                 styleClass={`${styles.datePicker}`}
               />
               <div className={`${styles.aboutCheckbox}`}>
@@ -199,6 +203,7 @@ export default function About() {
                   label={''}
                   value={''}
                   isChecked={''}
+                  isDisabled={isDisabled}
                   // changeHandler={}
                 />
                 <label>To be Decided</label>
@@ -221,6 +226,7 @@ export default function About() {
                 //     });
                 //   }}
                 //   isDisabled={isPreview}
+                isDisabled={isDisabled}
                 styleClass={`${styles.datePicker}`}
               />
               <div className={`${styles.aboutCheckbox}`}>
@@ -229,6 +235,7 @@ export default function About() {
                   label={''}
                   value={''}
                   isChecked={''}
+                  isDisabled={isDisabled}
                   // changeHandler={}
                 />
                 <label>To be Decided</label>
@@ -245,7 +252,8 @@ export default function About() {
                   inputName: 'name',
                   // label: 'Total Duration:',
                   placeholder: 'Auto pupulated',
-                  value: ''
+                  value: '',
+                  isDisabled: isDisabled
                 }}
                 styleClass={`${styles.inputName1}`}
                 // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -258,7 +266,8 @@ export default function About() {
                   inputName: 'name',
                   // label:'Learning Duration:',
                   placeholder: 'Auto populated',
-                  value: ''
+                  value: '',
+                  isDisabled: isDisabled
                 }}
                 styleClass={`${styles.inputName1}`}
                 // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -280,7 +289,8 @@ export default function About() {
           placeholder: 'Enter course discription',
           rows: 5,
           maxLength: 160,
-          value: courseMetaData?.description
+          value: courseMetaData?.description,
+          isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
         changeHandler={(e) => handleChange({ description: e?.target?.value })}
@@ -294,7 +304,7 @@ export default function About() {
           placeholder="Enter course outcomes"
           name="outcomes"
           isError={!courseMetaData?.outcomes?.length && error?.includes('outcomes')}
-          // isDisabled={isFreezed}
+          isDisabled={isDisabled}
         />
       </div>
 
@@ -306,7 +316,7 @@ export default function About() {
           placeholder="Enter course Highlights"
           name="benefits"
           isError={!courseMetaData?.benefits?.length && error?.includes('benefits')}
-          // isDisabled={isFreezed}
+          isDisabled={isDisabled}
         />
       </div>
 
@@ -319,7 +329,7 @@ export default function About() {
             placeholder="Enter course Highlights"
             name="prequisites"
             isError={!courseMetaData?.prequisites?.length && error?.includes('prequisites')}
-            // isDisabled={isFreezed}
+            isDisabled={isDisabled}
           />
         </div>
         <div>
@@ -329,7 +339,7 @@ export default function About() {
             placeholder="Enter course Highlights"
             name="relatedSkills"
             isError={!courseMetaData?.relatedSkills?.length && error?.includes('relatedSkills')}
-            // isDisabled={isFreezed}
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -343,8 +353,7 @@ export default function About() {
             placeholder="Add good for and press enter"
             name="goodFor"
             isError={!courseMetaData?.goodFor?.length && error?.includes('goodFor')}
-            // isDisabled={isFreezed}
-            customstyle={`${styles.courseHighlightBullet}`}
+            isDisabled={isDisabled}
           />
         </div>
 
@@ -355,7 +364,7 @@ export default function About() {
             placeholder="Add must for and press enter"
             name="mustFor"
             isError={!courseMetaData?.mustFor?.length && error?.includes('mustFor')}
-            // isDisabled={isFreezed}
+            isDisabled={isDisabled}
           />
         </div>
       </div>
@@ -371,8 +380,7 @@ export default function About() {
                 // setExamTabData({ ...examTabData, instructions: e });
                 handleChange({ Curriculum: e?.target?.value });
               }}
-              // isReadOnly={isPreview}
-
+              isReadOnly={isDisabled}
               placeholder="Enter instructions in less than 300 characters."
               value={courseMetaData?.Curriculum}
             />

@@ -297,7 +297,10 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
             e.currentTarget.disabled = true;
             mutateData(UPDATE_COURSE_DATA, sendData)
-              .then(() => setCourseMetaData({ ...courseMetaData, qaRequired: true }))
+              .then(() => {
+                setCourseMetaData({ ...courseMetaData, qaRequired: true });
+                setCourseCurrentState({ ...courseCurrentState, isDisabled: true });
+              })
               .catch((err) => setToastMessage('Course Freeze Error!'))
               .finally(() => closePopUp());
           },
