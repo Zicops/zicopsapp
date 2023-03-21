@@ -30,7 +30,7 @@ export default function AddVendorCourses() {
       handleClick: (course) => router.push(`/admin/courses/${course?.id}`)
     },
     {
-      displayType: 'Send For Approval Courses',
+      displayType: 'Sent For Approval Courses',
       footerType: 'adminFooter',
       buttonText: 'View',
       data: forApprovalCourses,
