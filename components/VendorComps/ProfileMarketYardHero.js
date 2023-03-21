@@ -25,8 +25,6 @@ const ProfileMarketYardHero = ({ onHandlePopup }) => {
     router.push(`/admin/vendor/market-yard/vendor-details/${vendorId}`);
   };
 
-  console.info(vendorData);
-
   return (
     <div className={`${styles.marketHeroContainer}`}>
       <div className={`${styles.marketHeroDetails}`}>
