@@ -85,11 +85,20 @@ export default function useHandleCourseData() {
 
     // add list for details, about
     const courseDetailsList = ['subCategories', 'summary', 'previewVideo', 'image', 'tileImage'];
+    const courseAboutList = [
+      'description',
+      'outcomes',
+      'benefits',
+      'prequisites',
+      'relatedSkills',
+      'goodFor',
+      'mustFor'
+    ];
 
     const lists = {
       [courseTabs.courseMaster.name]: courseMasterList,
-      [courseTabs.about.name]: [],
-      [courseTabs.details.name]: courseDetailsList
+      [courseTabs.details.name]: courseDetailsList,
+      [courseTabs.about.name]: courseAboutList
     };
 
     tabsToValidate?.forEach((tab) => {

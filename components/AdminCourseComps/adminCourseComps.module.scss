@@ -257,29 +257,6 @@ $marginBetweenInputs: 1em;
   color: #484848;
 }
 
-.courseDiscription {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
-  }
-}
-
-.courseOutcome,
-.courseHighlights {
-  margin-top: $marginBetweenInputs;
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
-  }
-}
 .bulletPoint > input {
   width: 100%;
   padding: 10px;
