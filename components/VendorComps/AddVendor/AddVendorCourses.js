@@ -47,25 +47,26 @@ export default function AddVendorCourses() {
 
   return (
     <div className={styles.vendorCourseTab}>
-      {!savedCourses?.length && !forApprovalCourses?.length && !publishedCourses?.length && (
+      {!savedCourses?.length && !forApprovalCourses?.length && !publishedCourses?.length ? (
         <div className={styles.fallback}>No Courses Added</div>
+      ) : (
+        courseSections.map((section, index) => {
+          return (
+            <div key={index}>
+              <CardContainer
+                type={section?.displayType}
+                footerType={section?.footerType}
+                courseData={section?.data}
+                isRemove={section?.isRemove ? section?.isRemove : false}
+                handleSubmit={section?.handleClick ? section?.handleClick : () => {}}
+                buttonText={section?.buttonText ? section?.buttonText : ''}
+                isAdmin={true}
+                customStyles={{ fontSize: '15px' }}
+              />
+            </div>
+          );
+        })
       )}
-      {courseSections.map((section, index) => {
-        return (
-          <div key={index}>
-            <CardContainer
-              type={section?.displayType}
-              footerType={section?.footerType}
-              courseData={section?.data}
-              isRemove={section?.isRemove ? section?.isRemove : false}
-              handleSubmit={section?.handleClick ? section?.handleClick : () => {}}
-              buttonText={section?.buttonText ? section?.buttonText : ''}
-              isAdmin={true}
-              customStyles={{ fontSize: '15px' }}
-            />
-          </div>
-        );
-      })}
     </div>
   );
 }
