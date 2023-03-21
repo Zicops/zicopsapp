@@ -1,15 +1,13 @@
-import { CdServicesAtom, CtServicesAtom, SmeServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import ViewDoc from '../common/ViewDoc';
-import VendorPopUp from './common/VendorPopUp';
-import useHandleVendor from './Logic/useHandleVendor';
-import styles from './vendorComps.module.scss';
+import VendorPopUp from '../common/VendorPopUp';
+import useHandleVendor from '../Logic/useHandleVendor';
+import SampleFilePreview from './SampleFilePreview';
+import styles from '../vendorComps.module.scss';
 import {
   ContentFormatIcon,
   ExpertiseIcon,
   LanguagesIcon
-} from '/components/common/ZicopsIcons/index.js';
+} from '@/components/common/ZicopsIcons/index.js';
 
 export default function VendorServices({ data, type = 'sme' }) {
   const [sampleFiles, setSampleFiles] = useState([]);
@@ -99,57 +97,20 @@ export default function VendorServices({ data, type = 'sme' }) {
           </div>
         }
         isFooterVisible={false}>
-        <div className={`${styles.samplePopupContainer}`}>
-          <div className={`${styles.sampleFilePreview}`}>
-            {['PDF', 'PPT']?.includes(sampleFiles?.[samplePopup]?.fileType) && (
-              <ViewDoc url={sampleFiles?.[samplePopup]?.fileUrl} />
-            )}
-            {['Image']?.includes(sampleFiles?.[samplePopup]?.fileType) && (
-              <img src={sampleFiles?.[samplePopup]?.fileUrl} />
-            )}
-          </div>
-
-          <div className={`${styles.samplePopupFooter}`}>
-            <p>{sampleFiles?.[samplePopup]?.rate}</p>
-
-            <div className={`${styles.samplePopupButtons}`}>
-              <button
-                onClick={() => {
-                  let updatedIndex = +samplePopup - 1;
-                  if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
-                  setSamplePopup(+updatedIndex);
-                }}>
-                Prev
-              </button>
-              <button
-                onClick={() => {
-                  let updatedIndex = +samplePopup + 1;
-                  if (updatedIndex === sampleFiles.length) updatedIndex = 0;
-                  setSamplePopup(+updatedIndex);
-                }}>
-                Next
-              </button>
-            </div>
-          </div>
-
-          {sampleDetails && (
-            <div className={`${styles.sampleFileDetails}`}>
-              <h3>Details</h3>
-
-              <label>File Name</label>
-              <p>{sampleFiles?.[samplePopup]?.title}</p>
-
-              <label>File Description</label>
-              <p>{sampleFiles?.[samplePopup]?.description}</p>
-
-              <label>File Size</label>
-              <p>{sampleFiles?.[samplePopup]?.size}</p>
-
-              <label>Price</label>
-              <p> {sampleFiles?.[samplePopup]?.rate}</p>
-            </div>
-          )}
-        </div>
+        <SampleFilePreview
+          isDetailsOpen={sampleDetails}
+          sampleFile={sampleFiles?.[samplePopup]}
+          handleNextClick={() => {
+            let updatedIndex = +samplePopup + 1;
+            if (updatedIndex === sampleFiles.length) updatedIndex = 0;
+            setSamplePopup(+updatedIndex);
+          }}
+          handlePrevClick={() => {
+            let updatedIndex = +samplePopup - 1;
+            if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
+            setSamplePopup(+updatedIndex);
+          }}
+        />
       </VendorPopUp>
     </div>
   );
