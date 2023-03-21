@@ -31,6 +31,7 @@
   .expertisePill {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
   }
 
   .expertisePill p {
@@ -105,25 +106,40 @@
     display: flex;
     gap: 15px;
 
-    div {
-      border: 2px solid $primary;
+    .sampleFile {
+      border: 1px solid $secondary;
       background-color: $darkTwo;
-      width: 8em;
-      height: 8em;
-      padding: 10px;
+      width: 20em;
+      height: 7em;
+      padding: 15px;
 
       display: flex;
-      justify-content: center;
       align-items: center;
 
       overflow: hidden;
       text-overflow: ellipsis;
 
       cursor: pointer;
-    }
-    img {
-      width: 20%;
-      cursor: pointer;
+
+      .sampleFileImage {
+        width: 30%;
+        background-color: $secondary;
+        img {
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+
+      .sampleFileDetails {
+        display: flex;
+        flex-direction: column;
+        padding: 0 15px;
+        gap: 15px;
+
+        .sampleFileRate {
+          color: $bgBody;
+        }
+      }
     }
   }
 }
@@ -242,17 +258,6 @@
       width: 4%;
       margin-top: 5px;
     }
-  }
-}
-
-.courseVendorContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 30%);
-  gap: 15px;
-
-  img {
-    width: 100%;
   }
 }
 
@@ -771,6 +776,12 @@
       padding-top: 10px;
       font-size: 20px;
       font-weight: 600;
+      color: $white;
+    }
+    .company {
+      padding-top: 0px;
+      font-size: 18px;
+      font-weight: 400;
       color: $white;
     }
     .courseImage {
@@ -1395,6 +1406,7 @@
         background-repeat: no-repeat;
         background-position: 5% 50%;
         outline: none;
+        color: $white;
       }
 
       ::placeholder {
@@ -1499,6 +1511,57 @@
   }
 }
 
+.merketExprienceContainer {
+  background-color: $darkOne;
+  border-radius: 8px;
+  padding: 24px;
+  color: $white;
+  .experienceHeading {
+    padding-bottom: 10px;
+    font-size: 18px;
+  }
+  .experienceLine {
+    border: 1px solid #292f2f;
+  }
+  .experienceMain {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    .companyImage {
+      width: 80px;
+      height: 80px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .companyExperienceDetails {
+      .companyPosition {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .companyName {
+        font-size: 16px;
+      }
+      .companyExperiencDate {
+        font-size: 16px;
+        color: #acacac;
+        .dot {
+          height: 3px;
+          width: 3px;
+          margin: 4px;
+          background-color: $white;
+          border-radius: 50%;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
 .experienceContainer {
   color: $white;
   height: 300px;
@@ -1522,6 +1585,38 @@
           color: $bgBody;
         }
       }
+    }
+  }
+}
+
+.fallback {
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  text-align: center;
+  margin: 2em;
+
+  color: $white;
+}
+.vendorCourseTab {
+  padding: 2em;
+}
+
+.downloadBtn {
+  text-align: center;
+
+  button {
+    background-color: transparent;
+    color: $primary;
+    border: 2px solid $primary;
+    padding: 0.5em 1em;
+    margin: 1em;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary;
+      color: $black;
     }
   }
 }
