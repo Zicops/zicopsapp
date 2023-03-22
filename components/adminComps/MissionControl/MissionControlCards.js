@@ -1,14 +1,17 @@
+import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
 import ProductTour from '@/components/common/ProductTour';
 import ToolTip from '@/components/common/ToolTip';
 import { ADMIN_HOME } from '@/components/common/ToolTip/tooltip.helper';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
   return (
@@ -74,8 +77,23 @@ const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  const vendorDetails = useRecoilValue(VendorStateAtom);
+  const userDetails = useRecoilValue(UserStateAtom);
+  const [vendorDetails, setVendorDetails] = useRecoilState(VendorStateAtom);
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
+  useEffect(async () => {
+    if (vendorDetails?.vendorId) return;
+    const vendorDetail = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userDetails?.id },
+      {},
+      userQueryClient
+    );
+    if (!vendorDetail?.getUserVendor?.[0]?.vendorId) return;
+    setVendorDetails(vendorDetail?.getUserVendor[0]);
+  }, [userDetails?.id]);
+
+  console.info(vendorDetails);
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
