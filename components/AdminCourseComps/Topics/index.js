@@ -59,7 +59,10 @@ export default function Topics() {
                               type="small"
                               title={`Topic ${topic?.sequence} : ${topic.name}`}
                               editHandler={() =>
-                                setDisplayPopUp({ data: topic, type: popUpTypes.topic })
+                                setDisplayPopUp({
+                                  data: { mod, chap: chapter, top: topic },
+                                  type: popUpTypes.topic
+                                })
                               }
                             />
                           );
@@ -95,7 +98,9 @@ export default function Topics() {
                       key={topic.id}
                       type="small"
                       title={`Topic ${topic?.sequence} : ${topic.name}`}
-                      editHandler={() => setDisplayPopUp({ data: topic, type: popUpTypes.topic })}
+                      editHandler={() =>
+                        setDisplayPopUp({ data: { mod, top: topic }, type: popUpTypes.topic })
+                      }
                     />
                   );
                 })}
@@ -103,7 +108,7 @@ export default function Topics() {
                 <IconButton
                   text="Add Topic"
                   styleClasses={styles.addCourseContentBtn}
-                  handleClick={() => setDisplayPopUp({ data: null, type: popUpTypes.topic })}
+                  handleClick={() => setDisplayPopUp({ data: { mod }, type: popUpTypes.topic })}
                 />
               </>
             )}
@@ -141,8 +146,15 @@ export default function Topics() {
         />
       )}
 
-      {displayPopUp?.type === 'topic' && (
-        <TopicPopUp topic={displayPopUp?.data} popUpState={[displayPopUp, setDisplayPopUp]} />
+      {/* add edit topic */}
+      {displayPopUp?.type === popUpTypes.topic && (
+        <TopicPopUp
+          topData={displayPopUp?.data?.top}
+          chapData={displayPopUp?.data?.chap}
+          modData={displayPopUp?.data?.mod}
+          closePopUp={() => setDisplayPopUp({ data: null, type: null })}
+          popUpState={[displayPopUp?.type, setDisplayPopUp]}
+        />
       )}
     </>
   );

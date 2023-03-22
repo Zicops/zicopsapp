@@ -1,11 +1,99 @@
+import { ADD_COURSE_TOPIC, UPDATE_COURSE_TOPIC } from '@/api/Mutations';
+import { mutateData } from '@/helper/api.helper';
+import { sanitizeFormData } from '@/helper/common.helper';
+import { isWordSame } from '@/helper/utils.helper';
+import { AllCourseModulesDataAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { getTopicDataObj } from './adminCourseComps.helper';
 
-export default function useHandleTopic(topic) {
-  const [topicData, setTopicData] = useState(getTopicDataObj());
-  const [editTopic, setEditTopic] = useState(getTopicDataObj());
+export default function useHandleTopic(
+  modData = null,
+  chapData = null,
+  topData = null,
+  closePopUp = () => {}
+) {
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
 
-  if (topic?.id && topic?.id !== topicData?.id) setTopicData(getTopicDataObj(topic));
+  const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(null);
+  const [topicData, setTopicData] = useState(
+    getTopicDataObj({
+      courseId: courseMetaData?.id,
+      moduleId: modData?.id,
+      chapterId: chapData?.id,
+      sequence: modData?.topics?.length + 1
+    })
+  );
 
-  return { topicData, editTopic, setEditTopic };
+  useEffect(() => {
+    if (!topData?.id) return;
+
+    setTopicData(getTopicDataObj(topData));
+  }, [topData]);
+
+  function toggleEditTopicForm() {
+    // reset to original data if cancel
+    if (isEditTopicFormVisible) setTopicData(getTopicDataObj(topData));
+
+    setIsEditTopicFormVisible(!isEditTopicFormVisible);
+  }
+
+  async function addUpdateTopic(e) {
+    const isNameSame = !!modData?.topics?.find(
+      (top) => top?.id !== topicData?.id && isWordSame(top?.name, topicData?.name)
+    );
+    if (isNameSame) return setToastMessage('Topic with same name already exists in this module');
+
+    e.target.disabled = true;
+
+    const sendData = sanitizeFormData(topicData);
+    // add new module
+    if (!topicData?.id) {
+      mutateData(ADD_COURSE_TOPIC, sendData)
+        .then((res) => {
+          if (!res?.addCourseTopic) return setToastMessage('Topic Create Error');
+
+          const _allModules = structuredClone(allModules);
+          const index = _allModules?.findIndex((m) => m?.id === modData?.id);
+          if (index < 0) return;
+
+          _allModules?.[index]?.topics?.push(res?.addCourseTopic);
+          setAllModules(_allModules);
+        })
+        .catch(() => setToastMessage('Topic Create Error'))
+        .finally(() => closePopUp());
+      return;
+    }
+
+    // update module
+    mutateData(UPDATE_COURSE_TOPIC, sendData)
+      .then((res) => {
+        if (!res?.updateCourseTopic) return setToastMessage('Topic Update Error');
+
+        const _allModules = structuredClone(allModules);
+        const index = _allModules?.findIndex((m) => m?.id === modData?.id);
+        if (index < 0) return;
+
+        const updatedChap = res?.updateCourseTopic;
+        _allModules[index].topics = _allModules?.[index]?.topics?.map((chap) =>
+          chap?.id === updatedChap?.id ? updatedChap : chap
+        );
+        setAllModules(_allModules);
+      })
+      .catch(() => setToastMessage('Topic Update Error'))
+      .finally(() => setIsEditTopicFormVisible(!isEditTopicFormVisible));
+  }
+
+  return {
+    topicData,
+    setTopicData,
+    addUpdateTopic,
+    isEditTopicFormVisible,
+    toggleEditTopicForm
+  };
 }

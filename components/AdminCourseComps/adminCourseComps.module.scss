@@ -524,6 +524,40 @@ $marginBetweenInputs: 1em;
   }
 }
 
+.addTopicForm {
+  margin: 1.5em 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  .addTopicFormBtn {
+    padding: 0.7em 2em;
+    margin: 1em 1em 0;
+    font-size: 0.9rem;
+    border-color: $darkThree;
+    color: $darkThree;
+    background-color: $darkTwo;
+
+    &.addBtn {
+      border-color: $primary;
+      color: $primary;
+      box-shadow: 0px 0px 10px 0px $primary;
+    }
+
+    &:hover {
+      border-color: $white;
+      color: $white;
+    }
+
+    &:disabled {
+      border-color: $darkThree;
+      color: $darkThree;
+      box-shadow: none;
+      opacity: 0.5;
+    }
+  }
+}
+
 // extra
 .vcSetting {
   display: grid;
@@ -552,20 +586,6 @@ $marginBetweenInputs: 1em;
   &.active {
     border-color: $primary;
   }
-}
-
-.addTopicForm {
-  margin: 1.5em 4em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-}
-
-.addTopicFormBtns {
-  display: flex;
-  gap: 1em;
-
-  justify-content: center;
 }
 
 // course configuration

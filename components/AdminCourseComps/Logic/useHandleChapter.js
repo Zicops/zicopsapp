@@ -47,6 +47,7 @@ export default function useHandleChapter(modData = null, chapData = null, closeP
           const _allModules = structuredClone(allModules);
           const index = _allModules?.findIndex((m) => m?.id === modData?.id);
           if (index < 0) return;
+
           _allModules?.[index]?.chapters?.push(res?.addCourseChapter);
           setAllModules(_allModules);
         })
