@@ -1,4 +1,9 @@
-import { UserStateAtom } from '@/state/atoms/users.atom';
+import { userClient, USER_LOGIN } from '@/api/UserMutations';
+import { USER_STATUS } from '@/helper/constants.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -10,10 +15,10 @@ const UserDisplay = () => {
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   // const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const router = useRouter();
-
+  const [userLogin] = useMutation(USER_LOGIN, { client: userClient });
   const [fullName, setFullName] = useState('');
   const [lspName, setLspName] = useState('');
-  // const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   // const { getLoggedUserInfo } = useUserCourseData();
 
   useEffect(() => {
@@ -43,6 +48,45 @@ const UserDisplay = () => {
     //   return setLspName(lspName);
     // }
   }, [userProfileData]);
+
+  useEffect(() => {
+    if (userProfileData?.email) return;
+
+    if (!auth?.currentUser?.accessToken) return;
+    loginUser();
+
+    async function loginUser() {
+      for (let i = 0; i < 4; i++) {
+        let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          console.log(sessionStorage.getItem('tokenF'));
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) break;
+
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+
+        if (!!res?.data?.login?.is_verified) {
+          setUserProfileData(getUserObject(res?.data?.login));
+          sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+          break;
+        }
+      }
+    }
+  }, [userProfileData?.email]);
 
   // async function loadAndSetUserData() {
   //   const userData = await getLoggedUserInfo();

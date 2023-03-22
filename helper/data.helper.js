@@ -134,7 +134,7 @@ export function sortArrByKeyInOrder(array, key = 'sequence', isAsc = true) {
     ascVal = 1;
     desVal = -1;
   }
-  return localArr?.sort((a, b) => (a[key] > b[key] ? ascVal : desVal));
+  return localArr?.sort((a, b) => (a?.[key] > b?.[key] ? ascVal : desVal));
 }
 
 // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path

@@ -1,4 +1,6 @@
+import { truncateToN } from '@/helper/common.helper';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import {
   getExperiencesObject,
   VendorExperiencesAtom,
@@ -26,25 +28,25 @@ export default function useProfile() {
   const vendorId = router.query.vendorId || '0';
 
   const completeExperienceHandler = () => {
-    const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
-    const start_date = new Date(StartDate);
-    const start_timestamp = start_date.getTime() / 1000;
-    const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
-    const end_date = new Date(EndDate);
-    const end_timestamp = end_date.getTime() / 1000;
-    const experienceData = {
+    const _experienceData = {
+      ...experiencesData,
       vendor_id: vendorId || '',
-      title: experiencesData?.title || '',
       email: profileData?.email || '',
-      company_name: experiencesData?.companyName || '',
-      employement_type: experiencesData?.employeeType || '',
-      location: experiencesData?.location || '',
-      location_type: experiencesData?.locationType || '',
-      start_date: start_timestamp || null,
-      end_date: end_timestamp || null,
       status: VENDOR_MASTER_STATUS.active
     };
-    setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
+
+    setProfileData((prev) => {
+      const data = structuredClone(prev);
+      const editExpIndex = prev?.experienceData?.findIndex(
+        (e) => _experienceData?.expId === e?.expId
+      );
+
+      if (editExpIndex >= 0) data.experienceData[editExpIndex] = _experienceData;
+      if (editExpIndex === -1) data?.experienceData?.push(_experienceData);
+
+      return data;
+    });
+
     setIsOpenExpriences(false);
     setExperiencesData(getExperiencesObject());
   };
@@ -74,6 +76,13 @@ export default function useProfile() {
     setProfileData({ ...profileData, content_development: [...selectedCdExpertise] });
     setOpenCdExpertise(false);
   };
+
+  function getFileName() {
+    return truncateToN(
+      profileData?.profileImage?.name || getEncodedFileNameFromUrl(profileData?.photoUrl),
+      45
+    );
+  }
 
   return {
     completeExperienceHandler,
@@ -105,6 +114,7 @@ export default function useProfile() {
     selectedCdExpertise,
     setSelectedCdExpertise,
     selectedLanguages,
-    setSelectedLanguages
+    setSelectedLanguages,
+    getFileName
   };
 }

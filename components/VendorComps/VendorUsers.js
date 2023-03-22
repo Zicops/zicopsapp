@@ -9,7 +9,7 @@ import LabeledRadioCheckbox from '../common/FormComponents/LabeledRadioCheckbox'
 
 const VendorUsers = () => {
   const { vendorAdminUsers, loading, getVendorAdmins } = useHandleVendor();
-  console.info('vendorData', vendorAdminUsers);
+
   useEffect(() => {
     getVendorAdmins();
   }, []);
@@ -91,7 +91,7 @@ const VendorUsers = () => {
     <>
       <ZicopsTable
         columns={columns}
-        tableHeight="70vh"
+        tableHeight="54vh"
         pageSize={getPageSizeBasedOnScreen()}
         rowsPerPageOptions={[3]}
         loading={loading}

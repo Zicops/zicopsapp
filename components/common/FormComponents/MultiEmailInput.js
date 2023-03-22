@@ -3,7 +3,12 @@ import { useState } from 'react';
 import Select from 'react-select';
 import { customSelectStyles } from '../../common/FormComponents/Logic/formComponents.helper';
 
-export default function MultiEmailInput({ type = 'Internal', items = [], setItems }) {
+export default function MultiEmailInput({
+  type = 'Internal',
+  items = [],
+  setItems,
+  isDisabled = false
+}) {
   const [error, setError] = useState(null);
   const [value, setValue] = useState('');
 
@@ -56,13 +61,22 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
     return items.includes(email);
   }
 
-  const defaultStyles = customSelectStyles();
+  const defaultStyles = customSelectStyles(false, '100%', false, false, {
+    controlStyles: {
+      '&:hover': isDisabled
+        ? {
+            cursor: 'no-drop'
+          }
+        : {}
+    }
+  });
   const customStyles = {
     ...defaultStyles,
     container: () => ({
       ...defaultStyles.container,
       margin: '10px auto'
     }),
+
     multiValue: (styles, { data }) => ({
       ...defaultStyles.multiValue,
       display: 'flex',
@@ -103,24 +117,39 @@ export default function MultiEmailInput({ type = 'Internal', items = [], setItem
     })
   };
 
+  const val = items?.map((e) => {
+    if (typeof e !== 'string') return { label: e, value: e };
+
+    return {
+      label: (
+        <p>
+          {e} <span>{type}</span>
+        </p>
+      ),
+      value: e
+    };
+  });
   return (
     <>
-      <Select
-        options={items?.map((e) => ({ label: e, value: e }))}
-        value={items?.map((e) => ({ label: e, value: e }))}
-        name="email"
-        placeholder="Enter email and enter"
-        className="w-100"
-        styles={customStyles}
-        isMulti={true}
-        isClearable={false}
-        backspaceRemovesValue
-        onInputChange={handleChange}
-        onKeyDown={handleKeyDown}
-        onChange={(removedEmailList) => setItems(removedEmailList.map((email) => email.value))}
-        components={{ DropdownIndicator: () => null }}
-        noOptionsMessage={() => null}
-      />
+      <div style={{ position: 'relative' }}>
+        <Select
+          options={val}
+          value={val}
+          name="email"
+          placeholder="Enter email and enter"
+          className="w-100"
+          styles={customStyles}
+          isMulti={true}
+          isClearable={false}
+          isDisabled={isDisabled}
+          backspaceRemovesValue
+          onInputChange={handleChange}
+          onKeyDown={handleKeyDown}
+          onChange={(removedEmailList) => setItems(removedEmailList.map((email) => email.value))}
+          components={{ DropdownIndicator: () => null }}
+          noOptionsMessage={() => null}
+        />
+      </div>
     </>
   );
 }

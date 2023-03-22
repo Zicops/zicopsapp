@@ -3,20 +3,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import {
-  VENDOR_FILE_FORMATS,
-  VENDOR_LANGUAGES,
-  VENDOR_MASTER_STATUS
-} from '@/helper/constants.helper';
-import { useState, useEffect } from 'react';
-import AddVendorProfile from '../../AddVendorProfile';
-import ProfileManageVendor from '../../ProfileMangeVendor';
-import styles from '../../vendorComps.module.scss';
-import VendorPopUp from '../../common/VendorPopUp';
-import AddExpertise from './AddExpertise';
-import useHandleVendor from '../../Logic/useHandleVendor';
-import AddSample from '../../AddSample';
-import FileManageVendor from '../../FileManageVendor';
+import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
 import {
   allProfileAtom,
   CdServicesAtom,
@@ -27,7 +14,17 @@ import {
   SmeServicesAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import AddSample from '../../AddSample';
+import AddVendorProfile from '../../AddVendorProfile';
+import VendorPopUp from '../../common/VendorPopUp';
+import FileManageVendor from '../../FileManageVendor';
+import useHandleVendor from '../../Logic/useHandleVendor';
+import ProfileManageVendor from '../../ProfileMangeVendor';
+import styles from '../../vendorComps.module.scss';
+import AddExpertise from './AddExpertise';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -47,6 +44,12 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [newOPFormat, setNewOPFormat] = useState('');
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
+
+  const [displayFormats, setDisplayFormats] = useState([...VENDOR_FILE_FORMATS, ...data?.formats]);
 
   const {
     addUpdateProfile,
@@ -98,6 +101,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     }
   };
 
+  const handleRemoveLanguage = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+  };
+
+  const handleRemoveExpertise = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, expertises: [...data?.expertises?.filter((lang) => lang !== value)] });
+  };
+
+  const handleRemoveFormats = (e) => {
+    const { value, checked } = e.target;
+    setData({ ...data, formats: [...data?.formats?.filter((lang) => lang !== value)] });
+  };
   const addLanguagesHandler = () => {
     setData({ ...data, languages: [...selectedLanguages] });
     setLanguagePopupState(false);
@@ -134,6 +151,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             type="checkbox"
             name={inputName}
             isChecked={data[`${inputName}`]}
+            isDisabled={isViewPage}
             changeHandler={(e) => changeHandler(e, data, setData)}
           />
         </div>
@@ -144,7 +162,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               inputOptions={{
                 inputName: 'serviceDescription',
                 placeholder: 'Describe your service in 160 characters',
-                value: data.serviceDescription
+                maxLength: 160,
+                value: data.serviceDescription,
+                isDisabled: isViewPage || !data?.isApplicable
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
@@ -157,7 +177,10 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text={experticeName}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setExpertisePopupState(true)}
+                handleClick={() => {
+                  setExpertisePopupState(true);
+                }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -168,7 +191,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={expert}
                         value={expert}
-                        isChecked={true}
+                        isChecked={data?.expertises?.includes(expert)}
+                        changeHandler={handleRemoveExpertise}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -177,7 +202,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setExpertisePopupState(true)}
+                  handleClick={() => {
+                    setExpertisePopupState(true);
+                    setSelectedExpertise([...data?.expertises]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -192,6 +221,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setLanguagePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -202,7 +232,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={lang}
                         value={lang}
-                        isChecked={true}
+                        isChecked={data?.languages?.includes(lang)}
+                        changeHandler={handleRemoveLanguage}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -211,7 +243,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setLanguagePopupState(true)}
+                  handleClick={() => {
+                    setLanguagePopupState(true);
+                    setSelectedLanguages([...data?.languages]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -224,6 +260,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setOPDeliverablePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -234,7 +271,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         type="checkbox"
                         label={format}
                         value={format}
-                        isChecked={true}
+                        isChecked={data?.formats?.includes(format)}
+                        changeHandler={handleRemoveFormats}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -243,7 +282,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setOPDeliverablePopupState(true)}
+                  handleClick={() => {
+                    setOPDeliverablePopupState(true);
+                    setSelectedFormats([...data?.formats]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -261,6 +304,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   setSamplePopupState(true);
                   getSampleFiles();
                 }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
@@ -280,40 +324,38 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
+                  isDisabled={isViewPage || !data?.isApplicable || fileData[0]?.length >= 5}
                 />
               </>
             )}
           </div>
+
           <div className={`${styles.addProfiles}`}>
             <label for="profiles">Add profiles: </label>
-            {!profileDetails?.length ? (
-              <IconButton
-                text="Add profiles"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => {
-                  setProfileData(getProfileObject());
-                  setIsOpenProfile(true);
-                }}
-              />
-            ) : (
-              <>
-                <div className={`${styles.showFilesMain}`}>
-                  {profileDetails?.map((data) => (
-                    <div className={`${styles.showFiles}`}>
-                      <img src="/images/svg/account_circle.svg" alt="" />
-                      {data?.first_name + '&' + data?.email}
-                    </div>
-                  ))}
-                </div>
-                <IconButton
-                  text="Add more"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setIsOpenProfile(true)}
-                />
-              </>
-            )}
+            <div className={`${styles.showFilesMain}`}>
+              {profileDetails?.map((data) => {
+                if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                if (pType === 'cd' && !data?.content_development?.length) return null;
+
+                return (
+                  <div className={`${styles.showFiles}`}>
+                    <img src="/images/svg/account_circle.svg" alt="" />
+                    {data?.first_name + '(' + data?.email + ')'}
+                  </div>
+                );
+              })}
+            </div>
+            <IconButton
+              text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || !data?.isApplicable}
+              handleClick={() => {
+                if (!profileDetails?.length) setProfileData(getProfileObject());
+                setIsOpenProfile(true);
+              }}
+            />
           </div>
         </div>
       </div>
@@ -378,10 +420,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[opdeliverablePopupState, setOPDeliverablePopupState]}
         size="medium"
         title="Add O/P deliverable formats"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
+        closeBtn={{
+          name: 'Cancel',
+          handleClick: () => {
+            setNewOPFormat('');
+            setOPDeliverablePopupState(false);
+          }
+        }}
+        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}
+        onCloseWithCross={() => {
+          setNewOPFormat('');
+          setOPDeliverablePopupState(false);
+        }}>
         <h4>Select Format</h4>
-        {VENDOR_FILE_FORMATS.map((data, index) => {
+        {displayFormats.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
               <LabeledRadioCheckbox
@@ -399,15 +451,23 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <LabeledInput
           inputOptions={{
             inputName: 'fileFormat',
-            placeholder: 'Enter O/P deliverable format name'
+            placeholder: 'Enter O/P deliverable format name',
+            value: newOPFormat
           }}
           styleClass={`${styles.opdInput}`}
+          changeHandler={(e) => setNewOPFormat(e.target.value)}
         />
         <IconButton
           text="Create"
           imgUrl="/images/edit.png"
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
+          handleClick={() => {
+            if (!newOPFormat?.trim()?.length) return;
+            setDisplayFormats([...displayFormats, newOPFormat]);
+            setSelectedFormats([...selectedFormats, newOPFormat]);
+            setNewOPFormat();
+          }}
         />
       </VendorPopUp>
       <VendorPopUp

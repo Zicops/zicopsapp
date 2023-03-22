@@ -97,3 +97,9 @@ export const SEND_EMAIL = gql`
     )
   }
 `;
+
+export const ADD_USER_TAGS = gql`
+mutation addUserTags($ids:[UserDetails] ,$tags: [String]){
+  addUserTags(ids: $ids, tags: $tags)
+}
+`
