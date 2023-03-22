@@ -71,7 +71,7 @@ export default function Topics() {
                           text="Add Topic"
                           styleClasses={styles.addCourseContentBtn}
                           handleClick={() =>
-                            setDisplayPopUp({ data: null, type: popUpTypes.topic })
+                            setDisplayPopUp({ data: { mod }, type: popUpTypes.topic })
                           }
                         />
                       </BoxContainer>
