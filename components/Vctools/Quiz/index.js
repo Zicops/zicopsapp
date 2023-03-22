@@ -2,7 +2,37 @@ import styles from "../vctoolMain.module.scss"
 import QuizQuestion from "../QuizQuestion";
 import CreateQuiz from "./CreateQuiz";
 import QuizQA from "./QuizQA";
-const QuizPage = ({ showHide=false }) => {
+import { useState } from "react";
+import ShowQuiz from "./ShowQuiz";
+const QuizPage = ({ showHide = false }) => {
+    const [objTitle, setObjTitle] = useState('')
+    function showQuiz(title) {
+        if (title === '') return quizComponent[0].component;
+        const obj = quizComponent.find(obTitle => obTitle.title === title);
+        return obj?.component;
+    }
+    const quizComponent = [{
+        title: "CreateQuiz",
+        component: (<CreateQuiz addQuiz={() => {
+            setObjTitle('QuizQA')
+        }} />)
+    },
+    {
+        title: "QuizQA",
+        component: (<QuizQA cancelRoom={() => {
+            setObjTitle("CreateQuiz")
+        }} showQuiz={()=>
+        {
+            setObjTitle("showQuiz")
+        }} />)
+    },
+    {
+        title: "showQuiz",
+        component: (<ShowQuiz addQuiz={() => {
+            setObjTitle("QuizQA")
+        }} />)
+    }
+    ]
     return (
         <div className={`${styles.quiz}`}>
             <div className={`${styles.quizHead}`}>
@@ -15,18 +45,9 @@ const QuizPage = ({ showHide=false }) => {
             </div>
 
             <div className={`${styles.quizScreen}`}>
-                {/* <div className={`${styles.quizeAttemtpsHead}`}>Un-attempted</div>
-                <div className={`${styles.quizUnattempted}`}>
-                    <QuizQuestion />
-                    <QuizQuestion />
-                    <QuizQuestion />
-                </div>
-                <div className={`${styles.quizeAttemtpsHead}`}>Attempted</div>
-                <div className={`${styles.quizAttempted}`}>
-                    <QuizQuestion />
-                </div> */}
-                {/* <CreateQuiz/> */}
-                <QuizQA/>
+                {
+                    showQuiz(objTitle)
+                }
             </div>
         </div>
     )

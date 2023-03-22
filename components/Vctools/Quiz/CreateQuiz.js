@@ -1,5 +1,5 @@
 import styles from "../vctoolMain.module.scss"
-const CreateQuiz = () => {
+const CreateQuiz = ({addQuiz}) => {
     return (
         <div className={`${styles.moderatorQuize}`}>
 
@@ -11,7 +11,7 @@ const CreateQuiz = () => {
                 </div>
             </div>
             <button className={`${styles.addQuizBtn}`} onClick={() => {
-                
+                addQuiz()
             }}><div>+</div>Add Quiz</button>
         </div>
     )

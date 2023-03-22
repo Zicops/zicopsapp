@@ -1,7 +1,7 @@
 import { height } from "@mui/system";
 import { useState } from "react"
 import styles from "../vctoolMain.module.scss"
-const QuizQuestion = () => {
+const QuizQuestion = ({ QuizQuestion, }) => {
     const [expand, setexpand] = useState(true)
     return (
         <div className={`${styles.quizQuestion}`}>
@@ -26,7 +26,21 @@ const QuizQuestion = () => {
 
             <div>
                 {
-                    !expand ? <div className={`${styles.questionScreen}`} ></div> : ""
+                    !expand ? <div className={`${styles.pollQuestionScreen}`} >
+                        <div className={`${styles.pollSavedLabel}`}>Saved</div>
+                        <div className={`${styles.pollQuestions}`}>{QuizQuestion}</div>
+                        <div className={`${styles.pollBoxOptions}`}>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div className={`${styles.pollBoxBtns}`}>
+                            <button className={`${styles.pollBoxDeleteBnt}`}>Delete</button>
+                            <button className={`${styles.pollBoxEditBnt}`}>Edit</button>
+                        </div>
+                        {/* <button className={`${styles.publishPoll}`}>Publish</button> */}
+                    </div> : ""
                 }
             </div>
         </div>
