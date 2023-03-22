@@ -31,6 +31,7 @@
   .expertisePill {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
   }
 
   .expertisePill p {
@@ -104,9 +105,41 @@
     width: 100%;
     display: flex;
     gap: 15px;
-    img {
-      width: 20%;
+
+    .sampleFile {
+      border: 1px solid $secondary;
+      background-color: $darkTwo;
+      width: 20em;
+      height: 7em;
+      padding: 15px;
+
+      display: flex;
+      align-items: center;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       cursor: pointer;
+
+      .sampleFileImage {
+        width: 30%;
+        background-color: $secondary;
+        img {
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+
+      .sampleFileDetails {
+        display: flex;
+        flex-direction: column;
+        padding: 0 15px;
+        gap: 15px;
+
+        .sampleFileRate {
+          color: $bgBody;
+        }
+      }
     }
   }
 }
@@ -118,6 +151,7 @@
   position: relative;
 
   .sampleFilePreview {
+    min-height: 40vh;
     object-fit: contain;
     height: 100%;
     width: 100%;
@@ -185,18 +219,16 @@
 
 .vendorDetailsContainer {
   width: 100%;
-  height: 400px;
-  display: flex;
-  justify-content: space-between;
+  // height: 550px;
   margin-top: 20px;
   box-shadow: 0 0 20px 0 rgba($darkOne, 0.5);
   color: $white;
 
   .details {
-    width: 49%;
+    width: 100%;
     height: 100%;
     background-color: $darkOne;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 2px solid $accent;
     font-weight: 400;
     padding-left: 25px;
@@ -204,35 +236,28 @@
   }
 
   .detailsData {
-    padding-top: 30px;
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 15px;
 
     span {
       color: $bgBody;
     }
   }
+  .marketyardSocialMediaIcons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    margin-bottom: 4%;
 
-  .socialMedia {
-    width: 49%;
-    height: 100%;
-    background-color: $darkOne;
-    border-radius: 8px;
-    border: 2px solid $accent;
-    padding-left: 25px;
-    padding-top: 30px;
-  }
-}
-
-.courseVendorContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 30%);
-  gap: 15px;
-
-  img {
-    width: 100%;
+    img {
+      // border: 1px solid #747474;
+      // border-radius: 5px;
+      cursor: pointer;
+      width: 4%;
+      margin-top: 5px;
+    }
   }
 }
 
@@ -259,10 +284,10 @@
 
 .vendorIndividualProfilesContainer {
   width: 100%;
-  height: 198px;
   border: 1px solid $secondaryWhite;
   border-radius: 5px;
   margin-top: 15px;
+  padding: 10px;
   display: flex;
   // justify-content: space-evenly;
   align-items: center;
@@ -600,7 +625,7 @@
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 8px;
- 
+
         .singleLanguage {
           background: $bgTile;
           padding: 12px 16px;
@@ -635,18 +660,18 @@
         cursor: pointer;
       }
     }
-        .languages {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-    
-          .singleLanguage {
-            background: $bgTile;
-            padding: 12px 16px;
-            border-radius: 4px;
-          }
-        }
+    .languages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+
+      .singleLanguage {
+        background: $bgTile;
+        padding: 12px 16px;
+        border-radius: 4px;
+      }
+    }
 
     .addOPFormat {
       width: 50%;
@@ -696,13 +721,12 @@
         cursor: pointer;
       }
     }
-    .showFilesMain{
+    .showFilesMain {
       display: flex;
       flex-direction: column;
       gap: 5px;
-      
 
-      .showFiles{
+      .showFiles {
         display: flex;
         gap: 10px;
         width: fit-content;
@@ -710,7 +734,7 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img{
+        img {
           width: 30px;
           height: 30px;
         }
@@ -752,6 +776,12 @@
       padding-top: 10px;
       font-size: 20px;
       font-weight: 600;
+      color: $white;
+    }
+    .company {
+      padding-top: 0px;
+      font-size: 18px;
+      font-weight: 400;
       color: $white;
     }
     .courseImage {
@@ -1001,31 +1031,30 @@
       margin-top: 8px;
       cursor: pointer;
     }
-        .exButton {
-          background-color: $bgTile !important;
-          width: max-content;
-          flex-direction: row;
-          span{
-            display: flex;
-            align-items: center;
-            img{
-              width: 24px;
-              height: 24px;
-            }
-
-          }
-        }
-  }
-  .languages{
+    .exButton {
+      background-color: $bgTile !important;
+      width: max-content;
+      flex-direction: row;
+      span {
         display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-          .singleLanguage{
-                background: $bgTile;
-                  padding: 12px 16px;
-                  border-radius: 4px;
-          }
+        align-items: center;
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+    .singleLanguage {
+      background: $bgTile;
+      padding: 12px 16px;
+      border-radius: 4px;
+    }
   }
 }
 
@@ -1111,7 +1140,8 @@
 .dropDownMain {
   margin-top: 8px;
 }
-.singleProfileContainer , .singleFileContainer{
+.singleProfileContainer,
+.singleFileContainer {
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
@@ -1156,37 +1186,38 @@
   .editIcon {
     cursor: pointer;
   }
-  .singleFileDetails{
+  .singleFileDetails {
     display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 70%;
-      color: $white;
-      .fileName{
-        font-size: 20px;
-      }
-      .filePrice{
-        display: flex;
-          width: 100%;
-          font-size: 18px;
-          justify-content: space-between;
-          align-items: center;
-          color: $bgBody;
-      }
-  }
-    .deleteIcon {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-     width: 20px;
-    height: 20px;
-      img {
-       width: 100%;
-       height: 100%;
-      }
+    flex-direction: column;
+    justify-content: space-between;
+    width: 70%;
+    color: $white;
+    .fileName {
+      font-size: 20px;
     }
+    .filePrice {
+      display: flex;
+      width: 100%;
+      font-size: 18px;
+      justify-content: space-between;
+      align-items: center;
+      color: $bgBody;
+    }
+  }
+  .deleteIcon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
-.manageVendorProfileMain , .vendorFileMain {
+.manageVendorProfileMain,
+.vendorFileMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -1375,6 +1406,7 @@
         background-repeat: no-repeat;
         background-position: 5% 50%;
         outline: none;
+        color: $white;
       }
 
       ::placeholder {
@@ -1475,6 +1507,116 @@
       color: $bgBody;
       font-size: 90%;
       margin-top: 10px;
+    }
+  }
+}
+
+.merketExprienceContainer {
+  background-color: $darkOne;
+  border-radius: 8px;
+  padding: 24px;
+  color: $white;
+  .experienceHeading {
+    padding-bottom: 10px;
+    font-size: 18px;
+  }
+  .experienceLine {
+    border: 1px solid #292f2f;
+  }
+  .experienceMain {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    .companyImage {
+      width: 80px;
+      height: 80px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .companyExperienceDetails {
+      .companyPosition {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .companyName {
+        font-size: 16px;
+      }
+      .companyExperiencDate {
+        font-size: 16px;
+        color: #acacac;
+        .dot {
+          height: 3px;
+          width: 3px;
+          margin: 4px;
+          background-color: $white;
+          border-radius: 50%;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.experienceContainer {
+  color: $white;
+  height: 300px;
+  background-color: $darkTwo;
+
+  .individualExperience {
+    .individualExperienceContainer {
+      display: flex;
+      align-items: center;
+
+      .companyLogo {
+        width: 15%;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .details {
+        .dates {
+          color: $bgBody;
+        }
+      }
+    }
+  }
+}
+
+.fallback {
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  text-align: center;
+  margin: 2em;
+
+  color: $white;
+}
+.vendorCourseTab {
+  padding: 2em;
+}
+
+.downloadBtn {
+  text-align: center;
+
+  button {
+    background-color: transparent;
+    color: $primary;
+    border: 2px solid $primary;
+    padding: 0.5em 1em;
+    margin: 1em;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary;
+      color: $black;
     }
   }
 }

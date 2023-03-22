@@ -356,7 +356,9 @@ export default function HomepageScreen() {
       {},
       userQueryClient
     );
-    courseFilters.Owner = vendorDetail?.getUserVendor?.[1]?.name;
+    if (!vendorDetail?.getUserVendor?.[0]?.name) return;
+
+    courseFilters.Owner = vendorDetail?.getUserVendor?.[0]?.name;
     // courseFiltes.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
 
     const getLatestCourses = await getLatestCoursesByFilters(courseFilters, pageSize);

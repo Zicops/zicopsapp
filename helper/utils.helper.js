@@ -15,8 +15,8 @@ export const months = [
   'December'
 ];
 
-export const years = Array.from(Array(new Date().getFullYear() - 1979), (_, i) =>
-  (i + 1980).toString()
+export const years = Array.from(Array(new Date().getFullYear() - 1969), (_, i) =>
+  (i + 1970).toString()
 );
 
 export function displayUnixDate(unixTime) {
@@ -238,6 +238,12 @@ export function getFileNameFromUrl(fileUrl) {
   if (!fileUrl) return '';
 
   return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
+}
+
+export function getEncodedFileNameFromUrl(fileUrl) {
+  if (!fileUrl) return '';
+
+  return Buffer.from(decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop()), 'base64').toString();
 }
 
 // https://stackoverflow.com/a/23013574

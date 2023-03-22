@@ -1,21 +1,35 @@
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import styles from './vendorComps.module.scss';
-import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import IconButton from '@/components/common/IconButton';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddExpriences from './AddExpriences';
-import { VENDOR_LANGUAGES, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import VendorPopUp from './common/VendorPopUp';
+import { VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import {
+  getExperiencesObject,
+  VendorExperiencesAtom,
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom
+} from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import AddExpriences from './AddExpriences';
 import AddExpertise from './AddVendor/common/AddExpertise';
+import VendorPopUp from './common/VendorPopUp';
 import useHandleVendor from './Logic/useHandleVendor';
-import { optionYearArray } from './Logic/vendorComps.helper';
 import useProfile from './Logic/useProfile';
+import { optionYearArray } from './Logic/vendorComps.helper';
+import styles from './vendorComps.module.scss';
 
 const AddVendorProfile = ({ data = {} }) => {
-  const { handleProfilePhoto, getSingleExperience } = useHandleVendor();
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const smeServices = useRecoilValue(SmeServicesAtom);
+  const crtServices = useRecoilValue(CtServicesAtom);
+  const cdServices = useRecoilValue(CdServicesAtom);
+
+  const { handleProfilePhoto, getSingleExperience, getProfileExperience } = useHandleVendor();
   const {
     completeExperienceHandler,
     handleLanguageSelection,
@@ -43,8 +57,13 @@ const AddVendorProfile = ({ data = {} }) => {
     setSelectedCrtExpertise,
     selectedCdExpertise,
     setSelectedCdExpertise,
-    selectedLanguages
+    selectedLanguages,
+    setSelectedLanguages,
+    getFileName
   } = useProfile();
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
 
   return (
     <div className={`${styles.inputMain}`}>
@@ -55,7 +74,9 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'firstName',
               placeholder: 'Enter First Name',
-              value: profileData.firstName
+              maxLength: 60,
+              value: profileData.firstName,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -66,7 +87,9 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'lastName',
               placeholder: 'Enter Last Name',
-              value: profileData.lastName
+              maxLength: 60,
+              value: profileData.lastName,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -78,7 +101,8 @@ const AddVendorProfile = ({ data = {} }) => {
               inputName: 'email',
               placeholder: 'Enter email address',
               type: 'email',
-              value: profileData.email
+              value: profileData.email,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -89,7 +113,10 @@ const AddVendorProfile = ({ data = {} }) => {
             inputOptions={{
               inputName: 'contactNumber',
               placeholder: 'Enter contact number',
-              value: profileData.contactNumber
+              maxLength: 12,
+              isNumericOnly: true,
+              value: profileData.contactNumber,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -103,7 +130,8 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Describe your service on 160 characters',
               rows: 5,
               maxLength: 160,
-              value: profileData.description
+              value: profileData.description,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
           />
@@ -113,16 +141,17 @@ const AddVendorProfile = ({ data = {} }) => {
           <BrowseAndUpload
             styleClass={`${styles.uploadImage}`}
             styleClassBtn={`${styles.uploadButton}`}
-            title="Drag and drop"
+            title={getFileName() || 'Drag & Drop'}
             handleFileUpload={handleProfilePhoto}
             handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
             previewData={{
-              fileName: profileData?.profileImage?.name,
-              filePath: profileData?.profileImage
+              fileName: getFileName(),
+              filePath: profileData?.profileImage || profileData?.photoUrl
             }}
             inputName="profileImage"
-            // hideRemoveBtn={true}
-            isActive={profileData?.profileImage}
+            filePreview={profileData?.profileImage || profileData?.photoUrl}
+            isActive={profileData?.profileImage || profileData?.photoUrl}
+            isDisabled={isViewPage}
           />
         </div>
         <div className={`${styles.input1}`}>
@@ -135,7 +164,8 @@ const AddVendorProfile = ({ data = {} }) => {
                 label: profileData.experienceYear,
                 value: profileData.experienceYear
               },
-              options: optionYearArray
+              options: optionYearArray,
+              isDisabled: isViewPage
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData, 'experienceYear')}
             styleClass={styles.dropDownMain}
@@ -143,34 +173,37 @@ const AddVendorProfile = ({ data = {} }) => {
         </div>
         <div className={`${styles.addExpertise}`}>
           <label for="serviceDescription">Experience: </label>
-          {!profileData?.experience?.length ? (
+          {!profileData?.experienceData?.length ? (
             <IconButton
               text="Add experiences"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
               handleClick={() => setIsOpenExpriences(true)}
+              isDisabled={isViewPage}
             />
           ) : (
             <>
-              {profileExperience?.map((exp) => (
+              {profileData?.experienceData?.map((exp) => (
                 <IconButton
-                  text={
-                    typeof exp === 'string' ? exp : exp?.title + ' ' + '@' + ' ' + exp?.company_name
-                  }
+                  text={`${exp?.title} @ ${exp?.companyName}`}
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    getProfileExperience(profileData.profileId);
-                    getSingleExperience(exp.PfId, exp.ExpId);
+                    setExperiencesData(getExperiencesObject(exp));
                   }}
+                  isDisabled={isViewPage}
                 />
               ))}
               <IconButton
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setIsOpenExpriences(true)}
+                handleClick={() => {
+                  setExperiencesData(getExperiencesObject(null));
+                  setIsOpenExpriences(true);
+                }}
+                isDisabled={isViewPage}
               />
             </>
           )}
@@ -184,6 +217,7 @@ const AddVendorProfile = ({ data = {} }) => {
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
               handleClick={() => setIsOpenLanguage(true)}
+              isDisabled={isViewPage}
             />
           ) : (
             <>
@@ -203,121 +237,152 @@ const AddVendorProfile = ({ data = {} }) => {
                 text="Add more"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setIsOpenLanguage(true)}
+                isDisabled={isViewPage}
+                handleClick={() => {
+                  setIsOpenLanguage(true);
+                  setSelectedLanguages([...profileData?.languages]);
+                }}
               />
             </>
           )}
         </div>
-        <div className={`${styles.addExpertise}`}>
-          <label for="serviceDescription">Subject matter expertise:</label>
-          {!profileData?.sme_expertises?.length ? (
-            <IconButton
-              text="Add subject matter expertise"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setOpenSmeExpertise(true)}
-            />
-          ) : (
-            <>
-              <div className={`${styles.languages}`}>
-                {profileData?.sme_expertises?.map((data, index) => (
-                  <div className={`${styles.singleLanguage}`} key={index}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={data}
-                      value={data}
-                      isChecked={true}
-                    />
-                  </div>
-                ))}
-              </div>
+        {!!smeServices.isApplicable && (
+          <div className={`${styles.addExpertise}`}>
+            <label for="serviceDescription">Subject matter expertise:</label>
+            {!profileData?.sme_expertises?.length ? (
               <IconButton
-                text="Add more"
+                text="Add subject matter expertise"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setOpenSmeExpertise(true)}
+                isDisabled={isViewPage}
+                handleClick={() => {
+                  setOpenSmeExpertise(true);
+                }}
               />
-            </>
-          )}
-        </div>
-        <div className={`${styles.addExpertise}`}>
-          <label for="serviceDescription">Classroom Training Expertise:</label>
-          {!profileData?.crt_expertises?.length ? (
-            <IconButton
-              text="Add classroom training expertise"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setOpenCrtExpertise(true)}
-            />
-          ) : (
-            <>
-              <div className={`${styles.languages}`}>
-                {profileData?.crt_expertises?.map((data, index) => (
-                  <div className={`${styles.singleLanguage}`} key={index}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={data}
-                      value={data}
-                      isChecked={true}
-                    />
-                  </div>
-                ))}
-              </div>
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {profileData?.sme_expertises?.map((data, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={data}
+                        value={data}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  isDisabled={isViewPage}
+                  handleClick={() => {
+                    setOpenSmeExpertise(true);
+                    setSelectedSmeExpertise([...profileData?.sme_expertises]);
+                  }}
+                />
+              </>
+            )}
+          </div>
+        )}
+
+        {!!crtServices.isApplicable && (
+          <div className={`${styles.addExpertise}`}>
+            <label for="serviceDescription">Classroom Training Expertise:</label>
+            {!profileData?.crt_expertises?.length ? (
               <IconButton
-                text="Add more"
+                text="Add classroom training expertise"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setOpenCrtExpertise(true)}
               />
-            </>
-          )}
-        </div>
-        <div className={`${styles.addExpertise}`}>
-          <label for="serviceDescription">Content Development Expertise:</label>
-          {!profileData?.content_development?.length ? (
-            <IconButton
-              text="Add content development expertise"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setOpenCdExpertise(true)}
-            />
-          ) : (
-            <>
-              <div className={`${styles.languages}`}>
-                {profileData?.content_development?.map((data, index) => (
-                  <div className={`${styles.singleLanguage}`} key={index}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={data}
-                      value={data}
-                      isChecked={true}
-                    />
-                  </div>
-                ))}
-              </div>
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {profileData?.crt_expertises?.map((data, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={data}
+                        value={data}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  isDisabled={isViewPage}
+                  handleClick={() => {
+                    setOpenCrtExpertise(true);
+                    setSelectedCrtExpertise([...profileData?.crt_expertises]);
+                  }}
+                />
+              </>
+            )}
+          </div>
+        )}
+
+        {!!cdServices.isApplicable && (
+          <div className={`${styles.addExpertise}`}>
+            <label for="serviceDescription">Content Development Expertise:</label>
+            {!profileData?.content_development?.length ? (
               <IconButton
-                text="Add more"
+                text="Add content development expertise"
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage}
                 handleClick={() => setOpenCdExpertise(true)}
               />
-            </>
-          )}
-        </div>
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {profileData?.content_development?.map((data, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={data}
+                        value={data}
+                        isChecked={true}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <IconButton
+                  text="Add more"
+                  styleClass={`${styles.button}`}
+                  imgUrl="/images/svg/add_circle.svg"
+                  isDisabled={isViewPage}
+                  handleClick={() => {
+                    setOpenCdExpertise(true);
+                    setSelectedCdExpertise([...profileData?.content_development]);
+                  }}
+                />
+              </>
+            )}
+          </div>
+        )}
       </div>
+
       <div className={`${styles.addProfileContainer}`}>
         <LabeledRadioCheckbox
-          label="is Speaker"
+          label="Is Speaker"
           type="checkbox"
           name="isSpeaker"
           isChecked={profileData?.isSpeaker}
           changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+          isDisabled={isViewPage}
         />
       </div>
 
       <VendorPopUp
         open={isOpenExpriences}
-        title="Add experience"
+        title={`${experiencesData?.expId ? 'Edit' : 'Add'} Experience`}
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
@@ -386,9 +451,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 type="checkbox"
                 label={data}
                 value={data}
-                isChecked={
-                  selectedLanguages?.includes(data) || profileData?.languages?.includes(data)
-                }
+                isChecked={selectedLanguages?.includes(data)}
                 changeHandler={handleLanguageSelection}
               />
             </div>

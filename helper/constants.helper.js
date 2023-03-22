@@ -11,6 +11,7 @@ export const COURSE_MAP_STATUS = {
   disable: 'disable'
 };
 export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
+export const USER_TYPE = {internal: 'internal' , external: 'external'};
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -19,7 +20,7 @@ export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 //need to delete chorot later
 export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
-
+export const VC_TOOL_ROLE = ['moderator', 'instructor', 'participant'];
 export const PUBLIC_PATHS = [
   '/login',
   '/auth-verify',
@@ -169,7 +170,8 @@ export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
   previewVideoSize: ONE_MB_IN_BYTES * 50,
   topicVideoSize: ONE_MB_IN_BYTES * 500,
-  questionOptionSize: ONE_MB_IN_BYTES * 250
+  questionOptionSize: ONE_MB_IN_BYTES * 250,
+  vendorSampleSize: ONE_MB_IN_BYTES * 50
 };
 
 export const EMAIL_TEMPLATE_IDS = {
@@ -224,3 +226,27 @@ export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual'
 
 // GENERIC CONSTANTS
 export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
+
+export const FILE_TYPES = {
+  vendorSampleFiles: [
+    '.zip',
+    '.rar',
+    '.pdf',
+    '.ppt',
+    '.pptx',
+    '.doc',
+    '.docx',
+    '.xls',
+    '.xlsx',
+    '.txt',
+    '.srt',
+    '.vtt',
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.mp3',
+    '.mp4',
+    '.webm'
+  ].join(', ')
+};

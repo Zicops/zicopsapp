@@ -1,6 +1,6 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
 import ChatBar from '../Chatbar';
@@ -12,6 +12,9 @@ import ResourcePage from '../Resource';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
+import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
+import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray } from '@/state/atoms/vctool.atoms';
+
 const MainToolbar = ({
   audiotoggle,
   videotoggle,
@@ -22,25 +25,26 @@ const MainToolbar = ({
   handRiseFun,
   fullScreenFun,
   fullscreen,
+  CreateBreakoutroomlist,
   getUesrId,
   mouseMoveFun,
   isStarted,
   startAdvertisement,
-  stopAdvertisement
+  stopAdvertisement,
+  autoAssignRoom
 }) => {
+
+  const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(breakoutRoomselectedparticipant)
+  const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup)
   const [fade1, setfade1] = useState(false);
   const [hand, sethand] = useState(true);
   const [showQAbtn, setshowQAbtn] = useState(false);
-
-  const [showWhiteBoard, setshowWhiteBoard] = useState(true);
-
-  const [showresourcePage, setresourcePage] = useState(false);
-  const [showAbout, setshowAbout] = useState(false);
-  const [showQuiz, setshowQuiz] = useState(false);
-  // const [IsStarted,setIsStarted]=useState(true)
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
+  const participantPopuppanel = useRecoilValue(particiantPopup)
+  const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
+  const [pollInfo, setPollInfo] = useRecoilState(pollArray)
 
   function getClickedComponent(title) {
     if (title === '') return <></>;
@@ -58,7 +62,9 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('breakOutRoom');
           }}
-        />
+          createRooms={() => {
+            CreateBreakoutroomlist()
+          }} />
       )
     },
     {
@@ -153,25 +159,33 @@ const MainToolbar = ({
           }}
         />
       )
+    },
+    {
+      title: 'AddParticipantpopup',
+      component: (
+        <AddParticipantpopup presetRoom={breakoutRoomtotalno.presentRoom} totalRooms={breakoutRoomtotalno.totalRoomno}
+          autoAssignRoom={autoAssignRoom} />
+      )
     }
   ];
-  const clearTime=()=>
-  {
-  setTimeout(() => {
-    setfade1(false)
-  },5000);
+  const clearTime = () => {
+    setTimeout(() => {
+      setfade1(false)
+    }, 3000);
   }
   return (
-    <div
-      className={`${styles.toolBar}`}
+    <div className={`${styles.toolBar}`}
       onMouseMove={(e) => {
         mouseMoveFun();
         setfade1(true);
         clearTimeout(clearTime())
       }}
-      >
+      onMouseOver={() => {
+        mouseMoveFun();
+      }}>
       <div className={`${styles.toolBarnav}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
+        onMouseOver={() => {
           setfade1(true);
         }}>
         <button>
@@ -237,10 +251,11 @@ const MainToolbar = ({
           setfade1(false);
         }}>
 
-        <>{getClickedComponent(selectedButton)}</>
+        <>{getClickedComponent(selectedButton)}
+          {getClickedComponent(participantPopuppanel.roomId)}</>
       </div>
 
-      <div className={`${styles.toolBarfooter}`}
+      <div className={`${styles.toolBarFooter}`}
         id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
           setfade1(true);
         }}>
@@ -249,6 +264,11 @@ const MainToolbar = ({
             <VctoolButton
               onClickfun={() => {
                 endMeetng();
+                setbreakoutRoomparticipant(null)
+                setbreakoutRoompopup({
+                  roomId: "",
+                  isRoom: false
+                })
               }}
               trueSrc={'/images/svg/vctool/logout.svg'}
               falseSrc={'/images/svg/vctool/logout.svg'}

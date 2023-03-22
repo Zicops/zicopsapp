@@ -1,63 +1,84 @@
 import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors } from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
-import { LEARNING_SPACE_ID, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import styles from './vendorComps.module.scss';
 
-export default function MarketYardData({ vendorType, displayRows = {} }) {
+export default function MarketYardData({ vendorType = null, displayRows = {}, searchText = null }) {
   const skeletonCardCount = 6;
-  const { vendorDetails, getLspVendors, loading } = useHandleMarketYard();
-  const [orgVendors, setOrgVendors] = useState([...Array(skeletonCardCount)]);
+  const {
+    vendorDetails,
+    getLspVendors,
+    loading,
+    getLspSpeakers,
+    speakerDetails
+  } = useHandleMarketYard();
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
   const [cdVendors, setCdVendors] = useState([...Array(skeletonCardCount)]);
+  // const [speakerVendors, setSpeakerVendors] = useState([...Array(skeletonCardCount)]);
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList1 = await getLspVendors(lspId, true);
-    setLspVendors(vendorList1);
-    // const smeVendorList = await getLspVendors(
-    //   lspId,
-    //   { status: VENDOR_MASTER_STATUS.active, service: 'sme' },
-    //   true
-    // );
-    // setSmeVendors(smeVendorList);
-    // const crtVendorList = await getLspVendors(
-    //   lspId,
-    //   { status: VENDOR_MASTER_STATUS.active, service: 'crt' },
-    //   true
-    // );
-    // setCrtVendors(crtVendorList);
-    // const cdVendorList = await getLspVendors(
-    //   lspId,
-    //   { status: VENDOR_MASTER_STATUS.active, service: 'cd' },
-    //   true
-    // );
-    // setCdVendors(cdVendorList);
+    const zicopsLsp = COMMON_LSPS.zicops;
 
-    const orgLspId = LEARNING_SPACE_ID;
-    const vendorList2 = await getLspVendors(orgLspId, true);
-    setOrgVendors(vendorList2);
-  }, []);
+    const myVendorFilter = {};
+    if (searchText) myVendorFilter.name = searchText;
+    const myVendors = await getLspVendors(lspId, myVendorFilter, true);
+    setLspVendors(myVendors || []);
+
+    const filters = { service: 'sme' };
+    if (searchText) filters.name = searchText;
+    if (vendorType) filters.type = vendorType;
+
+    const smeVendorList = await getLspVendors(zicopsLsp, filters, true);
+    setSmeVendors(smeVendorList || []);
+
+    filters.service = 'crt';
+    const crtVendorList = await getLspVendors(zicopsLsp, filters, true);
+    setCrtVendors(crtVendorList || []);
+
+    filters.service = 'cd';
+    const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
+    setCdVendors(cdVendorList || []);
+  }, [vendorType, searchText]);
+
+  useEffect(async () => {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    await getLspSpeakers(lspId, displayRows?.speakerType || null, false);
+  }, [displayRows?.speakerType]);
+
   return (
     <>
-      <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
-      {displayRows?.isSmeDisplayed && (
+      {!!(
+        !lspVendors?.length &&
+        !smeVendors?.length &&
+        !crtVendors?.length &&
+        !cdVendors?.length &&
+        !speakerDetails?.length
+      ) && <div className={styles.fallback}>No Vendors Found</div>}
+
+      {!!lspVendors?.length && (
+        <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
+      )}
+
+      {displayRows?.isSmeDisplayed && !!smeVendors?.length && (
         <ZicopsCarousel
           title="Subject Matter Experts Marketplace"
-          data={orgVendors}
+          data={smeVendors}
           type="vendor"
         />
       )}
-      {displayRows?.isCdDisplayed && (
-        <ZicopsCarousel title="Content Development Marketplace" data={lspVendors} type="vendor" />
+      {displayRows?.isCdDisplayed && !!crtVendors?.length && (
+        <ZicopsCarousel title="Content Development Marketplace" data={crtVendors} type="vendor" />
       )}
-      {displayRows?.isCrtDisplayed && (
-        <ZicopsCarousel title="Training Fulfiller Marketplace" data={lspVendors} type="vendor" />
+
+      {displayRows?.isCrtDisplayed && !!cdVendors?.length && (
+        <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-      {displayRows?.isSpeakerDisplayed && (
-        <ZicopsCarousel title="Speakers Marketplace" data={lspVendors} type="vendor" />
+      {!!speakerDetails?.length && (
+        <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
       )}
     </>
   );

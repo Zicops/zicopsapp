@@ -10,7 +10,7 @@ import {
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AddSample from '../AddSample';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
@@ -19,11 +19,15 @@ import SingleFile from './SingleFile';
 const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
-  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
-  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
-  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
-  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
-    useHandleVendor();
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const {
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles,
+    addSampleFile
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -55,15 +59,13 @@ const FileManageVendor = ({ pType }) => {
       <div className={`${styles.vendorFileMain}`}>
         {!!fileData?.length && fileData?.map((data) => <SingleFile data={data} pType={pType} />)}
 
-        <div
-          className={`${styles.addAnotherProfile}`}
-          onClick={() => {
-            setIsOpenAddFile(true);
-          }}>
+        <div className={`${styles.addAnotherProfile}`}>
           <IconButton
             text="Add another file"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
+            handleClick={() => setIsOpenAddFile(true)}
+            isDisabled={fileData?.length >= 5}
           />
         </div>
       </div>
@@ -78,7 +80,7 @@ const FileManageVendor = ({ pType }) => {
           handleClick: addNewSampleFileHendler
         }}
         isFooterVisible={true}>
-        <AddSample />
+        <AddSample pType={pType} />
       </VendorPopUp>
     </div>
   );

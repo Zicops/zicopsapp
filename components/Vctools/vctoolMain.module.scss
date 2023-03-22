@@ -1,6 +1,6 @@
 @import '../../styles/base.scss';
 
-.main_div {
+.mainCard {
     width: 100vw;
     height: 85vh;
     display: flex;
@@ -9,14 +9,14 @@
     flex-direction: column;
 }
 
-.Vccard {
+.vcCard {
     width: 480px;
     height: 366px;
     border: 1px solid #484848;
     border-radius: 8px;
 }
 
-.video1 {
+.videoPlayer {
     width: 100%;
     height: 270px;
 
@@ -42,11 +42,11 @@
 
 }
 
-#btns_bg1 {
+#btnsBg1 {
     background-color: #202222;
 }
 
-#btns_bg2 {
+#btnsBg2 {
     background-Color: #F53D41;
 }
 
@@ -71,9 +71,11 @@
     padding: 15px;
     margin-left: 10px;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
-.join_btn {
+.joinBtn {
     width: 100%;
     display: flex;
     justify-content: right;
@@ -81,12 +83,14 @@
     padding-right: 10px;
 }
 
-.join_btn>button {
+.joinBtn>button {
     width: 81px;
     height: 48px;
     border-radius: 3rem;
     background-color: #6BCFCF;
     cursor: pointer;
+    border: none;
+    outline: none;
 }
 
 .meet {
@@ -111,13 +115,13 @@
 }
 
 // Styling footertool
-#changeBackground
-{
+#changeBackground {
     background: #7d7d7d;
 }
+
 .toolBar {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 1010;
     width: 100%;
     height: 100vh;
@@ -128,7 +132,7 @@
 
 .toolBarnav {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 1010;
     // z-index: 1010;
     width: 100vw;
@@ -146,7 +150,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -169,9 +173,9 @@
     width: 100vw;
 }
 
-.toolBarfooter {
+.toolBarFooter {
     // opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     position: absolute;
     bottom: 0;
     z-index: 1010;
@@ -198,11 +202,16 @@
 
 }
 
+.footerLeft>div {
+    outline: none;
+    border: none;
+}
+
 .footerLeft>button {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -216,6 +225,8 @@
     margin-right: 10px;
     border-radius: 50px;
     cursor: pointer;
+    outline: none;
+    border: none;
 }
 
 .footerRight {
@@ -229,7 +240,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -241,6 +252,8 @@
     margin-right: 10px;
     border-radius: 50px;
     cursor: pointer;
+    outline: none;
+    border: none;
 }
 
 .canselBtn {
@@ -251,7 +264,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -267,7 +280,7 @@
 
 #fadein1 {
     opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.2s;
     z-index: 999;
 }
 
@@ -288,14 +301,14 @@
     background-color: #1A1D21;
 }
 
-.chatbar_head {
+.chatbarHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -305,13 +318,13 @@
     padding-bottom: 20px;
 }
 
-.chatbar_head>button {
+.chatbarHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.chatbar_Screen {
+.chatbarScreen {
     width: 300px;
     height: 72%;
     overflow: scroll;
@@ -319,11 +332,11 @@
     border-bottom: 1px solid #292F2F;
 }
 
-.chatbar_Screen::-webkit-scrollbar {
+.chatbarScreen::-webkit-scrollbar {
     display: none;
 }
 
-.chatbar_input {
+.chatbarInput {
     margin-top: 20px;
     height: 15%;
     width: 300px;
@@ -335,7 +348,7 @@
     flex-direction: column;
 }
 
-.chatbar_input>input {
+.chatbarInput>input {
     width: 270px;
     font-size: 16px;
     height: 24px;
@@ -346,13 +359,13 @@
 
 }
 
-.chatsendfile {
+.chatSendFile {
     width: 276px;
     display: flex;
     justify-content: space-between;
 }
 
-.chatsendfile>input {
+.chatSendFile>input {
     color: white;
     background-color: #1A1D21;
     outline: none;
@@ -375,14 +388,14 @@
     background-color: #1A1D21;
 }
 
-.qaBarhead {
+.qaBarHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -392,24 +405,24 @@
     padding-bottom: 20px;
 }
 
-.qaBarhead>button {
+.qaBarHead>button {
     background-color: transparent;
     outline: none;
     border: none;
 }
 
-.qaBarscreen {
+.qaBarScreen {
     width: 300px;
     height: 75%;
     overflow: scroll;
     // padding-bottom: 20px;
 }
 
-.qaBarscreen::-webkit-scrollbar {
+.qaBarScreen::-webkit-scrollbar {
     display: none;
 }
 
-.qaBarinput {
+.qaBarInput {
     // margin-top: 20px;
     height: 15%;
     width: 300px;
@@ -421,7 +434,7 @@
     flex-direction: column;
 }
 
-.qaBarinput>input {
+.qaBarInput>input {
     width: 270px;
     font-size: 16px;
     height: 20px;
@@ -432,13 +445,13 @@
 
 }
 
-.qaSendfile {
+.qaSendFile {
     width: 276px;
     display: flex;
     justify-content: space-between;
 }
 
-.qaSendfile>input {
+.qaSendFile>input {
     color: white;
     background-color: #1A1D21;
     outline: none;
@@ -449,11 +462,19 @@
     color: #747474;
 }
 
+.qabarBtnContainer {
+    height: 86px;
+    width: 300px;
+    display: flex;
+    justify-content: right;
+    margin-top: 55px;
+}
+
 .qaBtn {
     width: 161px;
     height: 48px;
     background: #6BCFCF;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -478,7 +499,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -489,7 +510,7 @@
 }
 
 .pollScreen {
-    height: 75%;
+    height: 91%;
     width: 296px;
 }
 
@@ -499,6 +520,427 @@
     border: none;
 }
 
+.moderatorPoll {
+    width: 276px;
+    height: 90%;
+}
+
+.moderatorAddPoll {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pollModeratorScree {
+    width: 296px;
+    height: 99%;
+
+}
+
+
+
+.pollIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.pollAvailableHead {
+    width: 276px;
+    height: 28px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+.pollAvailablesubHead {
+    width: 276px;
+    height: 24px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    margin-top: 8px;
+    color: #747474;
+}
+
+// .pollAvailableHead> {
+//     width: 276px;
+//     height: 24px;
+    
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+//     text-align: center;
+//     color: #747474;
+// }
+
+.addPollBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #6BCFCF;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.addPollBtn>div {
+    width: 15px;
+    height: 23px;
+    font-size: 1.5rem;
+    margin-right: 14px;
+}
+
+// PollQA component
+
+.pollQA {
+    width: 296px;
+    height: 100%;
+    overflow: scroll;
+
+}
+
+.pollQA::-webkit-scrollbar {
+    display: none;
+}
+
+.pollQA>p {
+    width: 276px;
+    height: 24px;
+    font-size: 16px;
+    // 
+    font-style: normal;
+    line-height: 24px;
+    display: flex;
+    justify-content: left;
+    color: white;
+    margin-top: 10px;
+}
+
+.pollQaScreen {
+    width: 296px;
+    height: 100%;
+}
+
+.pollQuestion {
+    width: 296px;
+    height: 210px;
+    background-color: #26292C;
+    margin-top: 12px;
+}
+
+.pollName {
+    width: 276px;
+    padding-top: 1px;
+    // padding-left: 10px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    input {
+        width: 276px;
+        height: 40px;
+        border: none;
+        outline: none;
+        margin: auto 10px;
+        background-color: #1A1D21;
+        padding: 5px;
+        color: white;
+    }
+}
+
+.pollInput {
+    width: 276px;
+    height: 40px;
+    border: none;
+    outline: none;
+    margin-left: auto 10px;
+    background-color: #1A1D21;
+    padding: 5px;
+    color: white;
+}
+
+.pollOption {
+    width: 296px;
+    height: 130px;
+    padding-top: 2px;
+    background-color: #26292C;
+    // margin: 7px 0 7px 0;
+    border-radius: 4px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    div {
+        width: 276px;
+        height: 76px;
+        background-color: #1A1D21;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin: auto 10px;
+
+        input {
+            width: 276px;
+            height: 40px;
+            border: none;
+            outline: none;
+            background-color: #1A1D21;
+            padding: 5px;
+            color: white;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            margin: 6px 0 6px 10px;
+        }
+    }
+}
+
+.pollOptionLabel {
+    margin: 10px 0 10px 10px;
+    width: 276px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.pollOptionContainer {
+    width: 290px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pollAddOptionBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1A1D21;
+    border-radius: 4px;
+    border: solid #262626 2px;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+
+    div {
+        width: 15px;
+        height: 23px;
+        font-size: 1.5rem;
+        margin-right: 14px;
+    }
+}
+
+.pollSaveBtns {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    button {
+        width: 140px;
+        height: 48px;
+        border-radius: 4px;
+        // 
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        outline: none;
+        border: none;
+    }
+}
+
+.pollCancelBtn {
+    background-color: #26292C;
+    color: white;
+}
+
+.pollSaveBtn {
+    background-color: #6BCFCF;
+    color: black;
+}
+
+.pollScreenContainer {
+    width: 100%;
+    height: 63vh;
+    overflow: scroll;
+}
+
+.pollScreenContainer::-webkit-scrollbar {
+    display: none;
+}
+
+
+.pollQuestionScreen {
+    width: 100%;
+    height: 50vh;
+    margin-top: 7px;
+    background-color: #121212;
+    padding-left: 10px;
+    // overflow: scroll;
+
+}
+
+.pollQuestionhead {
+    display: flex;
+    width: 276px;
+}
+
+.pollLable {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+}
+
+.publishPollHead {
+    margin-right: 24px;
+    color: #6BCFCF;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.pollQuestions {
+    width: 100%;
+    height: auto;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: white;
+    background-color: #121212;
+
+}
+
+.pollSavedLabel {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #F6AC3C;
+    margin-bottom: 12px;
+    margin-top: 6px;
+}
+
+.pollBoxOptions {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-right: 8px;
+    // height: 50%;
+}
+
+.pollBoxOptions>div {
+    width: 100%;
+    height: 50px;
+    border: solid #ACACAC .5px;
+    border-radius: 4px;
+    margin-top: 12px;
+    color: white;
+
+}
+
+.pollBoxBtns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+
+}
+
+.pollBoxEditBnt {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.pollBoxBtns>button {
+    width: 130px;
+    height: 40px;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    background: #292F2F;
+    margin-right: 10px;
+    margin-top: 15px;
+}
+
+.pollBoxDeleteBnt {
+    color:#F53D41;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+// .publishPoll
+// {
+//     width: 100%;
+//     color: red;
+    
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+// }
 // styling Participants bar
 .participantsBar {
     z-index: 1020;
@@ -518,7 +960,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -546,7 +988,7 @@
 }
 
 .participantsScreenhead {
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -557,7 +999,7 @@
 .allInstructors {
     width: 276px;
     height: auto;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -665,7 +1107,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    // 
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -681,12 +1123,515 @@
     border: none;
 }
 
+.breakoutRoomscreen {
+    width: 296px;
+    height: 90%;
+    overflow: scrol;
+}
+
 .breakoutRoomscreen::-webkit-scrollbar {
     display: none;
 }
 
 .breakoutRoomparticipants::-webkit-scrollbar {
     display: none;
+}
+
+.moderatorBreakoutroom {
+    width: 276px;
+    height: 90%;
+}
+
+
+.breakouRoomIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+
+
+.moderatorAddroom {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.breakoutRoomAvailableHead {
+    width: 276px;
+    height: 28px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+
+
+.moderatorAddroom>p {
+    width: 276px;
+    height: 24px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 8px;
+
+    text-align: center;
+    color: #747474;
+}
+
+.addBreakoutroombtn {
+    width: 296px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.breakoutRoomDetails {
+    width: 296px;
+    height: 90%;
+    padding-top: 10px;
+}
+
+.breakoutRoomDetailsHead {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #FFFFFF;
+    margin-top: 8px;
+}
+
+.breakoutLable {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoominputbox {
+    margin-top: 10px;
+}
+
+.breakoutRoominputbox>input {
+    width: 296px;
+    height: 40px;
+    background-color: #1A1D21;
+    border: 1px solid #292F2F;
+    outline: none;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.breakoutRoomnumbers {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.breakoutRoomnumbers>button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-radius: 2px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    background-color: #292F2F;
+
+}
+
+.breakoutRoomnumbers>div {
+    width: 210px;
+    height: 40px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 40px;
+    color: #ACACAC;
+    border: 1px solid #292F2F;
+    background-color: #1A1D21;
+}
+
+.participantBreakoutroomsetting {
+    display: flex;
+    margin-top: 16px;
+}
+
+.participantBreakoutroomsetting>input {
+    width: 20.5px;
+    height: 20.5px;
+    margin-right: 10px;
+}
+
+.participantBreakoutroomsetting>p {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #747474;
+}
+
+.breakoutRoomsaveinfobtn {
+    width: 296px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.breakoutcancelinfo {
+    width: 140px;
+    height: 48px;
+    color: white;
+    background-color: #26292C;
+    border: none;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.breakoutsaveinfo {
+    width: 140px;
+    height: 48px;
+    color: rgb(0, 0, 0);
+    background: #6BCFCF;
+    border-radius: 4px;
+    border: none;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.manageRooms {
+    width: 296px;
+    height: 90%;
+}
+
+.manageRoomshead {
+    display: flex;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.manageRoomshead>div {
+    width: 90%;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.manageRoombtns {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.manageRoombtn1 {
+    width: 140px;
+    height: 40px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #6BCFCF;
+}
+
+.manageRoombtn2 {
+    width: 140px;
+    height: 40px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0B0C0D;
+}
+
+.availableRoomcontainerhead {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.availableRoomcontainer {
+    width: 296px;
+    height: 82%;
+    overflow: scroll;
+}
+
+.availableRoomcontainer::-webkit-scrollbar {
+    display: none;
+}
+
+.breakoutRoomCard {
+    width: 296px;
+    height: 40px;
+    display: flex;
+    margin-top: 5px;
+}
+
+.breakoutRoomCardLeft {
+    display: flex;
+    width: 70%;
+    justify-content: left;
+    align-items: center;
+    color: white;
+}
+
+.breakoutRoomCardLeftHeading {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    margin-left: 8px;
+    color: #FFFFFF;
+}
+
+.breakoutRoomCardIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #2B60EA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.breakoutRoomCardRight {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.breakoutRoomCardRight>button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+
+.BreakoutRoomtootips {
+    position: absolute;
+    width: 147px;
+    height: 130px;
+    left: 130px;
+    // top: 208px;
+    background: #0B0C0D;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+}
+
+.BreakoutRoomtootips>button {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.breakoutRoomparticipants {
+    width: 296px;
+    height: auto;
+}
+
+.breakoutRoomparticipants>button {
+    width: 290px;
+    margin: 6px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid #292F2F;
+    height: 40px;
+}
+
+.breakoutRoomParticipantHeading {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoomParticipantScreen {
+    width: 296px;
+    height: 30vh;
+    overflow: scroll;
+}
+
+.breakoutRoomParticipantScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.addParticipantPopup {
+    height: 482px;
+    width: 510px;
+    position: absolute;
+    top: 15%;
+    right: 30%;
+    // bottom: 20%;
+    padding: 14px;
+    background: #1A1D21;
+}
+
+.addParticipantPopupHead {
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    // padding-left: 24px;
+    width: 440px;
+    padding-bottom: 14px;
+    margin: auto;
+    border-bottom: 1px solid #292F2F;
+}
+
+.addParticipantSubHead {
+    width: 440px;
+    display: flex;
+    color: #ACACAC;
+    padding-top: 14px;
+    font-weight: 400;
+    font-size: 18px;
+    margin: auto;
+}
+
+.addParticipantSubHead>div {
+    width: 90%;
+}
+
+.addParticipantPopupScreen {
+    width: 440px;
+    height: 65%;
+    margin: auto;
+    padding-top: 12px;
+    // background-color: #6BCFCF;
+    border-bottom: 1px solid #292F2F;
+    overflow: scroll;
+}
+
+.addParticipantPopupScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.addParticipantbtn {
+    padding-top: 12px;
+    width: 440px;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
+
+.addParticipantbtn1 {
+    width: 209px;
+    height: 48px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.addParticipantbtn2 {
+    width: 209px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000000;
+}
+
+// styling participantFrame
+.participantFrame {
+    width: 440px;
+    height: 40px;
+    display: flex;
+    margin-top: 8px;
+    align-items: centerS;
+}
+
+.participantFrameicon {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.participantFramename {
+    margin-left: 12px;
+    
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+}
+
+.participantFrame>div {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.participantFrame>input {
+    width: 24px;
+    height: 24px;
+    line-height: 40px;
 }
 
 // styling resources page
@@ -699,6 +1644,7 @@
     padding-left: 17px;
     right: 0;
     background-color: #1A1D21;
+    color: black;
 }
 
 .resourceHead {
@@ -708,7 +1654,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -735,12 +1681,13 @@
 }
 
 .resourceScreenhead {
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 24px;
     color: #ACACAC;
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
 }
 
 //styling about page
@@ -755,6 +1702,23 @@
     background-color: #1A1D21;
 }
 
+.aboutScreenHeading {
+    margin-top: 15px;
+    padding-top: 10px;
+    width: 276px;
+    height: 56px;
+    font-size: 18xp;
+    line-height: 28px;
+    color: white;
+}
+
+.aboutScreenSessionHead {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    font-size: 14px;
+}
+
 .aboutHead {
     padding-top: 20px;
     width: 296px;
@@ -762,7 +1726,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -805,11 +1769,11 @@
     font-size: 14px;
 }
 
-.aboutscreen {
+.aboutScreen {
     height: 88%;
 }
 
-.aboutmeetinginfo {
+.aboutMeetingInfo {
     display: flex;
     width: 276px;
     justify-content: baseline;
@@ -819,7 +1783,7 @@
     padding-bottom: 10px;
 }
 
-.aboutmeetinglogo {
+.aboutMeetingLogo {
     height: 40px;
     width: 40px;
     border: solid #292F2F 1px;
@@ -828,7 +1792,7 @@
     align-items: center;
 }
 
-.aboutmeetinglogo>img {
+.aboutMeetingLogo>img {
     height: 20px;
     width: 22.1px;
 }
@@ -844,15 +1808,21 @@
     right: 0;
     background-color: #1A1D21;
     // height: 88vh;
-    
+
 }
-.quizScreen
-{
+
+.quizeAttemtpsHead {
+    padding-top: 12px;
+    color: #ACACAC;
+    font-size: 14px;
+}
+
+.quizScreen {
     overflow: scroll;
     height: 90%;
 }
-.quizScreen::-webkit-scrollbar
-{
+
+.quizScreen::-webkit-scrollbar {
     display: none;
 }
 
@@ -863,7 +1833,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Poppins';
+    
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
@@ -908,20 +1878,53 @@
     display: flex;
     justify-content: right;
 }
-.quizeExpand>img 
-{
+
+.quizeExpand>img {
     width: 12px;
 }
-.questionScreen
-{
+
+.questionScreen {
     height: 60vh;
     margin-top: 7px;
     background-color: #121212;
-   
+
 }
-.quizeExpand>button
-{
+
+.quizeExpand>button {
     background-color: transparent;
     outline: none;
     border: none;
+}
+
+// styling create BreakoutRoom
+.createRoom {
+    width: 296px;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.createRoomhead {
+    font-size: 14px;
+    color: white;
+    font-weight: 400;
+    width: 40%;
+}
+
+.createRoombtns {
+    display: flex;
+    height: 44px;
+    width: 65%;
+    justify-content: right;
+    align-items: center;
+}
+
+.createRoombtns>button {
+    width: 80px;
+    height: 25px;
+    font-size: 10px;
+    margin-left: 6px;
+    background-color: #2B60EA;
+    color: white;
 }
