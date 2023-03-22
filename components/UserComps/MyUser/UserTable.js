@@ -1,25 +1,17 @@
-import { userClient } from '@/api/UserMutations';
-import { GET_USER_LSP_ROLES } from '@/api/UserQueries';
 import EllipsisMenu from '@/common/EllipsisMenu';
 import LabeledRadioCheckbox from '@/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/common/ZicopsTable';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import { loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE, USER_MAP_STATUS, USER_TYPE } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUserAboutObject, useUpdateUserAboutData } from '@/helper/hooks.helper';
 import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import {
-  AdminLearnerListAtom,
-  DisabledUserAtom,
-  InviteUserAtom,
-  UserStateAtom
-} from '@/state/atoms/users.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import useAdminQuery, { getUsersForAdmin } from '../Logic/getUsersForAdmin';
+import useAdminQuery from '../Logic/getUsersForAdmin';
 
 const MyUserTable = forwardRef(
   (
@@ -30,21 +22,11 @@ const MyUserTable = forwardRef(
     const [data, setData] = useState([]);
     const [disableAlert, setDisableAlert] = useState(false);
     const [isMakeAdminAlert, setIsMakeAdminAlert] = useState(false);
-    const [disabledUserList, setDisabledUserList] = useRecoilState(DisabledUserAtom);
-    const [adminLearnerList, setAdminLearnerList] = useRecoilState(AdminLearnerListAtom);
     const userData = useRecoilValue(UserStateAtom);
-    const [currentDisabledUser, setCurrentDisabledUser] = useState(null);
     const [currentSelectedUser, setCurrentSelectedUser] = useState(null);
-    const [invitedUsers, setInvitedUsers] = useRecoilState(InviteUserAtom);
 
-    const {
-      newUserAboutData,
-      setNewUserAboutData,
-      updateAboutUser,
-      updateUserLsp,
-      isFormCompleted,
-      updateUserRole
-    } = useUpdateUserAboutData();
+    const { newUserAboutData, setNewUserAboutData, updateUserLsp, updateUserRole } =
+      useUpdateUserAboutData();
 
     const [isLoading, setLoading] = useState(true);
     const [filterCol, setFilterCol] = useState('email');
@@ -59,14 +41,18 @@ const MyUserTable = forwardRef(
     // function exposed to parent
     useImperativeHandle(ref, () => ({
       clearSelection() {
+        setData((prevUsers) => {
+          const _data = structuredClone(prevUsers);
+          selectedUser.forEach((disableUser) => {
+            const index = _data?.findIndex((user) => disableUser?.id === user?.id);
+            if (index >= 0 && disableUser?.id !== userData?.id)
+              _data[index].lsp_status = USER_MAP_STATUS?.disable;
+          });
+          return _data;
+        });
         setSelectedUser([]);
       }
     }));
-
-    async function sortArray(arr, param) {
-      const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
-      return sortedArr;
-    }
 
     useEffect(async () => {
       // loadUserData();
@@ -79,89 +65,11 @@ const MyUserTable = forwardRef(
 
       setData(sortArrByKeyInOrder([...usersTableData], 'created_at', false), setLoading(false));
       return;
-      const _usersData = await getUsersForAdmin(true);
-      if (_usersData?.error) {
-        setLoading(false);
-        return setToastMsg({ type: 'danger', message: `${_usersData?.error}` });
-      }
-      setData(sortArrByKeyInOrder([..._usersData], 'created_at', false), setLoading(false));
-      for (let i = 0; i < _usersData.length; i++) {
-        const user = _usersData[i];
-        const res = await loadQueryDataAsync(
-          GET_USER_LSP_ROLES,
-          {
-            user_id: user?.id,
-            user_lsp_ids: [user?.user_lsp_id]
-          },
-          {},
-          userClient
-        );
-        const lspRoleArr = res?.getUserLspRoles;
-
-        let roleData = {};
-        if (lspRoleArr?.length > 1) {
-          const latestUpdatedRole = await sortArray(lspRoleArr, 'updated_at');
-          roleData = latestUpdatedRole?.pop();
-        } else {
-          roleData = lspRoleArr[0];
-        }
-
-        user.role = roleData?.role;
-        user.roleData = roleData;
-      }
-      //make sure no user without role map is shown
-      const usersData = _usersData?.filter((user) => !!user?.roleData);
-      let users = [];
-
-      if (isAdministration) {
-        users = usersData?.filter((user) => user?.role?.toLowerCase() === 'admin');
-        // console.log(users,'users')
-      } else {
-        users = [...usersData];
-      }
-      // setLoading(false);
-      console.info(users, 'users');
-      setData(sortArrByKeyInOrder([...users], 'created_at', false));
-      return;
     }, []);
 
     useEffect(() => {
       getUser(selectedUser);
     }, [selectedUser]);
-
-    // async function loadUserData() {
-    //   setLoading(true);
-
-    //   const lspId = sessionStorage.getItem('lsp_id');
-    //   const queryVariables = { lsp_id: lspId, pageCursor: '', Direction: '', pageSize: 30 };
-    //   if (pageCursor) queryVariables.pageCursor = pageCursor;
-
-    //   loadQueryDataAsync(GET_USER_LSP_MAP_BY_LSPID, queryVariables, {}, userQueryClient).then(
-    //     async (lspMapRes) => {
-    //       if (lspMapRes?.error) return { error: 'Error while while loading lsp maps!' };
-
-    //       const lspMapData = lspMapRes?.getUserLspMapsByLspId;
-    //       if (lspMapData?.pageCursor) setPageCursor(lspMapData?.pageCursor);
-
-    //       //removing duplicate values
-    //       const _lspUsers = lspMapData?.user_lsp_maps?.filter(
-    //         (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
-    //       );
-    //       const _userIds = _lspUsers?.map((user) => user?.user_id)?.filter((userId) => !!userId);
-
-    //       const userDetailsRes = await loadQueryDataAsync(
-    //         GET_USER_DETAIL,
-    //         { user_id: _userIds },
-    //         {},
-    //         userQueryClient
-    //       );
-
-    //       if (userDetailsRes?.error) return { error: 'Error while while loading user detail!' };
-    //     }
-    //   );
-
-    //   setLoading(false);
-    // }
 
     const columns = [
       {
@@ -338,40 +246,14 @@ const MyUserTable = forwardRef(
                 if (a) {
                   setData((prevUsers) => {
                     const _data = structuredClone(prevUsers);
-                    console.log(newUserAboutData,'sfhso');
                     const index = _data?.findIndex((user) => user?.id === currentSelectedUser?.id);
                     if (index >= 0) _data[index].lsp_status = newUserAboutData?.status;
-                    console.log(_data,'data',index);
                     return _data;
                   });
 
-                  setCurrentDisabledUser(null);
+                  setCurrentSelectedUser(null);
 
-                  return setToastMsg({
-                    type: 'success',
-                    message: `Successfully ${isDisabled ? 'disable' : 'enable'} ${
-                      newUserAboutData?.email
-                    }`
-                  });
-                  return;
-                  const isDisabled = newUserAboutData?.status === USER_MAP_STATUS?.disable;
-
-                  if (isDisabled) {
-                    setDisabledUserList((prev) => [...prev, currentDisabledUser]);
-                  } else {
-                    const _allDisabledUsers = structuredClone(disabledUserList);
-                    const i = _allDisabledUsers?.findIndex(
-                      (userId) => userId === newUserAboutData?.id
-                    );
-                    if (i >= 0) _allDisabledUsers.splice(i, 1);
-                    setDisabledUserList(_allDisabledUsers);
-                  }
-                  setCurrentDisabledUser(null);
-
-                  const _allUsers = structuredClone(data);
-                  const i = _allUsers?.findIndex((user) => user?.id === newUserAboutData?.id);
-                  if (i >= 0) _allUsers[i].lsp_status = newUserAboutData?.status;
-                  setData(_allUsers);
+                  let isDisabled = newUserAboutData?.status === USER_MAP_STATUS?.disable;
 
                   return setToastMsg({
                     type: 'success',
@@ -386,7 +268,10 @@ const MyUserTable = forwardRef(
                   message: `Error while disabling ${newUserAboutData?.email}`
                 });
               },
-              handleClickRight: () => setDisableAlert(false)
+              handleClickRight: () => {
+                setCurrentSelectedUser(null);
+                setDisableAlert(false);
+              }
             }}
           />
         )}
@@ -408,27 +293,7 @@ const MyUserTable = forwardRef(
                   if (index >= 0) _data[index].role = currentSelectedUser?.updateTo;
                   return _data;
                 });
-                // if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.admin) {
-                //   const _updatedList = adminLearnerList?.learners?.filter((userId) => {
-                //     return userId !== isRoleUpdate?.user_id;
-                //   });
-
-                //   setAdminLearnerList((prevValue) => ({
-                //     admins: [...prevValue?.admins, isRoleUpdate?.user_id],
-                //     learners: [..._updatedList]
-                //   }));
-                // }
-
-                // // same thing for learner also
-                // if (currentSelectedUser?.updateTo?.toLowerCase() === USER_LSP_ROLE?.learner) {
-                //   const _updatedList = adminLearnerList?.admins?.filter((userId) => {
-                //     return userId !== isRoleUpdate?.user_id;
-                //   });
-                //   setAdminLearnerList((prevValue) => ({
-                //     admins: [..._updatedList],
-                //     learners: [...prevValue?.learners, isRoleUpdate?.user_id]
-                //   }));
-                // }
+                
                 setToastMsg({
                   type: 'success',
                   message: `Changed ${currentSelectedUser?.email} role successfully.`

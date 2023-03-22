@@ -1118,7 +1118,6 @@ export function useUpdateUserAboutData() {
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
       if (user?.id === userDataAbout?.id) continue;
-      if (disabledUserList?.includes(user?.id)) continue;
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
@@ -1133,10 +1132,7 @@ export function useUpdateUserAboutData() {
         userIds?.push(user?.id);
       }
     }
-    if (!isError) {
-      if (!userIds?.length) return !isError;
-      setDisabledUserList((prev) => [...prev, ...userIds]);
-    }
+    if (!isError && !userIds?.length) return !isError;
     return !isError;
   }
   async function updateMultiUserAbout() {
