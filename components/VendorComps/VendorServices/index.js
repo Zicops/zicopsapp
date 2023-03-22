@@ -87,7 +87,7 @@ export default function VendorServices({ data, type = 'sme' }) {
                   <img src={getFileType(data?.fileType)} />
                 </div>
                 <div className={styles.sampleFileDetails}>
-                  <div>{`${data?.title}.${data?.fileType?.toLowerCase()}`}</div>
+                  <div>{`${data?.title}`}</div>
                   <div className={styles.sampleFileRate}>{data.rate}</div>
                 </div>
               </div>
