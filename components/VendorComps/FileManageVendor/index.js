@@ -22,8 +22,12 @@ const FileManageVendor = ({ pType }) => {
   const smeData = useRecoilValue(SmeServicesAtom);
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
-  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
-    useHandleVendor();
+  const {
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles,
+    addSampleFile
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 

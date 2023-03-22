@@ -6,8 +6,13 @@ import styles from './vendorComps.module.scss';
 
 export default function MarketYardData({ vendorType = null, displayRows = {}, searchText = null }) {
   const skeletonCardCount = 6;
-  const { vendorDetails, getLspVendors, loading, getLspSpeakers, speakerDetails } =
-    useHandleMarketYard();
+  const {
+    vendorDetails,
+    getLspVendors,
+    loading,
+    getLspSpeakers,
+    speakerDetails
+  } = useHandleMarketYard();
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
