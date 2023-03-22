@@ -12,13 +12,22 @@ export default function SampleFilePreview({
     download: 'download',
     image: 'image',
     video: 'video',
+    audio: 'audio',
     docPreview: 'doc'
   };
 
   let displayType = types.download;
-  if (['pdf', 'ppt']?.includes(sampleFile?.fileType?.toLowerCase())) displayType = types.docPreview;
-  if (['image']?.includes(sampleFile?.fileType?.toLowerCase())) displayType = types.image;
-  if (['video']?.includes(sampleFile?.fileType?.toLowerCase())) displayType = types.video;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('image')) displayType = types.image;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('video')) displayType = types.video;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('sheet')) displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('presentation'))
+    displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('pdf')) displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('document'))
+    displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('audio')) displayType = types.audio;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('text')) displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('stream')) displayType = types.docPreview;
 
   return (
     <>
@@ -27,6 +36,7 @@ export default function SampleFilePreview({
           {displayType === types.docPreview && <ViewDoc url={sampleFile?.fileUrl} />}
           {displayType === types.image && <img src={sampleFile?.fileUrl} />}
           {displayType === types.video && <video src={sampleFile?.fileUrl} controls />}
+          {displayType === types.audio && <audio src={sampleFile?.fileUrl} controls />}
           {displayType === types.download && (
             <div className={`${styles.downloadBtn}`}>
               <p>Can't Preview this File</p>

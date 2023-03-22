@@ -26,7 +26,8 @@ export default function VendorServices({ data, type = 'sme' }) {
           fileUrl: file?.file_url,
           fileType: file?.fileType,
           status: file?.status,
-          rate: file?.price
+          rate: file?.price,
+          actualFileType: file?.actualFileType
         }))
       ) || [];
     });
@@ -96,35 +97,37 @@ export default function VendorServices({ data, type = 'sme' }) {
           <small>{!sampleFiles?.length && 'No Sample Files Available'}</small>
         </div>
       </div>
-      <VendorPopUp
-        popUpState={[samplePopup != null, setSamplePopup]}
-        size="large"
-        title={sampleFiles?.[samplePopup]?.title}
-        headerComps={
-          <div className={`${styles.sampleDetailButton}`}>
-            <img
-              src="/images/svg/info.svg"
-              alt=""
-              onClick={() => setSampleDetails(!sampleDetails)}
-            />
-          </div>
-        }
-        isFooterVisible={false}>
-        <SampleFilePreview
-          isDetailsOpen={sampleDetails}
-          sampleFile={sampleFiles?.[samplePopup]}
-          handleNextClick={() => {
-            let updatedIndex = +samplePopup + 1;
-            if (updatedIndex === sampleFiles.length) updatedIndex = 0;
-            setSamplePopup(+updatedIndex);
-          }}
-          handlePrevClick={() => {
-            let updatedIndex = +samplePopup - 1;
-            if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
-            setSamplePopup(+updatedIndex);
-          }}
-        />
-      </VendorPopUp>
+      {samplePopup != null && (
+        <VendorPopUp
+          popUpState={[true, setSamplePopup]}
+          size="large"
+          title={sampleFiles?.[samplePopup]?.title}
+          headerComps={
+            <div className={`${styles.sampleDetailButton}`}>
+              <img
+                src="/images/svg/info.svg"
+                alt=""
+                onClick={() => setSampleDetails(!sampleDetails)}
+              />
+            </div>
+          }
+          isFooterVisible={false}>
+          <SampleFilePreview
+            isDetailsOpen={sampleDetails}
+            sampleFile={sampleFiles?.[samplePopup]}
+            handleNextClick={() => {
+              let updatedIndex = +samplePopup + 1;
+              if (updatedIndex === sampleFiles.length) updatedIndex = 0;
+              setSamplePopup(+updatedIndex);
+            }}
+            handlePrevClick={() => {
+              let updatedIndex = +samplePopup - 1;
+              if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
+              setSamplePopup(+updatedIndex);
+            }}
+          />
+        </VendorPopUp>
+      )}
     </div>
   );
 }

@@ -153,16 +153,16 @@
   position: relative;
 
   .sampleFilePreview {
-    min-height: 40vh;
+    height: 60vh;
     object-fit: contain;
-    height: 100%;
-    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: auto;
 
-    img {
+    img,
+    video {
       height: 100%;
     }
   }

@@ -62,8 +62,11 @@ export default function ManageVendorTabs() {
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
         handleSubmit: () => {
-          addUpdateVendor(tab === tabData[0].name);
-          handleMail(tab === tabData[0].name);
+          addUpdateVendor(tab === tabData[0].name).then((id) => {
+            if (!id) return;
+
+            handleMail();
+          });
           addUpdateSme(tab === tabData[1].name);
           addUpdateCrt(tab === tabData[1].name);
           addUpdateCd(tab === tabData[1].name);
