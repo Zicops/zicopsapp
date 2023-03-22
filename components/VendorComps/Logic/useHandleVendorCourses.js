@@ -1,4 +1,4 @@
-import { GET_MY_COURSES } from '@/api/Queries';
+import { GET_LATEST_COURSES, GET_MY_COURSES } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -13,7 +13,7 @@ export default function useHandleVendorCourses() {
   async function getVendorCourses(status = COURSE_STATUS.publish) {
     const lspId = sessionStorage?.getItem('lsp_id');
 
-    const courseInfo = await loadQueryDataAsync(GET_MY_COURSES, {
+    const courseInfo = await loadQueryDataAsync(GET_LATEST_COURSES, {
       publish_time: time,
       pageSize: 30,
       pageCursor: '',

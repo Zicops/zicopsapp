@@ -193,6 +193,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         value={expert}
                         isChecked={data?.expertises?.includes(expert)}
                         changeHandler={handleRemoveExpertise}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -233,6 +234,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         value={lang}
                         isChecked={data?.languages?.includes(lang)}
                         changeHandler={handleRemoveLanguage}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -271,6 +273,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         value={format}
                         isChecked={data?.formats?.includes(format)}
                         changeHandler={handleRemoveFormats}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -407,6 +410,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 value={data}
                 isChecked={selectedLanguages.includes(data)}
                 changeHandler={handleLanguageSelection}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             </div>
           );
@@ -439,6 +443,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 value={data}
                 isChecked={selectedFormats.includes(data)}
                 changeHandler={handleFileSelection}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             </div>
           );

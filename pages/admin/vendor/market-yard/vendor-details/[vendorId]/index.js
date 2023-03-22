@@ -102,7 +102,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Courses',
-      component: <CoursesVendor courseImage={coursesVendor[vendorId]?.courseImage} />
+      component: <CoursesVendor />
     },
     {
       name: 'Profile',

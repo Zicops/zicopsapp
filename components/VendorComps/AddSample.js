@@ -23,8 +23,6 @@ const AddSample = ({ pType }) => {
   const crtServices = useRecoilValue(CtServicesAtom);
   const cdServices = useRecoilValue(CdServicesAtom);
 
-  console.info(pType, smeServices, crtServices, cdServices, sampleData);
-
   function getFileName() {
     return truncateToN(
       sampleData?.sampleFile?.name || getEncodedFileNameFromUrl(sampleData?.photoUrl),

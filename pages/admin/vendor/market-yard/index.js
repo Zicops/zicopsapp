@@ -5,10 +5,15 @@ import MarketYardHeroSection from '@/components/VendorComps/MarketYardHeroSectio
 import MarketYardData from '@/components/VendorComps/MarketYardData';
 import { useState } from 'react';
 import { serviceOptions } from '@/components/VendorComps/Logic/vendorComps.helper';
+import { useDebounce } from '@/helper/hooks.helper';
 
 export default function MarketYard() {
   const [vendorType, setVendorType] = useState(null);
   const [vendorService, setVendorService] = useState(null);
+  const [searchText, setSearchText] = useState('');
+
+  const searchQuery = useDebounce(searchText, 1000);
+
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
@@ -18,7 +23,10 @@ export default function MarketYard() {
           setVendorType={setVendorType}
           vendorService={vendorService}
           setVendorService={setVendorService}
+          searchText={searchText}
+          setSearchText={setSearchText}
         />
+
         <MarketYardData
           vendorType={vendorType?.value}
           displayRows={{
@@ -27,6 +35,7 @@ export default function MarketYard() {
             isCrtDisplayed: vendorService?.value ? 'crt' === vendorService?.value : true,
             speakerType: vendorService?.value
           }}
+          searchText={searchQuery}
         />
       </MainBody>
     </>

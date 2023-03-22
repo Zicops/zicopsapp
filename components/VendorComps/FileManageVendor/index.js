@@ -10,7 +10,7 @@ import {
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AddSample from '../AddSample';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
@@ -19,9 +19,9 @@ import SingleFile from './SingleFile';
 const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
-  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
-  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
-  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
   const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
     useHandleVendor();
   const router = useRouter();
@@ -60,7 +60,7 @@ const FileManageVendor = ({ pType }) => {
             text="Add another file"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={setIsOpenAddFile(true)}
+            handleClick={() => setIsOpenAddFile(true)}
             isDisabled={fileData?.length >= 5}
           />
         </div>
