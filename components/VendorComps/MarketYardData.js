@@ -6,13 +6,8 @@ import styles from './vendorComps.module.scss';
 
 export default function MarketYardData({ vendorType = null, displayRows = {}, searchText = null }) {
   const skeletonCardCount = 6;
-  const {
-    vendorDetails,
-    getLspVendors,
-    loading,
-    getLspSpeakers,
-    speakerDetails
-  } = useHandleMarketYard();
+  const { vendorDetails, getLspVendors, loading, getLspSpeakers, speakerDetails } =
+    useHandleMarketYard();
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
@@ -41,10 +36,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
 
     filters.service = 'cd';
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
-    setCdVendors(cdVendorList || []);
-
-    const speakerList = await getLspSpeakers(zicopsLsp, filters, true);
-    setSpeakerVendors(speakerList || []);
+    setCdVendors(cdVendorList);
   }, [vendorType, searchText]);
 
   useEffect(async () => {
@@ -80,9 +72,8 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
       {displayRows?.isCrtDisplayed && !!cdVendors?.length && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-
-      {displayRows?.isSpeakerDisplayed && !!speakerDetails?.length && (
-        <ZicopsCarousel title="Speakers Marketplace" data={speakerVendors} type="vendor" />
+      {!!speakerDetails?.length && (
+        <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
       )}
     </>
   );

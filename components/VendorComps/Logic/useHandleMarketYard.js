@@ -78,11 +78,12 @@ export default function useHandleMarketYard() {
       return _sortedData;
     }
 
-    let newSpeakerArray;
+    let newSpeakerArray = [];
     for (let i = 0; i < _sortedData?.length; i++) {
-      newSpeakerArray = [
-        { ..._sortedData[i], name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name }
-      ];
+      newSpeakerArray.push({
+        ..._sortedData[i],
+        name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name
+      });
     }
 
     setSpeakerDetails(newSpeakerArray);
