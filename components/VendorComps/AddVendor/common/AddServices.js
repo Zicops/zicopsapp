@@ -410,6 +410,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 value={data}
                 isChecked={selectedLanguages.includes(data)}
                 changeHandler={handleLanguageSelection}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             </div>
           );
@@ -442,6 +443,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 value={data}
                 isChecked={selectedFormats.includes(data)}
                 changeHandler={handleFileSelection}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             </div>
           );
