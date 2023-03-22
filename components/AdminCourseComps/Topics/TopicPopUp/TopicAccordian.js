@@ -1,8 +1,8 @@
 import { PlusIcon } from '@/common/ZicopsIcons';
 import { useState } from 'react';
-import styles from '../adminCourseComps.module.scss';
+import styles from '../../adminCourseComps.module.scss';
 
-export default function ZicopsAccordian({ title, description, children }) {
+export default function TopicAccordian({ title, description, children }) {
   const [isActive, setIsActive] = useState(false);
 
   return (
