@@ -36,7 +36,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [selectedExpertise, setSelectedExpertise] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState(data?.languages);
+  const [tempLanguages, setTempLanguages] = useState(data?.languages);
   const [selectedFormats, setSelectedFormats] = useState([]);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
@@ -101,9 +102,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     }
   };
 
-  const handleRemoveLanguage = (e) => {
+  const handleAddRemoveLanguage = (e) => {
     const { value, checked } = e.target;
-    setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+      setSelectedLanguages([...selectedLanguages?.filter((lang) => lang !== value)]);
+    }
   };
 
   const handleRemoveExpertise = (e) => {
@@ -117,6 +123,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
   const addLanguagesHandler = () => {
     setData({ ...data, languages: [...selectedLanguages] });
+    setTempLanguages([...selectedLanguages]);
     setLanguagePopupState(false);
   };
 
@@ -226,14 +233,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.languages?.map((lang, index) => (
+                  {tempLanguages?.map((lang, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={lang}
                         value={lang}
-                        isChecked={data?.languages?.includes(lang)}
-                        changeHandler={handleRemoveLanguage}
+                        isChecked={selectedLanguages?.includes(lang)}
+                        changeHandler={handleAddRemoveLanguage}
                         isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
@@ -245,7 +252,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   imgUrl="/images/svg/add_circle.svg"
                   handleClick={() => {
                     setLanguagePopupState(true);
-                    setSelectedLanguages([...data?.languages]);
+                    setSelectedLanguages([...selectedLanguages]);
                   }}
                   isDisabled={isViewPage || !data?.isApplicable}
                 />
