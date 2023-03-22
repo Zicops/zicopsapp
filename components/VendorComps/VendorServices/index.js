@@ -33,10 +33,10 @@ export default function VendorServices({ data, type = 'sme' }) {
   }, []);
 
   function getFileType(fileType = null) {
-    if (fileType === 'PDF') return '/image/pdf-icon1.png';
-    if (fileType === 'PPT') return '/image/ppt-icon1.png';
+    if (fileType === 'PDF') return '/images/pdf-icon1.png';
+    if (fileType === 'PPT') return '/images/ppt-icon1.png';
 
-    return '/image/default-document.png';
+    return '/images/default-document.png';
   }
 
   return (

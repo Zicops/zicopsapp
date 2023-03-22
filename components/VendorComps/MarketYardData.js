@@ -36,7 +36,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
 
     filters.service = 'cd';
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
-    setCdVendors(cdVendorList);
+    setCdVendors(cdVendorList || []);
   }, [vendorType, searchText]);
 
   useEffect(async () => {
