@@ -1,12 +1,12 @@
 import styles from "../vctoolMain.module.scss"
-const ResourcePage=({showHide=false})=>
+const ResourcePage=({hide=false})=>
 {
     return(
         <div className={`${styles.resourceBar}`}>
             <div className={`${styles.resourceHead}`}>
                 <div>Resources</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

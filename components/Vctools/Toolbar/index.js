@@ -59,7 +59,7 @@ const MainToolbar = ({
       title: 'breakOutRoom',
       component: (
         <BreakoutRoom
-          showHide={() => {
+          hide={() => {
             selectedButton === 'breakOutRoom'
               ? setSelectedButton('')
               : setSelectedButton('breakOutRoom');
@@ -73,7 +73,7 @@ const MainToolbar = ({
       title: 'participants',
       component: (
         <Participants
-          showHide={() => {
+          hide={() => {
             selectedButton === 'participants'
               ? setSelectedButton('')
               : setSelectedButton('participants');
@@ -86,7 +86,7 @@ const MainToolbar = ({
       title: 'quiz',
       component: (
         <QuizPage
-          showHide={() => {
+          hide={() => {
             selectedButton === 'quiz' ? setSelectedButton('') : setSelectedButton('quiz');
           }}
         />
@@ -100,7 +100,7 @@ const MainToolbar = ({
       title: 'poll',
       component: (
         <Poll
-          showHide={() => {
+          hide={() => {
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
         />
@@ -110,7 +110,7 @@ const MainToolbar = ({
       title: 'qaBar',
       component: (
         <QAbar
-          showHide={() => {
+          hide={() => {
             selectedButton === 'qaBar' ? setSelectedButton('') : setSelectedButton('qaBar');
           }}
         />
@@ -120,7 +120,7 @@ const MainToolbar = ({
       title: 'chatBar',
       component: (
         <ChatBar
-          showHide={() => {
+          hide={() => {
             selectedButton === 'chatBar' ? setSelectedButton('') : setSelectedButton('chatBar');
           }}
         />
@@ -130,7 +130,7 @@ const MainToolbar = ({
       title: 'resourceBar',
       component: (
         <ResourcePage
-          showHide={() => {
+        hide={() => {
             selectedButton === 'resourceBar'
               ? setSelectedButton('')
               : setSelectedButton('resourceBar');
@@ -168,7 +168,7 @@ const MainToolbar = ({
     {
       title: 'manageAccount',
       component: (
-        <ManageAccount showHide={() => {
+        <ManageAccount hide={() => {
           selectedButton === 'manageAccount' ? setSelectedButton('') : setSelectedButton('manageAccount')
         }} />
       )

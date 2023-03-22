@@ -1,4 +1,4 @@
-
+$textColor:#ACACAC;
 .chatBox
 {
   width: 296px;
@@ -34,7 +34,7 @@
   width: 75%;
   display: flex;
   justify-content: flex-end;
-  color: #ACACAC;
+  color:$textColor;
 }
 .messageHead
 {
@@ -52,7 +52,7 @@
   {
     width: 255px;
     height: 100%;
-    color: white;
+    color:$white;
     // height: max-content;
     float: right;
   }

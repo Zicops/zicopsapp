@@ -6,7 +6,7 @@ import styles from "../vctoolMain.module.scss";
 import BreakoutRoomSetting from "./BreakoutRoomSetting";
 import CreateBreakoutRoom from "./CreateBreakoutRoom";
 import ManageRoom from "./ManageRoom";
-const BreakoutRoom = ({ showHide = false, createRooms }) => {
+const BreakoutRoom = ({ hide = false, createRooms }) => {
     const allUserdata = useRecoilValue(vctoolAlluserinfo)
     const [isModerator, setIsModerator] = useState(true)
     const userdata = useRecoilValue(UserStateAtom)
@@ -84,7 +84,7 @@ const BreakoutRoom = ({ showHide = false, createRooms }) => {
                 <div className={`${styles.breakoutHead}`}>
                     <div>Breakout Rooms</div>
                     <button onClick={() => {
-                        showHide()
+                        hide()
                     }}>
                         <img src="/images/svg/vctool/close.svg" />
                     </button>

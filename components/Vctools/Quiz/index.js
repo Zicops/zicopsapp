@@ -4,7 +4,7 @@ import CreateQuiz from "./CreateQuiz";
 import QuizQA from "./QuizQA";
 import { useState } from "react";
 import ShowQuiz from "./ShowQuiz";
-const QuizPage = ({ showHide = false }) => {
+const QuizPage = ({ hide = false }) => {
     const [objTitle, setObjTitle] = useState('')
     function showQuiz(title) {
         if (title === '') return quizComponent[0].component;
@@ -38,7 +38,7 @@ const QuizPage = ({ showHide = false }) => {
             <div className={`${styles.quizHead}`}>
                 <div>Quiz</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

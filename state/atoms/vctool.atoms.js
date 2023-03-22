@@ -89,7 +89,7 @@ export const VcChatReplyAtom = atom({
     default: getMesaageObj()
 });
 
-export const DiscussionAtom = atom({
+export const vcChatBarAtom = atom({
     key: 'DiscussionAtom',
     default: []
 });

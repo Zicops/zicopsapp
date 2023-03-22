@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss";
 import EmptyQa from "./EmptyQa";
 import VcQaMessageBlock from "./VcQaMessageBlock";
-const QAbar = ({ showHide = false }) => {
+const QAbar = ({ hide = false }) => {
     const [showQAbtn, setshowQAbtn] = useState(false)
     const [message, setMessage] = useState('');
     const [messageArr, setMessageArr] = useRecoilState(AQChatAtom);
@@ -76,7 +76,7 @@ const QAbar = ({ showHide = false }) => {
             <div className={`${styles.qaBarHead}`}>
                 <div>Q & A</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

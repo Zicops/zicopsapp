@@ -4,8 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
 import PollQA from "./PollQA";
 const CreatePOll = ({ addPoll, setPollTitle }) => {
-    // const pollArr=useRecoilValue(pollArray);
-    const [pollInfo, setPollInfo] = useRecoilState(pollArray)
     return (
         <div className={`${styles.moderatorPoll}`}>
 

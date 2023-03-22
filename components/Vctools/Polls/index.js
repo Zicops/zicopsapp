@@ -3,7 +3,7 @@ import styles from "../vctoolMain.module.scss";
 import CreatePOll from "./CreatePoll";
 import PollQA from "./PollQA";
 import ShowPoll from "./ShowPoll";
-const Poll = ({ showHide = false }) => {
+const Poll = ({ hide = false }) => {
     const [polltitle, setPollTitle] = useState('')
     function showPollPopup(title) {
         if (title === '') return pollComponent[1].component;
@@ -35,7 +35,7 @@ const Poll = ({ showHide = false }) => {
             <div className={`${styles.pollHead}`}>
                 <div>Polls</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>

@@ -2,7 +2,7 @@ import { pollArray } from "@/state/atoms/vctool.atoms";
 import { useEffect, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
-const PollBox = ({ pollNumber, publish, pollQuestion, Options }) => {
+const PollBox = ({ pollNumber, publish, pollQuestion, options }) => {
     const [expand, setexpand] = useState(true)
     return (
         <div className={`${styles.quizQuestion}`}>
@@ -33,7 +33,7 @@ const PollBox = ({ pollNumber, publish, pollQuestion, Options }) => {
                         <div className={`${styles.pollQuestions}`}>{pollQuestion}</div>
                         <div className={`${styles.pollBoxOptions}`}>
                             {
-                                Options.map((data) => {
+                                options.map((data) => {
                                     return (
                                         <div>{data.value}</div>
                                     )

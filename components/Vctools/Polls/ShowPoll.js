@@ -9,8 +9,8 @@ const ShowPoll = ({ setPollTitle }) => {
             <div className={`${styles.pollScreenContainer}`}>
                 {
                     pollInfo.map((data, index) => {
-                        return (data.pollName !== '' && data.pollOptions !== '') && <PollBox pollNumber={`Poll ${index}`} pollQuestion={data.pollQuestion} 
-                        Options={pollInfo[index].pollOptions} />
+                        return (data.pollName !== '' && data.pollQuestion !== '') && <PollBox pollNumber={`Poll ${index}`} pollQuestion={data.pollQuestion} 
+                        options={pollInfo[index].pollOptions} />
                     })
                 }
             </div>

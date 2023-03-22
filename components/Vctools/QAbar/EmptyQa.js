@@ -7,9 +7,6 @@ const EmptyQa = () => {
                 <div className={`${styles.qaQuetionAvailableAvailableHead}`}>No questions !</div>
                 <p>click bellow to ask question</p>
             </div>
-            {/* <button className={`${styles.addBreakoutroombtn}`} onClick={() => {
-                // addRoom()
-            }}>Add Room</button> */}
         </div>
     )
 };

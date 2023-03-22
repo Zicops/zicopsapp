@@ -20,11 +20,6 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
 
     const [quizAtom, setQuizAtom] = useRecoilState(quizArray)
     const [isChecked, setIsChecked] = useState(false)
-    // useEffect(() => {
-    //     if (isChecked) {
-    //         setQuizInfo
-    //     }
-    // })
     return (
         <div className={`${styles.quizQAcontainer}`}>
             <div className={`${styles.quizeQALabel}`}>Create Quiz</div>
@@ -142,7 +137,6 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                         option4: ''
                     })
                     // setQuizInfo([])
-                    console.log(quizAtom)
                     showQuiz();
                 }}>Save</button>
             </div>

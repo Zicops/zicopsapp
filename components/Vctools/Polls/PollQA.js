@@ -62,7 +62,7 @@ const PollQA = ({ ShowPoll }) => {
                         }}>cancel</button>
                     <button className={`${styles.pollSaveBtn}`}
                         onClick={() => {
-                            if (pollName !== "" && pollQuestion !== '' && options!=="") {
+                            if (pollName !== "" && pollQuestion !== '' && options.length>0) {
                                 setPollInfo([
                                     ...pollInfo,
                                     {

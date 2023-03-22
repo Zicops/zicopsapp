@@ -1,12 +1,12 @@
 import { UserStateAtom } from "@/state/atoms/users.atom";
-import { DiscussionAtom } from "@/state/atoms/vctool.atoms";
+import { vcChatBarAtom } from "@/state/atoms/vctool.atoms";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss";
 import ChatMessageBlock from "./VcChatMessageBlock";
-const ChatBar = ({ showHide = false }) => {
+const ChatBar = ({ hide = false }) => {
     const [message, setMessage] = useState('');
-    const [messageArr, setMessageArr] = useRecoilState(DiscussionAtom);
+    const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
     const [sendMessage, setSendMessage] = useState(false);
     const userDetails = useRecoilValue(UserStateAtom);
     const sendMessageHandler = () => {
@@ -72,7 +72,7 @@ const ChatBar = ({ showHide = false }) => {
             <div className={`${styles.chatbarHead}`}>
                 <div>Chat</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>
@@ -84,10 +84,6 @@ const ChatBar = ({ showHide = false }) => {
                     return (
                         <>
                             <ChatMessageBlock message={data?.parent} isLeft={!isRight} />
-                            {/* {data?.replies &&
-                data?.replies?.map((reply) => (
-                  <ChatMessageBlock message={reply} isLeft={!isRight} isReply={true} />
-                ))} */}
                         </>
                     );
                 })}
