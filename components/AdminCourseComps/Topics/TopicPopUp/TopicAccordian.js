@@ -12,7 +12,7 @@ export default function TopicAccordian({ title, description, children }) {
           <p>{title}</p>
 
           <div className={`${styles.imgContainer}`}>
-            {isActive ? (
+            {!isActive ? (
               <PlusIcon color={styles.primary} />
             ) : (
               <div className={`${styles.minus}`}></div>

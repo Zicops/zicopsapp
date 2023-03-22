@@ -24,7 +24,7 @@ $marginBetweenInputs: 1em;
   label,
   input {
     width: 100%;
-    padding: 8px;
+    // padding: 8px;
   }
 }
 
@@ -477,20 +477,14 @@ $marginBetweenInputs: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-
-  overflow: auto;
-  overflow-y: overlay;
-
-  height: 40vh;
-
-  &::-webkit-scrollbar {
-    width: 2px;
-  }
 }
 
 // module pop up
 .popUpFormContainer {
   padding: 1.5em;
+  max-height: 60vh;
+  overflow: hidden auto;
+  overflow-y: overlay;
 
   > div {
     margin-bottom: 20px;
@@ -522,13 +516,6 @@ $marginBetweenInputs: 1em;
       }
     }
   }
-}
-
-.addTopicForm {
-  margin: 1.5em 4em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
 
   .addTopicFormBtn {
     padding: 0.7em 2em;
@@ -547,6 +534,7 @@ $marginBetweenInputs: 1em;
     &:hover {
       border-color: $white;
       color: $white;
+      background-color: $darkTwo;
     }
 
     &:disabled {
@@ -556,6 +544,13 @@ $marginBetweenInputs: 1em;
       opacity: 0.5;
     }
   }
+}
+
+.addTopicForm {
+  margin: 1.5em 4em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 // extra

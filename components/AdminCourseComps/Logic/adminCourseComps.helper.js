@@ -55,3 +55,15 @@ export function getTopicDataObj(data = {}) {
     type: data?.type || ''
   };
 }
+
+export function getTopicAssessmentObj(data = {}) {
+  return {
+    id: data?.id || null,
+    topicId: data?.topicId || null,
+    courseId: data?.courseId || null,
+    examId: data?.examId || null,
+    language: data?.language || '',
+    category: data?.category || '',
+    subCategory: data?.subCategory || ''
+  };
+}

@@ -1,4 +1,5 @@
 import { ADD_COURSE_TOPIC, UPDATE_COURSE_TOPIC } from '@/api/Mutations';
+import { COURSE_TYPES, TOPIC_TYPES } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { isWordSame } from '@/helper/utils.helper';
@@ -35,6 +36,14 @@ export default function useHandleTopic(
 
     setTopicData(getTopicDataObj(topData));
   }, [topData]);
+
+  // set type to assessment if test series course
+  if (
+    courseMetaData?.type === COURSE_TYPES.testSeries &&
+    topicData?.type !== TOPIC_TYPES.assessment
+  ) {
+    setTopicData(getTopicDataObj({ ...topicData, type: TOPIC_TYPES.assessment }));
+  }
 
   function toggleEditTopicForm() {
     // reset to original data if cancel

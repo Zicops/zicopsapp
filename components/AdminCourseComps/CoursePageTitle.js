@@ -9,6 +9,7 @@ export default function CoursePageTitle({ isAddPage = false }) {
   // add course page
   if (isAddPage) {
     if (courseMetaData?.type === COURSE_TYPES.testSeries) return 'Add New Test Series';
+    if (courseMetaData?.type === COURSE_TYPES.classroom) return 'Add Classroom Course';
 
     return 'Add New Course';
   }

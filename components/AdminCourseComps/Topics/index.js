@@ -1,6 +1,6 @@
 import IconButton from '@/components/common/IconButton';
 import Spinner from '@/components/common/Spinner';
-import { AllCourseModulesDataAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
@@ -16,13 +16,12 @@ export default function Topics() {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
-  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const allModules = useRecoilValue(AllCourseModulesDataAtom);
-  const { displayPopUp, setDisplayPopUp, popUpTypes } = useHandleTopicTab();
+  const { displayPopUp, setDisplayPopUp, popUpTypes, isCourseExpertiseAdded } = useHandleTopicTab();
   const router = useRouter();
   const courseId = router?.query?.courseId || null;
 
-  if (courseId && (allModules == null || !allModules?.every((mod) => mod?.courseId === courseId)))
+  if (allModules == null || !allModules?.every((mod) => mod?.courseId === courseId))
     return <Spinner />;
 
   return (
@@ -120,7 +119,7 @@ export default function Topics() {
         text="Add Module"
         styleClasses={styles.addCourseContentBtn}
         handleClick={() => {
-          if (!courseMetaData?.expertiseLevel)
+          if (!isCourseExpertiseAdded)
             return setToastMessage('Please select at least one expertise level');
 
           setDisplayPopUp({ data: null, type: popUpTypes.module });

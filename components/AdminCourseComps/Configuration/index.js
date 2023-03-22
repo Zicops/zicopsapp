@@ -185,7 +185,7 @@ export default function Configuration() {
           <div>
             <h4>Course Freeze</h4>
 
-            <div className={`w-100 ${styles.boxContainer}`}>
+            <div className={`w-100`}>
               <SwitchBox
                 labeledInputProps={{
                   label: 'Freeze',

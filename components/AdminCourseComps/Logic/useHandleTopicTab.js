@@ -1,24 +1,38 @@
 import { GET_COURSE_CHAPTERS, GET_COURSE_MODULES, GET_COURSE_TOPICS } from '@/api/Queries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
-import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
+import {
+  AllCourseModulesDataAtom,
+  CourseCurrentStateAtom,
+  CourseMetaDataAtom
+} from '@/state/atoms/courses.atom';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleTopicTab() {
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const courseCurrentState = useRecoilValue(CourseCurrentStateAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [displayPopUp, setDisplayPopUp] = useState({ data: null, type: null });
+  const [isCourseExpertiseAdded, setIsCourseExpertiseAdded] = useState(null);
 
   const popUpTypes = { module: 'module', chapter: 'chapter', topic: 'topic' };
 
   const router = useRouter();
   const courseId = router?.query?.courseId || null;
 
+  // load module topic chapter data
   useEffect(() => {
     if (!courseId) return;
+
     getModuleChapterTopic();
   }, [courseId]);
+
+  // update course expertise added check
+  useEffect(() => {
+    setIsCourseExpertiseAdded(!!courseMetaData?.expertiseLevel?.length);
+  }, [courseCurrentState?.isSaved]);
 
   async function getModuleChapterTopic() {
     if (!courseId) return;
@@ -48,19 +62,5 @@ export default function useHandleTopicTab() {
     setAllModules(_allModules);
   }
 
-  function getFilteredTopicData(topicArr, moduleId, chapterId, chapterData) {
-    const _topicArr = structuredClone(topicArr);
-
-    return _topicArr?.filter((topic) => {
-      const isTopicMatched = !!chapterId
-        ? topic?.chapterId === chapterId
-        : topic?.moduleId === moduleId;
-
-      if (isTopicMatched) chapterData?.topics?.push(topic);
-
-      return !isTopicMatched;
-    });
-  }
-
-  return { displayPopUp, setDisplayPopUp, popUpTypes };
+  return { displayPopUp, setDisplayPopUp, popUpTypes, isCourseExpertiseAdded };
 }

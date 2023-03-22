@@ -101,7 +101,7 @@ export default function useSaveCourseData() {
     _courseCurrentState.error = [];
     setCourseCurrentState(_courseCurrentState);
     setCourseMetaData(getCourseMetaDataObj({ ..._courseMetaData, ...addCourseData }));
-    setToastMessage('Course Created Successfully');
+    setToastMessage('Course Created Successfully', 'success');
     router.push(`/admin/course/my-courses/edit/${addCourseData?.id}`);
   }
 
@@ -189,7 +189,10 @@ export default function useSaveCourseData() {
     const _courseMetaData = structuredClone(courseMetaData);
 
     // add course if no id is present
-    if (!courseMetaData.id) return addNewCourse(_courseMetaData);
+    if (!courseMetaData.id)
+      return addNewCourse(_courseMetaData).then(() => {
+        if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
+      });
 
     await uploadCourseFiles(_courseMetaData);
 

@@ -65,6 +65,7 @@ export async function loadQueryDataAsync(
   return response?.data || {};
 }
 
+// load current lsp data by default
 export async function loadMultipleLspDataWithMultipleQueries(
   QUERY,
   variableObj = {},
