@@ -4,11 +4,13 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { changeHandler, truncateToN } from '@/helper/common.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
@@ -17,6 +19,7 @@ import AddUrl from './common/AddUrl';
 export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
@@ -25,6 +28,8 @@ export default function VendorMaster() {
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const isViewPage = router.asPath?.includes('view-vendor');
 
@@ -150,8 +155,7 @@ export default function VendorMaster() {
               />
             ))}
           </div>
-        
-          </div>
+        </div>
       </div>
 
       <div className={`${styles.input4}`}>
@@ -173,7 +177,7 @@ export default function VendorMaster() {
           type="External"
           items={emails}
           setItems={setEmails}
-          isDisabled={isViewPage}
+          isDisabled={isViewPage || isVendor}
         />
       </div>
 
