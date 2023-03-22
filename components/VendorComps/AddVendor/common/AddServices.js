@@ -49,7 +49,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
 
-  const [displayFormats, setDisplayFormats] = useState(VENDOR_FILE_FORMATS);
+  const [displayFormats, setDisplayFormats] = useState([...VENDOR_FILE_FORMATS, ...data?.formats]);
 
   const {
     addUpdateProfile,
