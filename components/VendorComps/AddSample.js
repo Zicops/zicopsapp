@@ -100,8 +100,8 @@ const AddSample = ({ pType }) => {
               inputName: 'fileType',
               placeholder: 'Select File Type',
               value: {
-                label: sampleData.fileType,
-                value: sampleData.fileType
+                label: sampleData?.fileType,
+                value: sampleData?.fileType
               },
               options: fileFormatArray,
               menuPlacement: 'top'

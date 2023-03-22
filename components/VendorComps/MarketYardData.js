@@ -37,7 +37,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
     filters.service = 'cd';
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCdVendors(cdVendorList);
-  }, [vendorType]);
+  }, [vendorType, searchText]);
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
@@ -72,7 +72,7 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
       {displayRows?.isCrtDisplayed && !!cdVendors?.length && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-      {speakerDetails?.length && (
+      {!!speakerDetails?.length && (
         <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
       )}
     </>
