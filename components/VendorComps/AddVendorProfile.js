@@ -59,7 +59,19 @@ const AddVendorProfile = ({ data = {} }) => {
     setSelectedCdExpertise,
     selectedLanguages,
     setSelectedLanguages,
-    getFileName
+    getFileName,
+    handleAddRemoveLanguage,
+    closeLanguagesHandler,
+    tempLanguages,
+    handleAddRemoveSmeExpertise,
+    handleAddRemoveCrtExpertise,
+    handleAddRemoveCdExpertise,
+    closeExpertiseSmeHandler,
+    closeExpertiseCrtHandler,
+    closeExpertiseCdHandler,
+    tempSmeExpertise,
+    tempCrtExpertise,
+    tempCdExpertise
   } = useProfile();
 
   const router = useRouter();
@@ -222,13 +234,15 @@ const AddVendorProfile = ({ data = {} }) => {
           ) : (
             <>
               <div className={`${styles.languages}`}>
-                {profileData?.languages?.map((data, index) => (
+                {tempLanguages?.map((data, index) => (
                   <div className={`${styles.singleLanguage}`} key={index}>
                     <LabeledRadioCheckbox
                       type="checkbox"
                       label={data}
                       value={data}
-                      isChecked={true}
+                      isChecked={selectedLanguages?.includes(data)}
+                      changeHandler={handleAddRemoveLanguage}
+                      isDisabled={isViewPage}
                     />
                   </div>
                 ))}
@@ -240,7 +254,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 isDisabled={isViewPage}
                 handleClick={() => {
                   setIsOpenLanguage(true);
-                  setSelectedLanguages([...profileData?.languages]);
+                  setSelectedLanguages([...selectedLanguages]);
                 }}
               />
             </>
@@ -262,13 +276,15 @@ const AddVendorProfile = ({ data = {} }) => {
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {profileData?.sme_expertises?.map((data, index) => (
+                  {tempSmeExpertise?.map((data, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={data}
                         value={data}
-                        isChecked={true}
+                        isChecked={selectedSmeExpertise?.includes(data)}
+                        isDisabled={isViewPage}
+                        changeHandler={handleAddRemoveSmeExpertise}
                       />
                     </div>
                   ))}
@@ -280,7 +296,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   isDisabled={isViewPage}
                   handleClick={() => {
                     setOpenSmeExpertise(true);
-                    setSelectedSmeExpertise([...profileData?.sme_expertises]);
+                    setSelectedSmeExpertise([...selectedSmeExpertise]);
                   }}
                 />
               </>
@@ -302,13 +318,14 @@ const AddVendorProfile = ({ data = {} }) => {
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {profileData?.crt_expertises?.map((data, index) => (
+                  {tempCrtExpertise?.map((data, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={data}
                         value={data}
-                        isChecked={true}
+                        isChecked={selectedCrtExpertise?.includes(data)}
+                        changeHandler={handleAddRemoveCrtExpertise}
                       />
                     </div>
                   ))}
@@ -320,7 +337,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   isDisabled={isViewPage}
                   handleClick={() => {
                     setOpenCrtExpertise(true);
-                    setSelectedCrtExpertise([...profileData?.crt_expertises]);
+                    setSelectedCrtExpertise([...selectedCrtExpertise]);
                   }}
                 />
               </>
@@ -342,13 +359,14 @@ const AddVendorProfile = ({ data = {} }) => {
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {profileData?.content_development?.map((data, index) => (
+                  {tempCdExpertise?.map((data, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={data}
                         value={data}
-                        isChecked={true}
+                        isChecked={selectedCdExpertise?.includes(data)}
+                        changeHandler={handleAddRemoveCdExpertise}
                       />
                     </div>
                   ))}
@@ -360,7 +378,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   isDisabled={isViewPage}
                   handleClick={() => {
                     setOpenCdExpertise(true);
-                    setSelectedCdExpertise([...profileData?.content_development]);
+                    setSelectedCdExpertise([...selectedCdExpertise]);
                   }}
                 />
               </>
@@ -396,7 +414,7 @@ const AddVendorProfile = ({ data = {} }) => {
         title="Add Subject matter expertise"
         popUpState={[isOpenSmeExpertise, setOpenSmeExpertise]}
         size="large"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeExpertiseSmeHandler }}
         submitBtn={{ name: 'Add', handleClick: handleAddSmeExpertise }}
         isFooterVisible={true}>
         <AddExpertise
@@ -411,7 +429,7 @@ const AddVendorProfile = ({ data = {} }) => {
         title="Add Classroom Training Expertise"
         popUpState={[isOpenCrtExpertise, setOpenCrtExpertise]}
         size="large"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeExpertiseCrtHandler }}
         submitBtn={{ name: 'Add', handleClick: handleAddCrtExpertise }}
         isFooterVisible={true}>
         <AddExpertise
@@ -426,7 +444,7 @@ const AddVendorProfile = ({ data = {} }) => {
         title="Add Content Development Expertise"
         popUpState={[isOpenCdExpertise, setOpenCdExpertise]}
         size="large"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeExpertiseCdHandler }}
         submitBtn={{ name: 'Add', handleClick: handleAddCdExpertise }}
         isFooterVisible={true}>
         <AddExpertise
@@ -441,7 +459,7 @@ const AddVendorProfile = ({ data = {} }) => {
         title="Add language"
         popUpState={[isOpenLanguage, setIsOpenLanguage]}
         size="small"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeLanguagesHandler }}
         submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}
         isFooterVisible={true}>
         {VENDOR_LANGUAGES?.map((data, index) => {
