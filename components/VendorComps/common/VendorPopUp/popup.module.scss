@@ -69,6 +69,12 @@
 .button_container {
   display: flex;
   gap: 15px;
+
+  button {
+    &:disabled {
+      cursor: no-drop;
+    }
+  }
 }
 
 .btn_cancel_add {

@@ -12,7 +12,7 @@ import { VendorProfileAtom, allProfileAtom } from '@/state/atoms/vendor.atoms';
 export default function AboutProfile() {
   const router = useRouter();
   const profileId = router.query.profileId || null;
-  const profileData = useRecoilValue(VendorProfileAtom);
+  // const profileData = useRecoilValue(VendorProfileAtom);
 
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const viewProfileData = vendorProfiles?.filter((data) => data?.pf_id === profileId);

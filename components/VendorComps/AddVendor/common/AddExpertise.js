@@ -54,6 +54,7 @@ const AddExpertise = ({
         styleClass={`${styles.expertiseSearchBar}`}
       />
       {catSubCat?.cat?.map((data, index) => {
+        if (!catSubCat.subCatGrp?.[data.id]?.subCat?.length) return;
         return (
           <div className={`${styles.expertise1}`}>
             <h3>{data.Name}</h3>

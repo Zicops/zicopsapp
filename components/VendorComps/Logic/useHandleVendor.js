@@ -1,3 +1,4 @@
+import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
   CREATE_EXPERIENCE_VENDOR,
@@ -24,10 +25,16 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import {
+  COURSE_STATUS,
+  USER_LSP_ROLE,
+  VENDOR_MASTER_STATUS,
+  USER_TYPE
+} from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -61,6 +68,9 @@ export default function useHandleVendor() {
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
+  const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const skeletonCardCount = 6;
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
@@ -134,6 +144,19 @@ export default function useHandleVendor() {
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
+    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
+      user_id: user?.user_id,
+      user_lsp_id: user?.user_lsp_id
+    }));
+
+    const resTags = await addUserTags({
+      variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+    }).catch((err) => {
+      isError = true;
+    });
+
+    if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
   }
@@ -419,6 +442,7 @@ export default function useHandleVendor() {
     let isError = false;
     for (let i = 0; i < profileData?.experienceData?.length; i++) {
       const exp = profileData?.experienceData?.[i];
+      const isWorking = exp?.isWorking;
       const startDate = exp?.startMonth?.concat('-', exp?.startYear);
       const start_date = new Date(startDate);
       const start_timestamp = start_date.getTime() / 1000;
@@ -436,7 +460,7 @@ export default function useHandleVendor() {
         location: exp?.location?.trim() || '',
         locationType: exp?.locationType?.trim() || '',
         startDate: start_timestamp || null,
-        endDate: end_timestamp || null,
+        endDate: isWorking ? 0 : end_timestamp || null,
         status: exp?.status
       };
 
@@ -474,7 +498,10 @@ export default function useHandleVendor() {
       pType: ptype,
       name: sampleData?.sampleName || '',
       description: sampleData?.description || '',
-      pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+      pricing: '',
+      rate: sampleData?.rate || 0,
+      currency: sampleData?.currency || '',
+      unit: sampleData?.unit || '',
       file: sampleData?.sampleFile || null,
       fileType: sampleData?.fileType || '',
       status: VENDOR_MASTER_STATUS.active

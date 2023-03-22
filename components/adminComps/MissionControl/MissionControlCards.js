@@ -5,6 +5,7 @@ import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ProductTourVisible } from '@/state/atoms/productTour.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRecoilValue } from 'recoil';
@@ -73,6 +74,7 @@ const Card = ({ image, text, width, tooltipTitle, isDisabled = false }) => {
 const MissionControlCards = () => {
   const showProductTour = useRecoilValue(ProductTourVisible);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const vendorDetails = useRecoilValue(VendorStateAtom);
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
@@ -149,7 +151,12 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href={'/admin/vendor/manage-vendor'}>
+            <Link
+              href={
+                isVendor
+                  ? '/admin/vendor/manage-vendor/update-vendor/' + vendorDetails?.vendorId
+                  : '/admin/vendor/manage-vendor'
+              }>
               <a>
                 <Card
                   image="/images/VendorManagement.png"

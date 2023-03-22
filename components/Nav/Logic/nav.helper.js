@@ -13,7 +13,11 @@ export const AdminMenu = [
   },
   { title: 'Training', link: '/admin', isDisabled: true },
   { title: 'Exams', link: '/admin/exams/my-question-bank' },
-  { title: 'Vendor', link: '/admin/vendor/manage-vendor' },
+  {
+    title: 'Vendor',
+    link: '/admin/vendor/manage-vendor',
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
   { title: 'Lab', link: '/admin', isDisabled: true },
   { title: 'Analytics', link: '/admin/analytics/course-dashboard', isDemo: true },
   { title: 'Administration', link: '/admin/administration/organization' }

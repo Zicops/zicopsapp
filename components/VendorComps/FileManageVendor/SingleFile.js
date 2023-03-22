@@ -19,7 +19,11 @@ const SingleFile = ({ data, pType }) => {
     <div className={`${styles.singleFileContainer}`}>
       <div className={`${styles.singleProfileMain}`}>
         <div className={`${styles.singleProfileImage}`}>
-          <img src="/images/svg/file_image.svg" alt="" />
+          {data?.fileType === 'PPT' ? (
+            <img src="/images/PPT-icon.png" alt="" />
+          ) : (
+            <img src="/images/svg/file_image.svg" alt="" />
+          )}
         </div>
         <div className={`${styles.singleFileDetails}`}>
           <p className={`${styles.fileName}`}>{data?.name}</p>

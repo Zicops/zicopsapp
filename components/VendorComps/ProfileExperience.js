@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Loader from '../common/Loader';
 import styles from './AddVendor/addvendor.module.scss';
 import styless from './vendorComps.module.scss';
+import moment from 'moment';
 
 export default function ProfileExperience() {
   const { getProfileExperience } = useHandleVendor();
@@ -41,7 +42,8 @@ export default function ProfileExperience() {
                 <h4>{data.Title}</h4>
                 <p>{data.CompanyName}</p>
                 <p className={styless.dates}>
-                  {data.StartDate} - {data.EndDate == 0 ? 'Present' : data.EndDate}{' '}
+                  {moment.unix(data.StartDate).format('MMM, YYYY')} -{' '}
+                  {data.EndDate === 0 ? 'Present' : moment.unix(data.EndDate).format('MMM, YYYY')}{' '}
                   {data.EmployementType}
                 </p>
               </div>

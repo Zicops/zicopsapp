@@ -90,11 +90,18 @@ const AddExpriences = () => {
       </div>
       <div className={`${styles.checkBoxRole}`}>
         <LabeledRadioCheckbox
-          label="currently working in this role"
+          label="Currently Working in this Role"
           type="checkbox"
           name="isWorking"
           isChecked={experiencesData?.isWorking}
-          changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
+          changeHandler={(e) => {
+            const isChecked = e.target.checked;
+            const _experienceData = structuredClone(experiencesData);
+            _experienceData.isWorking = isChecked;
+            _experienceData.endMonth = null;
+            _experienceData.endYear = null;
+            setExperiencesData(_experienceData);
+          }}
         />
       </div>
       <div>
@@ -108,7 +115,8 @@ const AddExpriences = () => {
                 label: experiencesData?.startMonth,
                 value: experiencesData?.startMonth
               },
-              options: optionMonthArray
+              options: optionMonthArray,
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startMonth')
@@ -123,7 +131,8 @@ const AddExpriences = () => {
               value: {
                 label: experiencesData?.startYear,
                 value: experiencesData?.startYear
-              }
+              },
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startYear')
@@ -144,7 +153,8 @@ const AddExpriences = () => {
                   label: experiencesData?.endMonth,
                   value: experiencesData?.endMonth
                 },
-                isDisabled: experiencesData?.isWorking ? true : false
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endMonth')
@@ -161,7 +171,8 @@ const AddExpriences = () => {
                   label: experiencesData?.endYear,
                   value: experiencesData?.endYear
                 },
-                isDisabled: experiencesData?.isWorking ? true : false
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endYear')
