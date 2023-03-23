@@ -39,15 +39,19 @@ export default function ManageVendorTabs() {
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+  const shallowRoute = router.query?.shallowRoute || null;
   const isViewPage = router.asPath?.includes('view-vendor');
 
   // reset to default on load
   // NOTE: on load is saved is false which should ideally be false only if something is changed
   useEffect(() => {
+    if (shallowRoute) return;
+
     setVendorCurrentState(getVendorCurrentStateObj());
   }, []);
 
   useEffect(() => {
+    if (shallowRoute) return;
     if (!vendorId) return setEmailId([]);
     getSingleVendorInfo();
     getSmeDetails();
@@ -58,6 +62,43 @@ export default function ManageVendorTabs() {
     getCDSampleFiles();
     getAllProfileInfo();
   }, [vendorId]);
+
+  useEffect(() => {
+    if (vendorCurrentState?.isSaved || isViewPage) {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      router.events.off('routeChangeStart', beforeRouteHandler);
+      return;
+    }
+
+    const confirmationMessage = 'Changes you made may not be saved. Do you still wish to exit?';
+    function beforeUnloadHandler(e) {
+      (e || window.event).returnValue = confirmationMessage;
+
+      // setShowConfirmBox(1);
+      return confirmationMessage; // Gecko + Webkit, Safari, Chrome etc.
+    }
+
+    function beforeRouteHandler(url) {
+      // console.log(url);
+      // return false;
+      if (router.pathname !== url && !confirm(confirmationMessage)) {
+        // setShowConfirmBox(1);
+        router.push(`${router.asPath}?shallowRoute=true`, router.asPath, { shallow: true });
+        router.events.emit('routeChangeError');
+
+        // if (showConfirmBox !== 2)
+        throw `Route change to "${url}" was aborted (this error can be safely ignored). See https://github.com/zeit/next.js/issues/2476.`;
+      }
+    }
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+    router.events.on('routeChangeStart', beforeRouteHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+      router.events.off('routeChangeStart', beforeRouteHandler);
+    };
+  }, [vendorCurrentState?.isSaved]);
 
   const tabData = manageVendorTabData;
 
