@@ -32,6 +32,18 @@ export default function useHandleVendorServices() {
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
 
   async function addUpdateSme(displayToaster = true) {
+    if (!smeData?.isApplicable) return;
+
+    if (
+      !smeData?.serviceDescription.length ||
+      !smeData?.expertises?.length ||
+      !smeData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Subject Matter Expertise'
+      });
+
     const sendData = {
       vendor_id: vendorId,
       description: smeData?.serviceDescription || '',
@@ -58,19 +70,30 @@ export default function useHandleVendorServices() {
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
-    if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
-      const res = await createSme({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add SME Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+
+    const res = await createSme({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add SME Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Services Created' });
+    return res;
   }
 
   async function addUpdateCrt(displayToaster = true) {
+    if (!ctData?.isApplicable) return;
+
+    if (
+      !ctData?.serviceDescription.length ||
+      !ctData?.expertises?.length ||
+      !ctData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Classroom Training'
+      });
+
     const sendData = {
       vendor_id: vendorId,
       description: ctData?.serviceDescription || '',
@@ -97,19 +120,28 @@ export default function useHandleVendorServices() {
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
-    if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
-      const res = await createCrt({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+    const res = await createCrt({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Services Created' });
+    return res;
   }
 
   async function addUpdateCd(displayToaster = true) {
+    if (!cdData?.isApplicable) return;
+
+    if (
+      !cdData?.serviceDescription.length ||
+      !cdData?.expertises?.length ||
+      !cdData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Content Development'
+      });
     const sendData = {
       vendor_id: vendorId,
       description: cdData?.serviceDescription || '',
@@ -137,16 +169,15 @@ export default function useHandleVendorServices() {
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
-    if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {
-      const res = await createCd({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'CD Created Error' });
-      });
-      if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+
+    const res = await createCd({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'CD Created Error' });
+    });
+    if (isError) return;
+    if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
+    return res;
   }
 
   return {
