@@ -27,7 +27,7 @@ const AddExpertise = ({
   const [catSubCatFiltered, setCatSubCatFiltered] = useState(null);
   useEffect(() => {
     setCatSubCatFiltered(catSubCat);
-  }, []);
+  }, [catSubCat]);
 
   if (!catSubCat.isDataLoaded) {
     return (
