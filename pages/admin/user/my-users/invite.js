@@ -29,6 +29,7 @@ export default function MyUserPage() {
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
+  const [existingEmails, setExistingEmails] = useState([]);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isOpen, setIsOpen] = useState(false);
   // const [userOrgData , setUserOrgData] = useRecoilState(UsersOrganizationAtom);
@@ -44,6 +45,7 @@ export default function MyUserPage() {
   async function handleMail() {
     const { user_lsp_id } = parseJson(sessionStorage?.getItem('lspData'));
     if (loading) return;
+
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
     let emails = !tabData[0]?.name.includes('Invite')
@@ -66,16 +68,33 @@ export default function MyUserPage() {
     });
 
     if (isError) {
-      const message = JSON.parse(errorMsg?.split('body:')[1]);
-      if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
-        return setToastMsg({ type: 'danger', message: `Email already exists!` });
+      // const message = JSON.parse(errorMsg?.split('body:')[1]);
+      // if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
+      //   return setToastMsg({ type: 'danger', message: `Email already exists!` });
       return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     }
 
-    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
-      user_id: user?.user_id,
-      user_lsp_id: user?.user_lsp_id
-    }));
+    let existingEmails = [];
+    // adding tags to only those users who doesnt exist in the lsp
+    let userLspMaps = [];
+    const resultEmails = resEmail?.data?.inviteUsersWithRole;
+    resultEmails?.forEach((emailObj) => {
+      let message = emailObj?.message;
+      if (
+        message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+      )
+        existingEmails.push(emailObj?.email);
+      else if (message === CUSTOM_ERROR_MESSAGE?.newUsers)
+        userLspMaps.push({ user_id: emailObj?.user_id, user_lsp_id: emailObj?.user_lsp_id });
+    });
+
+    if (!!existingEmails?.length) setExistingEmails([...existingEmails]);
+
+    // const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
+    //   user_id: user?.user_id,
+    //   user_lsp_id: user?.user_lsp_id
+    // }));
 
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [userType] },
@@ -83,9 +102,14 @@ export default function MyUserPage() {
     }).catch((err) => {
       isError = true;
     });
-    
-    if(isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' })
-    
+
+    if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
+
+    if (!userLspMaps?.length && existingEmails?.length) {
+      setToastMsg({ type: 'info', message: `User exists!` });
+      return setIsOpen(true);
+    }
+
     setToastMsg({ type: 'success', message: `Emails sent successfully!` });
 
     return setIsOpen(true);
@@ -174,10 +198,13 @@ export default function MyUserPage() {
               closePopUp={setIsOpen}
               userEmails={
                 !tabData[0]?.name?.includes('Invite')
-                  ? emailId
-                  : emailId?.map((item) => item?.props?.children[0])
+                  ? emailId?.filter((x) => !existingEmails.includes(x))
+                  : emailId
+                      ?.map((item) => item?.props?.children[0])
+                      ?.filter((x) => !existingEmails.includes(x))
               }
               userType={userType}
+              existingEmails={existingEmails}
             />
           </PopUp>
         </MainBodyBox>
