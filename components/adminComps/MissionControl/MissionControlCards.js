@@ -81,7 +81,10 @@ const MissionControlCards = () => {
   const [vendorDetails, setVendorDetails] = useRecoilState(VendorStateAtom);
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
   useEffect(async () => {
+    if (!isVendor) return;
     if (vendorDetails?.vendorId) return;
     const vendorDetail = await loadAndCacheDataAsync(
       GET_USER_VENDORS,
@@ -92,10 +95,6 @@ const MissionControlCards = () => {
     if (!vendorDetail?.getUserVendor?.[0]?.vendorId) return;
     setVendorDetails(vendorDetail?.getUserVendor[0]);
   }, [userDetails?.id]);
-
-  console.info(vendorDetails);
-
-  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   return (
     <>
