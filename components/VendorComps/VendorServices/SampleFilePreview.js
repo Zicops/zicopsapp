@@ -60,7 +60,9 @@ export default function SampleFilePreview({
         </div>
 
         <div className={`${styles.samplePopupFooter}`}>
-          <p>{sampleFile?.rate}</p>
+          <p>
+            {sampleFile?.rate} {sampleFile?.currency} {sampleFile.unit}
+          </p>
 
           <div className={`${styles.samplePopupButtons}`}>
             <button onClick={handlePrevClick}>Prev</button>

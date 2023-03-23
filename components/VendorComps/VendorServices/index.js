@@ -26,7 +26,9 @@ export default function VendorServices({ data, type = 'sme' }) {
           fileUrl: file?.file_url,
           fileType: file?.fileType,
           status: file?.status,
-          rate: file?.price,
+          rate: file?.rate,
+          currency: file?.currency,
+          unit: file?.unit,
           actualFileType: file?.actualFileType
         }))
       ) || [];
@@ -103,6 +105,7 @@ export default function VendorServices({ data, type = 'sme' }) {
                 <div className={styles.sampleFileDetails}>
                   <div>{`${data?.title}`}</div>
                   <div className={styles.sampleFileRate}>
+                    {console.info(data)}
                     {data.rate} {data.currency} {data.unit}
                   </div>
                 </div>
