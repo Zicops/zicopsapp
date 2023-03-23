@@ -35,9 +35,16 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
-  const [selectedExpertise, setSelectedExpertise] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
-  const [selectedFormats, setSelectedFormats] = useState([]);
+
+  const [selectedExpertise, setSelectedExpertise] = useState(data?.expertises);
+  const [tempExpertise, setTempExpertise] = useState(data?.expertises);
+
+  const [selectedLanguages, setSelectedLanguages] = useState(data?.languages);
+  const [tempLanguages, setTempLanguages] = useState(data?.languages);
+
+  const [selectedFormats, setSelectedFormats] = useState(data?.formats);
+  const [tempFormats, setTempFormats] = useState(data?.formats);
+
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
@@ -89,7 +96,30 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
 
   const addExpertiseHandler = () => {
     setData({ ...data, expertises: [...selectedExpertise] });
+    setTempExpertise([...selectedExpertise]);
     setExpertisePopupState(false);
+  };
+
+  const handleAddRemoveExpertise = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedExpertise([...selectedExpertise, value]);
+    } else {
+      setData({ ...data, expertises: [...data?.expertises?.filter((lang) => lang !== value)] });
+      setSelectedExpertise([...selectedExpertise?.filter((lang) => lang !== value)]);
+    }
+  };
+
+  const closeExpertiseHandler = () => {
+    setSelectedExpertise([...tempExpertise]);
+    setTempExpertise([...tempExpertise]);
+    setExpertisePopupState(false);
+  };
+
+  const addLanguagesHandler = () => {
+    setData({ ...data, languages: [...selectedLanguages] });
+    setTempLanguages([...selectedLanguages]);
+    setLanguagePopupState(false);
   };
 
   const handleLanguageSelection = (e) => {
@@ -100,24 +130,36 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
       setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
     }
   };
-
-  const handleRemoveLanguage = (e) => {
+  const handleAddRemoveLanguage = (e) => {
     const { value, checked } = e.target;
-    setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+      setSelectedLanguages([...selectedLanguages?.filter((lang) => lang !== value)]);
+    }
   };
 
-  const handleRemoveExpertise = (e) => {
-    const { value, checked } = e.target;
-    setData({ ...data, expertises: [...data?.expertises?.filter((lang) => lang !== value)] });
-  };
-
-  const handleRemoveFormats = (e) => {
-    const { value, checked } = e.target;
-    setData({ ...data, formats: [...data?.formats?.filter((lang) => lang !== value)] });
-  };
-  const addLanguagesHandler = () => {
-    setData({ ...data, languages: [...selectedLanguages] });
+  const closeLanguagesHandler = () => {
+    setSelectedLanguages([...tempLanguages]);
+    setTempLanguages([...tempLanguages]);
     setLanguagePopupState(false);
+  };
+
+  const addFormatsHandler = () => {
+    setData({ ...data, formats: [...selectedFormats] });
+    setTempFormats([...selectedFormats]);
+    setOPDeliverablePopupState(false);
+  };
+
+  const handleAddRemoveFormats = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedFormats([...selectedFormats, value]);
+    } else {
+      setData({ ...data, formats: [...data?.formats?.filter((lang) => lang !== value)] });
+      setSelectedFormats([...selectedFormats.filter((lang) => lang !== value)]);
+    }
   };
 
   const handleFileSelection = (e) => {
@@ -129,8 +171,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     }
   };
 
-  const addFormatsHandler = () => {
-    setData({ ...data, formats: [...selectedFormats] });
+  const closeFormatsHandler = () => {
+    setSelectedFormats([...tempFormats]);
+    setTempFormats([...tempFormats]);
     setOPDeliverablePopupState(false);
   };
 
@@ -185,14 +228,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.expertises?.map((expert, index) => (
+                  {tempExpertise?.map((expert, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={expert}
                         value={expert}
-                        isChecked={data?.expertises?.includes(expert)}
-                        changeHandler={handleRemoveExpertise}
+                        isChecked={selectedExpertise?.includes(expert)}
+                        changeHandler={handleAddRemoveExpertise}
                         isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
@@ -204,7 +247,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   imgUrl="/images/svg/add_circle.svg"
                   handleClick={() => {
                     setExpertisePopupState(true);
-                    setSelectedExpertise([...data?.expertises]);
+                    setSelectedExpertise([...selectedExpertise]);
                   }}
                   isDisabled={isViewPage || !data?.isApplicable}
                 />
@@ -226,14 +269,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.languages?.map((lang, index) => (
+                  {tempLanguages?.map((lang, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={lang}
                         value={lang}
-                        isChecked={data?.languages?.includes(lang)}
-                        changeHandler={handleRemoveLanguage}
+                        isChecked={selectedLanguages?.includes(lang)}
+                        changeHandler={handleAddRemoveLanguage}
                         isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
@@ -245,7 +288,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   imgUrl="/images/svg/add_circle.svg"
                   handleClick={() => {
                     setLanguagePopupState(true);
-                    setSelectedLanguages([...data?.languages]);
+                    setSelectedLanguages([...selectedLanguages]);
                   }}
                   isDisabled={isViewPage || !data?.isApplicable}
                 />
@@ -265,14 +308,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.formats?.map((format, index) => (
+                  {tempFormats?.map((format, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={format}
                         value={format}
-                        isChecked={data?.formats?.includes(format)}
-                        changeHandler={handleRemoveFormats}
+                        isChecked={selectedFormats?.includes(format)}
+                        changeHandler={handleAddRemoveFormats}
                         isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
@@ -284,7 +327,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   imgUrl="/images/svg/add_circle.svg"
                   handleClick={() => {
                     setOPDeliverablePopupState(true);
-                    setSelectedFormats([...data?.formats]);
+                    setSelectedFormats([...selectedFormats]);
                   }}
                   isDisabled={isViewPage || !data?.isApplicable}
                 />
@@ -324,7 +367,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
-                  isDisabled={isViewPage || !data?.isApplicable || fileData[0]?.length >= 5}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -364,7 +407,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[expertisePopupState, setExpertisePopupState]}
         size="large"
         title="Add expertise"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeExpertiseHandler }}
         submitBtn={{ name: 'Add', handleClick: addExpertiseHandler }}>
         <AddExpertise
           expertiseValue={expertiseSearch}
@@ -399,7 +442,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[languagePopupState, setLanguagePopupState]}
         size="small"
         title="Add language"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeLanguagesHandler }}
         submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
@@ -422,6 +465,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         title="Add O/P deliverable formats"
         closeBtn={{
           name: 'Cancel',
+          handleClick: closeFormatsHandler,
           handleClick: () => {
             setNewOPFormat('');
             setOPDeliverablePopupState(false);
