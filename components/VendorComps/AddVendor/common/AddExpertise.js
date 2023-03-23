@@ -18,7 +18,7 @@ const AddExpertise = ({
     if (checked) {
       setSelectedExpertise([...selectedExpertise, value]);
     } else {
-      setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
+      setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
     }
   };
 
@@ -66,7 +66,7 @@ const AddExpertise = ({
                       type="checkbox"
                       label={value.Name}
                       value={value.Name}
-                      isChecked={selectedExpertise.includes(value.Name)}
+                      isChecked={selectedExpertise?.includes(value.Name)}
                       changeHandler={handleExpretiseSelection}
                     />
                   </div>
