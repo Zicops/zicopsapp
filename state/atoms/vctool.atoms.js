@@ -1,4 +1,11 @@
 import { atom } from "recoil";
+
+export const vcMeetingIconAtom=atom({
+    key:"vcMeetingIconAtom",
+    default:{
+        isModerator:false
+    }
+})
 export const vctoolAlluserinfo = atom({   //for storing all the room data
     key: "vctollInfo",
     default: []
