@@ -143,6 +143,7 @@ const AddSample = ({ pType }) => {
             <label>Unit:</label>
             <LabeledDropdown
               dropdownOptions={{
+                isSearchEnable: true,
                 inputName: 'unit',
                 placeholder: 'Select Unit',
                 value: {
@@ -154,6 +155,7 @@ const AddSample = ({ pType }) => {
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'unit')}
               styleClass={`${styles.unitDropDown}`}
+              isCreateable={true}
             />
           </div>
         </div>
