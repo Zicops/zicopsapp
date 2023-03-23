@@ -1,7 +1,7 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper.js';
-import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
+import { getPageSizeBasedOnScreen, isWordIncluded } from '@/helper/utils.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom.js';
 import Router from 'next/router.js';
 import { useEffect, useState } from 'react';
@@ -19,13 +19,16 @@ const MyVendor = () => {
   const [vendorTableData, setVendorTableData] = useState(null);
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [pageCursor, setPageCursor] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCol, setFilterCol] = useState('name');
 
+  const isVendor = userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor;
   useEffect(() => {
     if (vendorTableData?.length) return;
 
-    if (userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor) return getUserVendors();
+    if (isVendor) return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
-    getPaginatedVendors().then((data) => {
+    getPaginatedVendors()?.then((data) => {
       setPageCursor(data?.pageCursor || null);
       setVendorTableData(data?.vendors || []);
     });
@@ -42,7 +45,10 @@ const MyVendor = () => {
       field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => (
+        <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>
+      )
     },
     {
       field: 'services',
@@ -89,10 +95,12 @@ const MyVendor = () => {
   ];
   const pageSize = getPageSizeBasedOnScreen();
 
+  const options = [{ label: 'Name', value: 'name' }];
+
   return (
     <>
       <ZicopsTable
-        data={vendorTableData}
+        data={vendorTableData?.filter((user) => isWordIncluded(user?.[filterCol], searchQuery))}
         columns={columns}
         pageSize={pageSize}
         rowsPerPageOptions={[3]}
@@ -103,9 +111,28 @@ const MyVendor = () => {
           if (vendorTableData?.length / pageSize - currentPage < 3 && pageCursor) {
             getPaginatedVendors(pageCursor).then((data) => {
               setPageCursor(data?.pageCursor || null);
-              setVendorTableData((prev) => [...(prev || []), ...(data?.vendors || [])]);
+              const _tableData = structuredClone(vendorTableData || []);
+
+              data?.vendors?.forEach((v) => {
+                const isSameVendorPresent = _tableData?.find(
+                  (vendor) => vendor?.vendorId === v?.vendorId
+                );
+
+                if (isSameVendorPresent) return;
+
+                _tableData?.push(v);
+              });
+
+              setVendorTableData(_tableData);
             });
           }
+        }}
+        showCustomSearch={true}
+        searchProps={{
+          handleOptionChange: (val) => setFilterCol(val),
+          handleSearch: (val) => setSearchQuery(val),
+          options,
+          delayMS: 0
         }}
       />
 

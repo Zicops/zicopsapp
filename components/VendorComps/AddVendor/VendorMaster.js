@@ -4,11 +4,13 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { changeHandler, truncateToN } from '@/helper/common.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
@@ -17,6 +19,7 @@ import AddUrl from './common/AddUrl';
 export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
@@ -26,7 +29,18 @@ export default function VendorMaster() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  useEffect(() => {
+    setVendorData((prev) => ({
+      ...prev,
+      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]?.filter(
+        (e) => !!e
+      )
+    }));
+  }, [emails]);
 
   const socialMediaPopup = [
     {
@@ -100,7 +114,7 @@ export default function VendorMaster() {
           <label for="vendorName">Update vendor profile image:</label>
           <BrowseAndUpload
             styleClassBtn={`${styles.button}`}
-            title={getFileName() || 'Drag & Drop'} //image name is not setting here because we are getting an url
+            title={getFileName() || 'Drag & Drop'}
             handleFileUpload={handlePhotoInput}
             handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
             previewData={{
@@ -159,7 +173,12 @@ export default function VendorMaster() {
       </div>
       <div className={`${styles.input1}`}>
         <label for="users">Add User: </label>
-        <MultiEmailInput type="External" items={emails} setItems={setEmails} />
+        <MultiEmailInput
+          type="External"
+          items={emails}
+          setItems={setEmails}
+          isDisabled={isViewPage || isVendor}
+        />
       </div>
 
       {!!socialMediaPopup?.[openSocialMedia]?.title && (
@@ -187,6 +206,7 @@ export default function VendorMaster() {
             inputName={socialMediaPopup[openSocialMedia].inputName}
             urlData={socialMediaInput}
             setUrlData={setSocialMediaInput}
+            isDisabled={isViewPage}
           />
         </VendorPopUp>
       )}

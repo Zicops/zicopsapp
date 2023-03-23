@@ -1,14 +1,46 @@
-import { changeHandler } from '@/helper/common.helper';
-import { SampleAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
+import { changeHandler, truncateToN } from '@/helper/common.helper';
+import {
+  SampleAtom,
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom
+} from '@/state/atoms/vendor.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
-const AddSample = () => {
+import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+const AddSample = ({ pType }) => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
+  const smeServices = useRecoilValue(SmeServicesAtom);
+  const crtServices = useRecoilValue(CtServicesAtom);
+  const cdServices = useRecoilValue(CdServicesAtom);
+
+  function getFileName() {
+    return truncateToN(
+      sampleData?.sampleFile?.name || getEncodedFileNameFromUrl(sampleData?.photoUrl),
+      45
+    );
+  }
+
+  const fileType = [];
+
+  if (pType === 'sme') fileType = smeServices.formats;
+  if (pType === 'crt') fileType = crtServices.formats;
+  if (pType === 'cd') fileType = cdServices.formats;
+
+  const fileFormatArray = fileType.map((val) => ({
+    label: val,
+    value: val
+  }));
+
   return (
     <div>
       <div style={{ padding: '10px' }}>
@@ -38,15 +70,26 @@ const AddSample = () => {
             <label>Add sample file: </label>
             <BrowseAndUpload
               styleClassBtn={`${styles.button}`}
-              title="Drag & Drop"
+              title={getFileName() || 'Drag and Drop'}
               handleFileUpload={(e) => {
                 const file = e.target.files?.[0];
+                if (file?.size > LIMITS.vendorSampleSize) {
+                  fileErrMsg = `File Size limit is ${Math.ceil(
+                    LIMITS.vendorSampleSize / ONE_MB_IN_BYTES
+                  )} mb`;
+                  isValid = false;
+                  setToastMsg({ type: 'Danger', message: fileErrMsg });
+                }
                 setSampleData({ ...sampleData, sampleFile: file });
+              }}
+              handleRemove={() => setSampleData({ ...sampleData, sampleFile: null })}
+              previewData={{
+                fileName: getFileName(),
+                filePath: sampleData?.sampleFile
               }}
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
-              acceptedTypes={acceptedFiles}
-              hidePreviewBtns={true}
+              acceptedTypes={FILE_TYPES.vendorSampleFiles}
             />
           </div>
         </div>
@@ -60,7 +103,8 @@ const AddSample = () => {
                 label: sampleData?.fileType,
                 value: sampleData?.fileType
               },
-              options: fileFormatArray
+              options: fileFormatArray,
+              menuPlacement: 'top'
             }}
             changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'fileType')}
             styleClass={`${styles.fileFormatDropDown}`}
@@ -88,7 +132,8 @@ const AddSample = () => {
                   label: sampleData?.currency,
                   value: sampleData?.currency
                 },
-                options: currency
+                options: currency,
+                menuPlacement: 'top'
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'currency')}
               styleClass={`${styles.currencyDropDown}`}
@@ -104,7 +149,8 @@ const AddSample = () => {
                   label: sampleData?.unit,
                   value: sampleData?.unit
                 },
-                options: unit
+                options: unit,
+                menuPlacement: 'top'
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'unit')}
               styleClass={`${styles.unitDropDown}`}

@@ -1,3 +1,4 @@
+import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
   CREATE_EXPERIENCE_VENDOR,
@@ -24,10 +25,16 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, USER_LSP_ROLE, VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import {
+  COURSE_STATUS,
+  USER_LSP_ROLE,
+  VENDOR_MASTER_STATUS,
+  USER_TYPE
+} from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -61,6 +68,9 @@ export default function useHandleVendor() {
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
+  const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const skeletonCardCount = 6;
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
@@ -134,6 +144,19 @@ export default function useHandleVendor() {
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
+    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
+      user_id: user?.user_id,
+      user_lsp_id: user?.user_lsp_id
+    }));
+
+    const resTags = await addUserTags({
+      variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
+      context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+    }).catch((err) => {
+      isError = true;
+    });
+
+    if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
   }
@@ -246,11 +269,11 @@ export default function useHandleVendor() {
     setLoading(false);
   }
 
-  async function getSingleProfileInfo() {
+  async function getSingleProfileInfo(email) {
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
-      { vendor_id: vendorId, email: profileData?.email },
+      { vendor_id: vendorId, email: email },
       {},
       userQueryClient
     );
@@ -259,6 +282,8 @@ export default function useHandleVendor() {
   }
 
   async function getProfileExperience(pfId) {
+    if (!vendorId || !pfId) return [];
+
     const experienceInfo = await loadQueryDataAsync(
       GET_VENDOR_EXPERIENCES,
       { vendor_id: vendorId, pf_id: pfId },
@@ -266,11 +291,14 @@ export default function useHandleVendor() {
       userQueryClient
     );
 
-    setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
-    setProfileExperience(experienceInfo.getVendorExperience);
+    // setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
+    // setProfileExperience(experienceInfo.getVendorExperience);
+    return experienceInfo.getVendorExperience || [];
   }
 
   async function getSingleExperience(pfId, expId) {
+    if (!vendorId || !pfId || !expId) return;
+
     const experienceInfo = await loadQueryDataAsync(
       GET_SINGLE_EXPERIENCE_DETAILS,
       { vendor_id: vendorId, pf_id: pfId, exp_id: expId },
@@ -281,6 +309,17 @@ export default function useHandleVendor() {
     setExperiencesData(experienceInfo);
   }
 
+  async function getSampleFiles(p_type = 'sme') {
+    const fileInfo = await loadQueryDataAsync(
+      GET_SAMPLE_FILES,
+      { vendor_id: vendorId, p_type },
+      {},
+      userQueryClient
+    );
+    return fileInfo?.getSampleFiles;
+  }
+
+  // delete below function later
   async function getSMESampleFiles() {
     const fileInfo = await loadQueryDataAsync(
       GET_SAMPLE_FILES,
@@ -314,7 +353,7 @@ export default function useHandleVendor() {
   async function getSmeDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_SME_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -323,7 +362,7 @@ export default function useHandleVendor() {
     const smeData = fileInfo?.getSmeDetails;
     const smeDetails = {
       sme_id: smeData?.sme_id,
-      isApplicableSME: smeData?.is_applicable,
+      isApplicable: smeData?.is_applicable,
       serviceDescription: smeData?.description,
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
@@ -336,7 +375,7 @@ export default function useHandleVendor() {
   async function getCrtDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_CRT_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -345,7 +384,7 @@ export default function useHandleVendor() {
     const crtData = fileInfo?.getClassRoomTraining;
     const crtDetails = {
       crt_id: crtData?.crt_id,
-      isApplicableCT: crtData?.is_applicable,
+      isApplicable: crtData?.is_applicable,
       serviceDescription: crtData?.description,
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
@@ -358,7 +397,7 @@ export default function useHandleVendor() {
   async function getCdDetails() {
     if (!vendorId) return;
 
-    const fileInfo = await loadAndCacheDataAsync(
+    const fileInfo = await loadQueryDataAsync(
       GET_CD_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -367,7 +406,7 @@ export default function useHandleVendor() {
     const cdData = fileInfo?.getContentDevelopment;
     const cdDetails = {
       cd_id: cdData?.cd_id,
-      isApplicableCD: cdData?.is_applicable,
+      isApplicable: cdData?.is_applicable,
       serviceDescription: cdData?.description,
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
@@ -401,22 +440,32 @@ export default function useHandleVendor() {
 
   async function addUpdateExperience() {
     let isError = false;
-    for (let i = 0; i < profileData?.experience?.length; i++) {
+    for (let i = 0; i < profileData?.experienceData?.length; i++) {
+      const exp = profileData?.experienceData?.[i];
+      const isWorking = exp?.isWorking;
+      const startDate = exp?.startMonth?.concat('-', exp?.startYear);
+      const start_date = new Date(startDate);
+      const start_timestamp = start_date.getTime() / 1000;
+
+      const endDate = exp?.endMonth?.concat('-', exp?.endYear);
+      const end_date = new Date(endDate);
+      const end_timestamp = end_date.getTime() / 1000;
+
       let sendData = {
-        vendor_id: vendorId || '',
-        title: profileData?.experience[i]?.title?.trim() || '',
+        vendorId: vendorId || '',
+        title: exp?.title?.trim() || '',
         email: profileData?.email?.trim() || '',
-        company_name: profileData?.experience[i]?.company_name?.trim() || '',
-        employement_type: profileData?.experience[i]?.employement_type?.trim() || '',
-        location: profileData?.experience[i]?.location?.trim() || '',
-        location_type: profileData?.experience[i]?.locationType?.trim() || '',
-        start_date: profileData?.experience[i]?.start_date || null,
-        end_date: profileData?.experience[i]?.end_date || null,
-        status: profileData?.experience[i]?.status
+        companyName: exp?.companyName?.trim() || '',
+        employeeType: exp?.employeeType?.trim() || '',
+        location: exp?.location?.trim() || '',
+        locationType: exp?.locationType?.trim() || '',
+        startDate: start_timestamp || null,
+        endDate: isWorking ? 0 : end_timestamp || null,
+        status: exp?.status
       };
 
-      if (profileData?.experience[i]?.ExpId) {
-        sendData.ExpId = profileData?.experience[i]?.ExpId;
+      if (exp?.expId) {
+        sendData.expId = exp?.expId;
 
         const res = await updateExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
@@ -424,23 +473,20 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Update Experience Error' });
         });
 
-        if (isError) return;
+        if (isError) continue;
         setToastMsg({ type: 'success', message: 'Experience Updated' });
-        return res;
+        continue;
       }
-      if (
-        profileData?.email &&
-        profileData?.experience[i]?.title &&
-        profileData?.experience[i]?.company_name
-      ) {
+
+      if (profileData?.email && exp?.title && exp?.companyName) {
         const res = await createExperienceVendor({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
-        if (isError) return;
+        if (isError) continue;
         setToastMsg({ type: 'success', message: 'Experience Created' });
-        return res;
+        continue;
       }
     }
     // return isError;
@@ -452,22 +498,36 @@ export default function useHandleVendor() {
       pType: ptype,
       name: sampleData?.sampleName || '',
       description: sampleData?.description || '',
-      pricing: sampleData?.rate + sampleData?.currency + '/' + sampleData?.unit || '',
+      pricing: '',
+      rate: sampleData?.rate || 0,
+      currency: sampleData?.currency || '',
+      unit: sampleData?.unit || '',
       file: sampleData?.sampleFile || null,
       fileType: sampleData?.fileType || '',
       status: VENDOR_MASTER_STATUS.active
     };
 
     let isError = false;
-
-    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-    });
-    if (isError) return;
-    setToastMsg({ type: 'success', message: 'Sample File Created' });
-    return res;
+    if (
+      sampleData?.sampleName &&
+      sampleData?.description &&
+      sampleData?.sampleFile &&
+      sampleData?.fileType &&
+      sampleData?.rate &&
+      sampleData?.currency &&
+      sampleData?.unit
+    ) {
+      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+      });
+      if (isError) return;
+      setToastMsg({ type: 'success', message: 'Sample File Created' });
+      return res;
+    } else {
+      return setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+    }
   }
 
   async function deleteSample(sfid, pType) {
@@ -542,6 +602,7 @@ export default function useHandleVendor() {
     getCdDetails,
     getAllProfileInfo,
     getSingleProfileInfo,
+    getSampleFiles,
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,

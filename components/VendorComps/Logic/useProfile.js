@@ -19,37 +19,49 @@ export default function useProfile() {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState([]);
-  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState([]);
-  const [selectedCdExpertise, setSelectedCdExpertise] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState(profileData?.sme_expertises);
+  const [tempSmeExpertise, setTempSmeExpertise] = useState(profileData?.sme_expertises);
+  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState(profileData?.crt_expertises);
+  const [tempCrtExpertise, setTempCrtExpertise] = useState(profileData?.crt_expertises);
+  const [selectedCdExpertise, setSelectedCdExpertise] = useState(profileData?.content_development);
+  const [tempCdExpertise, setTempCdExpertise] = useState(profileData?.content_development);
+
+  const [selectedLanguages, setSelectedLanguages] = useState(profileData?.languages);
+  const [tempLanguages, setTempLanguages] = useState(profileData?.languages);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
   const completeExperienceHandler = () => {
-    const StartDate = experiencesData?.startMonth?.concat('-', experiencesData?.startYear);
-    const start_date = new Date(StartDate);
-    const start_timestamp = start_date.getTime() / 1000;
-    const EndDate = experiencesData?.endMonth?.concat('-', experiencesData?.endYear);
-    const end_date = new Date(EndDate);
-    const end_timestamp = end_date.getTime() / 1000;
-    const experienceData = {
+    const _experienceData = {
+      ...experiencesData,
       vendor_id: vendorId || '',
-      title: experiencesData?.title || '',
       email: profileData?.email || '',
-      company_name: experiencesData?.companyName || '',
-      employement_type: experiencesData?.employeeType || '',
-      location: experiencesData?.location || '',
-      location_type: experiencesData?.locationType || '',
-      start_date: start_timestamp || null,
-      end_date: end_timestamp || null,
       status: VENDOR_MASTER_STATUS.active
     };
-    setProfileData((prev) => ({ ...prev, experience: [...prev?.experience, experienceData] }));
+
+    setProfileData((prev) => {
+      const data = structuredClone(prev);
+      const editExpIndex = prev?.experienceData?.findIndex(
+        (e) => _experienceData?.expId === e?.expId
+      );
+
+      if (editExpIndex >= 0) data.experienceData[editExpIndex] = _experienceData;
+      if (editExpIndex === -1) data?.experienceData?.push(_experienceData);
+
+      return data;
+    });
+
     setIsOpenExpriences(false);
     setExperiencesData(getExperiencesObject());
   };
+
+  const addLanguagesHandler = () => {
+    setProfileData({ ...profileData, languages: [...selectedLanguages] });
+    setTempLanguages([...selectedLanguages]);
+    setIsOpenLanguage(false);
+  };
+
   const handleLanguageSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
@@ -59,24 +71,93 @@ export default function useProfile() {
     }
   };
 
-  const addLanguagesHandler = () => {
-    setProfileData({ ...profileData, languages: [...selectedLanguages] });
+  const handleAddRemoveLanguage = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setProfileData({
+        ...profileData,
+        languages: [...profileData?.languages?.filter((lang) => lang !== value)]
+      });
+      setSelectedLanguages([...selectedLanguages?.filter((lang) => lang !== value)]);
+    }
+  };
+
+  const closeLanguagesHandler = () => {
+    setSelectedLanguages([...tempLanguages]);
+    setTempLanguages([...tempLanguages]);
     setIsOpenLanguage(false);
   };
 
   const handleAddSmeExpertise = () => {
     setProfileData({ ...profileData, sme_expertises: [...selectedSmeExpertise] });
+    setTempSmeExpertise([...selectedSmeExpertise]);
     setOpenSmeExpertise(false);
   };
   const handleAddCrtExpertise = () => {
     setProfileData({ ...profileData, crt_expertises: [...selectedCrtExpertise] });
+    setTempCrtExpertise([...selectedCrtExpertise]);
     setOpenCrtExpertise(false);
   };
   const handleAddCdExpertise = () => {
     setProfileData({ ...profileData, content_development: [...selectedCdExpertise] });
+    setTempCdExpertise([...selectedCdExpertise]);
     setOpenCdExpertise(false);
   };
 
+  const handleAddRemoveSmeExpertise = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedSmeExpertise([...selectedSmeExpertise, value]);
+    } else {
+      setProfileData({
+        ...profileData,
+        sme_expertises: [...profileData?.sme_expertises?.filter((lang) => lang !== value)]
+      });
+      setSelectedSmeExpertise([...selectedSmeExpertise?.filter((lang) => lang !== value)]);
+    }
+  };
+  const handleAddRemoveCrtExpertise = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedCrtExpertise([...selectedCrtExpertise, value]);
+    } else {
+      setProfileData({
+        ...profileData,
+        crt_expertises: [...profileData?.crt_expertises?.filter((lang) => lang !== value)]
+      });
+      setSelectedCrtExpertise([...selectedCrtExpertise?.filter((lang) => lang !== value)]);
+    }
+  };
+  const handleAddRemoveCdExpertise = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      selectedCdExpertise([...selectedCdExpertise, value]);
+    } else {
+      setProfileData({
+        ...profileData,
+        content_development: [...profileData?.content_development?.filter((lang) => lang !== value)]
+      });
+      selectedCdExpertise([...selectedCdExpertise?.filter((lang) => lang !== value)]);
+    }
+  };
+
+  const closeExpertiseSmeHandler = () => {
+    setSelectedSmeExpertise([...tempSmeExpertise]);
+    setTempSmeExpertise([...tempSmeExpertise]);
+    setOpenSmeExpertise(false);
+  };
+  const closeExpertiseCrtHandler = () => {
+    setSelectedCrtExpertise([...tempCrtExpertise]);
+    setTempCrtExpertise([...tempCrtExpertise]);
+    setOpenCrtExpertise(false);
+  };
+  const closeExpertiseCdHandler = () => {
+    setSelectedCdExpertise([...tempCdExpertise]);
+    setTempCdExpertise([...tempCdExpertise]);
+    setOpenCdExpertise(false);
+  };
   function getFileName() {
     return truncateToN(
       profileData?.profileImage?.name || getEncodedFileNameFromUrl(profileData?.photoUrl),
@@ -115,6 +196,18 @@ export default function useProfile() {
     setSelectedCdExpertise,
     selectedLanguages,
     setSelectedLanguages,
-    getFileName
+    getFileName,
+    handleAddRemoveLanguage,
+    closeLanguagesHandler,
+    tempLanguages,
+    handleAddRemoveSmeExpertise,
+    handleAddRemoveCrtExpertise,
+    handleAddRemoveCdExpertise,
+    closeExpertiseSmeHandler,
+    closeExpertiseCrtHandler,
+    closeExpertiseCdHandler,
+    tempSmeExpertise,
+    tempCrtExpertise,
+    tempCdExpertise
   };
 }

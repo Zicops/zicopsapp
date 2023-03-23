@@ -94,6 +94,9 @@ export const INVITE_USERS_WITH_ROLE = gql`
     inviteUsersWithRole(emails: $emails, lsp_id: $lsp_id, role: $role) {
       email
       message
+      user_id
+      user_lsp_id
+      message
     }
   }
 `;
@@ -1585,28 +1588,28 @@ export const UPDATE_PROFILE_VENDOR = gql`
 
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $title: String
     $email: String!
-    $company_name: String
-    $employement_type: String
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     createExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {
@@ -1631,30 +1634,30 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
 
 export const UPDATE_EXPERIENCE_VENDOR = gql`
   mutation updateExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $expId: String
     $title: String
-    $email: String
-    $company_name: String
-    $employement_type: String
+    $email: String!
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     updateExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         exp_id: $expId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {
@@ -1686,6 +1689,9 @@ export const CREATE_SAMPLE_FILE = gql`
     $pricing: String!
     $file: Upload!
     $fileType: String
+    $rate: Int
+    $currency: String
+    $unit: String
     $status: String
   ) {
     uploadSampleFile(
@@ -1697,6 +1703,9 @@ export const CREATE_SAMPLE_FILE = gql`
         pricing: $pricing
         file: $file
         fileType: $fileType
+        rate: $rate
+        currency: $currency
+        unit: $unit
         status: $status
       }
     ) {
@@ -1705,6 +1714,9 @@ export const CREATE_SAMPLE_FILE = gql`
       fileType
       price
       file_url
+      rate
+      currency
+      unit
       created_at
       created_by
       updated_at

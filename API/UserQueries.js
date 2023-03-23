@@ -790,6 +790,52 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
   }
 `;
 
+export const GET_LSP_USERS_WITH_ROLE = gql`
+  query getPaginatedLspUsersWithRoles(
+    $lsp_id: String!
+    $role: [String]
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getPaginatedLspUsersWithRoles(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+      role: $role
+    ) {
+      data {
+        user {
+          id
+          first_name
+          last_name
+          status
+          role
+          is_verified
+          is_active
+          gender
+          created_by
+          updated_by
+          created_at
+          updated_at
+          email
+          phone
+          photo_url
+        }
+        roles {
+          user_lsp_id
+          user_role_id
+          role
+        }
+        status
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
 // VENDOR QUERIES START
 
 // {status: String , service: String}
@@ -982,6 +1028,10 @@ export const GET_SAMPLE_FILES = gql`
       fileType
       price
       file_url
+      rate
+      currency
+      unit
+      actualFileType
       created_at
       created_by
       updated_at
@@ -1131,30 +1181,66 @@ export const GET_PAGINATED_VENDORS = gql`
       filters: $filters
     ) {
       vendors {
-          vendorId
-          type
-          level
-          name
-          description
-          photo_url
-          address
-          users
-          website
-          facebook_url
-          instagram_url
-          twitter_url
-          linkedin_url
-          services
-          created_at
-          created_by
-          updated_at
-          updated_by
-          status
+        vendorId
+        type
+        level
+        name
+        description
+        photo_url
+        address
+        users
+        website
+        facebook_url
+        instagram_url
+        twitter_url
+        linkedin_url
+        services
+        created_at
+        created_by
+        updated_at
+        updated_by
+        status
       }
       pageCursor
       direction
       pageSize
     }
+  }
+`;
+
+export const GET_SPEAKERS = gql`
+  query getSpeakers($lspId: String, $service: String) {
+    getSpeakers(lsp_id: $lspId, service: $service) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      content_development
+      experience
+      experience_years
+      sme
+      crt
+      cd
+      is_speaker
+      lsp_id
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_VENDOR_SERVICES = gql`
+  query getVendorServices($vendorId: String) {
+    getVendorServices(vendor_id: $vendorId)
   }
 `;
 

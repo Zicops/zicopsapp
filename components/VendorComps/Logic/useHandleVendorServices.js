@@ -31,7 +31,7 @@ export default function useHandleVendorServices() {
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
 
-  async function addUpdateSme() {
+  async function addUpdateSme(displayToaster = true) {
     const sendData = {
       vendor_id: vendorId,
       description: smeData?.serviceDescription || '',
@@ -54,7 +54,8 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Updated' });
+
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
@@ -64,12 +65,12 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'Add SME Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SME Created' });
+      setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }
 
-  async function addUpdateCrt() {
+  async function addUpdateCrt(displayToaster = true) {
     const sendData = {
       vendor_id: vendorId,
       description: ctData?.serviceDescription || '',
@@ -93,7 +94,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
@@ -103,12 +104,12 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CRT Created' });
+      setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }
 
-  async function addUpdateCd() {
+  async function addUpdateCd(displayToaster = true) {
     const sendData = {
       vendor_id: vendorId,
       description: cdData?.serviceDescription || '',
@@ -133,7 +134,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
       return;
     }
     if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {
@@ -143,7 +144,7 @@ export default function useHandleVendorServices() {
         return setToastMsg({ type: 'danger', message: 'CD Created Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'CD Created' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
       return res;
     }
   }

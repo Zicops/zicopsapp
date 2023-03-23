@@ -5,6 +5,8 @@ import { VendorAllExpertise } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
+import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import Loader from '@/components/common/Loader';
 const AddExpertise = ({
   expertiseValue,
   setExpertise,
@@ -16,9 +18,11 @@ const AddExpertise = ({
     if (checked) {
       setSelectedExpertise([...selectedExpertise, value]);
     } else {
-      setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
+      setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
     }
   };
+
+  const { catSubCat } = useHandleCatSubCat();
 
   // const handleQuery = (event) => {
   //   const query = event.target.value;
@@ -33,6 +37,9 @@ const AddExpertise = ({
   //   } else setSearched(false);
   // };
 
+  if (!catSubCat.isDataLoaded)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+
   return (
     <div>
       <SearchBar
@@ -46,11 +53,12 @@ const AddExpertise = ({
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
-      {cat.map((data, index) => {
+      {catSubCat?.cat?.map((data, index) => {
+        if (!catSubCat.subCatGrp?.[data.id]?.subCat?.length) return;
         return (
           <div className={`${styles.expertise1}`}>
             <h3>{data.Name}</h3>
-            {subCat.map((value, index) => {
+            {catSubCat?.subCat?.map((value) => {
               if (value.CatId === data.id)
                 return (
                   <div className={`${styles.expertiseCheckbox}`}>
@@ -58,7 +66,7 @@ const AddExpertise = ({
                       type="checkbox"
                       label={value.Name}
                       value={value.Name}
-                      isChecked={selectedExpertise.includes(value.Name)}
+                      isChecked={selectedExpertise?.includes(value.Name)}
                       changeHandler={handleExpretiseSelection}
                     />
                   </div>

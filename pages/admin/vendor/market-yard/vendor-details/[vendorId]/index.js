@@ -1,11 +1,6 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import {
-  myVendors,
-  coursesVendor,
-  vendorProfiles,
-  serviceType
-} from '@/components/VendorComps/Logic/vendorComps.helper.js';
+import { coursesVendor, serviceType } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
@@ -19,16 +14,18 @@ import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
 import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
 import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
-import styles from '../../../../../components/VendorComps/vendorComps.module.scss';
+import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { allProfileAtom, SevicesAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
@@ -88,8 +85,7 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || null; //Change the 1 to null
-  // console.info(router.query.vendorId);
+  const vendorId = router.query.vendorId || null;
 
   const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
 
@@ -106,7 +102,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Courses',
-      component: <CoursesVendor courseImage={coursesVendor[vendorId]?.courseImage} />
+      component: <CoursesVendor />
     },
     {
       name: 'Profile',

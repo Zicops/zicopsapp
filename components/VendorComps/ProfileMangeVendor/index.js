@@ -27,7 +27,8 @@ const ProfileManageVendor = () => {
     setIsOpenProfile(true);
   };
 
-  const completeProfileHandler = async () => {
+  const completeProfileHandler = async (e) => {
+    e.target.disabled = true;
     await addUpdateExperience();
     await addUpdateProfile();
     await getAllProfileInfo();

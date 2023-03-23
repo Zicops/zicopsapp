@@ -1,10 +1,13 @@
 import {
   GET_ALL_ORDERS,
   GET_ORDER_SERVICES,
+  GET_SPEAKERS,
   GET_VENDORS_BY_LSP,
-  userQueryClient
+  GET_VENDOR_SERVICES,
+  userQueryClient,
+  GET_PAGINATED_VENDORS
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import {
@@ -31,21 +34,28 @@ export default function useHandleMarketYard() {
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
   const [servicesDetails, setServicesDetails] = useState([]);
+  const [speakerDetails, setSpeakerDetails] = useState([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  async function getLspVendors(lspId, isDataReturn = false) {
+  async function getLspVendors(lspId, filters, isDataReturn = false) {
     setLoading(true);
     const vendorList = await loadAndCacheDataAsync(
-      GET_VENDORS_BY_LSP,
-      { lsp_id: lspId },
+      // GET_VENDORS_BY_LSP,
+      GET_PAGINATED_VENDORS,
+      { lsp_id: lspId, filters: filters },
       {},
       userQueryClient
     );
     // filters: { status: 'Active', service: service }
-    const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
+    const _sortedData = sortArrByKeyInOrder(
+      vendorList?.getPaginatedVendors?.vendors || [],
+      'updated_at',
+      false
+    );
     if (isDataReturn) {
       setLoading(false);
       return _sortedData;
@@ -54,6 +64,43 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
+  async function getLspSpeakers(lspId, service, isDataReturn = false) {
+    setLoading(true);
+    const speakerList = await loadAndCacheDataAsync(
+      GET_SPEAKERS,
+      { lspId: lspId, service: service },
+      {},
+      userQueryClient
+    );
+    const _sortedData = sortArrByKeyInOrder(speakerList?.getSpeakers || [], 'updated_at', false);
+    if (isDataReturn) {
+      setLoading(false);
+      return _sortedData;
+    }
+
+    let newSpeakerArray = [];
+    for (let i = 0; i < _sortedData?.length; i++) {
+      newSpeakerArray.push({
+        ..._sortedData[i],
+        name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name
+      });
+    }
+
+    setSpeakerDetails(newSpeakerArray);
+    setLoading(false);
+  }
+
+  async function getVendorServices(vendorId) {
+    setLoading(true);
+    const services = await loadQueryDataAsync(
+      GET_VENDOR_SERVICES,
+      { vendorId: vendorId },
+      {},
+      userQueryClient
+    );
+    setServices(services?.getVendorServices);
+    setLoading(false);
+  }
   async function getAllOrders(lspId, isDataReturn = false) {
     setLoading(true);
     const orderList = await loadAndCacheDataAsync(
@@ -171,6 +218,10 @@ export default function useHandleMarketYard() {
     getAllOrders,
     getOrderServices,
     orderDetails,
-    servicesDetails
+    servicesDetails,
+    getLspSpeakers,
+    speakerDetails,
+    getVendorServices,
+    services
   };
 }

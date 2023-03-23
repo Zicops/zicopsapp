@@ -1,5 +1,3 @@
-@import '~/styles/base.scss';
-
 .addVendorContainer {
   font-size: 18px;
   margin: 20px 0px;
@@ -16,4 +14,9 @@
 
   text-align: center;
   margin: 2em;
+
+  color: $white;
+}
+.vendorCourseTab {
+  padding: 2em;
 }
