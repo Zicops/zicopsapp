@@ -91,7 +91,6 @@ export default function useHandleAddUserDetails() {
   const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
   const fcmToken = useRecoilValue(FcmTokenAtom);
-  
 
   // setting up local states
   useEffect(() => {
@@ -112,6 +111,7 @@ export default function useHandleAddUserDetails() {
     setIsAccountSetupReady(
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
+        userAboutData?.email.length > 0 &&
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
@@ -412,7 +412,7 @@ export default function useHandleAddUserDetails() {
         item?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
     );
     if (!!courses?.length) {
-    sendNotificationWithLink(
+      sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
@@ -562,7 +562,7 @@ export default function useHandleAddUserDetails() {
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
-    if(!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url; 
+    if (!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')
