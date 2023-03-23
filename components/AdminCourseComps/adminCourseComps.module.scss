@@ -24,7 +24,10 @@ $marginBetweenInputs: 1em;
   label,
   input {
     width: 100%;
-    // padding: 8px;
+  }
+
+  input {
+    padding: 8px;
   }
 }
 
@@ -517,6 +520,12 @@ $marginBetweenInputs: 1em;
     }
   }
 
+  .addTopicForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
   .addTopicFormBtn {
     padding: 0.7em 2em;
     margin: 1em 1em 0;
@@ -544,13 +553,6 @@ $marginBetweenInputs: 1em;
       opacity: 0.5;
     }
   }
-}
-
-.addTopicForm {
-  margin: 1.5em 4em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
 }
 
 // extra

@@ -5,6 +5,7 @@ import useHandleTopic from '../../Logic/useHandleTopic';
 import TopicRow from '../BoxContainer/TopicRow';
 import AddTopicForm from './AddTopicForm';
 import TopicAssessmentForm from './TopicAssessmentForm';
+import TopicClassroom from './TopicClassroom';
 import TopicContentForm from './TopicContentForm';
 
 export default function TopicPopUp({
@@ -18,6 +19,8 @@ export default function TopicPopUp({
     useHandleTopic(modData, chapData, topData, closePopUp);
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
+  const isClassroom = topicData?.type === TOPIC_TYPES.classroom;
+
   const submitBtnObj = { name: 'Design' };
   const closeBtnObj = { name: 'Cancel' };
 
@@ -28,7 +31,7 @@ export default function TopicPopUp({
       <PopUp
         title={`Topic ${topicData?.sequence}`}
         submitBtn={submitBtnObj}
-        isFooterVisible={!topicData?.id || isAssessment ? false : true}
+        isFooterVisible={false}
         popUpState={popUpState}
         closeBtn={closeBtnObj}>
         <div className={`${styles.popUpFormContainer}`}>
@@ -59,6 +62,7 @@ export default function TopicPopUp({
               {topicData?.type === TOPIC_TYPES.content && <TopicContentForm />}
 
               {isAssessment && <TopicAssessmentForm topData={topicData} closePopUp={closePopUp} />}
+              {isClassroom && <TopicClassroom topData={topicData} closePopUp={closePopUp} />}
             </>
           )}
         </div>

@@ -60,6 +60,7 @@ export default function AddTopicForm({
               label: 'Topic Type:',
               placeholder: 'Select topic type',
               options: types,
+              menuPlacement: 'top',
               value: topicData.type ? { value: topicData.type, label: topicData.type } : null,
               isDisabled: courseMetaData.type !== COURSE_TYPES.selfPaced
             }}

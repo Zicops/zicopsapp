@@ -1,5 +1,5 @@
 import { GET_COURSE_CHAPTERS, GET_COURSE_MODULES, GET_COURSE_TOPICS } from '@/api/Queries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import {
   AllCourseModulesDataAtom,
@@ -37,9 +37,9 @@ export default function useHandleTopicTab() {
   async function getModuleChapterTopic() {
     if (!courseId) return;
 
-    const moduleRes = loadAndCacheDataAsync(GET_COURSE_MODULES, { course_id: courseId });
-    const chapterRes = loadAndCacheDataAsync(GET_COURSE_CHAPTERS, { course_id: courseId });
-    const topicRes = loadAndCacheDataAsync(GET_COURSE_TOPICS, { course_id: courseId });
+    const moduleRes = loadQueryDataAsync(GET_COURSE_MODULES, { course_id: courseId });
+    const chapterRes = loadQueryDataAsync(GET_COURSE_CHAPTERS, { course_id: courseId });
+    const topicRes = loadQueryDataAsync(GET_COURSE_TOPICS, { course_id: courseId });
 
     const sortedModuleDataArr = sortArrByKeyInOrder((await moduleRes)?.getCourseModules);
     const sortedChapterDataArr = sortArrByKeyInOrder((await chapterRes)?.getCourseChapters);
