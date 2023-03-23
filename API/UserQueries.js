@@ -1298,11 +1298,11 @@ export const GET_COURSE_VIEWS = gql`
 
 export const GET_USER_EXAM_ATTEMPTS_BY_EXAMID = gql`
   query getUserExamAttemptsByExamIds(
-    $user_id: String
-    $exam_ids: [String]
+    $userId: String!
+    $examIds: [String]!
     $filters: ExamAttemptsFilters
   ) {
-    getUserExamAttemptsByExamIds(user_id: $user_id, exam_ids: $exam_ids, filters: $filters) {
+    getUserExamAttemptsByExamIds(user_id: $userId, exam_ids: $examIds, filters: $filters) {
       user_ea_id
       user_id
       user_lsp_id
