@@ -27,20 +27,7 @@ const AddExpertise = ({
   const [catSubCatFiltered, setCatSubCatFiltered] = useState(null);
   useEffect(() => {
     setCatSubCatFiltered(catSubCat);
-  }, [catSubCat]);
-
-  // const handleQuery = (event) => {
-  //   const query = event.target.value;
-  //   // setSearchQuery(query)
-  //   if (query.length > 0) {
-  //     setSearched(true);
-  //     setSearchedData([]);
-  //     const temp = subCat.filter((obj) => {
-  //       return obj.Name.toLowerCase().includes(query.toLowerCase());
-  //     });
-  //     setSearchedData(temp);
-  //   } else setSearched(false);
-  // };
+  }, []);
 
   if (!catSubCat.isDataLoaded) {
     return (
@@ -51,7 +38,7 @@ const AddExpertise = ({
   }
 
   return (
-    <div>
+    <div style={{ minHeight: '65vh' }}>
       <SearchBar
         inputDataObj={{
           inputOptions: {
@@ -62,32 +49,31 @@ const AddExpertise = ({
           changeHandler: (e) => {
             const query = e.target.value;
             setExpertise(query);
-            if (query.length > 0) {
-              const tempSubCat = catSubCatFiltered?.subCat?.filter((obj) => {
-                return obj.Name.toLowerCase().includes(query.toLowerCase());
-              });
-              const tempCat = catSubCatFiltered?.cat?.filter((obj) => {
-                return obj.Name.toLowerCase().includes(query.toLowerCase());
-              });
-              console.log(tempCat, tempSubCat);
-              // setCatSubCatFiltered({
-              //   cat: tempCat,
-              //   subCat: tempSubCat
-              // });
-            }
+            const tempSubCat = catSubCat?.subCat?.filter((obj) => {
+              return obj.Name.toLowerCase().includes(query.toLowerCase());
+            });
+            // const tempCat = catSubCat?.cat?.filter((obj) => {
+            //   return obj.Name.toLowerCase().includes(query.toLowerCase());
+            // });
+            setCatSubCatFiltered({
+              // cat: tempCat,
+              ...catSubCatFiltered,
+              subCat: tempSubCat
+            });
           }
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
       {catSubCatFiltered?.cat?.map((data, index) => {
+        // Change this condition to hide category names on search too.
         if (!catSubCatFiltered.subCatGrp?.[data.id]?.subCat?.length) return;
         return (
-          <div className={`${styles.expertise1}`}>
+          <div className={`${styles.expertise1}`} key={data.Name}>
             <h3>{data.Name}</h3>
             {catSubCatFiltered?.subCat?.map((value) => {
-              if (value.CatId === data.id)
+              if (value.CatId === data.id) {
                 return (
-                  <div className={`${styles.expertiseCheckbox}`}>
+                  <div className={`${styles.expertiseCheckbox}`} key={value.Name}>
                     <LabeledRadioCheckbox
                       type="checkbox"
                       label={value.Name}
@@ -97,6 +83,7 @@ const AddExpertise = ({
                     />
                   </div>
                 );
+              }
             })}
           </div>
         );
