@@ -1,6 +1,11 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import {
+  getVendorCurrentStateObj,
+  VendorCurrentStateAtom,
+  VendorStateAtom,
+  vendorUserInviteAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -15,6 +20,7 @@ export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
+  const [vendorCurrentState, setVendorCurrentState] = useRecoilState(VendorCurrentStateAtom);
 
   const { handleMail } = useHandleVendor();
   const { addUpdateVendor, loading } = useHandleVendorMaster();
@@ -34,6 +40,12 @@ export default function ManageVendorTabs() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  // reset to default on load
+  // NOTE: on load is saved is false which should ideally be false only if something is changed
+  useEffect(() => {
+    setVendorCurrentState(getVendorCurrentStateObj());
+  }, []);
 
   useEffect(() => {
     if (!vendorId) return setEmailId([]);
@@ -61,12 +73,16 @@ export default function ManageVendorTabs() {
       footerObj={{
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
-        handleSubmit: () => {
-          addUpdateVendor(tab === tabData[0].name);
-          handleMail(tab === tabData[0].name);
-          addUpdateSme(tab === tabData[1].name);
-          addUpdateCrt(tab === tabData[1].name);
-          addUpdateCd(tab === tabData[1].name);
+        handleSubmit: async () => {
+          setVendorCurrentState({ ...vendorCurrentState, isUpdating: true });
+
+          await addUpdateVendor(tab === tabData[0].name);
+          await handleMail(tab === tabData[0].name);
+          await addUpdateSme(tab === tabData[1].name);
+          await addUpdateCrt(tab === tabData[1].name);
+          await addUpdateCd(tab === tabData[1].name);
+
+          setVendorCurrentState(getVendorCurrentStateObj({ isSaved: true }));
         },
         status: vendorData?.status?.toUpperCase(),
         disableSubmit: isViewPage || loading,
