@@ -24,7 +24,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
             StopVideo(video, videoref)
             nameRef.current.style.display = "block"
         }
-    }, [video1])
+    })
     
     return (
         <div className={`${styles.vcCard}`}>
@@ -45,7 +45,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                 <VctoolButton onClickfun={() => {
                     startAudioenableFun()
                     setaudio1(!audio1)
-                }} customId={audio1 ? `${styles.btnsBg1}` : `${styles.btnsBg2}`}
+                }} customId={audio1 ? `${styles.audioBtn}` : `${styles.btnsBg2}`}
                     toggle={audio1} trueSrc={"/images/svg/vctool/mic-on.svg"} falseSrc={"/images/svg/vctool/mic-off.svg"} />
 
 

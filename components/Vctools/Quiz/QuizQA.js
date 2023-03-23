@@ -1,6 +1,6 @@
 import { quizArray } from "@/state/atoms/vctool.atoms";
 import { useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss";
 import QuizOptionBox from "./QuizOptionBox";
 const QuizQA = ({cancelRoom,showQuiz}) => {
@@ -15,6 +15,13 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
         option2: '',
         option3: '',
         option4: ''
+    })
+    const arr=useRecoilValue(quizArray)
+    const [selectedOption,setSelectedOption]=useState({
+        selectedOption1:false,
+        selectedOption2:false,
+        selectedOption3:false,
+        selectedOption4:false
     })
     const [answer, setAnswer] = useState('')
 
@@ -62,8 +69,15 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
 
             <p className={`${styles.quizOptionNotice}`}>*please select the correct option</p>
 
-            <QuizOptionBox isChecked={isChecked} click={() => {
-                setIsChecked(!isChecked)
+            <QuizOptionBox isChecked={selectedOption.selectedOption1} click={() => {
+                setSelectedOption({
+                    selectedOption1:true
+                })
+                if(selectedOption.selectedOption1)
+                {
+                    alert(options?.option1)
+                    setAnswer(options?.option1)
+                }
             }} optionNumber={1} values={options?.option1} onChange={(e) => {
                 setOptions(
                     {
@@ -72,8 +86,14 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                     }
                 )
             }} />
-            <QuizOptionBox click={() => {
-                setIsChecked(!isChecked)
+            <QuizOptionBox isChecked={selectedOption.selectedOption2}  click={() => {
+                  setSelectedOption({
+                    selectedOption2:true
+                })
+                if(selectedOption.selectedOption2)
+                {
+                    setAnswer(options?.option2)
+                }
             }} optionNumber={2} values={options?.option2} onChange={(e) => {
                 setOptions(
                     {
@@ -82,8 +102,14 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                     }
                 )
             }} />
-            <QuizOptionBox click={() => {
-                setIsChecked(!isChecked)
+            <QuizOptionBox isChecked={selectedOption.selectedOption3} click={() => {
+                  setSelectedOption({
+                    selectedOption3:true
+                })
+                if(selectedOption.selectedOption3)
+                {
+                    setAnswer(options?.option3)
+                }
             }} optionNumber={3} values={options?.option3} onChange={(e) => {
                 setOptions(
                     {
@@ -92,8 +118,14 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                     }
                 )
             }} />
-            <QuizOptionBox click={() => {
-                setIsChecked(!isChecked)
+            <QuizOptionBox isChecked={selectedOption.selectedOption4} click={() => {
+                 setSelectedOption({
+                    selectedOption4:true
+                })
+                if(selectedOption.selectedOption4)
+                {
+                    setAnswer(options?.option4)
+                }
             }} optionNumber={4} values={options?.option4} onChange={(e) => {
                 setOptions(
                     {
@@ -120,12 +152,12 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                                 difficultyLevel: difficultyLevel,
                                 hint: hint,
                                 options: options,
-                                answer: ''
+                                answer: answer
                             }
                         ])
                     }
                   }
-
+                  console.log(arr)
                     setQuizName("")
                     setQuizQuestion("")
                     setDifficultyLevel(1)

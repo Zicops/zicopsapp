@@ -10,7 +10,10 @@ const QuizOptionBox = ({ optionNumber, values, onChange, isChecked,click }) => {
                     // name="lspId"
                     isChecked={isChecked}
                     isDisabled={false}
-                changeHandler={click}
+                changeHandler={()=>
+                {
+                    click()
+                }}
                 />
                 <p>{`option ${optionNumber}`}</p>
             </div>

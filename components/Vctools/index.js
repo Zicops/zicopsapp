@@ -106,10 +106,10 @@ const VcMaintool = () => {
             //  allUserinfo
             // userinfo
             userinfo.forEach((data) => {
-              // api.executeCommand('grantModerator', data?.id);
-              // if ([api.getEmail(data?.id)].toString().includes("1000")) {
-              //   api.executeCommand('grantModerator', data?.id);
-              // }
+              api.executeCommand('grantModerator', data?.id);
+              if ([api.getEmail(data?.id)].toString().includes("@ziocps")) {
+                api.executeCommand('grantModerator', data?.id);
+              }
             })
           }}
 

@@ -1,7 +1,9 @@
-import { height } from "@mui/system";
+import { quizArray } from "@/state/atoms/vctool.atoms";
 import { useState } from "react"
+import { useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
-const QuizQuestion = ({ QuizQuestion, }) => {
+const QuizQuestion = ({ QuizQuestion, quizIndex}) => {
+    const quizArr=useRecoilValue(quizArray)
     const [expand, setexpand] = useState(true)
     return (
         <div className={`${styles.quizQuestion}`}>
@@ -11,7 +13,7 @@ const QuizQuestion = ({ QuizQuestion, }) => {
                     <div style={{
                         color: "white",
                         fontSize: "14px"
-                    }}>Quiz</div>
+                    }}>Quiz {quizIndex}</div>
                 </div>
                 <div className={`${styles.quizeExpand}`}>
                     <button onClick={() => {
@@ -30,10 +32,10 @@ const QuizQuestion = ({ QuizQuestion, }) => {
                         <div className={`${styles.pollSavedLabel}`}>Saved</div>
                         <div className={`${styles.pollQuestions}`}>{QuizQuestion}</div>
                         <div className={`${styles.pollBoxOptions}`}>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
+                            <div>{quizArr[quizIndex].options.option1}</div>
+                            <div>{quizArr[quizIndex].options.option2}</div>
+                            <div>{quizArr[quizIndex].options.option3}</div>
+                            <div>{quizArr[quizIndex].options.option3}</div>
                         </div>
                         <div className={`${styles.pollBoxBtns}`}>
                             <button className={`${styles.pollBoxDeleteBnt}`}>Delete</button>

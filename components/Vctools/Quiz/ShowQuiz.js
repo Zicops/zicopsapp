@@ -8,9 +8,9 @@ const ShowQuiz = ({addQuiz}) => {
         <div className={`${styles.showQuizContainer}`}>
             <div className={`${styles.availableQuizSCreen}`}>
                    {
-                    quizArr.map((data)=>
+                    quizArr.map((data,index)=>
                     {
-                        return (data.quizName!=='' && data.quizQuestion!=='') && <QuizQuestion QuizQuestion={data.quizQuestion}/>
+                        return (data.quizName!=='' && data.quizQuestion!=='') && <QuizQuestion QuizQuestion={data.quizQuestion} quizIndex={index}/>
                     })
                    }
             </div>
