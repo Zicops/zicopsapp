@@ -20,7 +20,6 @@ const InviteUserEmails = ({
     if (userType === '') return;
   }, []);
 
-  console.log(userEmails,existingEmails,'sssf');
   return (
     <>
       <div className={`${styles.inviteUserContainer}`}>
