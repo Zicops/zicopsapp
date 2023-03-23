@@ -736,9 +736,19 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img {
-          width: 30px;
-          height: 30px;
+        > img {
+          width: 20px;
+          // height: 30px;
+        }
+
+        .actionIcons {
+          display: flex;
+          width: 20px;
+          object-fit: cover;
+          gap: 5px;
+          img {
+            width: 100%;
+          }
         }
       }
     }
