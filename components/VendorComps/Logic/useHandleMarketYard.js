@@ -46,7 +46,7 @@ export default function useHandleMarketYard() {
     const vendorList = await loadAndCacheDataAsync(
       // GET_VENDORS_BY_LSP,
       GET_PAGINATED_VENDORS,
-      { lsp_id: lspId, filters: filters },
+      { lsp_id: lspId, filters: filters, pageSize: 28 },
       {},
       userQueryClient
     );
