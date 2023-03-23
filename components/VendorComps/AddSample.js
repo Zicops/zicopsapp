@@ -104,7 +104,8 @@ const AddSample = ({ pType }) => {
                 value: sampleData?.fileType
               },
               options: fileFormatArray,
-              menuPlacement: 'top'
+              menuPlacement: 'top',
+              noOptionsMessage: 'Please add your O/P Deliverable Formats'
             }}
             changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'fileType')}
             styleClass={`${styles.fileFormatDropDown}`}
