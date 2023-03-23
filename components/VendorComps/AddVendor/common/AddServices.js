@@ -188,7 +188,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
 
   const addSampleFileHandler = async () => {
-    await addSampleFile(pType);
+    const isSaved = await addSampleFile(pType);
+    if (!isSaved) return;
+
     getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);
