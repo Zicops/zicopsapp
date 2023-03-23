@@ -51,10 +51,9 @@ export default function MyUserPage() {
     let emails = !tabData[0]?.name.includes('Invite')
       ? emailId
       : emailId.map((item) => item?.props?.children[0]);
-    // console.log(emails, emailId);
+  
     //for removing duplicate email ids
     emails = emails.filter((value, index) => emails.indexOf(value) === index);
-    // console.log(emails);
 
     // send lowercase email only.
     let sendEmails = emails?.map((email) => email?.toLowerCase());
@@ -75,7 +74,7 @@ export default function MyUserPage() {
     }
 
     let existingEmails = [];
-    // adding tags to only those users who doesnt exist in the lsp
+    // adding tags to only to those users who doesnt exist in the lsp
     let userLspMaps = [];
     const resultEmails = resEmail?.data?.inviteUsersWithRole;
     resultEmails?.forEach((emailObj) => {
@@ -90,11 +89,6 @@ export default function MyUserPage() {
     });
 
     if (!!existingEmails?.length) setExistingEmails([...existingEmails]);
-
-    // const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
-    //   user_id: user?.user_id,
-    //   user_lsp_id: user?.user_lsp_id
-    // }));
 
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [userType] },
