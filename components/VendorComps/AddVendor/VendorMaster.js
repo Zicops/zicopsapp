@@ -164,7 +164,7 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            maxLength: 160,
+            maxLength: 500,
             value: vendorData?.description,
             isDisabled: isViewPage
           }}
