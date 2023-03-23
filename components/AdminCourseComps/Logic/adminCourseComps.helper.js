@@ -56,6 +56,26 @@ export function getTopicDataObj(data = {}) {
   };
 }
 
+export function getTopicContentDataObj(data = {}) {
+  return {
+    id: data?.id || null,
+    topicId: data?.topicId || null,
+    courseId: data?.courseId || null,
+    contentUrl: data?.contentUrl || null,
+    type: data?.type || null,
+    language: data?.language || '',
+    duration: data?.duration || '',
+    isDefault: data?.isDefault || '',
+
+    startTime: data?.startTime || '',
+    nextShowTime: data?.nextShowTime || '',
+    fromEndTime: data?.fromEndTime || '',
+    skipIntroDuration: data?.skipIntroDuration || '',
+
+    subtitleUrl: data?.subtitleUrl || null
+  };
+}
+
 export function getTopicAssessmentObj(data = {}) {
   return {
     id: data?.id || null,

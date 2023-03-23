@@ -6,7 +6,7 @@ import TopicRow from '../BoxContainer/TopicRow';
 import AddTopicForm from './AddTopicForm';
 import TopicAssessmentForm from './TopicAssessmentForm';
 import TopicClassroom from './TopicClassroom';
-import TopicContentForm from './TopicContentForm';
+import TopicContent from './TopicContent';
 
 export default function TopicPopUp({
   modData = null,
@@ -59,7 +59,9 @@ export default function TopicPopUp({
                 />
               )}
 
-              {topicData?.type === TOPIC_TYPES.content && <TopicContentForm />}
+              {topicData?.type === TOPIC_TYPES.content && (
+                <TopicContent topData={topicData} closePopUp={closePopUp} />
+              )}
 
               {isAssessment && <TopicAssessmentForm topData={topicData} closePopUp={closePopUp} />}
               {isClassroom && <TopicClassroom topData={topicData} closePopUp={closePopUp} />}

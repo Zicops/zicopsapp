@@ -1,22 +1,27 @@
-import styles from '../../adminCourseComps.module.scss';
-import TopicAccordian from './TopicAccordian';
+import styles from '../../../adminCourseComps.module.scss';
+import TopicAccordian from '../TopicAccordian';
+import ClassroomForm from './ClassroomForm';
 
-export default function TopicContentForm() {
+export default function TopicClassroom() {
   const topicAccordians = [
     {
-      title: 'Subtitles',
-      body: '<Classroom />'
+      title: 'Classroom',
+      body: <ClassroomForm />
     },
     {
-      title: 'Binge It',
-      body: 'Quiz'
-    },
-    {
-      title: 'Quiz',
+      title: 'Quizzes',
       body: 'Quiz'
     },
     {
       title: 'Resources',
+      body: 'Quiz'
+    },
+    {
+      title: 'Assignments',
+      body: '<Classroom />'
+    },
+    {
+      title: 'VC Setting',
       body: 'Quiz'
     }
   ];

@@ -3,7 +3,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import InputDatePicker from '@/components/common/InputDatePicker';
 import ZicopsButton from '@/components/common/ZicopsButton';
-import styles from '../../adminCourseComps.module.scss';
+import styles from '../../../adminCourseComps.module.scss';
 
 export default function ClassroomForm() {
   return (

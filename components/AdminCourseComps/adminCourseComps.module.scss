@@ -553,6 +553,30 @@ $marginBetweenInputs: 1em;
       opacity: 0.5;
     }
   }
+
+  .topicContentBarContainer {
+    .topSection,
+    .contentBar {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.3em auto;
+
+      p {
+        font-size: 0.9rem;
+        color: $darkThree;
+
+        span {
+          color: $white;
+        }
+      }
+    }
+
+    .contentBar {
+      background-color: $darkThree;
+      padding: 0.3em 1em;
+      border-radius: 5px;
+    }
+  }
 }
 
 // extra

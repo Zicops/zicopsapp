@@ -310,7 +310,11 @@ export default function Configuration() {
           btnObj={{
             handleClickLeft: (e) => {
               const { duration, ..._courseData } = courseMetaData;
-              const sendData = sanitizeFormData({ ..._courseData, qaRequired: false });
+              const sendData = sanitizeFormData({
+                ..._courseData,
+                qaRequired: false,
+                status: COURSE_STATUS.save
+              });
 
               e.currentTarget.disabled = true;
               mutateData(UPDATE_COURSE_DATA, sendData)
