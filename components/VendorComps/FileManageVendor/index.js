@@ -48,11 +48,13 @@ const FileManageVendor = ({ pType }) => {
   } else {
     fileData = cdData?.sampleFiles;
   }
-  const addNewSampleFileHendler = async () => {
+  const addNewSampleFileHendler = async (e) => {
+    e.target.disabled = true;
     await addSampleFile(pType);
     getSampleFiles();
     setIsOpenAddFile(false);
     setSampleData(getSampleObject());
+    e.target.disabled = false;
   };
   return (
     <div className={`${styles.vendorFileContainer}`}>
