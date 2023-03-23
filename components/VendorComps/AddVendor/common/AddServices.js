@@ -367,7 +367,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
-                  isDisabled={isViewPage || !data?.isApplicable || fileData[0]?.length >= 5}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
