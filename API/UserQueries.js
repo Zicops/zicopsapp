@@ -827,6 +827,7 @@ export const GET_LSP_USERS_WITH_ROLE = gql`
           user_role_id
           role
         }
+        status
       }
       pageCursor
       direction
