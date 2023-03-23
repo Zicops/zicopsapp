@@ -77,7 +77,10 @@ export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
   phoneError: 'PHONE_NUMBER_EXISTS',
   nothingToUpdate: 'nothing to update',
-  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT'
+  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT',
+  emailAlreadyExist: 'User already exists',
+  selfInvite: 'Inviting himself',
+  newUsers: 'New user'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];

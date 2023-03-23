@@ -27,9 +27,10 @@ import {
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COURSE_STATUS,
+  CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
-  VENDOR_MASTER_STATUS,
-  USER_TYPE
+  USER_TYPE,
+  VENDOR_MASTER_STATUS
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -144,10 +145,17 @@ export default function useHandleVendor() {
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
-    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
-      user_id: user?.user_id,
-      user_lsp_id: user?.user_lsp_id
-    }));
+
+    const resEmails = resEmail?.data?.inviteUsersWithRole;
+    let userLspMaps = [];
+
+    resEmails?.forEach((user) => {
+      let message = user?.message;
+      if (message === CUSTOM_ERROR_MESSAGE?.selfInvite)
+        userLspMaps.push({ user_id: userData?.id, user_lsp_id: userOrgData?.user_lsp_id });
+      else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
+    });
+    
 
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
