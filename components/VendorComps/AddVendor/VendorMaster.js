@@ -206,6 +206,7 @@ export default function VendorMaster() {
             inputName={socialMediaPopup[openSocialMedia].inputName}
             urlData={socialMediaInput}
             setUrlData={setSocialMediaInput}
+            isDisabled={isViewPage}
           />
         </VendorPopUp>
       )}
