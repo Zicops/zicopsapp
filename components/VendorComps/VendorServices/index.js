@@ -33,9 +33,24 @@ export default function VendorServices({ data, type = 'sme' }) {
     });
   }, []);
 
-  function getFileType(fileType = null) {
-    if (fileType === 'PDF') return '/images/pdf-icon1.png';
-    if (fileType === 'PPT') return '/images/ppt-icon1.png';
+  function getFileType(actualFileType = null) {
+    // if (actualFileType === 'PDF') return '/images/pdf-icon1.png';
+    // if (fileType === 'PPT') return '/images/ppt-icon1.png';
+    console.info(actualFileType, 'ayush');
+    if (actualFileType?.toLowerCase()?.includes('pdf')) return '/images/pdf-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('powerpoint')) return '/images/ppt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('presentation')) return '/images/pptx-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('stream')) return '/images/srt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('document')) return '/images/doc-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('msword')) '/images/docx-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('audio')) return '/images/mp3-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('mp4')) return '/images/mp4-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('png')) return '/images/png-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('jpeg')) return '/images/jpeg-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('jpg')) return '/images/jpg-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('gif')) return '/images/gif-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('text')) return '/images/txt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('sheet')) return '/images/xls-icon1.png';
 
     return '/images/default-document.png';
   }
@@ -85,7 +100,7 @@ export default function VendorServices({ data, type = 'sme' }) {
             return (
               <div className={styles.sampleFile} onClick={() => setSamplePopup(+data.id)}>
                 <div className={styles.sampleFileImage}>
-                  <img src={getFileType(data?.fileType)} />
+                  <img src={getFileType(data?.actualFileType)} />
                 </div>
                 <div className={styles.sampleFileDetails}>
                   <div>{`${data?.title}`}</div>

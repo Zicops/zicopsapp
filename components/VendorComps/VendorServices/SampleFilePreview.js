@@ -22,11 +22,15 @@ export default function SampleFilePreview({
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('image')) displayType = types.image;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('video')) displayType = types.video;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('sheet')) displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('excel')) displayType = types.docPreview;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('presentation'))
+    displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('powerpoint'))
     displayType = types.docPreview;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('pdf')) displayType = types.docPreview;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('document'))
     displayType = types.docPreview;
+  if (sampleFile?.actualFileType?.toLowerCase()?.includes('msword')) displayType = types.docPreview;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('audio')) displayType = types.audio;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('text')) displayType = types.docPreview;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('stream')) displayType = types.docPreview;
