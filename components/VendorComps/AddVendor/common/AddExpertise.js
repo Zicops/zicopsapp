@@ -7,6 +7,7 @@ import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import Loader from '@/components/common/Loader';
+import { isWordIncluded } from '@/helper/utils.helper';
 const AddExpertise = ({
   expertiseValue,
   setExpertise,
@@ -24,21 +25,16 @@ const AddExpertise = ({
 
   const { catSubCat } = useHandleCatSubCat();
 
-  const [catSubCatFiltered, setCatSubCatFiltered] = useState(null);
-  useEffect(() => {
-    setCatSubCatFiltered(catSubCat);
-  }, [catSubCat]);
-
   if (!catSubCat.isDataLoaded) {
     return (
-      <div className={`${styles.flexCenter}`} style={{ minHeight: '65vh' }}>
+      <div className={`${styles.flexCenter}`} style={{ minHeight: '66vh' }}>
         <Loader customStyles={{ height: '100%', background: 'transparent', overflow: 'hidden' }} />
       </div>
     );
   }
 
   return (
-    <div style={{ minHeight: '65vh' }}>
+    <div style={{ minHeight: '66vh' }}>
       <SearchBar
         inputDataObj={{
           inputOptions: {
@@ -46,44 +42,30 @@ const AddExpertise = ({
             placeholder: 'Search...',
             value: expertiseValue
           },
-          changeHandler: (e) => {
-            const query = e.target.value;
-            setExpertise(query);
-            const tempSubCat = catSubCat?.subCat?.filter((obj) => {
-              return obj.Name.toLowerCase().includes(query.toLowerCase());
-            });
-            // const tempCat = catSubCat?.cat?.filter((obj) => {
-            //   return obj.Name.toLowerCase().includes(query.toLowerCase());
-            // });
-            setCatSubCatFiltered({
-              // cat: tempCat,
-              ...catSubCatFiltered,
-              subCat: tempSubCat
-            });
-          }
+          changeHandler: (e) => setExpertise(e.target.value)
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
-      {catSubCatFiltered?.cat?.map((data, index) => {
-        // Change this condition to hide category names on search too.
-        if (!catSubCatFiltered.subCatGrp?.[data.id]?.subCat?.length) return;
+      {Object.values(catSubCat?.subCatGrp)?.map((obj) => {
+        const filteredSubcat = obj?.subCat?.filter((sc) =>
+          isWordIncluded(sc?.Name, expertiseValue)
+        );
+        if (!filteredSubcat.length) return;
         return (
-          <div className={`${styles.expertise1}`} key={data.Name}>
-            <h3>{data.Name}</h3>
-            {catSubCatFiltered?.subCat?.map((value) => {
-              if (value.CatId === data.id) {
-                return (
-                  <div className={`${styles.expertiseCheckbox}`} key={value.Name}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={value.Name}
-                      value={value.Name}
-                      isChecked={selectedExpertise?.includes(value.Name)}
-                      changeHandler={handleExpretiseSelection}
-                    />
-                  </div>
-                );
-              }
+          <div className={`${styles.expertise1}`} key={obj?.cat?.Name}>
+            <h3>{obj?.cat?.Name}</h3>
+            {filteredSubcat?.map((subCat) => {
+              return (
+                <div className={`${styles.expertiseCheckbox}`} key={subCat.Name}>
+                  <LabeledRadioCheckbox
+                    type="checkbox"
+                    label={subCat.Name}
+                    value={subCat.Name}
+                    isChecked={selectedExpertise?.includes(subCat.Name)}
+                    changeHandler={handleExpretiseSelection}
+                  />
+                </div>
+              );
             })}
           </div>
         );
