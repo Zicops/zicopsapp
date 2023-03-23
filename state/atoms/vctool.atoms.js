@@ -5,7 +5,7 @@ export const vcMeetingIconAtom = atom({
     default: {
         isModerator: false,           // default it is false
         isJoinedAsModerator: false,    // default it is false
-        isStartAdd: true                // default it is true
+        isStartAdd: false                // default it is false
     }
 })
 export const vctoolAlluserinfo = atom({   //for storing all the room data

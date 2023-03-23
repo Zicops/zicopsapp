@@ -15,6 +15,7 @@ import WhiteBoard from '../WhiteBoard';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray, vcMeetingIconAtom } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
+import StartSessionPopUp from '../StartSessionPopUP';
 
 const MainToolbar = ({
   audiotoggle,
@@ -57,6 +58,7 @@ const MainToolbar = ({
       stopAdvertisement()
     }
   })
+
   function getClickedComponent(title) {
     if (title === '') return <></>;
     const compObj = toolBarData?.find((obj) => obj.title === title);
@@ -182,6 +184,21 @@ const MainToolbar = ({
         }} />
       )
     },
+    {
+      title: 'startSessionPopup',
+      component: (<StartSessionPopUp concelMeetingFunc={() => {
+        setSelectedButton("")
+      }}
+        startMeetingFunc={() => {
+          setMeetingIconAtom({
+            ...meetingIconsAtom,
+            isStartAdd: false,
+            isJoinedAsModerator: false
+          })
+          setSelectedButton("")
+        }} />
+      )
+    }
   ];
   const clearTime = () => {
     setTimeout(() => {
@@ -297,11 +314,7 @@ const MainToolbar = ({
                 <div>
                   <VctoolButton
                     onClickfun={() => {
-                      setMeetingIconAtom({
-                        ...meetingIconsAtom,
-                        isStartAdd: false,
-                        isJoinedAsModerator: false
-                      })
+                      setSelectedButton('startSessionPopup')
                     }}
                     trueSrc={'/images/svg/vctool/Union.svg'}
                     falseSrc={'/images/svg/vctool/Union.svg'}

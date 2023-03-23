@@ -102,6 +102,7 @@
     align-items: center;
     padding-right: 10px;
 }
+
 .joinBtn>button,
 .joinModeratorBtn>button {
     width: 81px;
@@ -282,7 +283,8 @@
     border: none;
 }
 
-.canselBtn,.startMeeting {
+.canselBtn,
+.startMeeting {
     height: 48px;
     width: 127px;
     border-radius: 4rem;
@@ -301,12 +303,14 @@
     background-color: #F53D41;
     cursor: pointer;
 }
-.startMeeting
-{
+
+.startMeeting {
     background-color: #6BCFCF;
     color: $black;
 }
-.canselBtn>img,.startMeeting>img {
+
+.canselBtn>img,
+.startMeeting>img {
     margin-right: 10px;
 }
 
@@ -2396,11 +2400,96 @@
     height: 40px;
     margin-top: 12px;
 
+    div {
+        width: 75%;
+        font-weight: 400;
+        font-size: 16px;
+        color: #FFFFFF;
+    }
 }
 
-.hostControlls>div {
-    width: 75%;
-    font-weight: 400;
-    font-size: 16px;
-    color: #FFFFFF;
+// styling StartSessionPopUp
+
+.startSessionPopup {
+    width: 482px;
+    height: 332px;
+    background-color: #1A1D21;
+    position: absolute;
+    top: 25%;
+    left: 35%;
+    padding-top: 10px;
+
+
+}
+
+.starSessionInnerContainer {
+    width: 90%;
+    height: 90%;
+    margin: auto;
+
+    p {
+        font-size: 20px;
+        font-weight: 500;
+        color: white;
+        border-bottom: solid #292F2F 1px;
+        padding-bottom: 12px;
+    }
+}
+
+.startSessionInstruction {
+    margin-top: 10px;
+    line-height: 28px;
+    color: #ACACAC;
+    font-size: 18px;
+    font-weight: 400px;
+    border-bottom: solid #292F2F 1px;
+    padding-bottom: 12px;
+}
+
+.startSessionStartRecordBtn {
+    width: 100%;
+    padding-bottom: 6px;
+    padding-top: 6px;
+}
+
+.startSessionStartRecordBtn>div {
+    display: flex;
+    border-bottom: solid #292F2F 1px;
+    height: 4rem;
+    align-items: center;
+}
+
+.startSessionStartRecordBtn>div>p {
+    font-size: 18px;
+    font-weight: 500;
+    width: 85%;
+    border: none;
+    color: #747474;
+}
+
+.startSessionBtns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+
+    button {
+        width: 209px;
+        height: 48px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 16px;
+    }
+}
+.SessionCanselBtn
+{
+    background-color: #26292C;
+    border: solid #292F2F 1px;
+    color: #ACACAC;
+}
+.startSessionBtn
+{
+    background-color: #6BCFCF;
+    border: solid #292F2F 1px;
+    color: $black;
 }

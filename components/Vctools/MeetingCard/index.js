@@ -87,7 +87,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                             setMeetingIconAtom({
                                 ...meetingIconsAtom,
                                 // isJoinedAsModerator:true,
-                                isStartAdd:true
+                                // isStartAdd:true
                             })
                         }}>
                             Join
