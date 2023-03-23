@@ -34,8 +34,6 @@ export default function VendorServices({ data, type = 'sme' }) {
   }, []);
 
   function getFileType(actualFileType = null) {
-    // if (actualFileType === 'PDF') return '/images/pdf-icon1.png';
-    // if (fileType === 'PPT') return '/images/ppt-icon1.png';
     console.info(actualFileType, 'ayush');
     if (actualFileType?.toLowerCase()?.includes('pdf')) return '/images/pdf-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('powerpoint')) return '/images/ppt-icon1.png';
@@ -104,7 +102,9 @@ export default function VendorServices({ data, type = 'sme' }) {
                 </div>
                 <div className={styles.sampleFileDetails}>
                   <div>{`${data?.title}`}</div>
-                  <div className={styles.sampleFileRate}>{data.rate}</div>
+                  <div className={styles.sampleFileRate}>
+                    {data.rate} {data.currency} {data.unit}
+                  </div>
                 </div>
               </div>
             );
