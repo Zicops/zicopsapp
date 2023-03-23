@@ -96,8 +96,6 @@ const MissionControlCards = () => {
     setVendorDetails(vendorDetail?.getUserVendor[0]);
   }, [userDetails?.id]);
 
-  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
-
   useEffect(async () => {
     if (!isVendor) return;
     if (vendorDetails?.vendorId) return;
