@@ -1,9 +1,11 @@
 import { atom } from "recoil";
 
-export const vcMeetingIconAtom=atom({
-    key:"vcMeetingIconAtom",
-    default:{
-        isModerator:false
+export const vcMeetingIconAtom = atom({
+    key: "vcMeetingIconAtom",
+    default: {
+        isModerator: false,           // default it is false
+        isJoinedAsModerator: false,    // default it is false
+        isStartAdd: true                // default it is true
     }
 })
 export const vctoolAlluserinfo = atom({   //for storing all the room data
@@ -67,26 +69,10 @@ export const quizArray = atom({
                 option3: '',
                 option4: ''
             },
-            answer:''
+            answer: ''
         }
     ]
 })
-// export function getQuizArray(data) {
-//     return {
-//         quizName: data.quizName || '',
-//         quizQuestion: data.quizQuestion || '',
-//         difficultyLevel: data.difficultyLevel || 1,
-//         hint: data.hint || '',
-//         options: data.options || {
-//             option1: '',
-//             option2: '',
-//             option3: '',
-//             option4: ''
-//         },
-//         answer:data.answer
-//     }
-// }
-
 export const VcChatMessageAtom = atom({
     key: 'VcChatMessageAtom',
     default: getMesaageObj()

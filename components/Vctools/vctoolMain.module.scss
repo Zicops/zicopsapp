@@ -102,7 +102,6 @@
     align-items: center;
     padding-right: 10px;
 }
-
 .joinBtn>button,
 .joinModeratorBtn>button {
     width: 81px;
@@ -283,7 +282,7 @@
     border: none;
 }
 
-.canselBtn {
+.canselBtn,.startMeeting {
     height: 48px;
     width: 127px;
     border-radius: 4rem;
@@ -294,14 +293,20 @@
     // 
     font-style: normal;
     font-weight: 400;
+    outline: none;
+    border: none;
     font-size: 16px;
     margin-left: 10px;
     color: white;
     background-color: #F53D41;
     cursor: pointer;
 }
-
-.canselBtn>img {
+.startMeeting
+{
+    background-color: #6BCFCF;
+    color: $black;
+}
+.canselBtn>img,.startMeeting>img {
     margin-right: 10px;
 }
 

@@ -72,6 +72,11 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
+                            setMeetingIconAtom({
+                                ...meetingIconsAtom,
+                                isJoinedAsModerator:true,
+                                isStartAdd:true
+                            })
                         }}>
                             Join as a moderator
                         </button>
@@ -79,6 +84,11 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
+                            setMeetingIconAtom({
+                                ...meetingIconsAtom,
+                                // isJoinedAsModerator:true,
+                                isStartAdd:true
+                            })
                         }}>
                             Join
                         </button>

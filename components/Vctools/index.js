@@ -6,9 +6,10 @@ import MainToolbar from './Toolbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { StartMeeting, GenerateString } from "./help/vctool.helper"
-import { breakoutList, getVctoolMetaData, participantRole, pollArray, totalRoomno, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
+import { breakoutList, getVctoolMetaData, participantRole, pollArray, totalRoomno, vcMeetingIconAtom, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
 const VcMaintool = () => {
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
+  const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
@@ -151,6 +152,7 @@ const VcMaintool = () => {
           !hidecard ? <MeetingCard
             startMeeting={() => {
               StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
               sethidecard(!hidecard)
 

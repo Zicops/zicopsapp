@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
@@ -13,7 +13,7 @@ import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray } from '@/state/atoms/vctool.atoms';
+import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray, vcMeetingIconAtom } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 
 const MainToolbar = ({
@@ -47,7 +47,16 @@ const MainToolbar = ({
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
   const [showSetting, setShowSetting] = useState(false)
+  const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
 
+  useEffect(() => {
+    if (meetingIconsAtom?.isStartAdd) {
+      startAdvertisement()
+    }
+    else if (!meetingIconsAtom?.isStartAdd) {
+      stopAdvertisement()
+    }
+  })
   function getClickedComponent(title) {
     if (title === '') return <></>;
     const compObj = toolBarData?.find((obj) => obj.title === title);
@@ -130,7 +139,7 @@ const MainToolbar = ({
       title: 'resourceBar',
       component: (
         <ResourcePage
-        hide={() => {
+          hide={() => {
             selectedButton === 'resourceBar'
               ? setSelectedButton('')
               : setSelectedButton('resourceBar');
@@ -194,75 +203,77 @@ const MainToolbar = ({
         onMouseOver={() => {
           setfade1(true);
         }}>
-        <button>
-          <img src="/images/svg/vctool/folder-open.svg" />
-        </button>
 
-        <VctoolButton
-          onClickfun={() => {
+        {
+          meetingIconsAtom.isStartAdd ? "" : (<>
+            <button>
+              <img src="/images/svg/vctool/folder-open.svg" />
+            </button>
 
-            selectedButton === 'resourceBar'
-              ? setSelectedButton('')
-              : setSelectedButton('resourceBar');
-          }}
-          trueSrc={'/images/svg/vctool/library-books-active.svg'}
-          falseSrc={'/images/svg/vctool/library-books.svg'}
-          toggle={selectedButton === 'resourceBar'}
-          customId={selectedButton === 'resourceBar' ? `${styles.changeBackground}` : ''}
-        />
+            <VctoolButton
+              onClickfun={() => {
 
-        <VctoolButton
-          onClickfun={() => {
+                selectedButton === 'resourceBar'
+                  ? setSelectedButton('')
+                  : setSelectedButton('resourceBar');
+              }}
+              trueSrc={'/images/svg/vctool/library-books-active.svg'}
+              falseSrc={'/images/svg/vctool/library-books.svg'}
+              toggle={selectedButton === 'resourceBar'}
+              customId={selectedButton === 'resourceBar' ? `${styles.changeBackground}` : ''}
+            />
 
-            selectedButton === 'whiteBoard'
-              ? setSelectedButton('')
-              : setSelectedButton('whiteBoard');
-          }}
-          trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
-          falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
-          customId={selectedButton === 'whiteBoard' ? `${styles.changeBackground}` : ''}
-        />
-        <VctoolButton
-          onClickfun={() => {
+            <VctoolButton
+              onClickfun={() => {
 
-            selectedButton === 'quiz'
-              ? setSelectedButton('')
-              : setSelectedButton('quiz');
-          }}
-          trueSrc={'/images/svg/vctool/quiz-active.svg'}
-          falseSrc={'/images/svg/vctool/quiz.svg'}
-          toggle={selectedButton === 'quiz'}
-          customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
-        />
+                selectedButton === 'whiteBoard'
+                  ? setSelectedButton('')
+                  : setSelectedButton('whiteBoard');
+              }}
+              trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
+              falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
+              customId={selectedButton === 'whiteBoard' ? `${styles.changeBackground}` : ''}
+            />
+            <VctoolButton
+              onClickfun={() => {
 
-        {/* <button>
-          <img src="/images/svg/vctool/dashboard.svg" />
-        </button> */}
-        <VctoolButton
-          onClickfun={() => {
+                selectedButton === 'quiz'
+                  ? setSelectedButton('')
+                  : setSelectedButton('quiz');
+              }}
+              trueSrc={'/images/svg/vctool/quiz-active.svg'}
+              falseSrc={'/images/svg/vctool/quiz.svg'}
+              toggle={selectedButton === 'quiz'}
+              customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
+            />
+            <VctoolButton
+              onClickfun={() => {
 
-            selectedButton === 'about'
-              ? setSelectedButton('')
-              : setSelectedButton('about');
-          }}
-          toggle={selectedButton === 'about'}
-          trueSrc={'/images/svg/vctool/info-active.svg'}
-          falseSrc={'/images/svg/vctool/info.svg'}
-          customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
-        />
+                selectedButton === 'about'
+                  ? setSelectedButton('')
+                  : setSelectedButton('about');
+              }}
+              toggle={selectedButton === 'about'}
+              trueSrc={'/images/svg/vctool/info-active.svg'}
+              falseSrc={'/images/svg/vctool/info.svg'}
+              customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
+            />
 
-        <VctoolButton
-          onClickfun={() => {
+            <VctoolButton
+              onClickfun={() => {
 
-            selectedButton === 'manageAccount'
-              ? setSelectedButton('')
-              : setSelectedButton('manageAccount');
-          }}
-          toggle={selectedButton === 'manageAccount'}
-          trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
-          falseSrc={'/images/svg/vctool/manage-accounts.svg'}
-          customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
-        />
+                selectedButton === 'manageAccount'
+                  ? setSelectedButton('')
+                  : setSelectedButton('manageAccount');
+              }}
+              toggle={selectedButton === 'manageAccount'}
+              trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
+              falseSrc={'/images/svg/vctool/manage-accounts.svg'}
+              customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+            />
+          </>)
+        }
+        {/* */}
 
       </div>
       <div
@@ -280,144 +291,191 @@ const MainToolbar = ({
           setfade1(true);
         }}>
         <div className={`${styles.footerLeft}`}>
-          <div>
-            <VctoolButton
-              onClickfun={() => {
-                endMeetng();
-                setbreakoutRoomparticipant(null)
-                setbreakoutRoompopup({
-                  roomId: "",
-                  isRoom: false
-                })
-              }}
-              trueSrc={'/images/svg/vctool/logout.svg'}
-              falseSrc={'/images/svg/vctool/logout.svg'}
-              customStyle={`${styles.canselBtn}`}
-              btnValue={'Leave'}
-            />
-          </div>
+          {
+            meetingIconsAtom.isJoinedAsModerator ? (
+              <>
+                <div>
+                  <VctoolButton
+                    onClickfun={() => {
+                      setMeetingIconAtom({
+                        ...meetingIconsAtom,
+                        isStartAdd: false,
+                        isJoinedAsModerator: false
+                      })
+                    }}
+                    trueSrc={'/images/svg/vctool/Union.svg'}
+                    falseSrc={'/images/svg/vctool/Union.svg'}
+                    customStyle={`${styles.startMeeting}`}
+                    btnValue={'Start'}
+                  />
+                </div>
+                <div>
+                  <VctoolButton
+                    onClickfun={() => {
+                      endMeetng();
+                      setbreakoutRoomparticipant(null)
+                      setbreakoutRoompopup({
+                        roomId: "",
+                        isRoom: false
+                      })
 
-          <VctoolButton
-            onClickfun={() => {
-              setAudio();
-            }}
-            trueSrc={'/images/svg/vctool/mic-on.svg'}
-            falseSrc={'/images/svg/vctool/mic-off.svg'}
-            toggle={audiotoggle} customId={!audiotoggle ? `${styles.changeBackground}` : ''}
-          />
+                    }}
+                    trueSrc={'/images/svg/vctool/logout.svg'}
+                    falseSrc={'/images/svg/vctool/logout.svg'}
+                    customStyle={`${styles.canselBtn}`}
+                    btnValue={'Leave'}
+                  />
+                </div>
+              </>
+            ) : <div>
+              <VctoolButton
+                onClickfun={() => {
+                  endMeetng();
+                  setbreakoutRoomparticipant(null)
+                  setbreakoutRoompopup({
+                    roomId: "",
+                    isRoom: false
+                  })
+                }}
+                trueSrc={'/images/svg/vctool/logout.svg'}
+                falseSrc={'/images/svg/vctool/logout.svg'}
+                customStyle={`${styles.canselBtn}`}
+                btnValue={'Leave'}
+              />
+            </div>
+          }
 
-          <VctoolButton
-            onClickfun={() => {
-              setVideo();
-            }}
-            trueSrc={'/images/svg/vctool/videocam-on.svg'}
-            falseSrc={'/images/svg/vctool/videocam-off.svg'}
-            toggle={videotoggle}
-            customId={!videotoggle ? `${styles.changeBackground}` : ''}
-          />
+          {/*  */}
+          {
+            meetingIconsAtom.isStartAdd ? "" : (<>
+              <VctoolButton
+                onClickfun={() => {
+                  setAudio();
+                }}
+                trueSrc={'/images/svg/vctool/mic-on.svg'}
+                falseSrc={'/images/svg/vctool/mic-off.svg'}
+                toggle={audiotoggle} customId={!audiotoggle ? `${styles.changeBackground}` : ''}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
-              shareScreen();
-            }}
-            trueSrc={'/images/svg/vctool/present-to-all.svg'}
-            falseSrc={'/images/svg/vctool/present-to-all.svg'}
-          />
+              <VctoolButton
+                onClickfun={() => {
+                  setVideo();
+                }}
+                trueSrc={'/images/svg/vctool/videocam-on.svg'}
+                falseSrc={'/images/svg/vctool/videocam-off.svg'}
+                toggle={videotoggle}
+                customId={!videotoggle ? `${styles.changeBackground}` : ''}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
-              sethand(!hand);
-              handRiseFun();
-            }}
-            toggle={hand}
-            trueSrc={'/images/svg/vctool/back-hand.svg'}
-            falseSrc={'/images/svg/vctool/back-hand-on.svg'}
-            customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
-          />
+              <VctoolButton
+                onClickfun={() => {
+                  shareScreen();
+                }}
+                trueSrc={'/images/svg/vctool/present-to-all.svg'}
+                falseSrc={'/images/svg/vctool/present-to-all.svg'}
+              />
+
+              <VctoolButton
+                onClickfun={() => {
+                  sethand(!hand);
+                  handRiseFun();
+                }}
+                toggle={hand}
+                trueSrc={'/images/svg/vctool/back-hand.svg'}
+                falseSrc={'/images/svg/vctool/back-hand-on.svg'}
+                customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
+              />
+            </>)
+          }
         </div>
         <div className={`${styles.footerRight}`}>
-          <VctoolButton
-            onClickfun={() => {
+          {
+            meetingIconsAtom.isStartAdd ? "" : (<>
+              <VctoolButton
+                onClickfun={() => {
 
-              selectedButton === 'qaBar'
-                ? setSelectedButton('')
-                : setSelectedButton('qaBar');
-            }}
-            trueSrc={'/images/svg/vctool/help-active.svg'}
-            falseSrc={'/images/svg/vctool/help.svg'}
-            customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
-            toggle={selectedButton === 'qaBar'}
-          />
+                  selectedButton === 'qaBar'
+                    ? setSelectedButton('')
+                    : setSelectedButton('qaBar');
+                }}
+                trueSrc={'/images/svg/vctool/help-active.svg'}
+                falseSrc={'/images/svg/vctool/help.svg'}
+                customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'qaBar'}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
+              <VctoolButton
+                onClickfun={() => {
 
-              selectedButton === 'chatBar'
-                ? setSelectedButton('')
-                : setSelectedButton('chatBar');
-            }}
-            trueSrc={'/images/svg/vctool/chat-bubble-active.svg'}
-            falseSrc={'/images/svg/vctool/chat-bubble.svg'}
-            customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
-            toggle={selectedButton === 'chatBar'}
-          />
+                  selectedButton === 'chatBar'
+                    ? setSelectedButton('')
+                    : setSelectedButton('chatBar');
+                }}
+                trueSrc={'/images/svg/vctool/chat-bubble-active.svg'}
+                falseSrc={'/images/svg/vctool/chat-bubble.svg'}
+                customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'chatBar'}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
+              <VctoolButton
+                onClickfun={() => {
 
-              selectedButton === 'poll'
-                ? setSelectedButton('')
-                : setSelectedButton('poll');
-            }}
-            trueSrc={'/images/svg/vctool/insert-chart-active.svg'}
-            falseSrc={'/images/svg/vctool/insert-chart.svg'}
-            customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
-            toggle={selectedButton === 'poll'}
-          />
+                  selectedButton === 'poll'
+                    ? setSelectedButton('')
+                    : setSelectedButton('poll');
+                }}
+                trueSrc={'/images/svg/vctool/insert-chart-active.svg'}
+                falseSrc={'/images/svg/vctool/insert-chart.svg'}
+                customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'poll'}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
-              selectedButton === 'participants'
-                ? setSelectedButton('')
-                : setSelectedButton('participants');
-            }}
-            trueSrc={'/images/svg/vctool/group-active.svg'}
-            falseSrc={'/images/svg/vctool/group.svg'}
-            customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
-            toggle={selectedButton === 'participants'}
-          />
+              <VctoolButton
+                onClickfun={() => {
+                  selectedButton === 'participants'
+                    ? setSelectedButton('')
+                    : setSelectedButton('participants');
+                }}
+                trueSrc={'/images/svg/vctool/group-active.svg'}
+                falseSrc={'/images/svg/vctool/group.svg'}
+                customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'participants'}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
-              selectedButton === 'breakOutRoom'
-                ? setSelectedButton('')
-                : setSelectedButton('breakOutRoom');
-            }}
-            trueSrc={'/images/svg/vctool/account-tree-active.svg'}
-            falseSrc={'/images/svg/vctool/account-tree.svg'}
-            customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
-            toggle={selectedButton === 'breakOutRoom'}
-          />
-          <VctoolButton
-            onClickfun={() => {
-              setShowSetting(!showSetting)
-              showSettingFunc()
-            }}
-            trueSrc={'/images/svg/vctool/settings.svg'}
-            falseSrc={'/images/svg/vctool/settings.svg'}
-            customId={showSetting ? `${styles.changeBackground}` : ''}
-            toggle={showSetting}
-          />
+              <VctoolButton
+                onClickfun={() => {
+                  selectedButton === 'breakOutRoom'
+                    ? setSelectedButton('')
+                    : setSelectedButton('breakOutRoom');
+                }}
+                trueSrc={'/images/svg/vctool/account-tree-active.svg'}
+                falseSrc={'/images/svg/vctool/account-tree.svg'}
+                customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'breakOutRoom'}
+              />
+              <VctoolButton
+                onClickfun={() => {
+                  setShowSetting(!showSetting)
+                  showSettingFunc()
+                }}
+                trueSrc={'/images/svg/vctool/settings.svg'}
+                falseSrc={'/images/svg/vctool/settings.svg'}
+                customId={showSetting ? `${styles.changeBackground}` : ''}
+                toggle={showSetting}
+              />
 
-          <VctoolButton
-            onClickfun={() => {
-              fullScreenFun();
-            }}
-            toggle={fullscreen}
-            trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
-            falseSrc={'/images/svg/vctool/fullscreen.svg'}
+              <VctoolButton
+                onClickfun={() => {
+                  fullScreenFun();
+                }}
+                toggle={fullscreen}
+                trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
+                falseSrc={'/images/svg/vctool/fullscreen.svg'}
 
-          />
+              />
+            </>)
+          }
+          {/* */}
         </div>
       </div>
     </div>
