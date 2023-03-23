@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
 import { VendorAllExpertise } from '@/state/atoms/vendor.atoms';
@@ -24,6 +24,11 @@ const AddExpertise = ({
 
   const { catSubCat } = useHandleCatSubCat();
 
+  const [catSubCatFiltered, setCatSubCatFiltered] = useState(null);
+  useEffect(() => {
+    setCatSubCatFiltered(catSubCat);
+  }, [catSubCat]);
+
   // const handleQuery = (event) => {
   //   const query = event.target.value;
   //   // setSearchQuery(query)
@@ -37,8 +42,13 @@ const AddExpertise = ({
   //   } else setSearched(false);
   // };
 
-  if (!catSubCat.isDataLoaded)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+  if (!catSubCat.isDataLoaded) {
+    return (
+      <div className={`${styles.flexCenter}`} style={{ minHeight: '65vh' }}>
+        <Loader customStyles={{ height: '100%', background: 'transparent', overflow: 'hidden' }} />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -49,16 +59,32 @@ const AddExpertise = ({
             placeholder: 'Search...',
             value: expertiseValue
           },
-          changeHandler: (e) => setExpertise(e.target.value)
+          changeHandler: (e) => {
+            const query = e.target.value;
+            setExpertise(query);
+            if (query.length > 0) {
+              const tempSubCat = catSubCatFiltered?.subCat?.filter((obj) => {
+                return obj.Name.toLowerCase().includes(query.toLowerCase());
+              });
+              const tempCat = catSubCatFiltered?.cat?.filter((obj) => {
+                return obj.Name.toLowerCase().includes(query.toLowerCase());
+              });
+              console.log(tempCat, tempSubCat);
+              // setCatSubCatFiltered({
+              //   cat: tempCat,
+              //   subCat: tempSubCat
+              // });
+            }
+          }
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
-      {catSubCat?.cat?.map((data, index) => {
-        if (!catSubCat.subCatGrp?.[data.id]?.subCat?.length) return;
+      {catSubCatFiltered?.cat?.map((data, index) => {
+        if (!catSubCatFiltered.subCatGrp?.[data.id]?.subCat?.length) return;
         return (
           <div className={`${styles.expertise1}`}>
             <h3>{data.Name}</h3>
-            {catSubCat?.subCat?.map((value) => {
+            {catSubCatFiltered?.subCat?.map((value) => {
               if (value.CatId === data.id)
                 return (
                   <div className={`${styles.expertiseCheckbox}`}>
