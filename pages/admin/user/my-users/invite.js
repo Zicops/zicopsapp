@@ -18,7 +18,7 @@ import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sid
 import TabContainer from '../../../../components/common/TabContainer';
 import BulkUpload from '../../../../components/UserComps/BulkUpload';
 import InviteUser from '../../../../components/UserComps/InviteUser';
-import { CUSTOM_ERROR_MESSAGE, USER_LSP_ROLE } from '../../../../helper/constants.helper';
+import { CUSTOM_ERROR_MESSAGE, USER_LSP_ROLE, USER_TYPE } from '../../../../helper/constants.helper';
 
 export default function MyUserPage() {
   const [inviteUsers, { data, loading }] = useMutation(INVITE_USERS_WITH_ROLE, {
@@ -169,7 +169,7 @@ export default function MyUserPage() {
             tab={tab}
             setTab={setTab}
             footerObj={{
-              disableSubmit: loading || !emailId?.length,
+              disableSubmit: loading || !emailId?.length || userType?.toLowerCase() === USER_TYPE?.external,
               hideStatus: true,
               submitDisplay: tabData[0]?.name.includes('Invite') ? 'Send Invite' : 'Upload',
               isActive: !!emailId?.length,
