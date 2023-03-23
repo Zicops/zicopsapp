@@ -75,7 +75,7 @@ const QuizQA = ({cancelRoom,showQuiz}) => {
                 })
                 if(selectedOption.selectedOption1)
                 {
-                    alert(options?.option1)
+                    // alert(options?.option1)
                     setAnswer(options?.option1)
                 }
             }} optionNumber={1} values={options?.option1} onChange={(e) => {
