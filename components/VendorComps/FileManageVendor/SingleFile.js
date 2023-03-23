@@ -1,8 +1,12 @@
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 const SingleFile = ({ data, pType }) => {
-  const { deleteSample, getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } =
-    useHandleVendor();
+  const {
+    deleteSample,
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles
+  } = useHandleVendor();
   let getSampleFiles;
   if (pType === 'sme') {
     getSampleFiles = getSMESampleFiles;
@@ -29,7 +33,9 @@ const SingleFile = ({ data, pType }) => {
           <p className={`${styles.fileName}`}>{data?.name}</p>
           <div className={`${styles.hr}`}></div>
           <div className={`${styles.filePrice}`}>
-            <div className={`${styles.rate}`}>{data?.price}</div>
+            <div className={`${styles.rate}`}>
+              {data?.rate} {data?.currency} {data?.unit}
+            </div>
             <div className={`${styles.deleteIcon}`} onClick={() => HandleDeleteFile()}>
               <img src="/images/svg/delete.svg" alt="" />
             </div>
