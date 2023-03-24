@@ -586,6 +586,8 @@ export default function LearnerExams() {
     // }
     allAttempts.push(...examAttempt);
 
+    console.info('allAttempts', allAttempts);
+
     setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
 
     const onGoingAttempts = allAttempts?.filter(
@@ -603,22 +605,31 @@ export default function LearnerExams() {
     });
 
     console.info('completedAttempts', completedAttempts);
+    const UniqueCompleteAttempt = completedAttempts.reduce((acc, curr) => {
+      if (!acc[curr.user_ea_id]) {
+        acc[curr.user_ea_id] = curr;
+      }
+      return acc;
+    }, {});
+
+    const completedUniquAttemps = Object.values(UniqueCompleteAttempt);
+    console.info('completedUniquAttemps', completedUniquAttemps);
 
     let newCompleteAttempts = [];
     if (!userData?.id) return [];
     const id = userData?.id;
-    for (let i = 0; i < completedAttempts?.length; i++) {
+    for (let i = 0; i < completedUniquAttemps?.length; i++) {
       // if (!completedAttempts[i]?.user_ea_id) return;
       const results = await loadQueryDataAsync(
         GET_USER_EXAM_RESULTS,
-        { user_ea_details: [{ user_id: id, user_ea_id: completedAttempts[i]?.user_ea_id }] },
+        { user_ea_details: [{ user_id: id, user_ea_id: completedUniquAttemps[i]?.user_ea_id }] },
         {},
         userQueryClient
       );
       if (results?.getUserExamResults) {
         console.info('results?.getUserExamResults', results?.getUserExamResults);
         console.info('completedAttempts', completedAttempts);
-        completedAttempts?.map((r) => {
+        completedUniquAttemps?.map((r) => {
           if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
             console.log('index', results?.getUserExamResults[0]?.results[0]?.user_score);
             newCompleteAttempts.push({
@@ -649,6 +660,9 @@ export default function LearnerExams() {
 
     //adding course name to each of them
 
+    console.info('examMetas', examMetas);
+    console.info('examCourseMap', examCourseMap);
+
     examMetas?.forEach((exam, index) => {
       if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
         scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
@@ -657,6 +671,8 @@ export default function LearnerExams() {
       takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
       return;
     });
+    console.info('scheduleExams', scheduleExams);
+    console.info('takeAnyTimeExams', takeAnyTimeExams);
 
     // scheduleExam:[],takeAnyTime:[]
     setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
@@ -665,9 +681,12 @@ export default function LearnerExams() {
       const scheduleExamId = scheduleExams?.map((data) => data?.id);
       console.info(scheduleExamId);
       const schedule = await getExamSchedule(scheduleExamId);
+      console.info('schedule', schedule);
+      console.info('scheduleExams', scheduleExams);
+
       for (let i = 0; i < scheduleExams?.length; i++) {
         if (!schedule?.length) continue;
-        scheduleExams[i] = { ...scheduleExams[i], ...schedule[0] };
+        scheduleExams[i] = { ...scheduleExams[i], ...schedule[i] };
       }
     }
     // console.log(takeAnyTimeExams, scheduleExams);
