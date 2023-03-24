@@ -6,7 +6,11 @@ const VendorCard = ({ data }) => {
 
   const handleclick = () => {
     if (!data.vendorId) return;
-
+    if (data.pf_id) {
+      return router.push(
+        `/admin/vendor/market-yard/vendor-details/${data.vendorId}/profile-details/${data.pf_id}`
+      );
+    }
     return router.push(`/admin/vendor/market-yard/vendor-details/${data.vendorId}`);
   };
 
