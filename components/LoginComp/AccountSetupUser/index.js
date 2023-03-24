@@ -31,6 +31,8 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   useEffect(() => {
     if (!userData?.first_name) {
       const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
+      if (!refreshUserData?.email) return;
+
       return setUserData({ ...refreshUserData });
     }
 
