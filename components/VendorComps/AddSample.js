@@ -3,7 +3,8 @@ import {
   SampleAtom,
   SmeServicesAtom,
   CtServicesAtom,
-  CdServicesAtom
+  CdServicesAtom,
+  getSampleObject
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
@@ -15,6 +16,7 @@ import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorCo
 import styles from './vendorComps.module.scss';
 import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useEffect } from 'react';
 const AddSample = ({ pType }) => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -22,6 +24,10 @@ const AddSample = ({ pType }) => {
   const smeServices = useRecoilValue(SmeServicesAtom);
   const crtServices = useRecoilValue(CtServicesAtom);
   const cdServices = useRecoilValue(CdServicesAtom);
+
+  useEffect(() => {
+    setSampleData(getSampleObject());
+  }, []);
 
   function getFileName() {
     return truncateToN(
@@ -144,6 +150,7 @@ const AddSample = ({ pType }) => {
             <label>Unit:</label>
             <LabeledDropdown
               dropdownOptions={{
+                isSearchEnable: true,
                 inputName: 'unit',
                 placeholder: 'Select Unit',
                 value: {
@@ -155,6 +162,7 @@ const AddSample = ({ pType }) => {
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'unit')}
               styleClass={`${styles.unitDropDown}`}
+              isCreateable={true}
             />
           </div>
         </div>
