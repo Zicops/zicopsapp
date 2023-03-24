@@ -8,7 +8,6 @@ export default function ProfileVendor({ profileData }) {
 
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
-    console.log('lowerCase', lowerCase);
     setInputText(lowerCase);
   };
 
