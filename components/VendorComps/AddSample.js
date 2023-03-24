@@ -84,7 +84,8 @@ const AddSample = ({ pType }) => {
                     LIMITS.vendorSampleSize / ONE_MB_IN_BYTES
                   )} mb`;
                   isValid = false;
-                  setToastMsg({ type: 'Danger', message: fileErrMsg });
+                  e.target.value = '';
+                  setToastMsg({ type: 'danger', message: fileErrMsg });
                 }
                 setSampleData({ ...sampleData, sampleFile: file });
               }}
