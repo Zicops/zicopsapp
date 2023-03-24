@@ -27,6 +27,7 @@ import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import AddExpertise from './AddExpertise';
 import SampleFilePreview from '../../VendorServices/SampleFilePreview';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -37,6 +38,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
+  const [selectedSampleId, setSelectedSampleId] = useState(null);
 
   const [selectedExpertise, setSelectedExpertise] = useState(data?.expertises);
   const [tempExpertise, setTempExpertise] = useState(data?.expertises);
@@ -200,8 +202,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     setSampleData(getSampleObject());
   };
 
-  const HandleDeleteFile = async (sf_id) => {
+  const handleDeleteFile = async (sf_id) => {
     await deleteSample(sf_id, pType);
+    setSelectedSampleId(null);
     getSampleFiles();
   };
 
@@ -387,7 +390,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                       <img
                         className={`${styles.deleteIcon}`}
                         src="/images/svg/delete-outline.svg"
-                        onClick={() => HandleDeleteFile(file.sf_id)}
+                        onClick={() => setSelectedSampleId(file.sf_id)}
                       />
                       {/* </div> */}
                     </div>
@@ -574,6 +577,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         }}>
         <AddSample />
       </VendorPopUp>
+
       {previewState != null && (
         <VendorPopUp
           open={previewState}
@@ -598,6 +602,19 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             }}
           />
         </VendorPopUp>
+)}
+
+      {!!selectedSampleId && (
+        <ConfirmPopUp
+          title={`Are you sure to delete this sample file?`}
+          btnObj={{
+            handleClickLeft: (e) => {
+              e.currentTarget.disabled = true;
+              handleDeleteFile(selectedSampleId);
+            },
+            handleClickRight: () => setSelectedSampleId(null)
+          }}
+        />
       )}
     </>
   );
