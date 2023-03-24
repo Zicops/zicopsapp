@@ -119,23 +119,8 @@ export const AQChatAtom = atom({
     key: 'AQChatAtom',
     default: []
 });
-// export const alluserdata = atom({
-//     key: "alldata",
-//     default: {
-//         joinedUserInfo: [],
-//         breakoutRoomList: [],
-//         totalRoomNo: 1,
-//         setParticipantPopup: {
-//             roomId: "",
-//             isRoom: false
-//         },
-//         participantNumber: {
-//             totalRoomno: 0,
-//             presentRoom: 0
-//         },
-//         breakoutRoomSelectedParticipant:[]
-//     }
-// })
+
+
 
 export const vctoolMetaData = atom({
     key: "vctoolMetaData",

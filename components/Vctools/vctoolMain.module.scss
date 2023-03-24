@@ -988,16 +988,24 @@
 
 }
 
-.pollBoxBtns {
+.pollBoxOptions>div>img {
+    margin-right: 8px;
+}
+
+.pollBoxBtns,
+.quizBoxBtns {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-right: 10px;
+    // margin-right: 10px;
+    margin-top: 12px;
 
 }
 
 .pollBoxEditBnt {
     // 
+    width: 130px;
+    height: 40px;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1005,19 +1013,42 @@
     color: #FFFFFF;
 }
 
-.pollBoxBtns>button {
-    width: 130px;
-    height: 40px;
+
+
+.pollBoxBtns>button,
+.quizBoxBtns>button {
     border: 1px solid #292F2F;
     border-radius: 4px;
-    background: #292F2F;
-    margin-right: 10px;
+    font-weight: 400;
+    font-size: 16px;
+    margin-right: 8px;
     margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.pollBoxBtns>button {
+
+    background: #26292C;
+}
+
+.quizBoxEditBtn {
+    color: white;
+    background: #292F2F;
+    width: 135px;
+    height: 40px;
+}
+
+.quizBoxPublishBtn {
+    color: black;
+    background-color: #6BCFCF;
+    width: 135px;
+    height: 40px;
 }
 
 .pollBoxDeleteBnt {
     color: #F53D41;
-    // 
+    width: 130px;
+    height: 40px;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -2481,14 +2512,14 @@
         font-size: 16px;
     }
 }
-.SessionCanselBtn
-{
+
+.SessionCanselBtn {
     background-color: #26292C;
     border: solid #292F2F 1px;
     color: #ACACAC;
 }
-.startSessionBtn
-{
+
+.startSessionBtn {
     background-color: #6BCFCF;
     border: solid #292F2F 1px;
     color: $black;
