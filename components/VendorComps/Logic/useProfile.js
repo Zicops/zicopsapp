@@ -1,4 +1,4 @@
-import { truncateToN } from '@/helper/common.helper';
+import { convertUrlToFile, truncateToN } from '@/helper/common.helper';
 import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import {
@@ -41,19 +41,22 @@ export default function useProfile() {
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (vendorData?.type !== VENDOR_MASTER_TYPE.individual) return;
     if (profileData?.profileId) return;
 
     const allServiceLanguages = [
       ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
     ];
+
     setProfileData(
       getProfileObject({
         email: vendorData?.users?.[0],
         description: vendorData?.description,
-        profileImage: vendorData?.vendorProfileImage,
-        photoUrl: vendorData?.photoUrl,
+        profileImage: await convertUrlToFile(
+          vendorData?.photoUrl,
+          getEncodedFileNameFromUrl(vendorData?.photoUrl)
+        ),
         languages: allServiceLanguages,
         sme_expertises: smeData?.expertises,
         crt_expertises: ctData?.expertises,
