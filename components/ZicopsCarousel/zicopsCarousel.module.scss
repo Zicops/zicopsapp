@@ -286,12 +286,23 @@
   // height: 10vh;
   color: white;
 
+  &:hover {
+    transform: scale(1.1);
+    transition: all 300ms;
+  }
+
   .cardInnerVendorContainer {
   }
 
   .vendorImage {
     width: 100%;
-    img{
+    background-color: $darkThree;
+    border-radius: 10px;
+    overflow: hidden;
+    object-fit: cover;
+
+    img {
+      border-radius: 10px;
       width: 190px;
       height: 180px;
     }
