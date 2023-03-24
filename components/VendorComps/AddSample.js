@@ -124,7 +124,8 @@ const AddSample = ({ pType }) => {
               inputOptions={{
                 inputName: 'rate',
                 placeholder: 'Enter Rate',
-                value: sampleData?.rate
+                value: sampleData?.rate,
+                isNumericOnly: true
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData)}
             />

@@ -7,7 +7,8 @@ import {
   UPDATE_USER,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
@@ -25,6 +26,7 @@ import {
   NOTIFICATION_TITLES,
   USER_STATUS
 } from '@/helper/constants.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -76,6 +78,7 @@ export default function useHandleAddUserDetails() {
   const [addRole, { error: createRoleError }] = useMutation(ADD_USER_ROLE, {
     client: userClient
   });
+  const [userLogin] = useMutation(USER_LOGIN, { client: userClient });
 
   //recoil states
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
@@ -91,13 +94,45 @@ export default function useHandleAddUserDetails() {
   const [isSubmitDisable, setSubmitDisable] = useState(false);
   const [phCountryCode, setPhCountryCode] = useState('IN');
   const fcmToken = useRecoilValue(FcmTokenAtom);
-  
 
   // setting up local states
   useEffect(() => {
     setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
+
+  useEffect(() => {
+    if (userAboutData?.email) return;
+    if (!auth?.currentUser?.accessToken) return;
+
+    // loginUser();
+
+    async function loginUser() {
+      for (let i = 0; i < 4; i++) {
+        let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) continue;
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+        setUserAboutData(getUserObject(res?.data?.login));
+        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+      }
+    }
+  }, [userAboutData?.email]);
 
   useEffect(() => {
     let isPhValid = false;
@@ -112,6 +147,7 @@ export default function useHandleAddUserDetails() {
     setIsAccountSetupReady(
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
+        userAboutData?.email &&
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
@@ -260,7 +296,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     // const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
@@ -291,7 +326,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     const dataLang = resLang?.data?.addUserLanguageMap[0];
@@ -337,7 +371,6 @@ export default function useHandleAddUserDetails() {
       if (isError) {
         setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
         return;
-        return router.push('/account-setup');
       }
 
       const dataPref = resPref?.data?.addUserPreference[0];
@@ -412,7 +445,7 @@ export default function useHandleAddUserDetails() {
         item?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
     );
     if (!!courses?.length) {
-    sendNotificationWithLink(
+      sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
@@ -562,7 +595,7 @@ export default function useHandleAddUserDetails() {
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
-    if(!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url; 
+    if (!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')
