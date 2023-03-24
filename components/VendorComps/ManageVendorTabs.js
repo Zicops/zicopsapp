@@ -114,15 +114,16 @@ export default function ManageVendorTabs() {
       footerObj={{
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
-        handleSubmit: async () => {
+        handleSubmit: () => {
           setVendorCurrentState({ ...vendorCurrentState, isUpdating: true });
+          addUpdateVendor(tab === tabData[0].name).then((id) => {
+            if (!id) return;
 
-          await addUpdateVendor(tab === tabData[0].name);
-          await handleMail(tab === tabData[0].name);
-          await addUpdateSme(tab === tabData[1].name);
-          await addUpdateCrt(tab === tabData[1].name);
-          await addUpdateCd(tab === tabData[1].name);
-
+            handleMail();
+          });
+          addUpdateSme(tab === tabData[1].name);
+          addUpdateCrt(tab === tabData[1].name);
+          addUpdateCd(tab === tabData[1].name);
           setVendorCurrentState(getVendorCurrentStateObj({ isSaved: true }));
         },
         status: vendorData?.status?.toUpperCase(),
