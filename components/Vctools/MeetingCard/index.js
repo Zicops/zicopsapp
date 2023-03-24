@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcMeetingIconAtom } from '@/state/atoms/vctool.atoms';
+import { vcMeetingIconAtom, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { OnVideo, StopVideo } from "../help/vctool.helper";
@@ -10,6 +10,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
     const [video1, setvideo1] = useState(startmeetingVideoenable)
     const [audio1, setaudio1] = useState(startmeetingAudioenable)
     const userData = useRecoilValue(UserStateAtom)
+    const meetingInfo = useRecoilValue(vctoolAlluserinfo)
     const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
     const nameRef = useRef(null)
     let video = videoref.current;
@@ -36,7 +37,6 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
             })
         }
     })
-
     return (
         <div className={`${styles.vcCard}`}>
             <div className={`${styles.videoPlayer}`}>
@@ -72,11 +72,14 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            setMeetingIconAtom({
-                                ...meetingIconsAtom,
-                                isJoinedAsModerator:true,
-                                isStartAdd:true
-                            })
+                            if (meetingInfo.length <= 1) {
+                                setMeetingIconAtom({
+                                    ...meetingIconsAtom,
+                                    isJoinedAsModerator: true,
+                                    isStartAdd: true,
+                                })
+                            }
+
                         }}>
                             Join as a moderator
                         </button>
@@ -84,11 +87,14 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            // setMeetingIconAtom({
-                            //     ...meetingIconsAtom,
-                            //     // isJoinedAsModerator:true,
-                            //     // isStartAdd:true
-                            // })
+                            if (meetingInfo.length <= 1) {
+                                setMeetingIconAtom({
+                                    ...meetingIconsAtom,
+                                    // isJoinedAsModerator: true,
+                                    isStartAdd: true,
+                                })
+                            }
+                           
                         }}>
                             Join
                         </button>

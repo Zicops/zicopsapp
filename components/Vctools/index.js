@@ -93,25 +93,25 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
-            api.getRoomsInfo().then(rooms => {
-              setuserinfo(rooms.rooms[0].participants)
-              setbreakoutListarr(rooms.rooms)
-              setallInfo(rooms.rooms[0].participants)
-              setVctoolInfo(
-                {
-                  ...vctoolInfo,
-                  allRoomInfo: rooms.rooms[0].participants
-                })
-              // console.info(rooms.rooms[0].participants)
-            })
-            //  allUserinfo
-            // userinfo
-            userinfo.forEach((data) => {
+          api.getRoomsInfo().then(rooms => {
+            setuserinfo(rooms.rooms[0].participants)
+            setbreakoutListarr(rooms.rooms)
+            setallInfo(rooms.rooms[0].participants)
+            setVctoolInfo(
+              {
+                ...vctoolInfo,
+                allRoomInfo: rooms.rooms[0].participants
+              })
+          
+          })
+          //  allUserinfo
+          // userinfo
+          userinfo.forEach((data) => {
+            api.executeCommand('grantModerator', data?.id);
+            if ([api.getEmail(data?.id)].toString().includes("@ziocps")) {
               api.executeCommand('grantModerator', data?.id);
-              if ([api.getEmail(data?.id)].toString().includes("@ziocps")) {
-                api.executeCommand('grantModerator', data?.id);
-              }
-            })
+            }
+          })
           }}
 
 
