@@ -198,14 +198,14 @@ const AddVendorProfile = ({ data = {} }) => {
             />
           ) : (
             <>
-              {profileData?.experienceData?.map((exp) => (
+              {profileData?.experienceData?.map((exp, index) => (
                 <IconButton
                   text={`${exp?.title} @ ${exp?.companyName}`}
                   styleClasses={`${styles.exButton}`}
                   imgUrl="/images/svg/business_center.svg"
                   handleClick={() => {
                     setIsOpenExpriences(true);
-                    setExperiencesData(getExperiencesObject(exp));
+                    setExperiencesData(getExperiencesObject({ ...exp, localIndex: index }));
                   }}
                   isDisabled={isViewPage}
                 />
@@ -215,7 +215,9 @@ const AddVendorProfile = ({ data = {} }) => {
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => {
-                  setExperiencesData(getExperiencesObject(null));
+                  setExperiencesData(
+                    getExperiencesObject({ localIndex: profileData?.experienceData?.length || 0 })
+                  );
                   setIsOpenExpriences(true);
                 }}
                 isDisabled={isViewPage}
@@ -413,7 +415,12 @@ const AddVendorProfile = ({ data = {} }) => {
 
       <VendorPopUp
         open={isOpenExpriences}
-        title={`${experiencesData?.expId ? 'Edit' : 'Add'} Experience`}
+        title={`${
+          experiencesData?.expId ||
+          experiencesData?.localIndex !== profileData?.experienceData?.length
+            ? 'Edit'
+            : 'Add'
+        } Experience`}
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}

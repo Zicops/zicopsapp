@@ -80,6 +80,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
+    localIndex: data?.localIndex || null,
     expId: data?.expId || '',
     pfId: data?.pfId || '',
     title: data?.title || '',
