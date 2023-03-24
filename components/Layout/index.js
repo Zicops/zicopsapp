@@ -75,7 +75,7 @@ export default function Layout({ children }) {
     // const basicInfo = userData?.getUserDetails?.[0];
 
     const basicInfo = dUser;
-    setUserData((prev) => ({ ...prev, ...data, ...basicInfo, isUserUpdated: false }));
+    // setUserData((prev) => ({ ...prev, ...data, ...basicInfo, isUserUpdated: false }));
     return;
   }
 
