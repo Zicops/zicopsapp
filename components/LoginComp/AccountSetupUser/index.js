@@ -29,16 +29,12 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const router = useRouter();
 
   useEffect(() => {
-    setUserData({ ...userData, Photo: image });
-    setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
-    return;
-  }, [image]);
-
-  useEffect(() => {
     if (!userData?.first_name) {
       const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
       return setUserData({ ...refreshUserData });
     }
+
+    setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
     return;
   }, []);
 
@@ -135,7 +131,10 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           inputName={'profile-image'}
           label={'Profile Picture'}
           isRemove={true}
-          handleChange={setImage}
+          handleChange={(newImage) => {
+            setUserData({ ...userData, Photo: newImage });
+            setImage(newImage);
+          }}
           uploadedFile={userData?.Photo}
           imageUrl={userData?.photo_url}
           isAccountSetup={true}
