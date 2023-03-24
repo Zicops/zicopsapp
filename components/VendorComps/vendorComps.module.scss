@@ -748,7 +748,10 @@
           // height: 30px;
         }
 
-        .previewIcon, .deleteIcon {cursor: pointer;}
+        .previewIcon,
+        .deleteIcon {
+          cursor: pointer;
+        }
         .actionIcons {
           display: flex;
           width: 20px;
@@ -1390,7 +1393,8 @@
 
 .marketYardFrameContainer {
   height: 50vh;
-  background-image: url('/images/shop-transparent.png'), linear-gradient(265.52deg, #6bcfcf -12.05%, #52b7bd -1.4%, #369caa 72.51%, #369caa 105.51%);
+  background-image: url('/images/shop-transparent.png'),
+    linear-gradient(265.52deg, #6bcfcf -12.05%, #52b7bd -1.4%, #369caa 72.51%, #369caa 105.51%);
   background-size: 60%, 100%;
   background-position: bottom left;
   background-repeat: no-repeat;
@@ -1642,7 +1646,7 @@
   }
 }
 
-.flexCenter{
+.flexCenter {
   display: flex;
   justify-content: center;
   align-items: center;
