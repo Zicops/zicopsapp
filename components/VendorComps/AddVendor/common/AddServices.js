@@ -377,19 +377,21 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
                       {typeof file === 'string' ? file : file?.name}
-                      <div className={`${styles.actionIcons}`}>
-                        <img
-                          src="/images/svg/eye-line.svg"
-                          onClick={() => {
-                            setPreviewState(true);
-                            setPreviewFile({ ...file, fileUrl: file?.file_url });
-                          }}
-                        />
-                        <img
-                          src="/images/svg/delete-outline.svg"
-                          onClick={() => HandleDeleteFile(file.sf_id)}
-                        />
-                      </div>
+                      {/* <div className={`${styles.actionIcons}`}> */}
+                      <img
+                        src="/images/svg/eye-line.svg"
+                        className={`${styles.previewIcon}`}
+                        onClick={() => {
+                          setPreviewState(true);
+                          setPreviewFile({ ...file, fileUrl: file?.file_url });
+                        }}
+                      />
+                      <img
+                        className={`${styles.deleteIcon}`}
+                        src="/images/svg/delete-outline.svg"
+                        onClick={() => HandleDeleteFile(file.sf_id)}
+                      />
+                      {/* </div> */}
                     </div>
                   ))}
                 </div>
