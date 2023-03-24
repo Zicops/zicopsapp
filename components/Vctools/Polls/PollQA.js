@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRecoilState } from "recoil";
 import styles from "../vctoolMain.module.scss";
 import PollOption from "./PollOption";
-const PollQA = ({ ShowPoll }) => {
+const PollQA = ({ ShowPoll, goToCreatePoll}) => {
     const [pollInfo, setPollInfo] = useRecoilState(pollArray)
     const [pollQuestion, setPollQuestion] = useState('')
     const [pollName, setPollName] = useState('')
@@ -50,8 +50,8 @@ const PollQA = ({ ShowPoll }) => {
                             value: "",
                             imgUrl: ""
                         }
-
                     ])
+                  
 
                 }}><div>+</div> Add Option</button>
 
@@ -59,6 +59,10 @@ const PollQA = ({ ShowPoll }) => {
                     <button className={`${styles.pollCancelBtn}`}
                         onClick={() => {
                             setOptions([])
+                            if(options.length===0)
+                            {
+                             goToCreatePoll()
+                            }
                         }}>cancel</button>
                     <button className={`${styles.pollSaveBtn}`}
                         onClick={() => {

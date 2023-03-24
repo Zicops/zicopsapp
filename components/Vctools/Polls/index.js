@@ -1,12 +1,16 @@
+import { pollArray } from "@/state/atoms/vctool.atoms";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import DeletePoUp from "../DeletePopUp";
 import styles from "../vctoolMain.module.scss";
 import CreatePOll from "./CreatePoll";
 import PollQA from "./PollQA";
 import ShowPoll from "./ShowPoll";
-const Poll = ({ hide = false }) => {
+const Poll = ({ hide = false,deletePollPopUp }) => {
     const [polltitle, setPollTitle] = useState('')
+    const [pollInfo, setPollInfo] = useRecoilState(pollArray)
     function showPollPopup(title) {
-        if (title === '') return pollComponent[1].component;
+        if (title === '') return <>{(pollInfo.length > 1) ? pollComponent[2].component : pollComponent[1].component} </>;
         const pollObj = pollComponent.find(obj => obj.title == title)
         return pollObj?.component
     }
@@ -15,6 +19,13 @@ const Poll = ({ hide = false }) => {
             title: 'pollQA',
             component: (<PollQA ShowPoll={() => {
                 setPollTitle("showPoll")
+            }} goToCreatePoll={() => {
+                if (pollInfo.length > 1) {
+                    setPollTitle('showPoll')
+                }
+                else {
+                    setPollTitle("emptyPoll")
+                }
             }} />)
         },
         {
@@ -27,7 +38,9 @@ const Poll = ({ hide = false }) => {
             title: "showPoll",
             component: (<ShowPoll setPollTitle={() => {
                 setPollTitle("pollQA")
-            }} />)
+            }} deletePoll={()=>{
+                deletePollPopUp()
+            }}/>)
         }
     ]
     return (

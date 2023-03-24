@@ -16,6 +16,7 @@ import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray, vcMeetingIconAtom } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
+import DeletePoUp from '../DeletePopUp';
 
 const MainToolbar = ({
   audiotoggle,
@@ -44,6 +45,7 @@ const MainToolbar = ({
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
+  const [deletedPoupTitel,setDeletedPouptitle]=useState('')
   const participantPopuppanel = useRecoilValue(particiantPopup)
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
@@ -114,7 +116,9 @@ const MainToolbar = ({
           hide={() => {
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
-        />
+          deletePollPopUp={() => {
+            setDeletedPouptitle('deletePopUp')
+      }} />
       )
     },
     {
@@ -198,6 +202,16 @@ const MainToolbar = ({
           setSelectedButton("")
         }} />
       )
+    },
+    {
+      title: 'deletePopUp',
+      component: (<DeletePoUp poUpOptions={{
+        popUpName: "Poll",
+        popUpNotice: "Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?",
+        poupBtnInfo1: "Cancel",
+        poupBtnInfo2: "Delete"
+      }} 
+    />)
     }
   ];
   const clearTime = () => {
@@ -300,7 +314,9 @@ const MainToolbar = ({
         }}>
 
         <>{getClickedComponent(selectedButton)}
-          {getClickedComponent(participantPopuppanel.roomId)}</>
+          {getClickedComponent(participantPopuppanel.roomId)}
+          {getClickedComponent(deletedPoupTitel)}
+          </>
       </div>
 
       <div className={`${styles.toolBarFooter}`}
