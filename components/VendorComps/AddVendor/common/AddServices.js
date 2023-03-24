@@ -55,8 +55,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
   const [newOPFormat, setNewOPFormat] = useState('');
-  const [previewState, setPreviewState] = useState(false);
-  const [previewFile, setPreviewFile] = useState({});
+  const [previewState, setPreviewState] = useState(null);
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
@@ -92,11 +91,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   }
   let fileData = [];
   if (pType === 'sme') {
-    fileData.push(smeData?.sampleFiles);
+    fileData.push(...(smeData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else if (pType === 'crt') {
-    fileData.push(ctData?.sampleFiles);
+    fileData.push(...(ctData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else {
-    fileData.push(cdData?.sampleFiles);
+    fileData.push(...(cdData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   }
 
   const completeProfileHandler = async () => {
@@ -359,7 +358,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            {!fileData[0]?.length ? (
+            {!fileData?.length ? (
               <IconButton
                 text="Add sample files"
                 styleClass={`${styles.button}`}
@@ -373,7 +372,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.showFilesMain}`}>
-                  {fileData[0]?.map((file) => (
+                  {fileData?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
                       {typeof file === 'string' ? file : file?.name}
@@ -382,8 +381,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         src="/images/svg/eye-line.svg"
                         className={`${styles.previewIcon}`}
                         onClick={() => {
-                          setPreviewState(true);
-                          setPreviewFile({ ...file, fileUrl: file?.file_url });
+                          setPreviewState(+file.id);
                         }}
                       />
                       <img
@@ -576,14 +574,31 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         }}>
         <AddSample />
       </VendorPopUp>
-      <VendorPopUp
-        open={previewState}
-        popUpState={[previewState, setPreviewState]}
-        title={previewFile.name}
-        size="large"
-        isFooterVisible={false}>
-        <SampleFilePreview sampleFile={previewFile} />
-      </VendorPopUp>
+      {previewState != null && (
+        <VendorPopUp
+          open={previewState}
+          popUpState={[true, setPreviewState]}
+          title={fileData?.[previewState]?.name}
+          size="large"
+          isFooterVisible={false}>
+          <SampleFilePreview
+            sampleFile={{
+              ...fileData?.[previewState],
+              fileUrl: fileData?.[previewState]?.file_url
+            }}
+            handleNextClick={() => {
+              let updatedIndex = +previewState + 1;
+              if (updatedIndex === fileData?.length) updatedIndex = 0;
+              setPreviewState(+updatedIndex);
+            }}
+            handlePrevClick={() => {
+              let updatedIndex = +previewState - 1;
+              if (updatedIndex < 0) updatedIndex = fileData?.length - 1;
+              setPreviewState(+updatedIndex);
+            }}
+          />
+        </VendorPopUp>
+      )}
     </>
   );
 }
