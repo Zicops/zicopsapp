@@ -162,7 +162,7 @@ export default function useHandleVendor() {
     });
 
     if (!!existingEmails?.length) {
-      setToastMsg({ type: 'info', message: 'User Already Exists.' });
+      setToastMsg({ type: 'info', message: 'User Already exists in the learning space and cannot be mapped as vendor in this learning space.' });
     }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
