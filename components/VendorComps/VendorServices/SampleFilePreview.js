@@ -16,8 +16,6 @@ export default function SampleFilePreview({
     docPreview: 'doc'
   };
 
-  // console.info(sampleFile);
-
   let displayType = types.download;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('image')) displayType = types.image;
   if (sampleFile?.actualFileType?.toLowerCase()?.includes('video')) displayType = types.video;

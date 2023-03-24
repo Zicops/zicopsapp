@@ -190,7 +190,6 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
 
   const HandleDeleteFile = async (sf_id) => {
-    console.info(sf_id);
     await deleteSample(sf_id, pType);
     getSampleFiles();
   };
@@ -370,7 +369,6 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                         <img
                           src="/images/svg/eye-line.svg"
                           onClick={() => {
-                            console.info(file);
                             setPreviewState(true);
                             setPreviewFile({ ...file, fileUrl: file?.file_url });
                           }}
