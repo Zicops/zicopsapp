@@ -17,9 +17,11 @@ import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 import SingleFile from './SingleFile';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
+import { IsDataPresentAtom } from '../common/VendorPopUp/popup.helper';
 const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const smeData = useRecoilValue(SmeServicesAtom);
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
@@ -72,7 +74,10 @@ const FileManageVendor = ({ pType }) => {
             text="Add another file"
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            handleClick={() => setIsOpenAddFile(true)}
+            handleClick={() => {
+              setIsPopUpDataPresent(true);
+              setIsOpenAddFile(true);
+            }}
             isDisabled={fileData?.length >= 5}
           />
         </div>
