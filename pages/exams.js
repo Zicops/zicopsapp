@@ -250,7 +250,6 @@ export default function LearnerExams() {
     if (examCourseMapping?.takeAnyTime?.length) {
       for (let i = 0; i < examResults?.length; i++) {
         // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-        console.log(examCourseMapping);
         for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
           if (examResults[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
             examFinalResult.push({ ...examResults[i], ...examCourseMapping?.takeAnyTime[j] });
@@ -261,18 +260,16 @@ export default function LearnerExams() {
     console.info('examFinalResult', examFinalResult);
     // console.log(examFinalResult, 'final reult');
     //formating exam result table data
-    const uniqueArray = examFinalResult.reduce((acc, curr) => {
-      if (!acc[curr.user_ea_id]) {
-        acc[curr.user_ea_id] = curr;
-      }
-      return acc;
-    }, {});
+    // const uniqueArray = examFinalResult.reduce((acc, curr) => {
+    //   if (!acc[curr.user_ea_id]) {
+    //     acc[curr.user_ea_id] = curr;
+    //   }
+    //   return acc;
+    // }, {});
 
-    const uniqueResult = Object.values(uniqueArray);
+    // const uniqueResult = Object.values(uniqueArray);
 
-    console.info(uniqueResult);
-
-    const examsResult = uniqueResult?.map((exam) => ({
+    const examsResult = examFinalResult?.map((exam) => ({
       id: exam?.user_ea_id,
       courseName: exam?.courseName,
       examName: exam?.Name,
@@ -581,12 +578,13 @@ export default function LearnerExams() {
     const examMetasId = examMetas?.map((data) => data?.id);
     const examAttempt = await loadUserAttemptsAndResults(examMetasId);
     console.info('examAttempt', examAttempt);
-    for (let i = 0; i < examMetas?.length; i++) {
-      console.log('examAttempt', examAttempt);
-      if (!examAttempt?.length) continue;
-      allAttempts.push(...examAttempt);
-      console.info('allAttempts', allAttempts);
-    }
+    // for (let i = 0; i < examMetas?.length; i++) {
+    //   console.log('examAttempt', examAttempt);
+    //   if (!examAttempt?.length) continue;
+    //   allAttempts.push(...examAttempt);
+    //   console.info('allAttempts', allAttempts);
+    // }
+    allAttempts.push(...examAttempt);
 
     setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
 
@@ -604,7 +602,7 @@ export default function LearnerExams() {
       return attemp?.attempt_status?.toLowerCase() === 'completed';
     });
 
-    console.info("completedAttempts", completedAttempts);
+    console.info('completedAttempts', completedAttempts);
 
     let newCompleteAttempts = [];
     if (!userData?.id) return [];
