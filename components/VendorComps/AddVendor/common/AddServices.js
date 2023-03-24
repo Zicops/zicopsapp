@@ -26,6 +26,7 @@ import useHandleVendor from '../../Logic/useHandleVendor';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import AddExpertise from './AddExpertise';
+import SampleFilePreview from '../../VendorServices/SampleFilePreview';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -54,6 +55,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
   const [newOPFormat, setNewOPFormat] = useState('');
+  const [previewState, setPreviewState] = useState(false);
+  const [previewFile, setPreviewFile] = useState({});
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
@@ -67,7 +70,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     addSampleFile,
     getSMESampleFiles,
     getCRTSampleFiles,
-    getCDSampleFiles
+    getCDSampleFiles,
+    deleteSample
   } = useHandleVendor();
 
   useEffect(() => {
@@ -195,6 +199,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     setSamplePopupState(false);
     setShowCompleteFile(true);
     setSampleData(getSampleObject());
+  };
+
+  const HandleDeleteFile = async (sf_id) => {
+    await deleteSample(sf_id, pType);
+    getSampleFiles();
   };
 
   return (
@@ -367,7 +376,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   {fileData[0]?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
-                      {typeof file === 'string' ? file : file?.name + '.' + file?.fileType}
+                      {typeof file === 'string' ? file : file?.name}
+                      <div className={`${styles.actionIcons}`}>
+                        <img
+                          src="/images/svg/eye-line.svg"
+                          onClick={() => {
+                            setPreviewState(true);
+                            setPreviewFile({ ...file, fileUrl: file?.file_url });
+                          }}
+                        />
+                        <img
+                          src="/images/svg/delete-outline.svg"
+                          onClick={() => HandleDeleteFile(file.sf_id)}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -551,6 +573,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
           handleClick: addSampleFileHandler
         }}>
         <AddSample />
+      </VendorPopUp>
+      <VendorPopUp
+        open={previewState}
+        popUpState={[previewState, setPreviewState]}
+        title={previewFile.name}
+        size="large"
+        isFooterVisible={false}>
+        <SampleFilePreview sampleFile={previewFile} />
       </VendorPopUp>
     </>
   );

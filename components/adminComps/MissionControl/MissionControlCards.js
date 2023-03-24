@@ -96,6 +96,19 @@ const MissionControlCards = () => {
     setVendorDetails(vendorDetail?.getUserVendor[0]);
   }, [userDetails?.id]);
 
+  useEffect(async () => {
+    if (!isVendor) return;
+    if (vendorDetails?.vendorId) return;
+    const vendorDetail = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userDetails?.id },
+      {},
+      userQueryClient
+    );
+    if (!vendorDetail?.getUserVendor?.[0]?.vendorId) return;
+    setVendorDetails(vendorDetail?.getUserVendor[0]);
+  }, [userDetails?.id]);
+
   return (
     <>
       <div className="mission_control_body">

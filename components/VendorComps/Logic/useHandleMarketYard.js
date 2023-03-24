@@ -43,10 +43,10 @@ export default function useHandleMarketYard() {
 
   async function getLspVendors(lspId, filters, isDataReturn = false) {
     setLoading(true);
-    const vendorList = await loadAndCacheDataAsync(
+    const vendorList = await loadQueryDataAsync(
       // GET_VENDORS_BY_LSP,
       GET_PAGINATED_VENDORS,
-      { lsp_id: lspId, filters: filters },
+      { lsp_id: lspId, filters: filters, pageSize: 28 },
       {},
       userQueryClient
     );
@@ -66,7 +66,7 @@ export default function useHandleMarketYard() {
 
   async function getLspSpeakers(lspId, service, isDataReturn = false) {
     setLoading(true);
-    const speakerList = await loadAndCacheDataAsync(
+    const speakerList = await loadQueryDataAsync(
       GET_SPEAKERS,
       { lspId: lspId, service: service },
       {},
@@ -82,6 +82,7 @@ export default function useHandleMarketYard() {
     for (let i = 0; i < _sortedData?.length; i++) {
       newSpeakerArray.push({
         ..._sortedData[i],
+        vendorId: _sortedData[i]?.vendor_id,
         name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name
       });
     }

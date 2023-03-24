@@ -110,7 +110,8 @@ const AddSample = ({ pType }) => {
                 value: sampleData?.fileType
               },
               options: fileFormatArray,
-              menuPlacement: 'top'
+              menuPlacement: 'top',
+              noOptionsMessage: 'Please add your O/P Deliverable Formats'
             }}
             changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'fileType')}
             styleClass={`${styles.fileFormatDropDown}`}
@@ -123,7 +124,8 @@ const AddSample = ({ pType }) => {
               inputOptions={{
                 inputName: 'rate',
                 placeholder: 'Enter Rate',
-                value: sampleData?.rate
+                value: sampleData?.rate,
+                isNumericOnly: true
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData)}
             />

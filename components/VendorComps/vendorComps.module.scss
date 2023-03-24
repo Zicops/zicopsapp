@@ -153,16 +153,16 @@
   position: relative;
 
   .sampleFilePreview {
-    min-height: 40vh;
+    height: 60vh;
     object-fit: contain;
-    height: 100%;
-    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: auto;
 
-    img {
+    img,
+    video {
       height: 100%;
     }
   }
@@ -736,9 +736,19 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img {
-          width: 30px;
-          height: 30px;
+        > img {
+          width: 20px;
+          // height: 30px;
+        }
+
+        .actionIcons {
+          display: flex;
+          width: 20px;
+          object-fit: cover;
+          gap: 5px;
+          img {
+            width: 100%;
+          }
         }
       }
     }
@@ -1248,6 +1258,10 @@
     padding-right: 15px;
     border-radius: 5px;
     cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+    }
   }
 }
 
@@ -1353,7 +1367,7 @@
     width: 33%;
 
     .currencyDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 
@@ -1361,7 +1375,7 @@
     width: 33%;
 
     .unitDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 }
