@@ -271,7 +271,7 @@
     height: 50px;
     border-radius: 5px;
     background-color: #5c5c5c;
-    color: white;
+    color:$white;
     border: 1px solid #5c5c5c;
     padding-left: 15px;
     background-image: url('/images/search3.png');
@@ -301,10 +301,7 @@
     align-items: center;
     justify-content: center;
     gap: 35px;
-    .arrowImage {
-      margin-right: 20px;
-      cursor: pointer;
-    }
+    
   }
 
   .profileImage {
@@ -329,7 +326,12 @@
   .profileExperience {
     color: $bgBody;
   }
-
+.rightSide{
+  width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
   .servicesPillContainer {
     .servicesPill {
       display: flex;
@@ -351,6 +353,11 @@
       border-radius: 5px;
     }
   }
+}
+.arrowImage {
+  margin-right: 20px;
+  cursor: pointer;
+}
 }
 
 .input5 {
