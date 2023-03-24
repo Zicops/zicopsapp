@@ -41,7 +41,7 @@ export default function VendorServices({ data, type = 'sme' }) {
     if (actualFileType?.toLowerCase()?.includes('presentation')) return '/images/pptx-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('stream')) return '/images/srt-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('document')) return '/images/doc-icon1.png';
-    if (actualFileType?.toLowerCase()?.includes('msword')) '/images/docx-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('msword')) return '/images/docx-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('audio')) return '/images/mp3-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('mp4')) return '/images/mp4-icon1.png';
     if (actualFileType?.toLowerCase()?.includes('png')) return '/images/png-icon1.png';
