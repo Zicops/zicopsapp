@@ -82,7 +82,9 @@ export default function SampleFilePreview({
             <p>{sampleFile?.size || 'NA'}</p>
 
             <label>Price</label>
-            <p> {sampleFile?.rate || 'NA'}</p>
+            <p>
+              {sampleFile?.rate} {sampleFile?.currency} {sampleFile.unit}
+            </p>
           </div>
         )}
       </div>
