@@ -17,7 +17,7 @@ const AddExpertise = ({
   const handleExpretiseSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      setSelectedExpertise([...selectedExpertise, value]);
+      setSelectedExpertise([...(selectedExpertise || []), value]);
     } else {
       setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
     }

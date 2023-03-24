@@ -27,15 +27,21 @@ export default function useProfile() {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState(profileData?.sme_expertises);
-  const [tempSmeExpertise, setTempSmeExpertise] = useState(profileData?.sme_expertises);
-  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState(profileData?.crt_expertises);
-  const [tempCrtExpertise, setTempCrtExpertise] = useState(profileData?.crt_expertises);
-  const [selectedCdExpertise, setSelectedCdExpertise] = useState(profileData?.content_development);
-  const [tempCdExpertise, setTempCdExpertise] = useState(profileData?.content_development);
+  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState(
+    profileData?.sme_expertises || []
+  );
+  const [tempSmeExpertise, setTempSmeExpertise] = useState(profileData?.sme_expertises || []);
+  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState(
+    profileData?.crt_expertises || []
+  );
+  const [tempCrtExpertise, setTempCrtExpertise] = useState(profileData?.crt_expertises || []);
+  const [selectedCdExpertise, setSelectedCdExpertise] = useState(
+    profileData?.content_development || []
+  );
+  const [tempCdExpertise, setTempCdExpertise] = useState(profileData?.content_development || []);
 
-  const [selectedLanguages, setSelectedLanguages] = useState(profileData?.languages);
-  const [tempLanguages, setTempLanguages] = useState(profileData?.languages);
+  const [selectedLanguages, setSelectedLanguages] = useState(profileData?.languages || []);
+  const [tempLanguages, setTempLanguages] = useState(profileData?.languages || []);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
@@ -201,18 +207,18 @@ export default function useProfile() {
   };
 
   const closeExpertiseSmeHandler = () => {
-    setSelectedSmeExpertise([...tempSmeExpertise]);
-    setTempSmeExpertise([...tempSmeExpertise]);
+    setSelectedSmeExpertise([...(tempSmeExpertise || [])]);
+    setTempSmeExpertise([...(tempSmeExpertise || [])]);
     setOpenSmeExpertise(false);
   };
   const closeExpertiseCrtHandler = () => {
-    setSelectedCrtExpertise([...tempCrtExpertise]);
-    setTempCrtExpertise([...tempCrtExpertise]);
+    setSelectedCrtExpertise([...(tempCrtExpertise || [])]);
+    setTempCrtExpertise([...(tempCrtExpertise || [])]);
     setOpenCrtExpertise(false);
   };
   const closeExpertiseCdHandler = () => {
-    setSelectedCdExpertise([...tempCdExpertise]);
-    setTempCdExpertise([...tempCdExpertise]);
+    setSelectedCdExpertise([...(tempCdExpertise || [])]);
+    setTempCdExpertise([...(tempCdExpertise || [])]);
     setOpenCdExpertise(false);
   };
   function getFileName() {
