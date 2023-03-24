@@ -9,7 +9,7 @@ export default function AddVendorServices() {
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const ptype = [{ SME: 'sme', CRT: 'crt', CD: 'cd' }];
   const servicesHelper = [
@@ -20,7 +20,7 @@ export default function AddVendorServices() {
       inputName: 'isApplicable',
       experticeName: 'Add Subject Matter Expertise',
       ptype: ptype[0]?.SME,
-      isDev: true
+      isDemo: true
     },
     {
       data: ctData,
@@ -37,7 +37,7 @@ export default function AddVendorServices() {
       inputName: 'isApplicable',
       experticeName: 'Add Content Development Expertise',
       ptype: ptype[0]?.CD,
-      isDev: true
+      isDemo: true
     }
   ];
 
@@ -45,6 +45,7 @@ export default function AddVendorServices() {
     <div className={`${styles.addServiceContainer}`}>
       {servicesHelper.map((value, index) => {
         if (value?.isDev && !isDev) return;
+        if (value?.isDemo && !isDemo) return;
 
         return (
           <ZicopsAccordian title={value.title}>
