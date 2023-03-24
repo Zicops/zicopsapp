@@ -22,12 +22,8 @@ const FileManageVendor = ({ pType }) => {
   const smeData = useRecoilValue(SmeServicesAtom);
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
-  const {
-    getSMESampleFiles,
-    getCRTSampleFiles,
-    getCDSampleFiles,
-    addSampleFile
-  } = useHandleVendor();
+  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
+    useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -50,7 +46,9 @@ const FileManageVendor = ({ pType }) => {
   }
   const addNewSampleFileHendler = async (e) => {
     e.target.disabled = true;
-    await addSampleFile(pType);
+    const isSaved = await addSampleFile(pType);
+    if (!isSaved) return;
+
     getSampleFiles();
     setIsOpenAddFile(false);
     setSampleData(getSampleObject());

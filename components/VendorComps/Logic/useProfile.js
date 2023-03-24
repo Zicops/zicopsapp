@@ -43,7 +43,7 @@ export default function useProfile() {
     setProfileData((prev) => {
       const data = structuredClone(prev);
       const editExpIndex = prev?.experienceData?.findIndex(
-        (e) => _experienceData?.expId === e?.expId
+        (e) => !!e?.expId && _experienceData?.expId === e?.expId
       );
 
       if (editExpIndex >= 0) data.experienceData[editExpIndex] = _experienceData;
