@@ -5,17 +5,26 @@ import { useState } from 'react';
 import VendorPopUp from '../common/VendorPopUp';
 import AddVendorProfile from '../AddVendorProfile';
 import useHandleVendor from '../Logic/useHandleVendor';
-import { allProfileAtom, getProfileObject, VendorProfileAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilState } from 'recoil';
+import {
+  allProfileAtom,
+  getProfileObject,
+  VendorProfileAtom,
+  VendorStateAtom
+} from '@/state/atoms/vendor.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
 import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
 import { useRouter } from 'next/router';
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 
 const ProfileManageVendor = () => {
-  const [isOpenProfile, setIsOpenProfile] = useState(false);
-  const [showCompleteProfile, setCompleteProfile] = useState(false);
+  const vendorData = useRecoilValue(VendorStateAtom);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+
+  const [isOpenProfile, setIsOpenProfile] = useState(false);
+  const [showCompleteProfile, setCompleteProfile] = useState(false);
+
   const { addUpdateExperience, getAllProfileInfo } = useHandleVendor();
   const { addUpdateProfile } = useHandleVendorProfile();
 
@@ -30,7 +39,9 @@ const ProfileManageVendor = () => {
   const completeProfileHandler = async (e) => {
     e.target.disabled = true;
     await addUpdateExperience();
-    await addUpdateProfile();
+    const isSaved = await addUpdateProfile();
+    if (!isSaved) return;
+
     await getAllProfileInfo();
     setCompleteProfile(true);
     setIsOpenProfile(false);
@@ -40,6 +51,9 @@ const ProfileManageVendor = () => {
   useEffect(() => {
     getAllProfileInfo();
   }, []);
+
+  const isProfileBtnDisabled =
+    vendorData?.type === VENDOR_MASTER_TYPE.individual && profileDetails?.length ? true : false;
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
@@ -51,10 +65,10 @@ const ProfileManageVendor = () => {
         ))}
         <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
           <IconButton
-            text="Add another profile"
+            text={`Add ${profileDetails?.length ? 'another' : ''} profile`}
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
-            isDisabled={isViewPage}
+            isDisabled={isViewPage || isProfileBtnDisabled}
           />
         </div>
       </div>

@@ -20,6 +20,19 @@ export default function useHandleVendorProfile() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   async function addUpdateProfile() {
+    if (
+      !profileData?.firstName ||
+      !profileData?.lastName ||
+      !profileData?.email ||
+      !profileData?.experienceYear
+    ) {
+      setToastMsg({
+        type: 'danger',
+        message: 'Please Add First Name, Last Name, Email and Years of Experience!'
+      });
+      return null;
+    }
+
     const sendData = {
       vendor_id: vendorId || '',
       first_name: profileData?.firstName?.trim() || '',
@@ -45,7 +58,7 @@ export default function useHandleVendorProfile() {
     let isError = false;
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
-      await updateProfileVendor({
+      const res = await updateProfileVendor({
         variables: sendData,
         update: (_, { data }) => {
           handleCacheUpdate(
@@ -69,9 +82,9 @@ export default function useHandleVendorProfile() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
       });
-      if (isError) return;
+      if (isError) return null;
       setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
-      return;
+      return res;
     }
     if (
       profileData?.firstName &&
@@ -100,7 +113,7 @@ export default function useHandleVendorProfile() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Vendor profile Error' });
       });
-      if (isError) return;
+      if (isError) return null;
       setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
       return res;
     }
