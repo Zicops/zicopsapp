@@ -16,14 +16,19 @@ import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 import SingleFile from './SingleFile';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 const FileManageVendor = ({ pType }) => {
   const [isOpenAddFile, setIsOpenAddFile] = useState(false);
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const smeData = useRecoilValue(SmeServicesAtom);
   const ctData = useRecoilValue(CtServicesAtom);
   const cdData = useRecoilValue(CdServicesAtom);
-  const { getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles, addSampleFile } =
-    useHandleVendor();
+  const {
+    getSMESampleFiles,
+    getCRTSampleFiles,
+    getCDSampleFiles,
+    addSampleFile
+  } = useHandleVendor();
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
@@ -44,6 +49,9 @@ const FileManageVendor = ({ pType }) => {
   } else {
     fileData = cdData?.sampleFiles;
   }
+
+  const _sortedData = sortArrByKeyInOrder(fileData, 'updated_at', true);
+
   const addNewSampleFileHendler = async (e) => {
     e.target.disabled = true;
     const isSaved = await addSampleFile(pType);
@@ -57,7 +65,7 @@ const FileManageVendor = ({ pType }) => {
   return (
     <div className={`${styles.vendorFileContainer}`}>
       <div className={`${styles.vendorFileMain}`}>
-        {!!fileData?.length && fileData?.map((data) => <SingleFile data={data} pType={pType} />)}
+        {!!fileData?.length && _sortedData?.map((data) => <SingleFile data={data} pType={pType} />)}
 
         <div className={`${styles.addAnotherProfile}`}>
           <IconButton
