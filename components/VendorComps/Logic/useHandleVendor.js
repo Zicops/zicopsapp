@@ -149,14 +149,21 @@ export default function useHandleVendor() {
     const resEmails = resEmail?.data?.inviteUsersWithRole;
     let userLspMaps = [];
 
+    let existingEmails = [];
+
     resEmails?.forEach((user) => {
       let message = user?.message;
-      if (message === CUSTOM_ERROR_MESSAGE?.selfInvite)
-        userLspMaps.push({ user_id: userData?.id, user_lsp_id: userOrgData?.user_lsp_id });
+      if (
+        message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+      )
+        existingEmails.push(user?.email);
       else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
     });
-    
 
+    if (!!existingEmails?.length) {
+      setToastMsg({ type: 'info', message: 'User Already Exists.' });
+    }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
       context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
