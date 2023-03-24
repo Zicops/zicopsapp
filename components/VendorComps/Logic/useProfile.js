@@ -1,6 +1,7 @@
 import { convertUrlToFile, truncateToN } from '@/helper/common.helper';
 import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   CdServicesAtom,
   CtServicesAtom,
@@ -16,6 +17,8 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useProfile() {
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenSmeExpertise, setOpenSmeExpertise] = useState(false);
@@ -80,11 +83,24 @@ export default function useProfile() {
       email: profileData?.email || '',
       status: VENDOR_MASTER_STATUS.active
     };
+    if (
+      !experiencesData?.title ||
+      !experiencesData?.companyName ||
+      !experiencesData?.employeeType ||
+      !experiencesData?.location ||
+      !experiencesData?.locationType ||
+      !experiencesData?.startMonth ||
+      !experiencesData?.startYear ||
+      (experiencesData?.isWorking ? false : !experiencesData?.endMonth || !experiencesData?.endYear)
+    )
+      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     setProfileData((prev) => {
       const data = structuredClone(prev);
-      const editExpIndex = prev?.experienceData?.findIndex(
-        (e) => !!e?.expId && _experienceData?.expId === e?.expId
+      const editExpIndex = prev?.experienceData?.findIndex((e) =>
+        !!e?.expId
+          ? _experienceData?.expId === e?.expId
+          : _experienceData?.localIndex === e?.localIndex
       );
 
       if (editExpIndex >= 0) data.experienceData[editExpIndex] = _experienceData;
