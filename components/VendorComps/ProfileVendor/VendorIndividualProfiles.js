@@ -1,9 +1,6 @@
 import styles from '../vendorComps.module.scss';
 import { DownArrowIcon } from '@/components/common/ZicopsIcons';
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
-import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
-import { useEffect } from 'react';
 export default function VendorIndividualProfiles({ data }) {
   const router = useRouter();
 
@@ -15,6 +12,19 @@ export default function VendorIndividualProfiles({ data }) {
   if (data?.is_speaker) {
     const speaker = data?.is_speaker;
   }
+  let serviceArray = [];
+  if (data?.is_speaker) {
+    serviceArray.push('Speaker');
+  }
+  if (data?.sme_expertise?.length) {
+    serviceArray.push('SME');
+  }
+  if (data?.classroom_expertise?.length) {
+    serviceArray.push('CRT');
+  }
+  if (data?.content_development?.length) {
+    serviceArray.push('CD');
+  }
 
   return (
     <div className={`${styles.vendorIndividualProfilesContainer}`}>
@@ -25,18 +35,13 @@ export default function VendorIndividualProfiles({ data }) {
         <div className={`${styles.profileDetails}`}>
           <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
 
-          <p className={`${styles.profileServices}`}>
-            {data?.is_speaker ? 'Speaker' : ''}
-            {data?.sme_expertise?.length ? ' ' + '|' + ' ' + 'SME' : ''}
-            {data?.classroom_expertise?.length ? ' ' + '|' + ' ' + 'CRT' : ''}
-            {data?.content_development?.length ? ' ' + 'CD' : ''}
-          </p>
+          <p className={`${styles.profileServices}`}>{serviceArray.join(' | ')}</p>
           <p className={`${styles.profileExperience}`}>
             {data?.experience_years} years of experience
           </p>
         </div>
       </div>
-      <div className={`${styles.leftSide}`}>
+      <div className={`${styles.rightSide}`}>
         <div className={`${styles.servicesPillContainer}`}>
           <div className={`${styles.servicesPill}`}>
             {data?.sme_expertise?.map((expert) => (
