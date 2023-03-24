@@ -12,11 +12,12 @@ import {
   getSampleObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorCurrentStateAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AddSample from '../../AddSample';
 import AddVendorProfile from '../../AddVendorProfile';
 import VendorPopUp from '../../common/VendorPopUp';
@@ -51,6 +52,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
   const [newOPFormat, setNewOPFormat] = useState('');
 
   const router = useRouter();
@@ -67,6 +69,14 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     getCRTSampleFiles,
     getCDSampleFiles
   } = useHandleVendor();
+
+  useEffect(() => {
+    if (!isSaved) return;
+
+    setTempExpertise(selectedExpertise);
+    setTempLanguages(selectedLanguages);
+    setTempFormats(selectedFormats);
+  }, [isSaved]);
 
   let getSampleFiles;
   if (pType === 'sme') {
@@ -178,7 +188,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
 
   const addSampleFileHandler = async () => {
-    await addSampleFile(pType);
+    const isSaved = await addSampleFile(pType);
+    if (!isSaved) return;
+
     getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);

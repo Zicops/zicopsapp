@@ -28,8 +28,8 @@ import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COURSE_STATUS,
   USER_LSP_ROLE,
-  VENDOR_MASTER_STATUS,
-  USER_TYPE
+  USER_TYPE,
+  VENDOR_MASTER_STATUS
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -493,6 +493,25 @@ export default function useHandleVendor() {
   }
 
   async function addSampleFile(ptype) {
+    const allSampleFiles = {
+      sme: smeData?.sampleFiles,
+      crt: ctData?.sampleFiles,
+      cd: cdData?.sampleFiles
+    };
+    // duplicate name check
+    if (
+      allSampleFiles?.[ptype]?.find(
+        (smFile) =>
+          smFile?.name?.toLowerCase()?.trim() === sampleData?.sampleName?.toLowerCase()?.trim()
+      )
+    ) {
+      setToastMsg({
+        type: 'danger',
+        message: 'Sample File With same name already exist in this service'
+      });
+      return null;
+    }
+
     const sendData = {
       vendorId: vendorId,
       pType: ptype,
@@ -522,11 +541,12 @@ export default function useHandleVendor() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
       });
-      if (isError) return;
+      if (isError) return null;
       setToastMsg({ type: 'success', message: 'Sample File Created' });
       return res;
     } else {
-      return setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      return null;
     }
   }
 
