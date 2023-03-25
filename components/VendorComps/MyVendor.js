@@ -54,7 +54,10 @@ const MyVendor = () => {
       field: 'services',
       headerClassName: 'course-list-header',
       headerName: 'Services',
-      flex: 1
+      flex: 1,
+      renderCell: (params) => {
+        return params?.row?.services?.join(', ').toUpperCase();
+      }
     },
     {
       field: 'status',

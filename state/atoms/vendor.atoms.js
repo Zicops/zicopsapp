@@ -1,6 +1,20 @@
 import { atom } from 'recoil';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
+export const VendorCurrentStateAtom = atom({
+  key: 'VendorCurrentState',
+  default: getVendorCurrentStateObj()
+});
+
+export function getVendorCurrentStateObj(data = {}) {
+  return {
+    isUpdating: data?.isUpdating || false,
+    isSaved: data?.isSaved || false,
+    errors: data?.errors || [],
+    enabledServices: data?.enabledServices || []
+  };
+}
+
 export const VendorStateAtom = atom({
   key: 'vendorState',
   default: getVendorObject()
@@ -25,6 +39,7 @@ export function getVendorObject(data) {
     status: data?.status || VENDOR_MASTER_STATUS.draft
   };
 }
+
 export const VendorProfileAtom = atom({
   key: 'vendorProfile',
   default: getProfileObject()
@@ -66,6 +81,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
+    localIndex: data?.localIndex || null,
     expId: data?.expId || '',
     pfId: data?.pfId || '',
     title: data?.title || '',

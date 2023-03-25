@@ -1,16 +1,24 @@
-import { truncateToN } from '@/helper/common.helper';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { convertUrlToFile, truncateToN } from '@/helper/common.helper';
+import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
+  CdServicesAtom,
+  CtServicesAtom,
   getExperiencesObject,
+  getProfileObject,
+  SmeServicesAtom,
   VendorExperiencesAtom,
-  VendorProfileAtom
+  VendorProfileAtom,
+  VendorStateAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useProfile() {
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+
   const [isOpenExpriences, setIsOpenExpriences] = useState(false);
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
   const [isOpenSmeExpertise, setOpenSmeExpertise] = useState(false);
@@ -19,18 +27,60 @@ export default function useProfile() {
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
-  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState(profileData?.sme_expertises);
-  const [tempSmeExpertise, setTempSmeExpertise] = useState(profileData?.sme_expertises);
-  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState(profileData?.crt_expertises);
-  const [tempCrtExpertise, setTempCrtExpertise] = useState(profileData?.crt_expertises);
-  const [selectedCdExpertise, setSelectedCdExpertise] = useState(profileData?.content_development);
-  const [tempCdExpertise, setTempCdExpertise] = useState(profileData?.content_development);
+  const [selectedSmeExpertise, setSelectedSmeExpertise] = useState(
+    profileData?.sme_expertises || []
+  );
+  const [tempSmeExpertise, setTempSmeExpertise] = useState(profileData?.sme_expertises || []);
+  const [selectedCrtExpertise, setSelectedCrtExpertise] = useState(
+    profileData?.crt_expertises || []
+  );
+  const [tempCrtExpertise, setTempCrtExpertise] = useState(profileData?.crt_expertises || []);
+  const [selectedCdExpertise, setSelectedCdExpertise] = useState(
+    profileData?.content_development || []
+  );
+  const [tempCdExpertise, setTempCdExpertise] = useState(profileData?.content_development || []);
 
-  const [selectedLanguages, setSelectedLanguages] = useState(profileData?.languages);
-  const [tempLanguages, setTempLanguages] = useState(profileData?.languages);
+  const [selectedLanguages, setSelectedLanguages] = useState(profileData?.languages || []);
+  const [tempLanguages, setTempLanguages] = useState(profileData?.languages || []);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
+  const vendorData = useRecoilValue(VendorStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+
+  useEffect(async () => {
+    if (vendorData?.type !== VENDOR_MASTER_TYPE.individual) return;
+    if (profileData?.profileId) return;
+
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
+
+    setProfileData(
+      getProfileObject({
+        email: vendorData?.users?.[0],
+        description: vendorData?.description,
+        profileImage: await convertUrlToFile(
+          vendorData?.photoUrl,
+          getEncodedFileNameFromUrl(vendorData?.photoUrl)
+        ),
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.expertises,
+        crt_expertises: ctData?.expertises,
+        content_development: cdData?.expertises
+      })
+    );
+    setSelectedLanguages(allServiceLanguages);
+    setSelectedSmeExpertise(smeData?.expertises);
+    setSelectedCdExpertise(cdData?.expertises);
+    setSelectedCrtExpertise(ctData?.expertises);
+    setTempLanguages(allServiceLanguages);
+    setTempSmeExpertise(smeData?.expertises);
+    setTempCdExpertise(cdData?.expertises);
+    setTempCrtExpertise(ctData?.expertises);
+  }, [vendorData?.type]);
 
   const completeExperienceHandler = () => {
     const _experienceData = {
@@ -39,11 +89,24 @@ export default function useProfile() {
       email: profileData?.email || '',
       status: VENDOR_MASTER_STATUS.active
     };
+    if (
+      !experiencesData?.title ||
+      !experiencesData?.companyName ||
+      !experiencesData?.employeeType ||
+      !experiencesData?.location ||
+      !experiencesData?.locationType ||
+      !experiencesData?.startMonth ||
+      !experiencesData?.startYear ||
+      (experiencesData?.isWorking ? false : !experiencesData?.endMonth || !experiencesData?.endYear)
+    )
+      return setToastMsg({ type: 'danger', message: 'Please fill all the details' });
 
     setProfileData((prev) => {
       const data = structuredClone(prev);
-      const editExpIndex = prev?.experienceData?.findIndex(
-        (e) => _experienceData?.expId === e?.expId
+      const editExpIndex = prev?.experienceData?.findIndex((e) =>
+        !!e?.expId
+          ? _experienceData?.expId === e?.expId
+          : _experienceData?.localIndex === e?.localIndex
       );
 
       if (editExpIndex >= 0) data.experienceData[editExpIndex] = _experienceData;
@@ -144,18 +207,18 @@ export default function useProfile() {
   };
 
   const closeExpertiseSmeHandler = () => {
-    setSelectedSmeExpertise([...tempSmeExpertise]);
-    setTempSmeExpertise([...tempSmeExpertise]);
+    setSelectedSmeExpertise([...(tempSmeExpertise || [])]);
+    setTempSmeExpertise([...(tempSmeExpertise || [])]);
     setOpenSmeExpertise(false);
   };
   const closeExpertiseCrtHandler = () => {
-    setSelectedCrtExpertise([...tempCrtExpertise]);
-    setTempCrtExpertise([...tempCrtExpertise]);
+    setSelectedCrtExpertise([...(tempCrtExpertise || [])]);
+    setTempCrtExpertise([...(tempCrtExpertise || [])]);
     setOpenCrtExpertise(false);
   };
   const closeExpertiseCdHandler = () => {
-    setSelectedCdExpertise([...tempCdExpertise]);
-    setTempCdExpertise([...tempCdExpertise]);
+    setSelectedCdExpertise([...(tempCdExpertise || [])]);
+    setTempCdExpertise([...(tempCdExpertise || [])]);
     setOpenCdExpertise(false);
   };
   function getFileName() {

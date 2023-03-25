@@ -27,9 +27,10 @@ import {
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COURSE_STATUS,
+  CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
-  VENDOR_MASTER_STATUS,
-  USER_TYPE
+  USER_TYPE,
+  VENDOR_MASTER_STATUS
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -144,11 +145,29 @@ export default function useHandleVendor() {
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
-    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
-      user_id: user?.user_id,
-      user_lsp_id: user?.user_lsp_id
-    }));
 
+    const resEmails = resEmail?.data?.inviteUsersWithRole;
+    let userLspMaps = [];
+
+    let existingEmails = [];
+
+    resEmails?.forEach((user) => {
+      let message = user?.message;
+      if (
+        message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+      )
+        existingEmails.push(user?.email);
+      else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
+    });
+
+    if (!!existingEmails?.length) {
+      setToastMsg({
+        type: 'info',
+        message:
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+      });
+    }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
       context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
@@ -370,6 +389,7 @@ export default function useHandleVendor() {
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
+    return smeDetails;
   }
 
   async function getCrtDetails() {
@@ -392,6 +412,7 @@ export default function useHandleVendor() {
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
+    return crtDetails;
   }
 
   async function getCdDetails() {
@@ -414,6 +435,7 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+    return cdDetails;
   }
 
   async function getVendorCourses() {
@@ -493,6 +515,38 @@ export default function useHandleVendor() {
   }
 
   async function addSampleFile(ptype) {
+    const allSampleFiles = {
+      sme: smeData?.sampleFiles,
+      crt: ctData?.sampleFiles,
+      cd: cdData?.sampleFiles
+    };
+    // duplicate name check
+    if (
+      allSampleFiles?.[ptype]?.find(
+        (smFile) =>
+          smFile?.name?.toLowerCase()?.trim() === sampleData?.sampleName?.toLowerCase()?.trim()
+      )
+    ) {
+      setToastMsg({
+        type: 'danger',
+        message: 'Sample File With same name already exist in this service'
+      });
+      return null;
+    }
+
+    if (
+      !sampleData?.sampleName ||
+      !sampleData?.description ||
+      !sampleData?.sampleFile ||
+      !sampleData?.fileType ||
+      !sampleData?.rate ||
+      !sampleData?.currency ||
+      !sampleData?.unit
+    ) {
+      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      return null;
+    }
+
     const sendData = {
       vendorId: vendorId,
       pType: ptype,
@@ -508,26 +562,14 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    if (
-      sampleData?.sampleName &&
-      sampleData?.description &&
-      sampleData?.sampleFile &&
-      sampleData?.fileType &&
-      sampleData?.rate &&
-      sampleData?.currency &&
-      sampleData?.unit
-    ) {
-      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Sample File Created' });
-      return res;
-    } else {
-      return setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
-    }
+    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+    });
+    if (isError) return null;
+    setToastMsg({ type: 'success', message: 'Sample File Created' });
+    return res;
   }
 
   async function deleteSample(sfid, pType) {

@@ -7,7 +7,8 @@ import {
   UPDATE_USER,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
@@ -25,6 +26,7 @@ import {
   NOTIFICATION_TITLES,
   USER_STATUS
 } from '@/helper/constants.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -76,6 +78,7 @@ export default function useHandleAddUserDetails() {
   const [addRole, { error: createRoleError }] = useMutation(ADD_USER_ROLE, {
     client: userClient
   });
+  const [userLogin] = useMutation(USER_LOGIN, { client: userClient });
 
   //recoil states
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
@@ -94,9 +97,44 @@ export default function useHandleAddUserDetails() {
 
   // setting up local states
   useEffect(() => {
+    console.info('recoil: ', userDataAbout, 'local: ', userAboutData);
     setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
+
+  useEffect(() => {
+    if (userDataAbout?.email) return;
+    if (!auth?.currentUser?.accessToken) return;
+
+    loginUser();
+
+    async function loginUser() {
+      for (let i = 0; i < 4; i++) {
+        let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) continue;
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+
+        setUserDataAbout(getUserObject(res?.data?.login));
+        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+      }
+    }
+  }, [userDataAbout?.email]);
 
   useEffect(() => {
     let isPhValid = false;
@@ -124,7 +162,7 @@ export default function useHandleAddUserDetails() {
         userOrgData?.learningSpace_name?.length > 0 &&
         userOrgData?.organization_name?.length > 0
     );
-  }, [userOrgData]);
+  }, [userOrgData, userAboutData]);
 
   async function getUserOrgMapId(userLspId = '') {
     if (!userLspId?.length) return false;
@@ -260,7 +298,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     // const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
@@ -291,7 +328,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     const dataLang = resLang?.data?.addUserLanguageMap[0];
@@ -337,7 +373,6 @@ export default function useHandleAddUserDetails() {
       if (isError) {
         setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
         return;
-        return router.push('/account-setup');
       }
 
       const dataPref = resPref?.data?.addUserPreference[0];

@@ -45,8 +45,7 @@ export default function AddTopicContentForm({
   const languageOptions = [];
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
-  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
-  if (isDemo) types.push('document');
+  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5', 'document'];
 
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
@@ -163,7 +162,7 @@ export default function AddTopicContentForm({
                 isFiftyFifty={true}
                 inputOptions={{
                   inputName: 'duration',
-                  label: 'Duration:',
+                  label: newTopicContent?.type === 'document' ? 'Read Time' : 'Duration:',
                   maxLength: 16,
                   isDisabled: !!topicContent?.length || newTopicContent?.type === 'mp4',
                   value: topicContent?.length

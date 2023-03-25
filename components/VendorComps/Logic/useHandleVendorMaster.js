@@ -46,7 +46,7 @@ export default function useHandleVendorMaster() {
     if (vendorData?.vendorId) {
       sendData.vendorId = vendorData?.vendorId;
 
-      await updateVendor({
+      const res = await updateVendor({
         variables: sendData,
         update: (_, { data }) => {
           handleCacheUpdate(
@@ -65,10 +65,11 @@ export default function useHandleVendorMaster() {
       });
       setLoading(false);
 
-      if (isError) return;
+      if (isError) return null;
 
       if (displayToaster) setToastMsg({ type: 'success', message: 'Vendor Updated' });
-      return;
+      const _id = res.data.updateVendor.vendorId;
+      return _id;
     }
     if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
       const res = await addNewVendor({
@@ -94,12 +95,12 @@ export default function useHandleVendorMaster() {
         return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
       });
       setLoading(false);
-      if (isError) return;
+      if (isError) return null;
 
       setToastMsg({ type: 'success', message: 'Added vendor successfully' });
       const _id = res.data.addVendor.vendorId;
       router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
-      return res;
+      return _id;
     }
   }
 

@@ -12,11 +12,12 @@ import {
   getSampleObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorCurrentStateAtom,
   VendorProfileAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AddSample from '../../AddSample';
 import AddVendorProfile from '../../AddVendorProfile';
 import VendorPopUp from '../../common/VendorPopUp';
@@ -25,6 +26,8 @@ import useHandleVendor from '../../Logic/useHandleVendor';
 import ProfileManageVendor from '../../ProfileMangeVendor';
 import styles from '../../vendorComps.module.scss';
 import AddExpertise from './AddExpertise';
+import SampleFilePreview from '../../VendorServices/SampleFilePreview';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -35,6 +38,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
+  const [selectedSampleId, setSelectedSampleId] = useState(null);
 
   const [selectedExpertise, setSelectedExpertise] = useState(data?.expertises);
   const [tempExpertise, setTempExpertise] = useState(data?.expertises);
@@ -51,7 +55,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
   const [newOPFormat, setNewOPFormat] = useState('');
+  const [previewState, setPreviewState] = useState(null);
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
@@ -65,8 +71,17 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     addSampleFile,
     getSMESampleFiles,
     getCRTSampleFiles,
-    getCDSampleFiles
+    getCDSampleFiles,
+    deleteSample
   } = useHandleVendor();
+
+  useEffect(() => {
+    if (!isSaved) return;
+
+    setTempExpertise(selectedExpertise);
+    setTempLanguages(selectedLanguages);
+    setTempFormats(selectedFormats);
+  }, [isSaved]);
 
   let getSampleFiles;
   if (pType === 'sme') {
@@ -78,11 +93,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   }
   let fileData = [];
   if (pType === 'sme') {
-    fileData.push(smeData?.sampleFiles);
+    fileData.push(...(smeData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else if (pType === 'crt') {
-    fileData.push(ctData?.sampleFiles);
+    fileData.push(...(ctData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else {
-    fileData.push(cdData?.sampleFiles);
+    fileData.push(...(cdData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   }
 
   const completeProfileHandler = async () => {
@@ -178,11 +193,19 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   };
 
   const addSampleFileHandler = async () => {
-    await addSampleFile(pType);
+    const isSaved = await addSampleFile(pType);
+    if (!isSaved) return;
+
     getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);
     setSampleData(getSampleObject());
+  };
+
+  const handleDeleteFile = async (sf_id) => {
+    await deleteSample(sf_id, pType);
+    setSelectedSampleId(null);
+    getSampleFiles();
   };
 
   return (
@@ -338,7 +361,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            {!fileData[0]?.length ? (
+            {!fileData?.length ? (
               <IconButton
                 text="Add sample files"
                 styleClass={`${styles.button}`}
@@ -352,10 +375,24 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             ) : (
               <>
                 <div className={`${styles.showFilesMain}`}>
-                  {fileData[0]?.map((file) => (
+                  {fileData?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
-                      {typeof file === 'string' ? file : file?.name + '.' + file?.fileType}
+                      {typeof file === 'string' ? file : file?.name}
+                      {/* <div className={`${styles.actionIcons}`}> */}
+                      <img
+                        src="/images/svg/eye-line.svg"
+                        className={`${styles.previewIcon}`}
+                        onClick={() => {
+                          setPreviewState(+file.id);
+                        }}
+                      />
+                      <img
+                        className={`${styles.deleteIcon}`}
+                        src="/images/svg/delete-outline.svg"
+                        onClick={() => setSelectedSampleId(file.sf_id)}
+                      />
+                      {/* </div> */}
                     </div>
                   ))}
                 </div>
@@ -540,6 +577,45 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         }}>
         <AddSample />
       </VendorPopUp>
+
+      {previewState != null && (
+        <VendorPopUp
+          open={previewState}
+          popUpState={[true, setPreviewState]}
+          title={fileData?.[previewState]?.name}
+          size="large"
+          isFooterVisible={false}>
+          <SampleFilePreview
+            sampleFile={{
+              ...fileData?.[previewState],
+              fileUrl: fileData?.[previewState]?.file_url
+            }}
+            handleNextClick={() => {
+              let updatedIndex = +previewState + 1;
+              if (updatedIndex === fileData?.length) updatedIndex = 0;
+              setPreviewState(+updatedIndex);
+            }}
+            handlePrevClick={() => {
+              let updatedIndex = +previewState - 1;
+              if (updatedIndex < 0) updatedIndex = fileData?.length - 1;
+              setPreviewState(+updatedIndex);
+            }}
+          />
+        </VendorPopUp>
+)}
+
+      {!!selectedSampleId && (
+        <ConfirmPopUp
+          title={`Are you sure to delete this sample file?`}
+          btnObj={{
+            handleClickLeft: (e) => {
+              e.currentTarget.disabled = true;
+              handleDeleteFile(selectedSampleId);
+            },
+            handleClickRight: () => setSelectedSampleId(null)
+          }}
+        />
+      )}
     </>
   );
 }

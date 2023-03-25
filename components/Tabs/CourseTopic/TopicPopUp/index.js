@@ -234,7 +234,7 @@ export default function TopicPopUp({
                       <QuizForm
                         topicId={editTopic?.id || ''}
                         courseId={editTopic?.courseId || ''}
-                        isScrom={filteredTopicContent[0]?.type === 'SCORM'}
+                        isScrom={['SCORM', 'document']?.includes(filteredTopicContent[0]?.type)}
                         isFormOpen={(isOpen) => setDisableQuizAccordian(isOpen)}
                       />
                     }
