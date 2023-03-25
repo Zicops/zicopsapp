@@ -97,15 +97,16 @@ export default function useHandleAddUserDetails() {
 
   // setting up local states
   useEffect(() => {
-    // setUserAboutData(getUserObject(userDataAbout));
+    console.info('recoil: ', userDataAbout, 'local: ', userAboutData);
+    setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
 
   useEffect(() => {
-    if (userAboutData?.email) return;
+    if (userDataAbout?.email) return;
     if (!auth?.currentUser?.accessToken) return;
 
-    // loginUser();
+    loginUser();
 
     async function loginUser() {
       for (let i = 0; i < 4; i++) {
@@ -128,12 +129,12 @@ export default function useHandleAddUserDetails() {
 
         if (isError) continue;
         if (res?.data?.login?.status === USER_STATUS.disable) break;
-        console.info(res);
-        setUserAboutData(getUserObject(res?.data?.login));
+
+        setUserDataAbout(getUserObject(res?.data?.login));
         sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
       }
     }
-  }, [userAboutData?.email]);
+  }, [userDataAbout?.email]);
 
   useEffect(() => {
     let isPhValid = false;
@@ -161,7 +162,7 @@ export default function useHandleAddUserDetails() {
         userOrgData?.learningSpace_name?.length > 0 &&
         userOrgData?.organization_name?.length > 0
     );
-  }, [userOrgData]);
+  }, [userOrgData, userAboutData]);
 
   async function getUserOrgMapId(userLspId = '') {
     if (!userLspId?.length) return false;
