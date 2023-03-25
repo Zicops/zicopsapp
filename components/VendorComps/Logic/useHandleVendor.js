@@ -162,7 +162,11 @@ export default function useHandleVendor() {
     });
 
     if (!!existingEmails?.length) {
-      setToastMsg({ type: 'info', message: 'User Already exists in the learning space and cannot be mapped as vendor in this learning space.' });
+      setToastMsg({
+        type: 'info',
+        message:
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+      });
     }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
@@ -385,6 +389,7 @@ export default function useHandleVendor() {
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
+    return smeDetails;
   }
 
   async function getCrtDetails() {
@@ -407,6 +412,7 @@ export default function useHandleVendor() {
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
+    return crtDetails;
   }
 
   async function getCdDetails() {
@@ -429,6 +435,7 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+    return cdDetails;
   }
 
   async function getVendorCourses() {
