@@ -116,6 +116,7 @@ const AddExpriences = () => {
                 value: experiencesData?.startMonth
               },
               options: optionMonthArray,
+              isSearchEnable: true,
               menuPlacement: 'top'
             }}
             changeHandler={(e) =>
@@ -128,6 +129,7 @@ const AddExpriences = () => {
               inputName: 'startYear',
               placeholder: 'year',
               options: optionYearArray,
+              isSearchEnable: true,
               value: {
                 label: experiencesData?.startYear,
                 value: experiencesData?.startYear
