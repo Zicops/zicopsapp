@@ -1,9 +1,15 @@
-import { ADD_VENDOR, UPDATE_VENDOR, userClient } from '@/api/UserMutations';
+import {
+  ADD_VENDOR,
+  CREATE_PROFILE_VENDOR,
+  UPDATE_PROFILE_VENDOR,
+  UPDATE_VENDOR,
+  userClient
+} from '@/api/UserMutations';
 import { GET_VENDOR_DETAILS, userQueryClient } from '@/api/UserQueries';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { handleCacheUpdate } from '@/helper/data.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { getProfileObject, VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -12,14 +18,17 @@ import { useRecoilState } from 'recoil';
 export default function useHandleVendorMaster() {
   const [addNewVendor] = useMutation(ADD_VENDOR, { client: userClient });
   const [updateVendor] = useMutation(UPDATE_VENDOR, { client: userClient });
+  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
+
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
   const [loading, setLoading] = useState(false);
 
-  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
   const router = useRouter();
-  const vendorId = router.query.vendorId || '0';
+  const vendorId = router.query.vendorId || null;
 
   async function addUpdateVendor(displayToaster = true) {
     setLoading(true);
@@ -104,5 +113,64 @@ export default function useHandleVendorMaster() {
     }
   }
 
-  return { addUpdateVendor, loading };
+  // for individual vendor
+  async function syncIndividualVendorProfile(_vendorId = null) {
+    if (!(vendorId || _vendorId)) return null;
+    if (!profileData?.email) return null;
+
+    const sendData = {
+      vendor_id: vendorId || _vendorId,
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: profileData?.languages || [],
+      SME_Expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      content_development: profileData?.content_development || [],
+      experience: [],
+      experienceYear: profileData?.experienceYear || '',
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
+      await updateProfileVendor({ variables: sendData }).catch((err) => console.log(err));
+      return;
+    }
+
+    await createProfileVendor({ variables: sendData })
+      .then((response) => {
+        const res = response?.data?.createProfileVendor || {};
+
+        const resData = {
+          profileId: res?.pf_id || '',
+          firstName: res?.first_name || '',
+          lastName: res?.last_name || '',
+          email: res?.email || '',
+          contactNumber: res?.phone || '',
+          description: res?.description || '',
+          photoUrl: res?.photo_url || '',
+          experienceYears: res?.experience_years || '',
+          languages: res?.language || '',
+          sme_expertises: res?.sme_expertise || '',
+          crt_expertises: res?.classroom_expertise || '',
+          content_development: res?.content_development || '',
+          experience: res?.experience || '',
+          isSpeaker: res?.is_speaker || '',
+          sme: res?.sme || '',
+          crt: res?.crt || '',
+          cd: res?.cd || ''
+        };
+
+        setProfileData(getProfileObject(resData));
+      })
+
+      .catch((err) => console.log(err));
+  }
+
+  return { addUpdateVendor, loading, syncIndividualVendorProfile };
 }

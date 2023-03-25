@@ -25,15 +25,17 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { convertUrlToFile } from '@/helper/common.helper';
 import {
   COURSE_STATUS,
   CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
   USER_TYPE,
-  VENDOR_MASTER_STATUS
+  VENDOR_MASTER_STATUS,
+  VENDOR_MASTER_TYPE
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getEncodedFileNameFromUrl, getUnixFromDate } from '@/helper/utils.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -280,10 +282,35 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    const sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
+    let sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
       let experience = data?.experience?.length ? data?.experience : [];
       return { ...data, experience: experience };
     });
+
+    if (vendorData?.type === VENDOR_MASTER_TYPE.individual && sanetizeProfiles?.[0]) {
+      const allServiceLanguages = [
+        ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+      ];
+
+      const individualVendorProfile = getProfileObject({
+        email: vendorData?.users?.[0],
+        description: vendorData?.description,
+        profileImage: await convertUrlToFile(
+          vendorData?.photoUrl,
+          getEncodedFileNameFromUrl(vendorData?.photoUrl)
+        ),
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.expertises,
+        crt_expertises: ctData?.expertises,
+        content_development: cdData?.expertises
+      });
+
+      sanetizeProfiles[0] = {
+        ...(sanetizeProfiles?.[0] || {}),
+        ...individualVendorProfile
+      };
+    }
+
     setProfileDetails(sanetizeProfiles);
     setLoading(false);
   }
