@@ -63,6 +63,7 @@ export default function AboutVendor({ data }) {
       </div>
       <div className={`${styles.vendorServices}`}>
         {accordianMarketyardDetails.map((value, index) => {
+          if (!value?.serviceData?.isApplicable) return;
           return (
             <ZicopsAccordian title={value.title} description={value.description}>
               <VendorServices data={value.serviceData} type={value?.type} />
