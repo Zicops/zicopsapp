@@ -225,6 +225,12 @@ export const VENDOR_MASTER_STATUS = {
 
 export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
+export const VENDOR_SERVICES_TYPE = {
+  sme: { label: 'Subject Matter Expertise', type: 'sme' },
+  crt: { label: 'Classroom Training Expertise', type: 'crt' },
+  cd: { label: 'Content Development', type: 'cd' }
+};
+
 //Vendor Constant End
 
 // GENERIC CONSTANTS

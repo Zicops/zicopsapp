@@ -534,6 +534,19 @@ export default function useHandleVendor() {
       return null;
     }
 
+    if (
+      !sampleData?.sampleName ||
+      !sampleData?.description ||
+      !sampleData?.sampleFile ||
+      !sampleData?.fileType ||
+      !sampleData?.rate ||
+      !sampleData?.currency ||
+      !sampleData?.unit
+    ) {
+      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      return null;
+    }
+
     const sendData = {
       vendorId: vendorId,
       pType: ptype,
@@ -549,27 +562,14 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    if (
-      sampleData?.sampleName &&
-      sampleData?.description &&
-      sampleData?.sampleFile &&
-      sampleData?.fileType &&
-      sampleData?.rate &&
-      sampleData?.currency &&
-      sampleData?.unit
-    ) {
-      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-      });
-      if (isError) return null;
-      setToastMsg({ type: 'success', message: 'Sample File Created' });
-      return res;
-    } else {
-      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
-      return null;
-    }
+    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+    });
+    if (isError) return null;
+    setToastMsg({ type: 'success', message: 'Sample File Created' });
+    return res;
   }
 
   async function deleteSample(sfid, pType) {

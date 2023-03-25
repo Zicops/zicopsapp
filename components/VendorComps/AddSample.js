@@ -14,7 +14,7 @@ import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
-import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
+import { LIMITS, FILE_TYPES, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect } from 'react';
 const AddSample = ({ pType }) => {
@@ -79,14 +79,16 @@ const AddSample = ({ pType }) => {
               title={getFileName() || 'Drag and Drop'}
               handleFileUpload={(e) => {
                 const file = e.target.files?.[0];
+
                 if (file?.size > LIMITS.vendorSampleSize) {
-                  fileErrMsg = `File Size limit is ${Math.ceil(
+                  const fileErrMsg = `File Size limit is ${Math.ceil(
                     LIMITS.vendorSampleSize / ONE_MB_IN_BYTES
                   )} mb`;
-                  isValid = false;
                   e.target.value = '';
                   setToastMsg({ type: 'danger', message: fileErrMsg });
+                  return;
                 }
+
                 setSampleData({ ...sampleData, sampleFile: file });
               }}
               handleRemove={() => setSampleData({ ...sampleData, sampleFile: null })}
