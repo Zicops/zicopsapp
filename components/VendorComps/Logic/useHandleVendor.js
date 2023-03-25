@@ -496,7 +496,7 @@ export default function useHandleVendor() {
         });
 
         if (isError) continue;
-        setToastMsg({ type: 'success', message: 'Experience Updated' });
+        // setToastMsg({ type: 'success', message: 'Experience Updated' });
         continue;
       }
 
