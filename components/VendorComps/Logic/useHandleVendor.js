@@ -389,6 +389,7 @@ export default function useHandleVendor() {
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
+    return smeDetails;
   }
 
   async function getCrtDetails() {
@@ -411,6 +412,7 @@ export default function useHandleVendor() {
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
+    return crtDetails;
   }
 
   async function getCdDetails() {
@@ -433,6 +435,7 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+    return cdDetails;
   }
 
   async function getVendorCourses() {

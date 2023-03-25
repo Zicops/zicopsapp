@@ -97,7 +97,7 @@ export default function useHandleAddUserDetails() {
 
   // setting up local states
   useEffect(() => {
-    setUserAboutData(getUserObject(userDataAbout));
+    // setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
 
@@ -128,6 +128,7 @@ export default function useHandleAddUserDetails() {
 
         if (isError) continue;
         if (res?.data?.login?.status === USER_STATUS.disable) break;
+        console.info(res);
         setUserAboutData(getUserObject(res?.data?.login));
         sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
       }
