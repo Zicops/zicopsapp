@@ -119,31 +119,35 @@ export default function CourseCard({
           <div className={`${styles.smallCardContent}`}>
             <div className={`${styles.firstRow}`}>
               <div className={`${styles.buttons}`}>
-                {showAssignSymbol ? (
+                {!isVendor && (
                   <>
-                    <img
-                      className={`${styles.addBtn}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        gotoAssignCourses();
-                      }}
-                      src="/images/svg/add-line.svg"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <img
-                      className={`${styles.playBtn}`}
-                      src="/images/Frame 22.svg"
-                      alt=""
-                      onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
-                    />
-                    <img
-                      className={`${styles.removeBtn}`}
-                      src="/images/Frame 23.svg"
-                      alt=""
-                      onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
-                    />
+                    {showAssignSymbol ? (
+                      <>
+                        <img
+                          className={`${styles.addBtn}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            gotoAssignCourses();
+                          }}
+                          src="/images/svg/add-line.svg"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          className={`${styles.playBtn}`}
+                          src="/images/Frame 22.svg"
+                          alt=""
+                          onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
+                        />
+                        <img
+                          className={`${styles.removeBtn}`}
+                          src="/images/Frame 23.svg"
+                          alt=""
+                          onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
+                        />
+                      </>
+                    )}
                   </>
                 )}
                 {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />
