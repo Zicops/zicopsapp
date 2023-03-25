@@ -64,11 +64,11 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
-  async function getLspSpeakers(lspId, service, isDataReturn = false) {
+  async function getLspSpeakers(lspId, service, name, isDataReturn = false) {
     setLoading(true);
     const speakerList = await loadQueryDataAsync(
       GET_SPEAKERS,
-      { lspId: lspId, service: service },
+      { lspId: lspId, service: service, name: name },
       {},
       userQueryClient
     );
