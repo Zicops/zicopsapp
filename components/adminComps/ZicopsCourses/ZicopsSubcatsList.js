@@ -1,6 +1,9 @@
+import { DELETE_SUB_CAT_MAIN } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { ApolloProvider } from '@apollo/client';
@@ -19,6 +22,7 @@ function ZicopsSubCategoryList() {
   const [filterCol, setFilterCol] = useState('SubCatName');
   const userOrg = useRecoilValue(UsersOrganizationAtom);
   const [popUpState, udpatePopUpState] = useRecoilState(PopUpStatesAtomFamily('addCatSubCat'));
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const { catSubCat, setRefetch } = useHandleCatSubCat();
 
@@ -86,13 +90,15 @@ function ZicopsSubCategoryList() {
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             )}
-            {/* <DeleteBtn
-              id={params?.id}
-              variableObj={{ cat_id: params?.row?.CatId }}
-              resKey="deleteSubCatMain"
-              mutation={DELETE_SUB_CAT_MAIN}
-              onDelete={() => setRefetch(true)}
-            /> */}
+            {!!isDev && (
+              <DeleteBtn
+                id={params?.id}
+                variableObj={{ cat_id: params?.row?.CatId }}
+                resKey="deleteSubCatMain"
+                mutation={DELETE_SUB_CAT_MAIN}
+                onDelete={() => setRefetch(true)}
+              />
+            )}
           </>
         );
       }

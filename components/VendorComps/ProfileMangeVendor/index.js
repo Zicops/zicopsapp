@@ -63,14 +63,16 @@ const ProfileManageVendor = () => {
             <SingleProfile data={data} />
           </div>
         ))}
-        <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
-          <IconButton
-            text={`Add ${profileDetails?.length ? 'another' : ''} profile`}
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            isDisabled={isViewPage || isProfileBtnDisabled}
-          />
-        </div>
+        {vendorData?.type === VENDOR_MASTER_TYPE.company && (
+          <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
+            <IconButton
+              text={`Add ${profileDetails?.length ? 'another' : ''} profile`}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || isProfileBtnDisabled}
+            />
+          </div>
+        )}
       </div>
       <VendorPopUp
         open={isOpenProfile}

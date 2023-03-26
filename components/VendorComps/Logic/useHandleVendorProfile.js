@@ -1,30 +1,37 @@
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { handleCacheUpdate } from '@/helper/data.helper';
-import { GET_SINGLE_PROFILE_DETAILS, userQueryClient } from '@/api/UserQueries';
 import { CREATE_PROFILE_VENDOR, UPDATE_PROFILE_VENDOR, userClient } from '@/api/UserMutations';
-import { useRecoilState } from 'recoil';
-import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { GET_SINGLE_PROFILE_DETAILS, userQueryClient } from '@/api/UserQueries';
+import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { handleCacheUpdate } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendorProfile() {
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
 
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const vendorData = useRecoilValue(VendorStateAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
 
   async function addUpdateProfile() {
+    if (isIndividualVendor && !profileData?.experienceYear) {
+      setToastMsg({ type: 'danger', message: 'Please Add Years of Experience!' });
+      return null;
+    }
     if (
-      !profileData?.firstName ||
-      !profileData?.lastName ||
-      !profileData?.email ||
-      !profileData?.experienceYear
+      !isIndividualVendor &&
+      (!profileData?.firstName ||
+        !profileData?.lastName ||
+        !profileData?.email ||
+        !profileData?.experienceYear)
     ) {
       setToastMsg({
         type: 'danger',
@@ -42,7 +49,7 @@ export default function useHandleVendorProfile() {
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
       languages: profileData?.languages || [],
-      SME_expertise: profileData?.sme_expertises || [],
+      SME_Expertise: profileData?.sme_expertises || [],
       Classroom_expertise: profileData?.crt_expertises || [],
       content_development: profileData?.content_development || [],
       // experience:

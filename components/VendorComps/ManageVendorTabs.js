@@ -1,8 +1,14 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
+  CdServicesAtom,
+  CtServicesAtom,
+  getProfileObject,
   getVendorCurrentStateObj,
+  SmeServicesAtom,
   VendorCurrentStateAtom,
+  VendorProfileAtom,
   VendorStateAtom,
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
@@ -21,9 +27,13 @@ export default function ManageVendorTabs() {
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
   const [vendorCurrentState, setVendorCurrentState] = useRecoilState(VendorCurrentStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
   const { handleMail } = useHandleVendor();
-  const { addUpdateVendor, loading } = useHandleVendorMaster();
+  const { addUpdateVendor, loading, syncIndividualVendorProfile } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const {
@@ -114,6 +124,32 @@ export default function ManageVendorTabs() {
     };
   }, [vendorCurrentState?.isSaved]);
 
+  // sync profile details for individual vendor
+  useEffect(async () => {
+    if (vendorData?.type !== VENDOR_MASTER_TYPE.individual) return;
+
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
+
+    const vendorName = vendorData?.name?.split(' ');
+    setProfileData(
+      getProfileObject({
+        ...profileData,
+        firstName: vendorName?.[0] || '',
+        lastName: vendorName?.[1] || '',
+        email: vendorData?.users?.[0] || '',
+        description: vendorData?.description,
+        photoUrl: vendorData?.photoUrl,
+        profileImage: vendorData?.vendorProfileImage,
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.isApplicable ? smeData?.expertises : [],
+        crt_expertises: ctData?.isApplicable ? ctData?.expertises : [],
+        content_development: cdData?.isApplicable ? cdData?.expertises : []
+      })
+    );
+  }, [vendorData, smeData, cdData, ctData]);
+
   const tabData = manageVendorTabData;
 
   tabData[4].isHidden = !isDev;
@@ -133,6 +169,7 @@ export default function ManageVendorTabs() {
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
+            syncIndividualVendorProfile(id);
             handleMail();
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);

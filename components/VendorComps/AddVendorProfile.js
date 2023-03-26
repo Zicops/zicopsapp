@@ -83,92 +83,96 @@ const AddVendorProfile = ({ data = {} }) => {
   return (
     <div className={`${styles.inputMain}`}>
       <div className={`${styles.inputContainer}`}>
-        <div className={`${styles.input1}`}>
-          <label for="vendorName">First name: </label>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'firstName',
-              placeholder: 'Enter First Name',
-              maxLength: 60,
-              value: profileData.firstName,
-              isDisabled: isViewPage
-            }}
-            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-          />
-        </div>
-        <div className={`${styles.input1}`}>
-          <label for="vendorName">Last name: </label>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'lastName',
-              placeholder: 'Enter Last Name',
-              maxLength: 60,
-              value: profileData.lastName,
-              isDisabled: isViewPage
-            }}
-            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-          />
-        </div>
-        <div className={`${styles.input1}`}>
-          <label for="vendorName">Email id: </label>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'email',
-              placeholder: 'Enter email address',
-              type: 'email',
-              value: profileData.email,
-              isDisabled: isViewPage || isIndividualVendor
-            }}
-            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-          />
-        </div>
-        <div className={`${styles.input1}`}>
-          <label for="vendorName">Contact number: </label>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'contactNumber',
-              placeholder: 'Enter contact number',
-              maxLength: 12,
-              isNumericOnly: true,
-              value: profileData.contactNumber,
-              isDisabled: isViewPage
-            }}
-            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-          />
-        </div>
-        <div className={`${styles.input1}`}>
-          <label for="vendorName">Description: </label>
+        {!isIndividualVendor && (
+          <>
+            <div className={`${styles.input1}`}>
+              <label for="vendorName">First name: </label>
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'firstName',
+                  placeholder: 'Enter First Name',
+                  maxLength: 60,
+                  value: profileData.firstName,
+                  isDisabled: isViewPage
+                }}
+                changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+              />
+            </div>
+            <div className={`${styles.input1}`}>
+              <label for="vendorName">Last name: </label>
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'lastName',
+                  placeholder: 'Enter Last Name',
+                  maxLength: 60,
+                  value: profileData.lastName,
+                  isDisabled: isViewPage
+                }}
+                changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+              />
+            </div>
+            <div className={`${styles.input1}`}>
+              <label for="vendorName">Email id: </label>
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'email',
+                  placeholder: 'Enter email address',
+                  type: 'email',
+                  value: profileData.email,
+                  isDisabled: isViewPage || isIndividualVendor
+                }}
+                changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+              />
+            </div>
+            <div className={`${styles.input1}`}>
+              <label for="vendorName">Contact number: </label>
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'contactNumber',
+                  placeholder: 'Enter contact number',
+                  maxLength: 12,
+                  isNumericOnly: true,
+                  value: profileData.contactNumber,
+                  isDisabled: isViewPage
+                }}
+                changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+              />
+            </div>
+            <div className={`${styles.input1}`}>
+              <label for="vendorName">Description: </label>
 
-          <LabeledTextarea
-            inputOptions={{
-              inputName: 'description',
-              placeholder: 'Describe your service on 160 characters',
-              rows: 5,
-              maxLength: 160,
-              value: profileData.description,
-              isDisabled: isViewPage || isIndividualVendor
-            }}
-            changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
-          />
-        </div>
-        <div className={`${styles.input2}`}>
-          <label for="profileImage">Upload photo: </label>
-          <BrowseAndUpload
-            styleClass={`${styles.uploadImage}`}
-            styleClassBtn={`${styles.uploadButton}`}
-            title={getFileName() || 'Drag & Drop'}
-            handleFileUpload={handleProfilePhoto}
-            handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
-            previewData={{
-              fileName: getFileName(),
-              filePath: profileData?.profileImage || profileData?.photoUrl
-            }}
-            inputName="profileImage"
-            filePreview={profileData?.profileImage || profileData?.photoUrl}
-            isActive={profileData?.profileImage || profileData?.photoUrl}
-            isDisabled={isViewPage || isIndividualVendor}
-          />
-        </div>
+              <LabeledTextarea
+                inputOptions={{
+                  inputName: 'description',
+                  placeholder: 'Describe your service on 160 characters',
+                  rows: 5,
+                  maxLength: 160,
+                  value: profileData.description,
+                  isDisabled: isViewPage || isIndividualVendor
+                }}
+                changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
+              />
+            </div>
+            <div className={`${styles.input2}`}>
+              <label for="profileImage">Upload photo: </label>
+              <BrowseAndUpload
+                styleClass={`${styles.uploadImage}`}
+                styleClassBtn={`${styles.uploadButton}`}
+                title={getFileName() || 'Drag & Drop'}
+                handleFileUpload={handleProfilePhoto}
+                handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
+                previewData={{
+                  fileName: getFileName(),
+                  filePath: profileData?.profileImage || profileData?.photoUrl
+                }}
+                inputName="profileImage"
+                filePreview={profileData?.profileImage || profileData?.photoUrl}
+                isActive={profileData?.profileImage || profileData?.photoUrl}
+                isDisabled={isViewPage || isIndividualVendor}
+              />
+            </div>
+          </>
+        )}
         <div className={`${styles.input1}`}>
           <label for="expriences">Years of experience: </label>
           <LabeledDropdown
@@ -226,47 +230,49 @@ const AddVendorProfile = ({ data = {} }) => {
           )}
         </div>
 
-        <div className={`${styles.addExpertise}`}>
-          <label for="serviceDescription">Language: </label>
-          {!profileData?.languages?.length ? (
-            <IconButton
-              text="Add language"
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setIsOpenLanguage(true)}
-              isDisabled={isViewPage || isIndividualVendor}
-            />
-          ) : (
-            <>
-              <div className={`${styles.languages}`}>
-                {tempLanguages?.map((data, index) => (
-                  <div className={`${styles.singleLanguage}`} key={index}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={data}
-                      value={data}
-                      isChecked={selectedLanguages?.includes(data)}
-                      changeHandler={handleAddRemoveLanguage}
-                      isDisabled={isViewPage || isIndividualVendor}
-                    />
-                  </div>
-                ))}
-              </div>
-              {!isIndividualVendor && (
-                <IconButton
-                  text="Add more"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  isDisabled={isViewPage || isIndividualVendor}
-                  handleClick={() => {
-                    setIsOpenLanguage(true);
-                    setSelectedLanguages([...selectedLanguages]);
-                  }}
-                />
-              )}
-            </>
-          )}
-        </div>
+        {!isIndividualVendor && (
+          <div className={`${styles.addExpertise}`}>
+            <label for="serviceDescription">Language: </label>
+            {!profileData?.languages?.length ? (
+              <IconButton
+                text="Add language"
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                handleClick={() => setIsOpenLanguage(true)}
+                isDisabled={isViewPage || isIndividualVendor}
+              />
+            ) : (
+              <>
+                <div className={`${styles.languages}`}>
+                  {tempLanguages?.map((data, index) => (
+                    <div className={`${styles.singleLanguage}`} key={index}>
+                      <LabeledRadioCheckbox
+                        type="checkbox"
+                        label={data}
+                        value={data}
+                        isChecked={selectedLanguages?.includes(data)}
+                        changeHandler={handleAddRemoveLanguage}
+                        isDisabled={isViewPage || isIndividualVendor}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {!isIndividualVendor && (
+                  <IconButton
+                    text="Add more"
+                    styleClass={`${styles.button}`}
+                    imgUrl="/images/svg/add_circle.svg"
+                    isDisabled={isViewPage || isIndividualVendor}
+                    handleClick={() => {
+                      setIsOpenLanguage(true);
+                      setSelectedLanguages([...selectedLanguages]);
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        )}
         {!!smeServices.isApplicable && (
           <div className={`${styles.addExpertise}`}>
             <label for="serviceDescription">Subject matter expertise:</label>
