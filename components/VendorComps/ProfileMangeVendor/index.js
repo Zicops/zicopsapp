@@ -40,12 +40,16 @@ const ProfileManageVendor = () => {
     e.target.disabled = true;
     await addUpdateExperience();
     const isSaved = await addUpdateProfile();
-    if (!isSaved) return;
+    if (!isSaved) {
+      e.target.disabled = false;
+      return;
+    }
 
     await getAllProfileInfo();
     setCompleteProfile(true);
     setIsOpenProfile(false);
     setProfileData(getProfileObject());
+    e.target.disabled = false;
   };
 
   useEffect(() => {
@@ -53,7 +57,10 @@ const ProfileManageVendor = () => {
   }, []);
 
   const isProfileBtnDisabled =
-    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase() && profileDetails?.length ? true : false;
+    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase() &&
+    profileDetails?.length
+      ? true
+      : false;
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
