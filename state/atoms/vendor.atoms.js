@@ -47,6 +47,7 @@ export const VendorProfileAtom = atom({
 
 export function getProfileObject(data) {
   return {
+    vendorId: data?.vendorId || null,
     profileId: data?.profileId || null,
     firstName: data?.firstName || '',
     lastName: data?.lastName || '',

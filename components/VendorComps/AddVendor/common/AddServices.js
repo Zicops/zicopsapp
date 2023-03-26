@@ -3,7 +3,11 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import IconButton from '@/components/common/IconButton';
 import { changeHandler } from '@/helper/common.helper';
-import { VENDOR_FILE_FORMATS, VENDOR_LANGUAGES } from '@/helper/constants.helper';
+import {
+  VENDOR_FILE_FORMATS,
+  VENDOR_LANGUAGES,
+  VENDOR_MASTER_TYPE
+} from '@/helper/constants.helper';
 import {
   allProfileAtom,
   CdServicesAtom,
@@ -13,7 +17,8 @@ import {
   SampleAtom,
   SmeServicesAtom,
   VendorCurrentStateAtom,
-  VendorProfileAtom
+  VendorProfileAtom,
+  VendorStateAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -56,6 +61,8 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
+  const vendorData = useRecoilValue(VendorStateAtom);
+
   const [newOPFormat, setNewOPFormat] = useState('');
   const [previewState, setPreviewState] = useState(null);
 
@@ -63,6 +70,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const isViewPage = router.asPath?.includes('view-vendor');
 
   const [displayFormats, setDisplayFormats] = useState([...VENDOR_FILE_FORMATS, ...data?.formats]);
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   const {
     addUpdateProfile,
@@ -410,33 +420,35 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             )}
           </div>
 
-          <div className={`${styles.addProfiles}`}>
-            <label for="profiles">Add profiles: </label>
-            <div className={`${styles.showFilesMain}`}>
-              {profileDetails?.map((data) => {
-                if (pType === 'sme' && !data?.sme_expertise?.length) return null;
-                if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
-                if (pType === 'cd' && !data?.content_development?.length) return null;
+          {!isIndividual && (
+            <div className={`${styles.addProfiles}`}>
+              <label for="profiles">Add profiles: </label>
+              <div className={`${styles.showFilesMain}`}>
+                {profileDetails?.map((data) => {
+                  if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                  if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                  if (pType === 'cd' && !data?.content_development?.length) return null;
 
-                return (
-                  <div className={`${styles.showFiles}`}>
-                    <img src="/images/svg/account_circle.svg" alt="" />
-                    {data?.first_name + '(' + data?.email + ')'}
-                  </div>
-                );
-              })}
+                  return (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/account_circle.svg" alt="" />
+                      {data?.first_name + '(' + data?.email + ')'}
+                    </div>
+                  );
+                })}
+              </div>
+              <IconButton
+                text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
+                styleClass={`${styles.button}`}
+                imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage || !data?.isApplicable}
+                handleClick={() => {
+                  if (!profileDetails?.length) setProfileData(getProfileObject());
+                  setIsOpenProfile(true);
+                }}
+              />
             </div>
-            <IconButton
-              text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
-              styleClass={`${styles.button}`}
-              imgUrl="/images/svg/add_circle.svg"
-              isDisabled={isViewPage || !data?.isApplicable}
-              handleClick={() => {
-                if (!profileDetails?.length) setProfileData(getProfileObject());
-                setIsOpenProfile(true);
-              }}
-            />
-          </div>
+          )}
         </div>
       </div>
       <VendorPopUp

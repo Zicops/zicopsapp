@@ -6,7 +6,7 @@ import {
   userClient
 } from '@/api/UserMutations';
 import { GET_VENDOR_DETAILS, userQueryClient } from '@/api/UserQueries';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { handleCacheUpdate } from '@/helper/data.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { getProfileObject, VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
@@ -29,6 +29,9 @@ export default function useHandleVendorMaster() {
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   async function addUpdateVendor(displayToaster = true) {
     setLoading(true);
@@ -115,6 +118,7 @@ export default function useHandleVendorMaster() {
 
   // for individual vendor
   async function syncIndividualVendorProfile(_vendorId = null) {
+    if (!isIndividual) return null;
     if (!(vendorId || _vendorId)) return null;
     if (!profileData?.email) return null;
 

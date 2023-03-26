@@ -100,6 +100,9 @@ export default function useHandleVendor() {
   const vendorId = router.query.vendorId || null;
   const time = getUnixFromDate();
 
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
   async function handleMail() {
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
@@ -272,9 +275,12 @@ export default function useHandleVendor() {
     setVendorData(getVendorObject(singleData));
 
     setEmailId(vendorInfo?.getVendorDetails?.users || []);
+    return singleData;
   }
 
   async function getAllProfileInfo() {
+    if (isIndividual) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_ALL_PROFILE_DETAILS,
@@ -284,41 +290,16 @@ export default function useHandleVendor() {
     );
     let sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
       let experience = data?.experience?.length ? data?.experience : [];
-      return { ...data, experience: experience };
+      return { ...data, experience: experience, vendorId: data?.vendor_id };
     });
-
-    if (
-      vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase() &&
-      sanetizeProfiles?.[0]
-    ) {
-      const allServiceLanguages = [
-        ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
-      ];
-
-      const individualVendorProfile = getProfileObject({
-        email: vendorData?.users?.[0],
-        description: vendorData?.description,
-        profileImage: await convertUrlToFile(
-          vendorData?.photoUrl,
-          getEncodedFileNameFromUrl(vendorData?.photoUrl)
-        ),
-        languages: allServiceLanguages,
-        sme_expertises: smeData?.expertises,
-        crt_expertises: ctData?.expertises,
-        content_development: cdData?.expertises
-      });
-
-      sanetizeProfiles[0] = {
-        ...(sanetizeProfiles?.[0] || {}),
-        ...individualVendorProfile
-      };
-    }
 
     setProfileDetails(sanetizeProfiles);
     setLoading(false);
   }
 
   async function getSingleProfileInfo(email) {
+    if (!email) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
@@ -326,7 +307,40 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setProfileData(getProfileObject(profileInfo));
+
+    let profileDetails = profileInfo?.viewProfileVendorDetails;
+
+    if (isIndividual && profileDetails) {
+      const allServiceLanguages = [
+        ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+      ];
+
+      const individualVendorProfile = getProfileObject({
+        email: vendorData?.users?.[0],
+        profileId: profileDetails?.pf_id,
+        description: vendorData?.description,
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.expertises,
+        crt_expertises: ctData?.expertises,
+        content_development: cdData?.expertises,
+        languages: allServiceLanguages,
+        firstName: profileDetails?.first_name,
+        lastName: profileDetails?.last_name,
+        contactNumber: profileDetails?.phone,
+        photoUrl: profileDetails?.photo_url,
+        experienceYear: profileDetails?.experience_years,
+        languages: profileDetails?.language,
+        isSpeaker: profileDetails?.is_speaker,
+        vendorId: profileDetails?.vendor_id
+      });
+
+      profileDetails = {
+        ...(profileDetails || {}),
+        ...individualVendorProfile
+      };
+    }
+
+    setProfileData(getProfileObject(profileDetails));
     setLoading(false);
   }
 

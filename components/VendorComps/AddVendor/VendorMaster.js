@@ -70,9 +70,6 @@ export default function VendorMaster() {
     }
   ];
 
-  if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
-
   function getFileName() {
     return truncateToN(
       vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
@@ -82,6 +79,9 @@ export default function VendorMaster() {
 
   const isIndividualVendor =
     vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>

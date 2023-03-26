@@ -223,7 +223,7 @@ export const VENDOR_MASTER_STATUS = {
   disable: 'disable'
 };
 
-export const VENDOR_MASTER_TYPE = { company: 'Company', individual: 'Individual' };
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
 export const VENDOR_SERVICES_TYPE = {
   sme: { label: 'Subject Matter Expertise', type: 'sme' },

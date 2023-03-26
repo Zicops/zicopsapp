@@ -32,7 +32,6 @@ export default function ManageVendorTabs() {
   const cdData = useRecoilValue(CdServicesAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const { handleMail } = useHandleVendor();
   const { addUpdateVendor, loading, syncIndividualVendorProfile } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
@@ -44,13 +43,18 @@ export default function ManageVendorTabs() {
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,
-    getAllProfileInfo
+    getAllProfileInfo,
+    handleMail,
+    getSingleProfileInfo
   } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
   const shallowRoute = router.query?.shallowRoute || null;
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   // reset to default on load
   // NOTE: on load is saved is false which should ideally be false only if something is changed
@@ -69,7 +73,7 @@ export default function ManageVendorTabs() {
     loadVendorDetails();
 
     async function loadVendorDetails() {
-      await getSingleVendorInfo();
+      const singleVendorInfo = await getSingleVendorInfo();
       const smeData = await getSmeDetails();
       const crtData = await getCrtDetails();
       const cdData = await getCdDetails();
@@ -83,7 +87,10 @@ export default function ManageVendorTabs() {
       getSMESampleFiles();
       getCRTSampleFiles();
       getCDSampleFiles();
-      getAllProfileInfo();
+      const isIndividualVendor =
+        singleVendorInfo?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+      if (!isIndividualVendor) return getAllProfileInfo();
+      if (isIndividualVendor) return getSingleProfileInfo(singleVendorInfo?.users?.[0]);
     }
   }, [vendorId]);
 
@@ -132,12 +139,13 @@ export default function ManageVendorTabs() {
       ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
     ];
 
-    const vendorName = vendorData?.name?.split(' ');
+    let [firstName, ...lastName] = vendorData?.name?.split(' ');
+    lastName = lastName.join(' ');
     setProfileData(
       getProfileObject({
         ...profileData,
-        firstName: vendorName?.[0] || '',
-        lastName: vendorName?.[1] || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
         email: vendorData?.users?.[0] || '',
         description: vendorData?.description,
         photoUrl: vendorData?.photoUrl,
@@ -152,7 +160,9 @@ export default function ManageVendorTabs() {
 
   const tabData = manageVendorTabData;
 
-  tabData[4].isHidden = !isDev;
+  tabData[5].isHidden = !isDev;
+  tabData[3].isHidden = !isIndividual;
+  tabData[2].isHidden = isIndividual;
 
   const [tab, setTab] = useState(tabData[0].name);
 

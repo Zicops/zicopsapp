@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
 import { useRouter } from 'next/router';
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import Loader from '@/components/common/Loader';
 
 const ProfileManageVendor = () => {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -30,6 +31,7 @@ const ProfileManageVendor = () => {
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
+  const vendorId = router.query.vendorId || null;
 
   const addProfileHandler = () => {
     setProfileData(getProfileObject());
@@ -61,6 +63,9 @@ const ProfileManageVendor = () => {
     profileDetails?.length
       ? true
       : false;
+
+  if (vendorId && profileDetails?.every((profile) => profile.vendorId !== vendorId))
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
