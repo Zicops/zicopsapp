@@ -1,13 +1,12 @@
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { useState } from 'react';
 import useHandleVendor from '../Logic/useHandleVendor';
 import styles from '../vendorComps.module.scss';
 
 const SingleFile = ({ data, pType }) => {
-  const {
-    deleteSample,
-    getSMESampleFiles,
-    getCRTSampleFiles,
-    getCDSampleFiles
-  } = useHandleVendor();
+  const { deleteSample, getSMESampleFiles, getCRTSampleFiles, getCDSampleFiles } =
+    useHandleVendor();
+  const [confirmDelete, setConfirmDelete] = useState(null);
   let getSampleFiles;
   if (pType === 'sme') {
     getSampleFiles = getSMESampleFiles;
@@ -18,6 +17,7 @@ const SingleFile = ({ data, pType }) => {
   }
   const HandleDeleteFile = async () => {
     await deleteSample(data?.sf_id, pType);
+    setConfirmDelete(null);
     getSampleFiles();
   };
 
@@ -41,25 +41,39 @@ const SingleFile = ({ data, pType }) => {
   }
 
   return (
-    <div className={`${styles.singleFileContainer}`}>
-      <div className={`${styles.singleProfileMain}`}>
-        <div className={`${styles.singleProfileImage}`}>
-          <img src={getFileType(data?.actualFileType)} />
-        </div>
-        <div className={`${styles.singleFileDetails}`}>
-          <p className={`${styles.fileName}`}>{data?.name}</p>
-          <div className={`${styles.hr}`}></div>
-          <div className={`${styles.filePrice}`}>
-            <div className={`${styles.rate}`}>
-              {data?.rate} {data?.currency} {data?.unit}
-            </div>
-            <div className={`${styles.deleteIcon}`} onClick={() => HandleDeleteFile()}>
-              <img src="/images/svg/delete.svg" alt="" />
+    <>
+      <div className={`${styles.singleFileContainer}`}>
+        <div className={`${styles.singleProfileMain}`}>
+          <div className={`${styles.singleProfileImage}`}>
+            <img src={getFileType(data?.actualFileType)} />
+          </div>
+          <div className={`${styles.singleFileDetails}`}>
+            <p className={`${styles.fileName}`}>{data?.name}</p>
+            <div className={`${styles.hr}`}></div>
+            <div className={`${styles.filePrice}`}>
+              <div className={`${styles.rate}`}>
+                {data?.rate} {data?.currency} {data?.unit}
+              </div>
+              <div className={`${styles.deleteIcon}`} onClick={() => setConfirmDelete(true)}>
+                <img src="/images/svg/delete.svg" alt="" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      {!!confirmDelete && (
+        <ConfirmPopUp
+          title={`Are you sure to delete this sample file?`}
+          btnObj={{
+            handleClickLeft: (e) => {
+              e.currentTarget.disabled = true;
+              HandleDeleteFile();
+            },
+            handleClickRight: () => setConfirmDelete(null)
+          }}
+        />
+      )}
+    </>
   );
 };
 

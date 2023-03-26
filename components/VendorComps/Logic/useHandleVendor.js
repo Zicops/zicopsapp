@@ -162,7 +162,11 @@ export default function useHandleVendor() {
     });
 
     if (!!existingEmails?.length) {
-      setToastMsg({ type: 'info', message: 'User Already exists in the learning space and cannot be mapped as vendor in this learning space.' });
+      setToastMsg({
+        type: 'info',
+        message:
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+      });
     }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
@@ -385,6 +389,7 @@ export default function useHandleVendor() {
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
+    return smeDetails;
   }
 
   async function getCrtDetails() {
@@ -407,6 +412,7 @@ export default function useHandleVendor() {
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
+    return crtDetails;
   }
 
   async function getCdDetails() {
@@ -429,6 +435,7 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+    return cdDetails;
   }
 
   async function getVendorCourses() {
@@ -527,6 +534,19 @@ export default function useHandleVendor() {
       return null;
     }
 
+    if (
+      !sampleData?.sampleName ||
+      !sampleData?.description ||
+      !sampleData?.sampleFile ||
+      !sampleData?.fileType ||
+      !sampleData?.rate ||
+      !sampleData?.currency ||
+      !sampleData?.unit
+    ) {
+      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      return null;
+    }
+
     const sendData = {
       vendorId: vendorId,
       pType: ptype,
@@ -542,27 +562,14 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    if (
-      sampleData?.sampleName &&
-      sampleData?.description &&
-      sampleData?.sampleFile &&
-      sampleData?.fileType &&
-      sampleData?.rate &&
-      sampleData?.currency &&
-      sampleData?.unit
-    ) {
-      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-      });
-      if (isError) return null;
-      setToastMsg({ type: 'success', message: 'Sample File Created' });
-      return res;
-    } else {
-      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
-      return null;
-    }
+    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+    });
+    if (isError) return null;
+    setToastMsg({ type: 'success', message: 'Sample File Created' });
+    return res;
   }
 
   async function deleteSample(sfid, pType) {

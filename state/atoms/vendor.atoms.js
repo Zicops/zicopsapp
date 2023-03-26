@@ -10,7 +10,8 @@ export function getVendorCurrentStateObj(data = {}) {
   return {
     isUpdating: data?.isUpdating || false,
     isSaved: data?.isSaved || false,
-    errors: data?.errors || []
+    errors: data?.errors || [],
+    enabledServices: data?.enabledServices || []
   };
 }
 
@@ -80,6 +81,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
+    localIndex: data?.localIndex || null,
     expId: data?.expId || '',
     pfId: data?.pfId || '',
     title: data?.title || '',
