@@ -11,6 +11,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    .servicesHeading {
+      color: $white;
+    }
   }
 }
 
@@ -247,6 +251,14 @@
       color: $bgBody;
     }
   }
+
+  hr {
+    margin-top: 30px;
+    width: 62em;
+    margin-bottom: 20px;
+    border: 0.5px solid $secondary;
+  }
+
   .marketyardSocialMediaIcons {
     display: flex;
     gap: 10px;
@@ -789,7 +801,7 @@
 
 .marketHeroContainer {
   background-image: url('/images/svg/vendorHero.svg');
-  height: 60vh;
+  height: 50vh;
   background-size: cover;
   background-repeat: no-repeat;
   .marketHeroDetails {

@@ -62,6 +62,7 @@ export default function AboutVendor({ data }) {
         <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
+        <h3 className={`${styles.servicesHeading}`}>Services</h3>
         {accordianMarketyardDetails.map((value, index) => {
           if (!value?.serviceData?.isApplicable) return;
           return (
