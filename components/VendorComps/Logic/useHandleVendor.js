@@ -308,37 +308,35 @@ export default function useHandleVendor() {
       userQueryClient
     );
 
-    let profileDetails = profileInfo?.viewProfileVendorDetails;
+    let profileDetails = profileInfo?.viewProfileVendorDetails || {};
 
-    if (isIndividual && profileDetails) {
-      const allServiceLanguages = [
-        ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
-      ];
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
 
-      const individualVendorProfile = getProfileObject({
-        email: vendorData?.users?.[0],
-        profileId: profileDetails?.pf_id,
-        description: vendorData?.description,
-        languages: allServiceLanguages,
-        sme_expertises: smeData?.expertises,
-        crt_expertises: ctData?.expertises,
-        content_development: cdData?.expertises,
-        languages: allServiceLanguages,
-        firstName: profileDetails?.first_name,
-        lastName: profileDetails?.last_name,
-        contactNumber: profileDetails?.phone,
-        photoUrl: profileDetails?.photo_url,
-        experienceYear: profileDetails?.experience_years,
-        languages: profileDetails?.language,
-        isSpeaker: profileDetails?.is_speaker,
-        vendorId: profileDetails?.vendor_id
-      });
+    const individualVendorProfile = getProfileObject({
+      email: vendorData?.users?.[0],
+      profileId: profileDetails?.pf_id,
+      description: vendorData?.description,
+      languages: allServiceLanguages,
+      sme_expertises: smeData?.expertises,
+      crt_expertises: ctData?.expertises,
+      content_development: cdData?.expertises,
+      languages: allServiceLanguages,
+      firstName: profileDetails?.first_name,
+      lastName: profileDetails?.last_name,
+      contactNumber: profileDetails?.phone,
+      photoUrl: profileDetails?.photo_url,
+      experienceYear: profileDetails?.experience_years,
+      languages: profileDetails?.language,
+      isSpeaker: profileDetails?.is_speaker,
+      vendorId: profileDetails?.vendor_id
+    });
 
-      profileDetails = {
-        ...(profileDetails || {}),
-        ...individualVendorProfile
-      };
-    }
+    profileDetails = {
+      ...(profileDetails || {}),
+      ...individualVendorProfile
+    };
 
     setProfileData(getProfileObject(profileDetails));
     setLoading(false);
