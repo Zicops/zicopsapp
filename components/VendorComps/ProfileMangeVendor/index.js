@@ -53,7 +53,7 @@ const ProfileManageVendor = () => {
   }, []);
 
   const isProfileBtnDisabled =
-    vendorData?.type === VENDOR_MASTER_TYPE.individual && profileDetails?.length ? true : false;
+    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase() && profileDetails?.length ? true : false;
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
@@ -63,7 +63,7 @@ const ProfileManageVendor = () => {
             <SingleProfile data={data} />
           </div>
         ))}
-        {vendorData?.type === VENDOR_MASTER_TYPE.company && (
+        {vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.company?.toLowerCase() && (
           <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
             <IconButton
               text={`Add ${profileDetails?.length ? 'another' : ''} profile`}

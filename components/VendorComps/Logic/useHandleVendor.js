@@ -287,7 +287,10 @@ export default function useHandleVendor() {
       return { ...data, experience: experience };
     });
 
-    if (vendorData?.type === VENDOR_MASTER_TYPE.individual && sanetizeProfiles?.[0]) {
+    if (
+      vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase() &&
+      sanetizeProfiles?.[0]
+    ) {
       const allServiceLanguages = [
         ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
       ];

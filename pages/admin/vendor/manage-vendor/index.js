@@ -52,13 +52,15 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase(),
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.company?.toLowerCase(),
                 changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />

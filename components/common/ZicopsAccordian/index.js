@@ -2,8 +2,8 @@ import { useState } from 'react';
 import styles from './zicopsAccordian.module.scss';
 import { DownArrowIcon } from '../ZicopsIcons';
 
-export default function ZicopsAccordian({ title, description, children }) {
-  const [isActive, setIsActive] = useState(false);
+export default function ZicopsAccordian({ title, description, children, defaultState = false }) {
+  const [isActive, setIsActive] = useState(defaultState);
 
   return (
     <div className={`${styles.zicopsAccordianContainer}`}>

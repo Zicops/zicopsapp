@@ -126,7 +126,7 @@ export default function ManageVendorTabs() {
 
   // sync profile details for individual vendor
   useEffect(async () => {
-    if (vendorData?.type !== VENDOR_MASTER_TYPE.individual) return;
+    if (vendorData?.type.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
 
     const allServiceLanguages = [
       ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])

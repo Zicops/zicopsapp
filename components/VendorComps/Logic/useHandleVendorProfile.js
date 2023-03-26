@@ -19,7 +19,8 @@ export default function useHandleVendorProfile() {
   const vendorId = router.query.vendorId || '0';
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   async function addUpdateProfile() {
     if (isIndividualVendor && !profileData?.experienceYear) {

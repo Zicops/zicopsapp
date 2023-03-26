@@ -80,7 +80,8 @@ export default function VendorMaster() {
     );
   }
 
-  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -174,7 +175,7 @@ export default function VendorMaster() {
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
-      <div className={`${styles.input1}`}>
+      <div className={`${styles.email}`}>
         <label for="users">{isIndividualVendor ? 'Email' : 'Add User'}: </label>
         <MultiEmailInput
           type="External"
