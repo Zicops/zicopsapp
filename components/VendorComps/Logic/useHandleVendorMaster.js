@@ -60,6 +60,15 @@ export default function useHandleVendorMaster() {
 
       const res = await updateVendor({
         variables: sendData,
+        context: {
+          fetchOptions: {
+            useUpload: true,
+            onProgress: (ev) => {
+              console.info(ev);
+              setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 });
+            }
+          }
+        },
         update: (_, { data }) => {
           handleCacheUpdate(
             GET_VENDOR_DETAILS,
@@ -86,6 +95,13 @@ export default function useHandleVendorMaster() {
     if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
       const res = await addNewVendor({
         variables: sendData,
+        context: {
+          fetchOptions: {
+            useUpload: true,
+            onProgress: (ev) =>
+              setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
+          }
+        },
         update: (_, { data }) => {
           handleCacheUpdate(
             GET_VENDOR_DETAILS,

@@ -129,6 +129,7 @@ export default function VendorMaster() {
             inputName="vendorProfileImage"
             isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             isDisabled={isViewPage}
+            progressPercent={+vendorData?.fileUploadPercent || null}
           />
         </div>
       </div>

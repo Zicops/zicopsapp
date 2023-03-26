@@ -100,6 +100,7 @@ const AddSample = ({ pType }) => {
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
               acceptedTypes={FILE_TYPES.vendorSampleFiles}
+              progressPercent={sampleData?.fileUploadPercent || null}
             />
           </div>
         </div>

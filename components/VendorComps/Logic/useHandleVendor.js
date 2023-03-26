@@ -604,7 +604,16 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+    const res = await createSampleFiles({
+      variables: sendData,
+      context: {
+        fetchOptions: {
+          useUpload: true,
+          onProgress: (ev) =>
+            setSampleData({ ...sampleData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
+        }
+      }
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
