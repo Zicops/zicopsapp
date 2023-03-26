@@ -94,7 +94,7 @@ const FileManageVendor = ({ pType }) => {
         size="large"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{
-          name: 'Done',
+          name: 'Add',
           handleClick: addNewSampleFileHendler
         }}
         isFooterVisible={true}>

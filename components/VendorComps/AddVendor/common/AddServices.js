@@ -558,7 +558,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         title="Add Sample"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{
-          name: 'Add',
+          name: 'Done',
           handleClick: () => {
             setSamplePopupState(false);
           }
@@ -602,7 +602,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             }}
           />
         </VendorPopUp>
-)}
+      )}
 
       {!!selectedSampleId && (
         <ConfirmPopUp
