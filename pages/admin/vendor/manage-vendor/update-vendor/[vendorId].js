@@ -18,7 +18,9 @@ export default function EditVendor() {
           title={
             <>
               {vendorData?.name || 'Edit Vendor'}
-              <p style={{ color: 'var(--primary)', fontSize: '18px' }}>[ {vendorData?.type} ]</p>
+              <p style={{ color: 'var(--primary)', fontSize: '18px', textTransform: 'capitalize' }}>
+                [ {vendorData?.type} ]
+              </p>
               {/* <p className={`${styles.subHeader}`}>{vendorData?.type}</p> */}
             </>
           }

@@ -20,7 +20,7 @@ import Button from '../CustomVideoPlayer/Button';
 import useHandleVendor from './Logic/useHandleVendor';
 import useHandleVendorMaster from './Logic/useHandleVendorMaster';
 import useHandleVendorServices from './Logic/useHandleVendorServices';
-import { manageVendorTabData } from './Logic/vendorComps.helper';
+import { vendorTabData } from './Logic/vendorComps.helper';
 
 export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -32,7 +32,7 @@ export default function ManageVendorTabs() {
   const cdData = useRecoilValue(CdServicesAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const { addUpdateVendor, loading, syncIndividualVendorProfile } = useHandleVendorMaster();
+  const { addUpdateVendor, loading } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const {
@@ -44,8 +44,9 @@ export default function ManageVendorTabs() {
     getCRTSampleFiles,
     getCDSampleFiles,
     getAllProfileInfo,
-    handleMail,
-    getSingleProfileInfo
+    getSingleProfileInfo,
+    syncIndividualVendorProfile,
+    handleMail
   } = useHandleVendor();
 
   const router = useRouter();
@@ -158,13 +159,17 @@ export default function ManageVendorTabs() {
     );
   }, [vendorData, smeData, cdData, ctData]);
 
-  const tabData = manageVendorTabData;
+  const _tabDataObj = { ...vendorTabData };
+  _tabDataObj.orders.isHidden = !isDev;
 
-  tabData[5].isHidden = !isDev;
-  tabData[3].isHidden = !isIndividual;
-  tabData[2].isHidden = isIndividual;
+  _tabDataObj.profiles.isHidden = isIndividual;
+  _tabDataObj.users.isHidden = isIndividual;
 
-  const [tab, setTab] = useState(tabData[0].name);
+  _tabDataObj.experience.isHidden = !isIndividual;
+
+  const tabData = Object.values(_tabDataObj);
+
+  const [tab, setTab] = useState(vendorTabData?.master?.name);
 
   return (
     <TabContainer
@@ -179,7 +184,7 @@ export default function ManageVendorTabs() {
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
-            syncIndividualVendorProfile(id);
+            syncIndividualVendorProfile(id, tab === vendorTabData.experience.name);
             handleMail();
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);
