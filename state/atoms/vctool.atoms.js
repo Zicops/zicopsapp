@@ -1,5 +1,15 @@
 import { atom } from "recoil";
-
+export const joinMeeting=atom({
+    key:"joinMeeting",
+    default:false                 //check whether meeting is started or not
+})
+export const vcModeratorControlls=atom({
+    key:"vcModeratorControlls",
+    default:{
+        onMic:true,                  //set mic and video on and off
+        onVideo:true
+    }
+})
 export const vcMeetingIconAtom = atom({
     key: "vcMeetingIconAtom",
     default: {

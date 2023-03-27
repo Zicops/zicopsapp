@@ -2443,13 +2443,15 @@
     display: flex;
     height: 40px;
     margin-top: 12px;
-
-    div {
-        width: 75%;
-        font-weight: 400;
-        font-size: 16px;
-        color: #FFFFFF;
-    }
+}
+.hostControlls>div
+{
+    width: 75%;
+    display: flex;
+    font-weight: 400;
+    font-size: 16px;
+    color: #FFFFFF;
+    align-items: center;
 }
 
 // styling StartSessionPopUp

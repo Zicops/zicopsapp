@@ -1,15 +1,17 @@
-import styles from './vctoolMain.module.scss';
-import MeetingCard from './MeetingCard';
-import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
-import MainToolbar from './Toolbar';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { StartMeeting, GenerateString } from "./help/vctool.helper"
-import { breakoutList, getVctoolMetaData, participantRole, pollArray, totalRoomno, vcMeetingIconAtom, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
+import { breakoutList, joinMeeting, pollArray, totalRoomno, vcMeetingIconAtom, vcModeratorControlls, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
+import Script from 'next/script';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { StartMeeting } from "./help/vctool.helper";
+import MeetingCard from './MeetingCard';
+import MainToolbar from './Toolbar';
+import styles from './vctoolMain.module.scss';
 const VcMaintool = () => {
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
+  const [isMeetingStarted,setIsMeetingStarted]=useRecoilState(joinMeeting)
+  const [controlls,setControlls]=useRecoilState(vcModeratorControlls)
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
@@ -34,6 +36,21 @@ const VcMaintool = () => {
       document.mozFullscreenElement ||
       document.msFullscreenElement
   }
+  useEffect(()=>
+  {
+    if(isMeetingStarted)
+    {
+      if(!controlls.onVideo)
+      {
+        api.executeCommand('muteEveryone', 'video');
+      }
+      if(!controlls.onMic)
+      {
+        api.executeCommand('muteEveryone', 'audio');
+      }
+    }
+     
+  },[controlls])
   const startName = userData?.first_name + " " + userData?.last_name
   return (
     <div ref={fullScreenRef}>
@@ -70,6 +87,7 @@ const VcMaintool = () => {
             })
             setFullscreen(false)
             setisStarted(false)
+            setIsMeetingStarted(false)
           }}
           shareScreen={() => {
             api.executeCommand('toggleShareScreen');
@@ -149,9 +167,10 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              StartMeeting("zicops", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("sk", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
+              setIsMeetingStarted(true)
               sethidecard(!hidecard)
 
             }}
