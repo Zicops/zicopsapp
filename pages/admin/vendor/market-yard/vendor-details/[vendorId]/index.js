@@ -18,12 +18,20 @@ import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { allProfileAtom, SevicesAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import {
+  allProfileAtom,
+  SevicesAtom,
+  VendorProfileAtom,
+  VendorStateAtom
+} from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import ProfileExperience from '@/components/VendorComps/ProfileExperience';
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
+  const vendorSingleProfiles = useRecoilValue(VendorProfileAtom);
   const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
@@ -32,8 +40,30 @@ export default function VendorInfo() {
   const [addTax, setAddTax] = useState(false);
   const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
+
   const router = useRouter();
+  const vendorId = router.query.vendorId || null;
+
   const { addUpdateServices } = useHandleMarketYard();
+  const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
+
+  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
+  useEffect(() => {
+    if (!isIndividual) return;
+    if (!vendorData?.users?.length) return;
+
+    getSingleProfileInfo(vendorData?.users?.[0]);
+  }, [vendorData?.users]);
+
+  useEffect(() => {
+    getAllProfileInfo();
+    getSingleVendorInfo(vendorId);
+  }, []);
+
   const onOpenPopup = () => {
     setShowPopup(true);
   };
@@ -85,16 +115,6 @@ export default function VendorInfo() {
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
-  const vendorId = router.query.vendorId || null;
-
-  const { getAllProfileInfo, getSingleVendorInfo } = useHandleVendor();
-
-  useEffect(() => {
-    getAllProfileInfo();
-    getSingleVendorInfo(vendorId);
-  }, []);
-  const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
-
   const tabData = [
     {
       name: 'About',
@@ -106,7 +126,13 @@ export default function VendorInfo() {
     },
     {
       name: 'Profile',
-      component: <ProfileVendor profileData={vendorProfileData} />
+      component: <ProfileVendor profileData={vendorProfileData} />,
+      isHidden: isIndividual
+    },
+    {
+      name: 'Experience',
+      component: <ProfileExperience pfId={vendorSingleProfiles?.profileId} />,
+      isHidden: !isIndividual
     }
   ];
 

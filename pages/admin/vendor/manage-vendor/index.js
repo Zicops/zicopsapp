@@ -43,7 +43,9 @@ export default function ManageVendor() {
             closeBtn={{ name: 'Cancel' }}
             submitBtn={{
               name: 'Next',
-              handleClick: () => router.push('/admin/vendor/manage-vendor/add-vendor')
+              handleClick: () => {
+                router.push('/admin/vendor/manage-vendor/add-vendor');
+              }
             }}
             isFooterVisible={true}>
             <AddVendor

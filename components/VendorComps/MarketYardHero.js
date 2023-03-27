@@ -21,7 +21,7 @@ const MarketYardHero = ({ onHandlePopup }) => {
     <div className={`${styles.marketHeroContainer}`}>
       <div className={`${styles.marketHeroDetails}`}>
         <div className={`${styles.courseImage}`}>
-          <img src={vendorData?.vendorProfileImage || '/images/discord_logo.png'} alt="" />
+          <img src={vendorData?.photoUrl || '/images/discord_logo.png'} alt="" />
         </div>
         <p className={`${styles.companyName}`}>{vendorData?.name}</p>
         <div className={`${styles.expartContainer}`}>
