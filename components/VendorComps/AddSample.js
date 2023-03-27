@@ -67,6 +67,7 @@ const AddSample = ({ pType }) => {
             <LabeledTextarea
               inputOptions={{
                 inputName: 'description',
+                placeholder: 'Please enter your description',
                 value: sampleData?.description
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData)}
@@ -99,6 +100,7 @@ const AddSample = ({ pType }) => {
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
               acceptedTypes={FILE_TYPES.vendorSampleFiles}
+              progressPercent={sampleData?.fileUploadPercent || null}
             />
           </div>
         </div>
@@ -156,7 +158,7 @@ const AddSample = ({ pType }) => {
               dropdownOptions={{
                 isSearchEnable: true,
                 inputName: 'unit',
-                placeholder: 'Select Unit',
+                placeholder: 'Enter Unit',
                 value: {
                   label: sampleData?.unit,
                   value: sampleData?.unit

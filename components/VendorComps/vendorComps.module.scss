@@ -11,6 +11,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    .servicesHeading {
+      color: $white;
+    }
   }
 }
 
@@ -247,6 +251,14 @@
       color: $bgBody;
     }
   }
+
+  hr {
+    margin-top: 30px;
+    width: 62em;
+    margin-bottom: 20px;
+    border: 0.5px solid $secondary;
+  }
+
   .marketyardSocialMediaIcons {
     display: flex;
     gap: 10px;
@@ -489,6 +501,10 @@
       color: $white;
     }
   }
+
+  .email {
+    margin-top: 20px;
+  }
 }
 
 .viewProfilesContainer {
@@ -605,6 +621,10 @@
         margin-top: 10px;
         border: 1px solid $secondaryWhite;
         border-radius: 4px;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
 
@@ -627,6 +647,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
       .languages {
         display: flex;
@@ -666,6 +690,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
     .languages {
@@ -699,6 +727,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
   }
@@ -727,6 +759,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
     .showFilesMain {
@@ -750,16 +786,20 @@
         .previewIcon,
         .deleteIcon {
           cursor: pointer;
-        }
-        .actionIcons {
-          display: flex;
-          width: 20px;
-          object-fit: cover;
-          gap: 5px;
-          img {
-            width: 100%;
+
+          &:disabled {
+            opacity: 0.3;
           }
         }
+        // .actionIcons {
+        //   display: flex;
+        //   width: 20px;
+        //   object-fit: cover;
+        //   gap: 5px;
+        //   img {
+        //     width: 100%;
+        //   }
+        // }
       }
     }
 
@@ -789,7 +829,7 @@
 
 .marketHeroContainer {
   background-image: url('/images/svg/vendorHero.svg');
-  height: 60vh;
+  height: max(50vh , 350px);
   background-size: cover;
   background-repeat: no-repeat;
   .marketHeroDetails {

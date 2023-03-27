@@ -118,11 +118,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                       placement="right-start">
                       <span>
                         <Link href={path} key={key} className="row">
-                          <a
-                            className={isActive ? styles.active : ''}
-                            onClick={() => {
-                              router.pathname = path;
-                            }}>
+                          <a className={isActive ? styles.active : ''}>
                             <div>{val.title}</div>
                           </a>
                         </Link>
@@ -132,11 +128,7 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                     <ToolTip title={val.description} placement="right">
                       <span>
                         <Link href={path} key={key} className="row">
-                          <a
-                            className={isActive ? styles.active : ''}
-                            onClick={() => {
-                              router.pathname = path;
-                            }}>
+                          <a className={isActive ? styles.active : ''}>
                             <div>{val.title}</div>
                           </a>
                         </Link>

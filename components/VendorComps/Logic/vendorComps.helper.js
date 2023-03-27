@@ -6,11 +6,23 @@ import AddVendorCourses from '../AddVendor/AddVendorCourses';
 import VendorOrders from '../VendorOrders';
 import VendorUsers from '../VendorUsers';
 import ProfileManageVendor from '../ProfileMangeVendor';
+import AddIndividualVendorExperience from '../AddVendor/AddIndividualVendorExperience';
+
+export const vendorTabData = {
+  master: { name: 'Master', component: <VendorMaster /> },
+  services: { name: 'Services', component: <AddVendorServices /> },
+  profiles: { name: 'Profiles', component: <ProfileManageVendor /> },
+  experience: { name: 'Experience', component: <AddIndividualVendorExperience />, isHidden: true },
+  courses: { name: 'Courses', component: <AddVendorCourses /> },
+  orders: { name: 'Orders', component: <VendorOrders /> },
+  users: { name: 'Users', component: <VendorUsers /> }
+};
 
 export const manageVendorTabData = [
   { name: 'Master', component: <VendorMaster /> },
   { name: 'Services', component: <AddVendorServices /> },
   { name: 'Profiles', component: <ProfileManageVendor /> },
+  { name: 'Experience', component: <AddIndividualVendorExperience /> },
   { name: 'Courses', component: <AddVendorCourses /> },
   { name: 'Orders', component: <VendorOrders /> },
   { name: 'Users', component: <VendorUsers /> }
@@ -782,7 +794,7 @@ export const statusTypeServie = [
 export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
 
 export const serviceOptions = [
-  { label: 'Subject Matter', value: 'sme' },
+  { label: 'Subject Matter', value: 'sme', isDev: true },
   { label: 'Classroom Training', value: 'crt' },
-  { label: 'Content Development', value: 'cd' }
+  { label: 'Content Development', value: 'cd', isDev: true }
 ];

@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import useHandleVendorProfile from '../Logic/useHandleVendorProfile';
 import { useRouter } from 'next/router';
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import Loader from '@/components/common/Loader';
 
 const ProfileManageVendor = () => {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -30,6 +31,7 @@ const ProfileManageVendor = () => {
 
   const router = useRouter();
   const isViewPage = router.asPath?.includes('view-vendor');
+  const vendorId = router.query.vendorId || null;
 
   const addProfileHandler = () => {
     setProfileData(getProfileObject());
@@ -40,12 +42,16 @@ const ProfileManageVendor = () => {
     e.target.disabled = true;
     await addUpdateExperience();
     const isSaved = await addUpdateProfile();
-    if (!isSaved) return;
+    if (!isSaved) {
+      e.target.disabled = false;
+      return;
+    }
 
     await getAllProfileInfo();
     setCompleteProfile(true);
     setIsOpenProfile(false);
     setProfileData(getProfileObject());
+    e.target.disabled = false;
   };
 
   useEffect(() => {
@@ -53,7 +59,13 @@ const ProfileManageVendor = () => {
   }, []);
 
   const isProfileBtnDisabled =
-    vendorData?.type === VENDOR_MASTER_TYPE.individual && profileDetails?.length ? true : false;
+    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase() &&
+    profileDetails?.length
+      ? true
+      : false;
+
+  if (vendorId && profileDetails?.every((profile) => profile.vendorId !== vendorId))
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.manageVendorProfileContainer}`}>
@@ -63,14 +75,16 @@ const ProfileManageVendor = () => {
             <SingleProfile data={data} />
           </div>
         ))}
-        <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
-          <IconButton
-            text={`Add ${profileDetails?.length ? 'another' : ''} profile`}
-            styleClass={`${styles.button}`}
-            imgUrl="/images/svg/add_circle.svg"
-            isDisabled={isViewPage || isProfileBtnDisabled}
-          />
-        </div>
+        {vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.company?.toLowerCase() && (
+          <div className={`${styles.addAnotherProfile}`} onClick={addProfileHandler}>
+            <IconButton
+              text={`Add ${profileDetails?.length ? 'another' : ''} profile`}
+              styleClass={`${styles.button}`}
+              imgUrl="/images/svg/add_circle.svg"
+              isDisabled={isViewPage || isProfileBtnDisabled}
+            />
+          </div>
+        )}
       </div>
       <VendorPopUp
         open={isOpenProfile}

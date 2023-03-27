@@ -1,3 +1,5 @@
+import { DELETE_CAT_MAIN } from '@/api/Mutations';
+import DeleteBtn from '@/components/common/DeleteBtn';
 import PopUp from '@/components/common/PopUp';
 import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
@@ -47,7 +49,7 @@ function ZicopsCategoryList() {
     setIsLoading(true);
     const zicopsLsp = COMMON_LSPS.zicops;
 
-    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const loadDataFunction = loadQueryDataAsync;
     const zicopsLspData =
       zicopsLsp !== _lspId ? await loadDataFunction(GET_CATS_MAIN, { lsp_ids: [zicopsLsp] }) : {};
     const currentLspData = await loadDataFunction(GET_CATS_MAIN, { lsp_ids: [_lspId] });
@@ -102,12 +104,15 @@ function ZicopsCategoryList() {
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             )}
-            {/* <DeleteBtn
-              id={params?.id}
-              resKey="deleteCatMain"
-              mutation={DELETE_CAT_MAIN}
-              onDelete={() => refetch()}
-            /> */}
+
+            {!!isDev && (
+              <DeleteBtn
+                id={params?.id}
+                resKey="deleteCatMain"
+                mutation={DELETE_CAT_MAIN}
+                onDelete={() => loadCategories()}
+              />
+            )}
           </>
         );
       }

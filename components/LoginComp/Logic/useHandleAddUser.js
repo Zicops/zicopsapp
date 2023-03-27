@@ -149,7 +149,7 @@ export default function useHandleAddUserDetails() {
     setIsAccountSetupReady(
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
-        userAboutData?.email &&
+        userAboutData?.email.length > 0 &&
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
