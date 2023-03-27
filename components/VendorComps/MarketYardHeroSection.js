@@ -1,5 +1,6 @@
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
-import { useState } from 'react';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import { serviceOptions } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
@@ -33,6 +34,8 @@ export default function MarketYardHeroSection({
   searchText = '',
   setSearchText = () => {}
 }) {
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
@@ -62,7 +65,10 @@ export default function MarketYardHeroSection({
                 inputName: 'Service',
                 placeholder: 'All Services',
                 value: vendorService,
-                options: [{ label: 'All', value: null }, ...serviceOptions]
+                options: [
+                  { label: 'All', value: null },
+                  ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev))
+                ]
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}
