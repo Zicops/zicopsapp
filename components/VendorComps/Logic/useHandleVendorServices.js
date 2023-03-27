@@ -80,13 +80,13 @@ export default function useHandleVendorServices() {
       const data = res?.data?.updateSubjectMatterExpertise;
       setSMEData(
         getSMEServicesObject({
+          ...smeData,
           ...data,
           isApplicable: data?.is_applicable,
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries,
-          sampleFiles: data?.sample_files
+          formats: data?.output_deliveries
         })
       );
       return res?.data?.updateSubjectMatterExpertise;
@@ -103,13 +103,13 @@ export default function useHandleVendorServices() {
     const data = res?.data?.createSubjectMatterExpertise;
     setSMEData(
       getSMEServicesObject({
+        ...smeData,
         ...data,
         isApplicable: data?.is_applicable,
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries,
-        sampleFiles: data?.sample_files
+        formats: data?.output_deliveries
       })
     );
     return res?.data?.createSubjectMatterExpertise;
@@ -155,13 +155,13 @@ export default function useHandleVendorServices() {
       const data = res?.data?.updateClassRoomTraining;
       setCTData(
         getCTServicesObject({
+          ...ctData,
           ...data,
           isApplicable: data?.is_applicable,
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries,
-          sampleFiles: data?.sample_files
+          formats: data?.output_deliveries
         })
       );
       return res?.data?.updateClassRoomTraining;
@@ -177,13 +177,13 @@ export default function useHandleVendorServices() {
     const data = res?.data?.createClassRoomTraining;
     setCTData(
       getCTServicesObject({
+        ...ctData,
         ...data,
         isApplicable: data?.is_applicable,
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries,
-        sampleFiles: data?.sample_files
+        formats: data?.output_deliveries
       })
     );
     return res?.data?.createClassRoomTraining;
@@ -229,13 +229,13 @@ export default function useHandleVendorServices() {
       const data = res?.data?.updateContentDevelopment;
       setCDData(
         getCDServicesObject({
+          ...cdData,
           ...data,
           isApplicable: data?.is_applicable,
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries,
-          sampleFiles: data?.sample_files
+          formats: data?.output_deliveries
         })
       );
       return res?.data?.updateContentDevelopment;
@@ -252,13 +252,13 @@ export default function useHandleVendorServices() {
     const data = res?.data?.createContentDevelopment;
     setCDData(
       getCDServicesObject({
+        ...cdData,
         ...data,
         isApplicable: data?.is_applicable,
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries,
-        sampleFiles: data?.sample_files
+        formats: data?.output_deliveries
       })
     );
     return res?.data?.createContentDevelopment;

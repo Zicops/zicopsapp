@@ -63,9 +63,10 @@ export default function ManageVendorTabs() {
     if (!router.isReady) return;
     if (shallowRoute) return;
     if (vendorId) return;
+    if (!vendorCurrentState?.isSaved) return;
 
     setVendorCurrentState(getVendorCurrentStateObj());
-  }, [router.isReady]);
+  }, [router.isReady, vendorData, smeData, ctData, cdData]);
 
   useEffect(() => {
     if (shallowRoute) return;
