@@ -39,20 +39,22 @@ export default function SubtitleForm({ courseId, topicId }) {
             index={index + 1}
             text={res.language}
             type={
-              <span style={{ display: 'flex', alignItems: 'center'}}>
+              <span style={{ display: 'flex', alignItems: 'center' }}>
                 File
                 <DeleteBtn
                   id={/\/subtitles\/(.*?)\?/.exec(res?.subtitleUrl)?.[1] || null}
                   resKey="deleteTopicContentSubtitle"
                   mutation={DELETE_SUBTITLE}
                   variableObj={{
-                    courseId: res?.courseId, 
-                    topicId: res?.topicId, 
+                    courseId: res?.courseId,
+                    topicId: res?.topicId,
                     fileName: /\/subtitles\/(.*?)\?/.exec(res?.subtitleUrl)?.[1]
                   }}
                   onDelete={() => {
                     const _subtitleArr = structuredClone(subtitles);
-                    const index = _subtitleArr?.findIndex((sub) => sub?.id === res?.id);
+                    const index = !res?.id
+                      ? index
+                      : _subtitleArr?.findIndex((sub) => sub?.id === res?.id);
                     if (index >= 0) _subtitleArr.splice(index, 1);
 
                     setSubtitles(_subtitleArr);
