@@ -805,7 +805,7 @@
 
 .marketHeroContainer {
   background-image: url('/images/svg/vendorHero.svg');
-  height: 50vh;
+  height: max(50vh , 350px);
   background-size: cover;
   background-repeat: no-repeat;
   .marketHeroDetails {
