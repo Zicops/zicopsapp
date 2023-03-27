@@ -10,21 +10,12 @@ import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  CdServicesAtom,
-  CtServicesAtom,
-  getVendorObject,
-  SmeServicesAtom,
-  VendorStateAtom
-} from '@/state/atoms/vendor.atoms';
+import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 export default function ManageVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
-  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
-  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
@@ -54,9 +45,6 @@ export default function ManageVendor() {
               name: 'Next',
               handleClick: () => {
                 router.push('/admin/vendor/manage-vendor/add-vendor');
-                setSMEData(getSMEServicesObject());
-                setCTData(getCTServicesObject());
-                setCDData(getCDServicesObject());
               }
             }}
             isFooterVisible={true}>
