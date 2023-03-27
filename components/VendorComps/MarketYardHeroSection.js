@@ -36,7 +36,7 @@ export default function MarketYardHeroSection({
   return (
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
-        <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} />
+        {/* <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} /> */}
         <div className={`${styles.frameText}`}>
           <div className={`${styles.vendorDropDownContainer}`}>
             <LabeledDropdown

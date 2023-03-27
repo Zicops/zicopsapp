@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
 import { VendorAllExpertise } from '@/state/atoms/vendor.atoms';
@@ -7,6 +7,7 @@ import { cat, subCat } from '../../Logic/vendorComps.helper';
 import styles from '../../vendorComps.module.scss';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import Loader from '@/components/common/Loader';
+import { isWordIncluded } from '@/helper/utils.helper';
 const AddExpertise = ({
   expertiseValue,
   setExpertise,
@@ -16,32 +17,24 @@ const AddExpertise = ({
   const handleExpretiseSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
-      setSelectedExpertise([...selectedExpertise, value]);
+      setSelectedExpertise([...(selectedExpertise || []), value]);
     } else {
-      setSelectedExpertise(selectedExpertise.filter((lang) => lang !== value));
+      setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
     }
   };
 
   const { catSubCat } = useHandleCatSubCat();
 
-  // const handleQuery = (event) => {
-  //   const query = event.target.value;
-  //   // setSearchQuery(query)
-  //   if (query.length > 0) {
-  //     setSearched(true);
-  //     setSearchedData([]);
-  //     const temp = subCat.filter((obj) => {
-  //       return obj.Name.toLowerCase().includes(query.toLowerCase());
-  //     });
-  //     setSearchedData(temp);
-  //   } else setSearched(false);
-  // };
-
-  if (!catSubCat.isDataLoaded)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+  if (!catSubCat.isDataLoaded) {
+    return (
+      <div className={`${styles.flexCenter}`} style={{ minHeight: '66vh' }}>
+        <Loader customStyles={{ height: '100%', background: 'transparent', overflow: 'hidden' }} />
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div style={{ minHeight: '66vh' }}>
       <SearchBar
         inputDataObj={{
           inputOptions: {
@@ -53,24 +46,26 @@ const AddExpertise = ({
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
-      {catSubCat?.cat?.map((data, index) => {
-        if (!catSubCat.subCatGrp?.[data.id]?.subCat?.length) return;
+      {Object.values(catSubCat?.subCatGrp)?.map((obj) => {
+        const filteredSubcat = obj?.subCat?.filter((sc) =>
+          isWordIncluded(sc?.Name, expertiseValue)
+        );
+        if (!filteredSubcat.length) return;
         return (
-          <div className={`${styles.expertise1}`}>
-            <h3>{data.Name}</h3>
-            {catSubCat?.subCat?.map((value) => {
-              if (value.CatId === data.id)
-                return (
-                  <div className={`${styles.expertiseCheckbox}`}>
-                    <LabeledRadioCheckbox
-                      type="checkbox"
-                      label={value.Name}
-                      value={value.Name}
-                      isChecked={selectedExpertise.includes(value.Name)}
-                      changeHandler={handleExpretiseSelection}
-                    />
-                  </div>
-                );
+          <div className={`${styles.expertise1}`} key={obj?.cat?.Name}>
+            <h3>{obj?.cat?.Name}</h3>
+            {filteredSubcat?.map((subCat) => {
+              return (
+                <div className={`${styles.expertiseCheckbox}`} key={subCat.Name}>
+                  <LabeledRadioCheckbox
+                    type="checkbox"
+                    label={subCat.Name}
+                    value={subCat.Name}
+                    isChecked={selectedExpertise?.includes(subCat.Name)}
+                    changeHandler={handleExpretiseSelection}
+                  />
+                </div>
+              );
             })}
           </div>
         );

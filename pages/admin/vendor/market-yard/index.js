@@ -29,6 +29,7 @@ export default function MarketYard() {
 
         <MarketYardData
           vendorType={vendorType?.value}
+          vendorService={vendorService?.value}
           displayRows={{
             isSmeDisplayed: vendorService?.value ? 'sme' === vendorService?.value : true,
             isCdDisplayed: vendorService?.value ? 'cd' === vendorService?.value : true,

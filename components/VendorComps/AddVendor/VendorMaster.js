@@ -4,8 +4,9 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { changeHandler, truncateToN } from '@/helper/common.helper';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
@@ -20,6 +21,7 @@ export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
@@ -28,10 +30,9 @@ export default function VendorMaster() {
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+  const isViewPage = router.asPath?.includes('view-vendor');
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
-
-  const isViewPage = router.asPath?.includes('view-vendor');
 
   useEffect(() => {
     setVendorData((prev) => ({
@@ -78,6 +79,8 @@ export default function VendorMaster() {
       45
     );
   }
+
+  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -164,7 +167,7 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            maxLength: 160,
+            maxLength: 500,
             value: vendorData?.description,
             isDisabled: isViewPage
           }}
@@ -172,12 +175,14 @@ export default function VendorMaster() {
         />
       </div>
       <div className={`${styles.input1}`}>
-        <label for="users">Add User: </label>
+        <label for="users">{isIndividualVendor ? 'Email' : 'Add User'}: </label>
         <MultiEmailInput
           type="External"
           items={emails}
           setItems={setEmails}
-          isDisabled={isViewPage || isVendor}
+          isDisabled={
+            isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
+          }
         />
       </div>
 
@@ -206,6 +211,7 @@ export default function VendorMaster() {
             inputName={socialMediaPopup[openSocialMedia].inputName}
             urlData={socialMediaInput}
             setUrlData={setSocialMediaInput}
+            isDisabled={isViewPage}
           />
         </VendorPopUp>
       )}

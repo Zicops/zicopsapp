@@ -53,15 +53,13 @@ export default function ManageVendor() {
                 label: 'Individual/Freelancer',
                 value: 'individual',
                 isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
                 isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />
             <AddVendor

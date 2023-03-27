@@ -153,16 +153,16 @@
   position: relative;
 
   .sampleFilePreview {
-    min-height: 40vh;
+    height: 60vh;
     object-fit: contain;
-    height: 100%;
-    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: auto;
 
-    img {
+    img,
+    video {
       height: 100%;
     }
   }
@@ -221,7 +221,7 @@
 
 .vendorDetailsContainer {
   width: 100%;
-  // height: 550px;
+
   margin-top: 20px;
   box-shadow: 0 0 20px 0 rgba($darkOne, 0.5);
   color: $white;
@@ -271,7 +271,7 @@
     height: 50px;
     border-radius: 5px;
     background-color: #5c5c5c;
-    color: white;
+    color: $white;
     border: 1px solid #5c5c5c;
     padding-left: 15px;
     background-image: url('/images/search3.png');
@@ -301,10 +301,6 @@
     align-items: center;
     justify-content: center;
     gap: 35px;
-    .arrowImage {
-      margin-right: 20px;
-      cursor: pointer;
-    }
   }
 
   .profileImage {
@@ -329,27 +325,37 @@
   .profileExperience {
     color: $bgBody;
   }
+  .rightSide {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    .servicesPillContainer {
+      .servicesPill {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        p {
+          background-color: transparent;
+          border: 1px solid $secondaryBlack;
+          color: $bgBody;
+        }
+      }
 
-  .servicesPillContainer {
-    .servicesPill {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       p {
-        background-color: transparent;
-        border: 1px solid $secondaryBlack;
-        color: $bgBody;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        background-color: $secondary;
+        border-radius: 5px;
       }
     }
-
-    p {
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 5px;
-      padding-top: 5px;
-      background-color: $secondary;
-      border-radius: 5px;
-    }
+  }
+  .arrowImage {
+    margin-right: 20px;
+    cursor: pointer;
   }
 }
 
@@ -736,9 +742,23 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img {
-          width: 30px;
-          height: 30px;
+        > img {
+          width: 20px;
+          // height: 30px;
+        }
+
+        .previewIcon,
+        .deleteIcon {
+          cursor: pointer;
+        }
+        .actionIcons {
+          display: flex;
+          width: 20px;
+          object-fit: cover;
+          gap: 5px;
+          img {
+            width: 100%;
+          }
         }
       }
     }
@@ -1248,6 +1268,10 @@
     padding-right: 15px;
     border-radius: 5px;
     cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+    }
   }
 }
 
@@ -1353,7 +1377,7 @@
     width: 33%;
 
     .currencyDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 
@@ -1361,20 +1385,18 @@
     width: 33%;
 
     .unitDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 }
 
 .marketYardFrameContainer {
   height: 50vh;
-  background: linear-gradient(
-    265.52deg,
-    #6bcfcf -12.05%,
-    #52b7bd -1.4%,
-    #369caa 72.51%,
-    #369caa 105.51%
-  );
+  background-image: url('/images/shop-transparent.png'),
+    linear-gradient(265.52deg, #6bcfcf -12.05%, #52b7bd -1.4%, #369caa 72.51%, #369caa 105.51%);
+  background-size: 60%, 100%;
+  background-position: bottom left;
+  background-repeat: no-repeat;
   position: relative;
 
   .frameImage {
@@ -1621,4 +1643,10 @@
       color: $black;
     }
   }
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
