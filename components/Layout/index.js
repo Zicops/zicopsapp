@@ -48,12 +48,6 @@ export default function Layout({ children }) {
 
     if (userAboutData?.isUserUpdated) return loadUserData();
 
-    // const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:<lsp_id>},{},userQueryClient);
-    // if(userLearningSpaceData?.error) return console.log('User lsp load error!');
-    // //temporary solution only valid for one lsp...need to change later!
-    // sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
-    // // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
-    // setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
     return;
   }, []);
 
