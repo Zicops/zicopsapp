@@ -11,13 +11,8 @@ export default function MarketYardData({
   searchText = null
 }) {
   const skeletonCardCount = 6;
-  const {
-    vendorDetails,
-    getLspVendors,
-    loading,
-    getLspSpeakers,
-    speakerDetails
-  } = useHandleMarketYard();
+  const { vendorDetails, getLspVendors, loading, getLspSpeakers, speakerDetails } =
+    useHandleMarketYard();
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
@@ -47,7 +42,7 @@ export default function MarketYardData({
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCdVendors(cdVendorList || []);
 
-    await getLspSpeakers(lspId, displayRows?.speakerType || null, searchText || '', false);
+    await getLspSpeakers(zicopsLsp, displayRows?.speakerType || null, searchText || '', false);
   }, [vendorType, vendorService, searchText, displayRows?.speakerType]);
 
   return (
