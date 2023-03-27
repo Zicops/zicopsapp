@@ -30,7 +30,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
     },[video1])
 
     useEffect(() => {
-        if ([userData.email].toString().includes('1000@')) {
+        if ([userData.email].toString().includes('@zicops')) {
             setMeetingIconAtom({
                 ...meetingIconsAtom,
                 isModerator: true
