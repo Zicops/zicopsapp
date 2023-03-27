@@ -12,6 +12,9 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   CdServicesAtom,
   CtServicesAtom,
+  getCDServicesObject,
+  getCTServicesObject,
+  getSMEServicesObject,
   SmeServicesAtom,
   VendorCurrentStateAtom
 } from '@/state/atoms/vendor.atoms';
@@ -33,9 +36,9 @@ export default function useHandleVendorServices() {
   const vendorId = router.query.vendorId || '0';
 
   const vendorCurrentState = useRecoilValue(VendorCurrentStateAtom);
-  const smeData = useRecoilValue(SmeServicesAtom);
-  const ctData = useRecoilValue(CtServicesAtom);
-  const cdData = useRecoilValue(CdServicesAtom);
+  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
+  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
+  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
 
   async function addUpdateSme(displayToaster = true) {
     if (!(smeData?.isApplicable || vendorCurrentState?.enabledServices?.includes('sme'))) return;
@@ -73,6 +76,19 @@ export default function useHandleVendorServices() {
       if (isError) return;
 
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+
+      const data = res?.data?.updateSubjectMatterExpertise;
+      setSMEData(
+        getSMEServicesObject({
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries,
+          sampleFiles: data?.sample_files
+        })
+      );
       return res?.data?.updateSubjectMatterExpertise;
     }
 
@@ -83,6 +99,19 @@ export default function useHandleVendorServices() {
     });
     if (isError) return;
     setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createSubjectMatterExpertise;
+    setSMEData(
+      getSMEServicesObject({
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries,
+        sampleFiles: data?.sample_files
+      })
+    );
     return res?.data?.createSubjectMatterExpertise;
   }
 
@@ -122,6 +151,19 @@ export default function useHandleVendorServices() {
 
       if (isError) return;
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+
+      const data = res?.data?.updateClassRoomTraining;
+      setCTData(
+        getCTServicesObject({
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries,
+          sampleFiles: data?.sample_files
+        })
+      );
       return res?.data?.updateClassRoomTraining;
     }
     const res = await createCrt({ variables: sendData }).catch((err) => {
@@ -131,6 +173,19 @@ export default function useHandleVendorServices() {
     });
     if (isError) return;
     setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createClassRoomTraining;
+    setCTData(
+      getCTServicesObject({
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries,
+        sampleFiles: data?.sample_files
+      })
+    );
     return res?.data?.createClassRoomTraining;
   }
 
@@ -171,6 +226,18 @@ export default function useHandleVendorServices() {
       if (isError) return;
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
 
+      const data = res?.data?.updateContentDevelopment;
+      setCDData(
+        getCDServicesObject({
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries,
+          sampleFiles: data?.sample_files
+        })
+      );
       return res?.data?.updateContentDevelopment;
     }
 
@@ -181,6 +248,19 @@ export default function useHandleVendorServices() {
     });
     if (isError) return;
     if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createContentDevelopment;
+    setCDData(
+      getCDServicesObject({
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries,
+        sampleFiles: data?.sample_files
+      })
+    );
     return res?.data?.createContentDevelopment;
   }
 
