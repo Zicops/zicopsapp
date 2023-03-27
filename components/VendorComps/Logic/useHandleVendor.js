@@ -8,7 +8,9 @@ import {
   INVITE_USERS_WITH_ROLE,
   UPDATE_EXPERIENCE_VENDOR,
   UPDATE_PROFILE_VENDOR,
+  UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_VENDOR,
+  UPDATE_VENDOR_USER_MAP,
   userClient
 } from '@/api/UserMutations';
 import {
@@ -19,6 +21,8 @@ import {
   GET_SINGLE_EXPERIENCE_DETAILS,
   GET_SINGLE_PROFILE_DETAILS,
   GET_SME_DETAILS,
+  GET_USER_LEARNINGSPACES,
+  GET_USER_LSP_ROLES,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_ADMINS,
@@ -26,11 +30,12 @@ import {
   GET_VENDOR_EXPERIENCES,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COURSE_STATUS,
   CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
+  USER_MAP_STATUS,
   USER_TYPE,
   VENDOR_MASTER_STATUS,
   VENDOR_MASTER_TYPE
@@ -53,6 +58,7 @@ import {
   getVendorObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorAdminsAtom,
   VendorAllExperiencesAtom,
   VendorExperiencesAtom,
   VendorProfileAtom,
@@ -77,6 +83,8 @@ export default function useHandleVendor() {
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+  const [updateUserLspMap] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, { client: userClient });
+  const [updateVendorUserMap] = useMutation(UPDATE_VENDOR_USER_MAP, { client: userClient });
 
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
@@ -94,11 +102,11 @@ export default function useHandleVendor() {
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
   const courseType = useRecoilValue(CourseTypeAtom);
+  const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [vendorAdminUsers, setVendorAdminUsers] = useState([]);
   const [vendorCourses, setVendorCourses] = useState([[...Array(skeletonCardCount)]]);
 
   const router = useRouter();
@@ -215,7 +223,7 @@ export default function useHandleVendor() {
   async function getAllVendors() {
     setLoading(true);
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList = await loadAndCacheDataAsync(
+    const vendorList = await loadQueryDataAsync(
       GET_VENDORS_BY_LSP_FOR_TABLE,
       { lsp_id: lspId },
       {},
@@ -263,7 +271,7 @@ export default function useHandleVendor() {
   async function getSingleVendorInfo() {
     if (!vendorId) return;
 
-    const vendorInfo = await loadAndCacheDataAsync(
+    const vendorInfo = await loadQueryDataAsync(
       GET_VENDOR_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -279,7 +287,7 @@ export default function useHandleVendor() {
     };
     setVendorData(getVendorObject(singleData));
 
-    setEmailId(vendorInfo?.getVendorDetails?.users || []);
+    // setEmailId(vendorInfo?.getVendorDetails?.users || []);
     return singleData;
   }
 
@@ -644,6 +652,87 @@ export default function useHandleVendor() {
       .catch((err) => console.log(err));
   }
 
+  async function handleRemoveUser(email) {
+    const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
+    console.info(email, vendorAdminUsers, vendorAdmin);
+
+    if (!vendorAdmin?.id) {
+      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
+      return null;
+    }
+
+    // load user's all lsp
+    const userLspDataRes = await loadQueryDataAsync(
+      GET_USER_LEARNINGSPACES,
+      { user_id: vendorAdmin?.id },
+      {},
+      userQueryClient
+    );
+
+    const userLspData = userLspDataRes?.getUserLsps || [];
+    const userLspIds = userLspData?.map((lspData) => lspData?.user_lsp_id);
+    if (!userLspIds?.length) {
+      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
+      return null;
+    }
+
+    // load user roles
+    const userLspRolesRes = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: vendorAdmin?.id, user_lsp_ids: userLspIds },
+      {},
+      userQueryClient
+    );
+
+    // map user lsp data and role
+    const userDataArr = userLspData
+      ?.map((lspData) => {
+        const _data = structuredClone(lspData);
+        // find active vendor role
+        const activeVendorRole = userLspRolesRes?.getUserLspRoles?.find(
+          (roleData) => roleData?.is_active && roleData?.role === USER_LSP_ROLE.vendor
+        );
+
+        if (!activeVendorRole?.user_role_id) return null;
+
+        return _data;
+      })
+      ?.filter((data) => !!data);
+
+    console.info(userDataArr);
+    let isError = false;
+
+    for (let i = 0; i < userDataArr.length; i++) {
+      const userData = userDataArr[i];
+
+      await updateUserLspMap({
+        variables: {
+          user_lsp_id: userData?.user_lsp_id,
+          user_id: vendorAdmin?.id,
+          lsp_id: userData?.lsp_id,
+          status: USER_MAP_STATUS.disable
+        }
+      }).catch(() => {
+        isError = true;
+        setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+      });
+    }
+
+    await updateVendorUserMap({
+      variables: { vendorId, userId: vendorAdmin?.id, status: USER_MAP_STATUS.disable }
+    }).catch(() => {
+      isError = true;
+      setToastMsg({ type: 'danger', message: 'Vendor User Map Update Error' });
+    });
+
+    if (isError) {
+      setToastMsg({ type: 'success', message: 'User Removed Successfully' });
+      return true;
+    }
+
+    return null;
+  }
+
   async function addUpdateExperience(displaySuccessToaster = false) {
     let isError = false;
     const experienceData = [];
@@ -856,6 +945,7 @@ export default function useHandleVendor() {
     getAllVendors,
     getUserVendors,
     syncIndividualVendorProfile,
+    handleRemoveUser,
     addUpdateExperience,
     addSampleFile,
     handleMail,

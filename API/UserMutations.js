@@ -1460,6 +1460,20 @@ export const UPDATE_VENDOR = gql`
   }
 `;
 
+export const UPDATE_VENDOR_USER_MAP = gql`
+  mutation updateVendorUserMap($vendorId: String, $userId: String, $status: String) {
+    updateVendorUserMap(vendor_id: $vendorId, user_id: $userId, status: $status) {
+      vendor_id
+      user_id
+      created_at
+      created_by
+      status
+      updated_at
+      updated_by
+    }
+  }
+`;
+
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!

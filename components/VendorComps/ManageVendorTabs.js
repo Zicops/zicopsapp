@@ -36,6 +36,7 @@ export default function ManageVendorTabs() {
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const {
+    vendorAdminUsers,
     getSingleVendorInfo,
     getSmeDetails,
     getCrtDetails,
@@ -45,6 +46,7 @@ export default function ManageVendorTabs() {
     getCDSampleFiles,
     getAllProfileInfo,
     getSingleProfileInfo,
+    getVendorAdmins,
     syncIndividualVendorProfile,
     handleMail
   } = useHandleVendor();
@@ -55,7 +57,7 @@ export default function ManageVendorTabs() {
   const isViewPage = router.asPath?.includes('view-vendor');
 
   const isIndividual =
-    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   // reset to default on load
   // NOTE: on load is saved is false which should ideally be false only if something is changed
@@ -86,15 +88,21 @@ export default function ManageVendorTabs() {
       if (cdData?.isApplicable) enabledServices.push('cd');
       setVendorCurrentState(getVendorCurrentStateObj({ enabledServices }));
 
+      getVendorAdmins();
       getSMESampleFiles();
       getCRTSampleFiles();
       getCDSampleFiles();
+
       const isIndividualVendor =
-        singleVendorInfo?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+        singleVendorInfo?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
       if (!isIndividualVendor) return getAllProfileInfo();
       if (isIndividualVendor) return getSingleProfileInfo(singleVendorInfo?.users?.[0]);
     }
   }, [vendorId]);
+
+  useEffect(() => {
+    setEmailId(vendorAdminUsers?.map((user) => user?.email) || []);
+  }, [vendorAdminUsers]);
 
   useEffect(() => {
     if (vendorCurrentState?.isSaved || isViewPage) {
@@ -135,7 +143,7 @@ export default function ManageVendorTabs() {
 
   // sync profile details for individual vendor
   useEffect(async () => {
-    if (vendorData?.type.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
+    if (vendorData?.type?.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
 
     const allServiceLanguages = [
       ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])

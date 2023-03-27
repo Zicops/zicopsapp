@@ -8,7 +8,11 @@ import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import {
+  VendorAdminsAtom,
+  VendorStateAtom,
+  vendorUserInviteAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -20,13 +24,14 @@ import AddUrl from './common/AddUrl';
 export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
-  const { handlePhotoInput } = useHandleVendor();
+  const { handlePhotoInput, handleRemoveUser } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -34,14 +39,12 @@ export default function VendorMaster() {
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
-  useEffect(() => {
-    setVendorData((prev) => ({
-      ...prev,
-      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]?.filter(
-        (e) => !!e
-      )
-    }));
-  }, [emails]);
+  // useEffect(() => {
+  //   setVendorData((prev) => ({
+  //     ...prev,
+  //     users: [...emails?.map((item) => item?.props?.children[0])]?.filter((e) => !!e)
+  //   }));
+  // }, [emails]);
 
   const socialMediaPopup = [
     {
@@ -182,6 +185,7 @@ export default function VendorMaster() {
           type="External"
           items={emails}
           setItems={setEmails}
+          beforeRemoveEmail={(email) => handleRemoveUser(email)}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }

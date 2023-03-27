@@ -39,7 +39,7 @@ const MyVendor = () => {
       field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Vendor Name',
-      flex: 1
+      flex: 2
     },
     {
       field: 'type',
@@ -50,15 +50,15 @@ const MyVendor = () => {
         <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>
       )
     },
-    {
-      field: 'services',
-      headerClassName: 'course-list-header',
-      headerName: 'Services',
-      flex: 1,
-      renderCell: (params) => {
-        return params?.row?.services?.join(', ').toUpperCase();
-      }
-    },
+    // {
+    //   field: 'services',
+    //   headerClassName: 'course-list-header',
+    //   headerName: 'Services',
+    //   flex: 1,
+    //   renderCell: (params) => {
+    //     return params?.row?.services?.join(', ').toUpperCase();
+    //   }
+    // },
     {
       field: 'status',
       headerClassName: 'course-list-header',

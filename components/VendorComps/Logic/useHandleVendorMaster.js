@@ -33,7 +33,8 @@ export default function useHandleVendorMaster() {
       instagram_url: vendorData?.instagramURL?.trim() || '',
       twitter_url: vendorData?.twitterURL?.trim() || '',
       linkedin_url: vendorData?.linkedinURL?.trim() || '',
-      users: vendorData?.users || [],
+      // users: vendorData?.users || [],
+      users: [],
       description: vendorData?.description?.trim() || '',
       status: VENDOR_MASTER_STATUS.active
     };

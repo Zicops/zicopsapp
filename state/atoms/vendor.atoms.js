@@ -104,6 +104,11 @@ export const VendorAllExperiencesAtom = atom({
   default: []
 });
 
+export const VendorAdminsAtom = atom({
+  key: 'VendorAdmins',
+  default: []
+});
+
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
   default: getSMEServicesObject()
