@@ -34,7 +34,7 @@ const VcMaintool = () => {
       document.mozFullscreenElement ||
       document.msFullscreenElement
   }
-  const startName = userData.first_name + " " + userData.last_name
+  const startName = userData?.first_name + " " + userData?.last_name
   return (
     <div ref={fullScreenRef}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}></div>
@@ -93,6 +93,7 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
+            // console.log(userData)
           api.getRoomsInfo().then(rooms => {
             setuserinfo(rooms.rooms[0].participants)
             setbreakoutListarr(rooms.rooms)
@@ -151,7 +152,7 @@ const VcMaintool = () => {
         {
           !hidecard ? <MeetingCard
             startMeeting={() => {
-              StartMeeting("standup", "sandeep", containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("zicops", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
               sethidecard(!hidecard)

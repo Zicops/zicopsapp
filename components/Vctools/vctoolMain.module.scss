@@ -27,8 +27,7 @@
 }
 
 
-.subvideo,
-.subVideo1 {
+.subvideo {
     z-index: 100;
     height: 270px;
     width: 519px;
@@ -42,8 +41,15 @@
     font-size: larger;
     font-weight: bold;
     color: white;
-    background-color: black;
+    background-color: #26292C;
 
+}
+.subVideo1>img 
+{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: auto;
 }
 
 .videoplay {
@@ -199,7 +205,14 @@
     height: 100%;
     width: 100vw;
 }
-
+// .subScreen
+// {
+//     position: absolute;
+//     top: 88px;
+//     bottom: 88px;
+//     left: 0;
+//    right: 0;
+// }
 .toolBarFooter {
     // opacity: 0;
     transition: opacity 0.2s;

@@ -3,9 +3,7 @@ import { RecoilRoot } from "recoil"
 const Vctool = () => {
     return (
         <>
-            <RecoilRoot>
-                <VcMaintool />
-            </RecoilRoot>
+            <VcMaintool />
         </>
     )
 };

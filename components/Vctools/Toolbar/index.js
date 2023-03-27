@@ -40,12 +40,12 @@ const MainToolbar = ({
 
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(breakoutRoomselectedparticipant)
   const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup)
-  const [fade1, setfade1] = useState(false);
+  const [fade1, setfade1] = useState(true);
   const [hand, sethand] = useState(true);
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
-  const [deletedPoupTitel,setDeletedPouptitle]=useState('')
+  const [deletedPoupTitel, setDeletedPouptitle] = useState('')
   const participantPopuppanel = useRecoilValue(particiantPopup)
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
   const [pollInfo, setPollInfo] = useRecoilState(pollArray)
@@ -118,7 +118,7 @@ const MainToolbar = ({
           }}
           deletePollPopUp={() => {
             setDeletedPouptitle('deletePopUp')
-      }} />
+          }} />
       )
     },
     {
@@ -210,8 +210,8 @@ const MainToolbar = ({
         popUpNotice: "Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?",
         poupBtnInfo1: "Cancel",
         poupBtnInfo2: "Delete"
-      }} 
-    />)
+      }}
+      />)
     }
   ];
   const clearTime = () => {
@@ -223,8 +223,6 @@ const MainToolbar = ({
     <div className={`${styles.toolBar}`}
       onMouseMove={(e) => {
         mouseMoveFun();
-        setfade1(true);
-        clearTimeout(clearTime())
       }}
       onMouseOver={() => {
         mouseMoveFun();
@@ -232,7 +230,7 @@ const MainToolbar = ({
       <div className={`${styles.toolBarnav}`}
         id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
         onMouseOver={() => {
-          setfade1(true);
+          // setfade1(true);
         }}>
 
         {
@@ -310,18 +308,19 @@ const MainToolbar = ({
       <div
         className={`${styles.screen}`}
         onMouseMove={() => {
-          setfade1(false);
+          // setfade1(true);
+          // setfade1(true);
+          // clearTimeout(clearTime())
         }}>
-
         <>{getClickedComponent(selectedButton)}
           {getClickedComponent(participantPopuppanel.roomId)}
           {getClickedComponent(deletedPoupTitel)}
-          </>
+        </>
       </div>
 
       <div className={`${styles.toolBarFooter}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} onMouseOver={() => {
-          setfade1(true);
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} 
+        onMouseOver={() => {
         }}>
         <div className={`${styles.footerLeft}`}>
           {

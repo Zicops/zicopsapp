@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcMeetingIconAtom, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { vcMeetingIconAtom, vctoolAlluserinfo, vcUserData } from '@/state/atoms/vctool.atoms';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { OnVideo, StopVideo } from "../help/vctool.helper";
@@ -16,7 +16,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
     let video = videoref.current;
     let startName = ""
     if (!!userData?.first_name)
-        startName = userData.first_name[0] + " " + userData.last_name[0];
+        startName = userData?.first_name[0] + " " + userData?.last_name[0];
     useEffect(() => {
         if (video1) {
             OnVideo(video, videoref)
@@ -27,16 +27,16 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
             StopVideo(video, videoref)
             nameRef.current.style.display = "block"
         }
-    })
+    },[video1])
 
     useEffect(() => {
-        if ([userData.email].toString().includes('@zicops')) {
+        if ([userData.email].toString().includes('1000@')) {
             setMeetingIconAtom({
                 ...meetingIconsAtom,
                 isModerator: true
             })
         }
-    })
+    },[userData])
     return (
         <div className={`${styles.vcCard}`}>
             <div className={`${styles.videoPlayer}`}>
@@ -47,7 +47,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
 
                     </video>
                     <div ref={nameRef} className={`${styles.subVideo1}`}>
-                        <h1>{startName}</h1>
+                     <img src={userData.photo_url}/>
                     </div>
 
                 </div>
@@ -72,7 +72,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            if (meetingInfo.length <= 1) {
+                            if (meetingInfo.length <=1) {
                                 setMeetingIconAtom({
                                     ...meetingIconsAtom,
                                     isJoinedAsModerator: true,
@@ -87,7 +87,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            if (meetingInfo.length <= 1) {
+                            if (meetingInfo.length <=1) {
                                 setMeetingIconAtom({
                                     ...meetingIconsAtom,
                                     // isJoinedAsModerator: true,
