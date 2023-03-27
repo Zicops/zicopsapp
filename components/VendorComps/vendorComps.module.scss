@@ -621,6 +621,10 @@
         margin-top: 10px;
         border: 1px solid $secondaryWhite;
         border-radius: 4px;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
 
@@ -643,6 +647,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
       .languages {
         display: flex;
@@ -682,6 +690,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
     .languages {
@@ -715,6 +727,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
   }
@@ -743,6 +759,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
     .showFilesMain {
@@ -766,16 +786,20 @@
         .previewIcon,
         .deleteIcon {
           cursor: pointer;
-        }
-        .actionIcons {
-          display: flex;
-          width: 20px;
-          object-fit: cover;
-          gap: 5px;
-          img {
-            width: 100%;
+
+          &:disabled {
+            opacity: 0.3;
           }
         }
+        // .actionIcons {
+        //   display: flex;
+        //   width: 20px;
+        //   object-fit: cover;
+        //   gap: 5px;
+        //   img {
+        //     width: 100%;
+        //   }
+        // }
       }
     }
 
