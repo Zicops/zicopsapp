@@ -587,7 +587,7 @@
 }
 
 // Stylling Polls
-.pollBar {
+.pollBar,.vcToolSettingContainer {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -598,7 +598,7 @@
     background-color: #1A1D21;
 }
 
-.pollHead {
+.pollHead,.vctToolSettingHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -615,12 +615,12 @@
     padding-bottom: 20px;
 }
 
-.pollScreen {
+.pollScreen,.vcToolSettingScreen {
     height: 91%;
     width: 296px;
 }
 
-.pollHead>button {
+.pollHead>button,.vctToolSettingHead>button {
     background-color: transparent;
     outline: none;
     border: none;

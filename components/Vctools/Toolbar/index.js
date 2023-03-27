@@ -17,6 +17,7 @@ import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, po
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
 import DeletePoUp from '../DeletePopUp';
+import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
   audiotoggle,
@@ -212,6 +213,15 @@ const MainToolbar = ({
         poupBtnInfo2: "Delete"
       }}
       />)
+    },
+    {
+      title: 'SettingPopup',
+      component: (
+       <SettingPopup hide={()=>
+      {
+        selectedButton === 'SettingPopup' ? setSelectedButton('') : setSelectedButton('SettingPopup')
+      }}/>
+      )
     }
   ];
   const clearTime = () => {
@@ -484,7 +494,10 @@ const MainToolbar = ({
               <VctoolButton
                 onClickfun={() => {
                   setShowSetting(!showSetting)
-                  showSettingFunc()
+                  selectedButton === 'SettingPopup'
+                    ? setSelectedButton('')
+                    : setSelectedButton('SettingPopup');
+            // SettingPopup
                 }}
                 trueSrc={'/images/svg/vctool/settings.svg'}
                 falseSrc={'/images/svg/vctool/settings.svg'}

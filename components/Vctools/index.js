@@ -141,10 +141,7 @@ const VcMaintool = () => {
             // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
             //         }  );
           }}
-          showSettingFunc={() => {
-            api.executeCommand('toggleVirtualBackgroundDialog');
-
-          }} />
+           />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.mainCard}`}>
