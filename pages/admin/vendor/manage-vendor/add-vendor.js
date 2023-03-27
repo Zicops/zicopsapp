@@ -14,7 +14,8 @@ import {
   getVendorObject,
   SmeServicesAtom,
   VendorProfileAtom,
-  VendorStateAtom
+  VendorStateAtom,
+  vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -25,6 +26,7 @@ export default function VendorInfo() {
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
   // reset all recoil state
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function VendorInfo() {
     setCTData(getCTServicesObject());
     setCDData(getCDServicesObject());
     setProfileData(getProfileObject());
+    setEmailId([]);
   }, []);
   return (
     <>

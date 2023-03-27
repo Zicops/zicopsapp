@@ -1,6 +1,7 @@
 import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
+  ADD_VENDOR_USER_MAP,
   CREATE_EXPERIENCE_VENDOR,
   CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
@@ -84,6 +85,7 @@ export default function useHandleVendor() {
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
   const [updateUserLspMap] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, { client: userClient });
+  const [addVendorUserMap] = useMutation(ADD_VENDOR_USER_MAP, { client: userClient });
   const [updateVendorUserMap] = useMutation(UPDATE_VENDOR_USER_MAP, { client: userClient });
 
   const fcmToken = useRecoilValue(FcmTokenAtom);
@@ -132,26 +134,27 @@ export default function useHandleVendor() {
     let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor },
-      update: (_, { data }) => {
-        handleCacheUpdate(
-          GET_VENDOR_DETAILS,
-          { vendor_id: vendorData?.vendorId },
-          (cachedData) => ({
-            getVendorDetails: {
-              ...cachedData?.getVendorDetails,
-              users: [...cachedData?.getVendorDetails?.users, ...emails]
-            }
-          }),
-          userQueryClient
-        );
-      }
-    }).catch((err) => {
-      console.log('error', err);
-      errorMsg = err.message;
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
+    })
+      .then(async (res) => {
+        if (!res?.data?.inviteUsersWithRole) return;
 
-      isError = !!err;
-    });
+        const invitedUsers = res?.data?.inviteUsersWithRole;
+        for (let i = 0; i < invitedUsers.length; i++) {
+          const userData = invitedUsers[i];
+          await addVendorUserMap({
+            variables: { vendorId, userId: userData?.user_id, status: USER_MAP_STATUS.activate }
+          }).catch((err) => console.log(err));
+        }
+
+        return res;
+      })
+      .catch((err) => {
+        console.log('error', err);
+        errorMsg = err.message;
+
+        isError = !!err;
+      });
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
     // if (isError) {
