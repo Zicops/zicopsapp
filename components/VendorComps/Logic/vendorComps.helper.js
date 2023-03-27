@@ -6,11 +6,13 @@ import AddVendorCourses from '../AddVendor/AddVendorCourses';
 import VendorOrders from '../VendorOrders';
 import VendorUsers from '../VendorUsers';
 import ProfileManageVendor from '../ProfileMangeVendor';
+import AddIndividualVendorExperience from '../AddVendor/AddIndividualVendorExperience';
 
 export const manageVendorTabData = [
   { name: 'Master', component: <VendorMaster /> },
   { name: 'Services', component: <AddVendorServices /> },
   { name: 'Profiles', component: <ProfileManageVendor /> },
+  { name: 'Experience', component: <AddIndividualVendorExperience /> },
   { name: 'Courses', component: <AddVendorCourses /> },
   { name: 'Orders', component: <VendorOrders /> },
   { name: 'Users', component: <VendorUsers /> }
@@ -23,56 +25,64 @@ export const myVendors = [
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '1',
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '2',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '3',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '4',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '5',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '6',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   },
   {
     id: '7',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc:
+      'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
   }
 ];
 

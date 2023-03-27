@@ -1,8 +1,14 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
+import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
+  CdServicesAtom,
+  CtServicesAtom,
+  getProfileObject,
   getVendorCurrentStateObj,
+  SmeServicesAtom,
   VendorCurrentStateAtom,
+  VendorProfileAtom,
   VendorStateAtom,
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
@@ -21,9 +27,12 @@ export default function ManageVendorTabs() {
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
   const [vendorCurrentState, setVendorCurrentState] = useRecoilState(VendorCurrentStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const { handleMail } = useHandleVendor();
-  const { addUpdateVendor, loading } = useHandleVendorMaster();
+  const { addUpdateVendor, loading, syncIndividualVendorProfile } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const {
@@ -34,13 +43,18 @@ export default function ManageVendorTabs() {
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,
-    getAllProfileInfo
+    getAllProfileInfo,
+    handleMail,
+    getSingleProfileInfo
   } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
   const shallowRoute = router.query?.shallowRoute || null;
   const isViewPage = router.asPath?.includes('view-vendor');
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   // reset to default on load
   // NOTE: on load is saved is false which should ideally be false only if something is changed
@@ -59,7 +73,7 @@ export default function ManageVendorTabs() {
     loadVendorDetails();
 
     async function loadVendorDetails() {
-      await getSingleVendorInfo();
+      const singleVendorInfo = await getSingleVendorInfo();
       const smeData = await getSmeDetails();
       const crtData = await getCrtDetails();
       const cdData = await getCdDetails();
@@ -73,7 +87,10 @@ export default function ManageVendorTabs() {
       getSMESampleFiles();
       getCRTSampleFiles();
       getCDSampleFiles();
-      getAllProfileInfo();
+      const isIndividualVendor =
+        singleVendorInfo?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+      if (!isIndividualVendor) return getAllProfileInfo();
+      if (isIndividualVendor) return getSingleProfileInfo(singleVendorInfo?.users?.[0]);
     }
   }, [vendorId]);
 
@@ -114,9 +131,38 @@ export default function ManageVendorTabs() {
     };
   }, [vendorCurrentState?.isSaved]);
 
+  // sync profile details for individual vendor
+  useEffect(async () => {
+    if (vendorData?.type.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
+
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
+
+    let [firstName, ...lastName] = vendorData?.name?.split(' ');
+    lastName = lastName.join(' ');
+    setProfileData(
+      getProfileObject({
+        ...profileData,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: vendorData?.users?.[0] || '',
+        description: vendorData?.description,
+        photoUrl: vendorData?.photoUrl,
+        profileImage: vendorData?.vendorProfileImage,
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.isApplicable ? smeData?.expertises : [],
+        crt_expertises: ctData?.isApplicable ? ctData?.expertises : [],
+        content_development: cdData?.isApplicable ? cdData?.expertises : []
+      })
+    );
+  }, [vendorData, smeData, cdData, ctData]);
+
   const tabData = manageVendorTabData;
 
-  tabData[4].isHidden = !isDev;
+  tabData[5].isHidden = !isDev;
+  tabData[3].isHidden = !isIndividual;
+  tabData[2].isHidden = isIndividual;
 
   const [tab, setTab] = useState(tabData[0].name);
 
@@ -133,6 +179,7 @@ export default function ManageVendorTabs() {
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
+            syncIndividualVendorProfile(id);
             handleMail();
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);

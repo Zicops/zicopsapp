@@ -48,7 +48,7 @@ export default function AddVendorServices() {
         if (value?.isDemo && !isDemo) return;
 
         return (
-          <ZicopsAccordian title={value.title}>
+          <ZicopsAccordian title={value.title} defaultState={true}>
             <AddServices
               data={value.data}
               setData={value.setData}

@@ -76,7 +76,7 @@ const FileManageVendor = ({ pType }) => {
 
         <div className={`${styles.addAnotherProfile}`}>
           <IconButton
-            text="Add another file"
+            text={!fileData ? 'Add File' : 'Add another file'}
             styleClass={`${styles.button}`}
             imgUrl="/images/svg/add_circle.svg"
             handleClick={() => {
@@ -94,7 +94,7 @@ const FileManageVendor = ({ pType }) => {
         size="large"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{
-          name: 'Done',
+          name: 'Add',
           handleClick: addNewSampleFileHendler
         }}
         isFooterVisible={true}>

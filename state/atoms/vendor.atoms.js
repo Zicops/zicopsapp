@@ -36,7 +36,8 @@ export function getVendorObject(data) {
     twitterURL: data?.twitterURL || '',
     description: data?.description || '',
     users: data?.users || [],
-    status: data?.status || VENDOR_MASTER_STATUS.draft
+    status: data?.status || VENDOR_MASTER_STATUS.draft,
+    fileUploadPercent: data?.fileUploadPercent || 0
   };
 }
 
@@ -47,6 +48,7 @@ export const VendorProfileAtom = atom({
 
 export function getProfileObject(data) {
   return {
+    vendorId: data?.vendorId || null,
     profileId: data?.profileId || null,
     firstName: data?.firstName || '',
     lastName: data?.lastName || '',
@@ -166,7 +168,8 @@ export function getSampleObject(data) {
     fileType: data?.fileType || '',
     rate: data?.rate || '',
     currency: data?.currency || '',
-    unit: data?.unit || ''
+    unit: data?.unit || '',
+    fileUploadPercent: data?.fileUploadPercent || 0
   };
 }
 export const allSampleFilesAtom = atom({

@@ -1,9 +1,11 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { API_LINKS, authLink } from './api.helper';
+import customFetch from './customFetch';
 
 const httpLink = createUploadLink({
-  uri: API_LINKS.userClient
+  uri: API_LINKS.userClient,
+  fetch: customFetch
 });
 
 export const userClient = new ApolloClient({

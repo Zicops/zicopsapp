@@ -51,7 +51,7 @@ export default function useProfile() {
   const cdData = useRecoilValue(CdServicesAtom);
 
   useEffect(async () => {
-    if (vendorData?.type !== VENDOR_MASTER_TYPE.individual) return;
+    if (vendorData?.type.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
     if (profileData?.profileId) return;
 
     const allServiceLanguages = [

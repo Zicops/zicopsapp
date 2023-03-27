@@ -71,17 +71,17 @@ export default function SampleFilePreview({
         {isDetailsOpen && (
           <div className={`${styles.sampleFileDetails}`}>
             <h3>Details</h3>
-
             <label>File Name</label>
+
             <p>{sampleFile?.title || 'NA'}</p>
-
             <label>File Description</label>
+
             <p>{sampleFile?.description || 'NA'}</p>
-
             <label>File Size</label>
-            <p>{sampleFile?.size || 'NA'}</p>
 
-            <label>Price</label>
+            {/*<p>{sampleFile?.size || 'NA'}</p>
+        <label>Price</label>*/}
+
             <p>
               {sampleFile?.rate} {sampleFile?.currency} {sampleFile.unit}
             </p>

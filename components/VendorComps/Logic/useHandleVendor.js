@@ -25,15 +25,17 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { convertUrlToFile } from '@/helper/common.helper';
 import {
   COURSE_STATUS,
   CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
   USER_TYPE,
-  VENDOR_MASTER_STATUS
+  VENDOR_MASTER_STATUS,
+  VENDOR_MASTER_TYPE
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
-import { getUnixFromDate } from '@/helper/utils.helper';
+import { getEncodedFileNameFromUrl, getUnixFromDate } from '@/helper/utils.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -97,6 +99,9 @@ export default function useHandleVendor() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
   const time = getUnixFromDate();
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   async function handleMail() {
     if (emailId.length === 0)
@@ -270,9 +275,12 @@ export default function useHandleVendor() {
     setVendorData(getVendorObject(singleData));
 
     setEmailId(vendorInfo?.getVendorDetails?.users || []);
+    return singleData;
   }
 
   async function getAllProfileInfo() {
+    if (isIndividual) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_ALL_PROFILE_DETAILS,
@@ -280,15 +288,18 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    const sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
+    let sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
       let experience = data?.experience?.length ? data?.experience : [];
-      return { ...data, experience: experience };
+      return { ...data, experience: experience, vendorId: data?.vendor_id };
     });
+
     setProfileDetails(sanetizeProfiles);
     setLoading(false);
   }
 
   async function getSingleProfileInfo(email) {
+    if (!email) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
@@ -296,7 +307,38 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setProfileData(getProfileObject(profileInfo));
+
+    let profileDetails = profileInfo?.viewProfileVendorDetails || {};
+
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
+
+    const individualVendorProfile = getProfileObject({
+      email: vendorData?.users?.[0],
+      profileId: profileDetails?.pf_id,
+      description: vendorData?.description,
+      languages: allServiceLanguages,
+      sme_expertises: smeData?.expertises,
+      crt_expertises: ctData?.expertises,
+      content_development: cdData?.expertises,
+      languages: allServiceLanguages,
+      firstName: profileDetails?.first_name,
+      lastName: profileDetails?.last_name,
+      contactNumber: profileDetails?.phone,
+      photoUrl: profileDetails?.photo_url,
+      experienceYear: profileDetails?.experience_years,
+      languages: profileDetails?.language,
+      isSpeaker: profileDetails?.is_speaker,
+      vendorId: profileDetails?.vendor_id
+    });
+
+    profileDetails = {
+      ...(profileDetails || {}),
+      ...individualVendorProfile
+    };
+
+    setProfileData(getProfileObject(profileDetails));
     setLoading(false);
   }
 
@@ -496,7 +538,7 @@ export default function useHandleVendor() {
         });
 
         if (isError) continue;
-        setToastMsg({ type: 'success', message: 'Experience Updated' });
+        // setToastMsg({ type: 'success', message: 'Experience Updated' });
         continue;
       }
 
@@ -507,7 +549,7 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        setToastMsg({ type: 'success', message: 'Experience Created' });
+        // setToastMsg({ type: 'success', message: 'Experience Created' });
         continue;
       }
     }
@@ -562,7 +604,16 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    const res = await createSampleFiles({ variables: sendData }).catch((err) => {
+    const res = await createSampleFiles({
+      variables: sendData,
+      context: {
+        fetchOptions: {
+          useUpload: true,
+          onProgress: (ev) =>
+            setSampleData({ ...sampleData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
+        }
+      }
+    }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Create Sample Error' });

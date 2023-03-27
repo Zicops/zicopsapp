@@ -70,9 +70,6 @@ export default function VendorMaster() {
     }
   ];
 
-  if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
-
   function getFileName() {
     return truncateToN(
       vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
@@ -80,7 +77,11 @@ export default function VendorMaster() {
     );
   }
 
-  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -128,6 +129,7 @@ export default function VendorMaster() {
             inputName="vendorProfileImage"
             isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             isDisabled={isViewPage}
+            progressPercent={+vendorData?.fileUploadPercent || null}
           />
         </div>
       </div>
@@ -174,7 +176,7 @@ export default function VendorMaster() {
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
-      <div className={`${styles.input1}`}>
+      <div className={`${styles.email}`}>
         <label for="users">{isIndividualVendor ? 'Email' : 'Add User'}: </label>
         <MultiEmailInput
           type="External"

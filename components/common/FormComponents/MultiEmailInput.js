@@ -19,6 +19,7 @@ export default function MultiEmailInput({
   const [value, setValue] = useState('');
 
   function handleKeyDown(evt) {
+    if (isDisabled) return;
     if (['Enter', 'Tab', ','].includes(evt.key)) {
       evt.preventDefault();
 
@@ -38,6 +39,7 @@ export default function MultiEmailInput({
   }
 
   function handleChange(val, actionType) {
+    if (isDisabled) return;
     if (actionType?.action !== 'input-change') return;
     // if (!isEmail(value)) return;
     setError(null);
@@ -153,6 +155,7 @@ export default function MultiEmailInput({
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}
           onChange={(removedEmailList, actionType) => {
+            if (isDisabled) return;
             if (actionType?.action === 'remove-value') {
               setRemoveEmail({
                 emailListAfterRemoval: removedEmailList.map((email) => email.value),
