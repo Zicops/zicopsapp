@@ -8,8 +8,10 @@ export default function MultiEmailInput({
   type = 'Internal',
   items = [],
   setItems,
+  beforeRemoveEmail = async () => true,
   isDisabled = false
 }) {
+  console.info(beforeRemoveEmail);
   const [removeEmail, setRemoveEmail] = useState({
     emailListAfterRemoval: [],
     isConfirmDisplayed: false,
@@ -175,8 +177,12 @@ export default function MultiEmailInput({
           <ConfirmPopUp
             title={`Are you sure, you want to remove ${removeEmail?.removeEmail || 'email'}?`}
             btnObj={{
-              handleClickLeft: () => {
-                setItems(removeEmail?.emailListAfterRemoval);
+              handleClickLeft: async () => {
+                const shouldRemove = await beforeRemoveEmail(removeEmail?.removeEmail);
+                console.info(shouldRemove);
+
+                if (shouldRemove) setItems(removeEmail?.emailListAfterRemoval);
+
                 setRemoveEmail({
                   emailListAfterRemoval: [],
                   isConfirmDisplayed: false,
