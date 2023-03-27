@@ -185,7 +185,10 @@ export default function VendorMaster() {
           type="External"
           items={emails}
           setItems={setEmails}
-          beforeRemoveEmail={async (email) => await handleRemoveUser(email)}
+          beforeRemoveEmail={async (email) => {
+            console.info('function passed', email);
+            await handleRemoveUser(email);
+          }}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }
