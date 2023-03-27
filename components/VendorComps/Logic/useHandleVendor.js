@@ -2,10 +2,12 @@ import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
   CREATE_EXPERIENCE_VENDOR,
+  CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
   DELETE_SAMPLE_FILE,
   INVITE_USERS_WITH_ROLE,
   UPDATE_EXPERIENCE_VENDOR,
+  UPDATE_PROFILE_VENDOR,
   UPDATE_VENDOR,
   userClient
 } from '@/api/UserMutations';
@@ -25,7 +27,6 @@ import {
   userQueryClient
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
-import { convertUrlToFile } from '@/helper/common.helper';
 import {
   COURSE_STATUS,
   CUSTOM_ERROR_MESSAGE,
@@ -35,7 +36,7 @@ import {
   VENDOR_MASTER_TYPE
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
-import { getEncodedFileNameFromUrl, getUnixFromDate } from '@/helper/utils.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -46,6 +47,7 @@ import {
   CtServicesAtom,
   getCDServicesObject,
   getCTServicesObject,
+  getExperiencesObject,
   getProfileObject,
   getSMEServicesObject,
   getVendorObject,
@@ -58,6 +60,7 @@ import {
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -71,6 +74,8 @@ export default function useHandleVendor() {
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
+  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
 
   const fcmToken = useRecoilValue(FcmTokenAtom);
@@ -333,9 +338,31 @@ export default function useHandleVendor() {
       vendorId: profileDetails?.vendor_id
     });
 
+    const experienceRes = await getProfileExperience(profileDetails?.pf_id);
+
     profileDetails = {
       ...(profileDetails || {}),
-      ...individualVendorProfile
+      ...individualVendorProfile,
+      experienceData: experienceRes?.map((exp) => {
+        const startDate = moment(exp?.StartDate * 1000);
+        const endDate = moment(exp?.EndDate * 1000);
+        const isCurrentlyWorking = +exp?.EndDate === 0;
+
+        return getExperiencesObject({
+          expId: exp?.ExpId,
+          pfId: exp?.PfId,
+          title: exp?.Title,
+          companyName: exp?.CompanyName,
+          location: exp?.Location,
+          isWorking: isCurrentlyWorking,
+          employeeType: exp?.EmployementType,
+          locationType: exp?.LocationType,
+          startMonth: startDate?.format('MMMM'),
+          startYear: startDate?.format('YYYY'),
+          endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
+          endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+        });
+      })
     };
 
     setProfileData(getProfileObject(profileDetails));
@@ -502,8 +529,124 @@ export default function useHandleVendor() {
     setVendorCourses(courseInfo?.latestCourses?.courses);
   }
 
-  async function addUpdateExperience() {
+  // for individual vendor
+  async function syncIndividualVendorProfile(_vendorId = null, displaySuccessToaster = false) {
+    if (!isIndividual) return null;
+    if (!(vendorId || _vendorId)) return null;
+    if (!profileData?.email) return null;
+
+    const experienceRes = await addUpdateExperience(displaySuccessToaster);
+
+    const experienceData = experienceRes?.map((exp) => {
+      const startDate = moment(exp?.StartDate * 1000);
+      const endDate = moment(exp?.EndDate * 1000);
+      const isCurrentlyWorking = +exp?.EndDate === 0;
+
+      return getExperiencesObject({
+        expId: exp?.ExpId,
+        pfId: exp?.PfId,
+        title: exp?.Title,
+        companyName: exp?.CompanyName,
+        location: exp?.Location,
+        isWorking: isCurrentlyWorking,
+        employeeType: exp?.EmployementType,
+        locationType: exp?.LocationType,
+        startMonth: startDate?.format('MMMM'),
+        startYear: startDate?.format('YYYY'),
+        endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
+        endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+      });
+    });
+
+    const sendData = {
+      vendor_id: vendorId || _vendorId,
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: profileData?.languages || [],
+      SME_Expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      content_development: profileData?.content_development || [],
+      experience: [],
+      experienceYear: profileData?.experienceYear || '',
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
+      await updateProfileVendor({ variables: sendData })
+        .then((response) => {
+          const res = response?.data?.updateProfileVendor || {};
+
+          const resData = {
+            vendorId: res?.vendor_id || '',
+            profileId: res?.pf_id || '',
+            firstName: res?.first_name || '',
+            lastName: res?.last_name || '',
+            email: res?.email || '',
+            contactNumber: res?.phone || '',
+            description: res?.description || '',
+            photoUrl: res?.photo_url || '',
+            experienceYears: res?.experience_years || '',
+            languages: res?.language || '',
+            sme_expertises: res?.sme_expertise || '',
+            crt_expertises: res?.classroom_expertise || '',
+            content_development: res?.content_development || '',
+            experience: res?.experience || '',
+            isSpeaker: res?.is_speaker || '',
+            sme: res?.sme || '',
+            crt: res?.crt || '',
+            cd: res?.cd || ''
+          };
+
+          if (!!displaySuccessToaster)
+            setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+          setProfileData(getProfileObject({ ...profileData, ...resData, experienceData }));
+        })
+        .catch((err) => console.log(err));
+
+      return;
+    }
+
+    await createProfileVendor({ variables: sendData })
+      .then((response) => {
+        const res = response?.data?.createProfileVendor || {};
+
+        const resData = {
+          vendorId: res?.vendor_id || '',
+          profileId: res?.pf_id || '',
+          firstName: res?.first_name || '',
+          lastName: res?.last_name || '',
+          email: res?.email || '',
+          contactNumber: res?.phone || '',
+          description: res?.description || '',
+          photoUrl: res?.photo_url || '',
+          experienceYears: res?.experience_years || '',
+          languages: res?.language || '',
+          sme_expertises: res?.sme_expertise || '',
+          crt_expertises: res?.classroom_expertise || '',
+          content_development: res?.content_development || '',
+          experience: res?.experience || '',
+          isSpeaker: res?.is_speaker || '',
+          sme: res?.sme || '',
+          crt: res?.crt || '',
+          cd: res?.cd || ''
+        };
+
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
+        setProfileData(getProfileObject({ ...profileData, ...resData, experienceData }));
+      })
+      .catch((err) => console.log(err));
+  }
+
+  async function addUpdateExperience(displaySuccessToaster = false) {
     let isError = false;
+    const experienceData = [];
     for (let i = 0; i < profileData?.experienceData?.length; i++) {
       const exp = profileData?.experienceData?.[i];
       const isWorking = exp?.isWorking;
@@ -538,7 +681,9 @@ export default function useHandleVendor() {
         });
 
         if (isError) continue;
-        // setToastMsg({ type: 'success', message: 'Experience Updated' });
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Experience Updated' });
+        experienceData.push(res?.data?.updateExperienceVendor);
         continue;
       }
 
@@ -549,11 +694,15 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        // setToastMsg({ type: 'success', message: 'Experience Created' });
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Experience Created' });
+
+        experienceData.push(res?.data?.createExperienceVendor);
         continue;
       }
     }
-    // return isError;
+
+    return experienceData;
   }
 
   async function addSampleFile(ptype) {
@@ -706,6 +855,7 @@ export default function useHandleVendor() {
     getCdDetails,
     getAllVendors,
     getUserVendors,
+    syncIndividualVendorProfile,
     addUpdateExperience,
     addSampleFile,
     handleMail,

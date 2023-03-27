@@ -92,7 +92,6 @@ const AddVendorProfile = ({ data = {} }) => {
 
   if (vendorId && profileData?.vendorId !== vendorId)
     return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
-
   return (
     <div className={`${styles.inputMain}`}>
       <div className={`${styles.inputContainer}`}>
