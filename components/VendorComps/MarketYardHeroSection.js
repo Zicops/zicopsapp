@@ -46,7 +46,10 @@ export default function MarketYardHeroSection({
                 value: vendorType,
                 options: [
                   { label: 'All', value: null },
-                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({ label: val, value: val }))
+                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({
+                    label: <span style={{ textTransform: 'capitalize' }}>{val}</span>,
+                    value: val
+                  }))
                 ]
               }}
               changeHandler={(val) => setVendorType(val)}
