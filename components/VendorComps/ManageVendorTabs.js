@@ -64,8 +64,7 @@ export default function ManageVendorTabs() {
   useEffect(() => {
     if (!router.isReady) return;
     if (shallowRoute) return;
-    if (vendorId) return;
-    if (!vendorCurrentState?.isSaved) return;
+    if (vendorCurrentState?.isSaved) return;
 
     setVendorCurrentState(getVendorCurrentStateObj());
   }, [router.isReady, vendorData, smeData, ctData, cdData]);
@@ -189,12 +188,16 @@ export default function ManageVendorTabs() {
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
         handleSubmit: async () => {
-          setVendorCurrentState({ ...vendorCurrentState, isUpdating: true });
+          const _currentState = structuredClone(vendorCurrentState);
+          _currentState.isUpdating = true;
+          if (!vendorId) _currentState.isSaved = true;
+          setVendorCurrentState(_currentState);
+
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
             syncIndividualVendorProfile(id, tab === vendorTabData.experience.name);
-            handleMail();
+            handleMail(id);
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);
           const crtData = await addUpdateCrt(tab === tabData[1].name);
