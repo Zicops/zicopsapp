@@ -64,10 +64,24 @@ export default function ManageVendorTabs() {
   useEffect(() => {
     if (!router.isReady) return;
     if (shallowRoute) return;
-    if (vendorCurrentState?.isSaved) return;
+    if (!vendorCurrentState?.isSaved) return;
 
     setVendorCurrentState(getVendorCurrentStateObj());
-  }, [router.isReady, vendorData, smeData, ctData, cdData]);
+  }, [
+    router.isReady,
+    vendorData?.name,
+    vendorData?.address,
+    vendorData?.vendorAdminUsers,
+    vendorData?.website,
+    vendorData?.facebookURL,
+    vendorData?.instagramURL,
+    vendorData?.twitterURL,
+    vendorData?.linkedinURL,
+    vendorData?.description,
+    smeData,
+    ctData,
+    cdData
+  ]);
 
   useEffect(() => {
     if (shallowRoute) return;
