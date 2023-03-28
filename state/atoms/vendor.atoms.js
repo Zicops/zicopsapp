@@ -1,6 +1,11 @@
 import { atom } from 'recoil';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
+export const IsVendorAdminLoadingAtom = atom({
+  key: 'IsVendorAdminLoading',
+  default: null
+});
+
 export const VendorCurrentStateAtom = atom({
   key: 'VendorCurrentState',
   default: getVendorCurrentStateObj()

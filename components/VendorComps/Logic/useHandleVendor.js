@@ -57,6 +57,7 @@ import {
   getProfileObject,
   getSMEServicesObject,
   getVendorObject,
+  IsVendorAdminLoadingAtom,
   SampleAtom,
   SmeServicesAtom,
   VendorAdminsAtom,
@@ -105,6 +106,7 @@ export default function useHandleVendor() {
   const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
   const courseType = useRecoilValue(CourseTypeAtom);
   const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
+  const [isVendorAdminLoading, setIsVendorAdminLoading] = useRecoilState(IsVendorAdminLoadingAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -118,7 +120,7 @@ export default function useHandleVendor() {
   const isIndividual =
     vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
-  async function handleMail() {
+  async function handleMail(id) {
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
     let emails = emailId?.map((item) => item?.props?.children[0])?.filter((e) => !!e);
@@ -142,8 +144,14 @@ export default function useHandleVendor() {
         const invitedUsers = res?.data?.inviteUsersWithRole;
         for (let i = 0; i < invitedUsers.length; i++) {
           const userData = invitedUsers[i];
+          if (!userData?.user_id) continue;
+
           await addVendorUserMap({
-            variables: { vendorId, userId: userData?.user_id, status: USER_MAP_STATUS.activate }
+            variables: {
+              vendorId: vendorId || id,
+              userId: userData?.user_id,
+              status: USER_MAP_STATUS.activate
+            }
           }).catch((err) => console.log(err));
         }
 
@@ -176,7 +184,8 @@ export default function useHandleVendor() {
       let message = user?.message;
       if (
         message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
-        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist ||
+        !user?.user_id
       )
         existingEmails.push(user?.email);
       else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
@@ -189,16 +198,19 @@ export default function useHandleVendor() {
           'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
       });
     }
-    const resTags = await addUserTags({
-      variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
-      context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
-    }).catch((err) => {
-      isError = true;
-    });
+    if (userLspMaps?.length) {
+      const resTags = await addUserTags({
+        variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+      }).catch((err) => {
+        isError = true;
+      });
+    }
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    getVendorAdmins(id);
   }
 
   function handlePhotoInput(e) {
@@ -255,20 +267,21 @@ export default function useHandleVendor() {
     setLoading(false);
   }
 
-  async function getVendorAdmins() {
+  async function getVendorAdmins(id) {
     if (!userData?.id) return;
+    setIsVendorAdminLoading(true);
+
     // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
-    setLoading(true);
     const res = await loadQueryDataAsync(
       GET_VENDOR_ADMINS,
-      { vendor_id: vendorId },
+      { vendor_id: vendorId || id },
       {},
       userClient
     );
     const _sortedData = sortArrByKeyInOrder(res?.getVendorAdmins || [], 'updated_at', false);
 
     setVendorAdminUsers(_sortedData);
-    setLoading(false);
+    setIsVendorAdminLoading(false);
   }
 
   async function getSingleVendorInfo() {
@@ -657,12 +670,8 @@ export default function useHandleVendor() {
 
   async function handleRemoveUser(email) {
     const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
-    console.info(email, vendorAdminUsers, vendorAdmin);
-
-    if (!vendorAdmin?.id) {
-      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
-      return null;
-    }
+    // for local delete (email is just added and user is try to remove)
+    if (!vendorAdmin?.id) return true;
 
     // load user's all lsp
     const userLspDataRes = await loadQueryDataAsync(
@@ -702,7 +711,6 @@ export default function useHandleVendor() {
       })
       ?.filter((data) => !!data);
 
-    console.info(userDataArr);
     let isError = false;
 
     for (let i = 0; i < userDataArr.length; i++) {

@@ -55,16 +55,6 @@ export default function useHandleVendorMaster() {
             onProgress: (ev) =>
               setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
           }
-        },
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => ({
-              getVendorDetails: { ...cachedData?.getVendorDetails, ...data?.updateVendor }
-            }),
-            userQueryClient
-          );
         }
       }).catch((err) => {
         console.log(err);
@@ -88,21 +78,6 @@ export default function useHandleVendorMaster() {
             onProgress: (ev) =>
               setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
           }
-        },
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => {
-              const _cachedData = structuredClone(cachedData?.getVendorDetails);
-              const _updatedCache = data?.addVendor?.[0]
-                ? [data?.addVendor?.[0], ..._cachedData]
-                : _cachedData;
-
-              return { getVendorDetails: _updatedCache };
-            },
-            userQueryClient
-          );
         }
       }).catch((err) => {
         console.log(err);

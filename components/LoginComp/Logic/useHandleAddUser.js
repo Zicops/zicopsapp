@@ -97,7 +97,6 @@ export default function useHandleAddUserDetails() {
 
   // setting up local states
   useEffect(() => {
-    console.info('recoil: ', userDataAbout, 'local: ', userAboutData);
     setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
