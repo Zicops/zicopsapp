@@ -11,7 +11,6 @@ export default function MultiEmailInput({
   beforeRemoveEmail = async () => true,
   isDisabled = false
 }) {
-  console.info(beforeRemoveEmail);
   const [removeEmail, setRemoveEmail] = useState({
     emailListAfterRemoval: [],
     isConfirmDisplayed: false,
@@ -179,7 +178,6 @@ export default function MultiEmailInput({
             btnObj={{
               handleClickLeft: async () => {
                 const shouldRemove = await beforeRemoveEmail(removeEmail?.removeEmail);
-                console.info(shouldRemove);
 
                 if (shouldRemove) setItems(removeEmail?.emailListAfterRemoval);
 

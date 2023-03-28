@@ -657,7 +657,6 @@ export default function useHandleVendor() {
 
   async function handleRemoveUser(email) {
     const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
-    console.info(email, vendorAdminUsers, vendorAdmin);
 
     if (!vendorAdmin?.id) {
       setToastMsg({ type: 'danger', message: 'Something went wrong!' });
@@ -702,7 +701,6 @@ export default function useHandleVendor() {
       })
       ?.filter((data) => !!data);
 
-    console.info(userDataArr);
     let isError = false;
 
     for (let i = 0; i < userDataArr.length; i++) {
