@@ -209,8 +209,13 @@ export function getOrderObject(data) {
 }
 export const ServicesAtom = atom({
   key: 'servicesState',
-  default: getServicesObject()
+  default: getVendorServicesObject()
 });
+
+export function getVendorServicesObject() {
+  return { sme: [], crt: [], cd: [], speakers: [] };
+}
+
 export function getServicesObject(data) {
   return {
     serviceId: data?.service_id || '',
@@ -224,4 +229,13 @@ export function getServicesObject(data) {
     total: data?.total || 0,
     status: data?.status || ''
   };
+}
+
+export const VendorServicesListAtom = atom({
+  key: 'vendorServicesList',
+  default: getVendorServicesList()
+});
+
+export function getVendorServicesList() {
+  return { sme: false, crt: false, cd: false, speakers: false };
 }

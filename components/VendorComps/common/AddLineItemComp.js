@@ -8,13 +8,15 @@ import { ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 
-export default function AddLineItemComp() {
+export default function AddLineItemComp({ index, service }) {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
   const decrementHandler = () => {
-    if (servicesData?.quantity > 0) {
-      setServicesData({ ...servicesData, quantity: servicesData?.quantity - 1 });
-    }
+    if (servicesData?.[service]?.[index]?.quantity === 0) return;
+
+    const tempArray = structuredClone(servicesData);
+    tempArray[service][index].quantity -= 1;
+    setServicesData(tempArray);
   };
   return (
     <div className={`${styles.lineContainer}`}>
@@ -27,9 +29,13 @@ export default function AddLineItemComp() {
             placeholder: 'Line item description (in 60 chars)',
             rows: 3,
             maxLength: 60,
-            value: servicesData?.description
+            value: servicesData?.[service]?.[index]?.description
           }}
-          changeHandler={(e) => changeHandler(e, servicesData, setServicesData)}
+          changeHandler={(e) => {
+            const tempArray = structuredClone(servicesData);
+            tempArray[service][index].description = e.target.value;
+            setServicesData(tempArray);
+          }}
         />
       </div>
       <div>
@@ -39,12 +45,16 @@ export default function AddLineItemComp() {
             inputName: 'unit',
             placeholder: '/hour',
             value: {
-              label: servicesData?.unit,
-              value: servicesData?.unit
+              label: servicesData?.[service]?.[index]?.unit,
+              value: servicesData?.[service]?.[index]?.unit
             },
             options: unit
           }}
-          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'unit')}
+          changeHandler={(e) => {
+            const tempArray = structuredClone(servicesData);
+            tempArray[service][index].unit = e.value;
+            setServicesData(tempArray);
+          }}
         />
       </div>
       <div>
@@ -54,12 +64,16 @@ export default function AddLineItemComp() {
             inputName: 'currency',
             placeholder: 'INR',
             value: {
-              label: servicesData?.currency,
-              value: servicesData?.currency
+              label: servicesData?.[service]?.[index]?.currency,
+              value: servicesData?.[service]?.[index]?.currency
             },
             options: currency
           }}
-          changeHandler={(e) => changeHandler(e, servicesData, setServicesData, 'currency')}
+          changeHandler={(e) => {
+            const tempArray = structuredClone(servicesData);
+            tempArray[service][index].currency = e.value;
+            setServicesData(tempArray);
+          }}
         />
       </div>
       <div>
@@ -68,22 +82,29 @@ export default function AddLineItemComp() {
           inputOptions={{
             inputName: 'rate',
             placeholder: '',
-            value: servicesData?.rate
+            value: servicesData?.[service]?.[index]?.rate,
+            isNumericOnly: true
           }}
           inputClass={`${styles.lineInput}`}
-          changeHandler={(e) => changeHandler(e, servicesData, setServicesData)}
+          changeHandler={(e) => {
+            const tempArray = structuredClone(servicesData);
+            tempArray[service][index].rate = e.target.value;
+            setServicesData(tempArray);
+          }}
         />
       </div>
       <div>
         <p className={`${styles.heading}`}>Quantity</p>
         <div className={`${styles.quantity}`}>
           <span onClick={decrementHandler}>-</span>
-          <p>{servicesData?.quantity}</p>
+          <p>{servicesData?.[service]?.[index]?.quantity}</p>
 
           <span
-            onClick={() =>
-              setServicesData({ ...servicesData, quantity: servicesData?.quantity + 1 })
-            }>
+            onClick={() => {
+              const tempArray = structuredClone(servicesData);
+              tempArray[service][index].quantity += 1;
+              setServicesData(tempArray);
+            }}>
             +
           </span>
         </div>
@@ -91,7 +112,9 @@ export default function AddLineItemComp() {
       <div>
         <p className={`${styles.heading}`}>Total</p>
         <div className={`${styles.total}`}>
-          <p>{servicesData?.rate * servicesData?.quantity}</p>
+          <p>
+            {servicesData?.[service]?.[index]?.rate * servicesData?.[service]?.[index]?.quantity}
+          </p>
         </div>
       </div>
     </div>

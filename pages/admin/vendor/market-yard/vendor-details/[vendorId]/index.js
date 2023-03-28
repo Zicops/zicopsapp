@@ -20,9 +20,14 @@ import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   allProfileAtom,
-  SevicesAtom,
+  ServicesAtom,
   VendorProfileAtom,
-  VendorStateAtom
+  VendorStateAtom,
+  vendorServicesList,
+  VendorServicesListAtom,
+  getVendorServicesObject,
+  getServicesObject,
+  getVendorServicesList
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -34,7 +39,7 @@ export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const vendorSingleProfiles = useRecoilValue(VendorProfileAtom);
-  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
@@ -42,7 +47,9 @@ export default function VendorInfo() {
   const [addTax, setAddTax] = useState(false);
   const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] = useState([]);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] = useRecoilState(
+    VendorServicesListAtom
+  );
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -65,14 +72,12 @@ export default function VendorInfo() {
   useEffect(() => {
     getAllProfileInfo();
     getSingleVendorInfo(vendorId);
-  }, []);
-
-  useEffect(() => {
     getVendorServices(vendorId);
   }, []);
 
   const onOpenPopup = () => {
-    setSelectedServicesForOrder([]);
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
     setShowPopup(true);
   };
 
@@ -182,7 +187,7 @@ export default function VendorInfo() {
         submitBtn={{
           name: 'Next',
           handleClick: addOrderHandler,
-          disabled: selectedServicesForOrder ? false : true
+          disabled: Object.values(selectedServicesForOrder).some((v) => v) ? false : true
         }}>
         <p>Choose Service Type</p>
         {services?.map((data, index) => {
@@ -192,13 +197,17 @@ export default function VendorInfo() {
                 type="checkbox"
                 label={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
                 value={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
+                isChecked={selectedServicesForOrder?.[data]}
                 changeHandler={(e) => {
                   const { value, checked } = e.target;
-                  if (checked) setSelectedServicesForOrder([...selectedServicesForOrder, value]);
-                  if (!checked)
-                    setSelectedServicesForOrder(
-                      selectedServicesForOrder.filter((lang) => lang !== value)
-                    );
+                  const _orderList = structuredClone(selectedServicesForOrder);
+                  _orderList[data] = checked;
+
+                  const _serviceData = structuredClone(servicesData);
+                  _serviceData[data] = checked ? [getServicesObject()] : [];
+                  setServicesData(_serviceData);
+
+                  setSelectedServicesForOrder(_orderList);
                 }}
               />
             </div>
@@ -260,5 +269,4 @@ export default function VendorInfo() {
       </VendorPopUp>
     </>
   );
-
 }
