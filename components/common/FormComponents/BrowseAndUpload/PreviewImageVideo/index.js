@@ -33,7 +33,10 @@ export default function PreviewImageVideo({
         isFooterVisible={false}>
         {isVideo ? (
           <div style={{ position: 'relative', width: '100%', height: '60vh', textAlign: 'center' }}>
-            <video controls src={fileSrc || filePath} style={{ height: '100%', maxWidth: '100%' }}></video>
+            <video
+              controls
+              src={fileSrc || filePath}
+              style={{ height: '100%', maxWidth: '100%' }}></video>
           </div>
         ) : (
           <div style={{ position: 'relative', width: '100%', paddingBottom: '60%' }}>
