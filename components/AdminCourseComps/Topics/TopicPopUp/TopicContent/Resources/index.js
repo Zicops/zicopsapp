@@ -125,7 +125,7 @@ const Resource = () => {
             <div className={`w-100 text-center`}></div>
 
             {/* footer btn */}
-            <div className="center-element-with-flex">
+            <div className={`${styles.resourceBtns}`}>
               <Button
                 text="Cancel"
                 // clickHandler={toggleResourceForm}
