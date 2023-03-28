@@ -9,6 +9,7 @@ export default function MultiEmailInput({
   items = [],
   setItems,
   beforeRemoveEmail = async () => true,
+  isLoading = false,
   isDisabled = false,
   isEmailRemovable = true
 }) {
@@ -150,7 +151,8 @@ export default function MultiEmailInput({
           styles={customStyles}
           isMulti={true}
           isClearable={false}
-          isDisabled={isDisabled}
+          isLoading={isLoading}
+          isDisabled={isDisabled || isLoading}
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}
           onChange={(removedEmailList, actionType) => {

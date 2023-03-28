@@ -57,6 +57,7 @@ import {
   getProfileObject,
   getSMEServicesObject,
   getVendorObject,
+  IsVendorAdminLoadingAtom,
   SampleAtom,
   SmeServicesAtom,
   VendorAdminsAtom,
@@ -105,6 +106,7 @@ export default function useHandleVendor() {
   const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
   const courseType = useRecoilValue(CourseTypeAtom);
   const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
+  const [isVendorAdminLoading, setIsVendorAdminLoading] = useRecoilState(IsVendorAdminLoadingAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
@@ -182,7 +184,8 @@ export default function useHandleVendor() {
       let message = user?.message;
       if (
         message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
-        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist ||
+        !user?.user_id
       )
         existingEmails.push(user?.email);
       else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
@@ -207,6 +210,7 @@ export default function useHandleVendor() {
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
     setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    getVendorAdmins(id);
   }
 
   function handlePhotoInput(e) {
@@ -263,20 +267,21 @@ export default function useHandleVendor() {
     setLoading(false);
   }
 
-  async function getVendorAdmins() {
+  async function getVendorAdmins(id) {
     if (!userData?.id) return;
+    setIsVendorAdminLoading(true);
+
     // if(!userOrgData?.user_lsp_role !== USER_LSP_ROLE?.vendor) return ;
-    setLoading(true);
     const res = await loadQueryDataAsync(
       GET_VENDOR_ADMINS,
-      { vendor_id: vendorId },
+      { vendor_id: vendorId || id },
       {},
       userClient
     );
     const _sortedData = sortArrByKeyInOrder(res?.getVendorAdmins || [], 'updated_at', false);
 
     setVendorAdminUsers(_sortedData);
-    setLoading(false);
+    setIsVendorAdminLoading(false);
   }
 
   async function getSingleVendorInfo() {

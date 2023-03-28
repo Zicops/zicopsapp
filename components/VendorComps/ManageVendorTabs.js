@@ -95,12 +95,14 @@ export default function ManageVendorTabs() {
       const isIndividualVendor =
         singleVendorInfo?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
       if (!isIndividualVendor) return getAllProfileInfo();
-      if (isIndividualVendor) return getSingleProfileInfo(singleVendorInfo?.users?.[0]);
     }
   }, [vendorId]);
 
   useEffect(() => {
     setEmailId(vendorAdminUsers?.map((user) => user?.email) || []);
+
+    if (isIndividual && vendorAdminUsers?.[0]?.email)
+      getSingleProfileInfo(vendorAdminUsers?.[0]?.email);
   }, [vendorAdminUsers]);
 
   useEffect(() => {
@@ -155,7 +157,8 @@ export default function ManageVendorTabs() {
         ...profileData,
         firstName: firstName || '',
         lastName: lastName || '',
-        email: vendorData?.users?.[0] || '',
+        email:
+          emailId?.map((item) => item?.props?.children?.[0] || item)?.filter((e) => !!e)?.[0] || '',
         description: vendorData?.description,
         photoUrl: vendorData?.photoUrl,
         profileImage: vendorData?.vendorProfileImage,
@@ -165,7 +168,7 @@ export default function ManageVendorTabs() {
         content_development: cdData?.isApplicable ? cdData?.expertises : []
       })
     );
-  }, [vendorData, smeData, cdData, ctData]);
+  }, [vendorData, smeData, cdData, ctData, emailId]);
 
   const _tabDataObj = { ...vendorTabData };
   _tabDataObj.orders.isHidden = !isDev;
