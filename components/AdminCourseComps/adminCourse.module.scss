@@ -516,3 +516,48 @@
     line-height: 24px;
     color: #ACACAC;
 }
+
+
+
+//  styling Topic contains
+.resourceAddBtn
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+ .resourceTypeContainer {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+  .flexCenterWithGap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  .topicContentSmallBtn {
+    min-width: 100px;
+    width: 100px;
+    padding: 8px 10px;
+  }
+  
+
+//   styling Quiz 
+.editQuizBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  
+    .editQuiz {
+      height: 20px;
+      cursor: pointer;
+  
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }

@@ -1,6 +1,8 @@
 import useHandleTopicContent from '@/components/AdminCourseComps/Logic/useHandleTopicContent';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
+import Quiz from './Quiz';
+import Resource from './Resources';
 import TopicContentForm from './TopicContentForm';
 
 export default function TopicContent({ topData = null, closePopUp = () => {} }) {
@@ -17,11 +19,11 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     },
     {
       title: 'Quiz',
-      body: 'Quiz'
+      body: <Quiz/>
     },
     {
       title: 'Resources',
-      body: 'Quiz'
+      body: <Resource/>
     }
   ];
 
