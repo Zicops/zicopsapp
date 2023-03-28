@@ -28,6 +28,8 @@ import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketY
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import ProfileExperience from '@/components/VendorComps/ProfileExperience';
+import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
+
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
@@ -40,11 +42,12 @@ export default function VendorInfo() {
   const [addTax, setAddTax] = useState(false);
   const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] = useState([]);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices } = useHandleMarketYard();
+  const { addUpdateServices, services, getVendorServices } = useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -64,7 +67,12 @@ export default function VendorInfo() {
     getSingleVendorInfo(vendorId);
   }, []);
 
+  useEffect(() => {
+    getVendorServices(vendorId);
+  }, []);
+
   const onOpenPopup = () => {
+    setSelectedServicesForOrder([]);
     setShowPopup(true);
   };
 
@@ -73,7 +81,7 @@ export default function VendorInfo() {
     setShowPopup(false);
   };
 
-  const addOrderHandler = () => {
+  const addOrderHandler = (e) => {
     setAddRate(true);
     setAddOrder(false);
   };
@@ -171,12 +179,28 @@ export default function VendorInfo() {
         size="small"
         isMarketYard={true}
         closeBtn={{ name: 'Back', handleClick: backFirstPopUpHandler }}
-        submitBtn={{ name: 'Next', handleClick: addOrderHandler }}>
+        submitBtn={{
+          name: 'Next',
+          handleClick: addOrderHandler,
+          disabled: selectedServicesForOrder ? false : true
+        }}>
         <p>Choose Service Type</p>
-        {serviceType?.map((data, index) => {
+        {services?.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox1}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
+                value={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
+                changeHandler={(e) => {
+                  const { value, checked } = e.target;
+                  if (checked) setSelectedServicesForOrder([...selectedServicesForOrder, value]);
+                  if (!checked)
+                    setSelectedServicesForOrder(
+                      selectedServicesForOrder.filter((lang) => lang !== value)
+                    );
+                }}
+              />
             </div>
           );
         })}
@@ -236,4 +260,5 @@ export default function VendorInfo() {
       </VendorPopUp>
     </>
   );
+
 }
