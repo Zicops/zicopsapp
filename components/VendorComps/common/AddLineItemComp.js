@@ -4,12 +4,12 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import { useState } from 'react';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { currency, unit } from '../Logic/vendorComps.helper';
-import { SevicesAtom } from '@/state/atoms/vendor.atoms';
+import { ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 
 export default function AddLineItemComp() {
-  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
   const decrementHandler = () => {
     if (servicesData?.quantity > 0) {

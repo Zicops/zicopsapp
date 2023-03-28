@@ -1,14 +1,13 @@
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import { useState } from 'react';
 import styles from './vendorComps.module.scss';
 import AddLineItemComp from './common/AddLineItemComp';
+import { ServicesAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
 const AddLineItem = () => {
   const [isExpertise, setIsExpertise] = useState(true);
   const [addLine, setAddLine] = useState(1);
-
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const addAnotherItemHandler = () => setAddLine(addLine + 1);
   return (
     <div>
@@ -20,7 +19,7 @@ const AddLineItem = () => {
         />
       </div>
 
-      {Array.from(Array(addLine).keys())?.map((item) => (
+      {Array.from(Array(addLine).keys())?.map((item, i) => (
         <AddLineItemComp />
       ))}
 
