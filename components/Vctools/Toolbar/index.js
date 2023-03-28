@@ -53,15 +53,6 @@ const MainToolbar = ({
   const [showSetting, setShowSetting] = useState(false)
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
 
-  useEffect(() => {
-    if (meetingIconsAtom?.isStartAdd) {
-      startAdvertisement()
-    }
-    else if (!meetingIconsAtom?.isStartAdd) {
-      stopAdvertisement()
-    }
-  })
-
   function getClickedComponent(title) {
     if (title === '') return <></>;
     const compObj = toolBarData?.find((obj) => obj.title === title);

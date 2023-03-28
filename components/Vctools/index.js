@@ -40,17 +40,29 @@ const VcMaintool = () => {
   {
     if(isMeetingStarted)
     {
-      if(!controlls.onVideo)
+      if(controlls.onVideo)
       {
         api.executeCommand('muteEveryone', 'video');
       }
-      if(!controlls.onMic)
+      if(controlls.onMic)
       {
         api.executeCommand('muteEveryone', 'audio');
       }
     }
      
   },[controlls])
+
+
+  useEffect(() => {
+    if(isMeetingStarted){
+      if (meetingIconsAtom?.isStartAdd) {
+        api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+      }
+      else if (!meetingIconsAtom?.isStartAdd) {
+        api.executeCommand('stopShareVideo');
+      }
+    }
+  })
   const startName = userData?.first_name + " " + userData?.last_name
   return (
     <div ref={fullScreenRef}>
@@ -86,8 +98,9 @@ const VcMaintool = () => {
             })).catch((e) => {
             })
             setFullscreen(false)
-            setisStarted(false)
+            // setisStarted(false)
             setIsMeetingStarted(false)
+            
           }}
           shareScreen={() => {
             api.executeCommand('toggleShareScreen');
@@ -138,12 +151,12 @@ const VcMaintool = () => {
           // getUesrId={userinfo}
           isStarted={isStarted}
           startAdvertisement={() => {
-            api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+         
           }}
 
           stopAdvertisement={() => {
             // 
-            api.executeCommand('stopShareVideo');
+      
 
           }}
           CreateBreakoutroomlist={() => {

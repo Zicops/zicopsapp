@@ -6,8 +6,8 @@ export const joinMeeting=atom({
 export const vcModeratorControlls=atom({
     key:"vcModeratorControlls",
     default:{
-        onMic:true,                  //set mic and video on and off
-        onVideo:true
+        onMic:false,                  //set mic and video on and off
+        onVideo:false
     }
 })
 export const vcMeetingIconAtom = atom({

@@ -1,4 +1,6 @@
 import LabeledDropdown from "@/components/common/FormComponents/LabeledDropdown";
+import RangeSlider from "@/components/common/FormComponents/RangeSlider";
+import StyledSlider from "@/components/common/FormComponents/RangeSlider/StyledSlider";
 import styles from "../vctoolMain.module.scss"
 import style from "./vctoolSetting.module.scss"
 const SettingPopup = ({ hide }) => {
@@ -58,11 +60,14 @@ const SettingPopup = ({ hide }) => {
                 </div>
 
                 <div className={`${style.vctoolPerformanceContainer}`}>
-                <p>Audio & Video</p>
+                    <p>Audio & Video</p>
+                    <div className={`${styles.rsliderContainer}`}>
+                       <RangeSlider/>
+                    </div>
                 </div>
 
                 <div className={`${style.vctoolLayout}`}>
-                <p>Layout</p>
+                    <p>Layout</p>
                 </div>
             </div>
         </div>

@@ -1,7 +1,8 @@
 import styles from "../vctoolMain.module.scss"
-const ResourcePage=({hide=false})=>
-{
-    return(
+import CreateResource from "./CreateResource";
+import ResourcesQA from "./ResourcesQA";
+const ResourcePage = ({ hide = false }) => {
+    return (
         <div className={`${styles.resourceBar}`}>
             <div className={`${styles.resourceHead}`}>
                 <div>Resources</div>
@@ -11,13 +12,12 @@ const ResourcePage=({hide=false})=>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>
             </div>
-            
+
             <div className={`${styles.resourceScreen}`}>
-            <div className={`${styles.resourceScreenhead}`}>All files</div>
-
-
+                {/* <CreateResource /> */}
+                <ResourcesQA/>
             </div>
-          
+
         </div>
     )
 };

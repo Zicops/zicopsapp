@@ -44,8 +44,8 @@
     background-color: #26292C;
 
 }
-.subVideo1>img 
-{
+
+.subVideo1>img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -205,6 +205,7 @@
     height: 100%;
     width: 100vw;
 }
+
 // .subScreen
 // {
 //     position: absolute;
@@ -587,7 +588,8 @@
 }
 
 // Stylling Polls
-.pollBar,.vcToolSettingContainer {
+.pollBar,
+.vcToolSettingContainer {
     z-index: 1020;
     width: 336px;
     position: absolute;
@@ -598,7 +600,8 @@
     background-color: #1A1D21;
 }
 
-.pollHead,.vctToolSettingHead {
+.pollHead,
+.vctToolSettingHead {
     padding-top: 20px;
     width: 296px;
     height: 28px;
@@ -615,12 +618,14 @@
     padding-bottom: 20px;
 }
 
-.pollScreen,.vcToolSettingScreen {
+.pollScreen,
+.vcToolSettingScreen {
     height: 91%;
     width: 296px;
 }
 
-.pollHead>button,.vctToolSettingHead>button {
+.pollHead>button,
+.vctToolSettingHead>button {
     background-color: transparent;
     outline: none;
     border: none;
@@ -1939,9 +1944,74 @@
     align-items: center;
 }
 
+.resourcesQAContainer {
+    width: 100%;
+}
+
+.resourcesQAContainer>p {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.resourcesInputs {
+    width: 296px;
+    padding-top: 8px;
+    margin: auto;
+    background-color: #26292C;
+    padding-bottom: 12px;
+
+    p {
+        padding-left: 8px;
+        font-weight: 400;
+        font-size: 16px;
+        margin-bottom: 6px;
+        color: #ACACAC;
+    }
+}
+
+.resourceInputLable {
+    width: 276px;
+    margin: auto;
+    background-color: #26292C;
+}
+
+.resourcedragAndDropContainer {
+    width: 296px;
+
+    p {
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #ACACAC;
+    }
+}
+
+.resourcedragAndDrop {
+    width: 296px;
+    height: 200px;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23292F2FFF' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    margin-top: 12px;
+}
+
+// styling resources QA
 .aboutMeetingLogo>img {
     height: 20px;
     width: 22.1px;
+}
+
+.resourceName {
+    width: 276px;
+    height: 35px;
+    // margin: auto;
+    font-size: 14px;
+    margin-left: 9px;
+    border: none;
+    padding-left: 8px;
+    outline: none;
+    background-color: #1A1D21;
 }
 
 // styling quiz bar
@@ -2024,10 +2094,10 @@
     width: 70%;
     display: flex;
     justify-content: right;
-}
 
-.quizeExpand>img {
-    width: 12px;
+    img {
+        width: 12px;
+    }
 }
 
 .questionScreen {
@@ -2043,18 +2113,21 @@
     border: none;
 }
 
-.moderatorQuize {
+.moderatorQuize,
+.resourceModeratorContainer {
     width: 296px;
     height: 90%;
 }
 
-.quizModeratorScreen {
+.quizModeratorScreen,
+.resourceModeratorScreen {
     width: 296px;
     height: 99%;
 
 }
 
-.moderatorAddQuiz {
+.moderatorAddQuiz,
+.moderatorAddResource {
     width: 296px;
     height: 100%;
     display: flex;
@@ -2063,7 +2136,8 @@
     flex-direction: column;
 }
 
-.quizAvailableHead {
+.quizAvailableHead,
+.resourceAvailableHead {
     width: 276px;
     height: 28px;
     // 
@@ -2075,7 +2149,8 @@
     color: #ACACAC;
 }
 
-.quizAvailablesubHead {
+.quizAvailablesubHead,
+.resourceAvailablesubHead {
     width: 276px;
     height: 24px;
     // 
@@ -2088,7 +2163,8 @@
     color: #747474;
 }
 
-.addQuizBtn {
+.addQuizBtn,
+.addResourceBtn {
     width: 296px;
     height: 48px;
     display: flex;
@@ -2110,7 +2186,8 @@
     }
 }
 
-.quizIcon {
+.quizIcon,
+.recourceIcon {
     width: 55px;
     height: 55px;
     border: solid #292F2F 1px;
@@ -2444,8 +2521,8 @@
     height: 40px;
     margin-top: 12px;
 }
-.hostControlls>div
-{
+
+.hostControlls>div {
     width: 75%;
     display: flex;
     font-weight: 400;
