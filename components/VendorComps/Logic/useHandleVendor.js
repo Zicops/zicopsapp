@@ -665,11 +665,8 @@ export default function useHandleVendor() {
 
   async function handleRemoveUser(email) {
     const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
-
-    if (!vendorAdmin?.id) {
-      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
-      return null;
-    }
+    // for local delete (email is just added and user is try to remove)
+    if (!vendorAdmin?.id) return true;
 
     // load user's all lsp
     const userLspDataRes = await loadQueryDataAsync(
