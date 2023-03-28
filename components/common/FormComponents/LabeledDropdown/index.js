@@ -1,4 +1,5 @@
 import Select from 'react-select';
+import Creatable from 'react-select/creatable';
 import { labeledDropdownWrapper } from '../formComponents.module.scss';
 import { customSelectStyles } from '../Logic/formComponents.helper';
 
@@ -10,7 +11,8 @@ export default function LabeledDropdown({
   changeHandler,
   filterOption,
   isFiftyFifty = false,
-  customDropdownStyles = {}
+  customDropdownStyles = {},
+  isCreateable = false
 }) {
   let {
     inputName,
@@ -45,30 +47,57 @@ export default function LabeledDropdown({
           {label}
         </label>
       )}
-      <Select
-        options={options}
-        value={selectedValue}
-        filterOption={filterOption}
-        name={inputName}
-        placeholder={placeholder}
-        onChange={changeHandler}
-        className={`${label ? '' : 'w-100'} ${isError ? 'headShake' : ''}`}
-        menuPlacement={menuPlacement}
-        styles={customSelectStyles(
-          isFiftyFifty,
-          containerWidth,
-          isError,
-          isReadonly,
-          customDropdownStyles
-        )}
-        isSearchable={!!isSearchEnable}
-        isDisabled={!!isDisabled}
-        isLoading={isLoading}
-        isOptionDisabled={(option) => option.disabled}
-        noOptionsMessage={() => noOptionsMessage}
-        isMulti={!!isMulti}
-        isClearable={false}
-      />
+      {!isCreateable ? (
+        <Select
+          options={options}
+          value={selectedValue}
+          filterOption={filterOption}
+          name={inputName}
+          placeholder={placeholder}
+          onChange={changeHandler}
+          className={`${label ? '' : 'w-100'} ${isError ? 'headShake' : ''}`}
+          menuPlacement={menuPlacement}
+          styles={customSelectStyles(
+            isFiftyFifty,
+            containerWidth,
+            isError,
+            isReadonly,
+            customDropdownStyles
+          )}
+          isSearchable={!!isSearchEnable}
+          isDisabled={!!isDisabled}
+          isLoading={isLoading}
+          isOptionDisabled={(option) => option.disabled}
+          noOptionsMessage={() => noOptionsMessage}
+          isMulti={!!isMulti}
+          isClearable={false}
+        />
+      ) : (
+        <Creatable
+          options={options}
+          value={selectedValue}
+          filterOption={filterOption}
+          name={inputName}
+          placeholder={placeholder}
+          onChange={changeHandler}
+          className={`${label ? '' : 'w-100'} ${isError ? 'headShake' : ''}`}
+          menuPlacement={menuPlacement}
+          styles={customSelectStyles(
+            isFiftyFifty,
+            containerWidth,
+            isError,
+            isReadonly,
+            customDropdownStyles
+          )}
+          isSearchable={!!isSearchEnable}
+          isDisabled={!!isDisabled}
+          isLoading={isLoading}
+          isOptionDisabled={(option) => option.disabled}
+          noOptionsMessage={() => noOptionsMessage}
+          isMulti={!!isMulti}
+          isClearable={false}
+        />
+      )}
     </div>
   );
 }

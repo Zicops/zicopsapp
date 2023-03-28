@@ -1,12 +1,17 @@
 import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import {
+  ADD_VENDOR_USER_MAP,
   CREATE_EXPERIENCE_VENDOR,
+  CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
   DELETE_SAMPLE_FILE,
   INVITE_USERS_WITH_ROLE,
   UPDATE_EXPERIENCE_VENDOR,
+  UPDATE_PROFILE_VENDOR,
+  UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_VENDOR,
+  UPDATE_VENDOR_USER_MAP,
   userClient
 } from '@/api/UserMutations';
 import {
@@ -17,6 +22,8 @@ import {
   GET_SINGLE_EXPERIENCE_DETAILS,
   GET_SINGLE_PROFILE_DETAILS,
   GET_SME_DETAILS,
+  GET_USER_LEARNINGSPACES,
+  GET_USER_LSP_ROLES,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
   GET_VENDOR_ADMINS,
@@ -24,12 +31,15 @@ import {
   GET_VENDOR_EXPERIENCES,
   userQueryClient
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
   COURSE_STATUS,
+  CUSTOM_ERROR_MESSAGE,
   USER_LSP_ROLE,
+  USER_MAP_STATUS,
+  USER_TYPE,
   VENDOR_MASTER_STATUS,
-  USER_TYPE
+  VENDOR_MASTER_TYPE
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -43,11 +53,13 @@ import {
   CtServicesAtom,
   getCDServicesObject,
   getCTServicesObject,
+  getExperiencesObject,
   getProfileObject,
   getSMEServicesObject,
   getVendorObject,
   SampleAtom,
   SmeServicesAtom,
+  VendorAdminsAtom,
   VendorAllExperiencesAtom,
   VendorExperiencesAtom,
   VendorProfileAtom,
@@ -55,6 +67,7 @@ import {
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -68,7 +81,12 @@ export default function useHandleVendor() {
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
+  const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
+  const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+  const [updateUserLspMap] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, { client: userClient });
+  const [addVendorUserMap] = useMutation(ADD_VENDOR_USER_MAP, { client: userClient });
+  const [updateVendorUserMap] = useMutation(UPDATE_VENDOR_USER_MAP, { client: userClient });
 
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
@@ -86,16 +104,19 @@ export default function useHandleVendor() {
   const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
   const [profileExperience, setProfileExperience] = useRecoilState(VendorAllExperiencesAtom);
   const courseType = useRecoilValue(CourseTypeAtom);
+  const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [vendorAdminUsers, setVendorAdminUsers] = useState([]);
   const [vendorCourses, setVendorCourses] = useState([[...Array(skeletonCardCount)]]);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
   const time = getUnixFromDate();
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   async function handleMail() {
     if (emailId.length === 0)
@@ -113,26 +134,27 @@ export default function useHandleVendor() {
     let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor },
-      update: (_, { data }) => {
-        handleCacheUpdate(
-          GET_VENDOR_DETAILS,
-          { vendor_id: vendorData?.vendorId },
-          (cachedData) => ({
-            getVendorDetails: {
-              ...cachedData?.getVendorDetails,
-              users: [...cachedData?.getVendorDetails?.users, ...emails]
-            }
-          }),
-          userQueryClient
-        );
-      }
-    }).catch((err) => {
-      console.log('error', err);
-      errorMsg = err.message;
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
+    })
+      .then(async (res) => {
+        if (!res?.data?.inviteUsersWithRole) return;
 
-      isError = !!err;
-    });
+        const invitedUsers = res?.data?.inviteUsersWithRole;
+        for (let i = 0; i < invitedUsers.length; i++) {
+          const userData = invitedUsers[i];
+          await addVendorUserMap({
+            variables: { vendorId, userId: userData?.user_id, status: USER_MAP_STATUS.activate }
+          }).catch((err) => console.log(err));
+        }
+
+        return res;
+      })
+      .catch((err) => {
+        console.log('error', err);
+        errorMsg = err.message;
+
+        isError = !!err;
+      });
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
     // if (isError) {
@@ -144,11 +166,29 @@ export default function useHandleVendor() {
 
     // if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     // console.log(resEmail);
-    const userLspMaps = resEmail?.data?.inviteUsersWithRole?.map((user) => ({
-      user_id: user?.user_id,
-      user_lsp_id: user?.user_lsp_id
-    }));
 
+    const resEmails = resEmail?.data?.inviteUsersWithRole;
+    let userLspMaps = [];
+
+    let existingEmails = [];
+
+    resEmails?.forEach((user) => {
+      let message = user?.message;
+      if (
+        message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist
+      )
+        existingEmails.push(user?.email);
+      else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
+    });
+
+    if (!!existingEmails?.length) {
+      setToastMsg({
+        type: 'info',
+        message:
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+      });
+    }
     const resTags = await addUserTags({
       variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
       context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
@@ -186,7 +226,7 @@ export default function useHandleVendor() {
   async function getAllVendors() {
     setLoading(true);
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendorList = await loadAndCacheDataAsync(
+    const vendorList = await loadQueryDataAsync(
       GET_VENDORS_BY_LSP_FOR_TABLE,
       { lsp_id: lspId },
       {},
@@ -234,7 +274,7 @@ export default function useHandleVendor() {
   async function getSingleVendorInfo() {
     if (!vendorId) return;
 
-    const vendorInfo = await loadAndCacheDataAsync(
+    const vendorInfo = await loadQueryDataAsync(
       GET_VENDOR_DETAILS,
       { vendor_id: vendorId },
       {},
@@ -250,10 +290,13 @@ export default function useHandleVendor() {
     };
     setVendorData(getVendorObject(singleData));
 
-    setEmailId(vendorInfo?.getVendorDetails?.users || []);
+    // setEmailId(vendorInfo?.getVendorDetails?.users || []);
+    return singleData;
   }
 
   async function getAllProfileInfo() {
+    if (isIndividual) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_ALL_PROFILE_DETAILS,
@@ -261,15 +304,18 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    const sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
+    let sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
       let experience = data?.experience?.length ? data?.experience : [];
-      return { ...data, experience: experience };
+      return { ...data, experience: experience, vendorId: data?.vendor_id };
     });
+
     setProfileDetails(sanetizeProfiles);
     setLoading(false);
   }
 
   async function getSingleProfileInfo(email) {
+    if (!email) return;
+
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
       GET_SINGLE_PROFILE_DETAILS,
@@ -277,7 +323,60 @@ export default function useHandleVendor() {
       {},
       userQueryClient
     );
-    setProfileData(getProfileObject(profileInfo));
+
+    let profileDetails = profileInfo?.viewProfileVendorDetails || {};
+
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
+
+    const individualVendorProfile = getProfileObject({
+      email: vendorData?.users?.[0],
+      profileId: profileDetails?.pf_id,
+      description: vendorData?.description,
+      languages: allServiceLanguages,
+      sme_expertises: smeData?.expertises,
+      crt_expertises: ctData?.expertises,
+      content_development: cdData?.expertises,
+      languages: allServiceLanguages,
+      firstName: profileDetails?.first_name,
+      lastName: profileDetails?.last_name,
+      contactNumber: profileDetails?.phone,
+      photoUrl: profileDetails?.photo_url,
+      experienceYear: profileDetails?.experience_years,
+      languages: profileDetails?.language,
+      isSpeaker: profileDetails?.is_speaker,
+      vendorId: profileDetails?.vendor_id
+    });
+
+    const experienceRes = await getProfileExperience(profileDetails?.pf_id);
+
+    profileDetails = {
+      ...(profileDetails || {}),
+      ...individualVendorProfile,
+      experienceData: experienceRes?.map((exp) => {
+        const startDate = moment(exp?.StartDate * 1000);
+        const endDate = moment(exp?.EndDate * 1000);
+        const isCurrentlyWorking = +exp?.EndDate === 0;
+
+        return getExperiencesObject({
+          expId: exp?.ExpId,
+          pfId: exp?.PfId,
+          title: exp?.Title,
+          companyName: exp?.CompanyName,
+          location: exp?.Location,
+          isWorking: isCurrentlyWorking,
+          employeeType: exp?.EmployementType,
+          locationType: exp?.LocationType,
+          startMonth: startDate?.format('MMMM'),
+          startYear: startDate?.format('YYYY'),
+          endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
+          endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+        });
+      })
+    };
+
+    setProfileData(getProfileObject(profileDetails));
     setLoading(false);
   }
 
@@ -370,6 +469,7 @@ export default function useHandleVendor() {
       expertises: smeData?.expertise
     };
     setSMEData(getSMEServicesObject(smeDetails));
+    return smeDetails;
   }
 
   async function getCrtDetails() {
@@ -392,6 +492,7 @@ export default function useHandleVendor() {
       expertises: crtData?.expertise
     };
     setCTData(getCTServicesObject(crtDetails));
+    return crtDetails;
   }
 
   async function getCdDetails() {
@@ -414,6 +515,7 @@ export default function useHandleVendor() {
       expertises: cdData?.expertise
     };
     setCDData(getCDServicesObject(cdDetails));
+    return cdDetails;
   }
 
   async function getVendorCourses() {
@@ -438,8 +540,205 @@ export default function useHandleVendor() {
     setVendorCourses(courseInfo?.latestCourses?.courses);
   }
 
-  async function addUpdateExperience() {
+  // for individual vendor
+  async function syncIndividualVendorProfile(_vendorId = null, displaySuccessToaster = false) {
+    if (!isIndividual) return null;
+    if (!(vendorId || _vendorId)) return null;
+    if (!profileData?.email) return null;
+
+    const experienceRes = await addUpdateExperience(displaySuccessToaster);
+
+    const experienceData = experienceRes?.map((exp) => {
+      const startDate = moment(exp?.StartDate * 1000);
+      const endDate = moment(exp?.EndDate * 1000);
+      const isCurrentlyWorking = +exp?.EndDate === 0;
+
+      return getExperiencesObject({
+        expId: exp?.ExpId,
+        pfId: exp?.PfId,
+        title: exp?.Title,
+        companyName: exp?.CompanyName,
+        location: exp?.Location,
+        isWorking: isCurrentlyWorking,
+        employeeType: exp?.EmployementType,
+        locationType: exp?.LocationType,
+        startMonth: startDate?.format('MMMM'),
+        startYear: startDate?.format('YYYY'),
+        endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
+        endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+      });
+    });
+
+    const sendData = {
+      vendor_id: vendorId || _vendorId,
+      first_name: profileData?.firstName?.trim() || '',
+      last_name: profileData?.lastName?.trim() || '',
+      email: profileData?.email?.trim() || '',
+      phone: profileData?.contactNumber.trim() || '',
+      photo: profileData?.profileImage || null,
+      description: profileData?.description.trim() || '',
+      languages: profileData?.languages || [],
+      SME_Expertise: profileData?.sme_expertises || [],
+      Classroom_expertise: profileData?.crt_expertises || [],
+      content_development: profileData?.content_development || [],
+      experience: [],
+      experienceYear: profileData?.experienceYear || '',
+      is_speaker: profileData?.isSpeaker || false,
+      status: VENDOR_MASTER_STATUS.active
+    };
+    if (typeof sendData?.photo === 'string') sendData.photo = null;
+    if (profileData?.profileId) {
+      sendData.profileId = profileData?.profileId;
+      await updateProfileVendor({ variables: sendData })
+        .then((response) => {
+          const res = response?.data?.updateProfileVendor || {};
+
+          const resData = {
+            vendorId: res?.vendor_id || '',
+            profileId: res?.pf_id || '',
+            firstName: res?.first_name || '',
+            lastName: res?.last_name || '',
+            email: res?.email || '',
+            contactNumber: res?.phone || '',
+            description: res?.description || '',
+            photoUrl: res?.photo_url || '',
+            experienceYears: res?.experience_years || '',
+            languages: res?.language || '',
+            sme_expertises: res?.sme_expertise || '',
+            crt_expertises: res?.classroom_expertise || '',
+            content_development: res?.content_development || '',
+            experience: res?.experience || '',
+            isSpeaker: res?.is_speaker || '',
+            sme: res?.sme || '',
+            crt: res?.crt || '',
+            cd: res?.cd || ''
+          };
+
+          if (!!displaySuccessToaster)
+            setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
+          setProfileData(getProfileObject({ ...profileData, ...resData, experienceData }));
+        })
+        .catch((err) => console.log(err));
+
+      return;
+    }
+
+    await createProfileVendor({ variables: sendData })
+      .then((response) => {
+        const res = response?.data?.createProfileVendor || {};
+
+        const resData = {
+          vendorId: res?.vendor_id || '',
+          profileId: res?.pf_id || '',
+          firstName: res?.first_name || '',
+          lastName: res?.last_name || '',
+          email: res?.email || '',
+          contactNumber: res?.phone || '',
+          description: res?.description || '',
+          photoUrl: res?.photo_url || '',
+          experienceYears: res?.experience_years || '',
+          languages: res?.language || '',
+          sme_expertises: res?.sme_expertise || '',
+          crt_expertises: res?.classroom_expertise || '',
+          content_development: res?.content_development || '',
+          experience: res?.experience || '',
+          isSpeaker: res?.is_speaker || '',
+          sme: res?.sme || '',
+          crt: res?.crt || '',
+          cd: res?.cd || ''
+        };
+
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
+        setProfileData(getProfileObject({ ...profileData, ...resData, experienceData }));
+      })
+      .catch((err) => console.log(err));
+  }
+
+  async function handleRemoveUser(email) {
+    const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
+    console.info(email, vendorAdminUsers, vendorAdmin);
+
+    if (!vendorAdmin?.id) {
+      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
+      return null;
+    }
+
+    // load user's all lsp
+    const userLspDataRes = await loadQueryDataAsync(
+      GET_USER_LEARNINGSPACES,
+      { user_id: vendorAdmin?.id },
+      {},
+      userQueryClient
+    );
+
+    const userLspData = userLspDataRes?.getUserLsps || [];
+    const userLspIds = userLspData?.map((lspData) => lspData?.user_lsp_id);
+    if (!userLspIds?.length) {
+      setToastMsg({ type: 'danger', message: 'Something went wrong!' });
+      return null;
+    }
+
+    // load user roles
+    const userLspRolesRes = await loadQueryDataAsync(
+      GET_USER_LSP_ROLES,
+      { user_id: vendorAdmin?.id, user_lsp_ids: userLspIds },
+      {},
+      userQueryClient
+    );
+
+    // map user lsp data and role
+    const userDataArr = userLspData
+      ?.map((lspData) => {
+        const _data = structuredClone(lspData);
+        // find active vendor role
+        const activeVendorRole = userLspRolesRes?.getUserLspRoles?.find(
+          (roleData) => roleData?.is_active && roleData?.role === USER_LSP_ROLE.vendor
+        );
+
+        if (!activeVendorRole?.user_role_id) return null;
+
+        return _data;
+      })
+      ?.filter((data) => !!data);
+
+    console.info(userDataArr);
     let isError = false;
+
+    for (let i = 0; i < userDataArr.length; i++) {
+      const userData = userDataArr[i];
+
+      await updateUserLspMap({
+        variables: {
+          user_lsp_id: userData?.user_lsp_id,
+          user_id: vendorAdmin?.id,
+          lsp_id: userData?.lsp_id,
+          status: USER_MAP_STATUS.disable
+        }
+      }).catch(() => {
+        isError = true;
+        setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+      });
+    }
+
+    await updateVendorUserMap({
+      variables: { vendorId, userId: vendorAdmin?.id, status: USER_MAP_STATUS.disable }
+    }).catch(() => {
+      isError = true;
+      setToastMsg({ type: 'danger', message: 'Vendor User Map Update Error' });
+    });
+
+    if (isError) {
+      setToastMsg({ type: 'success', message: 'User Removed Successfully' });
+      return true;
+    }
+
+    return null;
+  }
+
+  async function addUpdateExperience(displaySuccessToaster = false) {
+    let isError = false;
+    const experienceData = [];
     for (let i = 0; i < profileData?.experienceData?.length; i++) {
       const exp = profileData?.experienceData?.[i];
       const isWorking = exp?.isWorking;
@@ -474,7 +773,9 @@ export default function useHandleVendor() {
         });
 
         if (isError) continue;
-        setToastMsg({ type: 'success', message: 'Experience Updated' });
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Experience Updated' });
+        experienceData.push(res?.data?.updateExperienceVendor);
         continue;
       }
 
@@ -485,14 +786,50 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        setToastMsg({ type: 'success', message: 'Experience Created' });
+        if (!!displaySuccessToaster)
+          setToastMsg({ type: 'success', message: 'Experience Created' });
+
+        experienceData.push(res?.data?.createExperienceVendor);
         continue;
       }
     }
-    // return isError;
+
+    return experienceData;
   }
 
   async function addSampleFile(ptype) {
+    const allSampleFiles = {
+      sme: smeData?.sampleFiles,
+      crt: ctData?.sampleFiles,
+      cd: cdData?.sampleFiles
+    };
+    // duplicate name check
+    if (
+      allSampleFiles?.[ptype]?.find(
+        (smFile) =>
+          smFile?.name?.toLowerCase()?.trim() === sampleData?.sampleName?.toLowerCase()?.trim()
+      )
+    ) {
+      setToastMsg({
+        type: 'danger',
+        message: 'Sample File With same name already exist in this service'
+      });
+      return null;
+    }
+
+    if (
+      !sampleData?.sampleName ||
+      !sampleData?.description ||
+      !sampleData?.sampleFile ||
+      !sampleData?.fileType ||
+      !sampleData?.rate ||
+      !sampleData?.currency ||
+      !sampleData?.unit
+    ) {
+      setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
+      return null;
+    }
+
     const sendData = {
       vendorId: vendorId,
       pType: ptype,
@@ -508,26 +845,23 @@ export default function useHandleVendor() {
     };
 
     let isError = false;
-    if (
-      sampleData?.sampleName &&
-      sampleData?.description &&
-      sampleData?.sampleFile &&
-      sampleData?.fileType &&
-      sampleData?.rate &&
-      sampleData?.currency &&
-      sampleData?.unit
-    ) {
-      const res = await createSampleFiles({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Sample File Created' });
-      return res;
-    } else {
-      return setToastMsg({ type: 'danger', message: 'Please fill all the fields' });
-    }
+    const res = await createSampleFiles({
+      variables: sendData,
+      context: {
+        fetchOptions: {
+          useUpload: true,
+          onProgress: (ev) =>
+            setSampleData({ ...sampleData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
+        }
+      }
+    }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Create Sample Error' });
+    });
+    if (isError) return null;
+    setToastMsg({ type: 'success', message: 'Sample File Created' });
+    return res;
   }
 
   async function deleteSample(sfid, pType) {
@@ -613,6 +947,8 @@ export default function useHandleVendor() {
     getCdDetails,
     getAllVendors,
     getUserVendors,
+    syncIndividualVendorProfile,
+    handleRemoveUser,
     addUpdateExperience,
     addSampleFile,
     handleMail,

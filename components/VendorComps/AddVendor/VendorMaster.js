@@ -4,10 +4,15 @@ import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea'
 import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import Loader from '@/components/common/Loader';
 import { changeHandler, truncateToN } from '@/helper/common.helper';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import {
+  VendorAdminsAtom,
+  VendorStateAtom,
+  vendorUserInviteAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -19,28 +24,27 @@ import AddUrl from './common/AddUrl';
 export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
-  const { handlePhotoInput } = useHandleVendor();
+  const { handlePhotoInput, handleRemoveUser } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
+  const isViewPage = router.asPath?.includes('view-vendor');
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
-  const isViewPage = router.asPath?.includes('view-vendor');
-
-  useEffect(() => {
-    setVendorData((prev) => ({
-      ...prev,
-      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]?.filter(
-        (e) => !!e
-      )
-    }));
-  }, [emails]);
+  // useEffect(() => {
+  //   setVendorData((prev) => ({
+  //     ...prev,
+  //     users: [...emails?.map((item) => item?.props?.children[0])]?.filter((e) => !!e)
+  //   }));
+  // }, [emails]);
 
   const socialMediaPopup = [
     {
@@ -69,15 +73,18 @@ export default function VendorMaster() {
     }
   ];
 
-  if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
-
   function getFileName() {
     return truncateToN(
       vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
       45
     );
   }
+
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -125,6 +132,7 @@ export default function VendorMaster() {
             inputName="vendorProfileImage"
             isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             isDisabled={isViewPage}
+            progressPercent={+vendorData?.fileUploadPercent || null}
           />
         </div>
       </div>
@@ -164,20 +172,26 @@ export default function VendorMaster() {
           inputOptions={{
             inputName: 'description',
             placeholder: 'Say Something...',
-            maxLength: 160,
+            maxLength: 500,
             value: vendorData?.description,
             isDisabled: isViewPage
           }}
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
-      <div className={`${styles.input1}`}>
-        <label for="users">Add User: </label>
+      <div className={`${styles.email}`}>
+        <label for="users">{isIndividualVendor ? 'Email' : 'Add User'}: </label>
         <MultiEmailInput
           type="External"
           items={emails}
           setItems={setEmails}
-          isDisabled={isViewPage || isVendor}
+          beforeRemoveEmail={async (email) => {
+            console.info('function passed', email);
+            await handleRemoveUser(email);
+          }}
+          isDisabled={
+            isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
+          }
         />
       </div>
 

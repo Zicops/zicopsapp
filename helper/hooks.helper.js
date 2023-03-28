@@ -89,7 +89,7 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const loadDataFunction = loadQueryDataAsync;
     const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
@@ -1038,8 +1038,7 @@ export function useUpdateUserAboutData() {
       setInvitedUsers((prev) => [...prev, userData?.user_id]);
     }
 
-    if (!isError)
-      setNewUserAboutData((prev) => ({ ...prev, status: userData.status }));
+    if (!isError) setNewUserAboutData((prev) => ({ ...prev, status: userData.status }));
     return !isError;
   }
 

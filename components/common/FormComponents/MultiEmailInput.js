@@ -2,17 +2,26 @@ import { isEmail } from '@/helper/common.helper';
 import { useState } from 'react';
 import Select from 'react-select';
 import { customSelectStyles } from '../../common/FormComponents/Logic/formComponents.helper';
+import ConfirmPopUp from '../ConfirmPopUp';
 
 export default function MultiEmailInput({
   type = 'Internal',
   items = [],
   setItems,
+  beforeRemoveEmail = async () => true,
   isDisabled = false
 }) {
+  console.info(beforeRemoveEmail);
+  const [removeEmail, setRemoveEmail] = useState({
+    emailListAfterRemoval: [],
+    isConfirmDisplayed: false,
+    removeEmail: null
+  });
   const [error, setError] = useState(null);
   const [value, setValue] = useState('');
 
   function handleKeyDown(evt) {
+    if (isDisabled) return;
     if (['Enter', 'Tab', ','].includes(evt.key)) {
       evt.preventDefault();
 
@@ -31,10 +40,12 @@ export default function MultiEmailInput({
     }
   }
 
-  function handleChange(value) {
-    if (!isEmail(value)) return;
+  function handleChange(val, actionType) {
+    if (isDisabled) return;
+    if (actionType?.action !== 'input-change') return;
+    // if (!isEmail(value)) return;
     setError(null);
-    setValue(value?.trim());
+    setValue(val?.trim());
   }
 
   function isValid(email) {
@@ -135,6 +146,7 @@ export default function MultiEmailInput({
         <Select
           options={val}
           value={val}
+          inputValue={value}
           name="email"
           placeholder="Enter email and enter"
           className="w-100"
@@ -142,13 +154,50 @@ export default function MultiEmailInput({
           isMulti={true}
           isClearable={false}
           isDisabled={isDisabled}
-          backspaceRemovesValue
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}
-          onChange={(removedEmailList) => setItems(removedEmailList.map((email) => email.value))}
+          onChange={(removedEmailList, actionType) => {
+            if (isDisabled) return;
+            if (actionType?.action === 'remove-value') {
+              setRemoveEmail({
+                emailListAfterRemoval: removedEmailList.map((email) => email.value),
+                isConfirmDisplayed: true,
+                removeEmail:
+                  actionType?.removedValue?.value?.props?.children?.[0] ||
+                  actionType?.removedValue?.value ||
+                  null
+              });
+            }
+          }}
           components={{ DropdownIndicator: () => null }}
           noOptionsMessage={() => null}
         />
+
+        {!!removeEmail?.isConfirmDisplayed && (
+          <ConfirmPopUp
+            title={`Are you sure, you want to remove ${removeEmail?.removeEmail || 'email'}?`}
+            btnObj={{
+              handleClickLeft: async () => {
+                const shouldRemove = await beforeRemoveEmail(removeEmail?.removeEmail);
+                console.info(shouldRemove);
+
+                if (shouldRemove) setItems(removeEmail?.emailListAfterRemoval);
+
+                setRemoveEmail({
+                  emailListAfterRemoval: [],
+                  isConfirmDisplayed: false,
+                  removeEmail: null
+                });
+              },
+              handleClickRight: () =>
+                setRemoveEmail({
+                  emailListAfterRemoval: [],
+                  isConfirmDisplayed: false,
+                  removeEmail: null
+                })
+            }}
+          />
+        )}
       </div>
     </>
   );

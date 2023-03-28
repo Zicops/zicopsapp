@@ -152,7 +152,7 @@ const MyUserTable = forwardRef(
         }
       }
     ];
-    if (!isAdministration) {
+    if (!isAdministration && userType?.toLowerCase() === USER_TYPE?.internal) {
       columns.push({
         field: 'action',
         headerClassName: 'course-list-header',

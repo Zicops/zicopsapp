@@ -1,6 +1,20 @@
 import { atom } from 'recoil';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
+export const VendorCurrentStateAtom = atom({
+  key: 'VendorCurrentState',
+  default: getVendorCurrentStateObj()
+});
+
+export function getVendorCurrentStateObj(data = {}) {
+  return {
+    isUpdating: data?.isUpdating || false,
+    isSaved: data?.isSaved || false,
+    errors: data?.errors || [],
+    enabledServices: data?.enabledServices || []
+  };
+}
+
 export const VendorStateAtom = atom({
   key: 'vendorState',
   default: getVendorObject()
@@ -22,9 +36,11 @@ export function getVendorObject(data) {
     twitterURL: data?.twitterURL || '',
     description: data?.description || '',
     users: data?.users || [],
-    status: data?.status || VENDOR_MASTER_STATUS.draft
+    status: data?.status || VENDOR_MASTER_STATUS.draft,
+    fileUploadPercent: data?.fileUploadPercent || 0
   };
 }
+
 export const VendorProfileAtom = atom({
   key: 'vendorProfile',
   default: getProfileObject()
@@ -32,6 +48,7 @@ export const VendorProfileAtom = atom({
 
 export function getProfileObject(data) {
   return {
+    vendorId: data?.vendorId || null,
     profileId: data?.profileId || null,
     firstName: data?.firstName || '',
     lastName: data?.lastName || '',
@@ -66,6 +83,7 @@ export const VendorExperiencesAtom = atom({
 
 export function getExperiencesObject(data) {
   return {
+    localIndex: data?.localIndex || null,
     expId: data?.expId || '',
     pfId: data?.pfId || '',
     title: data?.title || '',
@@ -83,6 +101,11 @@ export function getExperiencesObject(data) {
 
 export const VendorAllExperiencesAtom = atom({
   key: 'vendorAllExperiences',
+  default: []
+});
+
+export const VendorAdminsAtom = atom({
+  key: 'VendorAdmins',
   default: []
 });
 
@@ -150,7 +173,8 @@ export function getSampleObject(data) {
     fileType: data?.fileType || '',
     rate: data?.rate || '',
     currency: data?.currency || '',
-    unit: data?.unit || ''
+    unit: data?.unit || '',
+    fileUploadPercent: data?.fileUploadPercent || 0
   };
 }
 export const allSampleFilesAtom = atom({

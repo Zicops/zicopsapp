@@ -43,7 +43,9 @@ export default function ManageVendor() {
             closeBtn={{ name: 'Cancel' }}
             submitBtn={{
               name: 'Next',
-              handleClick: () => router.push('/admin/vendor/manage-vendor/add-vendor')
+              handleClick: () => {
+                router.push('/admin/vendor/manage-vendor/add-vendor');
+              }
             }}
             isFooterVisible={true}>
             <AddVendor
@@ -52,16 +54,16 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase(),
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.company?.toLowerCase(),
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />
             <AddVendor

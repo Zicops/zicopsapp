@@ -40,6 +40,13 @@ function MyApp({ Component, pageProps }) {
     return () => clearTimeout(timeout);
   }, []);
 
+  // disable right click
+  useEffect(() => {
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+  }, []);
+
   return (
     <>
       <Head>
