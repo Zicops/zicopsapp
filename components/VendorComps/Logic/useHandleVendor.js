@@ -142,6 +142,8 @@ export default function useHandleVendor() {
         const invitedUsers = res?.data?.inviteUsersWithRole;
         for (let i = 0; i < invitedUsers.length; i++) {
           const userData = invitedUsers[i];
+          if (!userData?.user_id) continue;
+
           await addVendorUserMap({
             variables: {
               vendorId: vendorId || id,
