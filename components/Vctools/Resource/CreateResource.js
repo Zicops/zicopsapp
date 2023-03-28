@@ -1,5 +1,5 @@
 import styles from "../vctoolMain.module.scss"
-const CreateResource = () => {
+const CreateResource = ({addResource}) => {
     return (
         <div className={`${styles.resourceModeratorContainer}`}>
 
@@ -11,7 +11,7 @@ const CreateResource = () => {
                 </div>
             </div>
             <button className={`${styles.addResourceBtn}`} onClick={() => {
-                // addQuiz()
+                addResource()
             }}><div>+</div>Add Resource</button>
         </div>
     )
