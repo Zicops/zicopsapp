@@ -98,37 +98,39 @@ export const useExamData = () => {
     let assessmentTopics = [];
     // need later for courses down exam
     let assessmentCourses = [];
+
+    const filteredTopics = courseTopics?.filter(
+      (topic) => topic?.type?.toLowerCase() === 'assessment'
+    );
+    assessmentTopics = assessmentTopics.concat(filteredTopics);
     for (let i = 0; i < _courseData?.length; i++) {
-      if (!courseTopics?.length) continue;
-      const filteredTopics = courseTopics?.filter(
-        (topic) => topic?.type?.toLowerCase() === 'assessment'
-      );
       if (!filteredTopics?.length) continue;
-      assessmentTopics = assessmentTopics.concat(filteredTopics);
       assessmentCourses = assessmentCourses.concat(_courseData[i]);
       // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
       for (let j = 0; j < filteredTopics?.length; j++) {
-        topicCourseMap.push({
-          [`${filteredTopics[j]?.id}`]: {
-            courseName: _courseData[i]?.name,
-            topicId: filteredTopics[j]?.id,
-            courseId: _courseData[i]?.id
-          }
-        });
+        if (_courseData?.[i].id === filteredTopics?.[j].courseId) {
+          topicCourseMap.push({
+            [`${filteredTopics[j]?.id}`]: {
+              courseName: _courseData[i]?.name,
+              topicId: filteredTopics[j]?.id,
+              courseId: _courseData[i]?.id
+            }
+          });
+        }
       }
     }
+
     if (!assessmentTopics?.length) return setLoading(false);
     const examCourseMap = {};
 
     // // load topic exams
     let exams = [];
     const topicExams = await getTopicExams(courseIds);
-
+    if (!topicExams?.length) return [];
     for (let i = 0; i < assessmentTopics?.length; i++) {
-      if (!topicExams?.length) continue;
-      examCourseMap[topicExams[0]?.examId] = {
-        courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
-        examId: topicExams[0]?.examId,
+      examCourseMap[topicExams[i]?.examId] = {
+        courseName: topicCourseMap[i]?.[`${assessmentTopics[i]?.id}`]?.courseName,
+        examId: topicExams[i]?.examId,
         topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
         courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
       };
@@ -143,12 +145,11 @@ export const useExamData = () => {
 
     const examInstruction = await getExamInstruction(examIds);
     for (let i = 0; i < examMetas?.length; i++) {
-      if (!examInstruction?.length) continue;
       examMetas[i] = {
         ...examMetas[i],
-        instructionId: examInstruction[0]?.id,
-        passingCriteria: examInstruction[0]?.PassingCriteria,
-        noAttempts: examInstruction[0]?.NoAttempts
+        instructionId: examInstruction[i]?.id,
+        passingCriteria: examInstruction[i]?.PassingCriteria,
+        noAttempts: examInstruction[i]?.NoAttempts
       };
     }
 
@@ -188,6 +189,7 @@ export const useExamData = () => {
       courseName: exam?.courseName,
       examDate: moment.unix(exam?.Start).format('LLL')
     }));
+
     return {
       scheduleExams: scheduleExamData,
       takeAnyTimeExams: takeAnyTimeExams
@@ -195,6 +197,11 @@ export const useExamData = () => {
   }
 
   return {
-    loadExamData
+    loadExamData,
+    getTopics,
+    getTopicExams,
+    getExamsMeta,
+    getExamSchedule,
+    getExamInstruction
   };
 };
