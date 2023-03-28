@@ -27,6 +27,10 @@ $bgFooter: #001111;
 $bgHeader: #0b0c0d;
 $popupBgColor: #323232;
 $warning: #f6ac3c;
+$success: #12664f;
+$zicopsPink: #E782A6;
+$zicopsSky: #41A9EF;
+$skeletonColor: dimgray;
 
 $headerHeight: 70px;
 $footerHeight: 100px;
@@ -35,6 +39,41 @@ $cardTileRatio: 1.75;
 
 $courseTitle: 22px;
 $courseTitleSmall: 18px;
+
+:export {
+  primary: $primary;
+  secondary: $secondary;
+
+  accent: $accent;
+  bgContent: $bgContent;
+  error: $error;
+  white: $white;
+  secondaryWhite: $secondaryWhite;
+  tertiaryWhite: $tertiaryWhite;
+
+  black: $black;
+  secondaryBlack: $secondaryBlack;
+  tertiaryBlack: $tertiaryBlack;
+  header: $header;
+  darkOne: $darkOne;
+  darkTwo: $darkTwo;
+  darkThree: $darkThree;
+  darkFour: $darkFour;
+  bgTile: $bgTile;
+  bgBody: $bgBody;
+  bgFooter: $bgFooter;
+  bgHeader: $bgHeader;
+  popupBgColor: $popupBgColor;
+  warning: $warning;
+  success: $success;
+  skeletonColor: $skeletonColor;
+
+  headerHeight: $headerHeight;
+  footerHeight: $footerHeight;
+  cardTileRatio: $cardTileRatio;
+  courseTitle: $courseTitle;
+  courseTitleSmall: $courseTitleSmall;
+}
 // function for generating transparent color from base colors
 @function getLowOpacityColor($colorInHex, $opacityInHex) {
   @return rgba($colorInHex, $opacityInHex);
@@ -85,6 +124,7 @@ $courseTitleSmall: 18px;
   }
   @if $state == 'disabled' {
     border: 2px solid $darkThree;
+    cursor: not-allowed !important;
   }
 
   @if $state == 'focus' {

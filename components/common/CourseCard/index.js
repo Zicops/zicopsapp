@@ -1,7 +1,9 @@
 import { truncateToN } from '@/helper/common.helper';
-import { COURSE_TYPES } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getCourseDisplayTime } from '@/helper/utils.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
+import { useRecoilValue } from 'recoil';
 import styles from './courseCard.module.scss';
 
 export default function CourseCard({
@@ -13,25 +15,48 @@ export default function CourseCard({
   notext = false,
   showAssignSymbol = true
 }) {
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const router = useRouter();
+
   if (!courseData?.name) return null;
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   function handleMouseEnter(e, start = 0, end = 0) {
-    if (e.currentTarget.parentNode.dataset.index === start.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '15px';
-      e.currentTarget.parentNode.style.marginRight = '-15px';
+    const firstLastCardOffset = 13;
+    const pageOffset = 100;
+    const mouseOffset = window.innerHeight / 2;
+
+    if (
+      e.clientY > mouseOffset &&
+      document.body.scrollHeight - window.pageYOffset < window.innerHeight + pageOffset
+    ) {
+      e.currentTarget.firstChild.style.marginTop = '-55%';
+    } else {
+      e.currentTarget.firstChild.style.marginTop = '-25%';
     }
 
-    if (e.currentTarget.parentNode.dataset.index === end.toString()) {
-      e.currentTarget.parentNode.style.marginLeft = '-15px';
-      e.currentTarget.parentNode.style.marginRight = '15px';
+    if (e.currentTarget.parentNode.dataset?.index === start.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = `${firstLastCardOffset}px`;
+      e.currentTarget.parentNode.style.marginRight = `${-firstLastCardOffset}px`;
     }
+
+    if (e.currentTarget.parentNode.dataset?.index === end.toString()) {
+      e.currentTarget.parentNode.style.marginLeft = `${-firstLastCardOffset}px`;
+      e.currentTarget.parentNode.style.marginRight = `${firstLastCardOffset}px`;
+    }
+
+    e.currentTarget.parentNode.style.transitionDelay = '0.6s';
+    e.currentTarget.parentNode.style.transitionTime = '0.2s';
   }
 
   function handleMouseLeave(e) {
-    e.currentTarget.parentNode.style.margin = '';
+    e.currentTarget.firstChild.style.marginTop = '0';
+    e.currentTarget.parentNode.style.margin = '0';
+    e.currentTarget.parentNode.style.transitionDelay = '0s';
   }
   const gotoCourse = () => {
+    if (isVendor) return router.push(`/preview?courseId=${courseData.id}`);
+
     if (!courseData?.examId) {
       router.push(courseData?.id ? `/course/${courseData.id}` : '/courses');
     } else {
@@ -69,7 +94,7 @@ export default function CourseCard({
   return (
     <>
       <div
-        style={{ maxWidth: '350px' }}
+        style={{ maxWidth: '350px', height: '100%', width: '100%' }}
         className={`${styles.card_item} ${styleClass}`}
         onClick={!notext ? gotoCourse : () => {}}
         onMouseEnter={(e) => {
@@ -94,31 +119,35 @@ export default function CourseCard({
           <div className={`${styles.smallCardContent}`}>
             <div className={`${styles.firstRow}`}>
               <div className={`${styles.buttons}`}>
-                {showAssignSymbol ? (
+                {!isVendor && (
                   <>
-                    <img
-                      className={`${styles.addBtn}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        gotoAssignCourses();
-                      }}
-                      src="/images/svg/add-line.svg"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <img
-                      className={`${styles.playBtn}`}
-                      src="/images/Frame 22.svg"
-                      alt=""
-                      onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
-                    />
-                    <img
-                      className={`${styles.removeBtn}`}
-                      src="/images/Frame 23.svg"
-                      alt=""
-                      onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
-                    />
+                    {showAssignSymbol ? (
+                      <>
+                        <img
+                          className={`${styles.addBtn}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            gotoAssignCourses();
+                          }}
+                          src="/images/svg/add-line.svg"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          className={`${styles.playBtn}`}
+                          src="/images/Frame 22.svg"
+                          alt=""
+                          onClick={(e) => gotoCoursePage(e, 'startCourse=true')}
+                        />
+                        <img
+                          className={`${styles.removeBtn}`}
+                          src="/images/Frame 23.svg"
+                          alt=""
+                          onClick={(e) => gotoCoursePage(e, 'isUnAssign=true')}
+                        />
+                      </>
+                    )}
                   </>
                 )}
                 {/* <img className={`${styles.addBtn}`} src="/images/Frame 22.svg" alt="" />

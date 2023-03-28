@@ -1,10 +1,9 @@
+import MultiEmailInput from '@/components/common/FormComponents/MultiEmailInput';
 import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import { INVITE_USERS, userClient } from 'API/UserMutations';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-
-import MultiEmailInput from './MultiEmailInput';
 
 export default function InviteUser({ userType }) {
   const [emailIds, setEmailIds] = useState([]);
@@ -19,14 +18,14 @@ export default function InviteUser({ userType }) {
     setUserEmailIDs([...emailIds]);
   }, [emailIds]);
 
-  useEffect(()=>{
-    console.log('called')
-  if(userEmailIDs === null){
-    setEmailIds([]);
-    setUserEmailIDs([]);
-  }
-  return;
-  },[userEmailIDs])
+  useEffect(() => {
+    console.log('called');
+    if (userEmailIDs === null) {
+      setEmailIds([]);
+      setUserEmailIDs([]);
+    }
+    return;
+  }, [userEmailIDs]);
 
   return (
     <>

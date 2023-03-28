@@ -1,6 +1,6 @@
-import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { deleteData, loadQueryDataAsync } from '@/helper/api.helper';
+import { deleteData } from '@/helper/api.helper';
 import { HIDE_HEADER_FOOTER_FOR_ROUTE } from '@/helper/constants.helper';
+import useUserCourseData from '@/helper/hooks.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { NotificationAtom } from '@/state/atoms/notification.atom';
 import { DeleteConfirmDataAtom, getDeleteConfirmDataObj } from '@/state/atoms/popUp.atom';
@@ -16,12 +16,31 @@ import { main } from './layout.module.scss';
 
 export default function Layout({ children }) {
   const [userAboutData, setUserData] = useRecoilState(UserStateAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [deleteConfirmData, setDeleteConfirmData] = useRecoilState(DeleteConfirmDataAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
+  const { getOrgByDomain, OrgDetails, getLoggedUserInfo } = useUserCourseData();
 
   const [isFullHeight, setIsFullHeight] = useState(0);
+  const [disableBtn, setDisableBtn] = useState(false);
   const router = useRouter();
+
+  useEffect(async () => {
+    if (!!userOrgData?.logo_url) return;
+    let orgId = sessionStorage?.getItem('org_id');
+    //
+    if (!orgId) {
+      const orgData = await getOrgByDomain();
+      setUserOrgData((prev) => ({
+        ...prev,
+        logo_url: orgData?.logo_url || '',
+        organization_id: orgData?.org_id
+      }));
+      return;
+    }
+    OrgDetails();
+  }, [router?.asPath]);
 
   //refill the  recoil values
   useEffect(async () => {
@@ -44,15 +63,18 @@ export default function Layout({ children }) {
     // const userId = [];
     // userId.push(data?.id);
     const userId = data?.id;
-    const userData = await loadQueryDataAsync(
-      GET_USER_DETAIL,
-      { user_id: [userId] },
-      {},
-      userQueryClient
-    );
-    if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.getUserDetails?.[0];
+    // const userData = await loadQueryDataAsync(
+    //   GET_USER_DETAIL,
+    //   { user_id: [userId] },
+    //   {},
+    //   userQueryClient
+    // );
+    const dUser = await getLoggedUserInfo();
 
+    // if (userData?.error) return console.log('User data load error');
+    // const basicInfo = userData?.getUserDetails?.[0];
+
+    const basicInfo = dUser;
     setUserData((prev) => ({ ...prev, ...data, ...basicInfo, isUserUpdated: false }));
     return;
   }
@@ -74,21 +96,35 @@ export default function Layout({ children }) {
             'Are you sure about deleting? This will delete it permanently!'
           }
           btnObj={{
+            leftIsDisable: disableBtn,
+            rightIsDisable: disableBtn,
             handleClickLeft: async () => {
+              setDisableBtn(true);
+
               let isDeleted = 'localDelete';
+              const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
+
+              if (!isBeforeDeleteSuccess) {
+                setDisableBtn(false);
+                return setDeleteConfirmData(getDeleteConfirmDataObj());
+              }
+
               if (deleteConfirmData?.id) {
                 isDeleted = await deleteData(deleteConfirmData?.mutation, {
                   id: deleteConfirmData?.id,
                   ...deleteConfirmData?.variableObj
                 });
               }
-              console.log(isDeleted, deleteConfirmData);
+
               setDeleteConfirmData(getDeleteConfirmDataObj());
 
-              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey])
+              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+                setDisableBtn(false);
                 return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
+              }
 
               deleteConfirmData?.onDelete();
+              setDisableBtn(false);
             },
             handleClickRight: () => setDeleteConfirmData(getDeleteConfirmDataObj())
           }}

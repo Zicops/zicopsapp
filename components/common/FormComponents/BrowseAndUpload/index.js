@@ -5,6 +5,7 @@ import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
 import ToolTip from '../../ToolTip';
 import styles from '../formComponents.module.scss';
+import DisplayImage from './DisplayImage';
 import PreviewImageVideo from './PreviewImageVideo';
 
 export default function BrowseAndUpload({
@@ -23,7 +24,9 @@ export default function BrowseAndUpload({
   shouldShowPreview = true,
   styleClass = '',
   title = null,
-  styleClassBtn = ''
+  styleClassBtn = '',
+  filePreview = null,
+  progressPercent = 0
 }) {
   const inputRef = useRef();
   const [showPreview, setShowPreview] = useState(false);
@@ -42,9 +45,16 @@ export default function BrowseAndUpload({
           className={`w-100 ${styles.btn} ${isActive ? styles.isActive : ''} ${
             isError ? 'error' : ''
           } ${styleClassBtn}`}>
-          <img src="/images/upload.png" alt="" />
+          {/* <img src={filePreview || '/images/upload.png'} alt="" /> */}
+          <DisplayImage filePath={filePreview || '/images/upload.png'} />
           {title || 'Browse & upload'}
         </button>
+
+        {!!progressPercent && (
+          <div className={styles.progressBar}>
+            <div className={`${styles.progressBarFill} w-${Math.floor(progressPercent)}`}></div>
+          </div>
+        )}
 
         <input
           type="file"

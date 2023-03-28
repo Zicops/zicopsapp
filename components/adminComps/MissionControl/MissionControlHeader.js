@@ -1,15 +1,16 @@
+import ToolTip from '@/components/common/ToolTip';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { ProductTourVisible } from '@/state/atoms/productTour.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import Image from 'next/image';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Select from 'react-select';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SiteMapAtom } from '../../../state/atoms/sitemap.atom';
-import styles from './missionControl.module.scss';
 import Sitemap from '../../common/AdminHeader/Sitemap';
 import PopUp from '../../common/PopUp';
-import ToolTip from '@/components/common/ToolTip';
-import { ProductTourVisible } from '@/state/atoms/productTour.atom';
-import Dropdown from '@/components/common/Dropdown';
+import styles from './missionControl.module.scss';
 
 export default function MissionControlHeader() {
   const [showSitemap, setShowSitemap] = useState(false);
@@ -18,6 +19,10 @@ export default function MissionControlHeader() {
   const router = useRouter();
   const [viewButtons, setViewButtons] = useState(false);
   const [viewProductTour, setViewProductTour] = useRecoilState(ProductTourVisible);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const handleClick = () => {
     setViewProductTour(true);
@@ -161,7 +166,7 @@ export default function MissionControlHeader() {
                   alt=""
                   height={'40px'}
                   width={'40px'}
-                  onClick={() => setViewButtons(!viewButtons)}
+                  onClick={() => !!isDev && setViewButtons(!viewButtons)}
                 />
               </span>
             </ToolTip>
@@ -190,14 +195,14 @@ export default function MissionControlHeader() {
             </div>
           </ToolTip>
           <ToolTip title="Sitemap" placement="right-start">
-            <div className="rightside_icon">
+            <div className="rightside_icon" style={isVendor ? { cursor: 'not-allowed' } : {}}>
               <Image
                 src="/images/hiararchy.png"
                 className="rightside_icon"
                 alt=""
                 height={'40px'}
                 width={'50px'}
-                onClick={() => setShowSitemap(true)}
+                onClick={() => (isVendor ? '' : setShowSitemap(true))}
               />
             </div>
           </ToolTip>

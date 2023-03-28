@@ -2,18 +2,18 @@
 
 import { UPDATE_COURSE } from '@/api/Mutations';
 import {
-  GET_COURSE_CHAPTERS,
   GET_COURSE_MODULES,
   GET_COURSE_TOPICS,
   GET_COURSE_TOPICS_CONTENT_META_BY_COURSE_ID,
-  GET_TOPIC_EXAMS,
   GET_TOPIC_EXAMS_BY_COURSE_ID
 } from '@/api/Queries';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -29,11 +29,17 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
   const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const [isLevelDataAdded, setIsLevelDataAdded] = useState(null);
   const [isLangDataAdded, setIsLangDataAdded] = useState(null);
   const [isModuleDataValid, setIsModuleDataValid] = useState(null);
   const [fakeLoaderForUx, setFakeLoaderForUx] = useState(null);
+  const [msgObj, setMsgObj] = useState({
+    levelMsg: null,
+    langMsg: null,
+    moduleDataMsg: null
+  });
 
   useEffect(() => {
     clearTimeout(timer);
@@ -86,14 +92,16 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     const allLanguages = structuredClone([...(fullCourseData?.language || [])]);
     const expertiseLevel = structuredClone(fullCourseData?.expertise_level?.split(',') || []);
 
-    const allModules = structuredClone((await moduleRes)?.getCourseModules || []);
+    const allModules = sortArrByKeyInOrder((await moduleRes)?.getCourseModules || []);
     if (!allModules?.length) {
       setIsLangDataAdded(false);
       setIsLevelDataAdded(false);
       setIsModuleDataValid(false);
+      setMsgObj({ ...msgObj, moduleDataMsg: 'No Modules Added!' });
       return;
     }
 
+    const _msgObj = structuredClone(msgObj);
     // check for all module added for selected levels
     allModules?.some((mod) => {
       const index = expertiseLevel?.findIndex((level) => level === mod?.level);
@@ -101,6 +109,8 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
       return expertiseLevel?.length === 0;
     });
+    if (expertiseLevel?.length)
+      _msgObj.levelMsg = `Module with Expertise ${expertiseLevel} missing`;
     setIsLevelDataAdded(!expertiseLevel?.length);
 
     // const allChapters = structuredClone((await chapterRes)?.getCourseChapters || []);
@@ -108,6 +118,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     if (!allTopics?.length) {
       setIsLangDataAdded(false);
       setIsModuleDataValid(false);
+      setMsgObj({ ...msgObj, moduleDataMsg: 'No Topics Added!' });
       return;
     }
 
@@ -121,6 +132,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
     // loop through all topic
     const topicData = allTopics?.map((topic) => {
       const _topic = topic;
+      const currentTopicLocation = getTopicLocation(allModules, allTopics, topic);
 
       // checks for topic content
       if (topic?.type === COURSE_TOPIC_TYPES.content && isLangDataComplete) {
@@ -130,34 +142,41 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
         _topic.contentData = _topicContent;
 
         // data is not complete if there is no topic content
-        if (_topicContent?.length === 0) isModuleDataComplete = false;
+        if (_topicContent?.length === 0) {
+          _msgObj.moduleDataMsg = `No Content Added for ${currentTopicLocation}`;
+          isModuleDataComplete = false;
+        }
 
         if (_topicContent?.length) {
           // check if all selected lang have been used
           const selectedLangs = structuredClone(allLanguages || []);
           _topicContent?.forEach((tc) => {
             const index = selectedLangs?.findIndex((lang) => lang === tc?.language);
-            if (index !== -1) selectedLangs?.splice(index, 1);
+            if (index !== -1) return selectedLangs?.splice(index, 1);
           });
 
           isLangDataComplete = selectedLangs?.length === 0;
         } else {
           isLangDataComplete = false;
         }
+
+        if (!isLangDataComplete) _msgObj.langMsg = `Language missing for ${currentTopicLocation}`;
       }
 
       if (topic?.type === COURSE_TOPIC_TYPES.assessment) {
         const topicExam = allTopicExams?.filter((topicExam) => topicExam?.topicId === topic?.id);
 
         _topic.contentData = topicExam;
-        if (!topicExam?.length) isModuleDataComplete = false;
+        if (!topicExam?.length) {
+          _msgObj.moduleDataMsg = `No Exam Added for ${currentTopicLocation}`;
+          isModuleDataComplete = false;
+        }
       }
 
       return _topic;
     });
     setIsLangDataAdded(isLangDataComplete);
 
-    console.log('isModuleDataComplete', isModuleDataComplete);
     const isDataValid = [];
     allModules?.some((mod) => {
       if (!isModuleDataComplete) {
@@ -186,8 +205,22 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
       return !_isDataValid;
     });
 
+    setMsgObj(_msgObj);
     setIsModuleDataValid(isDataValid?.every((item) => item));
     // console.log(allModules, allChapters, allTopics, allTopicContent, allLanguages, expertiseLevel);
+  }
+
+  function getTopicLocation(allSequenceSortedModules = [], allTopics = [], topic = {}) {
+    const modIndex = allSequenceSortedModules?.findIndex((mod) => mod?.id === topic?.moduleId);
+    if (modIndex < 0) return null;
+
+    const allSequenceSortedTopicOfMod = sortArrByKeyInOrder(
+      allTopics?.filter((top) => top?.moduleId === allSequenceSortedModules?.[modIndex]?.id)
+    );
+    const topIndex = allSequenceSortedTopicOfMod?.findIndex((top) => top?.id === topic?.id);
+    if (topIndex < 0) return null;
+
+    return `M${modIndex + 1}T${topIndex + 1}`;
   }
 
   return (
@@ -222,7 +255,14 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
             <LabeledRadioCheckbox
               type="checkbox"
-              label="Modules for each selected Expertise Level"
+              label={
+                <>
+                  Modules for each selected Expertise Level
+                  <span className={`${styles.failureReason}`}>
+                    {!!msgObj?.levelMsg && ` (${msgObj?.levelMsg})`}
+                  </span>
+                </>
+              }
               isChecked={isLevelDataAdded}
               isDisabled={true}
               isLoading={isLevelDataAdded === null}
@@ -230,7 +270,14 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
             <LabeledRadioCheckbox
               type="checkbox"
-              label="Topic Content added for each selected Language"
+              label={
+                <>
+                  Topic Content added for each selected Language
+                  <span className={`${styles.failureReason}`}>
+                    {!!msgObj?.langMsg && ` (${msgObj?.langMsg})`}
+                  </span>
+                </>
+              }
               isChecked={isLangDataAdded}
               isDisabled={true}
               isLoading={isLangDataAdded === null}
@@ -238,7 +285,14 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
 
             <LabeledRadioCheckbox
               type="checkbox"
-              label="All Module should have complete topic data"
+              label={
+                <>
+                  All Module should have complete topic data
+                  <span className={`${styles.failureReason}`}>
+                    {!!msgObj?.moduleDataMsg && ` (${msgObj?.moduleDataMsg})`}
+                  </span>
+                </>
+              }
               isChecked={isModuleDataValid}
               isDisabled={true}
               isLoading={isModuleDataValid === null}
@@ -270,7 +324,7 @@ export default function FreezeConfirmation({ closePopUp = () => {} }) {
                 setIsCourseSaved(true);
                 closePopUp();
               })
-              .catch((err) => console.log(err));
+              .catch((err) => setToastMsg({ type: 'danger', message: 'Course Freeze Error!' }));
           },
           textRight: 'Cancel',
           handleClickRight: closePopUp

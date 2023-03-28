@@ -1,5 +1,6 @@
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -27,6 +28,7 @@ export default function CourseTabs() {
   const isCourseUploading = useRecoilValue(isCourseUploadingAtom);
   const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
   const [featureFlags, setFeatureFlags] = useRecoilState(FeatureFlagsAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   // TODO: set to first tab when new course is opened
   // useEffect(() => {
@@ -60,12 +62,14 @@ export default function CourseTabs() {
     if (fullCourse?.qa_required) _status = COURSE_STATUS.freeze;
     if (fullCourse?.status === COURSE_STATUS.publish) _status = COURSE_STATUS.publish;
     if (fullCourse?.status === COURSE_STATUS.reject) _status = 'EXPIRED';
-    console.log(_status);
+    if (fullCourse?.status === COURSE_STATUS.approvalPending)
+      _status = COURSE_STATUS.approvalPending;
+
     setCourseStatus(_status);
   }, [fullCourse?.status, isCourseSaved]);
 
   useEffect(() => {
-    if (!fullCourse?.qa_required) setCourseStatus(fullCourse?.status);
+    if (!fullCourse?.qa_required) setCourseStatus(COURSE_STATUS.save);
   }, [fullCourse?.qa_required]);
 
   useEffect(() => {
@@ -155,10 +159,38 @@ export default function CourseTabs() {
   function getSubmitBtnText() {
     if (featureFlags.isPublishCourseEditable) return 'Published (U)';
     if ([COURSE_STATUS.publish, 'EXPIRED'].includes(courseStatus)) return 'Published';
-    if (courseStatus === COURSE_STATUS.freeze) return 'Publish';
+    if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)) {
+      if (courseStatus === COURSE_STATUS.approvalPending) return 'Sent For Approval';
+      if (fullCourse?.qa_required) return 'Send For Approval';
+    }
+    if ([COURSE_STATUS.freeze, COURSE_STATUS.approvalPending]?.includes(courseStatus))
+      return 'Publish';
     if (fullCourse?.id) return 'Update';
 
     return 'Save';
+  }
+
+  function getIsSubmitBtnDisabled() {
+    if (featureFlags.isPublishCourseEditable) return false;
+    if (!!isCourseUploading) return true;
+    if (
+      userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor) &&
+      courseStatus === COURSE_STATUS.approvalPending
+    )
+      return true;
+    if ([COURSE_STATUS.publish, COURSE_STATUS.reject, 'EXPIRED'].includes(courseStatus))
+      return true;
+
+    return false;
+  }
+
+  function getIsPublishing() {
+    // if (featureFlags.isPublishCourseEditable) return true;
+    if (userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor)) return false;
+    if (courseStatus === COURSE_STATUS.freeze || courseStatus === COURSE_STATUS.approvalPending)
+      return true;
+
+    return false;
   }
 
   return (
@@ -167,6 +199,7 @@ export default function CourseTabs() {
         tabData={tabData}
         tab={tab}
         setTab={setTab}
+        isDisabled={!!isCourseUploading}
         footerObj={{
           isActive:
             fullCourse?.name &&
@@ -185,17 +218,8 @@ export default function CourseTabs() {
             </>
           ),
           submitDisplay: getSubmitBtnText(),
-          disableSubmit: featureFlags.isPublishCourseEditable
-            ? false
-            : !!isCourseUploading ||
-              [COURSE_STATUS.publish, COURSE_STATUS.reject, 'EXPIRED'].includes(courseStatus),
-          handleSubmit: () =>
-            saveCourseData(
-              false,
-              null,
-              true,
-              featureFlags.isPublishCourseEditable ? true : courseStatus === COURSE_STATUS.freeze
-            ),
+          disableSubmit: getIsSubmitBtnDisabled(),
+          handleSubmit: () => saveCourseData(false, null, true, getIsPublishing()),
           cancelDisplay: 'Cancel',
           handleCancel: () => router.push('/admin/course/my-courses')
         }}>

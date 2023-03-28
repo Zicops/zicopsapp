@@ -1,15 +1,18 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { ADMIN_USERS } from '@/components/common/ToolTip/tooltip.helper';
+import MyUser from '@/components/UserComps/MyUser';
+import MyUserTable from '@/components/UserComps/MyUser/UserTable';
 import { useUpdateUserAboutData } from '@/helper/hooks.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AdminHeader from '../../../../components/common/AdminHeader';
 import MainBody from '../../../../components/common/MainBody';
 import MainBodyBox from '../../../../components/common/MainBodyBox';
 import Sidebar from '../../../../components/common/Sidebar';
 import { userSideBarData } from '../../../../components/common/Sidebar/Logic/sidebar.helper';
-import MyUser from '../../../../components/UserComps/MyUser';
 
 export default function MyUserPage() {
   const myUsersRef = useRef();
@@ -18,6 +21,8 @@ export default function MyUserPage() {
   const [userType, setUserType] = useState('Internal');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [disableAlert, setDisableAlert] = useState(false);
+  const userData = useRecoilValue(UserStateAtom);
+  const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const { setMultiUserArr, updateMultiUserAbout, disableMultiUser, resetMultiPassword } =
     useUpdateUserAboutData();
@@ -27,7 +32,9 @@ export default function MyUserPage() {
       text: 'Disable User',
       handleClick: () => {
         setDisableAlert(true);
-      }
+      },
+      isHidden:
+        !!selectedUser?.find((users) => users?.id === userData?.id) && selectedUser?.length === 1
     },
     {
       text: 'Reset  Password',
@@ -37,7 +44,6 @@ export default function MyUserPage() {
           return setToastMsg({ type: 'danger', message: 'Error while resetting password!' });
 
         return setToastMsg({ type: 'success', message: 'Reset password link sent successfully.' });
-
       }
     }
     // {
@@ -64,7 +70,7 @@ export default function MyUserPage() {
       <Sidebar sidebarItemsArr={userSideBarData} />
       <MainBody>
         <AdminHeader
-          title="Profile"
+          title="Users"
           pageRoute="/admin/user/my-users/invite"
           isAddShown={true}
           subHeaderData={{
@@ -79,7 +85,15 @@ export default function MyUserPage() {
         />
 
         <MainBodyBox>
-          <MyUser ref={myUsersRef} getUser={(list) => setSelectedUser(list)} />
+          {isDev ? (
+            <MyUserTable
+              ref={myUsersRef}
+              getUser={(list) => setSelectedUser(list)}
+              userType={userType}
+            />
+          ) : (
+            <MyUser ref={myUsersRef} getUser={(list) => setSelectedUser(list)} />
+          )}
 
           {disableAlert && (
             <ConfirmPopUp
@@ -89,7 +103,6 @@ export default function MyUserPage() {
               btnObj={{
                 handleClickLeft: async () => {
                   const success = await disableMultiUser(selectedUser);
-                  // console.log(success);
                   if (!success)
                     return setToastMsg({ type: 'danger', message: 'Error while disabling users' });
                   setSelectedUser([]);

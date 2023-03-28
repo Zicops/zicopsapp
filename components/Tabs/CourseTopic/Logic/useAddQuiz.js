@@ -7,7 +7,7 @@ import {
 } from '@/api/Queries';
 import { acceptedFileTypes } from '@/components/AdminExamComps/QuestionBanks/Logic/questionBank.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { QUESTION_STATUS } from '@/helper/constants.helper';
+import { LIMITS, ONE_MB_IN_BYTES, QUESTION_STATUS } from '@/helper/constants.helper';
 import { secondsToMinutes } from '@/helper/utils.helper';
 import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
@@ -51,7 +51,7 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
 
   // load question bank data
   useEffect(async () => {
-    const LARGE_PAGE_SIZE = 999999999999;
+    const LARGE_PAGE_SIZE = 10000;
     const queryVariables = { publish_time: Date.now(), pageSize: LARGE_PAGE_SIZE, pageCursor: '' };
 
     const qbRes = await loadQueryDataAsync(GET_LATEST_QUESTION_BANK, queryVariables);
@@ -118,7 +118,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       question && newQuiz?.difficulty && isOptionsCompleted >= 2 && isOneChecked;
 
     if (newQuiz?.questionId && newQuiz?.formType === 'create') {
-      if (newQuiz?.options?.length > isOptionsCompleted) questionRequired = false;
+      if (newQuiz?.options?.length > isOptionsCompleted) {
+        options?.forEach((option) => {
+          if (option?.id && !(option?.file || option?.option)) questionRequired = false;
+        });
+      }
     }
     setIsQuizReady(
       newQuiz.name &&
@@ -169,7 +173,8 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
     if (quizTempIndex >= 0) {
       const _quizzes = structuredClone(quizzes);
       const quizData = quizTemp[quizTempIndex];
-      if (quizData?.data && !isNaN(+quizData.index)) _quizzes[quizData?.index] = quizData?.data;
+      if (quizData?.data && !isNaN(+quizData.index))
+        _quizzes.splice(quizData?.index, 0, quizData?.data);
 
       setQuizzes(_quizzes);
     }
@@ -208,12 +213,27 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
     if (e?.value) setNewQuiz({ ...newQuiz, type: e.value });
 
     if (index != null) {
-      const updatedOption = { ...newQuiz?.options[index] };
+      const _newQuiz = structuredClone(newQuiz);
+      let updatedOption = _newQuiz?.options[index] || null;
+      if (updatedOption == null && _newQuiz?.options?.length < 4) {
+        updatedOption = { option: '', file: null, attachmentType: '', isCorrect: false };
+        _newQuiz?.options?.push(updatedOption);
+      }
 
       if (e.target.type === 'file') {
         const file = e.target.files[0];
         if (!file) return;
         if (!isImageValid(e)) return;
+
+        if (file?.size > LIMITS.questionOptionSize) {
+          e.target.value = '';
+          return setToastMsg({
+            type: 'danger',
+            message: `File Size limit is ${Math.ceil(
+              LIMITS.questionOptionSize / ONE_MB_IN_BYTES
+            )} mb`
+          });
+        }
 
         updatedOption.file = e.target.files[0];
         updatedOption.attachmentType = e.target.files[0]?.type;
@@ -223,9 +243,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
         updatedOption[e.target.name] = e.target.value;
       }
 
-      return setNewQuiz({
-        ...newQuiz,
-        options: newQuiz?.options?.map((o, i) => (i === index ? updatedOption : o))
+      return setNewQuiz((prev) => {
+        return {
+          ...prev,
+          options: prev?.options?.map((o, i) => (i === index ? updatedOption : o))
+        };
       });
     }
 
@@ -237,6 +259,13 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       const file = e.target.files[0];
       if (!file) return;
       if (!isImageValid(e)) return;
+      if (file?.size > LIMITS.questionOptionSize) {
+        e.target.value = '';
+        return setToastMsg({
+          type: 'danger',
+          message: `File Size limit is ${Math.ceil(LIMITS.questionOptionSize / ONE_MB_IN_BYTES)} mb`
+        });
+      }
 
       return setNewQuiz({
         ...newQuiz,
@@ -306,6 +335,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       };
     }
 
+    if (_quiz?.options?.length === 2)
+      _quiz?.options?.push({ option: '', file: null, attachmentType: '', isCorrect: false });
+    if (_quiz?.options?.length === 3)
+      _quiz?.options?.push({ option: '', file: null, attachmentType: '', isCorrect: false });
+
     setNewQuiz(_quiz);
     setEditedQuiz({ ..._quiz, isEditQuiz: false });
     const _quizzes = structuredClone(quizzes);
@@ -327,6 +361,13 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       quizzes?.some((q) => q?.name?.toLowerCase()?.trim() === newQuiz?.name?.toLowerCase()?.trim())
     )
       return setToastMsg({ type: 'danger', message: 'Quiz name cannot be same in one topic.' });
+    const isDuplicate = quizMetaData?.questions?.some(
+      (q) =>
+        q?.Description?.toLowerCase()?.trim() === newQuiz?.question?.toLowerCase()?.trim() &&
+        q?.id !== newQuiz?.questionId
+    );
+    if (isDuplicate)
+      return setToastMsg({ type: 'danger', message: 'Question with same name cannot be added!' });
 
     const _quizTemp = structuredClone(quizTemp);
     const quizTempIndex = quizTemp?.findIndex((q) => q?.data?.questionId === newQuiz?.questionId);

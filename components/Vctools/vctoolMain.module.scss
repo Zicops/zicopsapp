@@ -1,0 +1,1930 @@
+@import '../../styles/base.scss';
+
+.mainCard {
+    width: 100vw;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.vcCard {
+    width: 480px;
+    height: 366px;
+    border: 1px solid #484848;
+    border-radius: 8px;
+}
+
+.videoPlayer {
+    width: 100%;
+    height: 270px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #262626;
+}
+
+.subvideo {
+    z-index: 100;
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    border: solid black 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+
+}
+
+#btnsBg1 {
+    background-color: #202222;
+}
+
+#btnsBg2 {
+    background-Color: #F53D41;
+}
+
+.btns {
+    display: flex;
+    height: 93px;
+    width: auto;
+    align-items: center;
+    // padding-left: 1rem;
+    overflow: hidden;
+    background-color: #121212;
+}
+
+.btns>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background-color: #202222;
+    padding: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.joinBtn {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.joinBtn>button {
+    width: 81px;
+    height: 48px;
+    border-radius: 3rem;
+    background-color: #6BCFCF;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.meet {
+    z-index: 1000;
+    height: 99%;
+    width: 100%;
+    position: absolute;
+    // top:0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+}
+
+.disablevideo {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+// Styling footertool
+#changeBackground {
+    background: #7d7d7d;
+}
+
+.toolBar {
+    // opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 1010;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    margin: 0;
+
+}
+
+.toolBarnav {
+    // opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 1010;
+    // z-index: 1010;
+    width: 100vw;
+    height: 88px;
+    // background-color: transparent;
+    background-image: linear-gradient(black, transparent);
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.toolBarnav>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    // margin-left: 10px;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    border: none;
+    outline: none;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.screen {
+    z-index: 1010;
+    height: 100%;
+    width: 100vw;
+}
+
+.toolBarFooter {
+    // opacity: 0;
+    transition: opacity 0.2s;
+    position: absolute;
+    bottom: 0;
+    z-index: 1010;
+    height: 88px;
+    width: 100vw;
+    background-image: linear-gradient(transparent, black);
+    display: flex;
+    align-items: center;
+}
+
+.footerLeft {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 50%;
+}
+
+#footerLeftbtn1 {
+    background-color: #202222;
+}
+
+#footerLeftbtn2 {
+    background-color: white;
+
+}
+
+.footerLeft>div {
+    outline: none;
+    border: none;
+}
+
+.footerLeft>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+.footerRight {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 50%;
+}
+
+.footerRight>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    // margin-left: 10px;
+    color: white;
+    background-color: #202222;
+    height: 48px;
+    width: 48px;
+    margin-right: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+.canselBtn {
+    height: 48px;
+    width: 127px;
+    border-radius: 4rem;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #F53D41;
+    cursor: pointer;
+}
+
+.canselBtn>img {
+    margin-right: 10px;
+}
+
+#fadein1 {
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 999;
+}
+
+#fadeout1 {
+    opacity: 1011;
+    z-index: 1010;
+}
+
+// /styling chatbar
+.chatbar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.chatbarHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.chatbarHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.chatbarScreen {
+    width: 300px;
+    height: 72%;
+    overflow: scroll;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #292F2F;
+}
+
+.chatbarScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.chatbarInput {
+    margin-top: 20px;
+    height: 15%;
+    width: 300px;
+    border: 1px solid #292F2F;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 6px;
+    flex-direction: column;
+}
+
+.chatbarInput>input {
+    width: 270px;
+    font-size: 16px;
+    height: 24px;
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+
+}
+
+.chatSendFile {
+    width: 276px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chatSendFile>input {
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+}
+
+.chatbar>input> ::placeholder {
+    color: #747474;
+}
+
+// styling AQ bar
+.qaBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.qaBarHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.qaBarHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.qaBarScreen {
+    width: 300px;
+    height: 75%;
+    overflow: scroll;
+    // padding-bottom: 20px;
+}
+
+.qaBarScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.qaBarInput {
+    // margin-top: 20px;
+    height: 15%;
+    width: 300px;
+    border: 1px solid #292F2F;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 6px;
+    flex-direction: column;
+}
+
+.qaBarInput>input {
+    width: 270px;
+    font-size: 16px;
+    height: 20px;
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+
+}
+
+.qaSendFile {
+    width: 276px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.qaSendFile>input {
+    color: white;
+    background-color: #1A1D21;
+    outline: none;
+    border: none;
+}
+
+.qaBtn>input> ::placeholder {
+    color: #747474;
+}
+
+.qabarBtnContainer {
+    height: 86px;
+    width: 300px;
+    display: flex;
+    justify-content: right;
+    margin-top: 55px;
+}
+
+.qaBtn {
+    width: 161px;
+    height: 48px;
+    background: #6BCFCF;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+// Stylling Polls
+.pollBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.pollHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.pollScreen {
+    height: 91%;
+    width: 296px;
+}
+
+.pollHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.moderatorPoll {
+    width: 276px;
+    height: 90%;
+}
+
+.moderatorAddPoll {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pollModeratorScree {
+    width: 296px;
+    height: 99%;
+
+}
+
+
+
+.pollIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.pollAvailableHead {
+    width: 276px;
+    height: 28px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+.pollAvailablesubHead {
+    width: 276px;
+    height: 24px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    margin-top: 8px;
+    color: #747474;
+}
+
+// .pollAvailableHead> {
+//     width: 276px;
+//     height: 24px;
+    
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+//     text-align: center;
+//     color: #747474;
+// }
+
+.addPollBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #6BCFCF;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.addPollBtn>div {
+    width: 15px;
+    height: 23px;
+    font-size: 1.5rem;
+    margin-right: 14px;
+}
+
+// PollQA component
+
+.pollQA {
+    width: 296px;
+    height: 100%;
+    overflow: scroll;
+
+}
+
+.pollQA::-webkit-scrollbar {
+    display: none;
+}
+
+.pollQA>p {
+    width: 276px;
+    height: 24px;
+    font-size: 16px;
+    // 
+    font-style: normal;
+    line-height: 24px;
+    display: flex;
+    justify-content: left;
+    color: white;
+    margin-top: 10px;
+}
+
+.pollQaScreen {
+    width: 296px;
+    height: 100%;
+}
+
+.pollQuestion {
+    width: 296px;
+    height: 210px;
+    background-color: #26292C;
+    margin-top: 12px;
+}
+
+.pollName {
+    width: 276px;
+    padding-top: 1px;
+    // padding-left: 10px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    input {
+        width: 276px;
+        height: 40px;
+        border: none;
+        outline: none;
+        margin: auto 10px;
+        background-color: #1A1D21;
+        padding: 5px;
+        color: white;
+    }
+}
+
+.pollInput {
+    width: 276px;
+    height: 40px;
+    border: none;
+    outline: none;
+    margin-left: auto 10px;
+    background-color: #1A1D21;
+    padding: 5px;
+    color: white;
+}
+
+.pollOption {
+    width: 296px;
+    height: 130px;
+    padding-top: 2px;
+    background-color: #26292C;
+    // margin: 7px 0 7px 0;
+    border-radius: 4px;
+
+    p {
+        width: 276px;
+        height: 24px;
+        display: flex;
+        justify-content: flex-start;
+        margin: 8px auto 6px 10px;
+        color: #ACACAC;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    div {
+        width: 276px;
+        height: 76px;
+        background-color: #1A1D21;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin: auto 10px;
+
+        input {
+            width: 276px;
+            height: 40px;
+            border: none;
+            outline: none;
+            background-color: #1A1D21;
+            padding: 5px;
+            color: white;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+            margin: 6px 0 6px 10px;
+        }
+    }
+}
+
+.pollOptionLabel {
+    margin: 10px 0 10px 10px;
+    width: 276px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.pollOptionContainer {
+    width: 290px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pollAddOptionBtn {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1A1D21;
+    border-radius: 4px;
+    border: solid #262626 2px;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+
+    div {
+        width: 15px;
+        height: 23px;
+        font-size: 1.5rem;
+        margin-right: 14px;
+    }
+}
+
+.pollSaveBtns {
+    width: 296px;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    button {
+        width: 140px;
+        height: 48px;
+        border-radius: 4px;
+        // 
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        outline: none;
+        border: none;
+    }
+}
+
+.pollCancelBtn {
+    background-color: #26292C;
+    color: white;
+}
+
+.pollSaveBtn {
+    background-color: #6BCFCF;
+    color: black;
+}
+
+.pollScreenContainer {
+    width: 100%;
+    height: 63vh;
+    overflow: scroll;
+}
+
+.pollScreenContainer::-webkit-scrollbar {
+    display: none;
+}
+
+
+.pollQuestionScreen {
+    width: 100%;
+    height: 50vh;
+    margin-top: 7px;
+    background-color: #121212;
+    padding-left: 10px;
+    // overflow: scroll;
+
+}
+
+.pollQuestionhead {
+    display: flex;
+    width: 276px;
+}
+
+.pollLable {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+}
+
+.publishPollHead {
+    margin-right: 24px;
+    color: #6BCFCF;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.pollQuestions {
+    width: 100%;
+    height: auto;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: white;
+    background-color: #121212;
+
+}
+
+.pollSavedLabel {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #F6AC3C;
+    margin-bottom: 12px;
+    margin-top: 6px;
+}
+
+.pollBoxOptions {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-right: 8px;
+    // height: 50%;
+}
+
+.pollBoxOptions>div {
+    width: 100%;
+    height: 50px;
+    border: solid #ACACAC .5px;
+    border-radius: 4px;
+    margin-top: 12px;
+    color: white;
+
+}
+
+.pollBoxBtns {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+
+}
+
+.pollBoxEditBnt {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+}
+
+.pollBoxBtns>button {
+    width: 130px;
+    height: 40px;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    background: #292F2F;
+    margin-right: 10px;
+    margin-top: 15px;
+}
+
+.pollBoxDeleteBnt {
+    color:#F53D41;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+}
+// .publishPoll
+// {
+//     width: 100%;
+//     color: red;
+    
+//     font-style: normal;
+//     font-weight: 400;
+//     font-size: 16px;
+//     line-height: 24px;
+// }
+// styling Participants bar
+.participantsBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.participantsHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.participantsHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.participantsScreen {
+    height: 90%;
+    width: 296px;
+    overflow: scroll;
+
+}
+
+.participantsScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.participantsScreenhead {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.allInstructors {
+    width: 276px;
+    height: auto;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    color: white;
+}
+
+// styling student frame
+
+.studentFrame {
+    display: flex;
+    width: 296px;
+    // justify-content:baseline;
+    align-items: center;
+
+}
+
+.studentFramename {
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.studentFrameicons {
+    width: 40%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.studentFrameicons>img {
+    margin-left: 5px;
+}
+
+.studentFrameicons>img {
+    margin-right: 4px;
+}
+
+.avtar {
+    height: 40px;
+    width: 40px;
+    background-color: white;
+    color: black;
+    border-radius: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// styling White board
+.whiteBoard {
+    z-index: 1010;
+    width: 100vw;
+    z-index: 1000;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    background-color: white;
+}
+
+.whitepage {
+    width: 100vw;
+    height: 85%;
+    overflow: scroll;
+    border: solid black 1px;
+    cursor: url(/images/svg/vctool/pen.svg ), auto;
+}
+
+.whitepage::-webkit-scrollbar {
+    display: none;
+}
+
+.whiteBoardControlls {
+    width: 20vw;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+    align-items: center
+}
+
+.whiteBoardControlls>div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    line-height: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+// styling BreakoutRooms
+
+.breakoutRoombar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.breakoutHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.breakoutHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.breakoutRoomscreen {
+    width: 296px;
+    height: 90%;
+    overflow: scrol;
+}
+
+.breakoutRoomscreen::-webkit-scrollbar {
+    display: none;
+}
+
+.breakoutRoomparticipants::-webkit-scrollbar {
+    display: none;
+}
+
+.moderatorBreakoutroom {
+    width: 276px;
+    height: 90%;
+}
+
+
+.breakouRoomIcon {
+    width: 55px;
+    height: 55px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+
+
+.moderatorAddroom {
+    width: 296px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+.breakoutRoomAvailableHead {
+    width: 276px;
+    height: 28px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #ACACAC;
+}
+
+
+
+.moderatorAddroom>p {
+    width: 276px;
+    height: 24px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 8px;
+
+    text-align: center;
+    color: #747474;
+}
+
+.addBreakoutroombtn {
+    width: 296px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.breakoutRoomDetails {
+    width: 296px;
+    height: 90%;
+    padding-top: 10px;
+}
+
+.breakoutRoomDetailsHead {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #FFFFFF;
+    margin-top: 8px;
+}
+
+.breakoutLable {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoominputbox {
+    margin-top: 10px;
+}
+
+.breakoutRoominputbox>input {
+    width: 296px;
+    height: 40px;
+    background-color: #1A1D21;
+    border: 1px solid #292F2F;
+    outline: none;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.breakoutRoomnumbers {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.breakoutRoomnumbers>button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-radius: 2px;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    background-color: #292F2F;
+
+}
+
+.breakoutRoomnumbers>div {
+    width: 210px;
+    height: 40px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 40px;
+    color: #ACACAC;
+    border: 1px solid #292F2F;
+    background-color: #1A1D21;
+}
+
+.participantBreakoutroomsetting {
+    display: flex;
+    margin-top: 16px;
+}
+
+.participantBreakoutroomsetting>input {
+    width: 20.5px;
+    height: 20.5px;
+    margin-right: 10px;
+}
+
+.participantBreakoutroomsetting>p {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #747474;
+}
+
+.breakoutRoomsaveinfobtn {
+    width: 296px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.breakoutcancelinfo {
+    width: 140px;
+    height: 48px;
+    color: white;
+    background-color: #26292C;
+    border: none;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.breakoutsaveinfo {
+    width: 140px;
+    height: 48px;
+    color: rgb(0, 0, 0);
+    background: #6BCFCF;
+    border-radius: 4px;
+    border: none;
+    // 
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    border-radius: 4px;
+}
+
+.manageRooms {
+    width: 296px;
+    height: 90%;
+}
+
+.manageRoomshead {
+    display: flex;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.manageRoomshead>div {
+    width: 90%;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.manageRoombtns {
+    width: 296px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.manageRoombtn1 {
+    width: 140px;
+    height: 40px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #6BCFCF;
+}
+
+.manageRoombtn2 {
+    width: 140px;
+    height: 40px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0B0C0D;
+}
+
+.availableRoomcontainerhead {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.availableRoomcontainer {
+    width: 296px;
+    height: 82%;
+    overflow: scroll;
+}
+
+.availableRoomcontainer::-webkit-scrollbar {
+    display: none;
+}
+
+.breakoutRoomCard {
+    width: 296px;
+    height: 40px;
+    display: flex;
+    margin-top: 5px;
+}
+
+.breakoutRoomCardLeft {
+    display: flex;
+    width: 70%;
+    justify-content: left;
+    align-items: center;
+    color: white;
+}
+
+.breakoutRoomCardLeftHeading {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    margin-left: 8px;
+    color: #FFFFFF;
+}
+
+.breakoutRoomCardIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: #2B60EA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.breakoutRoomCardRight {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.breakoutRoomCardRight>button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+
+.BreakoutRoomtootips {
+    position: absolute;
+    width: 147px;
+    height: 130px;
+    left: 130px;
+    // top: 208px;
+    background: #0B0C0D;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+}
+
+.BreakoutRoomtootips>button {
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #FFFFFF;
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+.breakoutRoomparticipants {
+    width: 296px;
+    height: auto;
+}
+
+.breakoutRoomparticipants>button {
+    width: 290px;
+    margin: 6px;
+    // 
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid #292F2F;
+    height: 40px;
+}
+
+.breakoutRoomParticipantHeading {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.breakoutRoomParticipantScreen {
+    width: 296px;
+    height: 30vh;
+    overflow: scroll;
+}
+
+.breakoutRoomParticipantScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.addParticipantPopup {
+    height: 482px;
+    width: 510px;
+    position: absolute;
+    top: 15%;
+    right: 30%;
+    // bottom: 20%;
+    padding: 14px;
+    background: #1A1D21;
+}
+
+.addParticipantPopupHead {
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    // padding-left: 24px;
+    width: 440px;
+    padding-bottom: 14px;
+    margin: auto;
+    border-bottom: 1px solid #292F2F;
+}
+
+.addParticipantSubHead {
+    width: 440px;
+    display: flex;
+    color: #ACACAC;
+    padding-top: 14px;
+    font-weight: 400;
+    font-size: 18px;
+    margin: auto;
+}
+
+.addParticipantSubHead>div {
+    width: 90%;
+}
+
+.addParticipantPopupScreen {
+    width: 440px;
+    height: 65%;
+    margin: auto;
+    padding-top: 12px;
+    // background-color: #6BCFCF;
+    border-bottom: 1px solid #292F2F;
+    overflow: scroll;
+}
+
+.addParticipantPopupScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.addParticipantbtn {
+    padding-top: 12px;
+    width: 440px;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
+
+.addParticipantbtn1 {
+    width: 209px;
+    height: 48px;
+    background: #26292C;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+.addParticipantbtn2 {
+    width: 209px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000000;
+}
+
+// styling participantFrame
+.participantFrame {
+    width: 440px;
+    height: 40px;
+    display: flex;
+    margin-top: 8px;
+    align-items: centerS;
+}
+
+.participantFrameicon {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.participantFramename {
+    margin-left: 12px;
+    
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+}
+
+.participantFrame>div {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.participantFrame>input {
+    width: 24px;
+    height: 24px;
+    line-height: 40px;
+}
+
+// styling resources page
+.resourceBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+    color: black;
+}
+
+.resourceHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.resourceHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.resourceScreen {
+    height: 90%;
+    width: 296px;
+    overflow: scroll;
+}
+
+.resourceScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.resourceScreenhead {
+    
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #ACACAC;
+    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+}
+
+//styling about page
+.aboutBar {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+}
+
+.aboutScreenHeading {
+    margin-top: 15px;
+    padding-top: 10px;
+    width: 276px;
+    height: 56px;
+    font-size: 18xp;
+    line-height: 28px;
+    color: white;
+}
+
+.aboutScreenSessionHead {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: white;
+    font-size: 14px;
+}
+
+.aboutHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.aboutHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.aboutInstructor {
+    display: flex;
+    width: 276px;
+    justify-content: baseline;
+    border-bottom: solid #292F2F 1px;
+    margin-top: 10px;
+    align-items: center;
+    padding-bottom: 20px;
+    height: 48px;
+    margin-bottom: 15px;
+}
+
+.aboutInstructorlogo {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.intructorInfo {
+    width: 236px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.aboutScreen {
+    height: 88%;
+}
+
+.aboutMeetingInfo {
+    display: flex;
+    width: 276px;
+    justify-content: baseline;
+    height: 48px;
+    margin-top: 10px;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.aboutMeetingLogo {
+    height: 40px;
+    width: 40px;
+    border: solid #292F2F 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.aboutMeetingLogo>img {
+    height: 20px;
+    width: 22.1px;
+}
+
+// styling quiz bar
+.quiz {
+    z-index: 1020;
+    width: 336px;
+    position: absolute;
+    top: 88px;
+    bottom: 88px;
+    padding-left: 17px;
+    right: 0;
+    background-color: #1A1D21;
+    // height: 88vh;
+
+}
+
+.quizeAttemtpsHead {
+    padding-top: 12px;
+    color: #ACACAC;
+    font-size: 14px;
+}
+
+.quizScreen {
+    overflow: scroll;
+    height: 90%;
+}
+
+.quizScreen::-webkit-scrollbar {
+    display: none;
+}
+
+.quizHead {
+    padding-top: 20px;
+    width: 296px;
+    height: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    color: white;
+    border-bottom: 1px solid #292F2F;
+    padding-bottom: 20px;
+}
+
+.quizHead>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.quizUnattempted {
+    width: 276px;
+}
+
+.quizAttempted {
+    width: 276px;
+}
+
+.quizQuestion {
+    width: 276px;
+    margin-top: 12px;
+}
+
+.quizQuestionhead {
+    display: flex;
+    width: 276px;
+}
+
+.quizLable {
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+}
+
+.quizeExpand {
+    width: 70%;
+    display: flex;
+    justify-content: right;
+}
+
+.quizeExpand>img {
+    width: 12px;
+}
+
+.questionScreen {
+    height: 60vh;
+    margin-top: 7px;
+    background-color: #121212;
+
+}
+
+.quizeExpand>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+// styling create BreakoutRoom
+.createRoom {
+    width: 296px;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.createRoomhead {
+    font-size: 14px;
+    color: white;
+    font-weight: 400;
+    width: 40%;
+}
+
+.createRoombtns {
+    display: flex;
+    height: 44px;
+    width: 65%;
+    justify-content: right;
+    align-items: center;
+}
+
+.createRoombtns>button {
+    width: 80px;
+    height: 25px;
+    font-size: 10px;
+    margin-left: 6px;
+    background-color: #2B60EA;
+    color: white;
+}

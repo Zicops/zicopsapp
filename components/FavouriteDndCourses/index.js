@@ -123,8 +123,10 @@ export default function FavouriteDndCourses({ isLoading }) {
       userCourseData?.forEach((course) => {
         course.created_at = course.created_at?.replaceAll('/', '-');
 
-        userCourses?.push(course);
-        if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+        if (course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable) {
+          userCourses?.push(course);
+          if (course?.added_by?.role?.toLowerCase() === 'self') ++totalSelfCourseCount;
+        }
       });
     }
 
@@ -467,6 +469,7 @@ export default function FavouriteDndCourses({ isLoading }) {
         setIsAssignPopUpOpen={setIsAssignPopUpOpen}
         courseId={selectedCourse?.id}
         courseType={selectedCourse?.type}
+        courseName={selectedCourse?.name}
         suggestedCompletionDays={selectedCourse?.expected_completion}
         lspId={selectedCourse?.lspId}
         popUpProps={{

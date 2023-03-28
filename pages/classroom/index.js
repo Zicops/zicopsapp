@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { bigImages, sliderImages } from '../../API/DemoSliderData';
+import { bigImages, classroomSlider1, classroomSlider2, classroomSliderImages, sliderImages } from '../../API/DemoSliderData';
 import CommonCalendar from '../../components/common/CommonCalendar';
 import { useRouter } from 'next/router';
 import Options from '../../components/Exams/Options';
@@ -144,31 +144,28 @@ const Classroom = () => {
       }}>
       <HeroSliderContainer>
         {classroomData.map((item) => (
-          <ClassRoomBanner data={item}/>
+          <ClassRoomBanner data={item} />
         ))}
-        {/* {imageLink.map((item) => (
-          <img src={item} alt="" />
-        ))} */}
       </HeroSliderContainer>
-      <ZicopsCarousel title="Subscribed Classroom Courses" data={sliderImages} />
-      <ZicopsCarousel title="Recomended For You" data={sliderImages} />
+      <ZicopsCarousel title="Subscribed Classroom Courses" data={classroomSlider1} />
+      <ZicopsCarousel title="Recomended For You" data={classroomSlider2} />
 
-      <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
+      {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">
           <SimpleTable tableData={tableData} tableHeight="70vh" tableHeading="Mandatory Courses" />
         </div>
         <div className="w-40 calender_box">
           <CommonCalendar />
         </div>
-      </div>
+      </div> */}
       {/* <SelfPacedMiddle /> */}
 
-      <ZicopsCarousel title="Trending" data={sliderImages} />
+      <ZicopsCarousel title="Trending" data={classroomSliderImages} />
       <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
-      <ZicopsCarousel title="Live Events" data={sliderImages} />
+      {/* <ZicopsCarousel title="Live Events" data={sliderImages} />
       <ZicopsCarousel title="Your Attended Events" data={sliderImages} />
       <ZicopsCarousel title="Upcoming Events" data={sliderImages} />
-      <ZicopsCarousel title="Live Events" data={sliderImages} />
+      <ZicopsCarousel title="Live Events" data={sliderImages} /> */}
 
       {/* <Link href="/courses">
       <a>Courses</a>

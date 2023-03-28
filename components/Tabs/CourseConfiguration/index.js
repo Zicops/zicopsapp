@@ -1,82 +1,67 @@
 import { UPDATE_COURSE } from '@/api/Mutations';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
-import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import { COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import { FullCourseDataAtom, getFullCourseDataObj } from '@/state/atoms/course.atoms';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../../state/contexts/CourseContext';
 import RadioBox from '../common/RadioBox';
 import SwitchBox from '../common/SwitchBox';
-import { isCourseUploadingAtom } from '../Logic/tabs.helper';
+import styles from '../courseTabs.module.scss';
+import { IsCourseSavedAtom, isCourseUploadingAtom } from '../Logic/tabs.helper';
 import useHandleTabs from '../Logic/useHandleTabs';
 import CourseDetailsTable from './CourseDetailsTable';
 import FreezeConfirmation from './FreezeConfirmation';
-import styles from '../courseTabs.module.scss';
-import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 
 export default function CourseConfiguration() {
   const [updateCourse, { loading: courseUploading }] = useMutation(UPDATE_COURSE);
 
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isLoading, setIsLoading] = useRecoilState(isCourseUploadingAtom);
+  const [isCourseSaved, setIsCourseSaved] = useRecoilState(IsCourseSavedAtom);
+  const [fullCourseData, setFullCourseData] = useRecoilState(FullCourseDataAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
 
   const courseContextData = useContext(courseContext);
   const [freezeConfirmBox, setFreezeConfirmBox] = useState(null);
   const [showConfirmBox, setShowConfirmBox] = useState(null);
+  const [unFreeze, setUnFreeze] = useState(null);
+  const [disableBtn, setDisableBtn] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    setIsLoading(courseUploading ? 'UPDATING...' : null);
-  }, [courseUploading]);
-  // const { publishDate, expireDate, setPublishDate, setExpireDate } =
-  //   useHandleConfig(courseContextData);
+  // useEffect(() => {
+  //   setIsLoading(courseUploading ? 'UPDATING...' : null);
+  // }, [courseUploading]);
 
   const { fullCourse, updateCourseMaster, handleChange } = useHandleTabs(courseContextData);
-
-  // const [showConfirmBox, setShowConfirmBox] = useState(false);
 
   let isDisabled = fullCourse?.qa_required;
   if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) isDisabled = true;
   if (isPublishCourseEditable) isDisabled = false;
 
+  function getIsFreezeDisabled() {
+    if (isPublishCourseEditable) return false;
+    if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(fullCourse.status)) return true;
+    if (
+      userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor) &&
+      fullCourse?.status === COURSE_STATUS.approvalPending
+    )
+      return true;
+
+    return false;
+  }
+
   return (
     <>
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        {/* publis date *
-        <>
-          <label htmlFor="publish_date" className={`w-25`}>
-            Publish Date
-          </label>
-          <div className={`w-25`}>
-            <InputDatePicker
-              selectedDate={publishDate}
-              minDate={new Date()}
-              changeHandler={(d) => setPublishDate(d)}
-            />
-          </div>
-        </>
-
-        {/* expiry date *
-        <>
-          <label htmlFor="expire_date" className={`w-25`}>
-            Expire Date
-          </label>
-          <div className={`w-25`}>
-            <InputDatePicker
-              selectedDate={expireDate}
-              minDate={publishDate}
-              changeHandler={(d) => setExpireDate(d)}
-            />
-          </div>
-        </>
-      </div> */}
-
       {/* visiblity */}
       <div>
         <h4>Access Control</h4>
@@ -126,13 +111,14 @@ export default function CourseConfiguration() {
               description:
                 'Once a course is frozen it is no longer editable and ready for approval/publishing',
               name: 'qa_required',
-              isDisabled: isDisabled,
+              isDisabled: getIsFreezeDisabled(),
               isChecked: fullCourse?.qa_required || false,
               handleChange: (e) => {
                 const isFreeze = e.target.checked;
                 if (isFreeze) return setFreezeConfirmBox(true);
 
-                updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
+                setUnFreeze(true);
+                // updateCourseMaster({ ...fullCourse, qa_required: isFreeze });
               }
               // handleChange: () => setFreezeConfirmBox(true)
             }}
@@ -152,7 +138,7 @@ export default function CourseConfiguration() {
       </div>
 
       {/* Expire */}
-      {isDisabled && (
+      {COURSE_STATUS.publish === fullCourse?.status && (
         <div>
           <h4>Expire Course</h4>
 
@@ -220,50 +206,37 @@ export default function CourseConfiguration() {
           />
         </div>
       )}
-      {/* disable course */}
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <label htmlFor="visible" className="w-25">
-          Expire Course
-        </label>
+      {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
 
-        <div className="w-75">
-          <SwitchButton
-            // label="Display"
-            inputName="expire_course"
-            isChecked={fullCourse?.status === COURSE_STATUS.reject || false}
-            isDisabled={isCoursePublished}
-            handleChange={() =>
-              updateCourseMaster({
-                ...fullCourse,
-                status:
-                  fullCourse?.status === COURSE_STATUS.reject
-                    ? COURSE_STATUS.save
-                    : COURSE_STATUS.reject
-              })
-            }
-          />
-        </div>
-      </div> */}
-      {/* <div className={`center-element-with-flex ${styles.marginBottom}`}>
-        <SwitchButton
-          label="Active"
-          inputName="is_active"
-          isChecked={fullCourse?.is_active}
-          handleChange={(e) => {
-            if (!fullCourse?.is_active)
-              return updateCourseMaster({ ...fullCourse, is_active: true });
+      {unFreeze && (
+        <ConfirmPopUp
+          title={'Are you sure about unfreezing this course?'}
+          btnObj={{
+            leftIsDisable: disableBtn,
+            rightIsDisable: disableBtn,
+            handleClickLeft: () => {
+              setDisableBtn(true);
+              const { duration, ..._fullCourse } = fullCourse;
+              const sendData = { ..._fullCourse, qa_required: false };
 
-            setShowConfirmBox(true);
+              updateCourse({ variables: sendData })
+                .then(() => {
+                  updateCourseMaster({ ...fullCourse, qa_required: false });
+                  setFullCourseData(getFullCourseDataObj({ ...fullCourseData, qa_required: true }));
+                  setIsCourseSaved(true);
+                  setUnFreeze(false);
+                })
+                .catch((err) => {
+                  setToastMsg({ type: 'danger', message: 'Course Unfreeze Error!' });
+                })
+                .finally(() => {
+                  setDisableBtn(false);
+                });
+            },
+            handleClickRight: () => setUnFreeze(false)
           }}
         />
-        <SwitchButton
-          label="Display"
-          inputName="is_display"
-          isChecked={fullCourse?.is_display || false}
-          handleChange={handleChange}
-        />
-      </div> */}
-      {!!freezeConfirmBox && <FreezeConfirmation closePopUp={() => setFreezeConfirmBox(false)} />}
+      )}
 
       {showConfirmBox && (
         <ConfirmPopUp

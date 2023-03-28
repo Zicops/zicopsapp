@@ -1,6 +1,6 @@
 import { isEmail } from '@/helper/common.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -11,10 +11,8 @@ import LoginEmail from '../LoginEmail';
 import LoginHeadOne from '../LoginHeadOne';
 import styles from '../zicopsLogin.module.scss';
 
-import { GET_USER_ORGANIZATIONS, userQueryClient } from '@/api/UserQueries';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import HomeHeader from '@/components/HomePage/HomeHeader';
-import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useLoginMutation } from '@/helper/useLoginMutation';
 
 const LoginScreen = ({ setPage }) => {
@@ -64,7 +62,9 @@ const LoginScreen = ({ setPage }) => {
 
     if (!password) return setToastMsg({ type: 'danger', message: 'Enter password!!' });
 
-    const userData = await signIn(email, password);
+    let _email = email?.toLowerCase()?.trim();
+
+    const userData = await signIn(_email, password);
 
     if (userData) loginUser();
   };

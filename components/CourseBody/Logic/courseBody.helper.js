@@ -1,24 +1,46 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { atom } from 'recoil';
 import { filterAndSortTopicsBasedOnModuleId } from '../../../helper/data.helper';
-import CourseBodyNotes from '../CourseBodyNotes';
+import Certificates from '../Certificates';
 import CourseBodyAbout from '../CourseBodyAbout';
+import CourseBodyDiscussion from '../CourseBodyDiscussion';
+import CourseBodyNotes from '../CourseBodyNotes';
 import CourseBodyResources from '../CourseBodyResources';
 import CourseBodyTopics from '../CourseBodyTopics';
-import { atom } from 'recoil';
-import CourseBodyDiscussion from '../CourseBodyDiscussion';
 
 export const tabs = [
   {
     name: 'Topics',
-    comp: <CourseBodyTopics />
+    comp: <CourseBodyTopics />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
   },
   {
     name: 'Resources',
-    comp: <CourseBodyResources />
+    comp: <CourseBodyResources />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
   },
-  { name: 'Notes', comp: <CourseBodyNotes /> },
-  { name: 'Discussion', comp: <CourseBodyDiscussion /> },
+  {
+    name: 'Notes',
+    comp: <CourseBodyNotes />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
+  {
+    name: 'Discussion',
+    comp: <CourseBodyDiscussion />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
   // { name: 'Mentor', comp: ' XYZ ' },
-  { name: 'About', comp: <CourseBodyAbout /> }
+  {
+    name: 'About',
+    comp: <CourseBodyAbout />,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  },
+  {
+    name: 'Certificates',
+    comp: <Certificates />,
+    isHidden: true,
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+  }
 ];
 
 export function getResourceCount(resources, topicId) {

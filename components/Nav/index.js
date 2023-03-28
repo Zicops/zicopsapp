@@ -1,11 +1,13 @@
 import { userClient } from '@/api/UserMutations';
-import { GET_ORGANIZATIONS_DETAILS } from '@/api/UserQueries';
-import { sendNotification } from '@/helper/api.helper';
+import { GET_ORGANIZATIONS_DETAILS, GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
+import { loadAndCacheDataAsync, sendNotification } from '@/helper/api.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getCurrentHost } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { FcmTokenAtom, NotificationAtom } from '@/state/atoms/notification.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useLazyQuery } from '@apollo/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -29,7 +31,9 @@ export default function Nav() {
   const [fcmToken, setFcmToken] = useRecoilState(FcmTokenAtom);
   const [notifications, setNotifications] = useRecoilState(NotificationAtom);
   const [orgData, setOrgData] = useRecoilState(UsersOrganizationAtom);
-
+  const [vendorDetails, setVendorDetails] = useRecoilState(VendorStateAtom);
+  const userDetails = useRecoilValue(UserStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   const [showNotification, setShowNotification] = useState(false);
@@ -38,6 +42,8 @@ export default function Nav() {
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
     client: userClient
   });
+
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   const handleClickInside = () => setShowNotification(!showNotification);
   // const OrgDetails = async () => {
@@ -69,6 +75,19 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [notificationBarRef]);
 
+  useEffect(async () => {
+    if (!isVendor) return;
+    if (vendorDetails?.vendorId) return;
+    const vendorDetail = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userDetails?.id },
+      {},
+      userQueryClient
+    );
+    if (!vendorDetail?.getUserVendor?.[0]?.vendorId) return;
+    setVendorDetails(vendorDetail?.getUserVendor[0]);
+  }, [userDetails?.id]);
+
   const {
     searchQuery,
     activateSearch,
@@ -84,6 +103,8 @@ export default function Nav() {
 
   let displayDevMode = !!isDev;
   if (getCurrentHost()?.includes('localhost')) displayDevMode = true;
+
+  let notificationCount = notifications?.filter((n) => !n?.isRead)?.length;
 
   return (
     <div className={styles.navbar} id="navbar">
@@ -131,6 +152,9 @@ export default function Nav() {
               if (val?.isDisabled || val?.isDemo || val?.isDev) pageRoute = null;
               if (isDemo && val?.isDemo) pageRoute = val?.link;
               if (isDev && val?.isDev) pageRoute = val?.link;
+              if (isVendor && !val?.roleAccess?.includes(USER_LSP_ROLE.vendor)) pageRoute = null;
+              if (isVendor && val?.roleAccess?.includes(USER_LSP_ROLE.vendor) && val?.isCustomRoute)
+                pageRoute = `/admin/vendor/manage-vendor/update-vendor/${vendorDetails?.vendorId}`;
 
               // disabled links
               if (!pageRoute)
@@ -206,7 +230,7 @@ export default function Nav() {
             <ToolTip title="Show Notifications" placement="right">
               <li
                 onClick={handleClickInside}
-                data-count={notifications?.filter((n) => !n?.isRead)?.length}
+                data-count={notificationCount > 10 ? '10+' : notificationCount}
                 className={`${styles.notificationIcon} ${
                   !!notifications?.filter((n) => !n?.isRead)?.length &&
                   styles.activeNotificationIcon

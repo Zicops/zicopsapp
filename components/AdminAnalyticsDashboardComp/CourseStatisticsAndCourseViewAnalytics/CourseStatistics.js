@@ -1,14 +1,17 @@
-import React from 'react'
+import StatisticsCard from '@/components/DashboardComponents/StatisticsCard';
 import styles from '../adminAnalyticsDashboard.module.scss';
-import { statisticsCardData } from '@/components/DashboardComponents/Logic/dashboardData.helper'
-import StatisticsCard from '@/components/DashboardComponents/StatisticsCard'
+import SectionTitle from '../common/SectionTitle';
+import useHandleCourseStatistics from '../Logic/useHandleCourseStatistics';
 
 export default function CourseStatistics() {
+  const { mostAssigned, leastAssigned } = useHandleCourseStatistics();
+
   return (
     <div className={`${styles.wrapper}`}>
-      <div className={`${styles.wrapperHeading}`}>Course statistics</div>
-      {statisticsCardData.map((data) => {
-        return <StatisticsCard key = {data?.id} props={data} />;
+      <SectionTitle title="Course Statistics" />
+
+      {[mostAssigned, leastAssigned].map((data) => {
+        return <StatisticsCard key={data?.id} {...data} />;
       })}
     </div>
   );

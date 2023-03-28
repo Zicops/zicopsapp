@@ -1,3 +1,4 @@
+import TopicPdfViews from '@/components/CourseComps/TopicPdfViews';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
@@ -102,7 +103,6 @@ export default function VideoPlayer({
     topicContent[currentTopicContentIndex]?.subtitleUrl &&
     topicContent[currentTopicContentIndex]?.subtitleUrl[currentSubtitleIndex];
 
-  // console.log(videoData);
   return (
     <>
       {!videoData.videoSrc && videoData?.type !== 'classroom' && (
@@ -118,7 +118,6 @@ export default function VideoPlayer({
         }}>
         {videoType}
       </button> */}
-
       {videoData.type === 'mp4' && videoData.videoSrc && (
         <>
           <video
@@ -169,7 +168,6 @@ export default function VideoPlayer({
           )}
         </>
       )}
-
       {/* {videoData.type === 'SCORM' && videoData.videoSrc && ( */}
       {videoData.type === 'SCORM' && (
         <>
@@ -193,13 +191,27 @@ export default function VideoPlayer({
           </div>
         </>
       )}
-
       {videoData?.type === 'classroom' && (
         <iframe
           style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
           frameBorder="0"
           src={`https://zicops.whereby.com/${wherebyRoomId}?background=off&logo=off`}
           allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
+      )}
+      {videoData.type === 'document' && (
+        <>
+          <TopicPdfViews url={videoData?.videoSrc} />
+
+          <div className={`${styles.scromFullScreenBtn}`}>
+            <Button handleClick={handleFullScreen}>
+              {!document.fullscreenElement ? (
+                <div className={`${styles.fsBtn}`}></div>
+              ) : (
+                <div className={`${styles.fseBtn}`}></div>
+              )}
+            </Button>
+          </div>
+        </>
       )}
     </>
   );

@@ -2,51 +2,16 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { changeHandler } from '@/helper/common.helper';
-import { VendorExpriencesAtom } from '@/state/atoms/vendor.atoms';
-import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
 import styles from './vendorComps.module.scss';
-
-const optionEmploymentTypeArray = [
-  'Full-time',
-  'Part-time',
-  'Self employed',
-  'Freelance',
-  'Internship',
-  'Trainee'
-].map((val) => ({
-  label: val,
-  value: val
-}));
-
-const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
-  label: val,
-  value: val
-}));
-
-const optionMonthArray = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-].map((val) => ({
-  label: val,
-  value: val
-}));
+import { optionEmploymentTypeArray, optionLocationTypeArray } from './Logic/vendorComps.helper';
+import useExperience from './Logic/useExperience';
+import { useRecoilState } from 'recoil';
+import { VendorExperiencesAtom } from '@/state/atoms/vendor.atoms';
 
 const AddExpriences = () => {
-  const [employmentType, setEmploymentType] = useState(null);
-  const [locationType, setLocationType] = useState(null);
-  const [startMonth, setStartMonth] = useState(null);
-  const [endMonth, setEndMonth] = useState(null);
-  const [expriencesData, setExpriencesData] = useRecoilState(VendorExpriencesAtom);
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const { optionMonthArray, optionYearArray } = useExperience();
+
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -55,9 +20,10 @@ const AddExpriences = () => {
           inputOptions={{
             inputName: 'title',
             placeholder: 'Enter title',
-            value: expriencesData?.title
+            maxLength: 60,
+            value: experiencesData?.title
           }}
-          changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
+          changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
         />
       </div>
       <div className={`${styles.inputContainer}`}>
@@ -67,21 +33,27 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'companyName',
               placeholder: 'Enter company name',
-              value: expriencesData?.companyName
+              maxLength: 60,
+              value: experiencesData?.companyName
             }}
-            changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
+            changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
           />
         </div>
         <div className={`${styles.input1}`}>
-          <label for="vendorName">Employment type: </label>
+          <label for="employeeType">Employment type: </label>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'employment type',
+              inputName: 'employeeType',
               placeholder: 'Select employment type',
-              value: employmentType,
+              value: {
+                label: experiencesData?.employeeType,
+                value: experiencesData?.employeeType
+              },
               options: optionEmploymentTypeArray
             }}
-            changeHandler={(val) => setEmploymentType(val)}
+            changeHandler={(e) =>
+              changeHandler(e, experiencesData, setExperiencesData, 'employeeType')
+            }
             styleClass={styles.dropDownMain}
           />
         </div>
@@ -91,32 +63,45 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'location',
               placeholder: 'Ex. Pune, Maharashtra',
-              value: expriencesData?.location
+              maxLength: 160,
+              value: experiencesData?.location
             }}
-            changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
+            changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
           />
         </div>
         <div className={`${styles.input1}`}>
-          <label for="vendorName">Location type: </label>
+          <label for="locationType">Location type: </label>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'year',
+              inputName: 'locationType',
               placeholder: 'Select location type',
-              value: locationType,
+              value: {
+                label: experiencesData?.locationType,
+                value: experiencesData?.locationType
+              },
               options: optionLocationTypeArray
             }}
-            changeHandler={(val) => setLocationType(val)}
+            changeHandler={(e) =>
+              changeHandler(e, experiencesData, setExperiencesData, 'locationType')
+            }
             styleClass={styles.dropDownMain}
           />
         </div>
       </div>
       <div className={`${styles.checkBoxRole}`}>
         <LabeledRadioCheckbox
-          label="Curranty working in this role"
+          label="Currently Working in this Role"
           type="checkbox"
           name="isWorking"
-          isChecked={expriencesData?.isWorking}
-          changeHandler={(e) => changeHandler(e, expriencesData, setExpriencesData)}
+          isChecked={experiencesData?.isWorking}
+          changeHandler={(e) => {
+            const isChecked = e.target.checked;
+            const _experienceData = structuredClone(experiencesData);
+            _experienceData.isWorking = isChecked;
+            _experienceData.endMonth = null;
+            _experienceData.endYear = null;
+            setExperiencesData(_experienceData);
+          }}
         />
       </div>
       <div>
@@ -124,19 +109,36 @@ const AddExpriences = () => {
         <div className={`${styles.inputContainer2}`}>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'Month',
+              inputName: 'startMonth',
               placeholder: 'Month',
-              value: startMonth,
-              options: optionMonthArray
+              value: {
+                label: experiencesData?.startMonth,
+                value: experiencesData?.startMonth
+              },
+              options: optionMonthArray,
+              isSearchEnable: true,
+              menuPlacement: 'top'
             }}
-            changeHandler={(val) => setStartMonth(val)}
+            changeHandler={(e) =>
+              changeHandler(e, experiencesData, setExperiencesData, 'startMonth')
+            }
             styleClass={styles.dropDownMain}
           />
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'year',
-              placeholder: 'year'
+              inputName: 'startYear',
+              placeholder: 'year',
+              options: optionYearArray,
+              isSearchEnable: true,
+              value: {
+                label: experiencesData?.startYear,
+                value: experiencesData?.startYear
+              },
+              menuPlacement: 'top'
             }}
+            changeHandler={(e) =>
+              changeHandler(e, experiencesData, setExperiencesData, 'startYear')
+            }
             styleClass={styles.dropDownMain}
           />
         </div>
@@ -145,19 +147,38 @@ const AddExpriences = () => {
           <div className={`${styles.inputContainer2}`}>
             <LabeledDropdown
               dropdownOptions={{
-                inputName: 'Month',
+                inputName: 'endMonth',
                 placeholder: 'Month',
-                value: endMonth,
-                options: optionMonthArray
+                options: optionMonthArray,
+                isSearchEnable: true,
+                value: {
+                  label: experiencesData?.endMonth,
+                  value: experiencesData?.endMonth
+                },
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
-              changeHandler={(val) => setEndMonth(val)}
+              changeHandler={(e) =>
+                changeHandler(e, experiencesData, setExperiencesData, 'endMonth')
+              }
               styleClass={styles.dropDownMain}
             />
             <LabeledDropdown
               dropdownOptions={{
-                inputName: 'year',
-                placeholder: 'year'
+                inputName: 'endYear',
+                placeholder: 'year',
+                options: optionYearArray,
+                isSearchEnable: true,
+                value: {
+                  label: experiencesData?.endYear,
+                  value: experiencesData?.endYear
+                },
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
+              changeHandler={(e) =>
+                changeHandler(e, experiencesData, setExperiencesData, 'endYear')
+              }
               styleClass={styles.dropDownMain}
             />
           </div>

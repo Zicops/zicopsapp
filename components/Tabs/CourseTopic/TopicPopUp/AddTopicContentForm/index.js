@@ -1,7 +1,8 @@
-import { LIMITS } from '@/helper/constants.helper';
+import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useContext, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { courseContext } from '../../../../../state/contexts/CourseContext';
 import Button from '../../../../common/Button';
@@ -24,6 +25,7 @@ export default function AddTopicContentForm({
   const { newTopicContent, newTopicVideo, setNewTopicVideo } = data;
   const { handleTopicContentInput, handleTopicVideoInput } = inputHandlers;
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
 
   // to set state based on if topic content is present or not
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function AddTopicContentForm({
     });
 
     setNewTopicVideo({ ...newTopicVideo, file: null });
-  }, []);
+  }, [topicContent?.length]);
 
   let selectedLanguages = topicContent?.map((content) => content?.language);
   const lanuages = [...fullCourse?.language]?.filter((lang) => !selectedLanguages?.includes(lang));
@@ -43,7 +45,8 @@ export default function AddTopicContentForm({
   const languageOptions = [];
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
-  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
+  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5', 'document'];
+
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
 
@@ -88,6 +91,7 @@ export default function AddTopicContentForm({
           value: { value: newTopicContent.type, label: newTopicContent.type }
         }}
         changeHandler={(e) => handleTopicContentInput(e, 'type')}
+        customDropdownStyles={{ menuList: { maxHeight: '150px' } }}
       />
 
       {newTopicContent?.type && newTopicContent?.language && (
@@ -96,12 +100,25 @@ export default function AddTopicContentForm({
           <div className={`center-element-with-flex ${styles.marginBottom}`}>
             <label className={`w-25`}>Upload Contents:</label>
             <div className={`w-35`}>
+              <small
+                style={{
+                  color: styles.bgBody,
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}>
+                Max: {Math.ceil(LIMITS.topicVideoSize / ONE_MB_IN_BYTES)} Mb
+              </small>
               <BrowseAndUpload
                 handleFileUpload={(e) => {
                   const file = e.target.files?.[0];
 
-                  if (file?.size > LIMITS.courseVideoSize)
-                    return setToastMsg({ type: 'danger', message: 'File Size limit is 240 mb' });
+                  if (file?.size > LIMITS.topicVideoSize)
+                    return setToastMsg({
+                      type: 'danger',
+                      message: `File Size limit is ${Math.ceil(
+                        LIMITS.topicVideoSize / ONE_MB_IN_BYTES
+                      )} mb`
+                    });
 
                   if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);
 
@@ -109,7 +126,7 @@ export default function AddTopicContentForm({
                 }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={acceptedFiles}
+                acceptedTypes={newTopicContent?.type === 'document' ? '.pdf' : acceptedFiles}
                 hidePreviewBtns={true}
               />
             </div>
@@ -145,7 +162,7 @@ export default function AddTopicContentForm({
                 isFiftyFifty={true}
                 inputOptions={{
                   inputName: 'duration',
-                  label: 'Duration:',
+                  label: newTopicContent?.type === 'document' ? 'Read Time' : 'Duration:',
                   maxLength: 16,
                   isDisabled: !!topicContent?.length || newTopicContent?.type === 'mp4',
                   value: topicContent?.length

@@ -1,92 +1,111 @@
-import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
+  const courseType = useRecoilValue(CourseTypeAtom);
 
   const [categoryCard, setCategoryCard] = useState({
     id: 1,
-    cardTitle: 'Categories',
-    cardImage: '/images/svg/categories.svg',
-    cardCount: null,
-    cardText: 'Categories'
+    title: 'Categories',
+    image: '/images/svg/categories.svg',
+    count: null,
+    caption: null
   });
   const [subCategoryCard, setSubCategoryCard] = useState({
     id: 2,
-    cardTitle: 'Sub-categories',
-    cardImage: '/images/svg/workspaces.svg',
-    cardCount: null,
-    cardText: 'Sub-categories'
+    title: 'Sub-categories',
+    image: '/images/svg/workspaces.svg',
+    count: null,
+    caption: null
   });
   const [myCourseCard, setMyCourseCard] = useState({
     id: 3,
-    cardTitle: 'My Courses',
-    cardImage: '/images/svg/local_library.svg',
-    cardCount: null,
-    cardText: ''
+    title: 'My Courses',
+    image: '/images/svg/local_library.svg',
+    count: null,
+    caption: 'X assigned courses'
   });
   const [zicopsCard, setZicopsCard] = useState({
     id: 4,
-    cardTitle: 'Zicops Courses',
-    cardImage: '/images/svg/Logo.svg',
-    cardCount: null,
-    cardText: ''
+    title: 'Zicops Courses',
+    image: '/images/svg/Logo.svg',
+    count: null,
+    caption: 'X assigned courses'
   });
+
+  // cat sub cat count
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
-    // My Courses Count 
-    loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
-      input: {
-        lsp_id: _lspId,
-        course_status: 'PUBLISHED',
-        course_type: 'self-paced',
-        languages: ['English','Marathi','Arabic']
-      }
-    }).then((data) => {
-      console.log(data);
-    });
-    setCategoryCard((previousData) => {
-      const myCatCount = catSubCat?.cat;
-      return { ...previousData, cardCount: myCatCount?.length };
-    });
-    setSubCategoryCard((previousData) => {
-      const mySubCatCount = catSubCat?.subCat?.filter((subCat) => subCat?.LspId === _lspId)?.length;
-      return { ...previousData, cardCount: mySubCatCount };
-    });
-  }, [catSubCat?.cat?.length, catSubCat?.subCat?.length]);
-  console.log(catSubCat);
+    if (!catSubCat?.cat?.length && !catSubCat?.subCat?.length) return;
 
-  //   const cardData = [
-  //     {
-  //       id: 1,
-  //       cardTitle: 'Categories',
-  //       cardImage: '/images/svg/categories.svg',
-  //       cardCount: 13,
-  //       cardText: 'Categories'
-  //     },
-  //     {
-  //       id: 2,
-  //       cardTitle: 'Sub-categories',
-  //       cardImage: '/images/svg/workspaces.svg',
-  //       cardCount: 36,
-  //       cardText: 'Sub-categories'
-  //     },
-  //     {
-  //       id: 3,
-  //       cardTitle: 'My Courses',
-  //       cardImage: '/images/svg/local_library.svg',
-  //       cardCount: 38,
-  //       cardText: '18 assigned courses'
-  //     },
-  //     {
-  //       id: 4,
-  //       cardTitle: 'Zicops Courses',
-  //       cardImage: '/images/svg/Logo.svg',
-  //       cardCount: 56,
-  //       cardText: '32 assigned courses'
-  //     }
-  //   ];
+    const allCatCount = catSubCat?.cat?.length || 0;
+    const myLspCatCount = catSubCat?.cat?.filter((c) => c?.LspId === _lspId)?.length || 0;
+
+    const allSubCatCount = catSubCat?.subCat?.length || 0;
+    const myLspSubCatCount = catSubCat?.subCat?.filter((sc) => sc?.LspId === _lspId)?.length || 0;
+    setCategoryCard((previousData) => ({
+      ...previousData,
+      count: allCatCount,
+      caption: (
+        <>
+          <p>Zicops Categories:{allCatCount - myLspCatCount}</p>
+          <p>My Categories: {myLspCatCount}</p>
+        </>
+      )
+    }));
+    setSubCategoryCard((previousData) => ({
+      ...previousData,
+      count: allSubCatCount,
+      caption: (
+        <>
+          <p>Zicops Sub-Categories: {allSubCatCount - myLspSubCatCount}</p>
+          <p>My Sub-Categories: {myLspSubCatCount}</p>
+        </>
+      )
+    }));
+  }, [catSubCat?.cat?.length, catSubCat?.subCat?.length]);
+
+  // courses count
+  useEffect(() => {
+    setMyCourseCard({ ...myCourseCard, count: null });
+    setZicopsCard({ ...zicopsCard, count: null });
+    const _lspId = sessionStorage.getItem('lsp_id');
+    // My Courses Count
+
+    loadCourseCardData();
+
+    async function loadCourseCardData() {
+      const myCourseDataRes = loadCourseStats(_lspId);
+      const zicopsCourseDataRes = loadCourseStats(COMMON_LSPS.zicops);
+
+      const myCourseData = await myCourseDataRes;
+      const zicopsCourseData = await zicopsCourseDataRes;
+      setMyCourseCard({ ...myCourseCard, count: myCourseData?.totalMyCourses || 0 });
+      setZicopsCard({ ...zicopsCard, count: zicopsCourseData?.totalMyCourses || 0 });
+    }
+
+    async function loadCourseStats(lspId) {
+      let totalMyCourses = 0;
+      let totalAssignedCourses = 0;
+      if (!lspId) return { totalAssignedCourses, totalMyCourses };
+
+      const totalCourseCountRes = getAllCourseCountInLsp(lspId, { course_type: courseType });
+      // Add API call for getting total assign courses in a particular lsp
+      // const myCourseConsumptionStats = loadQueryDataAsync(
+      //   GET_COURSE_CONSUMPTION_STATS,
+      //   { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
+      //   {},
+      //   userClient
+      // );
+
+      return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
+    }
+  }, [courseType]);
+
   return [categoryCard, subCategoryCard, myCourseCard, zicopsCard];
 }

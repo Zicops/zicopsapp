@@ -1,3 +1,34 @@
+//DON'T DELETE THIS
+
+import VendorMaster from '../AddVendor/VendorMaster';
+import AddVendorServices from '../AddVendor/AddVendorServices';
+import AddVendorCourses from '../AddVendor/AddVendorCourses';
+import VendorOrders from '../VendorOrders';
+import VendorUsers from '../VendorUsers';
+import ProfileManageVendor from '../ProfileMangeVendor';
+import AddIndividualVendorExperience from '../AddVendor/AddIndividualVendorExperience';
+
+export const vendorTabData = {
+  master: { name: 'Master', component: <VendorMaster /> },
+  services: { name: 'Services', component: <AddVendorServices /> },
+  profiles: { name: 'Profiles', component: <ProfileManageVendor /> },
+  experience: { name: 'Experience', component: <AddIndividualVendorExperience />, isHidden: true },
+  courses: { name: 'Courses', component: <AddVendorCourses /> },
+  orders: { name: 'Orders', component: <VendorOrders /> },
+  users: { name: 'Users', component: <VendorUsers /> }
+};
+
+export const manageVendorTabData = [
+  { name: 'Master', component: <VendorMaster /> },
+  { name: 'Services', component: <AddVendorServices /> },
+  { name: 'Profiles', component: <ProfileManageVendor /> },
+  { name: 'Experience', component: <AddIndividualVendorExperience /> },
+  { name: 'Courses', component: <AddVendorCourses /> },
+  { name: 'Orders', component: <VendorOrders /> },
+  { name: 'Users', component: <VendorUsers /> }
+];
+
+//Delete later
 export const myVendors = [
   {
     id: '0',
@@ -677,7 +708,7 @@ export const sampleFiles = [
   },
   {
     id: '1',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_2.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '10 MB',
@@ -686,7 +717,7 @@ export const sampleFiles = [
   },
   {
     id: '2',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_3.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '30 MB',
@@ -695,7 +726,7 @@ export const sampleFiles = [
   },
   {
     id: '3',
-    title: 'File_management_python_1.0.jpg',
+    title: 'File_management_python_4.0.jpg',
     image: '/images/Cohort-Mapped.jpg',
     description: 'Subject matter expertise in Python and content for the same',
     size: '2 MB',
@@ -708,3 +739,62 @@ export const MarketYardHeroData = {
   companyName: 'ABC Learning Technology Pvt. Ltd.',
   expart: ['SME', 'Classroom Training', 'Content Development']
 };
+
+export const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const acceptedFiles = ['.zip', '.rar', '.pdf', '.ppt'].join(', ');
+
+export const optionEmploymentTypeArray = [
+  'Full-time',
+  'Part-time',
+  'Self employed',
+  'Freelance',
+  'Internship',
+  'Trainee'
+].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
+  label: val,
+  value: val
+}));
+
+export const dateNameID = [
+  { label: 'Date', value: '23/02/2023' },
+  { label: 'Vendor Name', value: 'ABC Pvt. Ltd.' },
+  { label: 'Order ID', value: '#111' }
+];
+
+export const statusTypeServie = [
+  { label: 'Status', value: 'Added' },
+  { label: 'Vendor Type', value: 'Organisation' },
+  { label: 'Services', value: 'SME, Content Development' }
+];
+
+export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
+
+export const serviceOptions = [
+  { label: 'Subject Matter', value: 'sme', isDev: true },
+  { label: 'Classroom Training', value: 'crt' },
+  { label: 'Content Development', value: 'cd', isDev: true }
+];

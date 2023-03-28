@@ -1,10 +1,9 @@
-import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { getUserData } from '@/helper/loggeduser.helper';
-import { parseJson } from '@/helper/utils.helper';
-import { getUserDetailsObj, UserDataAtom } from '@/state/atoms/global.atom';
+import { userClient, USER_LOGIN } from '@/api/UserMutations';
+import { USER_STATUS } from '@/helper/constants.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { IsUpdatedAtom, UserStateAtom } from '@/state/atoms/users.atom';
-import { useLazyQuery } from '@apollo/client';
+import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,60 +12,93 @@ import styles from '../nav.module.scss';
 import RightDropDownMenu from '../RightDropDownMenu';
 
 const UserDisplay = () => {
-  const [loadUserData] = useLazyQuery(GET_USER_DETAIL, {
-    client: userQueryClient
-  });
-
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
-  const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
-  const [isUpdate, setIsUpdate] = useRecoilState(IsUpdatedAtom);
-  const [fullName, setFullName] = useState(
-    `${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`
-  );
+  // const [userDataGlobal, setUserDataGlobal] = useRecoilState(UserDataAtom);
   const router = useRouter();
-
+  const [userLogin] = useMutation(USER_LOGIN, { client: userClient });
+  const [fullName, setFullName] = useState('');
   const [lspName, setLspName] = useState('');
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
-
-  useEffect(() => {
-    if (!isUpdate) return;
-    setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
-    setIsUpdate(false);
-  }, [isUpdate, userProfileData?.first_name, userProfileData?.last_name]);
+  // const { getLoggedUserInfo } = useUserCourseData();
 
   useEffect(() => {
     const lspName = sessionStorage?.getItem('lsp_name');
     if (!lspName) return;
-    if (!userProfileData?.id?.length) {
-      setLspName(lspName);
-      return loadAndSetUserData();
-    }
+    setLspName(lspName);
+    if (!userProfileData?.id) return;
     if (userProfileData?.isUserUpdated) {
-      setLspName(lspName);
-      return loadAndSetUserData();
+      setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+      return;
     }
-
-    return setLspName(lspName);
+    if (!fullName?.length) {
+      setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+      return;
+    }
+    // if (!userProfileData?.id?.length) {
+    //   console.log('calledss')
+    //   setLspName(lspName);
+    //   return loadAndSetUserData();
+    // }
+    // if (userProfileData?.isUserUpdated) {
+    //   setLspName(lspName);
+    //   return loadAndSetUserData();
+    // }
+    // if (userProfileData?.id) {
+    //   setFullName(`${userProfileData?.first_name || ''} ${userProfileData?.last_name || ''}`);
+    //   return setLspName(lspName);
+    // }
   }, [userProfileData]);
 
-  async function loadAndSetUserData() {
-    const data = getUserData();
-    const userId = data?.id;
-    if (!userId) return;
-    const userData = await loadUserData({ variables: { user_id: [userId] } }).catch((err) => {
-      console.log(err);
-    });
-    if (userData?.error) return console.log('User data load error');
-    const basicInfo = userData?.data?.getUserDetails?.[0];
+  useEffect(() => {
+    if (userProfileData?.email) return;
 
-    setFullName(`${basicInfo?.first_name} ${basicInfo?.last_name}`);
-    setUserProfileData((prevValue) => ({
-      ...prevValue,
-      ...basicInfo,
-      photoUrl: basicInfo?.photoUrl,
-      isUserUpdated: false
-    }));
-  }
+    if (!auth?.currentUser?.accessToken) return;
+    loginUser();
+
+    async function loginUser() {
+      for (let i = 0; i < 4; i++) {
+        let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          console.log(sessionStorage.getItem('tokenF'));
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) break;
+
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+
+        if (!!res?.data?.login?.is_verified) {
+          setUserProfileData(getUserObject(res?.data?.login));
+          sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+          break;
+        }
+      }
+    }
+  }, [userProfileData?.email]);
+
+  // async function loadAndSetUserData() {
+  //   const userData = await getLoggedUserInfo();
+  //   const basicInfo = userData;
+  //   console.log('calledss')
+  //   setUserProfileData((prevValue) => ({
+  //     ...prevValue,
+  //     ...basicInfo,
+  //     photo_url: basicInfo?.photo_url,
+  //     isUserUpdated: false
+  //   }));
+  // }
 
   // //refill the  recoil values
   // useEffect(async () => {
@@ -99,14 +131,14 @@ const UserDisplay = () => {
   //   }
   // }, []);
 
-  useEffect(() => {
-    const user_lsp_id = parseJson(sessionStorage?.getItem('lspData'))?.user_lsp_id || null;
-    const loggedUserData = parseJson(sessionStorage?.getItem('loggedUser')) || null;
-    setUserDataGlobal({
-      ...userDataGlobal,
-      userDetails: getUserDetailsObj({ ...userProfileData, ...loggedUserData, user_lsp_id })
-    });
-  }, [userProfileData]);
+  // useEffect(() => {
+  //   const user_lsp_id = parseJson(sessionStorage?.getItem('lspData'))?.user_lsp_id || null;
+  //   const loggedUserData = parseJson(sessionStorage?.getItem('loggedUser')) || null;
+  //   setUserDataGlobal({
+  //     ...userDataGlobal,
+  //     userDetails: getUserDetailsObj({ ...userProfileData, ...loggedUserData, user_lsp_id })
+  //   });
+  // }, [userProfileData]);
 
   //update value in sessionStorage
   let userGender = userProfileData?.gender?.toLowerCase();
@@ -130,7 +162,9 @@ const UserDisplay = () => {
           </div>
 
           <div className={styles.profilename}>
-            <div className={styles.name}>{fullName ? truncateTo16(`${fullName}`) : ''}</div>
+            <div className={styles.name}>
+              {!userProfileData?.id ? '' : truncateTo16(`${fullName}`)}
+            </div>
             <div className={styles.desg}>{lspName || 'Zicops'}</div>
           </div>
         </div>

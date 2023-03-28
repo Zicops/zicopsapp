@@ -1,10 +1,15 @@
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { forwardRef } from 'react';
 import { useRecoilValue } from 'recoil';
 
 const CoursePageTabs = forwardRef(
   ({ tabData, setActiveTab, activeCourseTab, customStyles }, ref) => {
+    const userOrgData = useRecoilValue(UsersOrganizationAtom);
     const { isDev, isDemo } = useRecoilValue(FeatureFlagsAtom);
+
+    const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
     return (
       <>
@@ -12,10 +17,13 @@ const CoursePageTabs = forwardRef(
           <div className="tabs">
             <ul>
               {tabData.map((tab) => {
+                if (tab?.isHidden) return null;
+                
                 let isDisabled = false;
                 if (tab?.isDisabled || tab?.isDemo || tab?.isDev) isDisabled = true;
                 if (isDemo && tab?.isDemo) isDisabled = false;
                 if (isDev && tab?.isDev) isDisabled = false;
+                if (isVendor && !tab?.roleAccess?.includes(USER_LSP_ROLE.vendor)) isDisabled = true;
 
                 return (
                   <li

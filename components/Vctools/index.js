@@ -1,110 +1,165 @@
-import styles from './VctoolMain.module.scss';
+import styles from './vctoolMain.module.scss';
 import MeetingCard from './MeetingCard';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Script from 'next/script';
 import MainToolbar from './Toolbar';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { StartMeeting, GenerateString } from "./help/vctool.helper"
+import { breakoutList, participantRole, pollArray, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 const VcMaintool = () => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const GenerateString = (length) => {
-    let result = ' ';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-  const ContainerRef=useRef(null)
+  const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
+  const [pollInfo,setPollInfo]=useRecoilState(pollArray)
+  const totalBreakoutrooms = useRecoilValue(totalRoomno)
+  const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList)
+  const allUserinfo = useRecoilValue(vctoolAlluserinfo)
+  const userData = useRecoilValue(UserStateAtom)
+  const [isStarted, setisStarted] = useState(false)
+  // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const containerRef = useRef(null)
   const [toolbar, settoobar] = useState(false);
-  const [toggleAudio, settoggleAudio] = useState(true);
-  const [toggleVideo, settoggleVideo] = useState(true);
-  const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
+  const [hidecard, sethidecard] = useState(false)
+  const [toggleAudio, settoggleAudio] = useState(false);
+  const [toggleVideo, settoggleVideo] = useState(false);
+  // const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
   const [api, setapi] = useState(null);
-  const StartMeeting = (givenName) => {
-    const domain = 'live.zicops.com';
-    const options = {
-      roomName: givenName,
-      // width: "100%",
-      // height: "100%",
-      parentNode: ContainerRef.current,
-      userInfo: {
-        email: 'email@jitsiexamplemail.com',
-        displayName: 'John Doe'   //default name
-      },
-      configOverwrite: {
-        startWithAudioMuted: !toggleAudio,
-        startWithVideoMuted: !toggleVideo,
-        prejoinPageEnabled: false
-      },
-
-      interfaceConfigOverwrite: {
-        SHOW_JITSI_WATERMARK: false,
-        DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
-        TOOLBAR_ALWAYS_VISIBLE: true,
-        TOOLBAR_BUTTONS: [
-          // 'closedcaptions',
-          // 'filmstrip',
-          // 'fullscreen',
-          // 'select-background',
-          // 'settings'
-        ]
-      },
-      onload: function () {
-        console.log('onload');
-        console.log('meeting is stared');
-        // settoobar(true)
-        setTimeout(() => {
-          settoobar(true);
-        }, 2000);
-      }
-    };
-    setapi(new JitsiMeetExternalAPI(domain, options));
-  };
+  const [Fullscreen, setFullscreen] = useState(false)
+  const fullScreenRef = useRef(null)
+  const [userinfo, setuserinfo] = useState([])
+  const GetFullScreenElement = () => {
+    return document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullscreenElement ||
+      document.msFullscreenElement
+  }
+  const startName = userData.first_name + " " + userData.last_name
   return (
-    <>
-      <div id="meet"  className={toolbar? `${styles.meet}`:""} ref={ContainerRef}></div>
+    <div ref={fullScreenRef}>
+      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}></div>
       {toolbar && (
         <MainToolbar
-          SetAudio={() => {
-            settoggleAudio(!toggleAudio);
-            api.executeCommand('toggleAudio');
+          setAudio={() => {
+            api.isAudioAvailable().then(available => {
+              if (available) {
+                settoggleAudio(!toggleAudio);
+                api.executeCommand('toggleAudio');
+              }
+            });
           }}
-          SetVideo={() => {
-            settoggleVideo(!toggleVideo);
-            api.executeCommand('toggleVideo');
+          setVideo={() => {
+            api.isVideoAvailable().then(available => {
+              if (available) {
+                settoggleVideo(!toggleVideo);
+                api.executeCommand('toggleVideo');
+              }
+            });
           }}
           audiotoggle={toggleAudio}
           videotoggle={toggleVideo}
-          EndMeetng={() => {
+          endMeetng={() => {
             api.dispose();
             settoobar(!toolbar);
+            sethidecard(!hidecard)
+            localStorage.removeItem("canvasimg");
+
+            document.exitFullscreen().then((data => {
+
+            })).catch((e) => {
+            })
+            setFullscreen(false)
+            setisStarted(false)
           }}
-          ShareScreen={() => {
+          shareScreen={() => {
             api.executeCommand('toggleShareScreen');
-            // settoggleVideo(!toggleVideo);
+            setFullscreen(false)
           }}
-          HandRiseFun={() => {
+          handRiseFun={() => {
             api.executeCommand('toggleRaiseHand');
           }}
-        />
+          fullScreenFun={() => {
+            if (GetFullScreenElement()) {
+              document.exitFullscreen().then((data => {
+              })).catch((e) => {
+              })
+            }
+            else {
+              fullScreenRef.current.requestFullscreen().catch((e) => {
+
+              })
+
+            }
+            setFullscreen(!Fullscreen)
+          }}
+          mouseMoveFun={() => {
+            // console.info(pollInfo)
+            api.getRoomsInfo().then(rooms => {
+              setbreakoutListarr(rooms.rooms)
+              setuserinfo(rooms.rooms[0].participants)
+              setallInfo(rooms.rooms[0].participants)
+            })
+            //  allUserinfo
+            // userinfo
+            api.executeCommand('displayName', userData.first_name);
+            userinfo.forEach((data) => {
+             
+              if ([api.getEmail(data?.id)].toString().includes("@zicops")) {
+                api.executeCommand('grantModerator', data.id);
+              }
+            })
+          //     api.listBreakoutRooms().then(breakoutRooms => {
+          //     console.log(breakoutRooms)
+          // });
+          }}
+
+
+          fullscreen={Fullscreen}
+          // getUesrId={userinfo}
+          isStarted={isStarted}
+          startAdvertisement={() => {
+            api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+          }}
+
+          stopAdvertisement={() => {
+            // 
+            api.executeCommand('stopShareVideo');
+
+          }}
+          CreateBreakoutroomlist={() => {
+            for (let i = 0; i < totalBreakoutrooms; i++) {
+              api.executeCommand('addBreakoutRoom');
+            }
+
+
+          }} autoAssignRoom={() => {
+
+            //         participantId: "bd6f680b",
+            // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
+            //         }  );
+          }} />
       )}
       <Script src="https://live.zicops.com/external_api.js"></Script>
-      <div className={`${styles.main_div}`}>
+      <div className={`${styles.mainCard}`}>
         {/* all components ara going to append here */}
-        <MeetingCard
-          StartMeeting={() => {
-            StartMeeting(link);
-          }}
-          StartAudioenableFun={() => {
-            settoggleAudio(!toggleAudio);
-          }}
-          StartVideoenableFun={() => {
-            settoggleVideo(!toggleVideo);
-          }}
-          StartmeetingAudioenable={toggleAudio}
-          StartmeetingVideoenable={toggleVideo}
-        />
+        {
+          !hidecard ? <MeetingCard
+            startMeeting={() => {
+              StartMeeting("standup", startName, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              setisStarted(true)
+              sethidecard(!hidecard)
+         
+            }}
+            startAudioenableFun={() => {
+              settoggleAudio(!toggleAudio);
+            }}
+            startVideoenableFun={() => {
+              settoggleVideo(!toggleVideo);
+            }}
+            startmeetingVideoenable={toggleVideo}
+            startmeetingAudioenable={toggleAudio}
+          /> : ''
+        }
       </div>
-    </>
+    </div>
   );
 };
 export default VcMaintool;

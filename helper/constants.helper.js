@@ -10,7 +10,8 @@ export const COURSE_MAP_STATUS = {
   completed: 'completed',
   disable: 'disable'
 };
-export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner' };
+export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
+export const USER_TYPE = { internal: 'internal', external: 'external' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -19,7 +20,7 @@ export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 //need to delete chorot later
 export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
-
+export const VC_TOOL_ROLE = ['moderator', 'instructor', 'participant'];
 export const PUBLIC_PATHS = [
   '/login',
   '/auth-verify',
@@ -76,7 +77,10 @@ export const CUSTOM_ERROR_MESSAGE = {
   emailError: 'EMAIL_EXISTS',
   phoneError: 'PHONE_NUMBER_EXISTS',
   nothingToUpdate: 'nothing to update',
-  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT'
+  shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT',
+  emailAlreadyExist: 'User already exists',
+  selfInvite: 'Inviting himself',
+  newUsers: 'New user'
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
@@ -117,10 +121,13 @@ export const COURSE_STATUS = {
   draft: 'DRAFT',
   upload: 'UPLOADING',
   update: 'UPDATING',
+
   save: 'SAVED',
   freeze: 'FREEZED',
   publish: 'PUBLISHED',
-  reject: 'REJECTED'
+  reject: 'REJECTED',
+  approvalPending: 'APPROVAL_PENDING',
+  hold: 'ON_HOLD'
 };
 
 export const COURSE_TOPIC_STATUS = {
@@ -128,6 +135,8 @@ export const COURSE_TOPIC_STATUS = {
   started: 'in-progress',
   completed: 'completed'
 };
+
+export const COURSE_EXPERTISES = ['Beginner', 'Competent', 'Proficient'];
 
 //need to delete later
 export const PRODUCT_TOUR_PATHS = ['exams'];
@@ -162,7 +171,10 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
-  courseVideoSize: ONE_MB_IN_BYTES * 240
+  previewVideoSize: ONE_MB_IN_BYTES * 50,
+  topicVideoSize: ONE_MB_IN_BYTES * 500,
+  questionOptionSize: ONE_MB_IN_BYTES * 250,
+  vendorSampleSize: ONE_MB_IN_BYTES * 50
 };
 
 export const EMAIL_TEMPLATE_IDS = {
@@ -184,8 +196,8 @@ export const COURSE_TOPIC_TYPES = {
 
 export const ORG_DOMAINS = [
   'https://demo.zicops.com',
-  'https://zicops.com',
-  'https://myspace.zicops.com'
+  'https://zicops.com'
+  // 'https://myspace.zicops.com'
 ];
 
 //Vendor Constant Start
@@ -205,4 +217,45 @@ export const VENDOR_LANGUAGES = [
 
 export const VENDOR_FILE_FORMATS = ['PPT', 'PDF', 'Consultancy'];
 
+export const VENDOR_MASTER_STATUS = {
+  active: 'active',
+  draft: 'draft',
+  disable: 'disable'
+};
+
+export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
+
+export const VENDOR_SERVICES_TYPE = {
+  sme: { label: 'Subject Matter Expertise', type: 'sme' },
+  crt: { label: 'Classroom Training Expertise', type: 'crt' },
+  cd: { label: 'Content Development', type: 'cd' }
+};
+
 //Vendor Constant End
+
+// GENERIC CONSTANTS
+export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
+
+export const FILE_TYPES = {
+  vendorSampleFiles: [
+    '.zip',
+    '.rar',
+    '.pdf',
+    '.ppt',
+    '.pptx',
+    '.doc',
+    '.docx',
+    '.xls',
+    '.xlsx',
+    '.txt',
+    '.srt',
+    '.vtt',
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.mp3',
+    '.mp4',
+    '.webm'
+  ].join(', ')
+};

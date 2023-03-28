@@ -1,42 +1,43 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import ZicopsCarousel from '@/components/ZicopsCarousel';
-import { myVendors } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import MainBody from '@/components/common/MainBody';
 import MarketYardHeroSection from '@/components/VendorComps/MarketYardHeroSection';
+import MarketYardData from '@/components/VendorComps/MarketYardData';
+import { useState } from 'react';
+import { serviceOptions } from '@/components/VendorComps/Logic/vendorComps.helper';
+import { useDebounce } from '@/helper/hooks.helper';
 
 export default function MarketYard() {
+  const [vendorType, setVendorType] = useState(null);
+  const [vendorService, setVendorService] = useState(null);
+  const [searchText, setSearchText] = useState('');
+
+  const searchQuery = useDebounce(searchText, 1000);
+
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
       <MainBody customStyles={{ overflowX: 'clip', padding: '0' }}>
-        <MarketYardHeroSection />
+        <MarketYardHeroSection
+          vendorType={vendorType}
+          setVendorType={setVendorType}
+          vendorService={vendorService}
+          setVendorService={setVendorService}
+          searchText={searchText}
+          setSearchText={setSearchText}
+        />
 
-        <ZicopsCarousel
-          title="My Vendors"
-          data={myVendors}
-          type="vendor"
-          //   handleTitleClick={() =>
-          //     router.push(
-          //       `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}`,
-          //       '/search-page'
-          //     )
-          //   }
+        <MarketYardData
+          vendorType={vendorType?.value}
+          vendorService={vendorService?.value}
+          displayRows={{
+            isSmeDisplayed: vendorService?.value ? 'sme' === vendorService?.value : true,
+            isCdDisplayed: vendorService?.value ? 'cd' === vendorService?.value : true,
+            isCrtDisplayed: vendorService?.value ? 'crt' === vendorService?.value : true,
+            speakerType: vendorService?.value
+          }}
+          searchText={searchQuery}
         />
-        <ZicopsCarousel
-          title="Subject Matter Experts Marketplace"
-          data={myVendors}
-          type="vendor"
-          //   handleTitleClick={() =>
-          //     router.push(
-          //       `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}`,
-          //       '/search-page'
-          //     )
-          //   }
-        />
-        <ZicopsCarousel title="Content Development Marketplace" data={myVendors} type="vendor" />
-        <ZicopsCarousel title="Training Fulfiller Marketplace" data={myVendors} type="vendor" />
-        <ZicopsCarousel title="Speakers Marketplace" data={myVendors} type="vendor" />
       </MainBody>
     </>
   );

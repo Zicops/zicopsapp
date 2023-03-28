@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
 import {
@@ -71,6 +71,7 @@ export default function TopicPopUp({
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
 
   const assessmentData = useAddAssessment(editTopic, setEditTopic);
+  const [disableQuizAccordian, setDisableQuizAccordian] = useState(null);
 
   useEffect(() => {
     if (isEdit && !isPopUpDataPresent) setIsPopUpDataPresent(true);
@@ -228,12 +229,13 @@ export default function TopicPopUp({
                   {/* quiz */}
                   <Accordion
                     title="Quiz"
-                    isDisabled={!filteredTopicContent?.length}
+                    isDisabled={!filteredTopicContent?.length || disableQuizAccordian}
                     content={
                       <QuizForm
                         topicId={editTopic?.id || ''}
                         courseId={editTopic?.courseId || ''}
-                        isScrom={filteredTopicContent[0]?.type === 'SCORM'}
+                        isScrom={['SCORM', 'document']?.includes(filteredTopicContent[0]?.type)}
+                        isFormOpen={(isOpen) => setDisableQuizAccordian(isOpen)}
                       />
                     }
                   />

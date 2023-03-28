@@ -15,6 +15,10 @@ export const months = [
   'December'
 ];
 
+export const years = Array.from(Array(new Date().getFullYear() - 1969), (_, i) =>
+  (i + 1970).toString()
+);
+
 export function displayUnixDate(unixTime) {
   if (!unixTime) return '';
 
@@ -70,7 +74,7 @@ export function secondsToHMS(secs, showHour = true) {
 
 export function displayMinToHMS(mins) {
   if (!mins) return '00 mins';
-  if (mins < 60) return `${mins} mins`;
+  if (mins < 60) return `${Math.ceil(mins)} mins`;
 
   const hours = ('0' + Math.floor(mins / 60)).substr(-2) || '00';
   const divisor_for_minutes = mins % 60;
@@ -156,9 +160,8 @@ export function toggleFullScreen(elem) {
 
 export function getUnixFromDate(dateObj = new Date()) {
   //implemented for unix timestamp
-  if(!(dateObj instanceof Date)) return dateObj;
-    
-  
+  if (!(dateObj instanceof Date)) return dateObj;
+
   const newDate = new Date(dateObj);
 
   return Math.floor(newDate.getTime() / 1000) || 0;
@@ -235,6 +238,12 @@ export function getFileNameFromUrl(fileUrl) {
   if (!fileUrl) return '';
 
   return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
+}
+
+export function getEncodedFileNameFromUrl(fileUrl) {
+  if (!fileUrl) return '';
+
+  return Buffer.from(decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop()), 'base64').toString();
 }
 
 // https://stackoverflow.com/a/23013574

@@ -18,6 +18,37 @@ export function DownArrowIcon({ color = '#6BCFCF', turns = '0' }) {
   );
 }
 
+export function DownSortTriangleIcon({ color = '#C4C4C4', turns = '0' }) {
+  return (
+    <svg
+      width="12"
+      height="6"
+      viewBox="0 0 12 6"
+      style={{ transform: `rotate(${turns}turn)` }}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 6L0 0H12L6 6Z" fill={color} />
+    </svg>
+  );
+}
+
+export function UnFoldMoreArrows({ color = '#6BCFCF', turns = '0' }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      style={{ transform: `rotate(${turns}turn)` }}
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M5.83 12L9 8.83L7.59 7.42L3 12L7.59 16.59L9 15.17L5.83 12ZM18.17 12L15 15.17L16.41 16.58L21 12L16.41 7.41L15 8.83L18.17 12Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
 export function ExpertiseIcon() {
   return (
     <svg width="22" height="18" viewBox="0 0 22 18" fill="none" xmlns="http://www.w3.org/2000/svg">

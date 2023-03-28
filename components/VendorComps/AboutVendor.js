@@ -7,41 +7,72 @@ import {
   classroomTraining,
   contentDevelopment
 } from './Logic/vendorComps.helper';
+import { useRecoilValue } from 'recoil';
+import {
+  SmeServicesAtom,
+  CtServicesAtom,
+  CdServicesAtom,
+  VendorStateAtom
+} from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
+import useHandleVendor from './Logic/useHandleVendor';
+import Loader from '../common/Loader';
+import { useRouter } from 'next/router';
 
 export default function AboutVendor({ data }) {
-  const smeData = subjectMatterExpertise.find(({ vendorId }) => vendorId === data.id);
-  const ctData = classroomTraining.find(({ vendorId }) => vendorId === data.id);
-  const cdData = contentDevelopment.find(({ vendorId }) => vendorId === data.id);
+  const { getSmeDetails, getCrtDetails, getCdDetails } = useHandleVendor();
 
+  useEffect(() => {
+    getSmeDetails();
+    getCrtDetails();
+    getCdDetails();
+  }, []);
+  const vendorData = useRecoilValue(VendorStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const router = useRouter();
+  const vendorId = router.query.vendorId || null;
+
+  const accordianMarketyardDetails = [
+    {
+      title: 'Subject Matter Expertise',
+      description: smeData.serviceDescription,
+      serviceData: smeData,
+      type: 'sme'
+    },
+    {
+      title: 'Classroom Training',
+      description: ctData.serviceDescription,
+      serviceData: ctData,
+      type: 'crt'
+    },
+    {
+      title: 'Content Development',
+      description: cdData.serviceDescription,
+      serviceData: cdData,
+      type: 'cd'
+    }
+  ];
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
-        <p>{data.desc}</p>
+        <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
-        <ZicopsAccordian
-          title={'Subject Matter Expertise'}
-          description={
-            'With a talented pool of individuals, we provide subject matter expertise in various topics. The expertise can be used for further content development or consultancy into the same.'
-          }>
-          <VendorServices data={smeData} />
-        </ZicopsAccordian>
-        <ZicopsAccordian
-          title={'Classroom Training'}
-          description={
-            'We have a history of conducting highly immersive and interactive trainings for corporate upskilling their teams.'
-          }>
-          <VendorServices data={ctData} />
-        </ZicopsAccordian>
-        <ZicopsAccordian
-          title={'Content Development'}
-          description={
-            'We develop immersive animated content keeping our content engaging for learners. Quick delivery and cost-effectively transform your static content into a dynamic anf engaging course.'
-          }>
-          <VendorServices data={cdData} />
-        </ZicopsAccordian>
+        <h3 className={`${styles.servicesHeading}`}>Services</h3>
+        {accordianMarketyardDetails.map((value, index) => {
+          if (!value?.serviceData?.isApplicable) return;
+          return (
+            <ZicopsAccordian title={value.title} description={value.description}>
+              <VendorServices data={value.serviceData} type={value?.type} />
+            </ZicopsAccordian>
+          );
+        })}
       </div>
-      <VendorDetails />
+      <VendorDetails data={data} />
     </div>
   );
 }

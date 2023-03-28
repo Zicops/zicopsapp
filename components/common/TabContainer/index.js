@@ -13,7 +13,8 @@ export default function TabContainer({
   footerObj = {},
   children,
   customStyles,
-  customClass = null
+  customClass = null,
+  isDisabled = false
 }) {
   const {
     status,
@@ -73,14 +74,21 @@ export default function TabContainer({
     <>
       <nav className={`${styles.tabHeader}`}>
         <ul>
-          {tabData.map((t) => (
-            <li
-              key={t.name}
-              className={tab === t.name ? `${styles.tabli} ${styles.active}` : `${styles.tabli}`}
-              onClick={() => setTab(t.name)}>
-              {t.name}
-            </li>
-          ))}
+          {tabData.map((t) => {
+            if (t?.isHidden) return null;
+
+            return (
+              <li
+                key={t.name}
+                className={tab === t.name ? `${styles.tabli} ${styles.active}` : `${styles.tabli}`}
+                onClick={() => {
+                  if (isDisabled) return;
+                  setTab(t.name);
+                }}>
+                {t.name}
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

@@ -83,6 +83,15 @@ export function getCurrentEpochTime() {
   return Math.floor(currentTime / 1000);
 }
 
+export async function convertUrlToFile(dataUrl, fileName = 'file.jpg') {
+  if (!dataUrl) return;
+
+  let response = await fetch(dataUrl);
+  let data = await response.blob();
+  let metadata = { type: 'image/jpeg' };
+  return new File([data], fileName, metadata);
+}
+
 //
 export function getNotificationMsg(type = '', msgObj = {}) {
   if (type === '') {
@@ -103,14 +112,34 @@ export function getNotificationMsg(type = '', msgObj = {}) {
       return `Note: You are no longer member of Cohort ${msg?.cohortName}. However streaming of learning to you, continues`;
     },
     promotedManager: function (msg) {
-      return `Your have been designated as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
+      return `You have been assigned as Cohort Manager for ${msg?.cohortName} cohort. Check out the cohort and manage the same.`;
     },
     demotedManager: function (msg) {
       return `Note: You are no longer Manager of Cohort ${msg?.cohortName}. Please continue your learning as a member.`;
+    },
+    unassignSelfCourse: function (msg) {
+      return `You have removed course ${msg.courseName}. Please let us know your feedback`;
     }
   };
 
   if (!notificationObj?.[type]) return false;
 
   return notificationObj?.[type](msgObj);
+}
+
+// this function is used to sanitize the sendData for any api that we are calling
+function sanitizeStr(s) {
+  return `${s}`.trim();
+}
+
+export function sanitizeFormData(_object) {
+  let object = structuredClone(_object);
+  Object.keys(object).forEach(function (k) {
+    if (object[k] && typeof object[k] === 'object') {
+      sanitizeFormData(object[k]);
+      return;
+    }
+    object[k] = sanitizeStr(object[k]);
+  });
+  return object;
 }

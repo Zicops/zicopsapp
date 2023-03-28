@@ -790,15 +790,67 @@ export const GET_LEARNINGSPACES_ID_BY_ORGID = gql`
   }
 `;
 
+export const GET_LSP_USERS_WITH_ROLE = gql`
+  query getPaginatedLspUsersWithRoles(
+    $lsp_id: String!
+    $role: [String]
+    $pageCursor: String
+    $pageSize: Int
+  ) {
+    getPaginatedLspUsersWithRoles(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: ""
+      pageSize: $pageSize
+      role: $role
+    ) {
+      data {
+        user {
+          id
+          first_name
+          last_name
+          status
+          role
+          is_verified
+          is_active
+          gender
+          created_by
+          updated_by
+          created_at
+          updated_at
+          email
+          phone
+          photo_url
+        }
+        roles {
+          user_lsp_id
+          user_role_id
+          role
+        }
+        status
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+// VENDOR QUERIES START
+
+// {status: String , service: String}
+
 export const GET_VENDORS_BY_LSP = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       level
       name
+      description
       photo_url
       address
+      users
       website
       facebook_url
       instagram_url
@@ -814,48 +866,434 @@ export const GET_VENDORS_BY_LSP = gql`
 `;
 
 export const GET_VENDORS_BY_LSP_FOR_TABLE = gql`
-  query getVendors($lsp_id: String) {
-    getVendors(lsp_id: $lsp_id) {
+  query getVendors($lsp_id: String, $filters: VendorFilters) {
+    getVendors(lsp_id: $lsp_id, filters: $filters) {
       vendorId
       type
       name
+      updated_at
+      status
     }
   }
 `;
 
-// combined queries
+export const GET_VENDOR_ADMINS = gql`
+  query getVendorAdmins($vendor_id: String!) {
+    getVendorAdmins(vendor_id: $vendor_id) {
+      id
+      first_name
+      last_name
+      status
+      role
+      is_verified
+      is_active
+      gender
+      created_by
+      updated_by
+      created_at
+      updated_at
+      email
+      phone
+      photo_url
+    }
+  }
+`;
 
-// export const GET_USER_META = gql`
-// query getUserMeta($user_id:){
-//   getUserPreferences(user_id: $user_id) {
-//     user_preference_id
-//     user_id
-//     user_lsp_id
-//     sub_category
-//     is_base
-//     is_active
-//     created_by
-//     updated_by
-//     created_at
-//     updated_at
-//   }
+export const GET_VENDOR_DETAILS = gql`
+  query getVendorDetails($vendor_id: String!) {
+    getVendorDetails(vendor_id: $vendor_id) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      website
+      users
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
 
-//   getUserDetails(user_ids: $user_id) {
-//     id
-//     first_name
-//     last_name
-//     status
-//     role
-//     is_verified
-//     is_active
-//     gender
-//     created_by
-//     updated_by
-//     created_at
-//     updated_at
-//     email
-//     phone
-//     photo_url
-//   }
-// }
-// `
+export const GET_VENDOR_EXPERIENCES = gql`
+  query getVendorExperience($vendor_id: String!, $pf_id: String!) {
+    getVendorExperience(vendor_id: $vendor_id, pf_id: $pf_id) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
+  }
+`;
+
+export const GET_SINGLE_EXPERIENCE_DETAILS = gql`
+  query getVendorExperienceDetails($vendor_id: String!, $pf_id: String!, $exp_id: String!) {
+    getVendorExperienceDetails(vendor_id: $vendor_id, pf_id: $pf_id, exp_id: $exp_id) {
+      ExpId
+      VendorId
+      PfId
+      StartDate
+      EndDate
+      Title
+      Location
+      LocationType
+      EmployementType
+      CompanyName
+      CreatedAt
+      CreatedBy
+      UpdatedAt
+      UpdatedBy
+      Status
+    }
+  }
+`;
+export const GET_SINGLE_PROFILE_DETAILS = gql`
+  query viewProfileVendorDetails($vendor_id: String!, $email: String!) {
+    viewProfileVendorDetails(vendor_id: $vendor_id, email: $email) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      content_development
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_ALL_PROFILE_DETAILS = gql`
+  query viewAllProfiles($vendor_id: String!) {
+    viewAllProfiles(vendor_id: $vendor_id) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      content_development
+      experience
+      experience_years
+      is_speaker
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_SAMPLE_FILES = gql`
+  query getSampleFiles($vendor_id: String!, $p_type: String!) {
+    getSampleFiles(vendor_id: $vendor_id, p_type: $p_type) {
+      sf_id
+      name
+      fileType
+      price
+      file_url
+      rate
+      currency
+      unit
+      actualFileType
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_USER_VENDORS = gql`
+  query getUserVendor($user_id: String) {
+    getUserVendor(user_id: $user_id) {
+      vendorId
+      type
+      level
+      name
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_SME_DETAILS = gql`
+  query getSmeDetails($vendor_id: String!) {
+    getSmeDetails(vendor_id: $vendor_id) {
+      vendor_id
+      sme_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CRT_DETAILS = gql`
+  query getClassRoomTraining($vendor_id: String!) {
+    getClassRoomTraining(vendor_id: $vendor_id) {
+      vendor_id
+      crt_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_CD_DETAILS = gql`
+  query getContentDevelopment($vendor_id: String!) {
+    getContentDevelopment(vendor_id: $vendor_id) {
+      vendor_id
+      cd_id
+      description
+      is_applicable
+      expertise
+      languages
+      output_deliveries
+      sample_files
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ALL_ORDERS = gql`
+  query getAllOrders($lsp_id: String) {
+    getAllOrders(lsp_id: $lsp_id) {
+      order_id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_ORDER_SERVICES = gql`
+  query getOrderServices($order_id: [String]) {
+    getOrderServices(order_id: $order_id) {
+      service_id
+      order_id
+      service_type
+      description
+      unit
+      currency
+      rate
+      quantity
+      total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const GET_PAGINATED_VENDORS = gql`
+  query getPaginatedVendors(
+    $lsp_id: String
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+    $filters: VendorFilters
+  ) {
+    getPaginatedVendors(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+      filters: $filters
+    ) {
+      vendors {
+        vendorId
+        type
+        level
+        name
+        description
+        photo_url
+        address
+        users
+        website
+        facebook_url
+        instagram_url
+        twitter_url
+        linkedin_url
+        services
+        created_at
+        created_by
+        updated_at
+        updated_by
+        status
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_SPEAKERS = gql`
+  query getSpeakers($lspId: String, $service: String, $name: String) {
+    getSpeakers(lsp_id: $lspId, service: $service, name: $name) {
+      pf_id
+      vendor_id
+      first_name
+      last_name
+      email
+      phone
+      photo_url
+      description
+      language
+      sme_expertise
+      classroom_expertise
+      content_development
+      experience
+      experience_years
+      sme
+      crt
+      cd
+      is_speaker
+      lsp_id
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const GET_VENDOR_SERVICES = gql`
+  query getVendorServices($vendorId: String) {
+    getVendorServices(vendor_id: $vendorId)
+  }
+`;
+
+// DASHBOARD QUERIES START
+export const GET_COURSE_CONSUMPTION_STATS = gql`
+  query getCourseConsumptionStats(
+    $lsp_id: String!
+    $pageCursor: String
+    $direction: String
+    $pageSize: Int
+  ) {
+    getCourseConsumptionStats(
+      lsp_id: $lsp_id
+      pageCursor: $pageCursor
+      Direction: $direction
+      pageSize: $pageSize
+    ) {
+      stats {
+        ID
+        LspId
+        CourseId
+        Category
+        SubCategory
+        Owner
+        Duration
+        TotalLearners
+        ActiveLearners
+        CompletedLearners
+        ExpectedCompletionTime
+        AverageCompletionTime
+        AverageComplianceScore
+        CreatedAt
+        UpdatedAt
+        CreatedBy
+        UpdatedBy
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_COURSE_VIEWS = gql`
+  query getCourseViews($lsp_id: [String!]!, $startTime: String!, $endTime: String!) {
+    getCourseViews(lsp_ids: $lsp_id, start_time: $startTime, end_time: $endTime) {
+      seconds
+      created_at
+      lsp_id
+      user_ids
+      date_string
+    }
+  }
+`;
+
+// DASHBOARD QUERIES END

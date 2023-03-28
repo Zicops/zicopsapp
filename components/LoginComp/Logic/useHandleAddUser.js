@@ -7,7 +7,8 @@ import {
   UPDATE_USER,
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
-  userClient
+  userClient,
+  USER_LOGIN
 } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS,
@@ -19,11 +20,13 @@ import {
 import { loadQueryDataAsync, sendNotificationWithLink } from '@/helper/api.helper';
 import { getCurrentEpochTime } from '@/helper/common.helper';
 import {
+  COURSE_MAP_STATUS,
   CUSTOM_ERROR_MESSAGE,
   NOTIFICATION_MSG_LINKS,
   NOTIFICATION_TITLES,
   USER_STATUS
 } from '@/helper/constants.helper';
+import { auth } from '@/helper/firebaseUtil/firebaseConfig';
 import { parseJson } from '@/helper/utils.helper';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -75,6 +78,7 @@ export default function useHandleAddUserDetails() {
   const [addRole, { error: createRoleError }] = useMutation(ADD_USER_ROLE, {
     client: userClient
   });
+  const [userLogin] = useMutation(USER_LOGIN, { client: userClient });
 
   //recoil states
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
@@ -93,9 +97,44 @@ export default function useHandleAddUserDetails() {
 
   // setting up local states
   useEffect(() => {
+    console.info('recoil: ', userDataAbout, 'local: ', userAboutData);
     setUserAboutData(getUserObject(userDataAbout));
     setUserOrgData(getUserOrgObject(userDataOrgLsp));
   }, [userDataAbout, userDataOrgLsp]);
+
+  useEffect(() => {
+    if (userDataAbout?.email) return;
+    if (!auth?.currentUser?.accessToken) return;
+
+    loginUser();
+
+    async function loginUser() {
+      for (let i = 0; i < 4; i++) {
+        let isError = false;
+        if (!auth?.currentUser?.accessToken) return;
+
+        const res = await userLogin({
+          context: {
+            headers: {
+              Authorization: auth?.currentUser?.accessToken
+                ? `Bearer ${auth?.currentUser?.accessToken}`
+                : ''
+            }
+          }
+        }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Login Error' });
+        });
+
+        if (isError) continue;
+        if (res?.data?.login?.status === USER_STATUS.disable) break;
+
+        setUserDataAbout(getUserObject(res?.data?.login));
+        sessionStorage.setItem('loggedUser', JSON.stringify(res?.data?.login));
+      }
+    }
+  }, [userDataAbout?.email]);
 
   useEffect(() => {
     let isPhValid = false;
@@ -110,6 +149,7 @@ export default function useHandleAddUserDetails() {
     setIsAccountSetupReady(
       userAboutData?.first_name.length > 0 &&
         userAboutData?.last_name.length > 0 &&
+        userAboutData?.email.length > 0 &&
         isPhValid &&
         userOrgData?.language.length > 0 &&
         userAboutData?.gender?.length > 0
@@ -122,7 +162,7 @@ export default function useHandleAddUserDetails() {
         userOrgData?.learningSpace_name?.length > 0 &&
         userOrgData?.organization_name?.length > 0
     );
-  }, [userOrgData]);
+  }, [userOrgData, userAboutData]);
 
   async function getUserOrgMapId(userLspId = '') {
     if (!userLspId?.length) return false;
@@ -258,7 +298,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     // const dataOrg = resOrg?.data?.addUserOrganizationMap[0];
@@ -289,7 +328,6 @@ export default function useHandleAddUserDetails() {
     if (isError) {
       setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
       return;
-      return router.push('/account-setup');
     }
 
     const dataLang = resLang?.data?.addUserLanguageMap[0];
@@ -335,7 +373,6 @@ export default function useHandleAddUserDetails() {
       if (isError) {
         setToastMsg({ type: 'danger', message: 'Error while filling the form please try again!' });
         return;
-        return router.push('/account-setup');
       }
 
       const dataPref = resPref?.data?.addUserPreference[0];
@@ -389,9 +426,9 @@ export default function useHandleAddUserDetails() {
     // return isError;
   }
 
-  async function notficationOnFirstLogin(userId = null, userLspId = null) {
+  async function notficationOnFirstLogin(userData = null, userLspId = null) {
     const sendData = {
-      user_id: userId,
+      user_id: userData?.id,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
       pageSize: 1000
@@ -405,15 +442,17 @@ export default function useHandleAddUserDetails() {
 
     //filtering the courses based on user_lsp_id
     const courses = userCoursesMaps?.getUserCourseMaps?.user_courses?.filter(
-      (item) => item?.user_lsp_id === userLspId
+      (item) =>
+        item?.user_lsp_id === userLspId &&
+        item?.course_status.toLowerCase() !== COURSE_MAP_STATUS.disable.toLowerCase()
     );
     if (!!courses?.length) {
       sendNotificationWithLink(
         {
           title: NOTIFICATION_TITLES?.signIn?.course,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.coursesAssigned?.msg,
-          user_id: [userId],
-          link:''
+          user_id: [userData?.id],
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -426,7 +465,7 @@ export default function useHandleAddUserDetails() {
       {},
       userQueryClient
     );
-    
+
     const cohorts = resCohorts?.getLatestCohorts?.cohorts;
     console.log(cohorts);
 
@@ -435,8 +474,8 @@ export default function useHandleAddUserDetails() {
         {
           title: NOTIFICATION_TITLES?.cohortAssign,
           body: NOTIFICATION_MSG_LINKS?.firstSigin?.cohortAssigned?.msg,
-          user_id: [userId],
-          link:""
+          user_id: [userData?.id],
+          link: ''
         },
         { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
       );
@@ -445,24 +484,47 @@ export default function useHandleAddUserDetails() {
       {
         title: NOTIFICATION_TITLES?.lspWelcome,
         body: `Hey ${userAboutData?.first_name} ${userAboutData?.last_name}, Welcome to ${userDataOrgLsp?.learningSpace_name} learning space. We wish you the best on your journey towards growth and empowerment.`,
-        user_id: [userId],
-        link:''
+        user_id: [userData?.id],
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
+
+    // const origin = window?.location?.origin || '';
+    // const bodyData = {
+    //   user_name: userData?.first_name || '',
+    //   lsp_name: sessionStorage?.getItem('lsp_name'),
+    //   // course_name: courseName || '',
+    //   // end_date: moment(courseAssignData?.endDate?.valueOf()).format('D MMM YYYY'),
+    //   link: `${origin}/`
+    // };
+
+    // let emailBody = {
+    //   to: [userData?.email],
+    //   sender_name: sessionStorage?.getItem('lsp_name'),
+    //   user_name: userData?.first_name || '',
+    //   body: JSON.stringify(bodyData),
+    //   template_id: ''
+    // }
+    // sendEmail(emailBody,{ context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } })
     sendNotificationWithLink(
       {
         title: NOTIFICATION_TITLES?.courseUnssigned,
         body: NOTIFICATION_MSG_LINKS?.firstSigin?.addCourses?.msg,
-        user_id: [userId],
-        link:''
+        user_id: [userData?.id],
+        link: ''
       },
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage.getItem('fcm-token') } } }
     );
     return true;
   }
 
-  async function updateAboutUser(newImage = null, isVerified = true,isFirst = false) {
+  async function updateAboutUser(
+    newImage = null,
+    isVerified = true,
+    isFirst = false,
+    isVendor = false
+  ) {
     let userLspId = sessionStorage.getItem('user_lsp_id');
     const sendUserData = {
       id: userAboutData?.id,
@@ -485,14 +547,27 @@ export default function useHandleAddUserDetails() {
       created_by: userAboutData?.created_by || 'Zicops',
       updated_by: userAboutData?.updated_by || 'Zicops'
     };
-
+    let isError = false;
+    if (isVendor) {
+      let sendLspData = {
+        user_lsp_id: userDataOrgLsp?.user_lsp_id,
+        user_id: userAboutData?.id,
+        lsp_id: userDataOrgLsp?.lsp_id,
+        status: USER_STATUS.activate
+      };
+      console.log(sendLspData, 'error at update user');
+      const res = await updateLsp({ variables: sendLspData }).catch((err) => {
+        errorMsg = err.message;
+        isError = true;
+        return setToastMsg({ type: 'danger', message: 'Update Lsp  Error' });
+      });
+    }
     if (userAboutData?.Photo) sendUserData.Photo = userAboutData?.Photo;
-    if (newImage) sendUserData.Photo = newImage;
+    if (newImage && newImage?.type?.includes('image')) sendUserData.Photo = newImage;
     // if (userAboutData?.photo_url) sendUserData.photo_url = userAboutData?.photo_url;
 
     // console.log(sendUserData, 'updateAboutUser');
 
-    let isError = false;
     let errorMsg = null;
     const res = await updateAbout({ variables: sendUserData }).catch((err) => {
       // console.log(err,'error at update user');
@@ -517,11 +592,12 @@ export default function useHandleAddUserDetails() {
     const data = res?.data?.updateUser;
     const _userData = { ...userAboutData, ...data };
 
-    if (isVerified && isFirst) {
-      await notficationOnFirstLogin(userAboutData?.id,userLspId);
+    if (isVerified && isFirst && !isVendor) {
+      await notficationOnFirstLogin(userAboutData?.id, userLspId);
     }
 
     // if (data?.photo_url.length > 0) data.photo_url = userAboutData?.photo_url;
+    if (!data?.photo_url?.length) _userData.photo_url = userAboutData?.photo_url;
     setUserDataAbout({ ..._userData, isUserUpdated: true });
     sessionStorage.setItem('loggedUser', JSON.stringify(_userData));
     // console.log(isError,'iserror')

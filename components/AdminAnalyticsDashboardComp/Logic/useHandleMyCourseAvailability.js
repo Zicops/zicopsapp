@@ -1,66 +1,69 @@
-// import { FullCourseDataAtom } from '@/state/atoms/course.atoms';
-import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { COURSE_STATUS } from '@/helper/constants.helper';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleMyCourseAvailability() {
+  const courseType = useRecoilValue(CourseTypeAtom);
+
   const [publishCard, setPublishCard] = useState({
     id: 1,
-    cardTitle: 'Published',
-    cardImage: '/images/svg/publish.svg',
-    cardCount: null,
-    cardText: 'Published courses'
+    title: 'Published',
+    image: '/images/svg/publish.svg',
+    count: null,
+    caption: 'Published courses'
   });
   const [readyCard, setReadyCard] = useState({
     id: 2,
-    cardTitle: 'Ready for publishing',
-    cardImage: '/images/svg/done.svg',
-    cardCount: null,
-    cardText: 'Ready to be published'
+    title: 'Ready for publishing',
+    image: '/images/svg/done.svg',
+    count: null,
+    caption: 'Ready to be published'
   });
   const [savedCard, setSavedCard] = useState({
     id: 3,
-    cardTitle: 'Saved',
-    cardImage: '/images/svg/save.svg',
-    cardCount: null,
-    cardText: 'Saved courses'
+    title: 'Saved',
+    image: '/images/svg/save.svg',
+    count: null,
+    caption: 'Saved courses'
   });
   const [expiredCard, setExpiredCard] = useState({
     id: 4,
-    cardTitle: 'Expired',
-    cardImage: '/images/svg/timer.svg',
-    cardCount: null,
-    cardText: 'Expired courses'
+    title: 'Expired',
+    image: '/images/svg/timer.svg',
+    count: null,
+    caption: 'Expired courses'
   });
   useEffect(() => {
     const _lspId = sessionStorage.getItem('lsp_id');
-     loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
-       input: {
-         lsp_id: _lspId,
-         course_status: 'PUBLISHED',
-        //  course_type: 'self-paced',
-        //  languages: ['English']
-       }
-     }).then((data) => {
-       console.info(data);
-     });
-    setPublishCard((previousData) => {
-      let course_status = 'PUBLISHED';
-      const myPublishCourses = course_status;
-      return { ...previousData, cardCount: myPublishCourses?.length };
-    });
-    setSavedCard((previousData) => {
-         let course_status = 'SAVED';
-         const mySavedCourses = course_status;
-         return { ...previousData, cardCount: mySavedCourses?.length };
-    });
-     setExpiredCard((previousData) => {
-       let course_status = 'REJECTED';
-       const myExpiredCourses = course_status;
-       return {...previousData, cardCount:myExpiredCourses?.length};
-     });
 
-  }, []);
+    loadAndSetMyCourseAvailability();
+
+    async function loadAndSetMyCourseAvailability() {
+      const publishedCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.publish
+      });
+      const savedCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.save
+      });
+      const expiredCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.reject
+      });
+      const readyCourseCount = getAllCourseCountInLsp(_lspId, {
+        course_type: courseType,
+        course_status: COURSE_STATUS.approvalPending
+      });
+
+      setPublishCard({ ...publishCard, count: await publishedCourseCount });
+      setSavedCard({ ...savedCard, count: await savedCourseCount });
+      setExpiredCard({ ...expiredCard, count: await expiredCourseCount });
+      setReadyCard({ ...readyCard, count: await readyCourseCount });
+    }
+  }, [courseType]);
+
   return [publishCard, readyCard, savedCard, expiredCard];
 }

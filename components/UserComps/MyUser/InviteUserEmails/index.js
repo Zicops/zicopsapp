@@ -1,12 +1,17 @@
-import UserButton from '@/components/common/UserButton';
 import { UsersEmailIdAtom } from '@/state/atoms/users.atom';
 import Button from 'common/components/Button';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from './inviteUserEmails.module.scss';
+import UserEmailPills from './UserEmailPills';
 
-const InviteUserEmails = ({ userEmails = [], closePopUp = () => {}, userType = '' }) => {
+const InviteUserEmails = ({
+  userEmails = [],
+  closePopUp = () => {},
+  userType = '',
+  existingEmails = []
+}) => {
   const [emailId, setEmailId] = useRecoilState(UsersEmailIdAtom);
   const router = useRouter();
 
@@ -18,19 +23,20 @@ const InviteUserEmails = ({ userEmails = [], closePopUp = () => {}, userType = '
   return (
     <>
       <div className={`${styles.inviteUserContainer}`}>
-        <div className={`${styles.titleContainer}`}>
-          The invite has been send to the following emails:
-        </div>
-        <div className={`${styles.emailContainer}`}>
-          {userEmails?.map((email) => (
-            <div className={`${styles.emailPills}`}>
-              <p>
-                {email}
-                <span>{userType}</span>
-              </p>
-            </div>
-          ))}
-        </div>
+        {!!userEmails?.length && (
+          <UserEmailPills
+            userEmails={userEmails}
+            userType={userType}
+            title={'The invite has been sent to the following emails:'}
+          />
+        )}
+        {!!existingEmails?.length && (
+          <UserEmailPills
+            userEmails={existingEmails}
+            userType={userType}
+            title={'Following emails already exist:'}
+          />
+        )}
         <div className={`${styles.buttonContainer}`}>
           <Button
             theme="dark"

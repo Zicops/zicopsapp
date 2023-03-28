@@ -85,6 +85,9 @@ export function getDeleteConfirmDataObj(data = {}) {
     mutation: data?.mutation || null,
     confirmMsg: data?.confirmMsg || null,
     onDelete: () => {},
+    beforeDelete: () => {
+      return true;
+    },
     resKey: null
   };
 }

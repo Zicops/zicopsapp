@@ -62,7 +62,7 @@ export default function EllipsisMenu({ buttonArr = [] }) {
               if (btn?.hideBtn) return;
 
               return (
-                <ToolTip title={`${btn?.text} user`} placement="right">
+                <ToolTip title={`${btn?.text} user`} placement="right" key={btn?.text}>
                   <li>
                     <button disabled={btn?.isDisabled || false} onClick={btn?.handleClick}>
                       {btn?.text}

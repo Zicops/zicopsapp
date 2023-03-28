@@ -10,7 +10,7 @@ import {
 import { USER_MAP_STATUS } from '@/helper/constants.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { FeatureFlagsAtom, getUserGlobalDataObj, UserDataAtom } from '@/state/atoms/global.atom';
-import { getUserObject, UserStateAtom } from '@/state/atoms/users.atom';
+import { getUserObject, UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { useAuthUserContext } from '@/state/contexts/AuthUserContext';
 import { useLazyQuery } from '@apollo/client';
 import { Skeleton } from '@mui/material';
@@ -26,6 +26,7 @@ const LearningSpaces = () => {
 
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
+  const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const skeletonCardCount = isDev ? 1 : 0;
 
@@ -106,8 +107,6 @@ const LearningSpaces = () => {
   useEffect(() => {
     setUserGlobalData((prevValue) => ({ ...prevValue, isPrefAdded: false, isOrgAdded: false }));
     // if (!domainArr.includes(URL)) return;
-    let orgData = getOrgByDomain();
-    setOrgData(orgData);
     UserLsp();
   }, []);
 
@@ -135,17 +134,19 @@ const LearningSpaces = () => {
       <div className={`${styles.ZicopsLogo}`}>
         <div>
           <Link href="/home">
-            <Image
-              src={
-                orgData?.data?.logo_url?.length
-                  ? orgData?.data?.logo_url
-                  : '/images/svg/asset-6.svg'
-              }
-              alt="zicops logo"
-              width={180}
-              height={40}
-              objectFit={'contain'}
-            />
+            {userOrgData?.logo_url == null ? (
+              <Skeleton height={80} width={120} />
+            ) : (
+              <Image
+                src={
+                  userOrgData?.logo_url?.length ? userOrgData?.logo_url : '/images/svg/asset-6.svg'
+                }
+                alt="zicops logo"
+                width={180}
+                height={40}
+                objectFit={'contain'}
+              />
+            )}
           </Link>
         </div>
         <div

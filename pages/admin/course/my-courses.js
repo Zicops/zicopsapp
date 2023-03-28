@@ -1,8 +1,8 @@
+import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
 import MyCourseList from '../../../components/adminComps/ZicopsCourses/MyCourseList';
-import CourseHead from '../../../components/CourseHead';
 import Sidebar from '../../../components/common/Sidebar';
 import { courseSidebarData } from '../../../components/common/Sidebar/Logic/sidebar.helper';
-import { ADMIN_COURSES } from '@/components/common/ToolTip/tooltip.helper';
+import CourseHead from '../../../components/CourseHead';
 
 const MyCourses = () => {
   return (

@@ -1,9 +1,11 @@
 import PhoneInputBox from '@/components/common/FormComponents/PhoneInputBox';
 import UploadAndPreview from '@/components/common/FormComponents/UploadAndPreview';
 import { changeHandler } from '@/helper/common.helper';
+import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
 import { Box, Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledDropdown from '../../common/FormComponents/LabeledDropdown';
@@ -22,19 +24,19 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
   const [userData, setUserData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
 
-  const { isAccountSetupReady, setPhCountryCode ,updateAboutUser } = useHandleAddUserDetails();
+  const { isAccountSetupReady, setPhCountryCode, updateAboutUser } = useHandleAddUserDetails();
 
-  useEffect(() => {
-    setUserData({ ...userData, Photo: image });
-    setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
-    return;
-  }, [image]);
+  const router = useRouter();
 
   useEffect(() => {
     if (!userData?.first_name) {
       const refreshUserData = JSON.parse(sessionStorage.getItem('loggedUser'));
+      if (!refreshUserData?.email) return;
+
       return setUserData({ ...refreshUserData });
     }
+
+    setUserOrgData({ ...userOrgData, language: selectedLanguage, is_base_language: true });
     return;
   }, []);
 
@@ -131,9 +133,13 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
           inputName={'profile-image'}
           label={'Profile Picture'}
           isRemove={true}
-          handleChange={setImage}
+          handleChange={(newImage) => {
+            setUserData({ ...userData, Photo: newImage });
+            setImage(newImage);
+          }}
           uploadedFile={userData?.Photo}
           imageUrl={userData?.photo_url}
+          isAccountSetup={true}
         />
         <Box mt={2} />
       </div>
@@ -147,13 +153,14 @@ const AccountSetupUser = ({ setCurrentComponent }) => {
             disabled={!isAccountSetupReady}
             variant={'contained'}
             className={`${styles.input_margin_transform}`}
-            onClick={async() => {
-              const _error = await updateAboutUser(null,false);
+            onClick={async () => {
+              let is_vendor = userOrgData?.user_lsp_role === USER_LSP_ROLE.vendor;
+              const _error = await updateAboutUser(null, true, false, is_vendor);
               // console.log(_error);
-              if(!_error) setCurrentComponent(1);
-
+              if (!_error && !is_vendor) return setCurrentComponent(1);
+              if (!_error) return router.push('/');
             }}>
-            Next
+            {userOrgData?.user_lsp_role === USER_LSP_ROLE.vendor ? 'Submit' : 'Next'}
           </Button>
         </div>
       </div>

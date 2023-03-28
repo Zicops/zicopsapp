@@ -828,12 +828,8 @@ const ExamScreen = () => {
   }, [questionData, current]);
 
   useEffect(() => {
-    if (userExamData?.duration?.timeLeft % 15 !== 0) return;
-    console.log(
-      userExamData?.duration?.timeLeft,
-      userExamData?.duration?.timeLeft % 15,
-      userExamData?.duration?.timeLeft % 15 !== 0
-    );
+    if (userExamData?.duration?.timeLeft === 0 || userExamData?.duration?.timeLeft % 15 !== 0)
+      return;
     syncDataWithBackend();
   }, [userExamData?.duration?.timeLeft]);
 
@@ -1004,7 +1000,7 @@ const ExamScreen = () => {
     if (isError) return false;
 
     _examData.userExamProgress = examProgressRes?.data?.addUserExamProgress;
-    console.log('_examData: ', _examData, examProgressRes);
+    // console.log('_examData: ', _examData, examProgressRes);
     setUserExamData(_examData);
 
     const courseProgressIndex = userCourseData?.userCourseProgress?.findIndex(
@@ -1045,7 +1041,6 @@ const ExamScreen = () => {
     if (isExamEnded) return console.log('exam ended so not syncing');
 
     const _examData = structuredClone(userExamData);
-    console.log(_examData);
 
     const currentAttemptIndex = _examData?.userExamAttempts?.findIndex(
       (attempt) => attempt?.user_ea_id === _examData?.currentAttemptId
@@ -1054,7 +1049,7 @@ const ExamScreen = () => {
     if (sendAttemptData) {
       const { timeLeft, total } = _examData?.duration;
       const durationSpent = total - timeLeft;
-      if (durationSpent > +sendAttemptData.attempt_duration)
+      if (timeLeft > 0 && durationSpent > +sendAttemptData.attempt_duration)
         sendAttemptData.attempt_duration = `${durationSpent}`;
 
       // console.log(sendAttemptData);
@@ -1134,7 +1129,7 @@ const ExamScreen = () => {
     const currentExamAttemptData = structuredClone(
       userExamData?.userExamAttempts?.find((a) => a?.user_ea_id === userExamData?.currentAttemptId)
     );
-    console.log(currentExamAttemptData);
+    // console.log(currentExamAttemptData);
     const examResultData = {
       user_id: currentExamAttemptData?.user_id,
       user_ea_id: currentExamAttemptData?.user_ea_id,
@@ -1182,7 +1177,7 @@ const ExamScreen = () => {
         finishedAt: getUnixFromDate()
       })
     };
-    console.log(sendExamData);
+    // console.log(sendExamData);
     // return;
     const resp = await addExamResult({ variables: sendExamData }).catch((err) => {
       console.log(err);
@@ -1229,12 +1224,18 @@ const ExamScreen = () => {
     // console.log(sendAttemptData);
     // udpate exam attempt data
     currentExamAttemptData.attempt_status = 'completed';
-    const examAttemptRes = await updateUserExamAttempts({
-      variables: currentExamAttemptData
-    }).catch((err) => {
-      console.log(err);
-      isError = true;
-    });
+    const examAttemptSendData = {
+      ...currentExamAttemptData,
+      attempt_duration:
+        +(_examData?.duration?.total - _examData?.duration?.timeLeft) ||
+        +currentExamAttemptData?.attempt_duration
+    };
+    const examAttemptRes = await updateUserExamAttempts({ variables: examAttemptSendData }).catch(
+      (err) => {
+        console.log(err);
+        isError = true;
+      }
+    );
     if (isError || resp?.errors)
       return setToastMsg({ type: 'danger', message: 'Attempt Update error' });
 
@@ -1312,7 +1313,7 @@ const ExamScreen = () => {
         current={current}
         setCurrent={setCurrent}
         calculateResult={async () => await calculateResult()}
-        syncDataWithBackend={() => syncDataWithBackend()}
+        syncDataWithBackend={syncDataWithBackend}
         handleExamStart={async () => await setUserAttemptData()}
         startExam={startExam}
         handlePopUpClose={() => setStartExam(null)}

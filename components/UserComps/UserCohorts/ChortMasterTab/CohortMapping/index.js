@@ -332,7 +332,7 @@ const CohortMapping = ({ isReadOnly = false }) => {
               clickHandler={() => {
                 handleSubmit();
               }}
-              isDisabled={loading}
+              isDisabled={loading || !courseAssignData?.expectedCompletionDays}
             />
           </div>
         </div>

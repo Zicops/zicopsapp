@@ -1,4 +1,65 @@
-@import '../../styles/base.scss';
+//   Info Count Card
+.infoCountCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+
+  width: 100%;
+  padding: 20px;
+
+  color: $white;
+  border-radius: 5px;
+  border: 1px solid $tertiaryWhite;
+  background-color: $darkTwo;
+
+  &:hover {
+    background-color: $secondary;
+    border-color: $secondaryBlack;
+
+    .header {
+      .iconContainer {
+        border-color: $secondaryBlack;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title {
+      font-size: 1.1rem;
+    }
+
+    .iconContainer {
+      display: flex;
+
+      height: 50px;
+      width: 50px;
+      padding: 12px;
+
+      background-color: $secondary;
+      border: 1px solid $tertiaryWhite;
+      border-radius: 5px;
+
+      img {
+        display: block;
+      }
+    }
+  }
+
+  .count {
+    font-size: 1.5rem;
+    flex: 1;
+  }
+
+  .caption {
+    color: $darkThree;
+  }
+}
+
 // availabilityCard
 .availabilityCard {
   // background-color: $darkOne;
@@ -54,66 +115,78 @@
     }
   }
 }
-// badge
-.badge_wrapper {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  justify-content: center;
-  min-width: 150px;
-  padding: 8px 16px;
-  background-color: $secondary;
-  // background-color: #1A1B26;
-  // border: 1px solid #30323F;
-  border-radius: 50px;
 
-  .badge_count,
-  .badge_text {
-    font-size: 18px;
-    // font-weight: 400;
-    color: #eaeaea;
+// pill styles
+.pill,
+.pillSkeleton {
+  display: inline-block;
+
+  background-color: $darkOne;
+  width: fit-content;
+  padding: 5px 15px;
+  border-radius: 20px;
+
+  &.pillSkeleton {
+    background-color: $skeletonColor;
   }
 }
-// Pill 
-// .badge_wrapper{
-//     display: flex;
-//     align-items: center;
-//     gap: 5px;
-//     justify-content: center;
-//     min-width: 150px;
-//     padding: 8px 16px;
-//     // background: #1A1B26;
-//     border: 1px solid #30323F;
-//     border-radius: 50px;
-//     .badge_count, .badge_text{
-//         font-size: 18px;
-//         font-weight: 400;
-//         color: #eaeaea;
-//     }
-// }
-// Progress Bar
-.progressBarFooter {
-    div {
-      width: 100%;
+
+.statisticCard {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
+
+  border: 1px solid $secondary;
+  border-radius: 5px;
+  padding: 15px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .img {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      .percent {
-        color: $primary;
-      }
-    }
 
-    .progress {
-      height: 10px;
+      height: 35px;
+      width: 35px;
+      padding: 5px;
       background-color: $secondary;
-      margin-top: 10px;
-
-      span {
-        height: 100%;
-        background-color: $primary;
-      }
     }
   }
+
+  .courseName {
+    font-size: 1.2rem;
+  }
+
+  .pillWrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+// Progress Bar
+.progressBarFooter {
+  div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    .percent {
+      color: $primary;
+    }
+  }
+
+  .progress {
+    height: 10px;
+    background-color: $secondary;
+    margin-top: 10px;
+
+    span {
+      height: 100%;
+      background-color: $primary;
+    }
+  }
+}
 // Card header
 .cardHeader {
   background: $darkTwo;
@@ -132,75 +205,29 @@
     color: $primary;
   }
 }
-//   StatisticsCard
-  .card_wrapper{
-    // background-color: #242630;
-    background-color: $darkTwo;
-    width: 100%;
-    padding: 20px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    // border: 1px solid #30323F;
-    border: 1px solid $darkThree;
-    .card_head{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .card_title{
-            font-weight: 300;
-            font-size: 18px;
-            color: #EAEAEA;
-        }
-        .card_img img{
-            background-color: $secondary;
-            // background-color: #2B2D36;
-            border: 1px solid #30323F;
-            border-radius: 4px;
-            padding: 14px;
-        }
-    }
-    .card_count{
-        font-weight: 500;
-        font-size: 1.5rem;
-        color: #EAEAEA;
-    }
-    .card_text{
-        font-weight: 400;
-        font-size: 16px;
-        color: #919397;
-    }
-    .pill_wrapper{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    }
-    // Switch Button
-    .switchContainer {
-      display: flex;
-      align-items: center;
-      background-color: transparent;
-      outline: 0;
-      border: 0;
-      cursor: pointer;
-    }
-    
-    .text {
-      color: $white;
-      font-size: 16px;
-      font-weight: 500;
-      text-transform: capitalize;
-      margin: auto;
-      // margin-bottom: 15px;
-      margin-left: 8px;
-      z-index: 100;
-    }
+// Switch Button
+.switchContainer {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.text {
+  color: $white;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: capitalize;
+  margin: auto;
+  // margin-bottom: 15px;
+  margin-left: 8px;
+  z-index: 100;
+}
 
 // Dropdown
-.dropdown > div > div:first-of-type{
+.dropdown > div > div:first-of-type {
   // background: #1A1B26;
   border: 1px solid #f4f4f4;
   border-radius: 4px;
