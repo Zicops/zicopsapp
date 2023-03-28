@@ -543,6 +543,105 @@
     padding: 8px 10px;
   }
   
+  //styling Binge
+
+  
+  .bingeContainer {
+    display: flex;
+    align-items: center;
+  
+    .bingeform {
+      width: 60%;
+      .bingeSetting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+  
+        .bingeSettingTitle {
+          font-size: 16px;
+          color: $primary;
+          width: 25%;
+        }
+        .bingeSettingBody {
+          width: 75%;
+          padding: 10px;
+        }
+      }
+    }
+  }
+  
+  .newline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  
+    input {
+      padding: 0 3px;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid $white;
+      width: 22px;
+      margin: 5px 0px;
+  
+      background-color: transparent;
+      color: $white;
+    }
+  
+    input:focus {
+      outline: 0;
+      background-color: $darkTwo;
+      box-shadow: none;
+    }
+    .durationvalue {
+      width: 40px;
+    }
+  }
+  .label {
+    min-width: 80px;
+    font-size: 12px;
+  }
+  .after {
+    min-width: 80px;
+    color: #868f8f;
+    font-size: 12px;
+    margin-left: 20px;
+  }
+  .video_preview {
+    height: 150px;
+    display: flex;
+  }
+  .fromEnd {
+    display: flex;
+    justify-content: center;
+    margin-left: 25%;
+  }
+  .checkbox_label {
+    font-size: 18px;
+    color: #ffffff;
+    margin: auto;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .checkbox_container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-top: -10px;
+    cursor: pointer;
+    font-size: 11px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
+
 
 //   styling Quiz 
 .editQuizBox {
