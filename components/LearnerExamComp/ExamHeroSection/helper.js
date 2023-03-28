@@ -6,16 +6,32 @@ import {
   GET_TOPIC_EXAMS_BY_COURSEID,
   queryClient
 } from '@/api/Queries';
+import {
+  GET_USER_EXAM_ATTEMPTS_BY_EXAMID,
+  GET_USER_EXAM_RESULTS,
+  userQueryClient
+} from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import useUserCourseData from '@/helper/hooks.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
+import { UserStateAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
 export const useExamData = () => {
   const { getUserCourseData } = useUserCourseData();
+  const userData = useRecoilValue(UserStateAtom);
+  const [examResults, setExamResults] = useState([]);
+  const [examAttempts, setExamAttempts] = useState([]);
+  const [onGoingExam, setOnGoingExam] = useState([]);
+  const [examCourseMapping, setExamCourseMapping] = useState({
+    scheduleExam: [],
+    takeAnyTime: []
+  });
   const [loading, setLoading] = useState(false);
+  const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
 
   async function getTopics(courseIds = []) {
     //return an empty array in case of error
@@ -30,6 +46,34 @@ export const useExamData = () => {
     if (topicRes?.error) return [];
     if (!topicRes?.getTopicsByCourseIds?.length) return [];
     return [...topicRes?.getTopicsByCourseIds];
+  }
+
+  async function loadUserAttemptsAndResults(examId = null) {
+    // if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
+    // setIsAttemptsLoaded(false);
+    if (!examId) return [];
+    if (!userData?.id) return [];
+    const id = userData?.id;
+    const resAttempts = await loadQueryDataAsync(
+      GET_USER_EXAM_ATTEMPTS_BY_EXAMID,
+      { userId: id, examIds: examId, filters: {} },
+      {},
+      userQueryClient
+    );
+    if (resAttempts?.error)
+      return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
+
+    // if no attempts are there there wont be any results as well
+    if (!resAttempts?.getUserExamAttemptsByExamIds?.length)
+      return setLoading(false, setIsAttemptsLoaded(true));
+
+    const examAttemptIds = resAttempts?.getUserExamAttemptsByExamIds?.map(
+      (attempt) => attempt?.user_ea_id
+    );
+
+    const attempts = resAttempts?.getUserExamAttemptsByExamIds;
+
+    return resAttempts?.getUserExamAttemptsByExamIds;
   }
 
   async function getTopicExams(courseIds = []) {
@@ -153,6 +197,82 @@ export const useExamData = () => {
       };
     }
 
+    const allAttempts = [];
+
+    const examMetasId = examMetas?.map((data) => data?.id);
+    const examAttempt = await loadUserAttemptsAndResults(examMetasId);
+
+    allAttempts?.push(...examAttempt);
+
+    console.info('examAttempt', examAttempt);
+    console.info('allAttempts', allAttempts);
+
+    setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
+
+    const onGoingAttempts = allAttempts?.filter(
+      (attemp) => attemp?.attempt_status?.toLowerCase() === 'started'
+    );
+
+    setOnGoingExam([...onGoingAttempts]);
+
+    const completedAttempts = allAttempts?.filter((attemp) => {
+      console.log(
+        attemp?.attempt_status?.toLowerCase(),
+        attemp?.attempt_status?.toLowerCase() === 'completed'
+      );
+      return attemp?.attempt_status?.toLowerCase() === 'completed';
+    });
+
+    console.info('completedAttempts', completedAttempts);
+    const UniqueCompleteAttempt = completedAttempts.reduce((acc, curr) => {
+      if (!acc[curr.user_ea_id]) {
+        acc[curr.user_ea_id] = curr;
+      }
+      return acc;
+    }, {});
+
+    const completedUniquAttemps = Object.values(UniqueCompleteAttempt);
+    console.info('completedUniquAttemps', completedUniquAttemps);
+
+    let newCompleteAttempts = [];
+    if (!userData?.id) return [];
+    const id = userData?.id;
+    for (let i = 0; i < completedUniquAttemps?.length; i++) {
+      // if (!completedAttempts[i]?.user_ea_id) return;
+      const results = await loadQueryDataAsync(
+        GET_USER_EXAM_RESULTS,
+        { user_ea_details: [{ user_id: id, user_ea_id: completedUniquAttemps[i]?.user_ea_id }] },
+        {},
+        userQueryClient
+      );
+      if (results?.getUserExamResults) {
+        console.info('results?.getUserExamResults', results?.getUserExamResults);
+        console.info('completedAttempts', completedAttempts);
+        completedUniquAttemps?.map((r) => {
+          if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
+            newCompleteAttempts.push({
+              ...r,
+              total: JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status)
+                .totalMarks,
+              score: results?.getUserExamResults[0]?.results[0]?.user_score
+            });
+          }
+        });
+      }
+    }
+    const UniqueCompleteAttempts = newCompleteAttempts.reduce((acc, curr) => {
+      if (!acc[curr.user_ea_id]) {
+        acc[curr.user_ea_id] = curr;
+      }
+      return acc;
+    }, {});
+
+    const uniquAttemps = Object.values(UniqueCompleteAttempts);
+    console.info('uniquAttemps', uniquAttemps);
+    if (newCompleteAttempts?.length) {
+      setExamResults([...uniquAttemps]);
+    }
+
     let scheduleExams = [];
     let takeAnyTimeExams = [];
 
@@ -189,7 +309,8 @@ export const useExamData = () => {
       courseName: exam?.courseName,
       examDate: moment.unix(exam?.Start).format('LLL')
     }));
-
+    setLoading(false);
+    setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
     return {
       scheduleExams: scheduleExamData,
       takeAnyTimeExams: takeAnyTimeExams
@@ -202,6 +323,13 @@ export const useExamData = () => {
     getTopicExams,
     getExamsMeta,
     getExamSchedule,
-    getExamInstruction
+    getExamInstruction,
+    setOnGoingExam,
+    examResults,
+    examCourseMapping,
+    examAttempts,
+    onGoingExam,
+    loading,
+    setLoading
   };
 };

@@ -1,18 +1,11 @@
 import {
-  GET_EXAM_INSTRUCTION_BY_EXAMID,
-  GET_EXAM_META,
-  GET_EXAM_SCHEDULE_BY_EXAMID,
-  GET_TOPICS_BY_COURSEIDS,
-  GET_TOPIC_EXAMS_BY_COURSEID,
-  queryClient
-} from '@/api/Queries';
-import {
   GET_USER_EXAM_ATTEMPTS_BY_EXAMID,
   GET_USER_EXAM_RESULTS,
   userQueryClient
 } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import ExamHeroSection from '@/components/LearnerExamComp/ExamHeroSection';
+import { useExamData } from '@/components/LearnerExamComp/ExamHeroSection/helper';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_TYPES } from '@/helper/constants.helper';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
@@ -41,9 +34,6 @@ export default function LearnerExams() {
   const [scheduleExamsData, setScheduleExamsData] = useState([]);
   const [activeSubcatArr, setActiveSubcatArr] = useState([]);
   const [examResultTableData, setExamResultTableData] = useState([]);
-  const [examAttempts, setExamAttempts] = useState([]);
-  const [examResults, setExamResults] = useState([]);
-  const [examCourseMapping, setExamCourseMapping] = useState({ scheduleExam: [], takeAnyTime: [] });
 
   const [latestCourses, setLatestCourses] = useState([...Array(skeletonCardCount)]);
   const [learningSpaceCourses, setLearningSpaceCourses] = useState([...Array(skeletonCardCount)]);
@@ -53,16 +43,26 @@ export default function LearnerExams() {
   const [subCategory3Courses, setSubCategory3Courses] = useState([...Array(skeletonCardCount)]);
   const [subCategory4Courses, setSubCategory4Courses] = useState([...Array(skeletonCardCount)]);
 
-  const [onGoingExam, setOnGoingExam] = useState([]);
   const [examOngoingData, setOnOgingData] = useRecoilState(OnGoingExamAtom);
   // const userGlobalData = useRecoilValue(UserDataAtom);
 
-  const [loading, setLoading] = useState(false);
   const [isAttemptsLoaded, setIsAttemptsLoaded] = useState(false);
 
+  const {
+    loadExamData,
+    examResults,
+    examCourseMapping,
+    examAttempts,
+    onGoingExam,
+    setOnGoingExam,
+    loading,
+    setLoading
+  } = useExamData();
+
   // reset recoil
-  useEffect(() => {
+  useEffect(async () => {
     setOnGoingExam([...Array(skeletonCardCount)]);
+    await loadExamData();
   }, []);
 
   const [inputText, setInputText] = useState('');
@@ -102,6 +102,7 @@ export default function LearnerExams() {
   };
   const pageSize = 28;
   const { getUserCourseData } = useUserCourseData();
+
   useEffect(() => {
     // setLoading(true);
 
@@ -259,17 +260,17 @@ export default function LearnerExams() {
     }
     console.info('examFinalResult', examFinalResult);
     // console.log(examFinalResult, 'final reult');
-    //formating exam result table data
-    // const uniqueArray = examFinalResult.reduce((acc, curr) => {
-    //   if (!acc[curr.user_ea_id]) {
-    //     acc[curr.user_ea_id] = curr;
-    //   }
-    //   return acc;
-    // }, {});
+    // formating exam result table data
+    const uniqueArray = examFinalResult.reduce((acc, curr) => {
+      if (!acc[curr.user_ea_id]) {
+        acc[curr.user_ea_id] = curr;
+      }
+      return acc;
+    }, {});
 
-    // const uniqueResult = Object.values(uniqueArray);
+    const uniqueResult = Object.values(uniqueArray);
 
-    const examsResult = examFinalResult?.map((exam) => ({
+    const examsResult = uniqueResult?.map((exam) => ({
       id: exam?.user_ea_id,
       courseName: exam?.courseName,
       examName: exam?.Name,
@@ -297,8 +298,9 @@ export default function LearnerExams() {
     // console.log(screen.width);
     setLoading(true);
     // loadUserAttemptsAndResults();
-    loadExamData();
+    // loadExamData();
   }, []);
+
   const courseFromPrefernces = latestCourses?.filter(
     (c) => !!activeSubcatArr?.find((pref) => pref?.sub_category === c?.sub_category)
   );
@@ -394,7 +396,6 @@ export default function LearnerExams() {
     if (!examId) return [];
     if (!userData?.id) return [];
     const id = userData?.id;
-    console.log(id);
     const resAttempts = await loadQueryDataAsync(
       GET_USER_EXAM_ATTEMPTS_BY_EXAMID,
       { userId: id, examIds: examId, filters: {} },
@@ -418,321 +419,7 @@ export default function LearnerExams() {
     return resAttempts?.getUserExamAttemptsByExamIds;
   }
 
-  async function getTopics(courseIds = []) {
-    //return an empty array in case of error
-
-    if (!courseIds) return [];
-    const topicRes = await loadQueryDataAsync(
-      GET_TOPICS_BY_COURSEIDS,
-      { course_ids: courseIds },
-      {},
-      queryClient
-    );
-    if (topicRes?.error) return [];
-    if (!topicRes?.getTopicsByCourseIds?.length) return [];
-    return [...topicRes?.getTopicsByCourseIds];
-  }
-
-  async function getTopicExams(courseIds = []) {
-    if (!courseIds) return [];
-    const examRes = await loadQueryDataAsync(
-      GET_TOPIC_EXAMS_BY_COURSEID,
-      { course_ids: courseIds },
-      {},
-      queryClient
-    );
-    console.log(examRes);
-    if (examRes?.error) return [];
-    if (!examRes?.getTopicExamsByCourseIds?.length) return [];
-    return [...examRes?.getTopicExamsByCourseIds];
-  }
-
-  async function getExamsMeta(examIds = []) {
-    if (!examIds?.length) return;
-    const examMetaRes = await loadQueryDataAsync(
-      GET_EXAM_META,
-      { exam_ids: examIds },
-      {},
-      queryClient
-    );
-    if (examMetaRes?.error) return [];
-    if (!examMetaRes?.getExamsMeta?.length) return [];
-    return [...examMetaRes?.getExamsMeta];
-  }
-
-  async function getExamSchedule(examId = []) {
-    if (!examId) return [];
-    const examSchedule = await loadQueryDataAsync(
-      GET_EXAM_SCHEDULE_BY_EXAMID,
-      { exam_ids: examId },
-      {},
-      queryClient
-    );
-    if (examSchedule?.error) return [];
-    if (!examSchedule?.getExamScheduleByExamId?.length) return [];
-    return [...examSchedule?.getExamScheduleByExamId];
-  }
-
-  async function getExamInstruction(examIds = []) {
-    if (!examIds) return [];
-    const examInstruction = await loadQueryDataAsync(
-      GET_EXAM_INSTRUCTION_BY_EXAMID,
-      { exam_ids: examIds },
-      {},
-      queryClient
-    );
-    if (examInstruction?.error) return [];
-    if (!examInstruction?.getExamInstructionByExamId?.length) return [];
-    return [...examInstruction?.getExamInstructionByExamId];
-  }
-
-  async function loadExamData() {
-    // userCourseMap -> topics => examsmetas => userExamAttempts =>
-    // for schedule exams => exam schedule
-    // for anytime exam -> userExamReuslts
-
-    // await loadUserAttemptsAndResults();
-
-    const topicCourseMap = [];
-    const courseData = await getUserCourseData(30);
-    if (!courseData?.length) return setLoading(false);
-    //filtering course data if id doesnt exist
-    const _courseData = courseData?.filter((course) => !!course?.id);
-    const courseIds = _courseData?.map((data) => data?.id);
-
-    const courseTopics = await getTopics(courseIds);
-    // let courseId = []
-    // const courseIds = _courseData?.map((course) => course?.id);
-
-    let assessmentTopics = [];
-    // need later for courses down exam
-    let assessmentCourses = [];
-    for (let i = 0; i < _courseData?.length; i++) {
-      if (!courseTopics?.length) continue;
-      const filteredTopics = courseTopics?.filter(
-        (topic) => topic?.type?.toLowerCase() === 'assessment'
-      );
-      if (!filteredTopics?.length) continue;
-      assessmentTopics = assessmentTopics.concat(filteredTopics);
-      assessmentCourses = assessmentCourses.concat(_courseData[i]);
-      // resultData.push({courseName:_courseData[i]?.name , topics: filteredTopics});
-      for (let j = 0; j < filteredTopics?.length; j++) {
-        topicCourseMap.push({
-          [`${filteredTopics[j]?.id}`]: {
-            courseName: _courseData[i]?.name,
-            tileImage: _courseData[i]?.tileImage,
-            type: _courseData[i]?.type,
-            topicId: filteredTopics[j]?.id,
-            courseId: _courseData[i]?.id
-          }
-        });
-      }
-    }
-
-    // console.log(assessmentTopics,'assasas',topicDataData)
-    if (!assessmentTopics?.length) return setLoading(false);
-
-    const examCourseMap = [];
-
-    // load topic exams
-    let exams = [];
-    const topicExams = await getTopicExams(courseIds);
-
-    for (let i = 0; i < assessmentTopics?.length; i++) {
-      if (!topicExams?.length) continue;
-      examCourseMap.push({
-        [`${topicExams[0]?.examId}`]: {
-          courseName: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseName,
-          tileImage: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.tileImage,
-          type: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.type,
-          examId: topicExams[0]?.examId,
-          topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
-          courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId
-        }
-      });
-      exams = exams.concat(topicExams);
-    }
-    console.log('examCourseMap', examCourseMap);
-    //loop to take exam related data in one piece
-
-    if (!exams?.length) return setLoading(false);
-
-    // to get exam metas
-    const examIds = topicExams?.map((data) => data?.examId);
-    const examMetas = await getExamsMeta(examIds);
-
-    //to load exam instructions
-    const examInstruction = await getExamInstruction(examIds);
-
-    for (let i = 0; i < examMetas?.length; i++) {
-      if (!examInstruction?.length) continue;
-      examMetas[i] = {
-        ...examMetas[i],
-        instructionId: examInstruction[0]?.id,
-        passingCriteria: examInstruction[0]?.PassingCriteria,
-        noAttempts: examInstruction[0]?.NoAttempts
-      };
-    }
-    const allAttempts = [];
-
-    const examMetasId = examMetas?.map((data) => data?.id);
-    const examAttempt = await loadUserAttemptsAndResults(examMetasId);
-    console.info('examAttempt', examAttempt);
-    // for (let i = 0; i < examMetas?.length; i++) {
-    //   console.log('examAttempt', examAttempt);
-    //   if (!examAttempt?.length) continue;
-    //   allAttempts.push(...examAttempt);
-    //   console.info('allAttempts', allAttempts);
-    // }
-    allAttempts.push(...examAttempt);
-
-    console.info('allAttempts', allAttempts);
-
-    setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
-
-    const onGoingAttempts = allAttempts?.filter(
-      (attemp) => attemp?.attempt_status?.toLowerCase() === 'started'
-    );
-
-    setOnGoingExam([...onGoingAttempts]);
-
-    const completedAttempts = allAttempts?.filter((attemp) => {
-      console.log(
-        attemp?.attempt_status?.toLowerCase(),
-        attemp?.attempt_status?.toLowerCase() === 'completed'
-      );
-      return attemp?.attempt_status?.toLowerCase() === 'completed';
-    });
-
-    console.info('completedAttempts', completedAttempts);
-    const UniqueCompleteAttempt = completedAttempts.reduce((acc, curr) => {
-      if (!acc[curr.user_ea_id]) {
-        acc[curr.user_ea_id] = curr;
-      }
-      return acc;
-    }, {});
-
-    const completedUniquAttemps = Object.values(UniqueCompleteAttempt);
-    console.info('completedUniquAttemps', completedUniquAttemps);
-
-    let newCompleteAttempts = [];
-    if (!userData?.id) return [];
-    const id = userData?.id;
-    for (let i = 0; i < completedUniquAttemps?.length; i++) {
-      // if (!completedAttempts[i]?.user_ea_id) return;
-      const results = await loadQueryDataAsync(
-        GET_USER_EXAM_RESULTS,
-        { user_ea_details: [{ user_id: id, user_ea_id: completedUniquAttemps[i]?.user_ea_id }] },
-        {},
-        userQueryClient
-      );
-      if (results?.getUserExamResults) {
-        console.info('results?.getUserExamResults', results?.getUserExamResults);
-        console.info('completedAttempts', completedAttempts);
-        completedUniquAttemps?.map((r) => {
-          if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
-            console.log('index', results?.getUserExamResults[0]?.results[0]?.user_score);
-            newCompleteAttempts.push({
-              ...r,
-              total: JSON.parse(results?.getUserExamResults[0]?.results[0]?.result_status)
-                .totalMarks,
-              score: results?.getUserExamResults[0]?.results[0]?.user_score
-            });
-          }
-        });
-      }
-    }
-    const UniqueCompleteAttempts = newCompleteAttempts.reduce((acc, curr) => {
-      if (!acc[curr.user_ea_id]) {
-        acc[curr.user_ea_id] = curr;
-      }
-      return acc;
-    }, {});
-
-    const uniquAttemps = Object.values(UniqueCompleteAttempts);
-    console.info('uniquAttemps', uniquAttemps);
-    if (newCompleteAttempts?.length) {
-      setExamResults([...uniquAttemps]);
-    }
-
-    let scheduleExams = [];
-    let takeAnyTimeExams = [];
-
-    //adding course name to each of them
-
-    console.info('examMetas', examMetas);
-    console.info('examCourseMap', examCourseMap);
-
-    examMetas?.forEach((exam, index) => {
-      if (exam?.ScheduleType?.toLowerCase() === SCHEDULE_TYPE[0]) {
-        scheduleExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
-        return;
-      }
-      takeAnyTimeExams.push({ ...exam, ...examCourseMap[index]?.[`${exam?.id}`] });
-      return;
-    });
-    console.info('scheduleExams', scheduleExams);
-    console.info('takeAnyTimeExams', takeAnyTimeExams);
-
-    // scheduleExam:[],takeAnyTime:[]
-    setExamCourseMapping({ scheduleExam: [...scheduleExams], takeAnyTime: [...takeAnyTimeExams] });
-
-    if (scheduleExams.length) {
-      const scheduleExamId = scheduleExams?.map((data) => data?.id);
-      console.info(scheduleExamId);
-      const schedule = await getExamSchedule(scheduleExamId);
-      console.info('schedule', schedule);
-      console.info('scheduleExams', scheduleExams);
-
-      for (let i = 0; i < scheduleExams?.length; i++) {
-        if (!schedule?.length) continue;
-        scheduleExams[i] = { ...scheduleExams[i], ...schedule[i] };
-      }
-    }
-    // console.log(takeAnyTimeExams, scheduleExams);
-    // if (!examAttempts?.length) return setTakeAnyTimeExams([...takeAnyTimeExams]);
-
-    let currentTime = getUnixFromDate();
-
-    let sExams = scheduleExams?.filter((exam) => parseInt(exam?.Start) > currentTime);
-
-    setScheduleExamsData(
-      sExams?.map((exam) => ({
-        examData: [
-          exam?.Name,
-          exam?.courseName,
-          moment.unix(exam?.Start).format('LLL')
-          // examTime:
-        ],
-        examId: exam?.id,
-        courseId: exam?.courseId,
-        topicId: exam?.topicId
-      })),
-      setLoading(false)
-    );
-
-    // setScheduleExamsData(
-    //   sExams?.map((exam) => ({
-    //     id: exam?.examId,
-    //     examName: exam?.Name,
-    //     courseName: exam?.courseName,
-    //     examStartDate: moment.unix(exam?.Start).format('LLL'),
-    //     // examTime:
-    //   }))
-    // );
-
-    // new Date(+exam?.Start * 1000).toDateString()
-
-    // const scheduleExamsWithAttempt = scheduleExams?.filter(
-    //   (exam) => parseInt(exam?.noAttempts) > 0
-    // );
-    // setTake;
-    //for takeanytime exam check for a state to make sure if exams are loaded or not
-  }
-
   const [showTable, setShowTable] = useState('');
-
-  // const resultTableRef = useRef();
 
   const examTables = [
     {
@@ -1079,8 +766,6 @@ export default function LearnerExams() {
       </div> */}
       </div>
 
-      {/* <ZicopsCarousel title="Test Packages" data={sliderImages} /> */}
-      {/* <ZicopsCarousel title="Your assessments" data={sliderImages} /> */}
       {!!examOngoingData?.length && (
         <ZicopsCarousel
           title="Continue with your exam"
@@ -1198,10 +883,7 @@ export default function LearnerExams() {
           }
         />
       )}
-      {/* <ZicopsCarousel title="Quesiton Banks" data={sliderImages} /> */}
-      {/* <ZicopsCarousel data={sliderImages} /> */}
-      {/* <BigCardSlider title="X-Athons" data={bigImages} slide={realSquare} /> */}
-      {/* <div ref={simpleTableRef} style={{marginBottom:'20px'}}></div> */}
+
       <div ref={simpleTableRef}>
         <div className="resultContainer">
           <ZicopsSimpleTable
