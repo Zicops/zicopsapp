@@ -118,7 +118,7 @@ export default function useHandleVendor() {
   const isIndividual =
     vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
-  async function handleMail() {
+  async function handleMail(id) {
     if (emailId.length === 0)
       return setToastMsg({ type: 'warning', message: 'Add at least one email!' });
     let emails = emailId?.map((item) => item?.props?.children[0])?.filter((e) => !!e);
@@ -143,7 +143,11 @@ export default function useHandleVendor() {
         for (let i = 0; i < invitedUsers.length; i++) {
           const userData = invitedUsers[i];
           await addVendorUserMap({
-            variables: { vendorId, userId: userData?.user_id, status: USER_MAP_STATUS.activate }
+            variables: {
+              vendorId: vendorId || id,
+              userId: userData?.user_id,
+              status: USER_MAP_STATUS.activate
+            }
           }).catch((err) => console.log(err));
         }
 
@@ -189,12 +193,14 @@ export default function useHandleVendor() {
           'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
       });
     }
-    const resTags = await addUserTags({
-      variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
-      context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
-    }).catch((err) => {
-      isError = true;
-    });
+    if (userLspMaps?.length) {
+      const resTags = await addUserTags({
+        variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+      }).catch((err) => {
+        isError = true;
+      });
+    }
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
@@ -657,7 +663,6 @@ export default function useHandleVendor() {
 
   async function handleRemoveUser(email) {
     const vendorAdmin = vendorAdminUsers?.find((user) => user?.email === email);
-    console.info(email, vendorAdminUsers, vendorAdmin);
 
     if (!vendorAdmin?.id) {
       setToastMsg({ type: 'danger', message: 'Something went wrong!' });
@@ -702,7 +707,6 @@ export default function useHandleVendor() {
       })
       ?.filter((data) => !!data);
 
-    console.info(userDataArr);
     let isError = false;
 
     for (let i = 0; i < userDataArr.length; i++) {

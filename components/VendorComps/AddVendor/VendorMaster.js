@@ -186,7 +186,6 @@ export default function VendorMaster() {
           items={emails}
           setItems={setEmails}
           beforeRemoveEmail={async (email) => {
-            console.info('function passed', email);
             await handleRemoveUser(email);
           }}
           isDisabled={
