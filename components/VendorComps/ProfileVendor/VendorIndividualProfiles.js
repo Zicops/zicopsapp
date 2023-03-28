@@ -44,14 +44,20 @@ export default function VendorIndividualProfiles({ data }) {
       <div className={`${styles.rightSide}`}>
         <div className={`${styles.servicesPillContainer}`}>
           <div className={`${styles.servicesPill}`}>
-            {data?.sme_expertise?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.sme_expertise?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
-            {data?.classroom_expertise?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.classroom_expertise?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
-            {data?.content_development?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.content_development?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
           </div>
         </div>
