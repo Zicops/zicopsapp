@@ -65,7 +65,9 @@ const MyVendor = () => {
       headerName: 'Status',
       flex: 1,
       renderCell: (params) => {
-        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.status}</span>;
+        return (
+          <span style={{ textTransform: 'capitalize' }}>{params?.row?.vendor_lsp_status}</span>
+        );
       }
     },
     {

@@ -1488,6 +1488,13 @@ export const UPDATE_VENDOR_USER_MAP = gql`
   }
 `;
 
+export const DISABLE_VENDOR_LSP_MAP = gql`
+  mutation disableVendorLspMap($vendorId: String, $lspId: String) {
+    disableVendorLspMap(vendor_id: $vendorId, lsp_id: $lspId)
+    Boolean
+  }
+`;
+
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!

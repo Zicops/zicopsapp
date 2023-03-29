@@ -1,5 +1,5 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { USER_MAP_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   CdServicesAtom,
@@ -113,7 +113,11 @@ export default function ManageVendorTabs() {
   }, [vendorId]);
 
   useEffect(() => {
-    setEmailId(vendorAdminUsers?.map((user) => user?.email) || []);
+    setEmailId(
+      vendorAdminUsers
+        ?.map((user) => (user?.user_lsp_status !== USER_MAP_STATUS.disable ? user?.email : null))
+        ?.filter((email) => email) || []
+    );
 
     if (isIndividual && vendorAdminUsers?.[0]?.email)
       getSingleProfileInfo(vendorAdminUsers?.[0]?.email);
