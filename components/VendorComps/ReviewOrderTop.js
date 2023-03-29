@@ -1,16 +1,16 @@
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
-import {
-  getServicesObject,
-  ServicesAtom,
-  VendorServicesListAtom,
-  VendorStateAtom
-} from '@/state/atoms/vendor.atoms';
+import { ServicesAtom, VendorServicesListAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
 const ReviewOrderTop = ({ isConfirm, data }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
+
+  const [serviceData, setServiceData] = useRecoilState(ServicesAtom);
+
+  const selectedServicesForOrder = useRecoilValue(VendorServicesListAtom);
+
   const orderArray = [];
   if (data?.sme?.length) {
     orderArray.push(...data?.sme);
@@ -33,55 +33,43 @@ const ReviewOrderTop = ({ isConfirm, data }) => {
           <span>{vendorData?.name} </span>
         </div>
       )}
-      {orderArray?.map((order, i) => (
-        <div className={`${styles.OrderDetails}`} key={i}>
-          <div className={`${styles.checkBoxLabel}`}>
-            <LabeledRadioCheckbox
-              label={
-                order?.serviceType === 'sme'
-                  ? VENDOR_SERVICES_TYPE?.sme?.label
-                  : order?.serviceType === 'crt'
-                  ? VENDOR_SERVICES_TYPE?.crt?.label
-                  : order?.serviceType === 'cd'
-                  ? VENDOR_SERVICES_TYPE?.cd?.label
-                  : ''
-              }
-              type="checkbox"
-              value={
-                order?.serviceType === 'sme'
-                  ? VENDOR_SERVICES_TYPE?.sme?.value
-                  : order?.serviceType === 'crt'
-                  ? VENDOR_SERVICES_TYPE?.crt?.value
-                  : order?.serviceType === 'cd'
-                  ? VENDOR_SERVICES_TYPE?.cd?.value
-                  : ''
-              }
-              isChecked={
-                order?.serviceType === 'sme' ||
-                order?.serviceType === 'crt' ||
-                order?.serviceType === 'cd'
-              }
-              // changeHandler={(e) => {
-              //   const { value, checked } = e.target;
-              //   order.serviceType = !checked
-              //     ? [getServicesObject({ isActive: false })]
-              //     : [getServicesObject({ isActive: true })];
-              // }}
-            />
+      {Object.keys(selectedServicesForOrder)?.map((service) => {
+        return (
+          <div className={`${styles.OrderDetails}`} key={service}>
+            {serviceData?.[service]?.map((value, i) => {
+              return (
+                <>
+                  <div className={`${styles.checkBoxLabel}`}>
+                    <LabeledRadioCheckbox
+                      label={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      type="checkbox"
+                      value={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      isChecked={serviceData[service][i].isActive}
+                      changeHandler={(e) => {
+                        const { value, checked } = e.target;
+                        const tempArray = structuredClone(serviceData);
+                        tempArray[service][i].isActive = checked;
+                        setServiceData(tempArray);
+                      }}
+                    />
+                  </div>
+                  <p className={`${styles.contentName}`}>{value?.description}</p>
+                  <div className={`${styles.OrderValue}`}>
+                    <p>
+                      {value?.rate} {value?.currency}
+                      {value?.unit}
+                    </p>
+                    <span>{value?.quantity}</span>
+                    <span>
+                      {value?.total} {value?.currency}
+                    </span>
+                  </div>
+                </>
+              );
+            })}
           </div>
-          <p className={`${styles.contentName}`}>{order?.description}</p>
-          <div className={`${styles.OrderValue}`}>
-            <p>
-              {order?.rate} {order?.currency}
-              {order?.unit}
-            </p>
-            <span>{order?.quantity}</span>
-            <span>
-              {order?.total} {order?.currency}
-            </span>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import ReviewOrderBottom from './ReviewOrderBottom';
 import { useRecoilState } from 'recoil';
 import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect } from 'react';
-const ReviewAndTaxComp = () => {
+const ReviewAndTax = () => {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
@@ -22,17 +22,17 @@ const ReviewAndTaxComp = () => {
     orderArray.push(...servicesData?.speakers);
   }
 
-  const subtotalArray = orderArray?.map((data) => data?.total);
-  const subtotal = subtotalArray?.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    0
-  );
+  const subtotalArray = orderArray?.map((data) => {
+    if (!data?.isActive) return null;
+    return data?.total;
+  });
+  const subtotal = subtotalArray?.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
 
   useEffect(() => {
     setOrderData({ ...orderData, total: subtotal, grossTotal: subtotal });
   }, [servicesData]);
-
-  console.info('subtotal', servicesData);
 
   return (
     <div>
@@ -46,4 +46,4 @@ const ReviewAndTaxComp = () => {
   );
 };
 
-export default ReviewAndTaxComp;
+export default ReviewAndTax;

@@ -32,7 +32,7 @@ import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import ProfileExperience from '@/components/VendorComps/ProfileExperience';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
-import ReviewAndTaxComp from '@/components/VendorComps/ReviewAndtaxComp';
+import ReviewAndTax from '@/components/VendorComps/ReviewAndTax';
 import AddLineComp from '@/components/VendorComps/AddLineComp';
 
 export default function VendorInfo() {
@@ -233,7 +233,7 @@ export default function VendorInfo() {
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
-          {currentComponent === 1 && <ReviewAndTaxComp setCurrentComponent={setCurrentComponent} />}
+          {currentComponent === 1 && <ReviewAndTax setCurrentComponent={setCurrentComponent} />}
           {currentComponent === 2 && (
             <ReviewAndTaxConfirm setCurrentComponent={setCurrentComponent} />
           )}
