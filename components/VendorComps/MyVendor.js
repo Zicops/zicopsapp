@@ -24,15 +24,13 @@ const MyVendor = () => {
 
   const isVendor = userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor;
   useEffect(() => {
-    if (vendorTableData?.length) return;
-
     if (isVendor) return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
-    getPaginatedVendors()?.then((data) => {
+    getPaginatedVendors('', { name: searchQuery?.trim() || '' })?.then((data) => {
       setPageCursor(data?.pageCursor || null);
       setVendorTableData(data?.vendors || []);
     });
-  }, []);
+  }, [searchQuery]);
 
   const columns = [
     {
@@ -139,8 +137,7 @@ const MyVendor = () => {
         searchProps={{
           handleOptionChange: (val) => setFilterCol(val),
           handleSearch: (val) => setSearchQuery(val),
-          options,
-          delayMS: 0
+          options
         }}
       />
 
