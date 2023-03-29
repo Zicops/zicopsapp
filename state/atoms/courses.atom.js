@@ -87,3 +87,25 @@ export const AllCourseModulesDataAtom = atom({
   key: 'AllCourseModulesData',
   default: null
 });
+
+export const ClassroomMasterAtom = atom({
+  key: 'ClassroomMaster',
+  default: getClassroomMasterDataObj()
+});
+
+export function getClassroomMasterDataObj(data = {}) {
+  return {
+    courseId: data?.courseId || null,
+    noOfLearners: data?.noOfLearners || 0,
+    trainers: data?.trainers || [],
+    moderators: data?.moderators || [],
+    courseStartDate: data?.courseStartDate || '',
+    courseEndDate: data?.courseEndDate || '',
+    curriculum: data?.curriculum,
+    createdAt: data?.createdAt || '',
+    createdBy: data?.createdBy || '',
+    updatedAt: data?.updatedAt || '',
+    updatedBy: data?.updatedBy || '',
+    status: data?.status || null
+  };
+}

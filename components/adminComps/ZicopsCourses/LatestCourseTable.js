@@ -122,7 +122,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                   outline: '0',
                   border: '0'
                 }}
-                onClick={() => Router.push(`/admin/courses/${params.row.id}`)}>
+                onClick={() => Router.push(`/admin/course/my-courses/edit/${params.row.id}`)}>
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             ) : (

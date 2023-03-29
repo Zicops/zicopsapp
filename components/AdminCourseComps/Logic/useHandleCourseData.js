@@ -4,6 +4,7 @@ import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   ActiveCourseTabNameAtom,
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom
 } from '@/state/atoms/courses.atom';
@@ -16,6 +17,7 @@ import { courseTabs } from './adminCourseComps.helper';
 export default function useHandleCourseData() {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -81,7 +83,7 @@ export default function useHandleCourseData() {
       'language',
       'lspId'
     ];
-    if (courseMetaData?.type === COURSE_TYPES.classroom) courseMasterList.push('noOfLearner');
+    if (courseMetaData?.type === COURSE_TYPES.classroom) courseMasterList.push('noOfLearners');
 
     // add list for details, about
     const courseDetailsList = [
@@ -112,16 +114,24 @@ export default function useHandleCourseData() {
       const tabDataList = lists?.[tab];
       if (!tabDataList?.length) return;
 
-      tabDataList.forEach((key) => !courseMetaData?.[key]?.length && errorList.push(key));
+      tabDataList.forEach(
+        (key) =>
+          !(courseMetaData?.[key]?.length || classroomMaster?.[key]?.length) && errorList.push(key)
+      );
     });
 
     if (isUpdateState) setCourseCurrentState({ ...courseCurrentState, error: errorList });
     return !errorList?.length;
   }
 
-  function handleChange(toBeUpdatedKeyValue = {}) {
+  function handleCourseMetaChange(toBeUpdatedKeyValue = {}) {
     setCourseCurrentState((prev) => ({ ...prev, isSaved: false }));
     setCourseMetaData((prev) => ({ ...prev, ...(toBeUpdatedKeyValue || {}) }));
+  }
+
+  function handleClassroomMasterChange(toBeUpdatedKeyValue = {}) {
+    setCourseCurrentState((prev) => ({ ...prev, isSaved: false }));
+    setClassroomMaster((prev) => ({ ...prev, ...(toBeUpdatedKeyValue || {}) }));
   }
 
   function handleExpertise(e) {
@@ -161,7 +171,8 @@ export default function useHandleCourseData() {
 
   return {
     ownerList,
-    handleChange,
+    handleCourseMetaChange,
+    handleClassroomMasterChange,
     handleExpertise,
     isDataPresent,
     handleFileInput

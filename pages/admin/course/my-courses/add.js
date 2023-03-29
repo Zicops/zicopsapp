@@ -6,11 +6,14 @@ import MainBody from '@/components/common/MainBody';
 import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
+import { CLASSROOM_MASTER_STATUS } from '@/constants/course.constants';
 import {
   ActiveCourseTabNameAtom,
   AllCourseModulesDataAtom,
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
+  getClassroomMasterDataObj,
   getCourseCurrentStateObj,
   getCourseMetaDataObj
 } from '@/state/atoms/courses.atom';
@@ -23,6 +26,7 @@ export default function AddCoursePage() {
   const courseType = useRecoilValue(CourseTypeAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const userOrg = useRecoilValue(UsersOrganizationAtom);
@@ -39,6 +43,7 @@ export default function AddCoursePage() {
       getCourseMetaDataObj({ type: courseType, isDisplay: true, lspId: userOrg?.lsp_id })
     );
     setCourseCurrentState(getCourseCurrentStateObj({ isSaved: true }));
+    setClassroomMaster(getClassroomMasterDataObj({ status: CLASSROOM_MASTER_STATUS.save }));
     setAllModules([]);
   }, [userOrg?.lsp_id]);
 

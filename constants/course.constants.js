@@ -27,3 +27,7 @@ export const TOPIC_TYPES = {
   assessment: 'Assessment',
   classroom: 'Classroom'
 };
+
+export const CLASSROOM_MASTER_STATUS = {
+  save: 'SAVED'
+};

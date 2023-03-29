@@ -16,7 +16,7 @@ import BulletPointInput from './BulletPointInput';
 export default function About() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
-  const { handleChange } = useHandleCourseData();
+  const { handleCourseMetaChange } = useHandleCourseData();
 
   const [title, settitle] = useState('');
   const [typeMOderator, settypeModerator] = useState('internal');
@@ -112,7 +112,7 @@ export default function About() {
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
-                  handleChange({ Trainers: e?.map((item, index) => item?.value) })
+                  handleCourseMetaChange({ Trainers: e?.map((item, index) => item?.value) })
                 }
               />
               <div className={`${styles.aboutCheckbox}`}>
@@ -158,7 +158,7 @@ export default function About() {
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
-                  handleChange({ Moderators: e?.map((item, index) => item?.value) })
+                  handleCourseMetaChange({ Moderators: e?.map((item, index) => item?.value) })
                 }
               />
               <div className={`${styles.aboutCheckbox}`}>
@@ -293,7 +293,7 @@ export default function About() {
           isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
-        changeHandler={(e) => handleChange({ description: e?.target?.value })}
+        changeHandler={(e) => handleCourseMetaChange({ description: e?.target?.value })}
       />
 
       {/* outcomes */}
@@ -378,7 +378,7 @@ export default function About() {
                 // if (examId && examTabData?.id !== examId) return;
                 // if (!examId && examTabData?.id) return;
                 // setExamTabData({ ...examTabData, instructions: e });
-                handleChange({ Curriculum: e?.target?.value });
+                handleCourseMetaChange({ Curriculum: e?.target?.value });
               }}
               isReadOnly={isDisabled}
               placeholder="Enter instructions in less than 300 characters."

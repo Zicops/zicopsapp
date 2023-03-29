@@ -6,12 +6,15 @@ import {
   UPLOAD_COURSE_TILE_IMAGE
 } from '@/api/Mutations';
 import { GET_LATEST_COURSES } from '@/api/Queries';
+import { CREATE_VILT_DATA, viltMutationClient } from '@/api/ViltMutations';
+import { COURSE_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { COURSE_STATUS, DEFAULT_VALUES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate, isWordSame } from '@/helper/utils.helper';
 import {
   ActiveCourseTabNameAtom,
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
   getCourseMetaDataObj
@@ -28,6 +31,7 @@ export default function useSaveCourseData() {
     set(ToastMsgAtom, { type, message });
   });
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const userData = useRecoilValue(UserStateAtom);
@@ -77,10 +81,42 @@ export default function useSaveCourseData() {
     return isDuplicate;
   }
 
+  async function addUpdateClassroomMaster(_courseMetaData = null) {
+    if (!_courseMetaData) return null;
+    if (_courseMetaData?.type !== COURSE_TYPES.classroom) return null;
+
+    const _classRoomData = sanitizeFormData({
+      lsp_id: _courseMetaData?.lspId || '',
+      course_id: _courseMetaData?.id || '',
+      no_of_learners: classroomMaster?.noOfLearners || '',
+      trainers: classroomMaster?.trainers || '',
+      moderators: classroomMaster?.moderators || '',
+      course_start_date: classroomMaster?.courseStartDate || '',
+      course_end_date: classroomMaster?.courseEndDate || '',
+      curriculum: classroomMaster?.curriculum || '',
+      status: classroomMaster?.status || ''
+    });
+
+    // await mutateData(UPDATE_VILT_DATA, { input: _classRoomData }, {}, viltMutationClient).catch(
+    //   () => setToastMessage('Classroom Update Error!')
+    // );
+
+    const res = await mutateData(
+      CREATE_VILT_DATA,
+      { input: _classRoomData },
+      {},
+      viltMutationClient
+    ).catch(() => setToastMessage('Classroom Create Error!'));
+
+    return res?.createViltData || null;
+  }
+
   async function addNewCourse(_courseMetaData = null) {
-    if (!courseMetaData) return;
-    if (!isDataPresent([courseTabs.courseMaster.name]))
-      return setToastMessage('Complete Course Master Data to create new course');
+    if (!courseMetaData) return null;
+    if (!isDataPresent([courseTabs.courseMaster.name])) {
+      setToastMessage('Complete Course Master Data to create new course');
+      return null;
+    }
 
     const _courseCurrentState = structuredClone(courseCurrentState);
 
@@ -94,7 +130,7 @@ export default function useSaveCourseData() {
     if (courseRes?.error || !addCourseData?.id) {
       setCourseCurrentState(_courseCurrentState);
       setToastMessage('Add Course Error');
-      return;
+      return null;
     }
 
     _courseCurrentState.isSaved = true;
@@ -103,10 +139,12 @@ export default function useSaveCourseData() {
     setCourseMetaData(getCourseMetaDataObj({ ..._courseMetaData, ...addCourseData }));
     setToastMessage('Course Created Successfully', 'success');
     router.push(`/admin/course/my-courses/edit/${addCourseData?.id}`);
+
+    return addCourseData || null;
   }
 
   async function updateCourse(_courseMetaData = null) {
-    if (!_courseMetaData) return;
+    if (!_courseMetaData) return null;
     if (!courseCurrentState?.isUpdating)
       setCourseCurrentState({ ...courseCurrentState, isUpdating: true });
 
@@ -190,16 +228,21 @@ export default function useSaveCourseData() {
 
     // add course if no id is present
     if (!courseMetaData.id)
-      return addNewCourse(_courseMetaData).then(() => {
-        if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
-      });
+      return addNewCourse(_courseMetaData)
+        .then(() => {
+          if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
+        })
+        .then((courseDataRes) => addUpdateClassroomMaster(courseDataRes))
+        .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);
 
     // update course
-    updateCourse(_courseMetaData).then((res) => {
+    updateCourse(_courseMetaData).then(async (res) => {
       setCourseCurrentState({ ...courseCurrentState, isUpdating: false, isSaved: true, error: [] });
       if (!res?.id) return;
+
+      await addUpdateClassroomMaster(res);
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
