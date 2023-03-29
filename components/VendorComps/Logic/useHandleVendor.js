@@ -6,6 +6,7 @@ import {
   CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
   DELETE_SAMPLE_FILE,
+  DISABLE_VENDOR_LSP_MAP,
   INVITE_USERS_WITH_ROLE,
   UPDATE_EXPERIENCE_VENDOR,
   UPDATE_PROFILE_VENDOR,
@@ -79,6 +80,7 @@ export default function useHandleVendor() {
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
   const [deleteFile] = useMutation(DELETE_SAMPLE_FILE, { client: userClient });
+  const [disableVendorLspMap] = useMutation(DISABLE_VENDOR_LSP_MAP, { client: userClient });
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
@@ -209,7 +211,7 @@ export default function useHandleVendor() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails send successfully!` });
     getVendorAdmins(id);
   }
 
@@ -295,6 +297,7 @@ export default function useHandleVendor() {
     );
     const singleData = {
       ...vendorInfo?.getVendorDetails,
+      lspId: vendorInfo?.getVendorDetails?.lsp_id,
       facebookURL: vendorInfo?.getVendorDetails?.facebook_url,
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
@@ -713,6 +716,37 @@ export default function useHandleVendor() {
 
     let isError = false;
 
+    const currentLsp = sessionStorage?.getItem('lsp_id');
+    // vendor admin is removed from other lsp than vendor creation lsp,
+    // then disable user lsp map for that particular lsp
+    if (currentLsp !== vendorData?.lspId) {
+      const userData = userDataArr?.find((data) => data?.lsp_id === currentLsp);
+      if (!userData?.lsp_id)
+        return setToastMsg({ type: 'danger', message: 'User Lsp Data Not Found' });
+
+      await updateUserLspMap({
+        variables: {
+          user_lsp_id: userData?.user_lsp_id,
+          user_id: vendorAdmin?.id,
+          lsp_id: userData?.lsp_id,
+          status: USER_MAP_STATUS.disable
+        }
+      })
+        .then((res) => {
+          if (!res?.data?.updateUserLspMap)
+            return setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+
+          setToastMsg({ type: 'success', message: 'User Removed Successfully From Lsp' });
+        })
+        .catch(() => {
+          isError = true;
+          setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+        });
+      return;
+    }
+
+    // vendor admin is removed from vendor and all lsps that user is mapped
+    // if the current lsp is vendor creation lsp
     for (let i = 0; i < userDataArr.length; i++) {
       const userData = userDataArr[i];
 
@@ -737,7 +771,7 @@ export default function useHandleVendor() {
     });
 
     if (isError) {
-      setToastMsg({ type: 'success', message: 'User Removed Successfully' });
+      setToastMsg({ type: 'success', message: 'User Removed Successfully From Vendor' });
       return true;
     }
 
@@ -899,6 +933,22 @@ export default function useHandleVendor() {
 
     let isError = false;
 
+    // disable vendor from lsp if current lsp is not vendor creation lsp
+    const currentLsp = sessionStorage?.getItem('lsp_id');
+    if (currentLsp !== vendorData?.lspId) {
+      disableVendorLspMap({
+        variables: { vendorId: vendorTableData?.vendorId, lspId: currentLsp }
+      })
+        .then((res) => {
+          if (!res?.data?.disableVendor)
+            return setToastMsg({ type: 'danger', message: 'Vendor Disabled Failed' });
+
+          setToastMsg({ type: 'success', message: 'Vendor Disabled From Lsp' });
+        })
+        .catch((err) => setToastMsg({ type: 'danger', message: 'Disable Vendor Error' }));
+    }
+
+    // mutation for vendor creation lsp
     const res = await updateVendor({
       variables: sendData,
       update: (_, { data }) => {
