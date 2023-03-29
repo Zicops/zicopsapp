@@ -1,25 +1,46 @@
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { handleCacheUpdate } from '@/helper/data.helper';
-import { GET_SINGLE_PROFILE_DETAILS, userQueryClient } from '@/api/UserQueries';
 import { CREATE_PROFILE_VENDOR, UPDATE_PROFILE_VENDOR, userClient } from '@/api/UserMutations';
-import { useRecoilState } from 'recoil';
-import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
+import { GET_SINGLE_PROFILE_DETAILS, userQueryClient } from '@/api/UserQueries';
+import { VENDOR_MASTER_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { handleCacheUpdate } from '@/helper/data.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { VendorProfileAtom, VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendorProfile() {
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
 
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const vendorData = useRecoilValue(VendorStateAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   async function addUpdateProfile() {
+    if (isIndividualVendor && !profileData?.experienceYear) {
+      setToastMsg({ type: 'danger', message: 'Please Add Years of Experience!' });
+      return null;
+    }
+    if (
+      !isIndividualVendor &&
+      (!profileData?.firstName ||
+        !profileData?.lastName ||
+        !profileData?.email ||
+        !profileData?.experienceYear)
+    ) {
+      setToastMsg({
+        type: 'danger',
+        message: 'Please Add First Name, Last Name, Email and Years of Experience!'
+      });
+      return null;
+    }
+
     const sendData = {
       vendor_id: vendorId || '',
       first_name: profileData?.firstName?.trim() || '',
@@ -45,7 +66,7 @@ export default function useHandleVendorProfile() {
     let isError = false;
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
-      await updateProfileVendor({
+      const res = await updateProfileVendor({
         variables: sendData,
         update: (_, { data }) => {
           handleCacheUpdate(
@@ -69,9 +90,9 @@ export default function useHandleVendorProfile() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update Vendor Profile Error' });
       });
-      if (isError) return;
+      if (isError) return null;
       setToastMsg({ type: 'success', message: 'Vendor Profile Updated' });
-      return;
+      return res;
     }
     if (
       profileData?.firstName &&
@@ -100,7 +121,7 @@ export default function useHandleVendorProfile() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Add Vendor profile Error' });
       });
-      if (isError) return;
+      if (isError) return null;
       setToastMsg({ type: 'success', message: 'Vendor Profile Created' });
       return res;
     }

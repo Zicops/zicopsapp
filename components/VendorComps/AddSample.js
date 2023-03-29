@@ -3,7 +3,8 @@ import {
   SampleAtom,
   SmeServicesAtom,
   CtServicesAtom,
-  CdServicesAtom
+  CdServicesAtom,
+  getSampleObject
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import BrowseAndUpload from '../common/FormComponents/BrowseAndUpload';
@@ -13,8 +14,9 @@ import LabeledTextarea from '../common/FormComponents/LabeledTextarea';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { acceptedFiles, currency, fileFormatArray, unit } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
-import { LIMITS, FILE_TYPES } from '@/helper/constants.helper';
+import { LIMITS, FILE_TYPES, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useEffect } from 'react';
 const AddSample = ({ pType }) => {
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -22,6 +24,10 @@ const AddSample = ({ pType }) => {
   const smeServices = useRecoilValue(SmeServicesAtom);
   const crtServices = useRecoilValue(CtServicesAtom);
   const cdServices = useRecoilValue(CdServicesAtom);
+
+  useEffect(() => {
+    setSampleData(getSampleObject());
+  }, []);
 
   function getFileName() {
     return truncateToN(
@@ -61,6 +67,7 @@ const AddSample = ({ pType }) => {
             <LabeledTextarea
               inputOptions={{
                 inputName: 'description',
+                placeholder: 'Please enter your description',
                 value: sampleData?.description
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData)}
@@ -73,13 +80,16 @@ const AddSample = ({ pType }) => {
               title={getFileName() || 'Drag and Drop'}
               handleFileUpload={(e) => {
                 const file = e.target.files?.[0];
+
                 if (file?.size > LIMITS.vendorSampleSize) {
-                  fileErrMsg = `File Size limit is ${Math.ceil(
+                  const fileErrMsg = `File Size limit is ${Math.ceil(
                     LIMITS.vendorSampleSize / ONE_MB_IN_BYTES
                   )} mb`;
-                  isValid = false;
-                  setToastMsg({ type: 'Danger', message: fileErrMsg });
+                  e.target.value = '';
+                  setToastMsg({ type: 'danger', message: fileErrMsg });
+                  return;
                 }
+
                 setSampleData({ ...sampleData, sampleFile: file });
               }}
               handleRemove={() => setSampleData({ ...sampleData, sampleFile: null })}
@@ -90,6 +100,7 @@ const AddSample = ({ pType }) => {
               inputName="upload_content"
               isActive={sampleData?.sampleFile}
               acceptedTypes={FILE_TYPES.vendorSampleFiles}
+              progressPercent={sampleData?.fileUploadPercent || null}
             />
           </div>
         </div>
@@ -104,7 +115,8 @@ const AddSample = ({ pType }) => {
                 value: sampleData?.fileType
               },
               options: fileFormatArray,
-              menuPlacement: 'top'
+              menuPlacement: 'top',
+              noOptionsMessage: 'Please add your O/P Deliverable Formats'
             }}
             changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'fileType')}
             styleClass={`${styles.fileFormatDropDown}`}
@@ -117,7 +129,8 @@ const AddSample = ({ pType }) => {
               inputOptions={{
                 inputName: 'rate',
                 placeholder: 'Enter Rate',
-                value: sampleData?.rate
+                value: sampleData?.rate,
+                isNumericOnly: true
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData)}
             />
@@ -143,8 +156,9 @@ const AddSample = ({ pType }) => {
             <label>Unit:</label>
             <LabeledDropdown
               dropdownOptions={{
+                isSearchEnable: true,
                 inputName: 'unit',
-                placeholder: 'Select Unit',
+                placeholder: 'Enter Unit',
                 value: {
                   label: sampleData?.unit,
                   value: sampleData?.unit
@@ -154,6 +168,7 @@ const AddSample = ({ pType }) => {
               }}
               changeHandler={(e) => changeHandler(e, sampleData, setSampleData, 'unit')}
               styleClass={`${styles.unitDropDown}`}
+              isCreateable={true}
             />
           </div>
         </div>

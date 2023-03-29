@@ -1,5 +1,6 @@
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
-import { useState } from 'react';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import { serviceOptions } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
@@ -33,10 +34,12 @@ export default function MarketYardHeroSection({
   searchText = '',
   setSearchText = () => {}
 }) {
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
-        <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} />
+        {/* <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} /> */}
         <div className={`${styles.frameText}`}>
           <div className={`${styles.vendorDropDownContainer}`}>
             <LabeledDropdown
@@ -46,7 +49,10 @@ export default function MarketYardHeroSection({
                 value: vendorType,
                 options: [
                   { label: 'All', value: null },
-                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({ label: val, value: val }))
+                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({
+                    label: <span style={{ textTransform: 'capitalize' }}>{val}</span>,
+                    value: val
+                  }))
                 ]
               }}
               changeHandler={(val) => setVendorType(val)}
@@ -59,7 +65,10 @@ export default function MarketYardHeroSection({
                 inputName: 'Service',
                 placeholder: 'All Services',
                 value: vendorService,
-                options: [{ label: 'All', value: null }, ...serviceOptions]
+                options: [
+                  { label: 'All', value: null },
+                  ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev))
+                ]
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}

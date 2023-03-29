@@ -25,7 +25,8 @@ export default function BrowseAndUpload({
   styleClass = '',
   title = null,
   styleClassBtn = '',
-  filePreview = null
+  filePreview = null,
+  progressPercent = 0
 }) {
   const inputRef = useRef();
   const [showPreview, setShowPreview] = useState(false);
@@ -48,6 +49,12 @@ export default function BrowseAndUpload({
           <DisplayImage filePath={filePreview || '/images/upload.png'} />
           {title || 'Browse & upload'}
         </button>
+
+        {!!progressPercent && (
+          <div className={styles.progressBar}>
+            <div className={`${styles.progressBarFill} w-${Math.floor(progressPercent)}`}></div>
+          </div>
+        )}
 
         <input
           type="file"

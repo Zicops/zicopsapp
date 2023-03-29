@@ -9,13 +9,16 @@ import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import { changeHandler } from '@/helper/common.helper';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { getVendorObject, VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 export default function ManageVendor() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   return (
     <>
@@ -23,7 +26,7 @@ export default function ManageVendor() {
       <MainBody>
         <AdminHeader
           title="Vendor List"
-          isAddShown={true}
+          isAddShown={!isVendor}
           handleClickForPlus={() => {
             setIsOpen(true);
             setVendorData(getVendorObject());
@@ -40,7 +43,9 @@ export default function ManageVendor() {
             closeBtn={{ name: 'Cancel' }}
             submitBtn={{
               name: 'Next',
-              handleClick: () => router.push('/admin/vendor/manage-vendor/add-vendor')
+              handleClick: () => {
+                router.push('/admin/vendor/manage-vendor/add-vendor');
+              }
             }}
             isFooterVisible={true}>
             <AddVendor
@@ -49,16 +54,16 @@ export default function ManageVendor() {
               checkboxProps1={{
                 label: 'Individual/Freelancer',
                 value: 'individual',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.individual,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.individual?.toLowerCase(),
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
               checkboxProps2={{
                 label: 'Company',
                 value: 'company',
-                isChecked: vendorData?.type === VENDOR_MASTER_TYPE?.company,
-                changeHandler: (e) => changeHandler(e, vendorData, setVendorData),
-                isDisabled: true
+                isChecked:
+                  vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE?.company?.toLowerCase(),
+                changeHandler: (e) => changeHandler(e, vendorData, setVendorData)
               }}
             />
             <AddVendor
