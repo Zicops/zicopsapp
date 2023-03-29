@@ -26,13 +26,15 @@ const AddLineItem = () => {
 
   const addAnotherItemHandler = (service) => {
     const _serviceData = structuredClone(servicesData);
-    _serviceData?.[service]?.push(getServicesObject());
+    _serviceData?.[service]?.push(getServicesObject({ serviceType: service }));
     setServicesData(_serviceData);
 
     const _addLine = structuredClone(addLine);
     _addLine[service] += 1;
     setAddLine(_addLine);
   };
+
+  // console.info('servicesData', servicesData);
   return (
     <div>
       {Object.keys(selectedServicesForOrder)?.map((service) => {

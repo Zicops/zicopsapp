@@ -1,6 +1,8 @@
 import styles from './vendorComps.module.scss';
-import { myVendors } from './Logic/vendorComps.helper';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilValue } from 'recoil';
 const CompleteOrder = () => {
+  const vendorData = useRecoilValue(VendorStateAtom);
   return (
     <div className={`${styles.CompleteItemContainer}`}>
       <div className={`${styles.circleImage}`}>
@@ -15,11 +17,11 @@ const CompleteOrder = () => {
         <span>New Vendor added to your Vendor list</span>
         <div className={`${styles.comapanyLogoName}`}>
           <div className={`${styles.logo}`}>
-            <img src={myVendors[0]?.image} alt="" />
+            <img src={vendorData?.photoUrl || '/images/discord_logo.png'} alt="" />
           </div>
           <div className={`${styles.comapanyName}`}>
-            <p>{myVendors[0]?.name}</p>
-            <span>{myVendors[0]?.type}</span>
+            <p>{vendorData?.name}</p>
+            <span>{vendorData?.type}</span>
           </div>
         </div>
       </div>
