@@ -31,3 +31,12 @@ export const TOPIC_TYPES = {
 export const CLASSROOM_MASTER_STATUS = {
   save: 'SAVED'
 };
+
+export const TOPIC_CONTENT_TYPES = {
+  scorm: 'SCORM',
+  tincan: 'TinCan',
+  html5: 'Web HTML5',
+  mp4: 'mp4',
+  cmi5: 'CMi5',
+  document: 'document'
+};

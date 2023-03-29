@@ -1,5 +1,8 @@
 import PopUp from '@/components/common/PopUp';
+import ZicopsButton from '@/components/common/ZicopsButton';
 import { TOPIC_TYPES } from '@/constants/course.constants';
+import { TopicContentListAtom } from '@/state/atoms/courses.atom';
+import { useRecoilValue } from 'recoil';
 import styles from '../../adminCourseComps.module.scss';
 import useHandleTopic from '../../Logic/useHandleTopic';
 import TopicRow from '../BoxContainer/TopicRow';
@@ -15,25 +18,22 @@ export default function TopicPopUp({
   popUpState = [],
   closePopUp = () => {}
 }) {
-  const { topicData, setTopicData, isEditTopicFormVisible, toggleEditTopicForm, addUpdateTopic } =
-    useHandleTopic(modData, chapData, topData, closePopUp);
+  const topicContentList = useRecoilValue(TopicContentListAtom);
+  const {
+    topicData,
+    setTopicData,
+    isEditTopicFormVisible,
+    toggleEditTopicForm,
+    addUpdateTopic,
+    handleSubmit
+  } = useHandleTopic(modData, chapData, topData, closePopUp);
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
   const isClassroom = topicData?.type === TOPIC_TYPES.classroom;
 
-  const submitBtnObj = { name: 'Design' };
-  const closeBtnObj = { name: 'Cancel' };
-
-  if (topicData?.id) submitBtnObj.name = 'Design';
-
   return (
     <>
-      <PopUp
-        title={`Topic ${topicData?.sequence}`}
-        submitBtn={submitBtnObj}
-        isFooterVisible={false}
-        popUpState={popUpState}
-        closeBtn={closeBtnObj}>
+      <PopUp title={`Topic ${topicData?.sequence}`} isFooterVisible={false} popUpState={popUpState}>
         <div className={`${styles.popUpFormContainer}`}>
           {!topicData?.id ? (
             <AddTopicForm
@@ -67,6 +67,20 @@ export default function TopicPopUp({
               {isClassroom && <TopicClassroom topData={topicData} closePopUp={closePopUp} />}
             </>
           )}
+        </div>
+
+        <div className="center-element-with-flex">
+          <ZicopsButton
+            customClass={styles.addTopicFormBtn}
+            handleClick={closePopUp}
+            display="Cancel"
+          />
+          <ZicopsButton
+            customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
+            isDisabled={!topicContentList?.length}
+            handleClick={handleSubmit}
+            display={'Design'}
+          />
         </div>
       </PopUp>
     </>

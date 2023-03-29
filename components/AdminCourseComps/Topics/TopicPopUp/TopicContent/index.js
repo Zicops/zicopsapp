@@ -7,7 +7,15 @@ import Resource from './Resources';
 import TopicContentForm from './TopicContentForm';
 
 export default function TopicContent({ topData = null, closePopUp = () => {} }) {
-  const { topicContentList } = useHandleTopicContent(topData, closePopUp);
+  const {
+    topicContentList,
+    isEditTopicFormVisible,
+    toggleForm,
+    topicContentFormData,
+    handleChange,
+    handleMp4FileInput,
+    handleSubmit
+  } = useHandleTopicContent(topData, closePopUp);
 
   const topicAccordians = [
     {
@@ -16,22 +24,33 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     },
     {
       title: 'Binge It',
-      body: <Binge/>
+      body: <Binge />
     },
     {
       title: 'Quiz',
-      body: <Quiz/>
+      body: <Quiz />
     },
     {
       title: 'Resources',
-      body: <Resource/>
+      body: <Resource />
     }
   ];
+
+  const isDisabled = false;
 
   return (
     <>
       <div className={styles.editTopicAccordianContainer}>
-        <TopicContentForm topicContentList={topicContentList} />
+        <TopicContentForm
+          topicContentList={topicContentList}
+          topicContentState={topicContentFormData}
+          isFormVisible={isEditTopicFormVisible}
+          toggleForm={toggleForm}
+          handleChange={handleChange}
+          handleMp4FileInput={handleMp4FileInput}
+          handleSubmit={handleSubmit}
+          isDisabled={isDisabled}
+        />
 
         {topicAccordians.map((item) => (
           <TopicAccordian key={item?.title} title={item.title}>

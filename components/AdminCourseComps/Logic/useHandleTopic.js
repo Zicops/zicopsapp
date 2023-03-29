@@ -3,7 +3,11 @@ import { COURSE_TYPES, TOPIC_TYPES } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { isWordSame } from '@/helper/utils.helper';
-import { AllCourseModulesDataAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import {
+  AllCourseModulesDataAtom,
+  CourseMetaDataAtom,
+  TopicContentListAtom
+} from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
@@ -20,6 +24,7 @@ export default function useHandleTopic(
   });
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
+  const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
 
   const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(null);
   const [topicData, setTopicData] = useState(
@@ -61,7 +66,7 @@ export default function useHandleTopic(
     e.target.disabled = true;
 
     const sendData = sanitizeFormData(topicData);
-    // add new module
+    // add new topic
     if (!topicData?.id) {
       mutateData(ADD_COURSE_TOPIC, sendData)
         .then((res) => {
@@ -73,13 +78,13 @@ export default function useHandleTopic(
 
           _allModules?.[index]?.topics?.push(res?.addCourseTopic);
           setAllModules(_allModules);
+          setTopicData({ ...topicData, id: res?.addCourseTopic?.id });
         })
-        .catch(() => setToastMessage('Topic Create Error'))
-        .finally(() => closePopUp());
+        .catch(() => setToastMessage('Topic Create Error'));
       return;
     }
 
-    // update module
+    // update topic
     mutateData(UPDATE_COURSE_TOPIC, sendData)
       .then((res) => {
         if (!res?.updateCourseTopic) return setToastMessage('Topic Update Error');
@@ -98,11 +103,16 @@ export default function useHandleTopic(
       .finally(() => setIsEditTopicFormVisible(!isEditTopicFormVisible));
   }
 
+  async function handleSubmit() {
+    console.info(topicContentList);
+  }
+
   return {
     topicData,
     setTopicData,
     addUpdateTopic,
     isEditTopicFormVisible,
-    toggleEditTopicForm
+    toggleEditTopicForm,
+    handleSubmit
   };
 }

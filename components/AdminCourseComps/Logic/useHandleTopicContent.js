@@ -1,26 +1,27 @@
-import { ADD_COURSE_TOPIC, UPDATE_COURSE_TOPIC } from '@/api/Mutations';
 import { GET_COURSE_TOPICS_CONTENT } from '@/api/Queries';
-import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
-import { sanitizeFormData } from '@/helper/common.helper';
-import { isWordSame } from '@/helper/utils.helper';
-import { AllCourseModulesDataAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { CourseMetaDataAtom, TopicContentListAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { getTopicContentDataObj } from './adminCourseComps.helper';
 
-export default function useHandleTopicContent(topData = null, closePopUp = () => {}) {
+export default function useHandleTopicContent(topData = null) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
-  const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
+  const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
 
   const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(null);
-  const [topicContentList, setTopicContentList] = useState(null);
   const [topicContentFormData, setTopicContentFormData] = useState(
     getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
   );
+
+  // reset state
+  useEffect(() => {
+    setTopicContentList(null);
+  }, []);
 
   useEffect(() => {
     if (!topData?.id) return;
@@ -40,58 +41,97 @@ export default function useHandleTopicContent(topData = null, closePopUp = () =>
       });
   }, [topData]);
 
-  // useEffect(() => {
-  //   if (!topData?.id) return;
+  useEffect(() => {
+    if (topicContentList?.length) return;
 
-  //   setTopicContentFormData(getTopicDataObj(topData));
-  // }, [topData]);
+    setIsEditTopicFormVisible(true);
+    setTopicContentFormData(
+      getTopicContentDataObj({
+        courseId: courseMetaData?.id,
+        topicId: topData?.id,
+        isDefault: true
+      })
+    );
+  }, [topicContentList?.length]);
 
-  async function addUpdateTopicContent(e) {
-    e.target.disabled = true;
-
-    const sendData = sanitizeFormData(topicContentFormData);
-    // add new module
-    if (!topicContentFormData?.id) {
-      mutateData(ADD_COURSE_TOPIC, sendData)
-        .then((res) => {
-          if (!res?.addCourseTopic) return setToastMessage('Topic Create Error');
-
-          // const _allModules = structuredClone(allModules);
-          // const index = _allModules?.findIndex((m) => m?.id === modData?.id);
-          // if (index < 0) return;
-
-          // _allModules?.[index]?.topics?.push(res?.addCourseTopic);
-          // setAllModules(_allModules);
+  function toggleForm() {
+    // reset form data
+    if (!isEditTopicFormVisible) {
+      setTopicContentFormData(
+        getTopicContentDataObj({
+          courseId: courseMetaData?.id,
+          topicId: topData?.id,
+          type: topicContentList?.[0]?.type,
+          isDefault: !topicContentList?.filter((tc) => tc?.isDefault)?.length
         })
-        .catch(() => setToastMessage('Topic Create Error'))
-        .finally(() => closePopUp());
-      return;
+      );
     }
 
-    // update module
-    mutateData(UPDATE_COURSE_TOPIC, sendData)
-      .then((res) => {
-        if (!res?.updateCourseTopic) return setToastMessage('Topic Update Error');
+    setIsEditTopicFormVisible(!isEditTopicFormVisible);
+  }
 
-        // const _allModules = structuredClone(allModules);
-        // const index = _allModules?.findIndex((m) => m?.id === modData?.id);
-        // if (index < 0) return;
+  function handleChange(toBeUpdatedKeyValue = {}) {
+    setTopicContentFormData((prev) => ({ ...prev, ...(toBeUpdatedKeyValue || {}) }));
+  }
 
-        // const updatedChap = res?.updateCourseTopic;
-        // _allModules[index].topics = _allModules?.[index]?.topics?.map((chap) =>
-        //   chap?.id === updatedChap?.id ? updatedChap : chap
-        // );
-        // setAllModules(_allModules);
-      })
-      .catch(() => setToastMessage('Topic Update Error'))
-      .finally(() => setIsEditTopicFormVisible(!isEditTopicFormVisible));
+  // video input
+  function handleMp4FileInput(e) {
+    if (!e.target.files?.length)
+      return setTopicContentFormData((prev) => ({ ...prev, file: null, duration: 0 }));
+
+    const video = document.createElement('video');
+    let duration = 0;
+    video.src = URL.createObjectURL(e.target.files[0]);
+    video.preload = 'metadata';
+    video.onloadedmetadata = function () {
+      window.URL.revokeObjectURL(video.src);
+      duration = video.duration;
+
+      const variableBufferTime = 2;
+      const prevUploadDuration = topicContentList?.filter(
+        (tc) => tc?.topicId === topicContentFormData?.topicId
+      );
+      if (
+        prevUploadDuration > 0 &&
+        (prevUploadDuration + variableBufferTime <= duration ||
+          prevUploadDuration - variableBufferTime >= duration)
+      ) {
+        e.target.value = null;
+        setToastMessage('Video Length Should be same for all videos!!');
+        return setTopicContentFormData((prev) => ({ ...prev, file: null, duration: 0 }));
+      }
+
+      setTopicContentFormData((prev) => ({
+        ...prev,
+        file: e.target.files[0],
+        duration: parseInt(duration)
+      }));
+    };
+  }
+
+  function handleSubmit() {
+    const _list = structuredClone(topicContentList);
+
+    // set every other topic content is default to false if current topic contnent is default true
+    if (topicContentFormData?.isDefault) _list?.forEach((item) => (item.isDefault = false));
+
+    _list.push(topicContentFormData);
+    setTopicContentList(_list);
+
+    setIsEditTopicFormVisible(false);
+    setTopicContentFormData(
+      getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
+    );
   }
 
   return {
     topicContentList,
     topicContentFormData,
     setTopicContentFormData,
-    addUpdateTopicContent,
-    isEditTopicFormVisible
+    isEditTopicFormVisible,
+    toggleForm,
+    handleChange,
+    handleMp4FileInput,
+    handleSubmit
   };
 }

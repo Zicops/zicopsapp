@@ -83,11 +83,6 @@ export function getCourseCurrentStateObj(data = {}) {
   };
 }
 
-export const AllCourseModulesDataAtom = atom({
-  key: 'AllCourseModulesData',
-  default: null
-});
-
 export const ClassroomMasterAtom = atom({
   key: 'ClassroomMaster',
   default: getClassroomMasterDataObj()
@@ -109,3 +104,13 @@ export function getClassroomMasterDataObj(data = {}) {
     status: data?.status || null
   };
 }
+
+export const AllCourseModulesDataAtom = atom({
+  key: 'AllCourseModulesData',
+  default: null
+});
+
+export const TopicContentListAtom = atom({
+  key: 'TopicContentList',
+  default: null
+});

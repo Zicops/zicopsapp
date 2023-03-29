@@ -66,13 +66,7 @@ export function getTopicContentDataObj(data = {}) {
     language: data?.language || '',
     duration: data?.duration || '',
     isDefault: data?.isDefault || '',
-
-    startTime: data?.startTime || '',
-    nextShowTime: data?.nextShowTime || '',
-    fromEndTime: data?.fromEndTime || '',
-    skipIntroDuration: data?.skipIntroDuration || '',
-
-    subtitleUrl: data?.subtitleUrl || null
+    file: data?.file || ''
   };
 }
 

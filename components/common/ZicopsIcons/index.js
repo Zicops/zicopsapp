@@ -1,3 +1,5 @@
+import themeHelper, { theme } from '@/helper/theme.helper';
+
 export function DownArrowIcon({ color = '#6BCFCF', turns = '0' }) {
   return (
     <svg
@@ -93,6 +95,23 @@ export function PlusIcon({ color = '#ACACAC' }) {
       style={{ height: '100%', width: '100%' }}>
       <path
         d="M16.8334 16.3333V0.333313H22.1667V16.3333H38.1667V21.6666H22.1667V37.6666H16.8334V21.6666H0.833374V16.3333H16.8334Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
+export function EditBoxIcon({ color = theme.white }) {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 24"
+      fill="none"
+      style={{ height: '100%', width: '100%' }}
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M16.757 2.99998L14.757 4.99998H5V19H19V9.24298L21 7.24298V20C21 20.2652 20.8946 20.5195 20.7071 20.7071C20.5196 20.8946 20.2652 21 20 21H4C3.73478 21 3.48043 20.8946 3.29289 20.7071C3.10536 20.5195 3 20.2652 3 20V3.99998C3 3.73476 3.10536 3.48041 3.29289 3.29287C3.48043 3.10533 3.73478 2.99998 4 2.99998H16.757ZM20.485 2.09998L21.9 3.51598L12.708 12.708L11.296 12.711L11.294 11.294L20.485 2.09998Z"
         fill={color}
       />
     </svg>

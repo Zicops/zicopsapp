@@ -526,56 +526,117 @@ $marginBetweenInputs: 1em;
     gap: 1em;
   }
 
-  .addTopicFormBtn {
-    padding: 0.7em 2em;
-    margin: 1em 1em 0;
-    font-size: 0.9rem;
-    border-color: $darkThree;
-    color: $darkThree;
-    background-color: $darkTwo;
+  .topicContentContainer {
+    margin-bottom: 1em;
 
-    &.addBtn {
-      border-color: $primary;
-      color: $primary;
-      box-shadow: 0px 0px 10px 0px $primary;
-    }
-
-    &:hover {
-      border-color: $white;
+    .titleWithLineAtSide {
       color: $white;
-      background-color: $darkTwo;
-    }
+      font-size: 16px;
+      text-transform: uppercase;
+      text-align: center;
 
-    &:disabled {
-      border-color: $darkThree;
-      color: $darkThree;
-      box-shadow: none;
-      opacity: 0.5;
-    }
-  }
+      &::before,
+      &::after {
+        display: inline-block;
+        content: '';
+        border-top: 2px solid $secondaryBlack;
+        min-width: 200px;
+        margin: 0 1rem;
 
-  .topicContentBarContainer {
-    .topSection,
-    .contentBar {
-      display: flex;
-      justify-content: space-between;
-      margin: 0.3em auto;
-
-      p {
-        font-size: 0.9rem;
-        color: $darkThree;
-
-        span {
-          color: $white;
-        }
+        transform: translateY(-5px);
       }
     }
 
-    .contentBar {
-      background-color: $darkThree;
-      padding: 0.3em 1em;
-      border-radius: 5px;
+    .topicContentForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      padding: 1em 2em;
+
+      .fileName {
+        text-align: right;
+        margin-left: 0.5em;
+      }
     }
+
+    .addMoreContentBtn {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5em;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: $primary;
+
+      div {
+        height: 1em;
+      }
+    }
+
+    .topicContentBarContainer {
+      margin: 0.5em auto;
+
+      .topSection,
+      .contentBar {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.2em auto;
+
+        p {
+          font-size: 0.9rem;
+          color: $darkThree;
+
+          span {
+            color: $white;
+          }
+        }
+
+        .editBtn {
+          width: 1.1em;
+          cursor: pointer;
+        }
+      }
+
+      .contentBar {
+        background-color: $darkThree;
+        padding: 0.3em 1em;
+        border-radius: 5px;
+      }
+    }
+
+    .flexContainerWithSpace {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+  }
+}
+
+.addTopicFormBtn {
+  padding: 0.7em 2em;
+  margin: 1em 1em 0;
+  font-size: 0.9rem;
+  border-color: $darkThree;
+  color: $darkThree;
+  background-color: $darkTwo;
+
+  &.addBtn {
+    border-color: $primary;
+    color: $primary;
+    box-shadow: 0px 0px 10px 0px $primary;
+  }
+
+  &:hover {
+    border-color: $white;
+    color: $white;
+    background-color: $darkTwo;
+  }
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    box-shadow: none;
+    opacity: 0.5;
   }
 }
 
