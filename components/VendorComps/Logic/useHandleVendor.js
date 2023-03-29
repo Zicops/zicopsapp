@@ -940,7 +940,7 @@ export default function useHandleVendor() {
         variables: { vendorId: vendorTableData?.vendorId, lspId: currentLsp }
       })
         .then((res) => {
-          if (!res?.data?.disableVendor)
+          if (!res?.data?.disableVendorLspMap)
             return setToastMsg({ type: 'danger', message: 'Vendor Disabled Failed' });
 
           onSuccess();
