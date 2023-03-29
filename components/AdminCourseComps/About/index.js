@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import styles from '../adminCourseComps.module.scss';
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
+import AddTrainerPopUp from './AddTrainerPopUp';
 import BulletPointInput from './BulletPointInput';
 
 export default function About() {
@@ -23,10 +24,23 @@ export default function About() {
 
   function showDropdown(title) {
     if (title === '') return <></>;
-    const obj = dropDown?.find((data) => data.title === title);
-    return obj.component;
+    const obj = dropDown?.find((data) => data?.title === title);
+    return obj?.component;
   }
+  const [showPopUp, setShowPoup] = useState(false);
+  // function showPopup(title) {
+  //   if (title === '') return <></>;
+  //   const obj = Popup.find((objTitle) => objTitle.title === title);
+  //   return obj?.component;
+  // }
   // const listModerator = ["internal", "Externar"]
+
+  const Popup = [
+    {
+      title: 'addTrainer',
+      component: <AddTrainerPopUp />
+    }
+  ];
   const Trainers = [
     {
       name: 'sandeep',
@@ -387,7 +401,14 @@ export default function About() {
           </div>
         </div>
       )}
+      {showPopUp && <AddTrainerPopUp showPopUp={showPopUp} setShowPopUp={setShowPoup}/>}
 
+      <button
+        onClick={() => {
+          setShowPoup(true);
+        }}>
+        ShowPopUp
+      </button>
       <NextBtn />
     </>
   );
