@@ -30,7 +30,7 @@ export default function VendorInfo() {
 
   // reset all recoil state
   useEffect(() => {
-    setVendorData(getVendorObject({ type: vendorData?.type }));
+    setVendorData(getVendorObject({ type: vendorData?.type, lspId: vendorData?.lspId }));
     setSMEData(getSMEServicesObject());
     setCTData(getCTServicesObject());
     setCDData(getCDServicesObject());

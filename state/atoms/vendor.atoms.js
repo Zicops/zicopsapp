@@ -28,6 +28,7 @@ export const VendorStateAtom = atom({
 export function getVendorObject(data) {
   return {
     vendorId: data?.vendorId || null,
+    lspId: data?.lspId || null,
     name: data?.name || '',
     type: data?.type || 'company',
     level: data?.level || 'lsp',
