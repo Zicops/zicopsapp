@@ -1,7 +1,7 @@
 import styles from '../vendorComps.module.scss';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { currency, unit } from '../Logic/vendorComps.helper';
 import { ServicesAtom } from '@/state/atoms/vendor.atoms';
@@ -11,6 +11,13 @@ import { changeHandler } from '@/helper/common.helper';
 export default function AddLineItemComp({ index, service }) {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
+  useEffect(() => {
+    const tempArray = structuredClone(servicesData);
+    tempArray[service][index].total =
+      servicesData?.[service]?.[index]?.rate * servicesData?.[service]?.[index]?.quantity;
+    setServicesData(tempArray);
+  }, [servicesData?.[service]?.[index]?.rate, servicesData?.[service]?.[index]?.quantity]);
+
   const decrementHandler = () => {
     if (servicesData?.[service]?.[index]?.quantity === 0) return;
 
@@ -18,6 +25,7 @@ export default function AddLineItemComp({ index, service }) {
     tempArray[service][index].quantity -= 1;
     setServicesData(tempArray);
   };
+
   return (
     <div className={`${styles.lineContainer}`}>
       <div>
@@ -112,9 +120,7 @@ export default function AddLineItemComp({ index, service }) {
       <div>
         <p className={`${styles.heading}`}>Total</p>
         <div className={`${styles.total}`}>
-          <p>
-            {servicesData?.[service]?.[index]?.rate * servicesData?.[service]?.[index]?.quantity}
-          </p>
+          <p>{servicesData?.[service]?.[index]?.total || 0}</p>
         </div>
       </div>
     </div>

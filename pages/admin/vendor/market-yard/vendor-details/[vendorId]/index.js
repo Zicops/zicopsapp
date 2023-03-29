@@ -1,6 +1,5 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import { coursesVendor, serviceType } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
@@ -10,10 +9,7 @@ import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
-import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
-import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
@@ -23,7 +19,6 @@ import {
   ServicesAtom,
   VendorProfileAtom,
   VendorStateAtom,
-  vendorServicesList,
   VendorServicesListAtom,
   getVendorServicesObject,
   getServicesObject,
@@ -37,7 +32,6 @@ import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
 import ReviewAndTaxComp from '@/components/VendorComps/ReviewAndtaxComp';
 import AddLineComp from '@/components/VendorComps/AddLineComp';
-import AddOrderPopup from '@/components/VendorComps/AddOrderPopup';
 
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -48,8 +42,6 @@ export default function VendorInfo() {
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
-  const [addTax, setAddTax] = useState(false);
-  const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
   const [selectedServicesForOrder, setSelectedServicesForOrder] =

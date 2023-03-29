@@ -1,11 +1,12 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import { useState } from 'react';
 import styles from './vendorComps.module.scss';
-const ReviewOrderBottom = ({ isTax }) => {
+const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount }) => {
   const [isShowTax, setShowTax] = useState(false);
-  const onShowTaxHandler = () => {
+  const onShowTaxHandler = ({ data }) => {
     setShowTax(true);
   };
+
   return (
     <div className={`${styles.ReviewBottomContainer}`}>
       <div className={`${styles.subTotal}`}>
@@ -23,7 +24,7 @@ const ReviewOrderBottom = ({ isTax }) => {
           )}
         </div>
         <div>
-          <p>4,00,000 INR</p>
+          <p>{subtotal} INR</p>
           {isTax && !isShowTax && (
             <div className={`${styles.taxAdd}`} onClick={onShowTaxHandler}>
               <span className={`${styles.pluse}`}>+</span>
@@ -35,11 +36,11 @@ const ReviewOrderBottom = ({ isTax }) => {
       </div>
       <div className={`${styles.TaxAmount}`}>
         <p>Tax Amount</p>
-        <p>0 INR</p>
+        <p>{taxAmount || 0} INR</p>
       </div>
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
-        <p>4,00,000 INR</p>
+        <p>{grossTotal}INR</p>
       </div>
     </div>
   );

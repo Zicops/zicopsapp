@@ -194,16 +194,16 @@ export const vendorUserInviteAtom = atom({
 
 export const OrderAtom = atom({
   key: 'orderState',
-  default: getOrderObject()
+  default: getVendorOrderObject()
 });
-export function getOrderObject(data) {
+export function getVendorOrderObject(data) {
   return {
-    order_id: data?.order_id || '',
-    vendor_id: data?.vendor_id || '',
-    lsp_id: data?.lsp_id || '',
+    orderId: data?.orderId || '',
+    vendorId: data?.vendorId || '',
+    lspId: data?.lspId || '',
     total: data?.total || 0,
     tax: data?.tax || 0,
-    grand_total: data?.grand_total || 0,
+    grossTotal: data?.grossTotal || 0,
     status: data?.status || ''
   };
 }
@@ -218,9 +218,9 @@ export function getVendorServicesObject() {
 
 export function getServicesObject(data) {
   return {
-    serviceId: data?.service_id || '',
-    orderId: data?.order_id || '',
-    serviceType: data?.service_type || '',
+    serviceId: data?.serviceId || '',
+    orderId: data?.orderId || '',
+    serviceType: data?.serviceType || '',
     description: data?.description || '',
     unit: data?.unit || 0,
     currency: data?.currency || '',
