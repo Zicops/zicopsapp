@@ -34,6 +34,7 @@ export default function useHandleTopicContent(topData = null) {
         );
 
         setTopicContentList(_topicContent || []);
+        if (_topicContent?.length) setIsEditTopicFormVisible(false);
       })
       .catch(() => {
         setToastMessage('Topic Content Load Error');

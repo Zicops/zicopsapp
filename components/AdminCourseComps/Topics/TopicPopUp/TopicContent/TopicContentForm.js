@@ -49,7 +49,7 @@ export default function TopicContentForm({
     <div className={styles.topicContentContainer}>
       <div className={`${styles.titleWithLineAtSide}`}>Content</div>
 
-      {topicContentList == null && <Spinner />}
+      {topicContentList == null && <Spinner customStyles={{ margin: '2em auto' }} />}
 
       {isFormVisible && topicContentList != null && (
         <div className={`${styles.topicContentForm}`}>
