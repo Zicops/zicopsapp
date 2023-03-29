@@ -2,7 +2,7 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { changeHandler } from '@/helper/common.helper';
 import React from 'react';
 import styles from '../../vendorComps.module.scss';
-const AddUrl = ({ inputName = '', urlData, setUrlData }) => {
+const AddUrl = ({ inputName = '', urlData, setUrlData, isDisabled = false }) => {
   return (
     <div className={`${styles.input1}`}>
       <label for="addUser">Add URL: </label>
@@ -10,7 +10,8 @@ const AddUrl = ({ inputName = '', urlData, setUrlData }) => {
         inputOptions={{
           inputName: inputName,
           placeholder: 'http://website_abc.com',
-          value: urlData
+          value: urlData,
+          isDisabled: isDisabled
         }}
         styleClass={`${styles.input5}`}
         changeHandler={(e) => setUrlData(e.target.value)}

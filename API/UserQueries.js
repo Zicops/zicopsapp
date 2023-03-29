@@ -827,6 +827,7 @@ export const GET_LSP_USERS_WITH_ROLE = gql`
           user_role_id
           role
         }
+        status
       }
       pageCursor
       direction
@@ -1208,8 +1209,8 @@ export const GET_PAGINATED_VENDORS = gql`
 `;
 
 export const GET_SPEAKERS = gql`
-  query getSpeakers($lspId: String, $service: String) {
-    getSpeakers(lsp_id: $lspId, service: $service) {
+  query getSpeakers($lspId: String, $service: String, $name: String) {
+    getSpeakers(lsp_id: $lspId, service: $service, name: $name) {
       pf_id
       vendor_id
       first_name

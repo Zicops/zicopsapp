@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 import styles from './vendorComps.module.scss';
 
-export default function MarketYardData({ vendorType = null, displayRows = {}, searchText = null }) {
+export default function MarketYardData({
+  vendorType = null,
+  vendorService = null,
+  displayRows = {},
+  searchText = null
+}) {
   const skeletonCardCount = 6;
-  const {
-    vendorDetails,
-    getLspVendors,
-    loading,
-    getLspSpeakers,
-    speakerDetails
-  } = useHandleMarketYard();
+  const { vendorDetails, getLspVendors, loading, getLspSpeakers, speakerDetails } =
+    useHandleMarketYard();
   const [lspVendors, setLspVendors] = useState([...Array(skeletonCardCount)]);
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
@@ -23,15 +23,14 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
     const lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
 
-    const myVendorFilter = {};
-    if (searchText) myVendorFilter.name = searchText;
-    const myVendors = await getLspVendors(lspId, myVendorFilter, true);
-    setLspVendors(myVendors || []);
-
-    const filters = { service: 'sme' };
+    const filters = {};
     if (searchText) filters.name = searchText;
     if (vendorType) filters.type = vendorType;
+    if (vendorService) filters.service = vendorService;
+    const myVendors = await getLspVendors(lspId, filters, true);
+    setLspVendors(myVendors || []);
 
+    filters.service = 'sme';
     const smeVendorList = await getLspVendors(zicopsLsp, filters, true);
     setSmeVendors(smeVendorList || []);
 
@@ -43,14 +42,8 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
     const cdVendorList = await getLspVendors(zicopsLsp, filters, true);
     setCdVendors(cdVendorList || []);
 
-    const speakerList = await getLspSpeakers(zicopsLsp, filters, true);
-    setSpeakerVendors(speakerList || []);
-  }, [vendorType, searchText]);
-
-  useEffect(async () => {
-    const lspId = sessionStorage?.getItem('lsp_id');
-    await getLspSpeakers(lspId, displayRows?.speakerType || null, false);
-  }, [displayRows?.speakerType]);
+    await getLspSpeakers(zicopsLsp, displayRows?.speakerType || null, searchText || '', false);
+  }, [vendorType, vendorService, searchText, displayRows?.speakerType]);
 
   return (
     <>
@@ -80,9 +73,8 @@ export default function MarketYardData({ vendorType = null, displayRows = {}, se
       {displayRows?.isCrtDisplayed && !!cdVendors?.length && (
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
       )}
-
-      {displayRows?.isSpeakerDisplayed && !!speakerDetails?.length && (
-        <ZicopsCarousel title="Speakers Marketplace" data={speakerVendors} type="vendor" />
+      {!!speakerDetails?.length && (
+        <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
       )}
     </>
   );

@@ -26,17 +26,32 @@ export default function VendorServices({ data, type = 'sme' }) {
           fileUrl: file?.file_url,
           fileType: file?.fileType,
           status: file?.status,
-          rate: file?.price
+          rate: file?.rate,
+          currency: file?.currency,
+          unit: file?.unit,
+          actualFileType: file?.actualFileType
         }))
       ) || [];
     });
   }, []);
 
-  function getFileType(fileType = null) {
-    if (fileType === 'PDF') return '/image/pdf-icon1.png';
-    if (fileType === 'PPT') return '/image/ppt-icon1.png';
+  function getFileType(actualFileType = null) {
+    if (actualFileType?.toLowerCase()?.includes('pdf')) return '/images/pdf-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('powerpoint')) return '/images/ppt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('presentation')) return '/images/pptx-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('stream')) return '/images/srt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('document')) return '/images/doc-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('msword')) return '/images/docx-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('audio')) return '/images/mp3-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('mp4')) return '/images/mp4-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('png')) return '/images/png-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('jpeg')) return '/images/jpeg-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('jpg')) return '/images/jpg-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('gif')) return '/images/gif-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('text')) return '/images/txt-icon1.png';
+    if (actualFileType?.toLowerCase()?.includes('sheet')) return '/images/xls-icon1.png';
 
-    return '/image/default-document.png';
+    return '/images/default-document.png';
   }
 
   return (
@@ -84,11 +99,13 @@ export default function VendorServices({ data, type = 'sme' }) {
             return (
               <div className={styles.sampleFile} onClick={() => setSamplePopup(+data.id)}>
                 <div className={styles.sampleFileImage}>
-                  <img src={getFileType(data?.fileType)} />
+                  <img src={getFileType(data?.actualFileType)} />
                 </div>
                 <div className={styles.sampleFileDetails}>
-                  <div>{`${data?.title}.${data?.fileType?.toLowerCase()}`}</div>
-                  <div className={styles.sampleFileRate}>{data.rate}</div>
+                  <div>{`${data?.title}`}</div>
+                  <div className={styles.sampleFileRate}>
+                    {data.rate} {data.currency} {data.unit}
+                  </div>
                 </div>
               </div>
             );
@@ -96,35 +113,37 @@ export default function VendorServices({ data, type = 'sme' }) {
           <small>{!sampleFiles?.length && 'No Sample Files Available'}</small>
         </div>
       </div>
-      <VendorPopUp
-        popUpState={[samplePopup != null, setSamplePopup]}
-        size="large"
-        title={sampleFiles?.[samplePopup]?.title}
-        headerComps={
-          <div className={`${styles.sampleDetailButton}`}>
-            <img
-              src="/images/svg/info.svg"
-              alt=""
-              onClick={() => setSampleDetails(!sampleDetails)}
-            />
-          </div>
-        }
-        isFooterVisible={false}>
-        <SampleFilePreview
-          isDetailsOpen={sampleDetails}
-          sampleFile={sampleFiles?.[samplePopup]}
-          handleNextClick={() => {
-            let updatedIndex = +samplePopup + 1;
-            if (updatedIndex === sampleFiles.length) updatedIndex = 0;
-            setSamplePopup(+updatedIndex);
-          }}
-          handlePrevClick={() => {
-            let updatedIndex = +samplePopup - 1;
-            if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
-            setSamplePopup(+updatedIndex);
-          }}
-        />
-      </VendorPopUp>
+      {samplePopup != null && (
+        <VendorPopUp
+          popUpState={[true, setSamplePopup]}
+          size="large"
+          title={sampleFiles?.[samplePopup]?.title}
+          headerComps={
+            <div className={`${styles.sampleDetailButton}`}>
+              <img
+                src="/images/svg/info.svg"
+                alt=""
+                onClick={() => setSampleDetails(!sampleDetails)}
+              />
+            </div>
+          }
+          isFooterVisible={false}>
+          <SampleFilePreview
+            isDetailsOpen={sampleDetails}
+            sampleFile={sampleFiles?.[samplePopup]}
+            handleNextClick={() => {
+              let updatedIndex = +samplePopup + 1;
+              if (updatedIndex === sampleFiles.length) updatedIndex = 0;
+              setSamplePopup(+updatedIndex);
+            }}
+            handlePrevClick={() => {
+              let updatedIndex = +samplePopup - 1;
+              if (updatedIndex < 0) updatedIndex = sampleFiles.length - 1;
+              setSamplePopup(+updatedIndex);
+            }}
+          />
+        </VendorPopUp>
+      )}
     </div>
   );
 }

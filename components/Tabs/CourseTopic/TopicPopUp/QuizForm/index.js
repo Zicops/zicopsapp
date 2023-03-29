@@ -75,7 +75,7 @@ export default function QuizForm({ courseId, topicId, isScrom = false, isFormOpe
                   mutation={DELETE_TOPIC_QUIZ}
                   onDelete={() => {
                     const _quiz = structuredClone(quizzes);
-                    const index = _quiz?.findIndex((q) => q?.id === quiz?.id);
+                    const index = !quiz?.id ? index : _quiz?.findIndex((q) => q?.id === quiz?.id);
                     if (index >= 0) _quiz.splice(index, 1);
 
                     setQuizzes(_quiz);

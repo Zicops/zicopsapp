@@ -89,7 +89,7 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const loadDataFunction = loadQueryDataAsync;
     const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
@@ -1013,15 +1013,6 @@ export function useUpdateUserAboutData() {
   async function updateUserLsp(userData = null) {
     userData = userData ? userData : newUserAboutData;
 
-    //     console.log(userData,'userData');
-    //  return ;
-    // if (disabledUserList)
-
-    // finding is admin is trying to disable the recent user or not
-    // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
-    // if (userData?.status?.toLowerCase() === 'disabled')
-    //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
-
     if (userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()) {
       const res = await getPrefData({
         variables: { user_id: userData?.id, user_lsp_id: userData?.user_lsp_id }
@@ -1042,10 +1033,12 @@ export function useUpdateUserAboutData() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
-    // console.log(res);
+
     if (sendLspData?.status === '') {
       setInvitedUsers((prev) => [...prev, userData?.user_id]);
     }
+
+    if (!isError) setNewUserAboutData((prev) => ({ ...prev, status: userData.status }));
     return !isError;
   }
 
@@ -1124,8 +1117,6 @@ export function useUpdateUserAboutData() {
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
       if (user?.id === userDataAbout?.id) continue;
-      if (disabledUserList?.includes(user?.id)) continue;
-      // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
@@ -1140,11 +1131,7 @@ export function useUpdateUserAboutData() {
         userIds?.push(user?.id);
       }
     }
-    if (!isError) {
-      if (!userIds?.length) return !isError;
-      setDisabledUserList((prev) => [...prev, ...userIds]);
-    }
-    // console.log(isError);
+    if (!isError && !userIds?.length) return !isError;
     return !isError;
   }
   async function updateMultiUserAbout() {

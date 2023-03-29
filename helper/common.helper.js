@@ -83,6 +83,15 @@ export function getCurrentEpochTime() {
   return Math.floor(currentTime / 1000);
 }
 
+export async function convertUrlToFile(dataUrl, fileName = 'file.jpg') {
+  if (!dataUrl) return;
+
+  let response = await fetch(dataUrl);
+  let data = await response.blob();
+  let metadata = { type: 'image/jpeg' };
+  return new File([data], fileName, metadata);
+}
+
 //
 export function getNotificationMsg(type = '', msgObj = {}) {
   if (type === '') {
