@@ -576,31 +576,10 @@ $marginBetweenInputs: 1em;
     .topicContentBarContainer {
       margin: 0.5em auto;
 
-      .topSection,
-      .contentBar {
+      .topSection {
         display: flex;
         justify-content: space-between;
         margin: 0.2em auto;
-
-        p {
-          font-size: 0.9rem;
-          color: $darkThree;
-
-          span {
-            color: $white;
-          }
-        }
-
-        .editBtn {
-          width: 1.1em;
-          cursor: pointer;
-        }
-      }
-
-      .contentBar {
-        background-color: $darkThree;
-        padding: 0.3em 1em;
-        border-radius: 5px;
       }
     }
 
@@ -689,6 +668,23 @@ $marginBetweenInputs: 1em;
       margin-left: 25%;
     }
   }
+
+  .resourceAddBtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+  }
+  .resourceTypeContainer {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+  .flexCenterWithGap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
 }
 
 .addTopicFormBtn {
@@ -716,6 +712,30 @@ $marginBetweenInputs: 1em;
     color: $darkThree;
     box-shadow: none;
     opacity: 0.5;
+  }
+}
+
+.contentBar {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.2em auto;
+
+  background-color: $darkThree;
+  padding: 0.3em 1em;
+  border-radius: 5px;
+
+  p {
+    font-size: 0.9rem;
+    color: $darkThree;
+
+    span {
+      color: $white;
+    }
+  }
+
+  .editBtn {
+    width: 1.1em;
+    cursor: pointer;
   }
 }
 
@@ -788,5 +808,19 @@ $marginBetweenInputs: 1em;
 
   .failureReason {
     color: $error;
+  }
+}
+
+// COMMON COMP STYLES
+.roundedBtn {
+  &.active:not(:disabled) {
+    border-color: $primary !important;
+    &.active {
+      box-shadow: 0px 0px 10px 0px $primary;
+
+      &:hover {
+        color: $primary !important;
+      }
+    }
   }
 }

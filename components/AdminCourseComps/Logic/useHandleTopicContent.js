@@ -13,7 +13,7 @@ export default function useHandleTopicContent(topData = null) {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
 
-  const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(null);
+  const [isFormVisible, setIsFormVisible] = useState(null);
   const [topicContentFormData, setTopicContentFormData] = useState(
     getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
   );
@@ -25,8 +25,9 @@ export default function useHandleTopicContent(topData = null) {
 
   useEffect(() => {
     if (!topData?.id) return;
-    if (topicContentList?.length) return;
+    if (topicContentList != null) return;
 
+    // load topic content, subtitle and binge data
     loadQueryDataAsync(GET_COURSE_TOPICS_CONTENT, { topic_id: topData?.id })
       .then((res) => {
         const _topicContent = res?.getTopicContent?.map((content) =>
@@ -34,18 +35,18 @@ export default function useHandleTopicContent(topData = null) {
         );
 
         setTopicContentList(_topicContent || []);
-        if (_topicContent?.length) setIsEditTopicFormVisible(false);
+        if (_topicContent?.length) setIsFormVisible(false);
       })
       .catch(() => {
         setToastMessage('Topic Content Load Error');
         setTopicContentList([]);
       });
-  }, [topData]);
+  }, [topData, topicContentList]);
 
   useEffect(() => {
     if (topicContentList?.length) return;
 
-    setIsEditTopicFormVisible(true);
+    setIsFormVisible(true);
     setTopicContentFormData(
       getTopicContentDataObj({
         courseId: courseMetaData?.id,
@@ -57,7 +58,7 @@ export default function useHandleTopicContent(topData = null) {
 
   function toggleForm() {
     // reset form data
-    if (!isEditTopicFormVisible) {
+    if (!isFormVisible) {
       setTopicContentFormData(
         getTopicContentDataObj({
           courseId: courseMetaData?.id,
@@ -68,7 +69,7 @@ export default function useHandleTopicContent(topData = null) {
       );
     }
 
-    setIsEditTopicFormVisible(!isEditTopicFormVisible);
+    setIsFormVisible(!isFormVisible);
   }
 
   function handleChange(toBeUpdatedKeyValue = {}) {
@@ -119,17 +120,16 @@ export default function useHandleTopicContent(topData = null) {
     _list.push(topicContentFormData);
     setTopicContentList(_list);
 
-    setIsEditTopicFormVisible(false);
+    setIsFormVisible(false);
     setTopicContentFormData(
       getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
     );
   }
 
   return {
-    topicContentList,
     topicContentFormData,
     setTopicContentFormData,
-    isEditTopicFormVisible,
+    isFormVisible,
     toggleForm,
     handleChange,
     handleMp4FileInput,

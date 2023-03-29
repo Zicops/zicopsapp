@@ -1,21 +1,21 @@
+import { DELETE_COURSE_TOPIC_CONTENT } from '@/api/Mutations';
+import RoundedBtn from '@/components/AdminCourseComps/common/RoundedBtn';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import Spinner from '@/components/common/Spinner';
-import ZicopsButton from '@/components/common/ZicopsButton';
 import { PlusIcon } from '@/components/common/ZicopsIcons';
 import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { truncateToN } from '@/helper/common.helper';
 import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { CourseMetaDataAtom, TopicContentListAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
-import TopicContentBar from './TopicContentBar';
+import ContentBar from './ContentBar';
 
 export default function TopicContentForm({
-  topicContentList = null,
   isFormVisible = false,
   isDisabled = false,
   topicContentState,
@@ -27,6 +27,7 @@ export default function TopicContentForm({
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
+  const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
 
   const selectedLanguages = topicContentList?.map((content) => content?.language);
@@ -44,6 +45,12 @@ export default function TopicContentForm({
   if (topicContentState?.type === TOPIC_CONTENT_TYPES.mp4) acceptedFilesTypes = ['.mp4'].join(', ');
   if (topicContentState?.type === TOPIC_CONTENT_TYPES.document)
     acceptedFilesTypes = ['.pdf'].join(', ');
+
+  const isTopicContentReady =
+    !topicContentState?.type ||
+    !topicContentState?.language ||
+    !(topicContentState?.file || topicContentState?.contentUrl) ||
+    !topicContentState?.duration;
 
   return (
     <div className={styles.topicContentContainer}>
@@ -184,31 +191,55 @@ export default function TopicContentForm({
             </>
           )}
 
+          <div className="center-element-with-flex"></div>
+
           <div className="center-element-with-flex">
-            {!!topicContentList?.length && (
-              <ZicopsButton
-                customClass={styles.addTopicFormBtn}
-                handleClick={toggleForm}
-                display="Cancel"
-              />
-            )}
-            <ZicopsButton
-              handleClick={handleSubmit}
-              customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
-              isDisabled={
-                !topicContentState?.type ||
-                !topicContentState?.language ||
-                !(topicContentState?.file || topicContentState?.contentUrl) ||
-                !topicContentState?.duration
-              }
+            {!!topicContentList?.length && <RoundedBtn display="Cancel" handleClick={toggleForm} />}
+
+            <RoundedBtn
               display={topicContentState?.id ? 'Update' : 'Add'}
+              isDisabled={isTopicContentReady}
+              isActive={!isTopicContentReady}
+              handleClick={handleSubmit}
             />
           </div>
         </div>
       )}
 
       {topicContentList?.map((content, index) => (
-        <TopicContentBar contentData={content} index={index} isDisabled={isDisabled} />
+        <>
+          <div className={`${styles.topicContentBarContainer}`}>
+            <div className={`${styles.topSection}`}>
+              <p>
+                Content Type: <span>{content?.type}</span>
+              </p>
+              <p>
+                Duration: <span>{content?.duration} sec</span>
+              </p>
+            </div>
+
+            <ContentBar
+              key={content?.language}
+              description={`Content Added ${content?.isDefault ? '(Default)' : ''}`}
+              type={content?.language}
+              isDisabled={isDisabled}
+              deleteProps={{
+                id: content?.id,
+                resKey: 'deleteTopicContent',
+                mutation: DELETE_COURSE_TOPIC_CONTENT,
+                onDelete: () => {
+                  const _list = structuredClone(topicContentList);
+                  const currentTopicIndex = !contentData?.id
+                    ? index
+                    : _list?.findIndex((tc) => tc?.id === contentData?.id);
+                  _list?.splice(currentTopicIndex, 1);
+
+                  setTopicContentList(_list);
+                }
+              }}
+            />
+          </div>
+        </>
       ))}
 
       {!!topicContentList?.length && !!languageOptions?.length && !isDisabled && (

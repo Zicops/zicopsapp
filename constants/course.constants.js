@@ -40,3 +40,10 @@ export const TOPIC_CONTENT_TYPES = {
   cmi5: 'CMi5',
   document: 'document'
 };
+
+export const TOPIC_RESOURCE_TYPES = {
+  pdf: 'PDF',
+  excel: 'EXCEL',
+  doc: 'DOC',
+  link: 'LINK'
+};

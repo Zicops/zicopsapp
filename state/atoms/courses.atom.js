@@ -128,3 +128,19 @@ export function getBingeDataObj(data) {
     fromEndTime: data?.fromEndTime || 0
   };
 }
+
+export const TopicResourcesAtom = atom({
+  key: 'TopicResources',
+  default: null
+});
+
+export function getTopicResourcesObject(data) {
+  return {
+    id: data.id || null,
+    topicId: data.topicId || null,
+    name: data.name || '',
+    type: data.type || '',
+    url: data.url || null,
+    file: data.file || null
+  };
+}

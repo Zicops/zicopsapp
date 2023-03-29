@@ -1,15 +1,18 @@
 import useHandleTopicContent from '@/components/AdminCourseComps/Logic/useHandleTopicContent';
+import { TopicContentListAtom } from '@/state/atoms/courses.atom';
+import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import BingeForm from './BingeForm';
 import Quiz from './Quiz';
-import Resource from './Resources';
+import ResourceForm from './ResourceForm';
 import TopicContentForm from './TopicContentForm';
 
 export default function TopicContent({ topData = null, closePopUp = () => {} }) {
+  const topicContentList = useRecoilValue(TopicContentListAtom);
+
   const {
-    topicContentList,
-    isEditTopicFormVisible,
+    isFormVisible,
     toggleForm,
     topicContentFormData,
     handleChange,
@@ -32,7 +35,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     },
     {
       title: 'Resources',
-      body: <Resource />
+      body: <ResourceForm topData={topData} />
     }
   ];
 
@@ -42,9 +45,8 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     <>
       <div className={styles.editTopicAccordianContainer}>
         <TopicContentForm
-          topicContentList={topicContentList}
           topicContentState={topicContentFormData}
-          isFormVisible={isEditTopicFormVisible}
+          isFormVisible={isFormVisible}
           toggleForm={toggleForm}
           handleChange={handleChange}
           handleMp4FileInput={handleMp4FileInput}
