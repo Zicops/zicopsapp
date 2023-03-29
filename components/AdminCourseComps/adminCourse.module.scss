@@ -648,8 +648,21 @@
   }
 
 
-
-
+// styling subtitles
+.addSubtitleBtn
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  margin-top: 18px;
+}
+.subtitleAddCancelBtn
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
 //   styling Quiz 
 .editQuizBox {
     display: flex;

@@ -4,6 +4,7 @@ import TopicAccordian from '../TopicAccordian';
 import Binge from './Bing';
 import Quiz from './Quiz';
 import Resource from './Resources';
+import SubTitles from './SubTitles';
 import TopicContentForm from './TopicContentForm';
 
 export default function TopicContent({ topData = null, closePopUp = () => {} }) {
@@ -12,7 +13,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
   const topicAccordians = [
     {
       title: 'Subtitles',
-      body: '<Classroom />'
+      body: <SubTitles/>
     },
     {
       title: 'Binge It',
