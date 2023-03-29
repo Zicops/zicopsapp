@@ -86,7 +86,10 @@ const MyVendor = () => {
             handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
-            text: params?.row?.status === VENDOR_MASTER_STATUS?.active ? 'Disable' : 'Enable',
+            text:
+              params?.row?.vendor_lsp_status === VENDOR_MASTER_STATUS?.active
+                ? 'Disable'
+                : 'Enable',
             handleClick: () => setSelectedVendor(params.row)
           }
         ];
