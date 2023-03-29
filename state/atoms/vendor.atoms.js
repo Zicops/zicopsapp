@@ -227,7 +227,8 @@ export function getServicesObject(data) {
     rate: data?.rate || 0,
     quantity: data?.quantity || 0,
     total: data?.total || 0,
-    status: data?.status || ''
+    status: data?.status || '',
+    isActive: data?.isActive || false
   };
 }
 

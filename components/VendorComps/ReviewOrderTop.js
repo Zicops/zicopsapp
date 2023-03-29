@@ -1,7 +1,13 @@
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
-import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { useRecoilValue } from 'recoil';
+import {
+  getServicesObject,
+  ServicesAtom,
+  VendorServicesListAtom,
+  VendorStateAtom
+} from '@/state/atoms/vendor.atoms';
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
 const ReviewOrderTop = ({ isConfirm, data }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -37,17 +43,37 @@ const ReviewOrderTop = ({ isConfirm, data }) => {
                   : order?.serviceType === 'crt'
                   ? VENDOR_SERVICES_TYPE?.crt?.label
                   : order?.serviceType === 'cd'
-                  ? VENDOR_SERVICES_TYPE?.crt?.label
+                  ? VENDOR_SERVICES_TYPE?.cd?.label
                   : ''
               }
               type="checkbox"
-              isChecked={true}
+              value={
+                order?.serviceType === 'sme'
+                  ? VENDOR_SERVICES_TYPE?.sme?.value
+                  : order?.serviceType === 'crt'
+                  ? VENDOR_SERVICES_TYPE?.crt?.value
+                  : order?.serviceType === 'cd'
+                  ? VENDOR_SERVICES_TYPE?.cd?.value
+                  : ''
+              }
+              isChecked={
+                order?.serviceType === 'sme' ||
+                order?.serviceType === 'crt' ||
+                order?.serviceType === 'cd'
+              }
+              // changeHandler={(e) => {
+              //   const { value, checked } = e.target;
+              //   order.serviceType = !checked
+              //     ? [getServicesObject({ isActive: false })]
+              //     : [getServicesObject({ isActive: true })];
+              // }}
             />
           </div>
           <p className={`${styles.contentName}`}>{order?.description}</p>
           <div className={`${styles.OrderValue}`}>
             <p>
-              {order?.rate} {order?.currency}/{order?.unit}
+              {order?.rate} {order?.currency}
+              {order?.unit}
             </p>
             <span>{order?.quantity}</span>
             <span>

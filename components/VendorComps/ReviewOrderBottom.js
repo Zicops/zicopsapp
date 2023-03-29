@@ -40,7 +40,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount }) => {
       </div>
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
-        <p>{grossTotal}INR</p>
+        <p>{grossTotal} INR</p>
       </div>
     </div>
   );

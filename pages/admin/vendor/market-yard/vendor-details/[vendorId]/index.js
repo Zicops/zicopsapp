@@ -58,6 +58,17 @@ export default function VendorInfo() {
   const isIndividual =
     vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
+  let isTotalcheck = false;
+  if (servicesData?.sme?.length && servicesData?.sme[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+  if (servicesData?.crt?.length && servicesData?.crt[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+  if (servicesData?.cd?.length && servicesData?.cd[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+
   useEffect(() => {
     if (!isIndividual) return;
     if (!vendorData?.users?.length) return;
@@ -191,7 +202,9 @@ export default function VendorInfo() {
                   _orderList[data] = checked;
 
                   const _serviceData = structuredClone(servicesData);
-                  _serviceData[data] = checked ? [getServicesObject({ serviceType: data })] : [];
+                  _serviceData[data] = checked
+                    ? [getServicesObject({ serviceType: data, isActive: true })]
+                    : [];
                   setServicesData(_serviceData);
 
                   setSelectedServicesForOrder(_orderList);
@@ -210,7 +223,8 @@ export default function VendorInfo() {
         closeBtn={{ name: 'Back', handleClick: backAddOrderHandler }}
         submitBtn={{
           name: currentComponent === 2 ? 'Confirm' : 'Next',
-          handleClick: addRateHandler
+          handleClick: addRateHandler,
+          disabled: isTotalcheck
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
