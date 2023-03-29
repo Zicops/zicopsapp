@@ -6,12 +6,12 @@ import styles from './AddVendor/addvendor.module.scss';
 import styless from './vendorComps.module.scss';
 import moment from 'moment';
 
-export default function ProfileExperience() {
+export default function ProfileExperience({ pfId = null }) {
   const { getProfileExperience } = useHandleVendor();
   const [experienceData, setExperienceData] = useState(null);
 
   const router = useRouter();
-  const profileId = router.query.profileId || null;
+  const profileId = router.query.profileId || pfId || null;
 
   useEffect(() => {
     getProfileExperience(profileId)

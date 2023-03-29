@@ -14,7 +14,7 @@ export default function User() {
     <>
       <Sidebar sidebarItemsArr={userSideBarData} />
       <MainBody>
-        <AdminHeader title="Profile" pageRoute="/admin/user" isAddShown={true} />
+        <AdminHeader title="Users" pageRoute="/admin/user" isAddShown={true} />
         <MainBodyBox>
           <UserProfile />
         </MainBodyBox>

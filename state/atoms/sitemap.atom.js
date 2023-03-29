@@ -41,6 +41,26 @@ export const SiteMapAtom = atom({
       head: 'Administration',
       displayName: 'My Learning Space',
       route: '/admin/administration/my-learning-space'
+    },
+    {
+      head: 'Vendor Management',
+      displayName: 'Market Yard',
+      route: '/admin/vendor/market-yard'
+    },
+    {
+      head: 'Vendor Management',
+      displayName: 'Manage Vendor',
+      route: '/admin/vendor/manage-vendor'
+    },
+    {
+      head: 'Vendor Management',
+      displayName: 'Dashboard',
+      route: '/admin'
+    },
+    {
+      head: 'Vendor Management',
+      displayName: 'Orders',
+      route: '/admin/vendor/orders'
     }
   ]
 });

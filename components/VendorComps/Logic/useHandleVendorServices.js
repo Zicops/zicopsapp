@@ -1,18 +1,26 @@
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { useRecoilState } from 'recoil';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
-  CREATE_SUBJECT_MATTER_EXPERTISE,
-  UPDATE_SUBJECT_MATTER_EXPERTISE,
   CREATE_CLASS_ROOM_TRANING,
-  UPDATE_CLASS_ROOM_TRANING,
   CREATE_CONTENT_DEVELOPMENT,
+  CREATE_SUBJECT_MATTER_EXPERTISE,
+  UPDATE_CLASS_ROOM_TRANING,
   UPDATE_CONTENT_DEVELOPMENT,
+  UPDATE_SUBJECT_MATTER_EXPERTISE,
   userClient
 } from '@/api/UserMutations';
+import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import {
+  CdServicesAtom,
+  CtServicesAtom,
+  getCDServicesObject,
+  getCTServicesObject,
+  getSMEServicesObject,
+  SmeServicesAtom,
+  VendorCurrentStateAtom
+} from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { SmeServicesAtom, CtServicesAtom, CdServicesAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleVendorServices() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -27,11 +35,23 @@ export default function useHandleVendorServices() {
   const router = useRouter();
   const vendorId = router.query.vendorId || '0';
 
+  const vendorCurrentState = useRecoilValue(VendorCurrentStateAtom);
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
 
   async function addUpdateSme(displayToaster = true) {
+    if (!(smeData?.isApplicable || vendorCurrentState?.enabledServices?.includes('sme'))) return;
+    if (
+      !smeData?.serviceDescription.length ||
+      !smeData?.expertises?.length ||
+      !smeData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Subject Matter Expertise'
+      });
+
     const sendData = {
       vendor_id: vendorId,
       description: smeData?.serviceDescription || '',
@@ -47,7 +67,7 @@ export default function useHandleVendorServices() {
     if (smeData?.sme_id) {
       sendData.sme_id = smeData?.sme_id;
 
-      await updateSme({ variables: sendData }).catch((err) => {
+      const res = await updateSme({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update SME Error' });
@@ -56,21 +76,57 @@ export default function useHandleVendorServices() {
       if (isError) return;
 
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
-      return;
+
+      const data = res?.data?.updateSubjectMatterExpertise;
+      setSMEData(
+        getSMEServicesObject({
+          ...smeData,
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries
+        })
+      );
+      return res?.data?.updateSubjectMatterExpertise;
     }
-    if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
-      const res = await createSme({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add SME Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+
+    const res = await createSme({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add SME Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createSubjectMatterExpertise;
+    setSMEData(
+      getSMEServicesObject({
+        ...smeData,
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries
+      })
+    );
+    return res?.data?.createSubjectMatterExpertise;
   }
 
   async function addUpdateCrt(displayToaster = true) {
+    if (!(ctData?.isApplicable || vendorCurrentState?.enabledServices?.includes('crt'))) return;
+    if (
+      !ctData?.serviceDescription.length ||
+      !ctData?.expertises?.length ||
+      !ctData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Classroom Training'
+      });
+
     const sendData = {
       vendor_id: vendorId,
       description: ctData?.serviceDescription || '',
@@ -87,7 +143,7 @@ export default function useHandleVendorServices() {
     if (ctData?.crt_id) {
       sendData.crt_id = ctData?.crt_id;
 
-      await updateCrt({ variables: sendData }).catch((err) => {
+      const res = await updateCrt({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update CRT Error' });
@@ -95,21 +151,55 @@ export default function useHandleVendorServices() {
 
       if (isError) return;
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
-      return;
+
+      const data = res?.data?.updateClassRoomTraining;
+      setCTData(
+        getCTServicesObject({
+          ...ctData,
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries
+        })
+      );
+      return res?.data?.updateClassRoomTraining;
     }
-    if (ctData?.serviceDescription && ctData?.expertises?.length && ctData?.languages?.length) {
-      const res = await createCrt({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
-      });
-      if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+    const res = await createCrt({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
+    });
+    if (isError) return;
+    setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createClassRoomTraining;
+    setCTData(
+      getCTServicesObject({
+        ...ctData,
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries
+      })
+    );
+    return res?.data?.createClassRoomTraining;
   }
 
   async function addUpdateCd(displayToaster = true) {
+    if (!(cdData?.isApplicable || vendorCurrentState?.enabledServices?.includes('cd'))) return;
+    if (
+      !cdData?.serviceDescription.length ||
+      !cdData?.expertises?.length ||
+      !cdData?.languages?.length
+    )
+      return setToastMsg({
+        type: 'danger',
+        message: 'Please Add Description, Expertise and Languages in Content Development'
+      });
     const sendData = {
       vendor_id: vendorId,
       description: cdData?.serviceDescription || '',
@@ -127,7 +217,7 @@ export default function useHandleVendorServices() {
     if (cdData?.cd_id) {
       sendData.cd_id = cdData?.cd_id;
 
-      await updateCd({ variables: sendData }).catch((err) => {
+      const res = await updateCd({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Update CD Error' });
@@ -135,18 +225,43 @@ export default function useHandleVendorServices() {
 
       if (isError) return;
       if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
-      return;
+
+      const data = res?.data?.updateContentDevelopment;
+      setCDData(
+        getCDServicesObject({
+          ...cdData,
+          ...data,
+          isApplicable: data?.is_applicable,
+          serviceDescription: data?.description,
+          languages: data?.languages,
+          expertises: data?.expertise,
+          formats: data?.output_deliveries
+        })
+      );
+      return res?.data?.updateContentDevelopment;
     }
-    if (cdData?.serviceDescription && cdData?.expertises?.length && cdData?.languages?.length) {
-      const res = await createCd({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'CD Created Error' });
-      });
-      if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
-      return res;
-    }
+
+    const res = await createCd({ variables: sendData }).catch((err) => {
+      console.log(err);
+      isError = !!err;
+      return setToastMsg({ type: 'danger', message: 'CD Created Error' });
+    });
+    if (isError) return;
+    if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
+
+    const data = res?.data?.createContentDevelopment;
+    setCDData(
+      getCDServicesObject({
+        ...cdData,
+        ...data,
+        isApplicable: data?.is_applicable,
+        serviceDescription: data?.description,
+        languages: data?.languages,
+        expertises: data?.expertise,
+        formats: data?.output_deliveries
+      })
+    );
+    return res?.data?.createContentDevelopment;
   }
 
   return {
