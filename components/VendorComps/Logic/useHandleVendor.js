@@ -943,9 +943,12 @@ export default function useHandleVendor() {
           if (!res?.data?.disableVendor)
             return setToastMsg({ type: 'danger', message: 'Vendor Disabled Failed' });
 
+          onSuccess();
+
           setToastMsg({ type: 'success', message: 'Vendor Disabled From Lsp' });
         })
         .catch((err) => setToastMsg({ type: 'danger', message: 'Disable Vendor Error' }));
+      return;
     }
 
     // mutation for vendor creation lsp

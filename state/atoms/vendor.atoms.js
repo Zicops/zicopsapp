@@ -205,7 +205,8 @@ export function getVendorOrderObject(data) {
     total: data?.total || 0,
     tax: data?.tax || 0,
     grossTotal: data?.grossTotal || 0,
-    status: data?.status || ''
+    status: data?.status || '',
+    currency: data?.currency || ''
   };
 }
 export const ServicesAtom = atom({
@@ -224,7 +225,6 @@ export function getServicesObject(data) {
     serviceType: data?.serviceType || '',
     description: data?.description || '',
     unit: data?.unit || 0,
-    currency: data?.currency || '',
     rate: data?.rate || 0,
     quantity: data?.quantity || 0,
     total: data?.total || 0,

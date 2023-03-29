@@ -22,7 +22,9 @@ import {
   VendorServicesListAtom,
   getVendorServicesObject,
   getServicesObject,
-  getVendorServicesList
+  getVendorServicesList,
+  OrderAtom,
+  getVendorOrderObject
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -44,8 +46,10 @@ export default function VendorInfo() {
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] =
-    useRecoilState(VendorServicesListAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] = useRecoilState(
+    VendorServicesListAtom
+  );
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -85,6 +89,7 @@ export default function VendorInfo() {
   const onOpenPopup = () => {
     setServicesData(getVendorServicesObject());
     setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
     setShowPopup(true);
   };
 
