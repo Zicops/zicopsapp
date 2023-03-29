@@ -23,7 +23,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   const courseType = useRecoilValue(CourseTypeAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const [latestCourses, setLatestCourse] = useState([]);
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
@@ -122,7 +122,13 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                   outline: '0',
                   border: '0'
                 }}
-                onClick={() => Router.push(`/admin/course/my-courses/edit/${params.row.id}`)}>
+                onClick={() =>
+                  Router.push(
+                    isDev
+                      ? `/admin/course/my-courses/edit/${params.row.id}`
+                      : `/admin/courses/${params.row.id}`
+                  )
+                }>
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
               </button>
             ) : (

@@ -114,3 +114,17 @@ export const TopicContentListAtom = atom({
   key: 'TopicContentList',
   default: null
 });
+
+export const BingeDataAtom = atom({
+  key: 'BingeData',
+  default: getBingeDataObj()
+});
+
+export function getBingeDataObj(data) {
+  return {
+    skipIntroDuration: data?.skipIntroDuration || 0,
+    startTime: data?.startTime || 0,
+    nextShowTime: data?.nextShowTime || 0,
+    fromEndTime: data?.fromEndTime || 0
+  };
+}

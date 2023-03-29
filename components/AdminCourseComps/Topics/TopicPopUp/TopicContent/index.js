@@ -1,7 +1,7 @@
 import useHandleTopicContent from '@/components/AdminCourseComps/Logic/useHandleTopicContent';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
-import Binge from './Bing';
+import BingeForm from './BingeForm';
 import Quiz from './Quiz';
 import Resource from './Resources';
 import TopicContentForm from './TopicContentForm';
@@ -24,7 +24,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     },
     {
       title: 'Binge It',
-      body: <Binge />
+      body: <BingeForm />
     },
     {
       title: 'Quiz',
@@ -53,7 +53,10 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
         />
 
         {topicAccordians.map((item) => (
-          <TopicAccordian key={item?.title} title={item.title}>
+          <TopicAccordian
+            key={item?.title}
+            title={item.title}
+            isDisabled={!topicContentList?.length}>
             {item.body}
           </TopicAccordian>
         ))}

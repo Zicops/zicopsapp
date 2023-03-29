@@ -610,6 +610,85 @@ $marginBetweenInputs: 1em;
       gap: 1em;
     }
   }
+
+  .bingeContainer {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+
+    .bingeform {
+      width: 60%;
+
+      .bingeSetting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .bingeSettingTitle {
+          font-size: 16px;
+          color: $primary;
+          width: 25%;
+        }
+        .bingeSettingBody {
+          width: 75%;
+          padding: 10px;
+        }
+      }
+    }
+
+    .newline {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      input {
+        padding: 0 3px;
+        margin: 0;
+        border: 0;
+        border-bottom: 1px solid $white;
+        width: 22px;
+        margin: 5px 0px;
+
+        background-color: transparent;
+        color: $white;
+      }
+
+      input:focus {
+        outline: 0;
+        background-color: $darkTwo;
+        box-shadow: none;
+      }
+      .durationvalue {
+        width: 40px;
+      }
+    }
+    .label {
+      min-width: 80px;
+    }
+    .after {
+      min-width: 80px;
+      color: $darkThree;
+      margin-left: 20px;
+    }
+
+    .video_preview {
+      display: flex;
+      height: 150px;
+      max-width: 45%;
+
+      video {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .fromEnd {
+      display: flex;
+      justify-content: center;
+      margin-left: 25%;
+    }
+  }
 }
 
 .addTopicFormBtn {
