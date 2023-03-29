@@ -5,6 +5,7 @@ import styles from '../../../adminCourseComps.module.scss';
 export default function ContentBar({
   type = '',
   description = '',
+  details = '',
   isDisabled = false,
   editHandler = null,
   deleteProps = {}
@@ -16,6 +17,7 @@ export default function ContentBar({
         <span>{description}</span>
 
         <div>
+          {details}
           {!isDisabled && (
             <>
               {!!editHandler && (

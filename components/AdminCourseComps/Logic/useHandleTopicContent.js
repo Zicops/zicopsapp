@@ -1,6 +1,13 @@
 import { GET_COURSE_TOPICS_CONTENT } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { CourseMetaDataAtom, TopicContentListAtom } from '@/state/atoms/courses.atom';
+import {
+  BingeDataAtom,
+  CourseMetaDataAtom,
+  getBingeDataObj,
+  getTopicSubtitlesObject,
+  TopicContentListAtom,
+  TopicSubtitlesAtom
+} from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
@@ -12,6 +19,8 @@ export default function useHandleTopicContent(topData = null) {
   });
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
+  const [topicSubtitle, setTopicSubtitle] = useRecoilState(TopicSubtitlesAtom);
+  const [binge, setBinge] = useRecoilState(BingeDataAtom);
 
   const [isFormVisible, setIsFormVisible] = useState(null);
   const [topicContentFormData, setTopicContentFormData] = useState(
@@ -30,9 +39,25 @@ export default function useHandleTopicContent(topData = null) {
     // load topic content, subtitle and binge data
     loadQueryDataAsync(GET_COURSE_TOPICS_CONTENT, { topic_id: topData?.id })
       .then((res) => {
-        const _topicContent = res?.getTopicContent?.map((content) =>
-          getTopicContentDataObj({ ...content, isDefault: content?.is_default })
-        );
+        const _topicContent = res?.getTopicContent?.map((content, i) => {
+          if (i === 0) {
+            const _subtitleArr = [];
+            content?.subtitleUrl?.forEach((subtitle) => {
+              _subtitleArr.push(
+                getTopicSubtitlesObject({
+                  topicId: content.topicId,
+                  subtitleUrl: subtitle.url,
+                  language: subtitle.language
+                })
+              );
+            });
+
+            setTopicSubtitle(_subtitleArr);
+            setBinge(getBingeDataObj(content));
+          }
+
+          return getTopicContentDataObj({ ...content, isDefault: content?.is_default });
+        });
 
         setTopicContentList(_topicContent || []);
         if (_topicContent?.length) setIsFormVisible(false);

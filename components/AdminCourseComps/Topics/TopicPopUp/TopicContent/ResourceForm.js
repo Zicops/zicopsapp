@@ -31,8 +31,9 @@ export default function ResourceForm({ topData = null }) {
       {resourcesList?.map((res, index) => (
         <ContentBar
           key={res?.key}
-          type={res?.type}
+          type={index + 1}
           description={res?.file?.name || getEncodedFileNameFromUrl(res?.url)}
+          details={res?.type}
           deleteProps={{
             id: res?.id,
             resKey: 'deleteTopicResource',
@@ -125,7 +126,7 @@ export default function ResourceForm({ topData = null }) {
         </>
       )}
 
-      <div className={`${styles.resourceAddBtn}`}>
+      <div className={`center-element-with-flex ${styles.marginBetweenInputs}`}>
         <IconButton styleClass="btnBlack" text="Add Resources" handleClick={toggleForm} />
       </div>
     </>

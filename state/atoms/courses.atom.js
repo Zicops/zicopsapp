@@ -115,6 +115,19 @@ export const TopicContentListAtom = atom({
   default: null
 });
 
+export const TopicSubtitlesAtom = atom({
+  key: 'TopicSubtitles',
+  default: null
+});
+
+export function getTopicSubtitlesObject(data) {
+  return {
+    topicId: data.topicId || null,
+    file: data?.file || null,
+    subtitleUrl: data.subtitleUrl || null,
+    language: data.language || null
+  };
+}
 export const BingeDataAtom = atom({
   key: 'BingeData',
   default: getBingeDataObj()

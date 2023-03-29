@@ -5,8 +5,11 @@ import { sanitizeFormData } from '@/helper/common.helper';
 import { isWordSame } from '@/helper/utils.helper';
 import {
   AllCourseModulesDataAtom,
+  BingeDataAtom,
   CourseMetaDataAtom,
-  TopicContentListAtom
+  TopicContentListAtom,
+  TopicResourcesAtom,
+  TopicSubtitlesAtom
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
@@ -25,6 +28,9 @@ export default function useHandleTopic(
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
+  const [topicSubtitle, setTopicSubtitle] = useRecoilState(TopicSubtitlesAtom);
+  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
+  const [binge, setBinge] = useRecoilState(BingeDataAtom);
 
   const [isEditTopicFormVisible, setIsEditTopicFormVisible] = useState(null);
   const [topicData, setTopicData] = useState(
@@ -105,6 +111,9 @@ export default function useHandleTopic(
 
   async function handleSubmit() {
     console.info(topicContentList);
+    console.info(topicSubtitle);
+    console.info(binge);
+    console.info(topicResources);
   }
 
   return {

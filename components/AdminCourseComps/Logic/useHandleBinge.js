@@ -21,6 +21,25 @@ export default function useHandleBinge() {
     ? URL?.createObjectURL(defaultTopicContent?.file)
     : defaultTopicContent?.contentUrl;
 
+  useEffect(() => {
+    // binge data
+    const startTimeMin = Math.floor(parseInt(binge.startTime || 0) / 60);
+    const startTimeSec = parseInt(binge.startTime || 0) - startTimeMin * 60;
+    const showTime = binge.fromEndTime || binge.nextShowTime;
+    const showTimeMin = Math.floor(parseInt(showTime || 0) / 60);
+    const showTimeSec = parseInt(showTime || 0) - showTimeMin * 60;
+
+    const _bingeData = {
+      startTimeMin: startTimeMin,
+      startTimeSec: startTimeSec,
+      skipIntroDuration: binge.skipIntroDuration,
+      showTimeMin: showTimeMin,
+      showTimeSec: showTimeSec,
+      isFromEnd: binge.fromEndTime > 0
+    };
+    setBingeData(_bingeData);
+  }, []);
+
   // validate the binge input afte input
   useEffect(() => {
     const videoDuration = +defaultTopicContent?.duration;

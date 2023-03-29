@@ -687,7 +687,7 @@ $marginBetweenInputs: 1em;
   }
 }
 
-.addTopicFormBtn {
+button.addTopicFormBtn {
   padding: 0.7em 2em;
   margin: 1em 1em 0;
   font-size: 0.9rem;
@@ -718,7 +718,7 @@ $marginBetweenInputs: 1em;
 .contentBar {
   display: flex;
   justify-content: space-between;
-  margin: 0.2em auto;
+  margin: 0.5em auto;
 
   background-color: $darkThree;
   padding: 0.3em 1em;
