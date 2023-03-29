@@ -29,7 +29,9 @@ export default function ManageVendor() {
           isAddShown={!isVendor}
           handleClickForPlus={() => {
             setIsOpen(true);
-            setVendorData(getVendorObject());
+            const currentLsp = sessionStorage?.getItem('lsp_id');
+
+            setVendorData(getVendorObject({ lspId: currentLsp }));
           }}
           isProductTooltip={false}
         />
