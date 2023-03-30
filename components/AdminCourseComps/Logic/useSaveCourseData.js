@@ -6,8 +6,8 @@ import {
   UPLOAD_COURSE_TILE_IMAGE
 } from '@/api/Mutations';
 import { GET_LATEST_COURSES } from '@/api/Queries';
-import { CREATE_VILT_DATA, viltMutationClient } from '@/api/ViltMutations';
-import { COURSE_TYPES } from '@/constants/course.constants';
+import { CREATE_VILT_DATA, UPDATE_VILT_DATA, viltMutationClient } from '@/api/ViltMutations';
+import { CLASSROOM_MASTER_STATUS, COURSE_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { COURSE_STATUS, DEFAULT_VALUES, USER_LSP_ROLE } from '@/helper/constants.helper';
@@ -94,12 +94,19 @@ export default function useSaveCourseData() {
       course_start_date: classroomMaster?.courseStartDate || '',
       course_end_date: classroomMaster?.courseEndDate || '',
       curriculum: classroomMaster?.curriculum || '',
-      status: classroomMaster?.status || ''
+      status: CLASSROOM_MASTER_STATUS?.save
     });
 
-    // await mutateData(UPDATE_VILT_DATA, { input: _classRoomData }, {}, viltMutationClient).catch(
-    //   () => setToastMessage('Classroom Update Error!')
-    // );
+    if (classroomMaster?.isUpdate) {
+      const resUpdate = await mutateData(
+        UPDATE_VILT_DATA,
+        { input: _classRoomData },
+        {},
+        viltMutationClient
+      ).catch(() => setToastMessage('Classroom Update Error!'));
+
+      return resUpdate?.updateViltData || null;
+    }
 
     const res = await mutateData(
       CREATE_VILT_DATA,
@@ -107,6 +114,8 @@ export default function useSaveCourseData() {
       {},
       viltMutationClient
     ).catch(() => setToastMessage('Classroom Create Error!'));
+
+    setClassroomMaster((prev) => ({ ...prev, isUpdate: true }));
 
     return res?.createViltData || null;
   }
@@ -229,10 +238,10 @@ export default function useSaveCourseData() {
     // add course if no id is present
     if (!courseMetaData.id)
       return addNewCourse(_courseMetaData)
+        .then((courseDataRes) => addUpdateClassroomMaster(courseDataRes))
         .then(() => {
           if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
         })
-        .then((courseDataRes) => addUpdateClassroomMaster(courseDataRes))
         .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);

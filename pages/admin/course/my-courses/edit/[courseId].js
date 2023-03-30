@@ -1,4 +1,5 @@
 import { GET_COURSE } from '@/api/Queries';
+import { GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
 import AdminCourseTabs from '@/components/AdminCourseComps/AdminCourseTabs';
 import CoursePageTitle from '@/components/AdminCourseComps/CoursePageTitle';
 import AdminHeader from '@/components/common/AdminHeader';
@@ -6,14 +7,17 @@ import MainBody from '@/components/common/MainBody';
 import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
+  getClassroomMasterDataObj,
   getCourseCurrentStateObj,
   getCourseMetaDataObj
 } from '@/state/atoms/courses.atom';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
@@ -24,6 +28,8 @@ export default function EditCoursePage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
+  const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
   const router = useRouter();
@@ -67,6 +73,34 @@ export default function EditCoursePage() {
         .catch((err) => {
           console.log(`Course Data Load Error: `, err);
           setToastMsg({ type: 'danger', message: 'Course Data Load Error' });
+        });
+
+      // if (courseType !== COURSE_TYPES.classroom) return;
+      loadQueryDataAsync(GET_VILT_DATA, { courseId: courseId }, {}, viltQueryClient)
+        .then((data) => {
+          const viltData = data?.getViltData;
+          if (!viltData) return setClassroomMaster(getClassroomMasterDataObj());
+          setClassroomMaster(
+            getClassroomMasterDataObj({
+              lsp: viltData?.lsp_id,
+              courseId: viltData?.course_id,
+              noOfLearners: viltData?.no_of_learners,
+              trainers: viltData?.trainers,
+              moderators: viltData?.moderators,
+              courseStartDate: viltData?.course_start_date,
+              courseEndDate: viltData?.course_end_date,
+              curriculum: viltData?.curriculum,
+              createdAt: viltData?.created_at,
+              createdBy: viltData?.created_by,
+              updatedAt: viltData?.updated_at,
+              updatedBy: viltData?.updated_by,
+              status: viltData?.status,
+              isUpdate: true
+            })
+          );
+        })
+        .catch((err) => {
+          setToastMsg({ type: 'danger', message: 'VILT Load Error' });
         });
     }
   }, [courseId]);

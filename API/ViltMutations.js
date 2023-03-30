@@ -55,7 +55,7 @@ export const CREATE_VILT_DATA = gql`
 // }
 export const UPDATE_VILT_DATA = gql`
   mutation updateViltData($input: ViltInput) {
-    createViltData(input: $input) {
+    updateViltData(input: $input) {
       lsp_id
       course_id
       no_of_learners

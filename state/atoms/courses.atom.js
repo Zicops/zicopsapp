@@ -96,12 +96,13 @@ export function getClassroomMasterDataObj(data = {}) {
     moderators: data?.moderators || [],
     courseStartDate: data?.courseStartDate || '',
     courseEndDate: data?.courseEndDate || '',
-    curriculum: data?.curriculum,
+    curriculum: data?.curriculum || '',
     createdAt: data?.createdAt || '',
     createdBy: data?.createdBy || '',
     updatedAt: data?.updatedAt || '',
     updatedBy: data?.updatedBy || '',
-    status: data?.status || null
+    status: data?.status || null,
+    isUpdate: data?.isUpdate || false
   };
 }
 
