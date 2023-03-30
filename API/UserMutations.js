@@ -1385,6 +1385,7 @@ export const ADD_VENDOR = gql`
     ) {
       vendorId
       type
+      lsp_id
       level
       name
       description
@@ -1441,6 +1442,7 @@ export const UPDATE_VENDOR = gql`
     ) {
       vendorId
       level
+      lsp_id
       type
       name
       photo_url
@@ -1485,6 +1487,13 @@ export const UPDATE_VENDOR_USER_MAP = gql`
       updated_at
       updated_by
     }
+  }
+`;
+
+export const DISABLE_VENDOR_LSP_MAP = gql`
+  mutation disableVendorLspMap($vendorId: String, $lspId: String) {
+    disableVendorLspMap(vendor_id: $vendorId, lsp_id: $lspId)
+    Boolean
   }
 `;
 
