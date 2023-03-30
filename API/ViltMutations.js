@@ -25,6 +25,7 @@ export const viltMutationClient = new ApolloClient({
 export const CREATE_VILT_DATA = gql`
   mutation createViltData($input: ViltInput) {
     createViltData(input: $input) {
+      id
       lsp_id
       course_id
       no_of_learners
@@ -56,6 +57,7 @@ export const CREATE_VILT_DATA = gql`
 export const UPDATE_VILT_DATA = gql`
   mutation updateViltData($input: ViltInput) {
     updateViltData(input: $input) {
+      id
       lsp_id
       course_id
       no_of_learners
@@ -64,6 +66,60 @@ export const UPDATE_VILT_DATA = gql`
       course_start_date
       course_end_date
       curriculum
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const CREATE_TOPIC_CLASSROOM = gql`
+  mutation createTopicClassroom($input: TopicClassroomInput) {
+    createTopicClassroom(input: $input) {
+      id
+      topic_id
+      trainers
+      moderators
+      training_start_time
+      training_end_time
+      duration
+      breaktime
+      language
+      is_screen_share_enabled
+      is_chat_enabled
+      is_microphone_enabled
+      is_qa_enabled
+      is_camera_enabled
+      is_override_config
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
+export const UPDATE_TOPIC_CLASSROOM = gql`
+  mutation updateTopicClassroom($input: TopicClassroomInput) {
+    updateTopicClassroom(input: $input) {
+      id
+      topic_id
+      trainers
+      moderators
+      training_start_time
+      training_end_time
+      duration
+      breaktime
+      language
+      is_screen_share_enabled
+      is_chat_enabled
+      is_microphone_enabled
+      is_qa_enabled
+      is_camera_enabled
+      is_override_config
       created_at
       created_by
       updated_at

@@ -90,12 +90,13 @@ export const ClassroomMasterAtom = atom({
 
 export function getClassroomMasterDataObj(data = {}) {
   return {
+    id: data?.id || null,
     courseId: data?.courseId || null,
     noOfLearners: data?.noOfLearners || 0,
     trainers: data?.trainers || [],
     moderators: data?.moderators || [],
-    courseStartDate: data?.courseStartDate || '',
-    courseEndDate: data?.courseEndDate || '',
+    courseStartDate: data?.courseStartDate || null,
+    courseEndDate: data?.courseEndDate || null,
     curriculum: data?.curriculum || '',
     createdAt: data?.createdAt || '',
     createdBy: data?.createdBy || '',

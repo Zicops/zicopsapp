@@ -85,19 +85,29 @@ export default function useSaveCourseData() {
     if (!_courseMetaData) return null;
     if (_courseMetaData?.type !== COURSE_TYPES.classroom) return null;
 
+    const trainers = classroomMaster?.trainers?.length
+      ? classroomMaster?.trainers?.map((data) => data?.user_id || data)
+      : [];
+    const moderators = classroomMaster?.moderators?.length
+      ? classroomMaster?.moderators?.map((data) => data?.user_id || data)
+      : [];
+
     const _classRoomData = sanitizeFormData({
       lsp_id: _courseMetaData?.lspId || '',
       course_id: _courseMetaData?.id || '',
       no_of_learners: classroomMaster?.noOfLearners || '',
-      trainers: classroomMaster?.trainers || '',
-      moderators: classroomMaster?.moderators || '',
-      course_start_date: classroomMaster?.courseStartDate || '',
-      course_end_date: classroomMaster?.courseEndDate || '',
+      // trainers: classroomMaster?.trainers || '',
+      // moderators: classroomMaster?.moderators || '',
+      course_start_date: getUnixFromDate(classroomMaster?.courseStartDate) || '',
+      course_end_date: getUnixFromDate(classroomMaster?.courseEndDate) || '',
       curriculum: classroomMaster?.curriculum || '',
-      status: CLASSROOM_MASTER_STATUS?.save
+      status: CLASSROOM_MASTER_STATUS?.save,
+      trainers: trainers,
+      moderators: moderators
     });
 
-    if (classroomMaster?.isUpdate) {
+    if (!!classroomMaster?.id) {
+      _classRoomData.id = classroomMaster?.id;
       const resUpdate = await mutateData(
         UPDATE_VILT_DATA,
         { input: _classRoomData },
@@ -115,7 +125,7 @@ export default function useSaveCourseData() {
       viltMutationClient
     ).catch(() => setToastMessage('Classroom Create Error!'));
 
-    setClassroomMaster((prev) => ({ ...prev, isUpdate: true }));
+    setClassroomMaster((prev) => ({ ...prev, isUpdate: true , id: res?.createViltData?.id}));
 
     return res?.createViltData || null;
   }

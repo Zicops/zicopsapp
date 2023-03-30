@@ -16,6 +16,7 @@ query getViltData($courseId:String){
   getViltData(
     courseId: $courseId
   ) {
+    id
     lsp_id
     course_id
     no_of_learners
@@ -24,6 +25,10 @@ query getViltData($courseId:String){
     course_start_date
     course_end_date
     curriculum
+    is_end_date_decided
+    is_start_date_decided
+    is_trainer_decided
+    is_moderator_decided
     created_at
     created_by
     updated_at

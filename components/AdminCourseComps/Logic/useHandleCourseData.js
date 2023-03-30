@@ -1,15 +1,24 @@
-import { GET_USER_VENDORS, GET_VENDORS_BY_LSP_FOR_TABLE, userQueryClient } from '@/api/UserQueries';
+import {
+  GET_USER_DETAIL,
+  GET_USER_VENDORS,
+  GET_VENDORS_BY_LSP_FOR_TABLE,
+  userQueryClient
+} from '@/api/UserQueries';
+import { GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
+import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { COURSE_TYPES } from '@/constants/course.constants';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE } from '@/helper/constants.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE, USER_MAP_STATUS } from '@/helper/constants.helper';
 import {
   ActiveCourseTabNameAtom,
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
-  CourseMetaDataAtom
+  CourseMetaDataAtom,
+  getClassroomMasterDataObj
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
@@ -27,6 +36,9 @@ export default function useHandleCourseData() {
   const userData = useRecoilValue(UserStateAtom);
 
   const [ownerList, setOwnerList] = useState(null);
+
+  const [trainerCandidates, setTrainerCandidates] = useState([]);
+  const [moderatorCandidates, setModeratorCandidates] = useState([]);
 
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -169,12 +181,106 @@ export default function useHandleCourseData() {
     setCourseMetaData({ ...courseMetaData, [inputName]: file });
   }
 
+  async function getTrainersAndModerators() {
+    const users = await getUsersForAdmin();
+    // filtering users based on lsp status
+    const filteredUsers =
+      users
+        ?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate)
+        ?.slice(0, 10) || [];
+
+    setTrainerCandidates([...filteredUsers]);
+    setModeratorCandidates([...filteredUsers]);
+    return filteredUsers;
+  }
+
+  async function getViltData(courseId = null) {
+    if (!courseId) return;
+    const resVilt = await loadQueryDataAsync(
+      GET_VILT_DATA,
+      { courseId: courseId },
+      {},
+      viltQueryClient
+    );
+
+    const viltData = resVilt?.getViltData?.[0];
+    if (!viltData) return setClassroomMaster(getClassroomMasterDataObj());
+    const trainers = viltData?.trainers || [];
+    const moderators = viltData?.moderators || [];
+
+    if (trainers.length || moderators.length) {
+      const resUsers = await loadQueryDataAsync(
+        GET_USER_DETAIL,
+        { user_id: [...trainers, ...moderators] },
+        {},
+        userQueryClient
+      );
+      const users = structuredClone(resUsers?.getUserDetails || []);
+      const newTrainers = [];
+      const newModerators = [];
+
+      trainers.forEach((trainerId) => {
+        const user = users.find((u) => u.id === trainerId);
+        if (user) {
+          newTrainers.push({
+            value: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            user_id: user.id
+          });
+        }
+      });
+
+      moderators.forEach((moderatorId) => {
+        const user = users.find((u) => u.id === moderatorId);
+        if (user) {
+          newModerators.push({
+            value: `${user.first_name} ${user.last_name}`,
+            email: user.email,
+            user_id: user.id
+          });
+        }
+      });
+
+      // assign new arrays to trainers and moderators
+      trainers.splice(0, trainers.length, ...newTrainers);
+      moderators.splice(0, moderators.length, ...newModerators);
+    }
+
+    setClassroomMaster(
+      getClassroomMasterDataObj({
+        id: viltData?.id,
+        lsp: viltData?.lsp_id,
+        courseId: viltData?.course_id,
+        noOfLearners: viltData?.no_of_learners,
+        trainers: trainers || viltData?.trainers,
+        moderators: moderators || viltData?.moderators,
+        courseStartDate: parseInt(viltData?.course_start_date)
+          ? moment.unix(viltData?.course_start_date).toDate()
+          : null,
+        courseEndDate: parseInt(viltData?.course_end_date)
+          ? moment.unix(viltData?.course_end_date).toDate()
+          : null,
+        curriculum: viltData?.curriculum,
+        createdAt: viltData?.created_at,
+        createdBy: viltData?.created_by,
+        updatedAt: viltData?.updated_at,
+        updatedBy: viltData?.updated_by,
+        status: viltData?.status,
+        isUpdate: true
+      })
+    );
+  }
+
   return {
     ownerList,
     handleCourseMetaChange,
     handleClassroomMasterChange,
     handleExpertise,
     isDataPresent,
-    handleFileInput
+    handleFileInput,
+    getTrainersAndModerators,
+    trainerCandidates,
+    moderatorCandidates,
+    getViltData
   };
 }
