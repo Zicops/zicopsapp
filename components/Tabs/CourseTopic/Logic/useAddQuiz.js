@@ -14,6 +14,7 @@ import { useMutation } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
+  BingeAtom,
   getQuizObject,
   QuizAtom,
   QuizMetaDataAtom,
@@ -32,6 +33,7 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
   const [quizMetaData, setQuizMetaData] = useRecoilState(QuizMetaDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const topicContent = useRecoilValue(TopicContentAtom);
+  const binge = useRecoilValue(BingeAtom);
 
   // local state
   const [quizTemp, setQuizTemp] = useState([]);
@@ -135,11 +137,16 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
   // validate the start time input after input
   useEffect(() => {
     const videoDuration = +topicContent[0]?.duration;
+
     if (isNaN(videoDuration)) return;
 
     const { startTimeMin, startTimeSec } = newQuiz;
     const _newQuiz = { ...newQuiz };
     let isInValidData = false;
+
+    const nextShowTime = parseInt(binge?.showTimeMin || 0) * 60 + parseInt(binge?.showTimeSec || 0);
+
+    const bingeTime = !binge.isFromEnd ? nextShowTime : videoDuration - nextShowTime;
 
     const startTime = +startTimeMin * 60 + +startTimeSec;
 
@@ -161,6 +168,11 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
       isInValidData = true;
       _newQuiz.startTimeMin = Math.floor(videoDuration / 60);
       _newQuiz.startTimeSec = videoDuration % 60;
+    }
+    if (startTime > bingeTime) {
+      isInValidData = true;
+      _newQuiz.startTimeMin = Math.floor(bingeTime / 60);
+      _newQuiz.startTimeSec = bingeTime % 60;
     }
 
     if (isInValidData) return setNewQuiz({ ...newQuiz, ..._newQuiz });
