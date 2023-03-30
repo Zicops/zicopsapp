@@ -4,7 +4,7 @@ import ReviewOrderBottom from './ReviewOrderBottom';
 import { useRecoilState } from 'recoil';
 import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useEffect } from 'react';
-const ReviewAndTax = () => {
+const ReviewAndTax = ({ isShowTax, setShowTax }) => {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
@@ -45,6 +45,8 @@ const ReviewAndTax = () => {
         subtotal={subtotal}
         grossTotal={subtotal}
         currency={orderData?.currency}
+        isShowTax={isShowTax}
+        setShowTax={setShowTax}
       />
       <div className={`${styles.hr}`}></div>
     </div>

@@ -45,10 +45,10 @@ export default function VendorInfo() {
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
+  const [isShowTax, setShowTax] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] = useRecoilState(
-    VendorServicesListAtom
-  );
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
@@ -229,11 +229,18 @@ export default function VendorInfo() {
         submitBtn={{
           name: currentComponent === 2 ? 'Confirm' : 'Next',
           handleClick: addRateHandler,
-          disabled: isTotalcheck
+          disabled:
+            (currentComponent === 0 && isTotalcheck) || (currentComponent === 1 && !isShowTax)
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
-          {currentComponent === 1 && <ReviewAndTax setCurrentComponent={setCurrentComponent} />}
+          {currentComponent === 1 && (
+            <ReviewAndTax
+              setCurrentComponent={setCurrentComponent}
+              isShowTax={isShowTax}
+              setShowTax={setShowTax}
+            />
+          )}
           {currentComponent === 2 && (
             <ReviewAndTaxConfirm setCurrentComponent={setCurrentComponent} />
           )}

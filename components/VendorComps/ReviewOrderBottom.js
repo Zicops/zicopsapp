@@ -1,9 +1,16 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import { useState } from 'react';
 import styles from './vendorComps.module.scss';
-const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, currency }) => {
-  const [isShowTax, setShowTax] = useState(false);
-  const onShowTaxHandler = ({ data }) => {
+const ReviewOrderBottom = ({
+  isTax,
+  subtotal,
+  grossTotal,
+  taxAmount,
+  currency,
+  isShowTax,
+  setShowTax
+}) => {
+  const onShowTaxHandler = () => {
     setShowTax(true);
   };
 
