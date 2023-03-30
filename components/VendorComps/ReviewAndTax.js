@@ -38,9 +38,14 @@ const ReviewAndTax = () => {
     <div>
       <p className={`${styles.addLineText}`}>Review and Add Tax</p>
       <div className={`${styles.hr}`}></div>
-      <ReviewOrderTop isConfirm={false} data={servicesData} />
+      <ReviewOrderTop isConfirm={false} data={servicesData} currency={orderData?.currency} />
       <div className={`${styles.hr}`}></div>
-      <ReviewOrderBottom isTax={true} subtotal={subtotal} grossTotal={subtotal} />
+      <ReviewOrderBottom
+        isTax={true}
+        subtotal={subtotal}
+        grossTotal={subtotal}
+        currency={orderData?.currency}
+      />
       <div className={`${styles.hr}`}></div>
     </div>
   );

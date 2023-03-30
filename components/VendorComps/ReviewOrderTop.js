@@ -4,7 +4,7 @@ import { ServicesAtom, VendorServicesListAtom, VendorStateAtom } from '@/state/a
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
-const ReviewOrderTop = ({ isConfirm, data }) => {
+const ReviewOrderTop = ({ isConfirm, data, currency }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
 
   const [serviceData, setServiceData] = useRecoilState(ServicesAtom);
@@ -56,12 +56,12 @@ const ReviewOrderTop = ({ isConfirm, data }) => {
                   <p className={`${styles.contentName}`}>{value?.description}</p>
                   <div className={`${styles.OrderValue}`}>
                     <p>
-                      {value?.rate} {value?.currency}
+                      {value?.rate} {currency}
                       {value?.unit}
                     </p>
                     <span>{value?.quantity}</span>
                     <span>
-                      {value?.total} {value?.currency}
+                      {value?.total} {currency}
                     </span>
                   </div>
                 </>
