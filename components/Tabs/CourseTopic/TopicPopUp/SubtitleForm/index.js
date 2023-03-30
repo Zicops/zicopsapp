@@ -52,10 +52,7 @@ export default function SubtitleForm({ courseId, topicId }) {
                   }}
                   onDelete={() => {
                     const _subtitleArr = structuredClone(subtitles);
-                    const index = !res?.id
-                      ? index
-                      : _subtitleArr?.findIndex((sub) => sub?.id === res?.id);
-                    if (index >= 0) _subtitleArr.splice(index, 1);
+                    _subtitleArr.splice(index, 1);
 
                     setSubtitles(_subtitleArr);
                   }}
