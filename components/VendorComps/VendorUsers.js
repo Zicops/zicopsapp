@@ -40,6 +40,19 @@ const VendorUsers = () => {
       headerClassName: 'course-list-header',
       headerName: 'Last Name',
       flex: 0.8
+    },
+    {
+      field: 'status',
+      headerClassName: 'course-list-header',
+      headerName: 'Status',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <span style={{ textTransform: 'capitalize' }}>
+            {params?.row?.user_lsp_status || 'Invited'}
+          </span>
+        );
+      }
     }
     // {
     //   field: 'role',

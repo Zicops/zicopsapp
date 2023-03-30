@@ -750,7 +750,7 @@ export const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
   value: val
 }));
 
-export const unit = ['Per hour', 'Per day', 'Per month', 'Per module'].map((val) => ({
+export const unit = ['/ hour', '/ day', '/ month', '/ module'].map((val) => ({
   label: val,
   value: val
 }));

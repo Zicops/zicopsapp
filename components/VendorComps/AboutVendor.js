@@ -55,7 +55,11 @@ export default function AboutVendor({ data }) {
     }
   ];
   if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+    return (
+      <div style={{ minHeight: '50vh' }}>
+        <Loader customStyles={{ height: '100%', background: 'transparent' }} />
+      </div>
+    );
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>

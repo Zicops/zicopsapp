@@ -19,7 +19,7 @@ import {
 } from '@/api/UserMutations';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { OrderAtom, SevicesAtom } from '@/state/atoms/vendor.atoms';
+import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -29,7 +29,7 @@ export default function useHandleMarketYard() {
   const [addServices] = useMutation(ADD_ORDER_SERVICES, { client: userClient });
   const [updateServices] = useMutation(UPDATE_ORDER_SERVICES, { client: userClient });
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
-  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
@@ -176,9 +176,9 @@ export default function useHandleMarketYard() {
 
   async function addUpdateServices() {
     const sendData = {
-      service_id: servicesData?.service_id || '',
-      order_id: servicesData?.order_id || '',
-      service_type: servicesData?.service_type || '',
+      service_id: servicesData?.serviceId || '',
+      order_id: servicesData?.orderId || '',
+      service_type: servicesData?.serviceType || '',
       description: servicesData?.description || '',
       unit: servicesData?.unit || 0,
       currency: servicesData?.currency || '',
@@ -188,8 +188,8 @@ export default function useHandleMarketYard() {
       status: VENDOR_MASTER_STATUS.active
     };
     let isError = false;
-    if (servicesData?.service_id) {
-      sendData.service_id = smeData?.service_id;
+    if (servicesData?.serviceId) {
+      sendData.service_id = servicesData?.serviceId;
       await updateServices({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;

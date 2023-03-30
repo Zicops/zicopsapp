@@ -988,7 +988,7 @@
   }
   .OrderValue {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     p {
       color: $bgBody;
     }
@@ -996,8 +996,8 @@
 }
 
 .ReviewBottomContainer {
-  padding-left: 30%;
-  padding-right: 10%;
+  padding-left: 65%;
+  // padding-right: 10%;
   display: flex;
   flex-direction: column;
   gap: 20px;

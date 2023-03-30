@@ -24,6 +24,7 @@ export default function useHandleVendorMaster() {
   async function addUpdateVendor(displayToaster = true) {
     setLoading(true);
     const sendData = {
+      lsp_id: vendorData?.lspId || null,
       name: vendorData?.name?.trim() || '',
       level: vendorData?.level?.trim() || '',
       type: vendorData?.type?.trim() || '',
@@ -69,7 +70,7 @@ export default function useHandleVendorMaster() {
       const _id = res.data.updateVendor.vendorId;
       return _id;
     }
-    if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
+    if (vendorData?.name && vendorData?.level && vendorData?.type) {
       const res = await addNewVendor({
         variables: sendData,
         context: {
@@ -82,7 +83,7 @@ export default function useHandleVendorMaster() {
       }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+        return setToastMsg({ type: 'danger', message: err.message || 'Add Vendor Error' });
       });
       setLoading(false);
       if (isError) return null;
