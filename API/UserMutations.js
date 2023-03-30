@@ -1,9 +1,11 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { API_LINKS, authLink } from './api.helper';
+import customFetch from './customFetch';
 
 const httpLink = createUploadLink({
-  uri: API_LINKS.userClient
+  uri: API_LINKS.userClient,
+  fetch: customFetch
 });
 
 export const userClient = new ApolloClient({
@@ -1383,6 +1385,7 @@ export const ADD_VENDOR = gql`
     ) {
       vendorId
       type
+      lsp_id
       level
       name
       description
@@ -1439,6 +1442,7 @@ export const UPDATE_VENDOR = gql`
     ) {
       vendorId
       level
+      lsp_id
       type
       name
       photo_url
@@ -1455,6 +1459,40 @@ export const UPDATE_VENDOR = gql`
       updated_by
       status
     }
+  }
+`;
+
+export const ADD_VENDOR_USER_MAP = gql`
+  mutation createVendorUserMap($vendorId: String, $userId: String, $status: String) {
+    createVendorUserMap(vendor_id: $vendorId, user_id: $userId, status: $status) {
+      vendor_id
+      user_id
+      created_at
+      created_by
+      status
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const UPDATE_VENDOR_USER_MAP = gql`
+  mutation updateVendorUserMap($vendorId: String, $userId: String, $status: String) {
+    updateVendorUserMap(vendor_id: $vendorId, user_id: $userId, status: $status) {
+      vendor_id
+      user_id
+      created_at
+      created_by
+      status
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const DISABLE_VENDOR_LSP_MAP = gql`
+  mutation disableVendorLspMap($vendorId: String, $lspId: String) {
+    disableVendorLspMap(vendor_id: $vendorId, lsp_id: $lspId)
   }
 `;
 

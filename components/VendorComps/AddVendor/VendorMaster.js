@@ -8,9 +8,13 @@ import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
-import { VendorStateAtom, vendorUserInviteAtom } from '@/state/atoms/vendor.atoms';
+import {
+  IsVendorAdminLoadingAtom,
+  VendorStateAtom,
+  vendorUserInviteAtom
+} from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
@@ -22,11 +26,12 @@ export default function VendorMaster() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const isVendorAdminLoading = useRecoilValue(IsVendorAdminLoadingAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
-  const { handlePhotoInput } = useHandleVendor();
+  const { handlePhotoInput, handleRemoveUser } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -34,14 +39,12 @@ export default function VendorMaster() {
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
-  useEffect(() => {
-    setVendorData((prev) => ({
-      ...prev,
-      users: [...vendorData?.users, ...emails?.map((item) => item?.props?.children[0])]?.filter(
-        (e) => !!e
-      )
-    }));
-  }, [emails]);
+  // useEffect(() => {
+  //   setVendorData((prev) => ({
+  //     ...prev,
+  //     users: [...emails?.map((item) => item?.props?.children[0])]?.filter((e) => !!e)
+  //   }));
+  // }, [emails]);
 
   const socialMediaPopup = [
     {
@@ -70,9 +73,6 @@ export default function VendorMaster() {
     }
   ];
 
-  if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
-
   function getFileName() {
     return truncateToN(
       vendorData?.vendorProfileImage?.name || getEncodedFileNameFromUrl(vendorData?.photoUrl),
@@ -80,7 +80,11 @@ export default function VendorMaster() {
     );
   }
 
-  const isIndividualVendor = vendorData?.type === VENDOR_MASTER_TYPE.individual;
+  const isIndividualVendor =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
+  if (vendorId && vendorData?.vendorId !== vendorId)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.vendorMasterContainer}`}>
@@ -128,6 +132,7 @@ export default function VendorMaster() {
             inputName="vendorProfileImage"
             isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
             isDisabled={isViewPage}
+            progressPercent={+vendorData?.fileUploadPercent || null}
           />
         </div>
       </div>
@@ -174,15 +179,17 @@ export default function VendorMaster() {
           changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
         />
       </div>
-      <div className={`${styles.input1}`}>
+      <div className={`${styles.email}`}>
         <label for="users">{isIndividualVendor ? 'Email' : 'Add User'}: </label>
         <MultiEmailInput
           type="External"
           items={emails}
           setItems={setEmails}
+          beforeRemoveEmail={async (email) => await handleRemoveUser(email)}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }
+          isLoading={isVendorAdminLoading}
         />
       </div>
 

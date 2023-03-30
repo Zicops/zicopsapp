@@ -55,14 +55,20 @@ export default function AboutVendor({ data }) {
     }
   ];
   if (vendorId && vendorData?.vendorId !== vendorId)
-    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+    return (
+      <div style={{ minHeight: '50vh' }}>
+        <Loader customStyles={{ height: '100%', background: 'transparent' }} />
+      </div>
+    );
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
         <p>{data?.description}</p>
       </div>
       <div className={`${styles.vendorServices}`}>
+        <h3 className={`${styles.servicesHeading}`}>Services</h3>
         {accordianMarketyardDetails.map((value, index) => {
+          if (!value?.serviceData?.isApplicable) return;
           return (
             <ZicopsAccordian title={value.title} description={value.description}>
               <VendorServices data={value.serviceData} type={value?.type} />

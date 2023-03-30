@@ -49,7 +49,7 @@ export default function VendorDetails({ data }) {
           {vendorDetails?.map((data, index) => (
             <div key={index}>
               <span>{data?.label}</span>
-              <p>{data?.value}</p>
+              <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
             </div>
           ))}
         </div>

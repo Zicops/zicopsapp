@@ -24,22 +24,20 @@ const MyVendor = () => {
 
   const isVendor = userOrgData?.user_lsp_role === USER_LSP_ROLE?.vendor;
   useEffect(() => {
-    if (vendorTableData?.length) return;
-
     if (isVendor) return getUserVendors()?.then((data) => setVendorTableData(data || []));
 
-    getPaginatedVendors()?.then((data) => {
+    getPaginatedVendors('', { name: searchQuery?.trim() || '' })?.then((data) => {
       setPageCursor(data?.pageCursor || null);
       setVendorTableData(data?.vendors || []);
     });
-  }, []);
+  }, [searchQuery]);
 
   const columns = [
     {
       field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Vendor Name',
-      flex: 1
+      flex: 2
     },
     {
       field: 'type',
@@ -50,22 +48,24 @@ const MyVendor = () => {
         <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>
       )
     },
-    {
-      field: 'services',
-      headerClassName: 'course-list-header',
-      headerName: 'Services',
-      flex: 1,
-      renderCell: (params) => {
-        return params?.row?.services?.join(', ').toUpperCase();
-      }
-    },
+    // {
+    //   field: 'services',
+    //   headerClassName: 'course-list-header',
+    //   headerName: 'Services',
+    //   flex: 1,
+    //   renderCell: (params) => {
+    //     return params?.row?.services?.join(', ').toUpperCase();
+    //   }
+    // },
     {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
       flex: 1,
       renderCell: (params) => {
-        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.status}</span>;
+        return (
+          <span style={{ textTransform: 'capitalize' }}>{params?.row?.vendor_lsp_status}</span>
+        );
       }
     },
     {
@@ -84,7 +84,10 @@ const MyVendor = () => {
             handleClick: () => Router.push(`manage-vendor/update-vendor/${params.row.vendorId}`)
           },
           {
-            text: params?.row?.status === VENDOR_MASTER_STATUS?.active ? 'Disable' : 'Enable',
+            text:
+              params?.row?.vendor_lsp_status === VENDOR_MASTER_STATUS?.active
+                ? 'Disable'
+                : 'Enable',
             handleClick: () => setSelectedVendor(params.row)
           }
         ];
@@ -134,8 +137,7 @@ const MyVendor = () => {
         searchProps={{
           handleOptionChange: (val) => setFilterCol(val),
           handleSearch: (val) => setSearchQuery(val),
-          options,
-          delayMS: 0
+          options
         }}
       />
 

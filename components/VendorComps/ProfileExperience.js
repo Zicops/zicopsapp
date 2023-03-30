@@ -6,12 +6,12 @@ import styles from './AddVendor/addvendor.module.scss';
 import styless from './vendorComps.module.scss';
 import moment from 'moment';
 
-export default function ProfileExperience() {
+export default function ProfileExperience({ pfId = null }) {
   const { getProfileExperience } = useHandleVendor();
   const [experienceData, setExperienceData] = useState(null);
 
   const router = useRouter();
-  const profileId = router.query.profileId || null;
+  const profileId = router.query.profileId || pfId || null;
 
   useEffect(() => {
     getProfileExperience(profileId)
@@ -32,9 +32,9 @@ export default function ProfileExperience() {
       <div>Experience</div>
       <hr />
       <div className={styless.individualExperience}>
-        {experienceData.map((data) => {
+        {experienceData.map((data, i) => {
           return (
-            <div className={styless.individualExperienceContainer}>
+            <div className={styless.individualExperienceContainer} key={i}>
               <div className={styless.companyLogo}>
                 <img src="/images/company-logo.png" />
               </div>

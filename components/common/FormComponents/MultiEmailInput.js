@@ -8,7 +8,10 @@ export default function MultiEmailInput({
   type = 'Internal',
   items = [],
   setItems,
-  isDisabled = false
+  beforeRemoveEmail = async () => true,
+  isLoading = false,
+  isDisabled = false,
+  isEmailRemovable = true
 }) {
   const [removeEmail, setRemoveEmail] = useState({
     emailListAfterRemoval: [],
@@ -19,6 +22,7 @@ export default function MultiEmailInput({
   const [value, setValue] = useState('');
 
   function handleKeyDown(evt) {
+    if (isDisabled) return;
     if (['Enter', 'Tab', ','].includes(evt.key)) {
       evt.preventDefault();
 
@@ -38,6 +42,7 @@ export default function MultiEmailInput({
   }
 
   function handleChange(val, actionType) {
+    if (isDisabled) return;
     if (actionType?.action !== 'input-change') return;
     // if (!isEmail(value)) return;
     setError(null);
@@ -69,13 +74,7 @@ export default function MultiEmailInput({
   }
 
   const defaultStyles = customSelectStyles(false, '100%', false, false, {
-    controlStyles: {
-      '&:hover': isDisabled
-        ? {
-            cursor: 'no-drop'
-          }
-        : {}
-    }
+    controlStyles: { '&:hover': isDisabled && !isEmailRemovable ? { cursor: 'no-drop' } : {} }
   });
   const customStyles = {
     ...defaultStyles,
@@ -120,7 +119,10 @@ export default function MultiEmailInput({
 
       marginLeft: '5px',
       borderRadius: '50%',
-      backgroundColor: 'var(--dark_three)'
+      backgroundColor: 'var(--dark_three)',
+      ':hover': {
+        cursor: 'pointer'
+      }
     })
   };
 
@@ -149,10 +151,13 @@ export default function MultiEmailInput({
           styles={customStyles}
           isMulti={true}
           isClearable={false}
-          isDisabled={isDisabled}
+          isLoading={isLoading}
+          isDisabled={isDisabled || isLoading}
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}
           onChange={(removedEmailList, actionType) => {
+            if (!isEmailRemovable) return;
+
             if (actionType?.action === 'remove-value') {
               setRemoveEmail({
                 emailListAfterRemoval: removedEmailList.map((email) => email.value),
@@ -172,8 +177,11 @@ export default function MultiEmailInput({
           <ConfirmPopUp
             title={`Are you sure, you want to remove ${removeEmail?.removeEmail || 'email'}?`}
             btnObj={{
-              handleClickLeft: () => {
-                setItems(removeEmail?.emailListAfterRemoval);
+              handleClickLeft: async () => {
+                const shouldRemove = await beforeRemoveEmail(removeEmail?.removeEmail);
+
+                if (shouldRemove) setItems(removeEmail?.emailListAfterRemoval);
+
                 setRemoveEmail({
                   emailListAfterRemoval: [],
                   isConfirmDisplayed: false,

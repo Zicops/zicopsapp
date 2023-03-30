@@ -1,8 +1,14 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
+import { USER_MAP_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
+  CdServicesAtom,
+  CtServicesAtom,
+  getProfileObject,
   getVendorCurrentStateObj,
+  SmeServicesAtom,
   VendorCurrentStateAtom,
+  VendorProfileAtom,
   VendorStateAtom,
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
@@ -14,19 +20,23 @@ import Button from '../CustomVideoPlayer/Button';
 import useHandleVendor from './Logic/useHandleVendor';
 import useHandleVendorMaster from './Logic/useHandleVendorMaster';
 import useHandleVendorServices from './Logic/useHandleVendorServices';
-import { manageVendorTabData } from './Logic/vendorComps.helper';
+import { vendorTabData } from './Logic/vendorComps.helper';
 
 export default function ManageVendorTabs() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
   const [vendorCurrentState, setVendorCurrentState] = useRecoilState(VendorCurrentStateAtom);
+  const smeData = useRecoilValue(SmeServicesAtom);
+  const ctData = useRecoilValue(CtServicesAtom);
+  const cdData = useRecoilValue(CdServicesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
 
-  const { handleMail } = useHandleVendor();
   const { addUpdateVendor, loading } = useHandleVendorMaster();
   const { addUpdateSme, addUpdateCrt, addUpdateCd } = useHandleVendorServices();
 
   const {
+    vendorAdminUsers,
     getSingleVendorInfo,
     getSmeDetails,
     getCrtDetails,
@@ -34,7 +44,11 @@ export default function ManageVendorTabs() {
     getSMESampleFiles,
     getCRTSampleFiles,
     getCDSampleFiles,
-    getAllProfileInfo
+    getAllProfileInfo,
+    getSingleProfileInfo,
+    getVendorAdmins,
+    syncIndividualVendorProfile,
+    handleMail
   } = useHandleVendor();
 
   const router = useRouter();
@@ -42,15 +56,32 @@ export default function ManageVendorTabs() {
   const shallowRoute = router.query?.shallowRoute || null;
   const isViewPage = router.asPath?.includes('view-vendor');
 
+  const isIndividual =
+    vendorData?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+
   // reset to default on load
   // NOTE: on load is saved is false which should ideally be false only if something is changed
   useEffect(() => {
     if (!router.isReady) return;
     if (shallowRoute) return;
-    if (vendorId) return;
+    if (!vendorCurrentState?.isSaved) return;
 
     setVendorCurrentState(getVendorCurrentStateObj());
-  }, [router.isReady]);
+  }, [
+    router.isReady,
+    vendorData?.name,
+    vendorData?.address,
+    vendorData?.vendorAdminUsers,
+    vendorData?.website,
+    vendorData?.facebookURL,
+    vendorData?.instagramURL,
+    vendorData?.twitterURL,
+    vendorData?.linkedinURL,
+    vendorData?.description,
+    smeData,
+    ctData,
+    cdData
+  ]);
 
   useEffect(() => {
     if (shallowRoute) return;
@@ -59,7 +90,7 @@ export default function ManageVendorTabs() {
     loadVendorDetails();
 
     async function loadVendorDetails() {
-      await getSingleVendorInfo();
+      const singleVendorInfo = await getSingleVendorInfo();
       const smeData = await getSmeDetails();
       const crtData = await getCrtDetails();
       const cdData = await getCdDetails();
@@ -70,12 +101,27 @@ export default function ManageVendorTabs() {
       if (cdData?.isApplicable) enabledServices.push('cd');
       setVendorCurrentState(getVendorCurrentStateObj({ enabledServices }));
 
+      getVendorAdmins();
       getSMESampleFiles();
       getCRTSampleFiles();
       getCDSampleFiles();
-      getAllProfileInfo();
+
+      const isIndividualVendor =
+        singleVendorInfo?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
+      if (!isIndividualVendor) return getAllProfileInfo();
     }
   }, [vendorId]);
+
+  useEffect(() => {
+    setEmailId(
+      vendorAdminUsers
+        ?.map((user) => (user?.user_lsp_status !== USER_MAP_STATUS.disable ? user?.email : null))
+        ?.filter((email) => email) || []
+    );
+
+    if (isIndividual && vendorAdminUsers?.[0]?.email)
+      getSingleProfileInfo(vendorAdminUsers?.[0]?.email);
+  }, [vendorAdminUsers]);
 
   useEffect(() => {
     if (vendorCurrentState?.isSaved || isViewPage) {
@@ -114,11 +160,45 @@ export default function ManageVendorTabs() {
     };
   }, [vendorCurrentState?.isSaved]);
 
-  const tabData = manageVendorTabData;
+  // sync profile details for individual vendor
+  useEffect(async () => {
+    if (vendorData?.type?.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
 
-  tabData[4].isHidden = !isDev;
+    const allServiceLanguages = [
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+    ];
 
-  const [tab, setTab] = useState(tabData[0].name);
+    let [firstName, ...lastName] = vendorData?.name?.split(' ');
+    lastName = lastName.join(' ');
+    setProfileData(
+      getProfileObject({
+        ...profileData,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email:
+          emailId?.map((item) => item?.props?.children?.[0] || item)?.filter((e) => !!e)?.[0] || '',
+        description: vendorData?.description,
+        photoUrl: vendorData?.photoUrl,
+        profileImage: vendorData?.vendorProfileImage,
+        languages: allServiceLanguages,
+        sme_expertises: smeData?.isApplicable ? smeData?.expertises : [],
+        crt_expertises: ctData?.isApplicable ? ctData?.expertises : [],
+        content_development: cdData?.isApplicable ? cdData?.expertises : []
+      })
+    );
+  }, [vendorData, smeData, cdData, ctData, emailId]);
+
+  const _tabDataObj = { ...vendorTabData };
+  _tabDataObj.orders.isHidden = !isDev;
+
+  _tabDataObj.profiles.isHidden = isIndividual;
+  _tabDataObj.users.isHidden = isIndividual;
+
+  _tabDataObj.experience.isHidden = !isIndividual;
+
+  const tabData = Object.values(_tabDataObj);
+
+  const [tab, setTab] = useState(vendorTabData?.master?.name);
 
   return (
     <TabContainer
@@ -129,11 +209,16 @@ export default function ManageVendorTabs() {
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
         handleSubmit: async () => {
-          setVendorCurrentState({ ...vendorCurrentState, isUpdating: true });
+          const _currentState = structuredClone(vendorCurrentState);
+          _currentState.isUpdating = true;
+          if (!vendorId) _currentState.isSaved = true;
+          setVendorCurrentState(_currentState);
+
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
-            handleMail();
+            syncIndividualVendorProfile(id, tab === vendorTabData.experience.name);
+            handleMail(id);
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);
           const crtData = await addUpdateCrt(tab === tabData[1].name);

@@ -14,6 +14,10 @@ const AddExpertise = ({
   selectedExpertise,
   setSelectedExpertise
 }) => {
+  useEffect(() => {
+    setExpertise('');
+  }, []);
+
   const handleExpretiseSelection = (e) => {
     const { value, checked } = e.target;
     if (checked) {
