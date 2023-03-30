@@ -181,7 +181,7 @@ export function getTopicQuizObject(data) {
       attachmentType: data?.attachmentType || '',
       isCorrect: data.isCorrect || false
     }),
-    editIndex: data?.editIndex || null
+    editIndex: data?.editIndex
   };
 }
 

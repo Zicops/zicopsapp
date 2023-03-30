@@ -14,6 +14,7 @@ import {
   UPLOAD_TOPIC_CONTENT_VIDEO,
   UPLOAD_TOPIC_RESOURCE
 } from '@/api/Mutations';
+import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { COURSE_TYPES, TOPIC_CONTENT_TYPES, TOPIC_TYPES } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
@@ -35,15 +36,11 @@ import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { getTopicDataObj } from './adminCourseComps.helper';
 
-export default function useHandleTopic(
-  modData = null,
-  chapData = null,
-  topData = null,
-  closePopUp = () => {}
-) {
+export default function useHandleTopic(modData = null, chapData = null, topData = null) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
+  const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [topicUploadProgress, setTopicUploadProgress] = useRecoilState(TopicUploadProgressAtom);
@@ -66,6 +63,10 @@ export default function useHandleTopic(
   );
 
   useEffect(() => {
+    setIsPopUpDataPresent(true);
+  }, []);
+
+  useEffect(() => {
     if (!topData?.id) return;
 
     setTopicData(getTopicDataObj(topData));
@@ -84,6 +85,14 @@ export default function useHandleTopic(
     if (isEditTopicFormVisible) setTopicData(getTopicDataObj(topData));
 
     setIsEditTopicFormVisible(!isEditTopicFormVisible);
+  }
+
+  function handleClose() {
+    setIsSubmitDisabled(null);
+    setTopicUploadProgress(null);
+    setTopicData(null);
+    setTopicContentList(null);
+    setTopicResources(null);
   }
 
   async function addUpdateTopic(e) {
@@ -303,12 +312,13 @@ export default function useHandleTopic(
       return null;
     }
 
-    const questionId = questionRes?.data?.addQuestionBankQuestion?.id;
+    const questionId = questionRes?.addQuestionBankQuestion?.id;
 
     // add update option
     for (let i = 0; i < optionData?.length; i++) {
       const option = optionData[i];
-      if (!option.option && !option.file) continue;
+      if (!option?.option && !option?.file) continue;
+      if (!questionId) continue;
 
       const sendOptionData = {
         description: option.option || '',
@@ -407,9 +417,9 @@ export default function useHandleTopic(
     await addResources();
     await addUpdateQuiz();
 
-    setIsSubmitDisabled(null);
-    setTopicUploadProgress(null);
-    closePopUp();
+    setToastMessage('Topic Content And Resources Uploaded', 'success');
+
+    handleClose();
   }
 
   return {
@@ -419,6 +429,7 @@ export default function useHandleTopic(
     isSubmitDisabled,
     isEditTopicFormVisible,
     toggleEditTopicForm,
-    handleSubmit
+    handleSubmit,
+    handleClose
   };
 }

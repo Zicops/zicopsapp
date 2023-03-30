@@ -235,6 +235,7 @@ export default function TopicContentForm({
                 }
                 type={content?.language}
                 isDisabled={isDisabled}
+                customClass={styles.topicContentBar}
                 customStyle={{
                   background: !isContentUrlPresent
                     ? styles.error

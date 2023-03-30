@@ -524,6 +524,8 @@ $marginBetweenInputs: 1em;
     display: flex;
     flex-direction: column;
     gap: 1em;
+
+    padding: 1em 3em;
   }
 
   .topicContentContainer {
@@ -580,6 +582,21 @@ $marginBetweenInputs: 1em;
         display: flex;
         justify-content: space-between;
         margin: 0.2em auto;
+
+        p {
+          color: $darkThree;
+          font-size: 0.8rem;
+        }
+      }
+
+      .topicContentBar {
+        text-align: center;
+
+        span {
+          .center {
+            flex: 1;
+          }
+        }
       }
     }
 
@@ -689,6 +706,10 @@ $marginBetweenInputs: 1em;
       gap: 1em;
       margin: 1em auto;
     }
+
+    .hint {
+      color: $darkThree;
+    }
   }
 
   .resourceAddBtn {
@@ -745,6 +766,7 @@ button.addTopicFormBtn {
   background-color: $darkThree;
   padding: 0.3em 1em;
   border-radius: 5px;
+  color: $black;
 
   div {
     display: flex;
@@ -754,7 +776,8 @@ button.addTopicFormBtn {
   }
 
   .editImg {
-    height: 1.2em;
+    height: 1.1em;
+    width: 1.1em;
     cursor: pointer;
   }
 

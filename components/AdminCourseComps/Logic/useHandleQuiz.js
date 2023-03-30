@@ -9,6 +9,7 @@ import {
 import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { QUESTION_STATUS } from '@/helper/constants.helper';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate, isWordSame, secondsToMinutes } from '@/helper/utils.helper';
 import {
   BingeDataAtom,
@@ -51,11 +52,13 @@ export default function useHandleQuiz(topData = null) {
     if (!topData?.id) return;
     if (topicQuiz != null) return;
 
-    // load resources
+    // load quiz data
     loadQueryDataAsync(GET_TOPIC_QUIZ, { topic_id: topData?.id })
-      .then((res) =>
+      .then((res) => {
+        const sortedBySequnce = sortArrByKeyInOrder(res?.getTopicQuizes);
+
         setTopicQuiz(
-          res?.getTopicQuizes?.map((quiz) => {
+          sortedBySequnce?.map((quiz) => {
             const timeObj = secondsToMinutes(+quiz?.startTime);
 
             return getTopicQuizObject({
@@ -64,8 +67,8 @@ export default function useHandleQuiz(topData = null) {
               startTimeSec: +timeObj?.second || 0
             });
           }) || []
-        )
-      )
+        );
+      })
       .catch(() => {
         setToastMessage('Topic Quiz Load Error');
         setTopicQuiz([]);
@@ -121,7 +124,7 @@ export default function useHandleQuiz(topData = null) {
 
   // validate the start time input after input
   useEffect(() => {
-    const videoDuration = +topicContentList[0]?.duration;
+    const videoDuration = +topicContentList?.[0]?.duration;
     const { nextShowTime, fromEndTime } = bingeData;
     if (isNaN(videoDuration)) return;
 
@@ -193,25 +196,31 @@ export default function useHandleQuiz(topData = null) {
     );
   }, [quizFormData]);
 
+  useEffect(() => {
+    if (isFormVisible) return;
+
+    // reset quiz data on form close
+    const _allQuiz = structuredClone(topicQuiz)?.map((quiz) => ({ ...quiz, editIndex: null }));
+    setQuizFormData(getTopicQuizObject({ courseId: courseMetaData?.id, topicId: topData?.id }));
+
+    // if (_allQuiz?.every((q) => q?.editIndex == null)) return;
+    setTopicQuiz(_allQuiz);
+  }, [isFormVisible]);
+
   function toggleForm(type = null) {
     // reset form data
     if (!isFormVisible && type !== 'edit')
       setQuizFormData(getTopicQuizObject({ courseId: courseMetaData?.id, topicId: topData?.id }));
 
-    if (type === 'edit' && quizFormData?.editIndex != null) {
-      const _allQuiz = structuredClone(topicQuiz);
-      _allQuiz.splice(quizFormData?.editIndex, 0, { ...quizFormData, editIndex: null });
-      setTopicQuiz(_allQuiz);
-    }
     setIsFormVisible(!isFormVisible);
   }
 
   function isOptionsDuplicate() {
-    const optionArr = quizFormData?.options?.map((op) => op.option?.trim()?.toLowerCase());
-    const isDuplicate = optionArr.some((op, i) => {
+    const optionArr = quizFormData?.options?.map((op) => op?.option?.trim()?.toLowerCase());
+    const isDuplicate = optionArr?.some((op, i) => {
       if (!op) return false;
 
-      return optionArr.indexOf(op) != i;
+      return optionArr?.indexOf(op) != i;
     });
 
     if (isDuplicate) setToastMessage('Options cannot be same.');
@@ -221,6 +230,20 @@ export default function useHandleQuiz(topData = null) {
   // input handler
   function handleQuizInput(e, index = null) {
     if (e?.value) setQuizFormData({ ...quizFormData, type: e.value });
+
+    // reset form data on switch
+    if (e.target.name === 'formType')
+      return setQuizFormData(
+        getTopicQuizObject({
+          courseId: courseMetaData?.id,
+          topicId: topData?.id,
+          formType: e.target.value,
+          name: quizFormData?.name,
+          startTimeMin: quizFormData?.startTimeMin,
+          startTimeSec: quizFormData?.startTimeSec,
+          editIndex: quizFormData?.editIndex
+        })
+      );
 
     if (index != null) {
       const _quizFormData = structuredClone(quizFormData);
@@ -291,11 +314,11 @@ export default function useHandleQuiz(topData = null) {
     const selectedQuiz = _quizData?.[index];
     let editQuizData = structuredClone(selectedQuiz);
 
-    const _fullQuestionData =
-      questionData?.find((q) => q?.questionId === selectedQuiz?.questionId) || null;
+    const isQuestionDataPresent =
+      _questionData?.find((q) => q?.questionId === selectedQuiz?.questionId) || null;
 
     // load question and option data and save it in questionData
-    if (!_fullQuestionData?.questionId) {
+    if (!isQuestionDataPresent) {
       const quesRes = await loadQueryDataAsync(GET_QUESTION_BY_ID, {
         question_ids: [selectedQuiz?.questionId]
       });
@@ -306,8 +329,7 @@ export default function useHandleQuiz(topData = null) {
       });
       const options = opRes?.getOptionsForQuestions?.[0]?.options;
 
-      editQuizData = {
-        ...editQuizData,
+      const quesData = {
         isMandatory: selectedQuiz?.isMandatory || false,
         type: question?.Type || 'MCQ',
         difficulty: question?.Difficulty || 1,
@@ -327,7 +349,7 @@ export default function useHandleQuiz(topData = null) {
         }))
       };
 
-      _questionData.push(editQuizData);
+      _questionData.push(quesData);
     }
 
     if (editQuizData?.options?.length === 2)
@@ -335,16 +357,28 @@ export default function useHandleQuiz(topData = null) {
     if (editQuizData?.options?.length === 3)
       editQuizData?.options?.push({ option: '', file: null, attachmentType: '', isCorrect: false });
 
-    _quizData?.splice(index, 1);
+    _quizData?.splice(index, 1, { ...(_quizData?.[index] || {}), editIndex: index });
 
-    if (quizFormData?.editIndex != null) {
-      _quizData.splice(quizFormData?.editIndex, 0, { ...quizFormData, editIndex: null });
-    }
+    const _fullQuestionData =
+      _questionData?.find((q) => q?.questionId === selectedQuiz?.questionId) || null;
+
+    // filtering null values to prevent overiding keys
+    const filteredQuizData = {};
+    Object.keys(editQuizData).forEach((key) => {
+      if (!editQuizData?.[key]) return null;
+
+      filteredQuizData[key] = editQuizData?.[key];
+    });
 
     setTopicQuiz(_quizData);
     setQuizFormData({
       ...(_fullQuestionData || null),
-      ...editQuizData,
+      ...filteredQuizData,
+      options: filteredQuizData?.options?.map((op, i) => {
+        if (op?.id || op?.option || op?.file) return op;
+
+        return _fullQuestionData?.options?.[i];
+      }),
       editIndex: index,
       formType: 'create'
     });
@@ -356,7 +390,7 @@ export default function useHandleQuiz(topData = null) {
   // save in recoil state
   function handleSubmit() {
     if (isOptionsDuplicate()) return;
-    if (topicQuiz?.some((q) => isWordSame(q?.name, quizFormData?.name)))
+    if (topicQuiz?.some((q) => isWordSame(q?.name, quizFormData?.name) && q?.editIndex == null))
       return setToastMessage('Quiz name cannot be same in one topic.');
 
     const isDuplicate = questionBankData?.questions?.some(
@@ -368,7 +402,7 @@ export default function useHandleQuiz(topData = null) {
     const _allQuiz = structuredClone(topicQuiz);
 
     if (quizFormData?.editIndex != null) {
-      _allQuiz.splice(quizFormData?.editIndex, 0, { ...quizFormData, editIndex: null });
+      _allQuiz.splice(quizFormData?.editIndex, 1, { ...quizFormData, editIndex: null });
     } else {
       _allQuiz.push({ ...quizFormData, editIndex: null });
     }

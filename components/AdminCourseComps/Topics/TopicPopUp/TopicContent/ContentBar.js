@@ -9,15 +9,16 @@ export default function ContentBar({
   isDisabled = false,
   editHandler = null,
   deleteProps = {},
-  customStyle = {}
+  customStyle = {},
+  customClass = ''
 }) {
   return (
     <>
-      <div className={`${styles.contentBar}`} style={customStyle}>
-        <span>{type}</span>
-        <span>{description}</span>
+      <div className={`${styles.contentBar} ${customClass}`} style={customStyle}>
+        <span className={`w-15`}>{type}</span>
+        <span className={`w-100 ${styles.center}`}>{description}</span>
 
-        <div>
+        <div className={`w-15`}>
           <span>{details}</span>
 
           {!isDisabled && (

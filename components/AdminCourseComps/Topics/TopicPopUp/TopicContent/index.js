@@ -5,10 +5,10 @@ import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import BingeForm from './BingeForm';
-import QuizForm from './QuizForm';
 import ResourceForm from './ResourceForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentForm from './TopicContentForm';
+import TopicQuiz from './TopicQuiz';
 
 export default function TopicContent({ topData = null, closePopUp = () => {} }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
@@ -39,7 +39,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
       id: 'quiz',
       title: 'Quiz',
       body: (
-        <QuizForm
+        <TopicQuiz
           topData={topData}
           setIsAccordionDisabled={(val) => setIsAccordionDisabled(!!val ? 'quiz' : '')}
         />

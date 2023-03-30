@@ -33,7 +33,7 @@ export default function AddTopicForm({
             label: 'Topic Name:',
             placeholder: 'Enter topic name ( in less than 60 characters )',
             maxLength: 60,
-            value: topicData.name
+            value: topicData?.name
           }}
           changeHandler={(e) => setTopicData({ ...topicData, name: e.target.value })}
         />
@@ -61,7 +61,7 @@ export default function AddTopicForm({
               placeholder: 'Select topic type',
               options: types,
               menuPlacement: 'top',
-              value: topicData.type ? { value: topicData.type, label: topicData.type } : null,
+              value: topicData?.type ? { value: topicData.type, label: topicData.type } : null,
               isDisabled: courseMetaData.type !== COURSE_TYPES.selfPaced
             }}
             changeHandler={(e) => setTopicData({ ...topicData, type: e.value })}

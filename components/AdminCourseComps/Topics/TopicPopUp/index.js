@@ -1,7 +1,9 @@
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import PopUp from '@/components/common/PopUp';
 import ZicopsButton from '@/components/common/ZicopsButton';
 import { TOPIC_TYPES } from '@/constants/course.constants';
 import { TopicContentListAtom } from '@/state/atoms/courses.atom';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../adminCourseComps.module.scss';
 import useHandleTopic from '../../Logic/useHandleTopic';
@@ -19,6 +21,7 @@ export default function TopicPopUp({
   closePopUp = () => {}
 }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
+  const [confimClose, setConfirmClose] = useState(null);
   const {
     topicData,
     setTopicData,
@@ -26,8 +29,9 @@ export default function TopicPopUp({
     isEditTopicFormVisible,
     toggleEditTopicForm,
     addUpdateTopic,
-    handleSubmit
-  } = useHandleTopic(modData, chapData, topData, closePopUp);
+    handleSubmit,
+    handleClose
+  } = useHandleTopic(modData, chapData, topData);
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
   const isClassroom = topicData?.type === TOPIC_TYPES.classroom;
@@ -40,15 +44,17 @@ export default function TopicPopUp({
         isFooterVisible={false}
         popUpState={popUpState}>
         <div className={`${styles.popUpFormContainer}`}>
+          {/* add new topic */}
           {!topicData?.id ? (
             <AddTopicForm
               topicData={topicData}
               setTopicData={setTopicData}
-              handleCancel={closePopUp}
+              handleCancel={() => setConfirmClose(true)}
               handleSubmit={addUpdateTopic}
             />
           ) : (
             <>
+              {/* edit topic  */}
               <TopicRow
                 key={topicData.id}
                 type="small"
@@ -65,11 +71,15 @@ export default function TopicPopUp({
               )}
 
               {topicData?.type === TOPIC_TYPES.content && (
-                <TopicContent topData={topicData} closePopUp={closePopUp} />
+                <TopicContent topData={topicData} closePopUp={() => setConfirmClose(true)} />
               )}
 
-              {isAssessment && <TopicAssessmentForm topData={topicData} closePopUp={closePopUp} />}
-              {isClassroom && <TopicClassroom topData={topicData} closePopUp={closePopUp} />}
+              {isAssessment && (
+                <TopicAssessmentForm topData={topicData} closePopUp={() => setConfirmClose(true)} />
+              )}
+              {isClassroom && (
+                <TopicClassroom topData={topicData} closePopUp={() => setConfirmClose(true)} />
+              )}
             </>
           )}
         </div>
@@ -77,7 +87,7 @@ export default function TopicPopUp({
         <div className="center-element-with-flex">
           <ZicopsButton
             customClass={styles.addTopicFormBtn}
-            handleClick={closePopUp}
+            handleClick={() => setConfirmClose(true)}
             isDisabled={isSubmitDisabled}
             display="Cancel"
           />
@@ -89,6 +99,19 @@ export default function TopicPopUp({
           />
         </div>
       </PopUp>
+
+      {!!confimClose && (
+        <ConfirmPopUp
+          title={'Are you sure you want to close the pop up?'}
+          btnObj={{
+            handleClickLeft: () => {
+              handleClose();
+              closePopUp();
+            },
+            handleClickRight: () => setConfirmClose(false)
+          }}
+        />
+      )}
     </>
   );
 }
