@@ -8,11 +8,34 @@ const ReviewAndTaxConfirm = () => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
-  const taxAmount = (orderData?.total * 10) / 100;
+  const orderArray = [];
+  if (servicesData?.sme?.length) {
+    orderArray.push(...servicesData?.sme);
+  }
+  if (servicesData?.crt?.length) {
+    orderArray.push(...servicesData?.crt);
+  }
+  if (servicesData?.cd?.length) {
+    orderArray.push(...servicesData?.cd);
+  }
+  if (servicesData?.speakers?.length) {
+    orderArray.push(...servicesData?.speakers);
+  }
+
+  const subtotalArray = orderArray?.map((data) => {
+    if (!data?.isActive) return null;
+    return data?.total;
+  });
+  const subtotal = subtotalArray?.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+
+  const taxAmount = (subtotal * 10) / 100;
+
   const grossTotal = orderData?.total + taxAmount;
 
   useEffect(() => {
-    setOrderData({ ...orderData, tax: taxAmount, grossTotal: grossTotal });
+    setOrderData({ ...orderData, total: subtotal, tax: taxAmount, grossTotal: grossTotal });
   }, [servicesData]);
   return (
     <div>
