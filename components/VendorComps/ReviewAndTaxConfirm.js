@@ -30,13 +30,16 @@ const ReviewAndTaxConfirm = () => {
     return accumulator + currentValue;
   }, 0);
 
-  const taxAmount = (subtotal * 10) / 100;
+  const taxAmount = (subtotal * orderData?.tax) / 100;
 
   const grossTotal = orderData?.total + taxAmount;
 
   useEffect(() => {
-    setOrderData({ ...orderData, total: subtotal, tax: taxAmount, grossTotal: grossTotal });
+    setOrderData({ ...orderData, total: subtotal, grossTotal: grossTotal });
   }, [servicesData]);
+
+  console.info('orderData', orderData);
+  console.info('servicesData', servicesData);
   return (
     <div>
       <p className={`${styles.addLineText}`}>Confirm</p>

@@ -1,5 +1,9 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import { changeHandler } from '@/helper/common.helper';
+import { OrderAtom } from '@/state/atoms/vendor.atoms';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import LabeledInput from '../common/FormComponents/LabeledInput';
 import styles from './vendorComps.module.scss';
 const ReviewOrderBottom = ({
   isTax,
@@ -10,6 +14,7 @@ const ReviewOrderBottom = ({
   isShowTax,
   setShowTax
 }) => {
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const onShowTaxHandler = () => {
     setShowTax(true);
   };
@@ -40,7 +45,19 @@ const ReviewOrderBottom = ({
               <span>Add Tax</span>
             </div>
           )}
-          {isShowTax && <div className={`${styles.taxValue}`}>10</div>}
+          {isShowTax && (
+            <LabeledInput
+              inputOptions={{
+                inputName: 'tax',
+                value: orderData?.tax,
+                isNumericOnly: true
+              }}
+              inputClass={`${styles.taxValue}`}
+              changeHandler={(e) => {
+                changeHandler(e, orderData, setOrderData);
+              }}
+            />
+          )}
         </div>
       </div>
       <div className={`${styles.TaxAmount}`}>

@@ -30,8 +30,12 @@ const ReviewAndTax = ({ isShowTax, setShowTax }) => {
     return accumulator + currentValue;
   }, 0);
 
+  const taxAmount = (subtotal * orderData?.tax) / 100;
+
+  const grossTotal = orderData?.total + taxAmount;
+
   useEffect(() => {
-    setOrderData({ ...orderData, total: subtotal, grossTotal: subtotal });
+    setOrderData({ ...orderData, total: subtotal, grossTotal: grossTotal });
   }, [servicesData]);
 
   return (
@@ -43,7 +47,8 @@ const ReviewAndTax = ({ isShowTax, setShowTax }) => {
       <ReviewOrderBottom
         isTax={true}
         subtotal={subtotal}
-        grossTotal={subtotal}
+        grossTotal={grossTotal}
+        taxAmount={taxAmount}
         currency={orderData?.currency}
         isShowTax={isShowTax}
         setShowTax={setShowTax}
