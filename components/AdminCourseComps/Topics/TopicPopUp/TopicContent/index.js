@@ -1,10 +1,11 @@
 import useHandleTopicContent from '@/components/AdminCourseComps/Logic/useHandleTopicContent';
 import { TopicContentListAtom } from '@/state/atoms/courses.atom';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import BingeForm from './BingeForm';
-import Quiz from './Quiz';
+import QuizForm from './QuizForm';
 import ResourceForm from './ResourceForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentForm from './TopicContentForm';
@@ -21,20 +22,31 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     handleSubmit
   } = useHandleTopicContent(topData, closePopUp);
 
+  const [isAccordionDisabled, setIsAccordionDisabled] = useState(null);
+
   const topicAccordians = [
     {
+      id: 'sub',
       title: 'Subtitles',
       body: <SubtitleForm topData={topData} />
     },
     {
+      id: 'binge',
       title: 'Binge It',
       body: <BingeForm />
     },
     {
+      id: 'quiz',
       title: 'Quiz',
-      body: <Quiz />
+      body: (
+        <QuizForm
+          topData={topData}
+          setIsAccordionDisabled={(val) => setIsAccordionDisabled(!!val ? 'quiz' : '')}
+        />
+      )
     },
     {
+      id: 'res',
       title: 'Resources',
       body: <ResourceForm topData={topData} />
     }
@@ -59,7 +71,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
           <TopicAccordian
             key={item?.title}
             title={item.title}
-            isDisabled={!topicContentList?.length}>
+            isDisabled={!topicContentList?.length || isAccordionDisabled === item?.id}>
             {item.body}
           </TopicAccordian>
         ))}

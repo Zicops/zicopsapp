@@ -142,6 +142,44 @@ export function getBingeDataObj(data) {
   };
 }
 
+export const QuestionBankDataAtom = atom({
+  key: 'QuestionBankData',
+  default: { questionBank: {}, questions: [] }
+});
+
+export const TopicQuizAtom = atom({
+  key: 'TopicQuiz',
+  default: null
+});
+
+export function getTopicQuizObject(data) {
+  return {
+    id: data.id || null,
+    topicId: data.topicId || null,
+    name: data.name || '',
+    startTimeMin: data?.startTimeMin || 0,
+    startTimeSec: data?.startTimeSec || 0,
+    isMandatory: data.isMandatory || false,
+    formType: data.formType || null,
+    type: data.type || 'MCQ',
+    difficulty: data?.difficulty || 1,
+    attachmentType: data?.attachmentType || '',
+    hint: data?.hint || '',
+
+    questionId: data.questionId || null,
+    question: data.question || '',
+    questionFile: data.questionFile || null,
+
+    options: Array(4).fill({
+      option: data.option || '',
+      file: data.file || null,
+      attachmentType: data?.attachmentType || '',
+      isCorrect: data.isCorrect || false
+    }),
+    editIndex: data?.editIndex || null
+  };
+}
+
 export const TopicResourcesAtom = atom({
   key: 'TopicResources',
   default: null

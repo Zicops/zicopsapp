@@ -17,11 +17,12 @@ export default function ContentBar({
         <span>{description}</span>
 
         <div>
-          {details}
+          <span>{details}</span>
+
           {!isDisabled && (
             <>
               {!!editHandler && (
-                <div onClick={editHandler}>
+                <div className={styles.editImg} onClick={editHandler}>
                   <EditBoxIcon />
                 </div>
               )}
