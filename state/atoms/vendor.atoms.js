@@ -195,34 +195,49 @@ export const vendorUserInviteAtom = atom({
 
 export const OrderAtom = atom({
   key: 'orderState',
-  default: getOrderObject()
+  default: getVendorOrderObject()
 });
-export function getOrderObject(data) {
+export function getVendorOrderObject(data) {
   return {
-    order_id: data?.order_id || '',
-    vendor_id: data?.vendor_id || '',
-    lsp_id: data?.lsp_id || '',
+    orderId: data?.orderId || '',
+    vendorId: data?.vendorId || '',
+    lspId: data?.lspId || '',
     total: data?.total || 0,
     tax: data?.tax || 0,
-    grand_total: data?.grand_total || 0,
-    status: data?.status || ''
+    grossTotal: data?.grossTotal || 0,
+    status: data?.status || '',
+    currency: data?.currency || ''
   };
 }
-export const SevicesAtom = atom({
+export const ServicesAtom = atom({
   key: 'servicesState',
-  default: getServicesObject()
+  default: getVendorServicesObject()
 });
+
+export function getVendorServicesObject() {
+  return { sme: [], crt: [], cd: [], speakers: [] };
+}
+
 export function getServicesObject(data) {
   return {
-    service_id: data?.service_id || '',
-    order_id: data?.order_id || '',
-    service_type: data?.service_type || '',
+    serviceId: data?.serviceId || '',
+    orderId: data?.orderId || '',
+    serviceType: data?.serviceType || '',
     description: data?.description || '',
     unit: data?.unit || 0,
-    currency: data?.currency || '',
     rate: data?.rate || 0,
     quantity: data?.quantity || 0,
     total: data?.total || 0,
-    status: data?.status || ''
+    status: data?.status || '',
+    isActive: data?.isActive || false
   };
+}
+
+export const VendorServicesListAtom = atom({
+  key: 'vendorServicesList',
+  default: getVendorServicesList()
+});
+
+export function getVendorServicesList() {
+  return { sme: false, crt: false, cd: false, speakers: false };
 }
