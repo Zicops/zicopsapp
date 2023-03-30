@@ -106,7 +106,7 @@ export default function SubtitleForm({ topData = null }) {
         </>
       )}
 
-      {!languageOptions?.length && (
+      {!!languageOptions?.length && (
         <div className={`center-element-with-flex ${styles.marginBetweenInputs}`}>
           <IconButton
             styleClass="btnBlack"

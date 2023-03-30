@@ -22,6 +22,7 @@ export default function TopicPopUp({
   const {
     topicData,
     setTopicData,
+    isSubmitDisabled,
     isEditTopicFormVisible,
     toggleEditTopicForm,
     addUpdateTopic,
@@ -33,7 +34,11 @@ export default function TopicPopUp({
 
   return (
     <>
-      <PopUp title={`Topic ${topicData?.sequence}`} isFooterVisible={false} popUpState={popUpState}>
+      <PopUp
+        title={`Topic ${topicData?.sequence}`}
+        closeBtn={{ disabled: isSubmitDisabled }}
+        isFooterVisible={false}
+        popUpState={popUpState}>
         <div className={`${styles.popUpFormContainer}`}>
           {!topicData?.id ? (
             <AddTopicForm
@@ -73,11 +78,12 @@ export default function TopicPopUp({
           <ZicopsButton
             customClass={styles.addTopicFormBtn}
             handleClick={closePopUp}
+            isDisabled={isSubmitDisabled}
             display="Cancel"
           />
           <ZicopsButton
             customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
-            isDisabled={!topicContentList?.length}
+            isDisabled={!topicContentList?.length || isSubmitDisabled}
             handleClick={handleSubmit}
             display={'Design'}
           />

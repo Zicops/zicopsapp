@@ -100,7 +100,7 @@ export default function useHandleTopicResources(topData = null) {
   function handleSubmit() {
     const _list = structuredClone(topicResources);
 
-    _list.push(resourceFormData);
+    _list.push({ ...resourceFormData, isNew: true });
     setTopicResources(_list);
 
     setIsFormVisible(false);

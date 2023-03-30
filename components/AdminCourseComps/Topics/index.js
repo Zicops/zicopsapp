@@ -37,44 +37,42 @@ export default function Topics() {
                 {/* chapters wise */}
                 {mod?.chapters?.map((chapter) => {
                   return (
-                    <>
-                      <BoxContainer
-                        key={chapter?.id}
-                        title={`Chapter ${chapter.sequence} : ${chapter.name}`}
-                        isChapter={true}
-                        editHandler={() =>
-                          setDisplayPopUp({
-                            data: { mod, chap: chapter },
-                            type: popUpTypes.chapter
-                          })
-                        }>
-                        {/* topic */}
-                        {mod?.topics?.map((topic) => {
-                          if (chapter?.id !== topic?.chapterId) return;
+                    <BoxContainer
+                      key={chapter?.id}
+                      title={`Chapter ${chapter.sequence} : ${chapter.name}`}
+                      isChapter={true}
+                      editHandler={() =>
+                        setDisplayPopUp({
+                          data: { mod, chap: chapter },
+                          type: popUpTypes.chapter
+                        })
+                      }>
+                      {/* topic */}
+                      {mod?.topics?.map((topic) => {
+                        if (chapter?.id !== topic?.chapterId) return;
 
-                          return (
-                            <TopicRow
-                              key={topic.id}
-                              type="small"
-                              title={`Topic ${topic?.sequence} : ${topic.name}`}
-                              editHandler={() =>
-                                setDisplayPopUp({
-                                  data: { mod, chap: chapter, top: topic },
-                                  type: popUpTypes.topic
-                                })
-                              }
-                            />
-                          );
-                        })}
-                        <IconButton
-                          text="Add Topic"
-                          styleClasses={styles.addCourseContentBtn}
-                          handleClick={() =>
-                            setDisplayPopUp({ data: { mod }, type: popUpTypes.topic })
-                          }
-                        />
-                      </BoxContainer>
-                    </>
+                        return (
+                          <TopicRow
+                            key={topic.id}
+                            type="small"
+                            title={`Topic ${topic?.sequence} : ${topic.name}`}
+                            editHandler={() =>
+                              setDisplayPopUp({
+                                data: { mod, chap: chapter, top: topic },
+                                type: popUpTypes.topic
+                              })
+                            }
+                          />
+                        );
+                      })}
+                      <IconButton
+                        text="Add Topic"
+                        styleClasses={styles.addCourseContentBtn}
+                        handleClick={() =>
+                          setDisplayPopUp({ data: { mod }, type: popUpTypes.topic })
+                        }
+                      />
+                    </BoxContainer>
                   );
                 })}
 

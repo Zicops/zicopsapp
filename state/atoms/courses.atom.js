@@ -110,6 +110,11 @@ export const AllCourseModulesDataAtom = atom({
   default: null
 });
 
+export const TopicUploadProgressAtom = atom({
+  key: 'TopicUploadProgress',
+  default: null
+});
+
 export const TopicContentListAtom = atom({
   key: 'TopicContentList',
   default: null
@@ -192,6 +197,7 @@ export function getTopicResourcesObject(data) {
     name: data.name || '',
     type: data.type || '',
     url: data.url || null,
-    file: data.file || null
+    file: data.file || null,
+    isNew: data?.isNew || null
   };
 }

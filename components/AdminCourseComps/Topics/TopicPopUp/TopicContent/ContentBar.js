@@ -8,11 +8,12 @@ export default function ContentBar({
   details = '',
   isDisabled = false,
   editHandler = null,
-  deleteProps = {}
+  deleteProps = {},
+  customStyle = {}
 }) {
   return (
     <>
-      <div className={`${styles.contentBar}`}>
+      <div className={`${styles.contentBar}`} style={customStyle}>
         <span>{type}</span>
         <span>{description}</span>
 

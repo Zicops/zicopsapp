@@ -9,7 +9,11 @@ import { PlusIcon } from '@/components/common/ZicopsIcons';
 import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { truncateToN } from '@/helper/common.helper';
 import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
-import { CourseMetaDataAtom, TopicContentListAtom } from '@/state/atoms/courses.atom';
+import {
+  CourseMetaDataAtom,
+  TopicContentListAtom,
+  TopicUploadProgressAtom
+} from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
@@ -27,6 +31,7 @@ export default function TopicContentForm({
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
+  const [topicUploadProgress, setTopicUploadProgress] = useRecoilState(TopicUploadProgressAtom);
   const [topicContentList, setTopicContentList] = useRecoilState(TopicContentListAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
 
@@ -206,41 +211,53 @@ export default function TopicContentForm({
         </div>
       )}
 
-      {topicContentList?.map((content, index) => (
-        <>
-          <div className={`${styles.topicContentBarContainer}`}>
-            <div className={`${styles.topSection}`}>
-              <p>
-                Content Type: <span>{content?.type}</span>
-              </p>
-              <p>
-                Duration: <span>{content?.duration} sec</span>
-              </p>
-            </div>
+      {topicContentList?.map((content, index) => {
+        const isContentUrlPresent = !!content?.id ? !!content?.contentUrl : true;
 
-            <ContentBar
-              key={content?.language}
-              description={`Content Added ${content?.isDefault ? '(Default)' : ''}`}
-              type={content?.language}
-              isDisabled={isDisabled}
-              deleteProps={{
-                id: content?.id,
-                resKey: 'deleteTopicContent',
-                mutation: DELETE_COURSE_TOPIC_CONTENT,
-                onDelete: () => {
-                  const _list = structuredClone(topicContentList);
-                  const currentTopicIndex = !contentData?.id
-                    ? index
-                    : _list?.findIndex((tc) => tc?.id === contentData?.id);
-                  _list?.splice(currentTopicIndex, 1);
+        return (
+          <>
+            <div className={`${styles.topicContentBarContainer}`}>
+              <div className={`${styles.topSection}`}>
+                <p>
+                  Content Type: <span>{content?.type}</span>
+                </p>
+                <p>
+                  Duration: <span>{content?.duration} sec</span>
+                </p>
+              </div>
 
-                  setTopicContentList(_list);
+              <ContentBar
+                key={content?.language}
+                description={
+                  !isContentUrlPresent
+                    ? 'No Content URL Found'
+                    : `Content Added ${content?.isDefault ? '(Default)' : ''}`
                 }
-              }}
-            />
-          </div>
-        </>
-      ))}
+                type={content?.language}
+                isDisabled={isDisabled}
+                customStyle={{
+                  background: !isContentUrlPresent
+                    ? styles.error
+                    : `linear-gradient(90deg, #86D386 ${
+                        topicUploadProgress ? topicUploadProgress[content.language] * 100 : 0
+                      }%, #868686 0%, #868686 100%)`
+                }}
+                deleteProps={{
+                  id: content?.id,
+                  resKey: 'deleteTopicContent',
+                  mutation: DELETE_COURSE_TOPIC_CONTENT,
+                  onDelete: () => {
+                    const _list = structuredClone(topicContentList);
+                    _list?.splice(index, 1);
+
+                    setTopicContentList(_list);
+                  }
+                }}
+              />
+            </div>
+          </>
+        );
+      })}
 
       {!!topicContentList?.length && !!languageOptions?.length && !isDisabled && (
         <div className={styles.addMoreContentBtn} onClick={toggleForm}>
