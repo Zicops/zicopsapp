@@ -4,12 +4,13 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import { useEffect, useState } from 'react';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import { currency, unit } from '../Logic/vendorComps.helper';
-import { ServicesAtom } from '@/state/atoms/vendor.atoms';
+import { ServicesAtom, OrderAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 
 export default function AddLineItemComp({ index, service }) {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   useEffect(() => {
     const tempArray = structuredClone(servicesData);
@@ -72,20 +73,21 @@ export default function AddLineItemComp({ index, service }) {
             inputName: 'currency',
             placeholder: 'INR',
             value: {
-              label: servicesData?.[service]?.[index]?.currency,
-              value: servicesData?.[service]?.[index]?.currency
+              label: orderData.currency,
+              value: orderData.currency
             },
             options: currency
           }}
           changeHandler={(e) => {
-            const tempArray = structuredClone(servicesData);
-            tempArray[service][index].currency = e.value;
-            setServicesData(tempArray);
+            changeHandler(e, orderData, setOrderData, 'currency');
           }}
         />
       </div>
       <div>
-        <p className={`${styles.heading}`}>Rate (INR/hr)</p>
+        <p className={`${styles.heading}`}>
+          Rate ({orderData.currency || 'INR'}
+          {servicesData?.[service]?.[index]?.unit || '/ hour'})
+        </p>
         <LabeledInput
           inputOptions={{
             inputName: 'rate',

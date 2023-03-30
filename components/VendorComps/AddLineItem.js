@@ -26,7 +26,7 @@ const AddLineItem = () => {
 
   const addAnotherItemHandler = (service) => {
     const _serviceData = structuredClone(servicesData);
-    _serviceData?.[service]?.push(getServicesObject({ serviceType: service }));
+    _serviceData?.[service]?.push(getServicesObject({ serviceType: service, isActive: true }));
     setServicesData(_serviceData);
 
     const _addLine = structuredClone(addLine);

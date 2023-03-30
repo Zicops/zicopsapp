@@ -8,8 +8,6 @@ const ReviewAndTaxConfirm = () => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
-  console.info('orderData', orderData);
-
   const taxAmount = (orderData?.total * 10) / 100;
   const grossTotal = orderData?.total + taxAmount;
 

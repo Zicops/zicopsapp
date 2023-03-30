@@ -22,7 +22,9 @@ import {
   VendorServicesListAtom,
   getVendorServicesObject,
   getServicesObject,
-  getVendorServicesList
+  getVendorServicesList,
+  OrderAtom,
+  getVendorOrderObject
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -30,7 +32,7 @@ import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import ProfileExperience from '@/components/VendorComps/ProfileExperience';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
-import ReviewAndTaxComp from '@/components/VendorComps/ReviewAndtaxComp';
+import ReviewAndTax from '@/components/VendorComps/ReviewAndTax';
 import AddLineComp from '@/components/VendorComps/AddLineComp';
 
 export default function VendorInfo() {
@@ -44,8 +46,10 @@ export default function VendorInfo() {
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] =
-    useRecoilState(VendorServicesListAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] = useRecoilState(
+    VendorServicesListAtom
+  );
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -85,6 +89,7 @@ export default function VendorInfo() {
   const onOpenPopup = () => {
     setServicesData(getVendorServicesObject());
     setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
     setShowPopup(true);
   };
 
@@ -228,7 +233,7 @@ export default function VendorInfo() {
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
-          {currentComponent === 1 && <ReviewAndTaxComp setCurrentComponent={setCurrentComponent} />}
+          {currentComponent === 1 && <ReviewAndTax setCurrentComponent={setCurrentComponent} />}
           {currentComponent === 2 && (
             <ReviewAndTaxConfirm setCurrentComponent={setCurrentComponent} />
           )}
