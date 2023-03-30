@@ -167,4 +167,7 @@ export function getVctoolMetaData(data) {
     }
 }
 
-
+export const meetingPageAtom=atom({
+    key:'meetingPageAtom',
+    default:false
+})

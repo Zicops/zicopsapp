@@ -1,4 +1,5 @@
 import TopicPdfViews from '@/components/CourseComps/TopicPdfViews';
+import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
@@ -192,11 +193,7 @@ export default function VideoPlayer({
         </>
       )}
       {videoData?.type === 'classroom' && (
-        <iframe
-          style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
-          frameBorder="0"
-          src={`https://zicops.whereby.com/${wherebyRoomId}?background=off&logo=off`}
-          allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
+      <VCtoolStartPage/>
       )}
       {videoData.type === 'document' && (
         <>

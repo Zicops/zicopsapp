@@ -2,6 +2,7 @@ import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import SessionJoinCard from '@/components/Vctools/SessionJoinCard';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -671,7 +672,10 @@ export default function TopicBox({
             </div>
           )}
           {type === 'Classroom' && (
-            <div className={`${styles.topic_player}`}>Click here to open classroom</div>
+            <div className={`${styles.topic_player}`}>
+              <SessionJoinCard/>
+            </div>
+            
           )}
         </div>
       </div>
