@@ -9,7 +9,7 @@ import Spinner from '@/components/common/Spinner';
 import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import ContentBar from './ContentBar';
 

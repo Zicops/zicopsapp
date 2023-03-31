@@ -173,7 +173,7 @@ $marginBetweenInputs: 1em;
   flex-direction: column;
   gap: $gapBetweenInputAndLabel;
 
-  div {
+  > div {
     // display: flex;
     gap: $marginBetweenInputs;
   }

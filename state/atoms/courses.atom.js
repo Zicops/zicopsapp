@@ -90,18 +90,24 @@ export const ClassroomMasterAtom = atom({
 
 export function getClassroomMasterDataObj(data = {}) {
   return {
+    id: data?.id || null,
     courseId: data?.courseId || null,
     noOfLearners: data?.noOfLearners || 0,
     trainers: data?.trainers || [],
     moderators: data?.moderators || [],
-    courseStartDate: data?.courseStartDate || '',
-    courseEndDate: data?.courseEndDate || '',
-    curriculum: data?.curriculum,
+    courseStartDate: data?.courseStartDate || null,
+    courseEndDate: data?.courseEndDate || null,
+    curriculum: data?.curriculum || '',
     createdAt: data?.createdAt || '',
     createdBy: data?.createdBy || '',
     updatedAt: data?.updatedAt || '',
     updatedBy: data?.updatedBy || '',
-    status: data?.status || null
+    status: data?.status || null,
+    isUpdate: data?.isUpdate || false,
+    isEndDatedecided: data?.isEndDatedecided || false,
+    isStartDatedecided: data?.isStartDatedecided || false,
+    isTrainerdecided: data?.isTrainerdecided || false,
+    isModeratordecided: data?.isModeratordecided || false
   };
 }
 
@@ -199,5 +205,35 @@ export function getTopicResourcesObject(data) {
     url: data.url || null,
     file: data.file || null,
     isNew: data?.isNew || null
+  };
+}
+
+export const TopicClassroomAtom = atom({
+  key: 'TopicClassroom',
+  default: getTopicClassroomObject()
+});
+
+export function getTopicClassroomObject(data = {}) {
+  return {
+    id: data?.id || null,
+    topicId: data?.topicId || '',
+    trainers: data?.trainers || [],
+    moderators: data?.moderators || [],
+    trainingStartTime: data?.trainingStartTime || '',
+    trainingEndTime: data?.trainingEndTime || '',
+    duration: data?.duration || '00',
+    breaktime: data?.breaktime || '',
+    language: data?.language || [],
+    isScreenShareEnabled: data?.isScreenShareEnabled || false,
+    isChatEnabled: data?.isChatEnabled || false,
+    isMicrophoneEnabled: data?.isMicrophoneEnabled || false,
+    isQaEnabled: data?.isQaEnabled || false,
+    isCameraEnabled: data?.isCameraEnabled || false,
+    isOverrideConfig: data?.isOverrideConfig || false,
+    createdAt: data?.createdAt || '',
+    createdBy: data?.createdBy || '',
+    updatedAt: data?.updatedAt || '',
+    updatedBy: data?.updatedBy || '',
+    status: data?.status || ''
   };
 }

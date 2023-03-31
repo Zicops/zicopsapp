@@ -2,11 +2,11 @@ import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import ClassroomForm from './ClassroomForm';
 
-export default function TopicClassroom() {
+export default function TopicClassroom({topData = {}}) {
   const topicAccordians = [
     {
       title: 'Classroom',
-      body: <ClassroomForm />
+      body: <ClassroomForm topData = { topData }/>
     },
     {
       title: 'Quizzes',

@@ -29,7 +29,13 @@ export const TOPIC_TYPES = {
 };
 
 export const CLASSROOM_MASTER_STATUS = {
-  save: 'SAVED'
+  save: 'SAVED',
+  draft: 'DRAFT'
+};
+
+export const TOPIC_CLASS_ROOM_STATUS = {
+  active: 'active',
+  disable: 'disable'
 };
 
 export const TOPIC_CONTENT_TYPES = {
