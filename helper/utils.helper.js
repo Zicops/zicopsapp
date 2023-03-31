@@ -301,6 +301,10 @@ export function getDateObjFromUnix(unixTimestamp) {
   return new Date(unixTimestamp * 1000);
 }
 
+export function isWordIncluded(sentence = '', word = '') {
+  return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
+}
+
 export function isWordSame(firstWord = '', secondWord = '') {
   if (!firstWord) return false;
   if (!secondWord) return false;
