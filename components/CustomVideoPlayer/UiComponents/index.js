@@ -1,3 +1,4 @@
+import { ActiveCourseTabAtom } from '@/components/CourseBody/Logic/courseBody.helper';
 import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { userContext } from '@/state/contexts/UserContext';
 import Image from 'next/image';
@@ -34,6 +35,7 @@ export default function UiComponents({
   const router = useRouter();
   const isPreview = router?.asPath?.includes('preview');
 
+  const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabAtom);
   const { videoElement, videoContainer } = refs;
   const { bookmarkData: allBookmarks } = useContext(userContext);
   const videoData = useRecoilValue(VideoAtom);
@@ -137,7 +139,9 @@ export default function UiComponents({
     {
       id: 0,
       btnImg: '/images/svg/spatial_audio_off.svg',
-      boxComponent: <SubtitleBox subtitleState={subtitleState} />,
+      boxComponent: (
+        <SubtitleBox subtitleState={subtitleState} isSubtitleDisplay={videoData?.type === 'mp4'} />
+      ),
       handleClick: () => switchBox(0),
       isHidden: videoData?.type === 'classroom'
     },
@@ -152,7 +156,7 @@ export default function UiComponents({
     {
       id: 2,
       btnImg: '/images/svg/forum.svg',
-      handleClick: () => switchBox(2),
+      handleClick: () => setActiveCourseTab('Discussion'),
       isHidden: videoData?.type === 'classroom'
     },
     {

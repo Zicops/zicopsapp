@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../customVideoPlayer.module.scss';
 
-export default function SubtitleBox({ subtitleState }) {
+export default function SubtitleBox({ subtitleState, isSubtitleDisplay = true }) {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [showSubtitles, setShowSubtitles] = subtitleState;
 
@@ -43,35 +43,37 @@ export default function SubtitleBox({ subtitleState }) {
         </div>
 
         {/* for topic content subtitles */}
-        <div>
-          <h4>
-            Subtitles
-            <SwitchButton
-              styles={{
-                marginLeft: '5px'
-              }}
-              isDisabled={!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length}
-              type={null}
-              isChecked={showSubtitles}
-              handleChange={() => setShowSubtitles(!showSubtitles)}
-              size="small"
-            />
-          </h4>
+        {!!isSubtitleDisplay && (
+          <div>
+            <h4>
+              Subtitles
+              <SwitchButton
+                styles={{
+                  marginLeft: '5px'
+                }}
+                isDisabled={!topicContent?.[currentTopicContentIndex]?.subtitleUrl?.length}
+                type={null}
+                isChecked={showSubtitles}
+                handleChange={() => setShowSubtitles(!showSubtitles)}
+                size="small"
+              />
+            </h4>
 
-          <section>
-            {topicContent &&
-              topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
-                <button
-                  key={s.language}
-                  className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''}`}
-                  onClick={() => {
-                    setVideoData({ ...videoData, currentSubtitleIndex: i });
-                  }}>
-                  {s.language}
-                </button>
-              ))}
-          </section>
-        </div>
+            <section>
+              {topicContent &&
+                topicContent[currentTopicContentIndex]?.subtitleUrl?.map((s, i) => (
+                  <button
+                    key={s.language}
+                    className={`${i === currentSubtitleIndex ? styles.languageBtnActive : ''}`}
+                    onClick={() => {
+                      setVideoData({ ...videoData, currentSubtitleIndex: i });
+                    }}>
+                    {s.language}
+                  </button>
+                ))}
+            </section>
+          </div>
+        )}
 
         {(videoData?.topicContent?.length ||
           topicContent[currentTopicContentIndex]?.subtitleUrl?.length) > 3 && (
