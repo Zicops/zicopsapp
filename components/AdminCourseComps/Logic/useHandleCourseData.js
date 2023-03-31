@@ -35,6 +35,8 @@ export default function useHandleCourseData() {
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const userData = useRecoilValue(UserStateAtom);
 
+  const [trainerCandidates, setTrainerCandidates] = useState([]);
+  const [moderatorCandidates, setModeratorCandidates] = useState([]);
   const [ownerList, setOwnerList] = useState(null);
 
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);

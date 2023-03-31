@@ -103,7 +103,11 @@ export function getClassroomMasterDataObj(data = {}) {
     updatedAt: data?.updatedAt || '',
     updatedBy: data?.updatedBy || '',
     status: data?.status || null,
-    isUpdate: data?.isUpdate || false
+    isUpdate: data?.isUpdate || false,
+    isEndDatedecided: data?.isEndDatedecided || false,
+    isStartDatedecided: data?.isStartDatedecided || false,
+    isTrainerdecided: data?.isTrainerdecided || false,
+    isModeratordecided: data?.isModeratordecided || false
   };
 }
 
