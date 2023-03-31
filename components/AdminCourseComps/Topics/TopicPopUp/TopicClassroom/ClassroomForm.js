@@ -1,11 +1,51 @@
+import useHandleCourseData from '@/components/AdminCourseComps/Logic/useHandleCourseData';
+import useHandleTopicClassroom from '@/components/AdminCourseComps/Logic/useHandleTopicClassroom';
 import InputTimePicker from '@/components/common/FormComponents/InputTimePicker';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import InputDatePicker from '@/components/common/InputDatePicker';
 import ZicopsButton from '@/components/common/ZicopsButton';
+import {
+  ClassroomMasterAtom,
+  CourseMetaDataAtom,
+  TopicClassroomAtom
+} from '@/state/atoms/courses.atom';
+import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 
-export default function ClassroomForm() {
+export default function ClassroomForm({ topData = {} }) {
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
+  const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const {
+    getTrainersAndModerators,
+    trainerCandidates,
+    moderatorCandidates,
+    handleClassroomMasterChange
+  } = useHandleCourseData();
+
+  const { handleTopicClassroomChange, addUpdateTopicClassroom } = useHandleTopicClassroom();
+
+  useEffect(() => {
+    if (trainers?.length || moderators?.length) return;
+    getTrainersAndModerators().then((data) => {
+      // console.log(data, 'sdasd');s
+    });
+  }, []);
+
+  let trainers = trainerCandidates?.map((user) => ({
+    name: user?.full_name,
+    isSelected: false,
+    email: user?.email,
+    user_id: user?.id
+  }));
+  let moderators = moderatorCandidates?.map((user) => ({
+    name: user?.full_name,
+    isSelected: false,
+    email: user?.email,
+    user_id: user?.id
+  }));
   return (
     <>
       {/* instructor and moderator */}
@@ -17,32 +57,65 @@ export default function ClassroomForm() {
             label: 'Instructor :',
             placeholder: 'Select or add trainer',
             isSearchEnable: true,
-            options: [],
-            value: null
+            isMulti: true,
+            options: trainers?.map((trainee, index) => ({
+              label: trainee.name,
+              value: trainee.name,
+              ...trainee
+            })),
+            value: !!classroomMaster?.trainers?.length
+              ? classroomMaster?.trainers?.map((trainee) => ({
+                  label: trainee?.value,
+                  value: trainee?.value,
+                  ...trainee
+                }))
+              : null
           }}
-          //   isLoading={!catSubCat?.isDataLoaded}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => {
-            // setActiveCatId(e);
-            // handleChange({ category: e?.value, subCategory: '' });
-          }}
+          changeHandler={(e) =>
+            handleClassroomMasterChange({
+              trainers: e?.map((item, index) => ({
+                value: item?.value,
+                email: item?.email,
+                user_id: item?.user_id
+              }))
+            })
+          }
         />
 
         <LabeledDropdown
-          //   isError={!courseMetaData?.subCategory?.length && error?.includes('subCategory')}
+          // isError={!courseMetaData?.category?.length && error?.includes('category')}
           dropdownOptions={{
             inputName: 'moderator',
             label: 'Moderator :',
-            placeholder: 'Select or add moderator',
+            placeholder: 'Select or add trainer',
             isSearchEnable: true,
-            options: [],
-            value: null
+            isMulti: true,
+            options: moderators?.map((mod, index) => ({
+              label: mod.name,
+              value: mod.name,
+              ...mod
+            })),
+            value: !!classroomMaster?.moderators?.length
+              ? classroomMaster?.moderators?.map((mod) => ({
+                  label: mod?.value,
+                  value: mod?.value,
+                  ...mod
+                }))
+              : null
           }}
-          //   isLoading={!catSubCat?.isDataLoaded}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          //   changeHandler={(e) => handleChange({ subCategory: e?.value })}
+          changeHandler={(e) =>
+            handleClassroomMasterChange({
+              moderators: e?.map((item, index) => ({
+                value: item?.value,
+                email: item?.email,
+                user_id: item?.user_id
+              }))
+            })
+          }
         />
       </div>
 
@@ -51,19 +124,12 @@ export default function ClassroomForm() {
         <section className={`w-100 ${styles.makeLabelInputColumnWise}`}>
           <label htmlFor="startDate">Training Start Date:</label>
           <InputDatePicker
-            // selectedDate={examTabData?.exam_start}
+            selectedDate={topicClassroom?.trainingStartTime}
             minDate={new Date()}
-            // changeHandler={(date) => {
-            //   const startDate = updateDate(date, examTabData?.exam_start);
-
-            //   const isNewDateAfterEnd = startDate > examTabData?.exam_end;
-
-            //   setExamTabData({
-            //     ...examTabData,
-            //     exam_start: startDate,
-            //     exam_end: isNewDateAfterEnd ? getTimeWithDuration(startDate) : examTabData?.exam_end
-            //   });
-            // }}
+            changeHandler={(date) => {
+              handleTopicClassroomChange({ trainingStartTime: date });
+            }}
+            // styleClass={`${styles.datePicker}`}
             // isDisabled={isPreview}
           />
         </section>
@@ -71,17 +137,11 @@ export default function ClassroomForm() {
         <section className={`w-100 ${styles.makeLabelInputColumnWise}`}>
           <label htmlFor="startTime">Training Start Time:</label>
           <InputTimePicker
-          // selected={examTabData?.exam_start}
-          // changeHandler={(date) => {
-          //   const endTime = updateTime(date, examTabData?.exam_start);
-
-          //   setExamTabData({
-          //     ...examTabData,
-          //     exam_start: endTime,
-          //     exam_end: getTimeWithDuration(endTime)
-          //   });
-          // }}
-          // isDisabled={isPreview}
+            selected={topicClassroom?.trainingStartTime}
+            changeHandler={(date) => {
+              handleTopicClassroomChange({ trainingStartTime: date });
+            }}
+            // isDisabled={isPreview}
           />
         </section>
       </div>
@@ -94,32 +154,48 @@ export default function ClassroomForm() {
             inputName: 'duration',
             label: 'Duration :',
             placeholder: '00',
-            value: '',
+            value: topicClassroom?.duration,
             // isDisabled: isDisabled,
-            isNumeric: true
+            isNumericOnly: true
           }}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+          changeHandler={(e) => handleTopicClassroomChange({ duration: e?.target?.value })}
         />
 
         <LabeledDropdown
-          //   isError={!courseMetaData?.subCategory?.length && error?.includes('subCategory')}
           dropdownOptions={{
             inputName: 'language',
             label: 'Language :',
             placeholder: 'Select language',
             isSearchEnable: true,
-            options: [],
-            value: null
+            menuPlacement: 'top',
+            isMulti: true,
+            options: !!courseMetaData?.language?.length
+              ? courseMetaData?.language?.map((lang) => ({ label: lang, value: lang }))
+              : null,
+            value: !!topicClassroom?.language?.length
+              ? topicClassroom?.language?.map((lang) => ({ label: lang, value: lang }))
+              : null
+            // isDisabled: isDisabled
           }}
-          //   isLoading={!catSubCat?.isDataLoaded}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          //   changeHandler={(e) => handleChange({ subCategory: e?.value })}
+          changeHandler={(e) =>
+            handleTopicClassroomChange({ language: e?.map((item) => item?.value) })
+          }
         />
       </div>
 
-      <ZicopsButton display={'Add'} float="right" padding="0.5em 1em" />
+      <ZicopsButton
+        display={'Add'}
+        float="right"
+        padding="0.5em 1em"
+        handleClick={() => {
+          console.log(topData);
+
+          addUpdateTopicClassroom(topData?.id);
+        }}
+      />
     </>
   );
 }
