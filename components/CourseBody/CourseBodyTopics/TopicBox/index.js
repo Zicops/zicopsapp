@@ -560,12 +560,14 @@ export default function TopicBox({
 
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
-              {!isDocument && (
+              {!isDocument ? (
                 <div className={`${styles.progress_bar}`}>
                   <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
                     {/* <img src="images/progressTriangle.png" alt="" /> */}
                   </div>
                 </div>
+              ) : (
+                <div className={`${styles.startReading}`}>Start Reading</div>
               )}
               <div className={`${styles.details}`}>
                 <div>{isDocument ? 'Document' : 'e-Content'}</div>
