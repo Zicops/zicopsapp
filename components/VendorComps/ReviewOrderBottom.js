@@ -21,7 +21,9 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
               <LabeledDropdown
                 dropdownOptions={{
                   inputName: 'percentage',
-                  placeholder: '%'
+                  placeholder: '%',
+                  value: { label: '%', value: '%' },
+                  options: [{ label: '%', value: '%' }]
                 }}
               />
             </div>
@@ -29,7 +31,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
         </div>
         <div>
           <p>
-            {subtotal} {orderData?.currency}
+            {orderData?.total} {orderData?.currency}
           </p>
           {isTax && !isShowTax && (
             <div className={`${styles.taxAdd}`} onClick={onShowTaxHandler}>
@@ -42,7 +44,8 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
               inputOptions={{
                 inputName: 'tax',
                 value: orderData?.tax,
-                isNumericOnly: true
+                isNumericOnly: true,
+                placeholder: '0'
               }}
               inputClass={`${styles.taxValue}`}
               changeHandler={(e) => {
@@ -61,7 +64,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
         <p>
-          {grossTotal} {orderData?.currency}
+          {orderData?.grossTotal} {orderData?.currency}
         </p>
       </div>
     </div>
