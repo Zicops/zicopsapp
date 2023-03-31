@@ -25,13 +25,16 @@ export default function CourseHead({
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
+  const disabledList = [2];
+  if (!isDev) disabledList.push(1);
+
   const options = Array(COURSE_TYPES?.length)
     .fill(null)
     .map((v, i) => {
       return {
         value: COURSE_TYPES[i],
         label: snakeCaseToTitleCase(COURSE_TYPES[i]),
-        isDisabled: [2].includes(i)
+        isDisabled: disabledList.includes(i)
       };
     });
   // const options = [

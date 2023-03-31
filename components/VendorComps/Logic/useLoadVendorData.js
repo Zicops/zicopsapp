@@ -62,10 +62,12 @@ export default function useLoadVendorData() {
       { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: filters },
       {},
       userQueryClient
-    ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }));
+    ).catch((err) => setToastMsg({ type: 'danger', message: 'Vendor Data Load Error' }));
 
-    if (vendorList.error || !vendorList?.getPaginatedVendors?.vendors) {
-      setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' });
+    if (!vendorList?.getPaginatedVendors?.vendors) return [];
+
+    if (vendorList.error) {
+      setToastMsg({ type: 'danger', message: 'Vendor Data Load Error' });
       return [];
     }
 

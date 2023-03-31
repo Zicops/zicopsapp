@@ -6,6 +6,7 @@ import {
   ONE_MB_IN_BYTES,
   VIDEO_FILE_TYPES
 } from '@/helper/constants.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { courseErrorAtom } from '@/state/atoms/module.atoms';
 import { useContext } from 'react';
@@ -148,7 +149,7 @@ export default function CourseDetails() {
             handleFileUpload={handleChange}
             handleRemove={() => removeSavedFile('uploadCourseVideo')}
             previewData={{
-              fileName: fileData.uploadCourseVideo,
+              fileName: getEncodedFileNameFromUrl(fileData.uploadCourseVideo),
               filePath: courseVideo?.file || fullCourse.previewVideo,
               isVideo: true
             }}
@@ -163,7 +164,7 @@ export default function CourseDetails() {
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
-          {truncateToN(fileData.uploadCourseVideo, 55)}
+          {truncateToN(getEncodedFileNameFromUrl(fileData.uploadCourseVideo), 55)}
         </div>
       </div>
 
@@ -175,7 +176,7 @@ export default function CourseDetails() {
             handleFileUpload={handleChange}
             handleRemove={() => removeSavedFile('uploadCourseImage')}
             previewData={{
-              fileName: fileData.uploadCourseImage,
+              fileName: getEncodedFileNameFromUrl(fileData.uploadCourseImage),
               filePath: courseTileImage?.file || fullCourse.tileImage
             }}
             isError={!(courseTileImage?.file || fullCourse.tileImage) && courseError?.details}
@@ -188,7 +189,7 @@ export default function CourseDetails() {
           />
         </div>
         <div className={`w-50 ${styles.fileName}`}>
-          {truncateToN(fileData.uploadCourseImage, 55)}
+          {truncateToN(getEncodedFileNameFromUrl(fileData.uploadCourseImage), 55)}
         </div>
       </div>
 
@@ -200,7 +201,7 @@ export default function CourseDetails() {
             handleFileUpload={handleChange}
             handleRemove={() => removeSavedFile('myfile')}
             previewData={{
-              fileName: fileData.myfile,
+              fileName: getEncodedFileNameFromUrl(fileData.myfile),
               filePath: courseImage?.file || fullCourse.image
             }}
             isError={!(courseImage?.file || fullCourse.image) && courseError?.details}
@@ -212,7 +213,9 @@ export default function CourseDetails() {
             removeTooltipTitle={ADMIN_COURSES.myCourses.details.removeCoursePicture}
           />
         </div>
-        <div className={`w-50 ${styles.fileName}`}>{truncateToN(fileData.myfile, 55)}</div>
+        <div className={`w-50 ${styles.fileName}`}>
+          {truncateToN(getEncodedFileNameFromUrl(fileData.myfile), 55)}
+        </div>
       </div>
 
       {/* Course Summary */}

@@ -55,6 +55,9 @@ export default function AddTopicContentForm({
   // .WEBM, .MPG, .MP2, .MPEG, .MPE, .MPV, .OGG, .MP4, .M4P, .M4V, .AVI, .WMV, .MOV, .QT, .FLV, .SWF, AVCHD,
   if (newTopicContent?.type === types[3]) acceptedFiles = ['.mp4'].join(', ');
 
+  const maxFileSize =
+    newTopicContent?.type === 'document' ? LIMITS.documentFile : LIMITS.topicVideoSize;
+
   return (
     <div className={`${styles.popUpFormContainer}`}>
       {/* is default */}
@@ -106,18 +109,16 @@ export default function AddTopicContentForm({
                   display: 'flex',
                   justifyContent: 'flex-end'
                 }}>
-                Max: {Math.ceil(LIMITS.topicVideoSize / ONE_MB_IN_BYTES)} Mb
+                Max: {Math.ceil(maxFileSize / ONE_MB_IN_BYTES)} Mb
               </small>
               <BrowseAndUpload
                 handleFileUpload={(e) => {
                   const file = e.target.files?.[0];
 
-                  if (file?.size > LIMITS.topicVideoSize)
+                  if (file?.size > maxFileSize)
                     return setToastMsg({
                       type: 'danger',
-                      message: `File Size limit is ${Math.ceil(
-                        LIMITS.topicVideoSize / ONE_MB_IN_BYTES
-                      )} mb`
+                      message: `File Size limit is ${Math.ceil(maxFileSize / ONE_MB_IN_BYTES)} mb`
                     });
 
                   if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);

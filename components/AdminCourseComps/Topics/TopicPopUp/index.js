@@ -35,6 +35,7 @@ export default function TopicPopUp({
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
   const isClassroom = topicData?.type === TOPIC_TYPES.classroom;
+  const isContent = topicData?.type === TOPIC_TYPES.content;
 
   return (
     <>
@@ -70,7 +71,7 @@ export default function TopicPopUp({
                 />
               )}
 
-              {topicData?.type === TOPIC_TYPES.content && (
+              {isContent && (
                 <TopicContent topData={topicData} closePopUp={() => setConfirmClose(true)} />
               )}
 
@@ -84,20 +85,22 @@ export default function TopicPopUp({
           )}
         </div>
 
-        <div className="center-element-with-flex">
-          <ZicopsButton
-            customClass={styles.addTopicFormBtn}
-            handleClick={() => setConfirmClose(true)}
-            isDisabled={isSubmitDisabled}
-            display="Cancel"
-          />
-          <ZicopsButton
-            customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
-            isDisabled={!topicContentList?.length || isSubmitDisabled}
-            handleClick={handleSubmit}
-            display={'Design'}
-          />
-        </div>
+        {!!(isContent && topicData?.id) && (
+          <div className="center-element-with-flex">
+            <ZicopsButton
+              customClass={styles.addTopicFormBtn}
+              handleClick={() => setConfirmClose(true)}
+              isDisabled={isSubmitDisabled}
+              display="Cancel"
+            />
+            <ZicopsButton
+              customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
+              isDisabled={!topicContentList?.length || isSubmitDisabled}
+              handleClick={handleSubmit}
+              display={'Design'}
+            />
+          </div>
+        )}
       </PopUp>
 
       {!!confimClose && (
