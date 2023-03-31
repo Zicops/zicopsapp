@@ -142,7 +142,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profile',
-      component: <ProfileVendor profileData={vendorProfileData} />,
+      component: <ProfileVendor profileData={vendorProfileData || []} />,
       isHidden: isIndividual
     },
     {
