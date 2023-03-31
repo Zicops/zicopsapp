@@ -159,10 +159,12 @@ export default function About() {
                 <LabeledRadioCheckbox
                   type="checkbox"
                   label={''}
-                  value={''}
-                  isChecked={''}
-                  isDisabled={isDisabled}
-                  // changeHandler={}
+                   // value={''}
+                   isChecked={classroomMaster?.isTrainerdecided}
+                   // isDisabled={''}
+                   changeHandler={(e) => {
+                     handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
+                   }}
                 />
                 <label>To be Decided</label>
               </div>
@@ -219,10 +221,12 @@ export default function About() {
                 <LabeledRadioCheckbox
                   type="checkbox"
                   label={''}
-                  value={''}
-                  isChecked={''}
-                  isDisabled={isDisabled}
-                  // changeHandler={}
+                  // value={''}
+                  isChecked={classroomMaster?.isModeratordecided}
+                  // isDisabled={''}
+                  changeHandler={(e) => {
+                    handleClassroomMasterChange({ isModeratordecided: e?.target?.checked });
+                  }}
                 />
                 <label>To be Decided</label>
               </div>
@@ -246,11 +250,12 @@ export default function About() {
               <div className={`${styles.aboutCheckbox}`}>
                 <LabeledRadioCheckbox
                   type="checkbox"
-                  label={''}
-                  value={''}
-                  isChecked={''}
-                  isDisabled={isDisabled}
-                  // changeHandler={}
+                  // value={isTrue}
+                  isChecked={classroomMaster?.isStartDatedecided}
+                  // isDisabled={''}
+                  changeHandler={(e) => {
+                    handleClassroomMasterChange({ isStartDatedecided: e?.target?.checked });
+                  }}
                 />
                 <label>To be Decided</label>
               </div>
@@ -273,10 +278,13 @@ export default function About() {
                 <LabeledRadioCheckbox
                   type="checkbox"
                   label={''}
-                  value={''}
-                  isChecked={''}
-                  isDisabled={isDisabled}
-                  // changeHandler={}
+                 // value={isTrue}
+                 isChecked={classroomMaster?.isEndDatedecided}
+                 // isDisabled={''}
+                 changeHandler={(e) => {
+                   console.log(e.target.checked,'sd');
+                   handleClassroomMasterChange({ isEndDatedecided: e?.target?.checked });
+                 }}
                 />
                 <label>To be Decided</label>
               </div>

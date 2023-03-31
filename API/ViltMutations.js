@@ -34,6 +34,10 @@ export const CREATE_VILT_DATA = gql`
       course_start_date
       course_end_date
       curriculum
+      is_end_date_decided
+      is_start_date_decided
+      is_trainer_decided
+      is_moderator_decided
       created_at
       created_by
       updated_at
@@ -56,7 +60,7 @@ export const CREATE_VILT_DATA = gql`
 // }
 export const UPDATE_VILT_DATA = gql`
   mutation updateViltData($input: ViltInput) {
-      updateViltData(input: $input) {
+    updateViltData(input: $input) {
       id
       lsp_id
       course_id
@@ -66,6 +70,10 @@ export const UPDATE_VILT_DATA = gql`
       course_start_date
       course_end_date
       curriculum
+      is_end_date_decided
+      is_start_date_decided
+      is_trainer_decided
+      is_moderator_decided
       created_at
       created_by
       updated_at

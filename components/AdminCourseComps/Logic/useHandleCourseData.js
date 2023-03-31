@@ -265,7 +265,11 @@ export default function useHandleCourseData() {
         updatedAt: viltData?.updated_at,
         updatedBy: viltData?.updated_by,
         status: viltData?.status,
-        isUpdate: true
+        isUpdate: true,
+        isEndDatedecided:!viltData?.is_end_date_decided,
+        isStartDatedecided:!viltData?.is_start_date_decided,
+        isTrainerdecided:!viltData?.is_trainer_decided,
+        isModeratordecided:!viltData?.is_moderator_decided
       })
     );
   }

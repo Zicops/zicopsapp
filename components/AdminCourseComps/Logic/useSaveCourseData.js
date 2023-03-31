@@ -103,7 +103,11 @@ export default function useSaveCourseData() {
       curriculum: classroomMaster?.curriculum || '',
       status: CLASSROOM_MASTER_STATUS?.save,
       trainers: trainers,
-      moderators: moderators
+      moderators: moderators,
+      is_end_date_decided: !classroomMaster?.isEndDatedecided,
+      is_start_date_decided: !classroomMaster?.isStartDatedecided,
+      is_trainer_decided: !classroomMaster?.isTrainerdecided,
+      is_moderator_decided: !classroomMaster?.isModeratordecided
     });
 
     if (!!classroomMaster?.id) {
@@ -125,7 +129,7 @@ export default function useSaveCourseData() {
       viltMutationClient
     ).catch(() => setToastMessage('Classroom Create Error!'));
 
-    setClassroomMaster((prev) => ({ ...prev, isUpdate: true , id: res?.createViltData?.id}));
+    setClassroomMaster((prev) => ({ ...prev, isUpdate: true, id: res?.createViltData?.id }));
 
     return res?.createViltData || null;
   }
