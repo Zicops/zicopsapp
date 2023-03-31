@@ -207,3 +207,33 @@ export function getTopicResourcesObject(data) {
     isNew: data?.isNew || null
   };
 }
+
+export const TopicClassroomAtom = atom({
+  key: 'TopicClassroom',
+  default: getTopicClassroomObject()
+});
+
+export function getTopicClassroomObject(data = {}) {
+  return {
+    id: data?.id || null,
+    topicId: data?.topicId || '',
+    trainers: data?.trainers || [],
+    moderators: data?.moderators || [],
+    trainingStartTime: data?.trainingStartTime || '',
+    trainingEndTime: data?.trainingEndTime || '',
+    duration: data?.duration || '00',
+    breaktime: data?.breaktime || '',
+    language: data?.language || [],
+    isScreenShareEnabled: data?.isScreenShareEnabled || false,
+    isChatEnabled: data?.isChatEnabled || false,
+    isMicrophoneEnabled: data?.isMicrophoneEnabled || false,
+    isQaEnabled: data?.isQaEnabled || false,
+    isCameraEnabled: data?.isCameraEnabled || false,
+    isOverrideConfig: data?.isOverrideConfig || false,
+    createdAt: data?.createdAt || '',
+    createdBy: data?.createdBy || '',
+    updatedAt: data?.updatedAt || '',
+    updatedBy: data?.updatedBy || '',
+    status: data?.status || ''
+  };
+}
