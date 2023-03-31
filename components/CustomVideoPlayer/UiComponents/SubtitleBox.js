@@ -1,4 +1,5 @@
 import SwitchButton from '@/components/common/FormComponents/SwitchButton';
+import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { VideoAtom } from '@/state/atoms/video.atom';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
@@ -19,7 +20,7 @@ export default function SubtitleBox({ subtitleState, isSubtitleDisplay = true })
       <div className={`${styles.languageList}`}>
         {/* for topic content language  */}
         <div>
-          <h4>Audio </h4>
+          <h4>{videoData?.type === TOPIC_CONTENT_TYPES.document ? 'Language' : 'Audio'} </h4>
 
           <section className="h-80">
             {videoData?.topicContent &&
