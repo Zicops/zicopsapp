@@ -1751,15 +1751,18 @@ export const CREATE_SAMPLE_FILE = gql`
       name
       fileType
       price
+      p_type
+      description
       file_url
-      rate
-      currency
-      unit
       created_at
       created_by
       updated_at
       updated_by
       status
+      rate
+      currency
+      unit
+      actualFileType
     }
   }
 `;

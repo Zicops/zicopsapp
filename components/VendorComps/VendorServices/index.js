@@ -29,6 +29,7 @@ export default function VendorServices({ data, type = 'sme' }) {
           rate: file?.rate,
           currency: file?.currency,
           unit: file?.unit,
+          description: file?.description,
           actualFileType: file?.actualFileType
         }))
       ) || [];
