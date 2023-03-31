@@ -56,17 +56,17 @@ const VcMaintool = () => {
   useEffect(() => {
     if(isMeetingStarted){
       if (meetingIconsAtom?.isStartAdd) {
-        api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+        api?.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
       }
       else if (!meetingIconsAtom?.isStartAdd) {
-        api.executeCommand('stopShareVideo');
+        api?.executeCommand('stopShareVideo');
       }
     }
-  })
+  },[meetingIconsAtom?.isStartAdd])
   const startName = userData?.first_name + " " + userData?.last_name
   return (
     <div ref={fullScreenRef}>
-      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}></div>
+      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
       {toolbar && (
         <MainToolbar
           setAudio={() => {
@@ -174,6 +174,7 @@ const VcMaintool = () => {
           }}
            />
       )}
+      </div>
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.mainCard}`}>
         {/* all components ara going to append here */}

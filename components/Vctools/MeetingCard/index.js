@@ -72,13 +72,13 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            if (meetingInfo.length <=1) {
-                                setMeetingIconAtom({
-                                    ...meetingIconsAtom,
-                                    isJoinedAsModerator: true,
-                                    isStartAdd: true,
-                                })
-                            }
+                            // if (meetingInfo.length <=1) {
+                            //     setMeetingIconAtom({
+                            //         ...meetingIconsAtom,
+                            //         isJoinedAsModerator: true,
+                            //         isStartAdd: true,
+                            //     })
+                            // }
 
                         }}>
                             Join as a moderator
@@ -87,13 +87,13 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                         <button onClick={() => {
                             startMeeting()
                             StopVideo(video, videoref)
-                            if (meetingInfo.length <=1) {
-                                setMeetingIconAtom({
-                                    ...meetingIconsAtom,
-                                    // isJoinedAsModerator: true,
-                                    isStartAdd: true,
-                                })
-                            }
+                            // if (meetingInfo.length <=1) {
+                            //     setMeetingIconAtom({
+                            //         ...meetingIconsAtom,
+                            //         // isJoinedAsModerator: true,
+                            //         isStartAdd: true,
+                            //     })
+                            // }
                            
                         }}>
                             Join
