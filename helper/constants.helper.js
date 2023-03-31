@@ -172,6 +172,7 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
   previewVideo: ONE_MB_IN_BYTES * 50,
+  documentFile: ONE_MB_IN_BYTES * 25,
   // remove previewVideoSize later
   previewVideoSize: ONE_MB_IN_BYTES * 50,
   topicVideoSize: ONE_MB_IN_BYTES * 500,
