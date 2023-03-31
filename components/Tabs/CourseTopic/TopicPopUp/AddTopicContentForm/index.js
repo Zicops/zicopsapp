@@ -127,9 +127,7 @@ export default function AddTopicContentForm({
                 }}
                 inputName="upload_content"
                 isActive={newTopicVideo.file}
-                acceptedTypes={
-                  newTopicContent?.type === 'document' ? '.pdf, .ppt, .pptx' : acceptedFiles
-                }
+                acceptedTypes={newTopicContent?.type === 'document' ? '.pdf' : acceptedFiles}
                 hidePreviewBtns={true}
               />
             </div>
