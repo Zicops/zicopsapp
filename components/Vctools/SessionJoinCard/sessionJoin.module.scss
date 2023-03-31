@@ -38,7 +38,7 @@
   width: 150px;
   display: flex;
   justify-content: flex-end;
-  margin-left: 22px;
+  margin-left: 47px;
 }
 .meetingduration :first-child {
   font-weight: 400;
@@ -62,4 +62,32 @@
   border: none;
   background-color: #272b30;
   border-radius: 4px;
+}
+.meetingLive {
+  color: #f53d41;
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    height: 15px;
+    width: 20px;
+    height: 22px;
+    width: 27px;
+    margin-left: 8px;
+  }
+}
+.sessionEnd {
+  font-weight: 500;
+  font-size: 16px;
+  color: #f6ac3c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    height: 22px;
+    width: 27px;
+    margin-left: 8px;
+  }
 }
