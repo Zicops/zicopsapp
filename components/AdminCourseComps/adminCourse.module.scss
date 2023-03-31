@@ -1,0 +1,669 @@
+// styling couse master
+.inputName {
+    flex-direction: column;
+    &label
+    {
+        width: 50%
+    }
+}
+.inputName>input {
+    width: 100%;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
+.inputName>input::placeholder {
+    font-size: 14px;
+}
+
+.lableDropdown {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.radioBox {
+    color: #747474;
+}
+
+.lableSubDropdown {
+    width: 49%;
+}
+
+.lableInput {
+    border-radius: 5px;
+}
+
+.expertiseHead {
+    margin-top: 12px;
+}
+
+.expertise {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    color: #747474;
+}
+
+
+.lableInputNum>input {
+    height: 2.4rem;
+}
+
+.settingControls {
+    display: flex;
+    margin-top: 16px;
+    justify-content: space-between;
+}
+
+.settingControls>div {
+    width: 49%;
+    // padding-left: 10px;
+}
+
+.settingControlsInput {
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+    margin-top: 12px;
+    color: #747474;
+}
+
+.settingControlsInput>input {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+}
+
+.settingControlsInput>div {
+    font-size: 16px;
+    color: #747474;
+}
+
+.settingControlHead {
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.courseMasterBtn {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.courseMasterBtn>button {
+    width: 87px;
+    height: 48px;
+    background-color: #6BCFCF;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: #040404;
+    border-radius: 4px;
+}
+
+// styling Details tap
+.additionalsubCategory {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.button1>img {
+    display: none;
+}
+
+.button1 {
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    line-height: 250px;
+    width: 100%;
+    // border: 15px red dotted;
+}
+
+.detailsSearchDropdown {
+    width: 40%;
+}
+
+.detailDropdownSection {
+    width: 40%;
+    height: 260px;
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    // background-color: #040404;
+    align-items: center;
+}
+
+.detailDropDownfile>button {
+    display: none;
+    outline: none;
+    border: none;
+}
+
+.detailDropDownfile {
+    width: 100%;
+    height: 100%;
+    // border: 2px red dashed;
+}
+
+.detailDropDownfile>div {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: #ACACAC;
+}
+
+.detailDropDown {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    color: #747474;
+    margin-top: 100px;
+}
+
+.detailDropDown>div {
+    text-align: center;
+}
+
+.detailDropDown>img {
+    width: 40px;
+    height: 44px;
+}
+
+.courseSummery {
+    margin-top: 12px;
+}
+
+.UploadCoursePreview {
+    margin-top: 12px;
+}
+
+.uploadCoursePreviewImage {
+    color: #747474;
+}
+
+.coursePageTitle {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.coursePageTitle>div {
+    width: 49%;
+}
+
+.courseDetailNextrBtn {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.courseDetailNextrBtn>button {
+    width: 87px;
+    height: 48px;
+    background: #6BCFCF;
+    border-radius: 4px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+// styling About page
+.lableDropdown {
+    border: none;
+
+}
+
+.aboutHead {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    margin-bottom: 16px;
+}
+
+.aboutInputTrainerModerator {
+    display: flex;
+    justify-content: space-between;
+}
+
+.aboutInputTrainerModerator>div {
+    width: 49%;
+}
+
+.aboutTrainer2 {
+    display: flex;
+    justify-content: space-between;
+    // width: 49%;
+    height: 25px;
+}
+
+.moderatorDropdown {
+    display: flex;
+}
+
+.droper {
+    display: flex;
+    flex-direction: column;
+    width: 95px;
+    height: 96px;
+    position: absolute;
+    top: 130px;
+    right: 70px;
+    justify-content: space-around;
+    z-index: 1000;
+    background-color: black;
+}
+
+.changeModeratorbtn {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+.droper>button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: white;
+}
+
+.aboutDatePicker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.datePicker {
+    width: 100%;
+
+}
+
+.datePicker>input {
+    border: solid black 2px;
+}
+
+.aboutDatePicker>div {
+    width: 49%;
+}
+
+.aboutCheckbox {
+    width: 50%;
+    margin-top: 10px;
+    display: flex;
+    line-height: 24px;
+
+}
+
+.aboutCheckbox>label {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #747474;
+}
+
+.totalDurationLable {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.totalDurationLable>div {
+    width: 49%;
+}
+
+.inputName1 {
+    flex-direction: column;
+    width: 100%;
+}
+
+.inputName1 ::placeholder {
+    font-size: 16px;
+}
+
+.durationLabel {
+    color: #747474;
+    font-size: 18px;
+}
+
+.courseDiscription {
+    margin-top: 16px;
+}
+
+.durationDiscription {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    color: #484848;
+}
+
+.courseOutcome {
+    margin-top: 16px;
+}
+
+.courseHighlights {
+    margin-top: 16px;
+}
+
+.aboutInputContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.aboutInputContainer>div {
+    width: 49%;
+}
+
+.aboutCurriculum {
+    margin-top: 16px;
+}
+
+.aboutNextBtn {
+    display: flex;
+    justify-content: right;
+    border-radius: 4px;
+}
+
+.aboutNextBtn>button {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    background: #6BCFCF;
+    font-size: 18px;
+    width: 87px;
+    height: 48px;
+    line-height: 28px;
+    color: #040404;
+}
+
+// styling configuration tab
+.configurationContainer {
+    width: 100%;
+    display: grid;
+}
+
+.configurationHead {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+    margin-bottom: 14px;
+}
+
+.cofigurationSettingLabel {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    color: #ACACAC;
+    margin-bottom: 14px;
+}
+
+.configurationCourseContainer {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.configurationCourseContainer>div {
+    width: 49%;
+}
+
+.configSettingContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.registrationBox>label {
+    width: 100%;
+    margin: 0;
+    height: 100px;
+    margin-right: 8px;
+
+}
+
+.registrationBox {
+    margin-right: 8px;
+    width: 100%;
+}
+
+.bookingBox>label {
+    width: 100%;
+    margin: 0;
+    height: 100px;
+    margin-left: 8px;
+}
+
+.bookingBox {
+    width: 100%;
+    margin-left: 8px;
+}
+
+.frizeCourse {
+    margin-top: 14px;
+    width: 100%;
+}
+
+.frizeCourse>label {
+    margin: 0;
+    width: 49%;
+}
+
+.configurationDetailhead {
+    margin-top: 14px;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.configDetailContainer {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+// styling details box of configuration
+.detailsBoxContainer {
+    display: flex;
+    height: 40px;
+    width: 500px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.detailsImgBox {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    border: solid #484848 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detailsInfo>label {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #ACACAC;
+}
+
+
+
+//  styling Topic contains
+.resourceAddBtn
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+ .resourceTypeContainer {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+  .flexCenterWithGap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  .topicContentSmallBtn {
+    min-width: 100px;
+    width: 100px;
+    padding: 8px 10px;
+  }
+  .resourceBtns
+  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 12px;
+  }
+  
+  //styling Binge
+
+  
+  .bingeContainer {
+    display: flex;
+    align-items: center;
+  
+    .bingeform {
+      width: 60%;
+      .bingeSetting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+  
+        .bingeSettingTitle {
+          font-size: 16px;
+          color: $primary;
+          width: 25%;
+        }
+        .bingeSettingBody {
+          width: 75%;
+          padding: 10px;
+        }
+      }
+    }
+  }
+  
+  .newline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  
+    input {
+      padding: 0 3px;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid $white;
+      width: 22px;
+      margin: 5px 0px;
+  
+      background-color: transparent;
+      color: $white;
+    }
+  
+    input:focus {
+      outline: 0;
+      background-color: $darkTwo;
+      box-shadow: none;
+    }
+    .durationvalue {
+      width: 40px;
+    }
+  }
+  .label {
+    min-width: 80px;
+    font-size: 12px;
+  }
+  .after {
+    min-width: 80px;
+    color: #868f8f;
+    font-size: 12px;
+    margin-left: 20px;
+  }
+  .video_preview {
+    height: 150px;
+    display: flex;
+  }
+  .fromEnd {
+    display: flex;
+    justify-content: center;
+    margin-left: 25%;
+  }
+  .checkbox_label {
+    font-size: 18px;
+    color: #ffffff;
+    margin: auto;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .checkbox_container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-top: -10px;
+    cursor: pointer;
+    font-size: 11px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
+
+
+//   styling Quiz 
+.editQuizBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  
+    .editQuiz {
+      height: 20px;
+      cursor: pointer;
+  
+      img {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }

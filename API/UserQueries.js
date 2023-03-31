@@ -1031,6 +1031,7 @@ export const GET_SAMPLE_FILES = gql`
       fileType
       price
       file_url
+      description
       rate
       currency
       unit

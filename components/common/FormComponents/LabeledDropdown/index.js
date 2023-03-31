@@ -11,6 +11,7 @@ export default function LabeledDropdown({
   changeHandler,
   filterOption,
   isFiftyFifty = false,
+  isFullWidth = false,
   customDropdownStyles = {},
   isCreateable = false
 }) {
@@ -31,7 +32,7 @@ export default function LabeledDropdown({
   if (isReadonly) isDisabled = true;
 
   let containerWidth = '75%';
-  if (!label) containerWidth = '100%';
+  if (!label || isFullWidth) containerWidth = '100%';
 
   let selectedValue = null;
   if (value?.value) selectedValue = value;

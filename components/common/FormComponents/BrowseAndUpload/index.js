@@ -1,4 +1,5 @@
 import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
+import { isWordIncluded } from '@/helper/utils.helper';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
@@ -63,11 +64,16 @@ export default function BrowseAndUpload({
           accept={acceptedTypes}
           disabled={isDisabled}
           onChange={(e) => {
-            let fileTypes = acceptedTypes
+            const fileTypes = acceptedTypes
               ?.split(', ')
               ?.map((t) => t?.trim()?.replace(/(\r\n|\n|\r)/gm, ''));
-
-            if (e.target.value && !fileTypes?.some((t) => e.target.value?.includes(t))) {
+            const fileName = e.target.value || '';
+            if (
+              !(
+                (fileName && fileTypes?.some((t) => isWordIncluded(fileName, t))) ||
+                isWordIncluded(acceptedTypes, e?.target?.files?.[0]?.type)
+              )
+            ) {
               return setToastMsg({
                 type: 'danger',
                 message: `Accepted file types are ${acceptedTypes}`

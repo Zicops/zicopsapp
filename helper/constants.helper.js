@@ -171,6 +171,8 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
+  previewVideo: ONE_MB_IN_BYTES * 50,
+  // remove previewVideoSize later
   previewVideoSize: ONE_MB_IN_BYTES * 50,
   topicVideoSize: ONE_MB_IN_BYTES * 500,
   questionOptionSize: ONE_MB_IN_BYTES * 250,
@@ -237,6 +239,9 @@ export const VENDOR_SERVICES_TYPE = {
 export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
 
 export const FILE_TYPES = {
+  coursePreviewVideo: 'video/mp4',
+  courseDisplayImage: '.jpg, .jpeg, .png, .gif,',
+  courseTileImage: '.jpg, .jpeg, .png, .gif,',
   vendorSampleFiles: [
     '.zip',
     '.rar',
