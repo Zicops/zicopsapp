@@ -295,8 +295,10 @@ export function getDateTimeFromUnix(unixTimestamp) {
   return `${d.toLocaleString()}`;
 }
 
-export function isWordIncluded(sentence = '', word = '') {
-  return sentence?.trim()?.toLowerCase()?.includes(word?.trim()?.toLowerCase());
+export function getDateObjFromUnix(unixTimestamp) {
+  if (!+unixTimestamp) return null;
+
+  return new Date(unixTimestamp * 1000);
 }
 
 export function isWordSame(firstWord = '', secondWord = '') {

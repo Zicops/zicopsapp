@@ -24,6 +24,8 @@ export default function AddTopicForm({
     );
   }
 
+  const isTypeDisabled = [COURSE_TYPES.testSeries]?.includes(courseMetaData.type);
+
   return (
     <>
       <div className={`${styles.addTopicForm}`}>
@@ -62,7 +64,7 @@ export default function AddTopicForm({
               options: types,
               menuPlacement: 'top',
               value: topicData?.type ? { value: topicData.type, label: topicData.type } : null,
-              isDisabled: courseMetaData.type !== COURSE_TYPES.selfPaced
+              isDisabled: isTypeDisabled
             }}
             changeHandler={(e) => setTopicData({ ...topicData, type: e.value })}
           />

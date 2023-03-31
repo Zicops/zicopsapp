@@ -1,12 +1,33 @@
+import useHandleTopicClassroom from '@/components/AdminCourseComps/Logic/useHandleTopicClassroom';
+import ZicopsButton from '@/components/common/ZicopsButton';
+import { TopicClassroomAtom } from '@/state/atoms/courses.atom';
+import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import ClassroomForm from './ClassroomForm';
 
-export default function TopicClassroom({topData = {}}) {
+export default function TopicClassroom({ topData = null, closePopUp = () => {} }) {
+  const topicClassroom = useRecoilValue(TopicClassroomAtom);
+
+  const {
+    isSubmitDisabled,
+    accordionOpenState,
+    setAccordionOpenState,
+    handleTopicClassroomChange,
+    addUpdateTopicClassroom
+  } = useHandleTopicClassroom(topData);
+
   const topicAccordians = [
     {
+      id: 1,
       title: 'Classroom',
-      body: <ClassroomForm topData = { topData }/>
+      body: (
+        <ClassroomForm
+          handleChange={handleTopicClassroomChange}
+          closeAccordion={() => setAccordionOpenState(1)}
+          topData={topData}
+        />
+      )
     },
     {
       title: 'Quizzes',
@@ -30,10 +51,28 @@ export default function TopicClassroom({topData = {}}) {
     <>
       <div className={styles.editTopicAccordianContainer}>
         {topicAccordians.map((item) => (
-          <TopicAccordian key={item?.title} title={item.title}>
+          <TopicAccordian
+            key={item?.title}
+            title={item.title}
+            isOpen={accordionOpenState === item?.id ? false : null}>
             {item.body}
           </TopicAccordian>
         ))}
+      </div>
+
+      <div className="center-element-with-flex">
+        <ZicopsButton
+          customClass={styles.addTopicFormBtn}
+          handleClick={closePopUp}
+          isDisabled={isSubmitDisabled}
+          display="Cancel"
+        />
+        <ZicopsButton
+          customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
+          isDisabled={isSubmitDisabled}
+          handleClick={addUpdateTopicClassroom}
+          display={!!topicClassroom?.id ? 'Update' : 'Save'}
+        />
       </div>
     </>
   );
