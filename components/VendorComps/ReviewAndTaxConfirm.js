@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ReviewOrderTop from './ReviewOrderTop';
 import ReviewOrderBottom from './ReviewOrderBottom';
@@ -38,8 +38,6 @@ const ReviewAndTaxConfirm = () => {
     setOrderData({ ...orderData, total: subtotal, grossTotal: grossTotal });
   }, [servicesData]);
 
-  console.info('orderData', orderData);
-  console.info('servicesData', servicesData);
   return (
     <div>
       <p className={`${styles.addLineText}`}>Confirm</p>

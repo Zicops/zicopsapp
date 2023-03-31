@@ -54,7 +54,7 @@ export default function VendorInfo() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices, services, getVendorServices } = useHandleMarketYard();
+  const { addUpdateServices, services, getVendorServices, addUpdateOrder } = useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -133,14 +133,15 @@ export default function VendorInfo() {
     setShowPopup(true);
   };
 
-  const addRateHandler = () => {
+  const addRateHandler = async () => {
     setCurrentComponent(currentComponent + 1);
-    if (currentComponent === 0) {
-      // addUpdateServices();
-    }
+
     if (currentComponent === 2) {
-      setCompleteOrder(true);
       setAddRate(false);
+      setCompleteOrder(true);
+      await addUpdateServices();
+      const orderDetails = await addUpdateOrder();
+      setOrderData(orderDetails);
     }
   };
 
@@ -281,7 +282,7 @@ export default function VendorInfo() {
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
         submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
-        <CompleteOrder />
+        <CompleteOrder orderId={orderData?.order_id} />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>
     </>
