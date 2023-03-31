@@ -53,6 +53,7 @@ export default function AddLineItemComp({ index, service }) {
           dropdownOptions={{
             inputName: 'unit',
             placeholder: '/hour',
+            isSearchEnable: true,
             value: {
               label: servicesData?.[service]?.[index]?.unit,
               value: servicesData?.[service]?.[index]?.unit
@@ -64,6 +65,7 @@ export default function AddLineItemComp({ index, service }) {
             tempArray[service][index].unit = e.value;
             setServicesData(tempArray);
           }}
+          isCreateable={true}
         />
       </div>
       <div>

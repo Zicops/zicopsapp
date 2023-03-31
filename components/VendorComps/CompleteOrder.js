@@ -1,7 +1,7 @@
 import styles from './vendorComps.module.scss';
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilValue } from 'recoil';
-const CompleteOrder = () => {
+const CompleteOrder = ({ orderId }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
   return (
     <div className={`${styles.CompleteItemContainer}`}>
@@ -10,7 +10,7 @@ const CompleteOrder = () => {
       </div>
       <p className={`${styles.text1}`}>New Order Added</p>
       <p className={`${styles.text2}`}>
-        A new order with Order ID “123abc” has been added.Do give your feedback of service post
+        A new order with Order ID "{orderId}" has been added.Do give your feedback of service post
         completion and delivery of the required services.
       </p>
       <div className={`${styles.newVendorAdd}`}>
