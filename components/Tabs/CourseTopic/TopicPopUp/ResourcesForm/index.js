@@ -45,11 +45,7 @@ export default function ResourcesForm({ courseId, topicId }) {
                   mutation={DELETE_TOPIC_RESOURCES}
                   onDelete={() => {
                     const _resources = structuredClone(resources);
-                    const resIndex = !res?.id
-                      ? index
-                      : _resources?.findIndex((r) => r?.id === res?.id);
-
-                    if (resIndex >= 0) _resources.splice(resIndex, 1);
+                    _resources.splice(index, 1);
 
                     setResources(_resources);
                   }}

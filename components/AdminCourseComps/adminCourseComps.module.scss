@@ -1,0 +1,883 @@
+@import '../../styles/base.scss';
+// Course Page Title
+.courseName {
+  display: block;
+  line-height: 1.1em;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.courseType {
+  color: $primary;
+  font-size: 1.1rem;
+}
+
+// Admin Course Tabs
+$gapBetweenInputAndLabel: 0.5em;
+$marginBetweenInputs: 1em;
+
+.makeLabelInputColumnWise {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  label,
+  input {
+    width: 100%;
+  }
+
+  input {
+    padding: 8px;
+  }
+}
+
+.twoColumnDisplay {
+  display: flex;
+  gap: $marginBetweenInputs;
+
+  > div {
+    flex: 1;
+  }
+}
+
+.marginBetweenInputs {
+  margin: $marginBetweenInputs auto;
+}
+
+// course master
+.expertiseContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.courseSettings {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: $gapBetweenInputAndLabel;
+  }
+}
+
+// configuration
+.configurationHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.cofigurationSettingLabel {
+  margin-top: $gapBetweenInputAndLabel;
+  color: #acacac;
+}
+
+.configurationCourseContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.configSettingContainer {
+  width: 100%;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.registrationBox,
+.bookingBox {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  // div {
+  //   // display: flex;
+  //   gap: $marginBetweenInputs;
+  // }
+}
+
+.registrationBox > label,
+.bookingBox > label {
+  width: 100%;
+  margin: 0;
+}
+
+.configurationDetailHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.configDetailContainer {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.configurationDetailHead {
+  margin-top: $gapBetweenInputAndLabel;
+}
+
+// styling details box of configuration
+.detailsBoxContainer {
+  display: flex;
+  height: 40px;
+  width: 500px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.detailsImgBox {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  border: solid #484848 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailsInfo > label {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #acacac;
+}
+
+// About
+.aboutTrainer,
+.aboutModerator {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.moderatorDropdown > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.aboutTrainerType {
+  display: flex;
+  justify-content: space-between;
+}
+
+.moderatorDropdown {
+  display: flex;
+}
+
+.aboutHead {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.droper {
+  display: flex;
+  flex-direction: column;
+  width: 95px;
+  height: 96px;
+  position: absolute;
+  top: 130px;
+  right: 80px;
+  justify-content: space-around;
+  z-index: 1000;
+  background-color: black;
+}
+
+.droper > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: white;
+}
+
+.aboutDatePicker > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.datePicker {
+  display: flex;
+  flex-direction: column;
+}
+
+.totalDurationLable > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.durationDiscription {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #484848;
+}
+
+.bulletPoint > input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid $darkThree;
+  background-color: $darkTwo;
+  color: $secondaryBlack;
+  font-size: 13px;
+  border-radius: 0px;
+  font-family: 'Poppins';
+  caret-color: $white;
+  color: $white;
+}
+// .bulletPoint >button
+// {
+//   outline: none;
+//   border: none;
+// }
+
+.aboutInputContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.aboutCurriculum {
+  display: flex;
+  flex-direction: column;
+  // gap: $gapBetweenInputAndLabel;
+
+  div {
+    // display: flex;
+    gap: $marginBetweenInputs;
+  }
+}
+
+.bulletPointInputContainer {
+  align-items: flex-start;
+  font-size: 13px;
+  word-break: break-all;
+
+  &.tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+
+    input {
+      width: 25%;
+      margin: 0;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.bullets {
+  display: flex;
+  justify-content: space-between;
+
+  border-radius: 5px;
+  font-size: inherit;
+  color: $darkThree;
+
+  background-color: $tertiaryBlack;
+  border: 1px solid $darkThree;
+  padding: 3px 10px;
+  margin: 5px auto;
+
+  &:last-child {
+    margin-bottom: 10px;
+  }
+}
+.bullets > button {
+  border: none;
+  outline: none;
+  background-color: $tertiaryBlack;
+  color: white;
+}
+
+// topic tab
+// module and chapter box
+.boxContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 200px;
+
+  border-radius: 5px;
+  border: 1px solid $primary;
+  background-color: $tertiaryBlack;
+  padding: 0.8em;
+  margin-bottom: 1em;
+
+  .boxHeader {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    margin-bottom: 0.5em;
+
+    img {
+      cursor: pointer;
+    }
+  }
+
+  &.chapterBox {
+    background-color: $darkTwo;
+    border: 0px;
+  }
+}
+
+// add topic, chapter, module btn
+.addCourseContentBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+  border: 1px solid $primary;
+  background-color: $darkOne;
+  color: $primary;
+  margin: 1em auto;
+
+  img {
+    display: block;
+  }
+
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+// single topic row
+.topicRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+
+  width: 100%;
+  margin: 5px 10px 5px auto;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  padding: 10px 20px;
+  color: $secondaryBlack;
+
+  .title {
+    flex: 1;
+    color: $white;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .editImg {
+    img {
+      width: 20px;
+      cursor: pointer;
+    }
+  }
+}
+
+// topic accoridon
+.topicAccordianContainer {
+  width: 100%;
+
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  border: 1px solid $darkTwo;
+  background-color: $tertiaryBlack;
+
+  .header {
+    cursor: pointer;
+
+    .title {
+      color: $white;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .imgContainer {
+      height: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+
+      .minus {
+        background-color: $primary;
+        height: 0.15em;
+        width: 1em;
+      }
+    }
+  }
+
+  .body {
+    padding-top: 20px;
+  }
+}
+
+.editTopicAccordianContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+// module pop up
+.popUpFormContainer {
+  padding: 1.5em;
+  max-height: 60vh;
+  overflow: hidden auto;
+  overflow-y: overlay;
+
+  > div {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .resourceType {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+
+  .isChapterWiseLabelContainer {
+    margin-left: 25%;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 0;
+
+    .isChapterWiseLabel {
+      display: flex;
+      flex-direction: column;
+      width: 400px;
+
+      span {
+        color: $darkThree;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .addTopicForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    padding: 1em 3em;
+  }
+
+  .topicContentContainer {
+    margin-bottom: 1em;
+
+    .titleWithLineAtSide {
+      color: $white;
+      font-size: 16px;
+      text-transform: uppercase;
+      text-align: center;
+
+      &::before,
+      &::after {
+        display: inline-block;
+        content: '';
+        border-top: 2px solid $secondaryBlack;
+        min-width: 200px;
+        margin: 0 1rem;
+
+        transform: translateY(-5px);
+      }
+    }
+
+    .topicContentForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      padding: 1em 2em;
+
+      .fileName {
+        text-align: right;
+        margin-left: 0.5em;
+      }
+    }
+
+    .addMoreContentBtn {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.5em;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: $primary;
+
+      div {
+        height: 1em;
+      }
+    }
+
+    .topicContentBarContainer {
+      margin: 0.5em auto;
+
+      .topSection {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.2em auto;
+
+        p {
+          color: $darkThree;
+          font-size: 0.8rem;
+        }
+      }
+
+      .topicContentBar {
+        text-align: center;
+
+        span {
+          .center {
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .flexContainerWithSpace {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+  }
+
+  .bingeContainer {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+
+    .bingeform {
+      width: 60%;
+
+      .bingeSetting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .bingeSettingTitle {
+          font-size: 16px;
+          color: $primary;
+          width: 25%;
+        }
+        .bingeSettingBody {
+          width: 75%;
+          padding: 10px;
+        }
+      }
+    }
+
+    .video_preview {
+      display: flex;
+      height: 150px;
+      max-width: 45%;
+
+      video {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .fromEnd {
+      display: flex;
+      justify-content: center;
+      margin-left: 25%;
+    }
+  }
+
+  .newline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+      padding: 0 3px;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid $white;
+      width: 22px;
+      margin: 5px 0px;
+
+      background-color: transparent;
+      color: $white;
+    }
+
+    input:focus {
+      outline: 0;
+      background-color: $darkTwo;
+      box-shadow: none;
+    }
+    .durationvalue {
+      width: 40px;
+    }
+
+    .label {
+      min-width: 80px;
+    }
+    .after {
+      min-width: 80px;
+      color: $darkThree;
+      margin-left: 20px;
+    }
+  }
+
+  .quizFormContainer {
+    margin: 2em auto;
+
+    .quizInput {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      font-size: 14px;
+
+      &.quizType {
+        display: flex;
+        width: 50%;
+        margin: 20px auto;
+      }
+    }
+
+    .quizFormSelect {
+      gap: 1em;
+      margin: 1em auto;
+    }
+
+    .hint {
+      color: $darkThree;
+    }
+  }
+
+  .resourceAddBtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+  }
+  .resourceTypeContainer {
+    max-width: 250px;
+    margin: auto auto 20px;
+  }
+  .flexCenterWithGap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+button.addTopicFormBtn {
+  padding: 0.7em 2em;
+  margin: 1em 1em 0;
+  font-size: 0.9rem;
+  border-color: $darkThree;
+  color: $darkThree;
+  background-color: $darkTwo;
+
+  &.addBtn {
+    border-color: $primary;
+    color: $primary;
+    box-shadow: 0px 0px 10px 0px $primary;
+  }
+
+  &:hover {
+    border-color: $white;
+    color: $white;
+    background-color: $darkTwo;
+  }
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    box-shadow: none;
+    opacity: 0.5;
+  }
+}
+
+.contentBar {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em auto;
+
+  background-color: $darkThree;
+  padding: 0.3em 1em;
+  border-radius: 5px;
+  color: $black;
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+  }
+
+  .editImg {
+    height: 1.1em;
+    width: 1.1em;
+    cursor: pointer;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $darkThree;
+
+    span {
+      color: $white;
+    }
+  }
+
+  .editBtn {
+    width: 1.1em;
+    cursor: pointer;
+  }
+}
+
+// extra
+.vcSetting {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  margin: 1em 0.5em;
+}
+
+.switchRadioBox {
+  display: flex;
+  padding: 10px 15px;
+  // margin: 15px;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  width: 100%;
+
+  .label {
+    font-weight: bold;
+  }
+  .description {
+    color: $darkThree;
+  }
+
+  &.active {
+    border-color: $primary;
+  }
+}
+
+// course configuration
+.switchBoxContainer {
+  display: flex;
+  padding: 10px 15px;
+  margin: 15px;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  width: 50%;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .label {
+    font-weight: bold;
+  }
+  .description {
+    color: $darkThree;
+  }
+
+  &.active {
+    border-color: $primary;
+  }
+}
+
+.freezeConditions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  text-align: left;
+  width: 100%;
+
+  .failureReason {
+    color: $error;
+  }
+}
+
+// COMMON COMP STYLES
+.roundedBtn {
+  &.active:not(:disabled) {
+    border-color: $primary !important;
+    &.active {
+      box-shadow: 0px 0px 10px 0px $primary;
+
+      &:hover {
+        color: $primary !important;
+      }
+    }
+  }
+}

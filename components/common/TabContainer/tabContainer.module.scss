@@ -20,7 +20,6 @@
   }
 }
 
-
 .tabHeader ul {
   display: flex;
   flex-wrap: wrap;
@@ -94,4 +93,8 @@
 
 .rightText {
   margin-right: 50px;
+}
+
+.centerSlot {
+  flex: 1;
 }

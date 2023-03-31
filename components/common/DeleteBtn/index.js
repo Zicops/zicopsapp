@@ -20,7 +20,13 @@ export default function DeleteBtn({
   return (
     <>
       <button
-        style={{ cursor: 'pointer', backgroundColor: 'transparent', outline: '0', border: '0' }}
+        style={{
+          cursor: 'pointer',
+          backgroundColor: 'transparent',
+          outline: '0',
+          border: '0',
+          padding: '0'
+        }}
         onClick={() => {
           const shouldDelete = !!deleteCondition ? deleteCondition() : true;
 
