@@ -5,15 +5,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import styles from './vendorComps.module.scss';
-const ReviewOrderBottom = ({
-  isTax,
-  subtotal,
-  grossTotal,
-  taxAmount,
-  currency,
-  isShowTax,
-  setShowTax
-}) => {
+const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, setShowTax }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const onShowTaxHandler = () => {
     setShowTax(true);
@@ -37,7 +29,7 @@ const ReviewOrderBottom = ({
         </div>
         <div>
           <p>
-            {subtotal} {currency}
+            {subtotal} {orderData?.currency}
           </p>
           {isTax && !isShowTax && (
             <div className={`${styles.taxAdd}`} onClick={onShowTaxHandler}>
@@ -63,13 +55,13 @@ const ReviewOrderBottom = ({
       <div className={`${styles.TaxAmount}`}>
         <p>Tax Amount</p>
         <p>
-          {taxAmount || 0} {currency}
+          {taxAmount || 0} {orderData?.currency}
         </p>
       </div>
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
         <p>
-          {grossTotal} {currency}
+          {grossTotal} {orderData?.currency}
         </p>
       </div>
     </div>

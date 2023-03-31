@@ -42,14 +42,13 @@ const ReviewAndTax = ({ isShowTax, setShowTax }) => {
     <div>
       <p className={`${styles.addLineText}`}>Review and Add Tax</p>
       <div className={`${styles.hr}`}></div>
-      <ReviewOrderTop isConfirm={false} data={servicesData} currency={orderData?.currency} />
+      <ReviewOrderTop isConfirm={false} />
       <div className={`${styles.hr}`}></div>
       <ReviewOrderBottom
         isTax={true}
         subtotal={subtotal}
         grossTotal={grossTotal}
         taxAmount={taxAmount}
-        currency={orderData?.currency}
         isShowTax={isShowTax}
         setShowTax={setShowTax}
       />

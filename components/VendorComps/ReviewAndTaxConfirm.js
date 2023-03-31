@@ -42,14 +42,13 @@ const ReviewAndTaxConfirm = () => {
     <div>
       <p className={`${styles.addLineText}`}>Confirm</p>
       <div className={`${styles.hr}`}></div>
-      <ReviewOrderTop isConfirm={true} data={servicesData} currency={orderData?.currency} />
+      <ReviewOrderTop isConfirm={true} />
       <div className={`${styles.hr}`}></div>
       <ReviewOrderBottom
         isTax={false}
         taxAmount={taxAmount}
         subtotal={orderData?.total}
         grossTotal={grossTotal}
-        currency={orderData?.currency}
       />
       <div className={`${styles.hr}`}></div>
     </div>
