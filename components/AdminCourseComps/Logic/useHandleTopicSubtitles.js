@@ -3,14 +3,10 @@ import {
   getTopicSubtitlesObject,
   TopicSubtitlesAtom
 } from '@/state/atoms/courses.atom';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useState } from 'react';
-import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleTopicSubtitles(topData = null) {
-  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
-    set(ToastMsgAtom, { type, message });
-  });
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicSubtitle, setTopicSubtitle] = useRecoilState(TopicSubtitlesAtom);
 

@@ -96,6 +96,8 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
 
               let path = val.link;
               if (val?.isHidden && !isDemo && !isDev) return null;
+              if (val?.isDev && !isDev) return null;
+              if (val?.isDemo && !isDemo) return null;
               if (isVendor && !val?.isVendor) return null;
               if (isVendor && val?.isCustomRoute)
                 path = `/admin/vendor/manage-vendor/update-vendor/${vendorDetails?.vendorId}`;

@@ -524,6 +524,8 @@ $marginBetweenInputs: 1em;
     display: flex;
     flex-direction: column;
     gap: 1em;
+
+    padding: 1em 3em;
   }
 
   .topicContentContainer {
@@ -580,6 +582,21 @@ $marginBetweenInputs: 1em;
         display: flex;
         justify-content: space-between;
         margin: 0.2em auto;
+
+        p {
+          color: $darkThree;
+          font-size: 0.8rem;
+        }
+      }
+
+      .topicContentBar {
+        text-align: center;
+
+        span {
+          .center {
+            flex: 1;
+          }
+        }
       }
     }
 
@@ -615,41 +632,6 @@ $marginBetweenInputs: 1em;
       }
     }
 
-    .newline {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      input {
-        padding: 0 3px;
-        margin: 0;
-        border: 0;
-        border-bottom: 1px solid $white;
-        width: 22px;
-        margin: 5px 0px;
-
-        background-color: transparent;
-        color: $white;
-      }
-
-      input:focus {
-        outline: 0;
-        background-color: $darkTwo;
-        box-shadow: none;
-      }
-      .durationvalue {
-        width: 40px;
-      }
-    }
-    .label {
-      min-width: 80px;
-    }
-    .after {
-      min-width: 80px;
-      color: $darkThree;
-      margin-left: 20px;
-    }
-
     .video_preview {
       display: flex;
       height: 150px;
@@ -666,6 +648,67 @@ $marginBetweenInputs: 1em;
       display: flex;
       justify-content: center;
       margin-left: 25%;
+    }
+  }
+
+  .newline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+      padding: 0 3px;
+      margin: 0;
+      border: 0;
+      border-bottom: 1px solid $white;
+      width: 22px;
+      margin: 5px 0px;
+
+      background-color: transparent;
+      color: $white;
+    }
+
+    input:focus {
+      outline: 0;
+      background-color: $darkTwo;
+      box-shadow: none;
+    }
+    .durationvalue {
+      width: 40px;
+    }
+
+    .label {
+      min-width: 80px;
+    }
+    .after {
+      min-width: 80px;
+      color: $darkThree;
+      margin-left: 20px;
+    }
+  }
+
+  .quizFormContainer {
+    margin: 2em auto;
+
+    .quizInput {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      font-size: 14px;
+
+      &.quizType {
+        display: flex;
+        width: 50%;
+        margin: 20px auto;
+      }
+    }
+
+    .quizFormSelect {
+      gap: 1em;
+      margin: 1em auto;
+    }
+
+    .hint {
+      color: $darkThree;
     }
   }
 
@@ -723,6 +766,20 @@ button.addTopicFormBtn {
   background-color: $darkThree;
   padding: 0.3em 1em;
   border-radius: 5px;
+  color: $black;
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+  }
+
+  .editImg {
+    height: 1.1em;
+    width: 1.1em;
+    cursor: pointer;
+  }
 
   p {
     font-size: 0.9rem;

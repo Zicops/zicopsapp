@@ -8,20 +8,23 @@ export default function ContentBar({
   details = '',
   isDisabled = false,
   editHandler = null,
-  deleteProps = {}
+  deleteProps = {},
+  customStyle = {},
+  customClass = ''
 }) {
   return (
     <>
-      <div className={`${styles.contentBar}`}>
-        <span>{type}</span>
-        <span>{description}</span>
+      <div className={`${styles.contentBar} ${customClass}`} style={customStyle}>
+        <span className={`w-15`}>{type}</span>
+        <span className={`w-100 ${styles.center}`}>{description}</span>
 
-        <div>
-          {details}
+        <div className={`w-15`}>
+          <span>{details}</span>
+
           {!isDisabled && (
             <>
               {!!editHandler && (
-                <div onClick={editHandler}>
+                <div className={styles.editImg} onClick={editHandler}>
                   <EditBoxIcon />
                 </div>
               )}

@@ -31,7 +31,7 @@ export default function VendorMaster() {
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
-  const { handlePhotoInput, handleRemoveUser } = useHandleVendor();
+  const { handlePhotoInput, handleRemoveUser, getVendorAdmins } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -185,7 +185,10 @@ export default function VendorMaster() {
           type="External"
           items={emails}
           setItems={setEmails}
-          beforeRemoveEmail={async (email) => await handleRemoveUser(email)}
+          beforeRemoveEmail={async (email) => {
+            await handleRemoveUser(email);
+            getVendorAdmins();
+          }}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }

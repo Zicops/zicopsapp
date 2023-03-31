@@ -37,9 +37,6 @@ export default function useHandleCourseData() {
 
   const [ownerList, setOwnerList] = useState(null);
 
-  const [trainerCandidates, setTrainerCandidates] = useState([]);
-  const [moderatorCandidates, setModeratorCandidates] = useState([]);
-
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
   useEffect(() => {

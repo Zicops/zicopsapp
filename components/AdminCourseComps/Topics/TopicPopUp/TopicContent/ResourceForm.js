@@ -5,10 +5,11 @@ import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload'
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import IconButton from '@/components/common/IconButton';
+import Spinner from '@/components/common/Spinner';
 import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import ContentBar from './ContentBar';
 
@@ -28,6 +29,8 @@ export default function ResourceForm({ topData = null }) {
 
   return (
     <>
+      {topicResources == null && <Spinner customStyles={{ margin: '2em auto' }} />}
+
       {resourcesList?.map((res, index) => (
         <ContentBar
           key={res?.key}

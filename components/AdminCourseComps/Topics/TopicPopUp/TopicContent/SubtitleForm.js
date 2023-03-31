@@ -90,7 +90,6 @@ export default function SubtitleForm({ topData = null }) {
             <div className={`w-100 text-center`}>{truncateToN(subtitleFormData?.name, 180)}</div>
 
             {/* footer btn */}
-
             <div className="center-element-with-flex">
               <RoundedBtn display="Cancel" handleClick={toggleForm} />
 
@@ -107,7 +106,7 @@ export default function SubtitleForm({ topData = null }) {
         </>
       )}
 
-      {!languageOptions?.length && (
+      {!!languageOptions?.length && (
         <div className={`center-element-with-flex ${styles.marginBetweenInputs}`}>
           <IconButton
             styleClass="btnBlack"

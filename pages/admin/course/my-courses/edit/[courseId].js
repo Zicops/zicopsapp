@@ -38,7 +38,7 @@ export default function EditCoursePage() {
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
 
-  // load course data
+  // load course data.
   useEffect(() => {
     if (!courseId) return;
 

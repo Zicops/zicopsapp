@@ -65,7 +65,7 @@ export function getTopicContentDataObj(data = {}) {
     type: data?.type || null,
     language: data?.language || '',
     duration: data?.duration || '',
-    isDefault: data?.isDefault || '',
+    isDefault: data?.isDefault || false,
     file: data?.file || ''
   };
 }
