@@ -2,10 +2,11 @@ import CourseBody from '@/components/CourseBody';
 import CourseHero from '@/components/CourseHero';
 import CustomVideo from '@/components/CustomVideoPlayer';
 import ExamLanding from '@/components/Exams/ExamLanding';
+import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getTopicExamObj, TopicExamAtom } from '@/state/atoms/module.atoms';
+import { getTopicClassroomObj, getTopicExamObj, TopicClassroomAtom, TopicExamAtom } from '@/state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import ModuleContextProvider from '@/state/contexts/ModuleContext';
@@ -19,6 +20,7 @@ export default function Course() {
   const { fullCourse } = useContext(courseContext);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+  const [topicClassroomData, setTopicClassroomData] = useRecoilState(TopicClassroomAtom);
   const startPlayer = videoData.startPlayer;
 
   const [ongoingCourses, setOngoingCourses] = useState([]);
@@ -41,6 +43,7 @@ export default function Course() {
     setVideoData(getVideoObject());
     setStartPlayer(false);
     setTopicExamData(getTopicExamObj());
+    setTopicClassroomData(getTopicClassroomObj());
   }, []);
 
   useEffect(async () => {
@@ -95,10 +98,14 @@ export default function Course() {
             overflowX: 'clip'
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
+          
+          {topicClassroomData?.id && <VCtoolStartPage vcData={topicClassroomData} isDisplayedInCourse={true}/>}
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
-          {!startPlayer && !topicExamData?.id && <CourseHero set={setStartPlayer} />}
+          {!startPlayer && !topicExamData?.id && !topicClassroomData?.id && (
+            <CourseHero set={setStartPlayer} />
+          )}
 
           <CourseBody />
           {/* <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />

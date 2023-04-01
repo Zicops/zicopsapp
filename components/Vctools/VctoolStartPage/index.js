@@ -3,7 +3,8 @@ import VcMaintool from '..';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
 
-const VCtoolStartPage = () => {
+const VCtoolStartPage = ({vcData = null, isDisplayedInCourse = false}) => {
+
   const [dateInfo, setDateInfo] = useState({
     day: 10,
     month: 12,
