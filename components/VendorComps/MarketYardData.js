@@ -62,7 +62,7 @@ export default function MarketYardData({
         <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
       )}
 
-      {!isDemo && displayRows?.isSmeDisplayed && !!smeVendors?.length && (
+      {isDemo && displayRows?.isSmeDisplayed && !!smeVendors?.length && (
         <ZicopsCarousel
           title="Subject Matter Experts Marketplace"
           data={smeVendors}
@@ -73,7 +73,7 @@ export default function MarketYardData({
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={crtVendors} type="vendor" />
       )}
 
-      {!isDemo && displayRows?.isCdDisplayed && !!cdVendors?.length && (
+      {isDemo && displayRows?.isCdDisplayed && !!cdVendors?.length && (
         <ZicopsCarousel title="Content Development Marketplace" data={cdVendors} type="vendor" />
       )}
       {!!speakerDetails?.length && (

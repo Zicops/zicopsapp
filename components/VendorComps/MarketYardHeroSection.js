@@ -63,9 +63,9 @@ export default function MarketYardHeroSection({
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'Service',
-                placeholder: !isDemo ? 'All Services' : 'Training',
-                value: !isDemo ? vendorService : 'crt',
-                isDisabled: isDemo,
+                placeholder: isDemo ? 'All Services' : 'Training',
+                value: isDemo ? vendorService : 'crt',
+                isDisabled: !isDemo,
                 options: [
                   { label: 'All', value: null },
                   ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev))
