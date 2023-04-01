@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import ClassroomForm from './ClassroomForm';
+import VcSettings from './VcSettings';
 
 export default function TopicClassroom({ topData = null, closePopUp = () => {} }) {
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
@@ -43,7 +44,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
     },
     {
       title: 'VC Setting',
-      body: 'Quiz'
+      body: <VcSettings/>
     }
   ];
 
