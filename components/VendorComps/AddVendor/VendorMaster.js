@@ -189,6 +189,7 @@ export default function VendorMaster() {
             await handleRemoveUser(email);
             getVendorAdmins();
           }}
+          isEmailRemovable={!(isVendor && isIndividualVendor)}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }

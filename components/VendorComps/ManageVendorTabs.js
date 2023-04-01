@@ -66,7 +66,7 @@ export default function ManageVendorTabs() {
     if (shallowRoute) return;
     if (!vendorCurrentState?.isSaved) return;
 
-    setVendorCurrentState(getVendorCurrentStateObj());
+    setVendorCurrentState(getVendorCurrentStateObj({enabledServices: vendorCurrentState?.enabledServices}));
   }, [
     router.isReady,
     vendorData?.name,
@@ -224,7 +224,7 @@ export default function ManageVendorTabs() {
           const crtData = await addUpdateCrt(tab === tabData[1].name);
           const cdData = await addUpdateCd(tab === tabData[1].name);
 
-          const enabledServices = [];
+          const enabledServices = structuredClone([...vendorCurrentState.enabledServices]);
 
           if (smeData?.is_applicable) enabledServices.push('sme');
           if (crtData?.is_applicable) enabledServices.push('crt');
