@@ -1,8 +1,10 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import useHandleMarketYard from './Logic/useHandleMarketYard';
+
 const data = [
   {
     id: '1001',
@@ -79,10 +81,18 @@ const data = [
 ];
 
 const VendorOrders = () => {
+  const { getAllOrders, orderDetails } = useHandleMarketYard();
+
   const router = useRouter();
+  useEffect(() => {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    getAllOrders(lspId);
+    // setOrderTableData(orderData);
+  }, []);
+  console.info(orderDetails);
   const columns = [
     {
-      field: 'order_id',
+      field: 'id',
       headerClassName: 'course-list-header',
       headerName: 'Order ID',
       flex: 0.6

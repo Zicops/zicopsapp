@@ -102,11 +102,12 @@ export default function useHandleMarketYard() {
     setServices(services?.getVendorServices);
     setLoading(false);
   }
+
   async function getAllOrders(lspId, isDataReturn = false) {
     setLoading(true);
-    const orderList = await loadAndCacheDataAsync(
+    const orderList = await loadQueryDataAsync(
       GET_ALL_ORDERS,
-      { lsp_id: lspId },
+      { lspId: lspId },
       {},
       userQueryClient
     );

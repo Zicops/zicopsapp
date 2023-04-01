@@ -1132,9 +1132,9 @@ export const GET_CD_DETAILS = gql`
 `;
 
 export const GET_ALL_ORDERS = gql`
-  query getAllOrders($lsp_id: String) {
-    getAllOrders(lsp_id: $lsp_id) {
-      order_id
+  query getAllOrders($lspId: String) {
+    getAllOrders(lsp_id: $lspId) {
+      id
       vendor_id
       lsp_id
       total
