@@ -5,6 +5,7 @@ import PopUp from '../../PopUp';
 import Spinner from '../../Spinner';
 import ViewDoc from '../../ViewDoc';
 import styles from '../formComponents.module.scss';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 
 const PREVIEW_FILE_TYPES = {
   download: 'download',
@@ -26,8 +27,10 @@ export default function FilePreview({
     if (fileSrc?.type != null && fileSrc?.url != null) return;
 
     if (typeof filePath === 'string' && fileSrc?.type == null) {
-      let type = getFileType(filePath);
-      if (!type) type = await checkImage(fileSrc?.url).catch((err) => console.log(err));
+      const decodedFileName = getEncodedFileNameFromUrl(filePath);
+      console.info(decodedFileName);
+      let type = getFileType(decodedFileName?.split('.')?.[1]);
+      if (!type) type = await checkImage(filePath).catch((err) => console.log(err));
 
       return setFileSrc({ type: type, url: filePath });
     }
@@ -87,8 +90,9 @@ export default function FilePreview({
   );
 }
 
-function getFileType(fileName = null) {
-  if (!fileName) return null;
+function getFileType(fileType = null) {
+  console.info(fileType);
+  if (!fileType) return null;
 
   if (
     [
@@ -103,12 +107,12 @@ function getFileType(fileName = null) {
       'vtt',
       'text/plain',
       'application/pdf'
-    ]?.includes(fileName?.toLowerCase())
+    ]?.includes(fileType?.toLowerCase())
   )
     return PREVIEW_FILE_TYPES.docPreview;
-  if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileName?.toLowerCase()))
+  if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.audio;
-  if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileName?.toLowerCase()))
+  if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.video;
   if (
     [
@@ -122,7 +126,7 @@ function getFileType(fileName = null) {
       'image/png',
       'image/gif',
       'image/jpeg'
-    ]?.includes(fileName?.toLowerCase())
+    ]?.includes(fileType?.toLowerCase())
   )
     return PREVIEW_FILE_TYPES.image;
 
