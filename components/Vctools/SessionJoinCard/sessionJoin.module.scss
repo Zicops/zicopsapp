@@ -1,0 +1,93 @@
+.joinSessionContainer {
+  width: 100%;
+  height: 120px;
+}
+.joinSessionContainer > div {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: flex-end;
+}
+.JoinSessionBtn {
+  width: 350px;
+  height: 40px;
+  margin-top: 10px;
+  background: #6bcfcf;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #0b0c0d;
+  border-radius: 4px;
+}
+.joinSessionHead {
+  color: #acacac;
+  font-weight: 400;
+  font-size: 16px;
+}
+.joinsessionFooter {
+  display: flex;
+  //   justify-content: space-between;
+  width: 350px;
+}
+.joinsessionFooter:first-child {
+  // width: 160px;
+  font-weight: 400;
+  font-size: 14px;
+}
+.meetingDuration {
+  width: 150px;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 47px;
+}
+.meetingduration :first-child {
+  font-weight: 400;
+  font-size: 14px;
+  color: #747474;
+}
+.durationTime {
+  color: #acacac;
+}
+.sessionEnded {
+  width: 350px;
+  height: 40px;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: 400;
+  font-size: 14px;
+  color: white;
+  outline: none;
+  border: none;
+  background-color: #272b30;
+  border-radius: 4px;
+}
+.meetingLive {
+  color: #f53d41;
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    height: 15px;
+    width: 20px;
+    height: 22px;
+    width: 27px;
+    margin-left: 8px;
+  }
+}
+.sessionEnd {
+  font-weight: 500;
+  font-size: 16px;
+  color: #f6ac3c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    height: 22px;
+    width: 27px;
+    margin-left: 8px;
+  }
+}

@@ -1,6 +1,7 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { vcMeetingIconAtom, vctoolAlluserinfo, vcUserData } from '@/state/atoms/vctool.atoms';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { OnVideo, StopVideo } from "../help/vctool.helper";
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
@@ -9,11 +10,13 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
     const [video1, setvideo1] = useState(startmeetingVideoenable)
     const [audio1, setaudio1] = useState(startmeetingAudioenable)
     const userData = useRecoilValue(UserStateAtom)
+    const meetingInfo = useRecoilValue(vctoolAlluserinfo)
+    const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
     const nameRef = useRef(null)
     let video = videoref.current;
     let startName = ""
     if (!!userData?.first_name)
-        startName = userData.first_name[0] + " " + userData.last_name[0];
+        startName = userData?.first_name[0] + " " + userData?.last_name[0];
     useEffect(() => {
         if (video1) {
             OnVideo(video, videoref)
@@ -24,8 +27,16 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
             StopVideo(video, videoref)
             nameRef.current.style.display = "block"
         }
-    }, [video1])
-    
+    },[video1])
+
+    useEffect(() => {
+        if ([userData.email].toString().includes('@zicops')) {
+            setMeetingIconAtom({
+                ...meetingIconsAtom,
+                isModerator: true
+            })
+        }
+    },[userData])
     return (
         <div className={`${styles.vcCard}`}>
             <div className={`${styles.videoPlayer}`}>
@@ -35,8 +46,8 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
 
 
                     </video>
-                    <div ref={nameRef} className={`${styles.subVideo}`}>
-                        <h1>{startName}</h1>
+                    <div ref={nameRef} className={`${styles.subVideo1}`}>
+                     <img src={userData.photo_url}/>
                     </div>
 
                 </div>
@@ -45,7 +56,7 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                 <VctoolButton onClickfun={() => {
                     startAudioenableFun()
                     setaudio1(!audio1)
-                }} customId={audio1 ? `${styles.btnsBg1}` : `${styles.btnsBg2}`}
+                }} customId={audio1 ? `${styles.audioBtn}` : `${styles.btnsBg2}`}
                     toggle={audio1} trueSrc={"/images/svg/vctool/mic-on.svg"} falseSrc={"/images/svg/vctool/mic-off.svg"} />
 
 
@@ -54,24 +65,43 @@ const MeetingCard = ({ startMeeting, startmeetingAudioenable, startmeetingVideoe
                     setvideo1(!video1)
                 }} customId={video1 ? `${styles.btnsBg1}` : `${styles.btnsBg2}`}
                     trueSrc={"/images/svg/vctool/videocam-on.svg"} falseSrc={"/images/svg/vctool/videocam-off.svg"} toggle={video1} />
-
                 <button><img src="/images/svg/vctool/settings.svg" /> </button>
+                <button><img src="/images/svg/vctool/temp-preferences-custom.svg" /> </button>
+                {
+                    meetingIconsAtom.isModerator ? <div className={`${styles.joinModeratorBtn}`}>
+                        <button onClick={() => {
+                            startMeeting()
+                            StopVideo(video, videoref)
+                            // if (meetingInfo.length <=1) {
+                            //     setMeetingIconAtom({
+                            //         ...meetingIconsAtom,
+                            //         isJoinedAsModerator: true,
+                            //         isStartAdd: true,
+                            //     })
+                            // }
 
-                <div className={`${styles.joinBtn}`}>
-                    <button onClick={() => {
-                        startMeeting()
-                        StopVideo(video, videoref)
-                        // console.log(startName)
-                    }}>
-                        Join
-                    </button>
+                        }}>
+                            Join as a moderator
+                        </button>
+                    </div> : <div className={`${styles.joinBtn}`}>
+                        <button onClick={() => {
+                            startMeeting()
+                            StopVideo(video, videoref)
+                            // if (meetingInfo.length <=1) {
+                            //     setMeetingIconAtom({
+                            //         ...meetingIconsAtom,
+                            //         // isJoinedAsModerator: true,
+                            //         isStartAdd: true,
+                            //     })
+                            // }
+                           
+                        }}>
+                            Join
+                        </button>
+                    </div>
+                }
 
-                    {/* <VctoolButton onClickfun={()=>
-                    {
-                        startMeeting()
-                        StopVideo(video,videoref)
-                    }} btnValue={"Join"}/> */}
-                </div>
+
             </div>
         </div>
     )
