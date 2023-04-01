@@ -95,30 +95,34 @@ export default function Layout({ children }) {
             handleClickLeft: async () => {
               setDisableBtn(true);
 
-              let isDeleted = 'localDelete';
-              const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
+              try {
+                let isDeleted = 'localDelete';
+                const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
 
-              if (!isBeforeDeleteSuccess) {
+                if (!isBeforeDeleteSuccess) {
+                  setDisableBtn(false);
+                  return setDeleteConfirmData(getDeleteConfirmDataObj());
+                }
+
+                if (deleteConfirmData?.id) {
+                  isDeleted = await deleteData(deleteConfirmData?.mutation, {
+                    id: deleteConfirmData?.id,
+                    ...deleteConfirmData?.variableObj
+                  });
+                }
+
+                setDeleteConfirmData(getDeleteConfirmDataObj());
+
+                if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+                  setDisableBtn(false);
+                  return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
+                }
+
+                deleteConfirmData?.onDelete();
                 setDisableBtn(false);
-                return setDeleteConfirmData(getDeleteConfirmDataObj());
-              }
-
-              if (deleteConfirmData?.id) {
-                isDeleted = await deleteData(deleteConfirmData?.mutation, {
-                  id: deleteConfirmData?.id,
-                  ...deleteConfirmData?.variableObj
-                });
-              }
-
-              setDeleteConfirmData(getDeleteConfirmDataObj());
-
-              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+              } catch {
                 setDisableBtn(false);
-                return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
               }
-
-              deleteConfirmData?.onDelete();
-              setDisableBtn(false);
             },
             handleClickRight: () => setDeleteConfirmData(getDeleteConfirmDataObj())
           }}

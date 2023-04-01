@@ -767,3 +767,38 @@
     // height: 20px;
   }
 }
+
+.filePreview {
+  height: 60vh;
+  object-fit: contain;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1em;
+  overflow: auto hidden;
+
+  img,
+  video {
+    height: 100%;
+    width: 100%;
+  }
+
+  .filePreviewFallBack {
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      color: $primary;
+      font-weight: 600;
+    }
+
+    small {
+      color: $darkThree;
+    }
+  }
+}

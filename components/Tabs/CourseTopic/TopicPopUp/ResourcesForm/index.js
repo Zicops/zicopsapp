@@ -1,5 +1,7 @@
 import { DELETE_TOPIC_RESOURCES } from '@/api/Mutations';
 import DeleteBtn from '@/components/common/DeleteBtn';
+import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilState } from 'recoil';
 import { truncateToN } from '../../../../../helper/common.helper';
 import { ResourcesAtom } from '../../../../../state/atoms/module.atoms';
@@ -23,6 +25,7 @@ export default function ResourcesForm({ courseId, topicId }) {
   } = useAddResources(courseId, topicId);
 
   const [resources, setResources] = useRecoilState(ResourcesAtom);
+  const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const fileTypes = ['PDF', 'EXCEL', 'DOC', 'LINK'];
   const resourceTypesOptions = [];
@@ -45,11 +48,7 @@ export default function ResourcesForm({ courseId, topicId }) {
                   mutation={DELETE_TOPIC_RESOURCES}
                   onDelete={() => {
                     const _resources = structuredClone(resources);
-                    const resIndex = !res?.id
-                      ? index
-                      : _resources?.findIndex((r) => r?.id === res?.id);
-
-                    if (resIndex >= 0) _resources.splice(resIndex, 1);
+                    _resources.splice(index, 1);
 
                     setResources(_resources);
                   }}
@@ -94,17 +93,39 @@ export default function ResourcesForm({ courseId, topicId }) {
               {/* subtitle file */}
               <div className="w-35">
                 {newResource.type !== 'LINK' ? (
-                  <BrowseAndUpload
-                    handleFileUpload={handleResourceInput}
-                    inputName="file"
-                    isActive={newResource?.file?.name}
-                    hidePreviewBtns={true}
-                    acceptedTypes={`
+                  <>
+                    <small
+                      style={{
+                        color: styles.bgBody,
+                        display: 'flex',
+                        justifyContent: 'flex-end'
+                      }}>
+                      Max: {Math.ceil(LIMITS.documentFile / ONE_MB_IN_BYTES)} Mb
+                    </small>
+                    <BrowseAndUpload
+                      handleFileUpload={(e) => {
+                        const file = e.target.files?.[0];
+
+                        if (file?.size > LIMITS.documentFile)
+                          return setToastMsg({
+                            type: 'danger',
+                            message: `File Size limit is ${Math.ceil(
+                              LIMITS.documentFile / ONE_MB_IN_BYTES
+                            )} mb`
+                          });
+
+                        handleResourceInput(e);
+                      }}
+                      inputName="file"
+                      isActive={newResource?.file?.name}
+                      hidePreviewBtns={true}
+                      acceptedTypes={`
                     ${newResource.type === 'EXCEL' ? '.csv, .xls, .xlsx' : ''}
                     ${newResource.type === 'DOC' ? '.doc, .docx' : ''} 
                     ${newResource.type === 'PDF' ? '.pdf' : ''}
                   `}
-                  />
+                    />
+                  </>
                 ) : (
                   <LabeledInput
                     inputOptions={{

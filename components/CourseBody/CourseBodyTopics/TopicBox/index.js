@@ -3,6 +3,7 @@ import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/L
 import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
 import SessionJoinCard from '@/components/Vctools/SessionJoinCard';
+import { COURSE_TYPES } from '@/constants/course.constants';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -24,6 +25,7 @@ import {
   isLoadingAtom,
   QuizAtom,
   TopicAtom,
+  TopicClassroomAtom,
   TopicContentAtom,
   TopicExamAtom
 } from '../../../../state/atoms/module.atoms';
@@ -40,6 +42,7 @@ import {
   passingCriteriaSymbol,
   ShowNotAssignedErrorAtom
 } from '../../Logic/topicBox.helper';
+import useLoadClassroomData from '../../Logic/useLoadClassroomData';
 import useLoadExamData from '../../Logic/useLoadExamData';
 
 let topicInstance = 0;
@@ -79,6 +82,7 @@ export default function TopicBox({
 
   const bookmarkStartTime = useRecoilValue(BookmarkStartTimeAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+  const [topicClassRoomData, setTopicClassroomData] = useRecoilState(TopicClassroomAtom);
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [quizData, setQuizData] = useRecoilState(QuizAtom);
@@ -99,6 +103,8 @@ export default function TopicBox({
 
   const data = {};
   let finalEndDate;
+  if (type?.toLowerCase() === COURSE_TYPES?.classroom)
+    data.classroomData = useLoadClassroomData(topic?.id);
   data.examData = useLoadExamData(examData?.examId);
   if (data?.examData?.scheduleType === SCHEDULE_TYPE[0] && !data?.examData?.examEnd)
     finalEndDate = new Date(getEndTime(data));
@@ -455,6 +461,9 @@ export default function TopicBox({
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
           if (type === 'Assessment') return loadTopicExam();
           if (type === 'Classroom') {
+            // need to add error handling and call the classroom using array of ids will do later.
+            setTopicClassroomData(data?.classroomData);
+            return 
             const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
             const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
 
@@ -561,12 +570,14 @@ export default function TopicBox({
 
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
-              {!isDocument && (
+              {!isDocument ? (
                 <div className={`${styles.progress_bar}`}>
                   <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
                     {/* <img src="images/progressTriangle.png" alt="" /> */}
                   </div>
                 </div>
+              ) : (
+                <div className={`${styles.startReading}`}>Start Reading</div>
               )}
               <div className={`${styles.details}`}>
                 <div>{isDocument ? 'Document' : 'e-Content'}</div>
@@ -673,9 +684,8 @@ export default function TopicBox({
           )}
           {type === 'Classroom' && (
             <div className={`${styles.topic_player}`}>
-              <SessionJoinCard/>
+              <SessionJoinCard classroomData={data?.classroomData} />
             </div>
-            
           )}
         </div>
       </div>

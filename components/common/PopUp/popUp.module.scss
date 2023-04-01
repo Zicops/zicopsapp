@@ -32,6 +32,24 @@
     height: 100%;
     overflow: auto;
   }
+
+  .footer {
+    button {
+      &:disabled,
+      &.btn_cancel_add_disabled {
+        width: 150px;
+        height: 40px;
+        background-color: #202222;
+        border: 2px solid #858f8f;
+        color: #858f8f;
+        cursor: no-drop;
+        margin-right: 15px;
+        text-transform: capitalize;
+        font-size: 15px;
+        opacity: 0.5;
+      }
+    }
+  }
 }
 
 .header {
@@ -66,19 +84,6 @@
   margin-right: 15px;
   text-transform: capitalize;
   font-size: 15px;
-}
-
-.btn_cancel_add_disabled {
-  width: 150px;
-  height: 40px;
-  background-color: #202222;
-  border: 2px solid #858f8f;
-  color: #858f8f;
-  cursor: no-drop;
-  margin-right: 15px;
-  text-transform: capitalize;
-  font-size: 15px;
-  opacity: 0.5;
 }
 
 .disabled {

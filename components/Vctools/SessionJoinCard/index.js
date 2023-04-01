@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from './sessionJoin.module.scss';
-const SessionJoinCard = () => {
+const SessionJoinCard = ({classroomData = {}}) => {
   const [timing, setTiming] = useState({
     // meeting start time
     day: new Date().getDate(),

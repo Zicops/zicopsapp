@@ -1,5 +1,4 @@
 import TopicPdfViews from '@/components/CourseComps/TopicPdfViews';
-import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { VideoAtom } from '../../../state/atoms/video.atom';
@@ -192,9 +191,9 @@ export default function VideoPlayer({
           </div>
         </>
       )}
-      {videoData?.type === 'classroom' && (
+      {/* {videoData?.type === 'classroom' && (
       <VCtoolStartPage/>
-      )}
+      )} */}
       {videoData.type === 'document' && (
         <>
           <TopicPdfViews url={videoData?.videoSrc} />

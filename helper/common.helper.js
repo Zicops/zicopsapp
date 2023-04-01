@@ -92,6 +92,18 @@ export async function convertUrlToFile(dataUrl, fileName = 'file.jpg') {
   return new File([data], fileName, metadata);
 }
 
+export async function getUrlFromFile(file) {
+  if (!file) return;
+
+  let fileUrl = await new Promise((resolve) => {
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => resolve(fileReader?.result);
+    fileReader?.readAsDataURL(file);
+  });
+
+  return fileUrl;
+}
+
 //
 export function getNotificationMsg(type = '', msgObj = {}) {
   if (type === '') {
@@ -128,18 +140,15 @@ export function getNotificationMsg(type = '', msgObj = {}) {
 }
 
 // this function is used to sanitize the sendData for any api that we are calling
-function sanitizeStr(s) {
-  return `${s}`.trim();
-}
+export function sanitizeFormData(dataObj) {
+  if (!dataObj) return dataObj;
+  let _dataObj = structuredClone(dataObj);
 
-export function sanitizeFormData(_object) {
-  let object = structuredClone(_object);
-  Object.keys(object).forEach(function (k) {
-    if (object[k] && typeof object[k] === 'object') {
-      sanitizeFormData(object[k]);
-      return;
-    }
-    object[k] = sanitizeStr(object[k]);
+  Object.keys(_dataObj).forEach((k) => {
+    if (!_dataObj[k]) return;
+    if (typeof _dataObj[k] === 'object') return sanitizeFormData(_dataObj[k]);
+    if (typeof _dataObj[k] === 'string') _dataObj[k] = _dataObj[k]?.trim();
   });
-  return object;
+
+  return _dataObj;
 }

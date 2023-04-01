@@ -602,6 +602,13 @@ export default function useHandleVendor() {
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
+    if (
+      !sendData?.SME_Expertise?.length &&
+      !sendData?.Classroom_expertise?.length &&
+      !sendData?.content_development?.length
+    ) {
+      sendData.is_speaker = false;
+    }
     if (typeof sendData?.photo === 'string') sendData.photo = null;
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
