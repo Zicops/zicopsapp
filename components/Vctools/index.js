@@ -1,5 +1,6 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { breakoutList, joinMeeting, pollArray, totalRoomno, vcMeetingIconAtom, vcModeratorControlls, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
+import { Router, useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -8,12 +9,12 @@ import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import styles from './vctoolMain.module.scss';
 const VcMaintool = () => {
+  const Route=useRouter()
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
   const [isMeetingStarted,setIsMeetingStarted]=useRecoilState(joinMeeting)
   const [controlls,setControlls]=useRecoilState(vcModeratorControlls)
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
-  const [pollInfo, setPollInfo] = useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList)
   const allUserinfo = useRecoilValue(vctoolAlluserinfo)
@@ -186,7 +187,8 @@ const VcMaintool = () => {
               setisStarted(true)
               setIsMeetingStarted(true)
               sethidecard(!hidecard)
-
+              // Route.push('/admin/courses/classRoom')       
+      
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);
