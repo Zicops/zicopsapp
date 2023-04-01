@@ -104,8 +104,8 @@ export default function useHandleTopicClassroom(topData = null) {
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
-      trainers: classroomMaster?.trainers?.map((data) => data?.user_id || data) || [],
-      moderators: classroomMaster?.moderators?.map((data) => data?.user_id || data) || [],
+      trainers: topicClassroom?.trainers?.map((data) => data?.user_id || data) || [],
+      moderators: topicClassroom?.moderators?.map((data) => data?.user_id || data) || [],
       training_start_time: getUnixFromDate(topicClassroom?.trainingStartTime),
       training_end_time: getUnixFromDate(topicClassroom?.trainingEndTime),
       duration: topicClassroom?.duration,
