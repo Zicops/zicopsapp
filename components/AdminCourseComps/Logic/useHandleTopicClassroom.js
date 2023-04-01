@@ -72,7 +72,7 @@ export default function useHandleTopicClassroom(topData = null) {
             isQaEnabled: _topicClassroom?.is_qa_enabled,
             isCameraEnabled: _topicClassroom?.is_camera_enabled,
             isOverrideConfig: _topicClassroom?.is_override_config,
-            language: [_topicClassroom?.language],
+            language: _topicClassroom?.language?.length ? [_topicClassroom?.language]:[],
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
