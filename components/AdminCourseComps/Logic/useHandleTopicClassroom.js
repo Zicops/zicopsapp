@@ -10,11 +10,12 @@ import { sanitizeFormData } from '@/helper/common.helper';
 import { getDateObjFromUnix, getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
-  TopicClassroomAtom,
-  getTopicClassroomObject
+  getTopicClassroomObject,
+  TopicClassroomAtom
 } from '@/state/atoms/courses.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilCallback, useRecoilState } from 'recoil';
 
 export default function useHandleTopicClassroom(topData = null) {
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
@@ -22,6 +23,9 @@ export default function useHandleTopicClassroom(topData = null) {
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(null);
   const [accordionOpenState, setAccordionOpenState] = useState(null);
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
 
   // reset state after some time
   useEffect(() => {
@@ -68,6 +72,7 @@ export default function useHandleTopicClassroom(topData = null) {
             isQaEnabled: _topicClassroom?.is_qa_enabled,
             isCameraEnabled: _topicClassroom?.is_camera_enabled,
             isOverrideConfig: _topicClassroom?.is_override_config,
+            language: [_topicClassroom?.language],
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
@@ -115,8 +120,6 @@ export default function useHandleTopicClassroom(topData = null) {
       status: TOPIC_CLASS_ROOM_STATUS?.active
     });
 
-    console.log(_topicClassroomData, 'sendData');
-
     if (!!topicClassroom?.id) {
       _topicClassroomData.id = topicClassroom?.id;
       const resUpdate = await mutateData(
@@ -125,6 +128,8 @@ export default function useHandleTopicClassroom(topData = null) {
         {},
         viltMutationClient
       ).catch(() => setToastMessage('Topic classroom Update Error!'));
+
+      setToastMessage('Topic classroom update successfully','success');
 
       return resUpdate?.updateTopicClassroom || null;
     }
@@ -137,6 +142,7 @@ export default function useHandleTopicClassroom(topData = null) {
     ).catch(() => setToastMessage('Topic classroom Create Error!'));
 
     setTopicClassroom((prev) => ({ ...prev, id: res?.createTopicClassroom?.id }));
+    setToastMessage('Topic classroom added successfully','success');
 
     return res?.createTopicClassroom || null;
   }

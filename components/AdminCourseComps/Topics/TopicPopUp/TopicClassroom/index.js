@@ -44,7 +44,12 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
     },
     {
       title: 'VC Setting',
-      body: <VcSettings/>
+      body: (
+        <VcSettings
+          handleChange={handleTopicClassroomChange}
+          closeAccordion={() => setAccordionOpenState(1)}
+        />
+      )
     }
   ];
 

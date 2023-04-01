@@ -1,12 +1,11 @@
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { TopicClassroomAtom } from '@/state/atoms/courses.atom';
-import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import SwitchBox from './common/SwitchBox';
 import styles from './vcSetting.module.scss';
-const VcSettings = () => {
-  const [topicClassroom,setTopicClassroom] = useRecoilState(TopicClassroomAtom);
-    return (
+const VcSettings = ({ handleChange = {}, closeAccordion = () => {} }) => {
+  const topicClassroom = useRecoilValue(TopicClassroomAtom);
+  return (
     <div className={`${styles.vcSettingContainer}`}>
       <p className={`${styles.permissionHead}`}>Permission</p>
       <p className={`${styles.subHead}`}>Let Everyone </p>
@@ -19,14 +18,12 @@ const VcSettings = () => {
                 'If disabled, only Instructor and Moderator will be able to share their screen',
               name: 'Share Screen',
               //   isDisabled: getIsFreezeDisabled(),
-                isChecked: topicClassroom.isScreenShareEnabled,
-                handleChange: (e) => {
-                  const share = e.target.checked;
-                  setTopicClassroom({
-                    ...topicClassroom,
-                    isScreenShareEnabled:share
-                  })
-                }
+              isChecked: topicClassroom?.isScreenShareEnabled,
+              handleChange: (e) => {
+                handleChange({
+                  isScreenShareEnabled: e.target.checked
+                });
+              }
             }}
           />
         </div>
@@ -38,14 +35,12 @@ const VcSettings = () => {
                 'If disabled, only Instructor and Moderator will be able to post messages to chat',
               name: 'qaRequired',
               //   isDisabled: getIsFreezeDisabled(),
-                isChecked:topicClassroom.isChatEnabled,
-                handleChange: (e) => {
-                  const isMessage = e.target.checked;
-                  setTopicClassroom({
-                    ...topicClassroom,
-                     isChatEnabled:isMessage
-                  })
-                }
+              isChecked: topicClassroom?.isChatEnabled,
+              handleChange: (e) => {
+                handleChange({
+                  isChatEnabled: e.target.checked
+                });
+              }
             }}
           />
         </div>
@@ -59,14 +54,12 @@ const VcSettings = () => {
                 'If disabled, only Instructor and Moderator will be able to access the microphone',
               name: 'qaRequired',
               //   isDisabled: getIsFreezeDisabled(),
-                isChecked: topicClassroom.isMicrophoneEnabled,
-                handleChange: (e) => {
-                  const isMicrophone = e.target.checked;
-                  setTopicClassroom({
-                    ...topicClassroom,
-                     isMicrophoneEnabled:isMicrophone
-                  })
-                }
+              isChecked: topicClassroom?.isMicrophoneEnabled,
+              handleChange: (e) => {
+                handleChange({
+                  isMicrophoneEnabled: e.target.checked
+                });
+              }
             }}
           />
         </div>
@@ -78,14 +71,12 @@ const VcSettings = () => {
                 'If disabled, only Instructor and Moderator will be able to post questions.',
               name: 'qaRequired',
               //   isDisabled: getIsFreezeDisabled(),
-                isChecked: topicClassroom.isQaEnabled,
-                handleChange: (e) => {
-                  const isQa = e.target.checked;
-                  setTopicClassroom({
-                    ...topicClassroom,
-                     isQaEnabled:isQa
-                  })
-                }
+              isChecked: topicClassroom?.isQaEnabled,
+              handleChange: (e) => {
+                handleChange({
+                  isQaEnabled: e.target.checked
+                });
+              }
             }}
           />
         </div>
@@ -98,14 +89,12 @@ const VcSettings = () => {
               'If disabled, only Instructor and Moderator will be able to access the microphone',
             name: 'qaRequired',
             //   isDisabled: getIsFreezeDisabled(),
-              isChecked: topicClassroom.isCameraEnabled,
-              handleChange: (e) => {
-                const isCamera = e.target.checked;
-                setTopicClassroom({
-                  ...topicClassroom,
-                   isCameraEnabled:isCamera
-                })
-              }
+            isChecked: topicClassroom?.isCameraEnabled,
+            handleChange: (e) => {
+              handleChange({
+                isCameraEnabled: e.target.checked
+              });
+            }
           }}
         />
       </div>
@@ -113,12 +102,14 @@ const VcSettings = () => {
       <div className={`${styles.moderatorControlls}`}>
         <LabeledRadioCheckbox
           type="checkbox"
-        //   isError={!courseMetaData?.expertiseLevel?.length && error?.includes('expertiseLevel')}
-        //   label={COURSE_EXPERTISE_LEVEL.competent}
-        //   value={COURSE_EXPERTISE_LEVEL.competent}
-          isChecked={topicClassroom.isOverrideConfig}
-        //   changeHandler={handleExpertise}
-        //   isDisabled={isDisabled}
+          //   isError={!courseMetaData?.expertiseLevel?.length && error?.includes('expertiseLevel')}
+          //   label={COURSE_EXPERTISE_LEVEL.competent}
+          //   value={COURSE_EXPERTISE_LEVEL.competent}
+          isChecked={topicClassroom?.isOverrideConfig}
+          changeHandler={(e) => {
+            handleChange({ isOverrideConfig: e.target.checked });
+          }}
+          //   isDisabled={isDisabled}
         />
         <p>Allow moderator to take over these controls</p>
       </div>
