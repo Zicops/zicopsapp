@@ -313,8 +313,8 @@
         cursor: pointer;
         opacity: 1;
 
-        &:disabled{
-          background-color:  $darkTwo;
+        &:disabled {
+          background-color: $darkTwo;
           color: $darkOne;
         }
 
@@ -1008,5 +1008,13 @@
     background-size: cover;
     padding: 10px;
     height: 20px;
+  }
+}
+
+.topicCompleted {
+  background: transparent !important;
+
+  &:hover {
+    background: $primary !important;
   }
 }
