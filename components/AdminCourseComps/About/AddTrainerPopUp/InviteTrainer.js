@@ -1,9 +1,19 @@
 import Button from '@/components/common/Button';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { AddTrainerPopUpAtom } from '@/state/atoms/courses.atom';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import AddExpertise from './AddExpertise';
 import styles from './addTrainer.module.scss';
 const InviteTrainer = () => {
+  const [userType, setUserType] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const typesOfUser = [
+    { label: 'Internal', value: 'Internal' },
+    { label: 'external', value: 'external' }
+  ];
+  const[addTrainerAtom,setAddtrainerAtom]=useRecoilState(AddTrainerPopUpAtom)
   return (
     <>
       <div className={`${styles.invitetrainerContainer}`}>
@@ -13,15 +23,14 @@ const InviteTrainer = () => {
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'select user',
-                placeholder: 'Internal'
-                //   options: [],
-                //   value: courseMetaData?.subCategory
-                //     ? { value: courseMetaData?.subCategory, label: courseMetaData?.subCategory }
-                //     : null,
-                //   isDisabled: true
+                placeholder: 'Internal',
+                options: typesOfUser,
+                value: { label: userType, value: userType }
               }}
-              // isFullWidth={true}
               styleClass={`${styles.selectUserInput}`}
+              changeHandler={(e) => {
+                setUserType(e?.value);
+              }}
             />
           </div>
           <div className={`${styles.emailInputs}`}>
@@ -29,18 +38,19 @@ const InviteTrainer = () => {
             <LabeledInput
               inputOptions={{
                 inputName: 'email',
-                placeholder: 'Type email ID and press enter'
-                //   isNumericOnly: true,
-                //   value: +courseMetaData?.expectedCompletion || null,
-                //   isDisabled: isDisabled
+                placeholder: 'Type email ID and press enter',
+                value: userEmail,
               }}
-              styleClass={`${styles.emailInput}`}
-              // changeHandler={(e) => handleChange({ expectedCompletion: e?.target?.value || null })}
+              changeHandler={(e) => 
+              {
+                setUserEmail(e.target.value)
+              }}
+               styleClass={`${styles.emailInput}`}
             />
           </div>
         </div>
 
-        <AddExpertise />
+        <AddExpertise title={'InviteTrainer'}/>
         <div className={`${styles.inviteTrainerBtns}`}>
           <Button
             text="Cancel"
@@ -49,7 +59,10 @@ const InviteTrainer = () => {
           />
           <Button
             text="Send Invite"
-            // clickHandler={toggleResourceForm}
+            clickHandler={()=>
+            {
+              console.info(addTrainerAtom.InviteTrainer)
+            }}
             styleClass={styles.inviteTrainerSendBtn}
           />
         </div>

@@ -18,16 +18,48 @@ import SearchBar from '@/components/common/FormComponents/SearchBar';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { isWordIncluded } from '@/helper/utils.helper';
-const AddExpertise = () => {
+import { useRecoilState } from 'recoil';
+import { AddTrainerPopUpAtom } from '@/state/atoms/courses.atom';
+const AddExpertise = ({title}) => {
   const [expertise, setExpertise] = useState([]);
   const [selectedExpertise, setSelectedExpertise] = useState([]);
+  const [selectedInviteExpertise, setSelectedInviteExpertise] = useState([]);
   const { catSubCat } = useHandleCatSubCat();
+  const[addTrainerAtom,setAddtrainerAtom]=useRecoilState(AddTrainerPopUpAtom)
+  useEffect(()=>
+  {
+    setAddtrainerAtom({
+      ...addTrainerAtom,
+      ExistingUserArr:[...selectedExpertise]
+    })
+  },[selectedExpertise])
+
+  useEffect(()=>
+  {
+    setAddtrainerAtom({
+      ...addTrainerAtom,
+      InviteTrainer:[...selectedInviteExpertise]
+    })
+  },[selectedInviteExpertise])
   const handleExpretiseSelection = (e) => {
-    const { value, checked } = e.target;
+    if(title==='ExistingUser')
+    {
+        const { value, checked } = e.target;
     if (checked) {
       setSelectedExpertise([...(selectedExpertise || []), value]);
+      
     } else {
       setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
+    }
+    }
+    else if(title==="InviteTrainer")
+    {
+      const { value, checked } = e.target;
+      if (checked) {
+        setSelectedInviteExpertise([...(selectedInviteExpertise || []), value]);
+      } else {
+        setSelectedInviteExpertise(selectedInviteExpertise?.filter((lang) => lang !== value));
+      }
     }
   };
   const cardContainerRef = useRef(null);
@@ -63,7 +95,7 @@ const AddExpertise = () => {
           inputDataObj={{
             inputOptions: {
               inputName: 'filter',
-              placeholder: 'Search...'
+              placeholder: 'Search...',
               // value: expertiseValue
             },
             changeHandler: (e) => setExpertise(e.target.value)
@@ -96,7 +128,7 @@ const AddExpertise = () => {
                           label={subCat.Name}
 
                           // isChecked={selectedExpertise?.includes(subCat.Name)}
-                          // changeHandler={handleExpretiseSelection}
+                          changeHandler={handleExpretiseSelection}
                         />
                       </div>
                     );

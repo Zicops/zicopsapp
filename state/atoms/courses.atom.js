@@ -87,3 +87,11 @@ export const AllCourseModulesDataAtom = atom({
   key: 'AllCourseModulesData',
   default: null
 });
+
+export const AddTrainerPopUpAtom=atom({
+  key:'AddTrainerPopUpAtom',
+  default:{
+    ExistingUserArr:[],
+    InviteTrainer:[]
+  }
+})
