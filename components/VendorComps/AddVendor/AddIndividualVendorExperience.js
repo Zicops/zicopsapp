@@ -155,18 +155,6 @@ const AddVendorProfile = ({ data = {} }) => {
         {!!smeServices.isApplicable && (
           <div className={`${styles.addExpertise}`}>
             <label for="serviceDescription">Subject matter expertise:</label>
-            {!profileData?.sme_expertises?.length ? (
-              <IconButton
-                text="Add subject matter expertise"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={isViewPage || isIndividualVendor}
-                handleClick={() => {
-                  setOpenSmeExpertise(true);
-                }}
-              />
-            ) : (
-              <>
                 <div className={`${styles.languages}`}>
                   {tempSmeExpertise?.map((data, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
@@ -181,56 +169,32 @@ const AddVendorProfile = ({ data = {} }) => {
                     </div>
                   ))}
                 </div>
-              </>
-            )}
           </div>
         )}
 
         {!!crtServices.isApplicable && (
           <div className={`${styles.addExpertise}`}>
             <label for="serviceDescription">Classroom Training Expertise:</label>
-            {!profileData?.crt_expertises?.length ? (
-              <IconButton
-                text="Add classroom training expertise"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={isViewPage || isIndividualVendor}
-                handleClick={() => setOpenCrtExpertise(true)}
-              />
-            ) : (
-              <>
-                <div className={`${styles.languages}`}>
-                  {tempCrtExpertise?.map((data, index) => (
-                    <div className={`${styles.singleLanguage}`} key={index}>
-                      <LabeledRadioCheckbox
-                        type="checkbox"
-                        label={data}
-                        value={data}
-                        isDisabled={isViewPage || isIndividualVendor}
-                        isChecked={selectedCrtExpertise?.includes(data)}
-                        changeHandler={handleAddRemoveCrtExpertise}
-                      />
-                    </div>
-                  ))}
+            <div className={`${styles.languages}`}>
+              {tempCrtExpertise?.map((data, index) => (
+                <div className={`${styles.singleLanguage}`} key={index}>
+                  <LabeledRadioCheckbox
+                    type="checkbox"
+                    label={data}
+                    value={data}
+                    isDisabled={isViewPage || isIndividualVendor}
+                    isChecked={selectedCrtExpertise?.includes(data)}
+                    changeHandler={handleAddRemoveCrtExpertise}
+                  />
                 </div>
-              </>
-            )}
+              ))}
+            </div>
           </div>
         )}
 
         {!!cdServices.isApplicable && (
           <div className={`${styles.addExpertise}`}>
             <label for="serviceDescription">Content Development Expertise:</label>
-            {!profileData?.content_development?.length ? (
-              <IconButton
-                text="Add content development expertise"
-                styleClass={`${styles.button}`}
-                imgUrl="/images/svg/add_circle.svg"
-                isDisabled={isViewPage || isIndividualVendor}
-                handleClick={() => setOpenCdExpertise(true)}
-              />
-            ) : (
-              <>
                 <div className={`${styles.languages}`}>
                   {tempCdExpertise?.map((data, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
@@ -245,8 +209,6 @@ const AddVendorProfile = ({ data = {} }) => {
                     </div>
                   ))}
                 </div>
-              </>
-            )}
           </div>
         )}
       </div>
@@ -277,7 +239,7 @@ const AddVendorProfile = ({ data = {} }) => {
         isFooterVisible={true}>
         <AddExpriences />
       </VendorPopUp>
-      <div className={`${styles.hr}`}></div>
+
       <VendorPopUp
         open={isOpenSmeExpertise}
         title="Add Subject matter expertise"

@@ -67,11 +67,11 @@ export default function MarketYardData({
         />
       )}
       {displayRows?.isCdDisplayed && !!crtVendors?.length && (
-        <ZicopsCarousel title="Content Development Marketplace" data={crtVendors} type="vendor" />
+        <ZicopsCarousel title="Training Fulfiller Marketplace" data={crtVendors} type="vendor" />
       )}
 
       {displayRows?.isCrtDisplayed && !!cdVendors?.length && (
-        <ZicopsCarousel title="Training Fulfiller Marketplace" data={cdVendors} type="vendor" />
+        <ZicopsCarousel title="Content Development Marketplace" data={cdVendors} type="vendor" />
       )}
       {!!speakerDetails?.length && (
         <ZicopsCarousel title="Speakers Marketplace" data={speakerDetails} type="vendor" />
