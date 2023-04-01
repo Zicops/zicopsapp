@@ -1,11 +1,11 @@
 import { getUrlFromFile, truncateToN } from '@/helper/common.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
 import Button from '../../Button';
 import PopUp from '../../PopUp';
 import Spinner from '../../Spinner';
 import ViewDoc from '../../ViewDoc';
 import styles from '../formComponents.module.scss';
-import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 
 const PREVIEW_FILE_TYPES = {
   download: 'download',
@@ -28,7 +28,6 @@ export default function FilePreview({
 
     if (typeof filePath === 'string' && fileSrc?.type == null) {
       const decodedFileName = getEncodedFileNameFromUrl(filePath);
-      console.info(decodedFileName);
       let type = getFileType(decodedFileName?.split('.')?.[1]);
       if (!type) type = await checkImage(filePath).catch((err) => console.log(err));
 
@@ -40,8 +39,6 @@ export default function FilePreview({
       .catch((err) => setFileSrc({ type: null, url: '' }));
   }, [fileName, filePath]);
 
-  console.info(fileSrc, fileName, filePath);
-
   async function checkImage(url) {
     return new Promise((resolve, reject) => {
       var request = new XMLHttpRequest();
@@ -51,7 +48,7 @@ export default function FilePreview({
         const str = request?.getAllResponseHeaders()?.split('\r\ncontent-type: ');
         const contentType = str?.[1]?.split('\r\n')?.[0];
 
-        resolve(contentType);
+        resolve(getFileType(contentType));
       };
 
       request.onerror = () => reject(null);
@@ -91,7 +88,6 @@ export default function FilePreview({
 }
 
 function getFileType(fileType = null) {
-  console.info(fileType);
   if (!fileType) return null;
 
   if (
