@@ -594,8 +594,8 @@ export default function useHandleVendor() {
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
       languages: profileData?.languages || [],
-      SME_Expertise: profileData?.sme_expertises || [],
-      Classroom_expertise: profileData?.crt_expertises || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      classroom_expertise: profileData?.crt_expertises || [],
       content_development: profileData?.content_development || [],
       experience: [],
       experienceYear: profileData?.experienceYear || '',
@@ -603,8 +603,8 @@ export default function useHandleVendor() {
       status: VENDOR_MASTER_STATUS.active
     };
     if (
-      !sendData?.SME_Expertise?.length &&
-      !sendData?.Classroom_expertise?.length &&
+      !sendData?.SME_expertise?.length &&
+      !sendData?.classroom_expertise?.length &&
       !sendData?.content_development?.length
     ) {
       sendData.is_speaker = false;
