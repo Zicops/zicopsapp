@@ -56,10 +56,11 @@ export default function VendorDetails({ data }) {
         <hr />
         <div>Social Media</div>
         <div className={`${styles.marketyardSocialMediaIcons}`}>
-          {socialMediaData?.map((media, i) => (
-            <img src={`${media?.imageUrl}`} />
-          ))}
-          {/* <small>{!socialMediaData?.value && 'No Social Media Available'}</small> */}
+          {socialMediaData?.map((media, i) => {
+            if (!media?.imageUrl) return;
+            return <img src={`${media?.imageUrl}`} />;
+          })}
+          <small>{!socialMediaData?.value && 'No Social Media Added'}</small>
         </div>
       </div>
     </div>

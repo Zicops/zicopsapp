@@ -16,7 +16,7 @@ export function getVendorCurrentStateObj(data = {}) {
     isUpdating: data?.isUpdating || false,
     isSaved: data?.isSaved || false,
     errors: data?.errors || [],
-    enabledServices: data?.enabledServices || []
+    enabledServices: [...new Set(data?.enabledServices || [])]
   };
 }
 
