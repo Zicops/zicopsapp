@@ -1,6 +1,7 @@
 import { GET_COURSE } from '@/api/Queries';
 import AdminCourseTabs from '@/components/AdminCourseComps/AdminCourseTabs';
 import CoursePageTitle from '@/components/AdminCourseComps/CoursePageTitle';
+import useHandleCourseData from '@/components/AdminCourseComps/Logic/useHandleCourseData';
 import AdminHeader from '@/components/common/AdminHeader';
 import MainBody from '@/components/common/MainBody';
 import MainBodyBox from '@/components/common/MainBodyBox';
@@ -9,11 +10,12 @@ import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.hel
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
-  CourseMetaDataAtom,
-  getCourseCurrentStateObj,
+  CourseMetaDataAtom, getCourseCurrentStateObj,
   getCourseMetaDataObj
 } from '@/state/atoms/courses.atom';
+import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
@@ -24,17 +26,24 @@ export default function EditCoursePage() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
+  const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+
+  const {getViltData} = useHandleCourseData();
 
   const router = useRouter();
   const courseId = router?.query?.courseId;
 
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
-  // load course data
+
+  // load course data.
   useEffect(() => {
     if (!courseId) return;
 
+    //load vilt data
+    getViltData(courseId);
     if (courseMetaData?.id !== courseId) {
       loadAndCacheDataAsync(GET_COURSE, { course_id: [courseId] })
         .then((res) => {
@@ -68,6 +77,9 @@ export default function EditCoursePage() {
           console.log(`Course Data Load Error: `, err);
           setToastMsg({ type: 'danger', message: 'Course Data Load Error' });
         });
+
+      // if (courseType !== COURSE_TYPES.classroom) return;
+      
     }
   }, [courseId]);
 
