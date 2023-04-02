@@ -68,7 +68,10 @@ export default function AboutVendor({ data }) {
         {accordianMarketyardDetails.map((value, index) => {
           if (!value?.serviceData?.isApplicable) return;
           return (
-            <ZicopsAccordian title={value.title} description={value.description}>
+            <ZicopsAccordian
+              title={value.title}
+              description={value.description}
+              defaultState={true}>
               <VendorServices data={value.serviceData} type={value?.type} />
             </ZicopsAccordian>
           );
