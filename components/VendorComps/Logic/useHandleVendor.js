@@ -211,7 +211,7 @@ export default function useHandleVendor() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
     getVendorAdmins(id);
   }
 
