@@ -41,7 +41,6 @@ const VCtoolStartPage = ({ vcData = null, isDisplayedInCourse = false }) => {
     <>
       <div className={`${styles.vctoolStartPageContainer}`}>
         <div className={`${styles.timeFrame}`}>
-          {/* <VcMaintool /> */}
           {/* <TimeFrame givenTime={new Date("4/10/2023 00:00:00").getTime()} */}
 
           <TimeFrame
