@@ -5,80 +5,80 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 
-const data = [
-  {
-    id: '1001',
-    order_id: 110,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  },
-  {
-    id: '1001',
-    order_id: 111,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Freelancer',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1002',
-    order_id: 112,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  },
-  {
-    id: '1003',
-    order_id: 113,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Freelancer',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1004',
-    order_id: 114,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1005',
-    order_id: 115,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1006',
-    order_id: 116,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1007',
-    order_id: 117,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1008',
-    order_id: 118,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  }
-];
+// const data = [
+//   {
+//     id: '1001',
+//     order_id: 110,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Company',
+//     services: 'SME, Content development',
+//     status: 'Added'
+//   },
+//   {
+//     id: '1001',
+//     order_id: 111,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Freelancer',
+//     services: 'SME, Content development',
+//     status: 'Confirmed'
+//   },
+//   {
+//     id: '1002',
+//     order_id: 112,
+//     vendor_name: 'Mnop learning',
+//     vendor_type: 'Company',
+//     services: 'SME, Content development',
+//     status: 'Added'
+//   },
+//   {
+//     id: '1003',
+//     order_id: 113,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Freelancer',
+//     services: 'Training',
+//     status: 'Added'
+//   },
+//   {
+//     id: '1004',
+//     order_id: 114,
+//     vendor_name: 'Mnop learning',
+//     vendor_type: 'Company',
+//     services: 'SME, Content development',
+//     status: 'Confirmed'
+//   },
+//   {
+//     id: '1005',
+//     order_id: 115,
+//     vendor_name: 'Mnop learning',
+//     vendor_type: 'Company',
+//     services: 'Training',
+//     status: 'Added'
+//   },
+//   {
+//     id: '1006',
+//     order_id: 116,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Company',
+//     services: 'SME, Content development',
+//     status: 'Confirmed'
+//   },
+//   {
+//     id: '1007',
+//     order_id: 117,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Company',
+//     services: 'Training',
+//     status: 'Added'
+//   },
+//   {
+//     id: '1008',
+//     order_id: 118,
+//     vendor_name: 'Abcd learning ',
+//     vendor_type: 'Company',
+//     services: 'SME, Content development',
+//     status: 'Added'
+//   }
+// ];
 
 const VendorOrders = () => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
@@ -86,10 +86,10 @@ const VendorOrders = () => {
   const router = useRouter();
   useEffect(() => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    getAllOrders(lspId);
+    const vendor = getAllOrders(lspId);
     // setOrderTableData(orderData);
+    console.info(vendor);
   }, []);
-  console.info(orderDetails);
   const columns = [
     {
       field: 'id',
@@ -174,7 +174,7 @@ const VendorOrders = () => {
         columns={columns}
         tableHeight="70vh"
         pageSize={getPageSizeBasedOnScreen()}
-        data={data}
+        data={orderDetails}
       />
     </>
   );

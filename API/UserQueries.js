@@ -1151,9 +1151,9 @@ export const GET_ALL_ORDERS = gql`
 
 export const GET_ORDER_SERVICES = gql`
   query getOrderServices($order_id: [String]) {
-    getOrderServices(order_id: $order_id) {
+    getOrderServices(id: $order_id) {
+      id
       service_id
-      order_id
       service_type
       description
       unit

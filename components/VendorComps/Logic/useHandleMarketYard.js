@@ -144,7 +144,6 @@ export default function useHandleMarketYard() {
   async function addUpdateOrder() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
-      orderId: orderData?.orderId,
       vendorId: vendorId,
       lspId: lspId,
       total: orderData?.total,
@@ -194,8 +193,6 @@ export default function useHandleMarketYard() {
     const serviceData = [];
     for (let i = 0; i < orderArray?.length; i++) {
       const sendData = {
-        serviceId: orderArray[i]?.serviceId || '',
-        orderId: orderArray[i]?.orderId || '',
         serviceType: orderArray[i]?.serviceType || '',
         description: orderArray[i]?.description || '',
         unit: orderArray[i]?.unit || 0,

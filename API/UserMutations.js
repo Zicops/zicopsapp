@@ -2033,7 +2033,6 @@ export const DELETE_SAMPLE_FILE = gql`
 
 export const ADD_ORDER = gql`
   mutation addOrder(
-    $orderId: String
     $vendorId: String
     $lspId: String
     $total: Int
@@ -2043,7 +2042,6 @@ export const ADD_ORDER = gql`
   ) {
     addOrder(
       input: {
-        order_id: $orderId
         vendor_id: $vendorId
         lsp_id: $lspId
         total: $total
@@ -2052,7 +2050,7 @@ export const ADD_ORDER = gql`
         status: $status
       }
     ) {
-      order_id
+      id
       vendor_id
       lsp_id
       total
@@ -2078,7 +2076,7 @@ export const UPDATE_ORDER = gql`
   ) {
     updateOrder(
       input: {
-        order_id: $orderId
+        id: $orderId
         vendor_id: $vendorId
         lsp_id: $lspId
         total: $total
@@ -2087,7 +2085,7 @@ export const UPDATE_ORDER = gql`
         status: $status
       }
     ) {
-      order_id
+      id
       vendor_id
       lsp_id
       total
