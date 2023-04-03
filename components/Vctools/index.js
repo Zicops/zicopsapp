@@ -8,7 +8,7 @@ import { StartMeeting } from "./help/vctool.helper";
 import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import styles from './vctoolMain.module.scss';
-const VcMaintool = () => {
+const VcMaintool = (vcData={}) => {
   const Route=useRouter()
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
@@ -180,7 +180,7 @@ const VcMaintool = () => {
       <div className={`${styles.mainCard}`}>
         {/* all components ara going to append here */}
         {
-          !hidecard ? <MeetingCard
+          !hidecard ? <MeetingCard vcData={vcData}
             startMeeting={() => {
               StartMeeting("sk", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s

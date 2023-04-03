@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
 import styles from './sessionJoin.module.scss';
-const SessionJoinCard = ({classroomData = {}}) => {
+const SessionJoinCard = ({ classroomData = {} }) => {
   const [timing, setTiming] = useState({
     // meeting start time
-    day: new Date().getDate(),
-    month: new Date().getMonth(),
-    year: new Date().getFullYear(),
-    time: 12,
-    timeMin: 29
+    day: new Date(classroomData?.trainingStartTime * 1000).getDate(),
+    month: new Date(classroomData?.trainingStartTime * 1000).getMonth(),
+    year: new Date(classroomData?.trainingStartTime * 1000).getFullYear(),
+    time: new Date(classroomData?.trainingStartTime * 1000).getHours(),
+    timeMin: new Date(classroomData?.trainingStartTime * 1000).getMinutes()
     // timeSec: 0
   });
-  let duration = 1800;
-  const [meetingStart, setmeetingStart] = useState(new Date('3/31/2023 14:58:00').getTime());
-  const [meetingEnd, setmeetingEnd] = useState(new Date('3/31/2023 15:30:00').getTime());
+  const [meetingStart, setmeetingStart] = useState(classroomData?.trainingStartTime);
+  const [meetingEnd, setmeetingEnd] = useState(classroomData?.trainingEndTime);
 
-  const [meetingDuration, setMeetingDuration] = useState(30);
-  const [meetingType, setMeetingType] = useState('');
+  const [meetingDuration, setMeetingDuration] = useState(classroomData?.duration / 60);
+  const [meetingType, setMeetingType] = useState();
   useEffect(() => {
     var now = new Date().getTime();
     if (now >= meetingStart && now <= meetingEnd) {
@@ -55,10 +54,14 @@ const SessionJoinCard = ({classroomData = {}}) => {
           <button className={`${styles.sessionEnded}`}>Recording will be available soon</button>
         )}
         <div className={`${styles.joinsessionFooter}`}>
-          <div>{`${timing.day}-${timing.month}-${timing.year},
-          ${timing.time}:${timing.timeMin} IST`}</div>
+          <div className={`${styles.meetingLiveDate}`}>{`${new Date(classroomData?.trainingStartTime * 1000).getDate()}-${new Date(
+            classroomData?.trainingStartTime * 1000
+          ).getMonth()}
+          -${new Date(classroomData?.trainingStartTime * 1000).getFullYear()},
+          ${new Date(classroomData?.trainingStartTime * 1000).getHours()}
+          :${new Date(classroomData?.trainingStartTime * 1000).getMinutes()} IST`}</div>
           <div className={`${styles.meetingDuration}`}>
-            duration :<div className={`${styles.durationTime}`}>{meetingDuration} min</div>
+            duration :<div className={`${styles.durationTime}`}>{classroomData?.duration / 60} min</div>
           </div>
           <div></div>
         </div>
