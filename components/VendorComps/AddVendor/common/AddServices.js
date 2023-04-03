@@ -232,6 +232,23 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             changeHandler={(e) => changeHandler(e, data, setData)}
           />
         </div>
+        <div className={`${styles.serviceMode}`}>
+          <label>Training Mode: </label>
+          <div className={`${styles.modeCheckbox}`}>
+            <LabeledRadioCheckbox
+              label="Online"
+              type="checkbox"
+              isDisabled={isViewPage || !data?.isApplicable}
+              // changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+            <LabeledRadioCheckbox
+              label="Offline"
+              type="checkbox"
+              isDisabled={isViewPage || !data?.isApplicable}
+              // changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+          </div>
+        </div>
         <div className={`${styles.serviceDescriptionExpertise}`}>
           <div className={`${styles.serviceDescription}`}>
             <label for="serviceDescription">Description: </label>
