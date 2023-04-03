@@ -1,9 +1,29 @@
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { useEffect, useState } from 'react';
+import { TopicClassroomFamilyAtom } from '@/state/atoms/courses.atom';
+import { useEffect } from 'react';
+import { useRecoilCallback } from 'recoil';
 
 export default function useLoadClassroomData(topicId = null) {
-  const [data, setData] = useState(null);
+  const setClassroomTopicData = useRecoilCallback(
+    ({ set }) =>
+      (topicId, classroomTopicData) => {
+        set(TopicClassroomFamilyAtom(topicId), classroomTopicData);
+      },
+    []
+  );
+
+  useEffect(() => {
+    if (!topicId) return;
+
+    loadClassRoomData()
+      .then((classroomData) => {
+        if (!classroomData?.id) return;
+
+        setClassroomTopicData(topicId, classroomData);
+      })
+      .catch((err) => console.log(err, 'at topicClassRoom'));
+  }, [topicId]);
 
   async function loadClassRoomData() {
     const res = await loadAndCacheDataAsync(
@@ -25,7 +45,7 @@ export default function useLoadClassroomData(topicId = null) {
       isQaEnabled: _topicClassroom?.is_qa_enabled,
       isCameraEnabled: _topicClassroom?.is_camera_enabled,
       isOverrideConfig: _topicClassroom?.is_override_config,
-      language: _topicClassroom?.language,
+      language: _topicClassroom?.language?.split(', '),
       status: _topicClassroom?.status,
       moderators: _topicClassroom?.moderators,
       trainers: _topicClassroom?.trainers,
@@ -33,17 +53,4 @@ export default function useLoadClassroomData(topicId = null) {
       duration: _topicClassroom?.duration
     };
   }
-
-  useEffect(() => {
-    if (!topicId) return;
-    loadClassRoomData()
-      .then((classroomData) => {
-        if (!classroomData?.id) return;
-        setData(classroomData);
-      })
-      .catch((err) => {
-        console.log(err, 'at topicClassRoom');
-      });
-  }, [topicId]);
-  return data;
 }

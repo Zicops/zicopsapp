@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import styles from './sessionJoin.module.scss';
-const SessionJoinCard = ({ classroomData = {} }) => {
+import { useRecoilValue } from 'recoil';
+import { TopicClassroomFamilyAtom } from '@/state/atoms/courses.atom';
+import useLoadClassroomData from '../Logic/useLoadClassroomData';
+const SessionJoinCard = ({ topicId = null }) => {
+  const classroomTopicData = useRecoilValue(TopicClassroomFamilyAtom(topicId));
+
   const [timing, setTiming] = useState({
     // meeting start time
     day: new Date(classroomData?.trainingStartTime * 1000).getDate(),
@@ -15,6 +20,11 @@ const SessionJoinCard = ({ classroomData = {} }) => {
 
   const [meetingDuration, setMeetingDuration] = useState(classroomData?.duration / 60);
   const [meetingType, setMeetingType] = useState();
+
+  useLoadClassroomData(topicId);
+
+  console.info(classroomTopicData);
+
   useEffect(() => {
     var now = new Date().getTime();
     if (now >= meetingStart && now <= meetingEnd) {
@@ -54,14 +64,15 @@ const SessionJoinCard = ({ classroomData = {} }) => {
           <button className={`${styles.sessionEnded}`}>Recording will be available soon</button>
         )}
         <div className={`${styles.joinsessionFooter}`}>
-          <div className={`${styles.meetingLiveDate}`}>{`${new Date(classroomData?.trainingStartTime * 1000).getDate()}-${new Date(
+          <div className={`${styles.meetingLiveDate}`}>{`${new Date(
             classroomData?.trainingStartTime * 1000
-          ).getMonth()}
+          ).getDate()}-${new Date(classroomData?.trainingStartTime * 1000).getMonth()}
           -${new Date(classroomData?.trainingStartTime * 1000).getFullYear()},
           ${new Date(classroomData?.trainingStartTime * 1000).getHours()}
           :${new Date(classroomData?.trainingStartTime * 1000).getMinutes()} IST`}</div>
           <div className={`${styles.meetingDuration}`}>
-            duration :<div className={`${styles.durationTime}`}>{classroomData?.duration / 60} min</div>
+            duration :
+            <div className={`${styles.durationTime}`}>{classroomData?.duration / 60} min</div>
           </div>
           <div></div>
         </div>

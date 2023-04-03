@@ -6,7 +6,8 @@ import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getTopicClassroomObj, getTopicExamObj, TopicClassroomAtom, TopicExamAtom } from '@/state/atoms/module.atoms';
+import { getTopicClassroomObject } from '@/state/atoms/courses.atom';
+import { getTopicExamObj, TopicClassroomAtom, TopicExamAtom } from '@/state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import ModuleContextProvider from '@/state/contexts/ModuleContext';
@@ -43,7 +44,7 @@ export default function Course() {
     setVideoData(getVideoObject());
     setStartPlayer(false);
     setTopicExamData(getTopicExamObj());
-    setTopicClassroomData(getTopicClassroomObj());
+    setTopicClassroomData(getTopicClassroomObject());
   }, []);
 
   useEffect(async () => {
@@ -98,8 +99,8 @@ export default function Course() {
             overflowX: 'clip'
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
-          
-          {topicClassroomData?.id && <VCtoolStartPage vcData={topicClassroomData} isDisplayedInCourse={true}/>}
+
+          {topicClassroomData?.topicId && <VCtoolStartPage isDisplayedInCourse={true} />}
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 

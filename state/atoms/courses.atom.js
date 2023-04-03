@@ -1,5 +1,5 @@
 import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
-import { atom } from 'recoil';
+import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
   key: 'ActiveCourseTabName',
@@ -207,6 +207,11 @@ export function getTopicResourcesObject(data) {
     isNew: data?.isNew || null
   };
 }
+
+export const TopicClassroomFamilyAtom = atomFamily({
+  key: 'TopicClassroomFamily',
+  default: []
+});
 
 export const TopicClassroomAtom = atom({
   key: 'TopicClassroom',
