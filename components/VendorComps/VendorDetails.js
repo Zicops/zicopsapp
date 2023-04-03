@@ -20,25 +20,25 @@ export default function VendorDetails({ data }) {
       title: 'Facebook',
       inputName: 'facebookURL',
       value: data?.facebookURL,
-      imageUrl: data?.facebookURL ? '/images/svg/Facebook.svg' : ''
+      imageUrl: '/images/svg/Facebook.svg'
     },
     {
       title: 'Instagram',
       inputName: 'instagramURL',
       value: data?.instagramURL,
-      imageUrl: data?.instagramURL ? '/images/svg/Instagram.svg' : ''
+      imageUrl: '/images/svg/Instagram.svg'
     },
     {
       title: 'Twitter',
       inputName: 'twitterURL',
       value: data?.twitterURL,
-      imageUrl: data?.twitterURL ? '/images/svg/Twitter.svg' : ''
+      imageUrl: '/images/svg/Twitter.svg'
     },
     {
       title: 'LinkedIn',
       inputName: 'linkedinURL',
       value: data?.linkedinURL,
-      imageUrl: data?.linkedinURL ? '/images/svg/Linkedin.svg' : ''
+      imageUrl: '/images/svg/Linkedin.svg'
     }
   ];
   return (
@@ -57,9 +57,17 @@ export default function VendorDetails({ data }) {
         <div>Social Media</div>
         <div className={`${styles.marketyardSocialMediaIcons}`}>
           {socialMediaData?.map((media, i) => (
-            <img src={`${media?.imageUrl}`} />
+            <>
+              {!!media?.value && (
+                <a href={media?.value} target="blank">
+                  <img src={`${media?.imageUrl}`} />
+                </a>
+              )}
+            </>
           ))}
-          {/* <small>{!socialMediaData?.value && 'No Social Media Available'}</small> */}
+          <small>
+            {socialMediaData.every((data) => !data?.value) && 'No Social Media Available'}
+          </small>
         </div>
       </div>
     </div>
