@@ -86,10 +86,10 @@ const VendorOrders = () => {
   const router = useRouter();
   useEffect(() => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    const vendor = getAllOrders(lspId);
+    getAllOrders(lspId);
     // setOrderTableData(orderData);
-    console.info(vendor);
   }, []);
+  console.info(orderDetails);
   const columns = [
     {
       field: 'id',
@@ -150,7 +150,7 @@ const VendorOrders = () => {
           // { handleClick: () => router.push(`/edit-order`) },
           {
             text: 'Edit',
-            handleClick: () => router.push(`/admin/vendor/orders/edit-order`)
+            handleClick: () => router.push(`/admin/vendor/orders/edit-order/${params.row.id}`)
           },
           {
             text: 'Disable'

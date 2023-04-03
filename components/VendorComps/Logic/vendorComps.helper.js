@@ -779,18 +779,6 @@ export const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map(
   value: val
 }));
 
-export const dateNameID = [
-  { label: 'Date', value: '23/02/2023' },
-  { label: 'Vendor Name', value: 'ABC Pvt. Ltd.' },
-  { label: 'Order ID', value: '#111' }
-];
-
-export const statusTypeServie = [
-  { label: 'Status', value: 'Added' },
-  { label: 'Vendor Type', value: 'Organisation' },
-  { label: 'Services', value: 'SME, Content Development' }
-];
-
 export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
 
 export const serviceOptions = [

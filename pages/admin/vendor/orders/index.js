@@ -4,7 +4,6 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import VendorOrders from '@/components/VendorComps/VendorOrders';
-import React from 'react';
 
 const Orders = () => {
   return (

@@ -1,7 +1,21 @@
-import { dateNameID, statusTypeServie } from '../Logic/vendorComps.helper';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
+import { statusTypeServie } from '../Logic/vendorComps.helper';
 import styles from '../vendorComps.module.scss';
+import { useRecoilState } from 'recoil';
 
-export default function OrderMaster() {
+export default function OrderMaster({ orderData, serviceData }) {
+  const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const dateNameID = [
+    { label: 'Date', value: '23/02/2023' },
+    { label: 'Vendor Name', value: vendorData?.name },
+    { label: 'Order ID', value: orderData?.id }
+  ];
+  const statusTypeServie = [
+    { label: 'Status', value: 'Added' },
+    { label: 'Vendor Type', value: vendorData?.type },
+    { label: 'Services', value: 'SME, Content Development' }
+  ];
+
   return (
     <div className={`${styles.orderMasterContainer}`}>
       <div className={`${styles.orderMasterDetails}`}>
