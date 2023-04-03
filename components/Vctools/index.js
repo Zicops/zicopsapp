@@ -186,8 +186,7 @@ const VcMaintool = (vcData={}) => {
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
               setIsMeetingStarted(true)
-              sethidecard(!hidecard)
-              // Route.push('/admin/courses/classRoom')       
+              sethidecard(!hidecard)    
       
             }}
             startAudioenableFun={() => {
