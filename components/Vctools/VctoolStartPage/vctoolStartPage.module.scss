@@ -5,6 +5,7 @@
   //   display: flex;
   padding-top: 5rem;
   justify-content: center;
+  overflow: hidden;
 }
 .subDiv {
   display: flex;
@@ -12,8 +13,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  //   padding-top: 4rem;
-  margin-top: -9rem;
+  margin-top: -5rem;
 }
 .vctoolStartPageContainer > div > div {
   margin-top: -6rem;
@@ -40,7 +40,7 @@
   //   width: 20%;
   display: flex;
   align-items: center;
-  margin-top: -4rem;
+  margin-top: 2rem;
   margin-right: 12px;
   justify-content: flex-end;
 }
