@@ -1777,6 +1777,8 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     createSubjectMatterExpertise(
@@ -1790,6 +1792,8 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
         output_deliveries: $output_deliveries
         sample_files: $sample_files
         Status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       vendor_id
@@ -1805,6 +1809,8 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1819,6 +1825,8 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     updateSubjectMatterExpertise(
@@ -1832,6 +1840,8 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
         output_deliveries: $output_deliveries
         sample_files: $sample_files
         Status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       vendor_id
@@ -1847,6 +1857,8 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1861,7 +1873,8 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $is_expertise_online: Boolean
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     createClassRoomTraining(
@@ -1874,8 +1887,9 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        is_expertise_online: $is_expertise_online
         status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       crt_id
@@ -1886,12 +1900,13 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      is_expertise_online
       created_at
       created_by
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1906,7 +1921,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $is_expertise_online: Boolean
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     updateClassRoomTraining(
@@ -1919,7 +1935,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        is_expertise_online: $is_expertise_online
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
         status: $status
       }
     ) {
@@ -1931,12 +1948,13 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      is_expertise_online
       created_at
       created_by
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1951,6 +1969,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     createContentDevelopment(
@@ -1964,6 +1984,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
         output_deliveries: $output_deliveries
         sample_files: $sample_files
         status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       cd_id
@@ -1979,6 +2001,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;

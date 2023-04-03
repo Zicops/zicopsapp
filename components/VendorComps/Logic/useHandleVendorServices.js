@@ -60,7 +60,9 @@ export default function useHandleVendorServices() {
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
       sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: smeData?.isExpertiseOnline,
+      isExpertiseOffline: smeData?.isExpertiseOffline
     };
 
     let isError = false;
@@ -135,7 +137,9 @@ export default function useHandleVendorServices() {
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
       sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: ctData?.isExpertiseOnline,
+      isExpertiseOffline: ctData?.isExpertiseOffline
     };
 
     let isError = false;
@@ -208,7 +212,9 @@ export default function useHandleVendorServices() {
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
       sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: cdData?.isExpertiseOnline,
+      isExpertiseOffline: cdData?.isExpertiseOffline
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 

@@ -238,14 +238,18 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             <LabeledRadioCheckbox
               label="Online"
               type="checkbox"
+              name="isExpertiseOnline"
+              isChecked={data[`isExpertiseOnline`]}
               isDisabled={isViewPage || !data?.isApplicable}
-              // changeHandler={(e) => changeHandler(e, data, setData)}
+              changeHandler={(e) => changeHandler(e, data, setData)}
             />
             <LabeledRadioCheckbox
               label="Offline"
               type="checkbox"
               isDisabled={isViewPage || !data?.isApplicable}
-              // changeHandler={(e) => changeHandler(e, data, setData)}
+              name="isExpertiseOffline"
+              isChecked={data[`isExpertiseOffline`]}
+              changeHandler={(e) => changeHandler(e, data, setData)}
             />
           </div>
         </div>
