@@ -239,7 +239,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               label="Online"
               type="checkbox"
               name="isExpertiseOnline"
-              isChecked={data[`isExpertiseOnline`]}
+              isChecked={data?.isExpertiseOnline}
               isDisabled={isViewPage || !data?.isApplicable}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
@@ -248,7 +248,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               type="checkbox"
               isDisabled={isViewPage || !data?.isApplicable}
               name="isExpertiseOffline"
-              isChecked={data[`isExpertiseOffline`]}
+              isChecked={data?.isExpertiseOffline}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
           </div>

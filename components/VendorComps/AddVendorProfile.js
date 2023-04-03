@@ -422,7 +422,12 @@ const AddVendorProfile = ({ data = {} }) => {
 
       <VendorPopUp
         open={isOpenExpriences}
-        title={`${!!experiencesData?.expId ? 'Edit' : 'Add'} Experience`}
+        title={`${
+          experiencesData?.expId ||
+          experiencesData?.localIndex !== profileData?.experienceData?.length
+            ? 'Edit'
+            : 'Add'
+        } Experience`}
         popUpState={[isOpenExpriences, setIsOpenExpriences]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
