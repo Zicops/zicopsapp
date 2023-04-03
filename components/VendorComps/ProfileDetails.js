@@ -4,7 +4,7 @@ export default function ProfileDetails({ data }) {
   const vendorDetails = [
     { label: 'Name', value: data?.first_name + ' ' + data?.last_name || 'NA' },
     { label: 'Type', value: 'Organisation' },
-    { label: 'Description', value: data?.description || 'NA' }
+    { label: 'Description', value: data?.description || 'NA' },
     { label: 'Years of Expereince', value: `${data?.experience_years} years` },
     { label: 'Speaker', value: data?.is_speaker ? 'Yes' : 'No' }
   ];

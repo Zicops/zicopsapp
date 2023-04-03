@@ -7,6 +7,7 @@ export default function ProfileVendor({ profileData }) {
   const [inputText, setInputText] = useState('');
 
   if (!profileData) return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
+  let count = 0;
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function ProfileVendor({ profileData }) {
           </div>
           {profileData?.map((data) => {
             if (!(data?.first_name + ' ' + data.last_name).toLowerCase().includes(inputText))
-              return;
+              return <div className={styles.fallback}>No Profile Match</div>;
             return <VendorIndividualProfiles data={data} />;
           })}
         </div>
