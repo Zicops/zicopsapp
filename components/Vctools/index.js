@@ -1,15 +1,20 @@
-import styles from './vctoolMain.module.scss';
-import MeetingCard from './MeetingCard';
-import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
-import MainToolbar from './Toolbar';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { StartMeeting, GenerateString } from "./help/vctool.helper"
-import { breakoutList, participantRole, pollArray, totalRoomno, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
-const VcMaintool = () => {
+import { breakoutList, joinMeeting, pollArray, totalRoomno, vcMeetingIconAtom, vcModeratorControlls, vctoolAlluserinfo, vctoolMetaData } from '@/state/atoms/vctool.atoms';
+import { Router, useRouter } from 'next/router';
+import Script from 'next/script';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { StartMeeting } from "./help/vctool.helper";
+import MeetingCard from './MeetingCard';
+import MainToolbar from './Toolbar';
+import styles from './vctoolMain.module.scss';
+const VcMaintool = (vcData={}) => {
+  const Route=useRouter()
+  const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData)
+  const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
+  const [isMeetingStarted,setIsMeetingStarted]=useRecoilState(joinMeeting)
+  const [controlls,setControlls]=useRecoilState(vcModeratorControlls)
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo)
-  const [pollInfo,setPollInfo]=useRecoilState(pollArray)
   const totalBreakoutrooms = useRecoilValue(totalRoomno)
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList)
   const allUserinfo = useRecoilValue(vctoolAlluserinfo)
@@ -32,10 +37,37 @@ const VcMaintool = () => {
       document.mozFullscreenElement ||
       document.msFullscreenElement
   }
-  const startName = userData.first_name + " " + userData.last_name
+  useEffect(()=>
+  {
+    if(isMeetingStarted)
+    {
+      if(controlls.onVideo)
+      {
+        api.executeCommand('muteEveryone', 'video');
+      }
+      if(controlls.onMic)
+      {
+        api.executeCommand('muteEveryone', 'audio');
+      }
+    }
+     
+  },[controlls])
+
+
+  useEffect(() => {
+    if(isMeetingStarted){
+      if (meetingIconsAtom?.isStartAdd) {
+        api?.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+      }
+      else if (!meetingIconsAtom?.isStartAdd) {
+        api?.executeCommand('stopShareVideo');
+      }
+    }
+  },[meetingIconsAtom?.isStartAdd])
+  const startName = userData?.first_name + " " + userData?.last_name
   return (
     <div ref={fullScreenRef}>
-      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}></div>
+      <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
       {toolbar && (
         <MainToolbar
           setAudio={() => {
@@ -67,7 +99,9 @@ const VcMaintool = () => {
             })).catch((e) => {
             })
             setFullscreen(false)
-            setisStarted(false)
+            // setisStarted(false)
+            setIsMeetingStarted(false)
+            
           }}
           shareScreen={() => {
             api.executeCommand('toggleShareScreen');
@@ -91,24 +125,26 @@ const VcMaintool = () => {
             setFullscreen(!Fullscreen)
           }}
           mouseMoveFun={() => {
-            // console.info(pollInfo)
-            api.getRoomsInfo().then(rooms => {
-              setbreakoutListarr(rooms.rooms)
-              setuserinfo(rooms.rooms[0].participants)
-              setallInfo(rooms.rooms[0].participants)
-            })
-            //  allUserinfo
-            // userinfo
-            api.executeCommand('displayName', userData.first_name);
-            userinfo.forEach((data) => {
-             
-              if ([api.getEmail(data?.id)].toString().includes("@zicops")) {
-                api.executeCommand('grantModerator', data.id);
-              }
-            })
-          //     api.listBreakoutRooms().then(breakoutRooms => {
-          //     console.log(breakoutRooms)
-          // });
+            // console.log(userData)
+          api.getRoomsInfo().then(rooms => {
+            setuserinfo(rooms.rooms[0].participants)
+            setbreakoutListarr(rooms.rooms)
+            setallInfo(rooms.rooms[0].participants)
+            setVctoolInfo(
+              {
+                ...vctoolInfo,
+                allRoomInfo: rooms.rooms[0].participants
+              })
+          
+          })
+          //  allUserinfo
+          // userinfo
+          userinfo.forEach((data) => {
+            api.executeCommand('grantModerator', data?.id);
+            if ([api.getEmail(data?.id)].toString().includes("@ziocps")) {
+              api.executeCommand('grantModerator', data?.id);
+            }
+          })
           }}
 
 
@@ -116,16 +152,17 @@ const VcMaintool = () => {
           // getUesrId={userinfo}
           isStarted={isStarted}
           startAdvertisement={() => {
-            api.executeCommand('startShareVideo', "https://www.youtube.com/watch?v=QNuILonXlRo");
+         
           }}
 
           stopAdvertisement={() => {
             // 
-            api.executeCommand('stopShareVideo');
+      
 
           }}
           CreateBreakoutroomlist={() => {
             for (let i = 0; i < totalBreakoutrooms; i++) {
+
               api.executeCommand('addBreakoutRoom');
             }
 
@@ -135,18 +172,23 @@ const VcMaintool = () => {
             //         participantId: "bd6f680b",
             // roomId: "fe5980f3-7f94-4042-bb67-b856cc95012f"
             //         }  );
-          }} />
+          }}
+           />
       )}
+      </div>
       <Script src="https://live.zicops.com/external_api.js"></Script>
       <div className={`${styles.mainCard}`}>
         {/* all components ara going to append here */}
         {
-          !hidecard ? <MeetingCard
+          !hidecard ? <MeetingCard vcData={vcData}
             startMeeting={() => {
-              StartMeeting("standup", startName, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              StartMeeting("sk", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
+              // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
+              setIsMeetingStarted(true)
               sethidecard(!hidecard)
-         
+              // Route.push('/admin/courses/classRoom')       
+      
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

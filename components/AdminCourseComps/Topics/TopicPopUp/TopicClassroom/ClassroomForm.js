@@ -143,8 +143,8 @@ export default function ClassroomForm({ handleChange = () => {}, closeAccordion 
               : null,
             value: !!topicClassroom?.language?.length
               ? topicClassroom?.language?.map((lang) => ({ label: lang, value: lang }))
-              : null
-            // isDisabled: isDisabled
+              : null,
+            isDisabled: topicClassroom?.language?.length === 1
           }}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}

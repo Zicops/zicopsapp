@@ -1,0 +1,111 @@
+.vctoolStartPageContainer {
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  //   display: flex;
+  padding-top: 5rem;
+  justify-content: center;
+  overflow: hidden;
+}
+.subDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: -5rem;
+}
+.vctoolStartPageContainer > div > div {
+  margin-top: -6rem;
+  h3 {
+    font-weight: 600;
+    font-size: 24px;
+    color: #6bcfcf;
+  }
+  h4 {
+    font-weight: 400;
+    font-size: 18px;
+    color: $white;
+    line-height: 28px;
+  }
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #acacac;
+    line-height: 28px;
+  }
+}
+.timeFrame {
+  height: 250px;
+  //   width: 20%;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  margin-right: 12px;
+  justify-content: flex-end;
+}
+.vctoolTimeFrame {
+  width: 200px;
+  height: 150px;
+  background-color: #1a1d21;
+  border-radius: 4px;
+}
+.vcTimer {
+  width: 85%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 31px;
+  border-bottom: solid #333 1px;
+  padding-bottom: 8px;
+}
+.vcTimer > div {
+  width: 55px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: 400;
+  font-size: 24px;
+  height: 75px;
+  //   background-color: #6bcfcf;
+}
+.vcTimer > div > div {
+  font-family: 'Digital Numbers';
+  margin-top: 8px;
+  font-weight: 400;
+  font-size: 24px;
+  color: #26ba4d;
+}
+.timeUnite {
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000
+}
+.vcTimer > p {
+  font-weight: 400;
+  font-size: 24px;
+  height: 75px;
+  display: flex;
+  align-items: center;
+}
+.vctoolTimeLine,
+.vctoolStartDate {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.timeIST {
+  font-weight: 400;
+  font-size: 18px;
+  color: #acacac;
+}
+.vctoolStartingDate {
+  font-weight: 400;
+  font-size: 18px;
+  color: white;
+}

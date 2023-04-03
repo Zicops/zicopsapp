@@ -5,7 +5,7 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import StudentFrame from "../StudentFrame";
 import { vctoolAlluserinfo } from "@/state/atoms/vctool.atoms";
 import { VC_TOOL_ROLE } from "@/helper/constants.helper";
-const Participants = ({ showHide = false, Info, Iframe }) => {
+const Participants = ({ hide = false, Info, Iframe }) => {
     const userData = useRecoilValue(UserStateAtom)
     const meetingInfo=useRecoilValue(vctoolAlluserinfo)
     const startName = userData.first_name + " " + userData.last_name
@@ -15,7 +15,7 @@ const Participants = ({ showHide = false, Info, Iframe }) => {
             <div className={`${styles.participantsHead}`}>
                 <div>Participants</div>
                 <button onClick={() => {
-                    showHide()
+                    hide()
                 }}>
                     <img src="/images/svg/vctool/close.svg" />
                 </button>
@@ -30,7 +30,7 @@ const Participants = ({ showHide = false, Info, Iframe }) => {
                 <div className={`${styles.allInstructors}`}>
                     {
                         meetingInfo.map((data) => {
-                            return (data?.role == VC_TOOL_ROLE[0]) && <StudentFrame name={data.displayName} />
+                            return (data?.role == VC_TOOL_ROLE[0]) && <StudentFrame name={data?.displayName} />
                             // return (userData.role != "Learner") && <StudentFrame name={data.displayName} />
                         })
                     }
