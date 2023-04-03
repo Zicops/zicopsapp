@@ -11,7 +11,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 
-export default function ClassroomForm({ handleChange = {}, closeAccordion = () => {} }) {
+export default function ClassroomForm({ handleChange = () => {}, closeAccordion = () => {} }) {
   const classroomMaster = useRecoilValue(ClassroomMasterAtom);
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);

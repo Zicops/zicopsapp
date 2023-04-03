@@ -728,6 +728,19 @@ $marginBetweenInputs: 1em;
     align-items: center;
     gap: 20px;
   }
+
+  .vcSettingContainer {
+    .darkThreeText {
+      color: $darkThree;
+    }
+
+    .toggleBtnContainer {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      grid-gap: 0.5em;
+      margin: 1em auto;
+    }
+  }
 }
 
 button.addTopicFormBtn {

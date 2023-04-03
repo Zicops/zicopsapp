@@ -53,13 +53,13 @@ export default function useHandleTopicClassroom(topData = null) {
         const moderators = moderatorsList?.filter((u) =>
           _topicClassroom?.moderators?.find((userId) => u?.user_id === userId)
         );
-
         setTopicClassroom(
           getTopicClassroomObject({
             ..._topicClassroom,
             trainers,
             moderators,
             topicId: _topicClassroom?.topic_id,
+            language: _topicClassroom?.language?.split(', '),
             trainingStartTime: getDateObjFromUnix(_topicClassroom?.training_start_time),
             trainingEndTime: getDateObjFromUnix(_topicClassroom?.training_end_time),
             isScreenShareEnabled: _topicClassroom?.is_screen_share_enabled,
@@ -96,6 +96,7 @@ export default function useHandleTopicClassroom(topData = null) {
 
   async function addUpdateTopicClassroom() {
     if (!topData?.id) return;
+    setIsSubmitDisabled(true);
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
@@ -114,8 +115,6 @@ export default function useHandleTopicClassroom(topData = null) {
       is_override_config: topicClassroom?.isOverrideConfig,
       status: TOPIC_CLASS_ROOM_STATUS?.active
     });
-
-    console.log(_topicClassroomData, 'sendData');
 
     if (!!topicClassroom?.id) {
       _topicClassroomData.id = topicClassroom?.id;
