@@ -1091,6 +1091,8 @@ export const GET_SME_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1111,6 +1113,8 @@ export const GET_CRT_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1131,6 +1135,8 @@ export const GET_CD_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;

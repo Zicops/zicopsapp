@@ -483,7 +483,9 @@ export default function useHandleVendor() {
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
       sampleFiles: smeData?.sample_files,
-      expertises: smeData?.expertise
+      expertises: smeData?.expertise,
+      isExpertiseOffline: smeData?.is_expertise_offline,
+      isExpertiseOnline: smeData?.is_expertise_online
     };
     setSMEData(getSMEServicesObject(smeDetails));
     return smeDetails;
@@ -506,7 +508,9 @@ export default function useHandleVendor() {
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
       sampleFiles: crtData?.sample_files,
-      expertises: crtData?.expertise
+      expertises: crtData?.expertise,
+      isExpertiseOffline: crtData?.is_expertise_offline,
+      isExpertiseOnline: crtData?.is_expertise_online
     };
     setCTData(getCTServicesObject(crtDetails));
     return crtDetails;
@@ -529,7 +533,9 @@ export default function useHandleVendor() {
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
       sampleFiles: cdData?.sample_files,
-      expertises: cdData?.expertise
+      expertises: cdData?.expertise,
+      isExpertiseOffline: cdData?.is_expertise_offline,
+      isExpertiseOnline: cdData?.is_expertise_online
     };
     setCDData(getCDServicesObject(cdDetails));
     return cdDetails;

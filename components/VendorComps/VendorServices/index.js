@@ -60,14 +60,28 @@ export default function VendorServices({ data, type = 'sme' }) {
       <div className={`${styles.expertise}`}>
         <div className={`${styles.expertiseHeader}`}>
           <ExpertiseIcon />
+          <span>Training Mode</span>
+        </div>
+        <div className={`${styles.expertisePill}`}>
+          {data?.isExpertiseOnline && <p>Online</p>}
+          {data?.isExpertiseOffline && <p>Offline</p>}
+          {!data?.isExpertiseOnline && !data?.isExpertiseOffline && <small>NA</small>}
+        </div>
+      </div>
+
+      <div className={`${styles.expertise}`}>
+        <div className={`${styles.expertiseHeader}`}>
+          <ExpertiseIcon />
           <span>Expertise</span>
         </div>
         <div className={`${styles.expertisePill}`}>
           {data?.expertises?.map((value, key) => {
             return <p>{value}</p>;
           })}
+          {!data?.expertises?.length && <small>NA</small>}
         </div>
       </div>
+
       <div className={`${styles.languages}`}>
         <div className={`${styles.languagesHeader}`}>
           <LanguagesIcon />
@@ -77,6 +91,7 @@ export default function VendorServices({ data, type = 'sme' }) {
           {data?.languages?.map((value, key) => {
             return <p>{value}</p>;
           })}
+          {!data?.languages?.length && <small>NA</small>}
         </div>
       </div>
       <div className={`${styles.contentFormat}`}>
@@ -88,6 +103,7 @@ export default function VendorServices({ data, type = 'sme' }) {
           {data?.formats?.map((value, key) => {
             return <p>{value}</p>;
           })}
+          {!data?.formats?.length && <small>NA</small>}
         </div>
       </div>
       <div className={`${styles.sample}`}>
