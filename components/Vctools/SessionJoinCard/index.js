@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
 import styles from './sessionJoin.module.scss';
+import moment from 'moment';
 const SessionJoinCard = ({ classroomData = {} }) => {
-  const [timing, setTiming] = useState({
-    // meeting start time
-    day: new Date(classroomData?.trainingStartTime * 1000).getDate(),
-    month: new Date(classroomData?.trainingStartTime * 1000).getMonth(),
-    year: new Date(classroomData?.trainingStartTime * 1000).getFullYear(),
-    time: new Date(classroomData?.trainingStartTime * 1000).getHours(),
-    timeMin: new Date(classroomData?.trainingStartTime * 1000).getMinutes()
-    // timeSec: 0
-  });
-  const [meetingStart, setmeetingStart] = useState(classroomData?.trainingStartTime);
-  const [meetingEnd, setmeetingEnd] = useState(classroomData?.trainingEndTime);
+  const meetingStart =new Date(classroomData?.trainingStartTime*1000).getTime();
+  const meetingEnd = new Date(classroomData?.trainingEndTime*1000).getTime();
+  
 
-  const [meetingDuration, setMeetingDuration] = useState(classroomData?.duration / 60);
+  const meetingDuration = classroomData?.duration / 60;
+  {/* <TimeFrame givenTime={new Date("4/3/2023 18:55:00").getTime()}/> */}
   const [meetingType, setMeetingType] = useState();
   useEffect(() => {
     var now = new Date().getTime();
@@ -21,10 +15,10 @@ const SessionJoinCard = ({ classroomData = {} }) => {
       setMeetingType('MeetingStarted');
     } else if (now < meetingStart) {
       setMeetingType('JoinSession');
-    } else {
+    } else if(now > meetingEnd) {
       setMeetingType('MeetingEnded');
     }
-  });
+  },[]);
   const title = ['Session has not started', 'Live now', 'Session Ended'];
   return (
     <div className={`${styles.joinSessionContainer}`}>
@@ -54,12 +48,10 @@ const SessionJoinCard = ({ classroomData = {} }) => {
           <button className={`${styles.sessionEnded}`}>Recording will be available soon</button>
         )}
         <div className={`${styles.joinsessionFooter}`}>
-          <div className={`${styles.meetingLiveDate}`}>{`${new Date(classroomData?.trainingStartTime * 1000).getDate()}-${new Date(
-            classroomData?.trainingStartTime * 1000
-          ).getMonth()}
-          -${new Date(classroomData?.trainingStartTime * 1000).getFullYear()},
-          ${new Date(classroomData?.trainingStartTime * 1000).getHours()}
-          :${new Date(classroomData?.trainingStartTime * 1000).getMinutes()} IST`}</div>
+          <div className={`${styles.meetingLiveDate}`}>{`${moment.unix(classroomData?.trainingStartTime).format('MM')}-${moment.unix(classroomData?.trainingStartTime).format('DD')}
+          -${moment.unix(classroomData?.trainingStartTime).format('YYYY')},
+          ${moment.unix(classroomData?.trainingStartTime).format(' h')}
+          :${moment.unix(classroomData?.trainingStartTime).format('mm')} IST`}</div>
           <div className={`${styles.meetingDuration}`}>
             duration :<div className={`${styles.durationTime}`}>{classroomData?.duration / 60} min</div>
           </div>

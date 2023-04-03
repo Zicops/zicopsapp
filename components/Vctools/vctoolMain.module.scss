@@ -7,6 +7,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .vcCard {
@@ -14,6 +15,7 @@
   height: 366px;
   border: 1px solid #484848;
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .videoPlayer {
@@ -138,9 +140,10 @@
 #changeBackground {
   background: #7d7d7d;
 }
+
 .meet {
   z-index: 1000;
-  height: 99vh;
+  height: 100vh;
   width: 100%;
   position: absolute;
   top: 0;
@@ -204,6 +207,7 @@
 .screen {
   // z-index: 1010;
   height: 100vh;
+  overflow: hidden;
   width: 100vw;
 }
 
@@ -1056,6 +1060,10 @@
   width: 296px;
   height: 99%;
 }
+
+// styling pollscreenParticipant
+
+
 
 // .publishPoll
 // {

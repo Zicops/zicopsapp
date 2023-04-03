@@ -182,12 +182,15 @@ const VcMaintool = (vcData={}) => {
         {
           !hidecard ? <MeetingCard vcData={vcData}
             startMeeting={() => {
+               // Route.push('/admin/vctool')   
+              
               StartMeeting("sk", userData.first_name, containerRef, userData.email, toggleAudio, settoobar, setapi, toggleVideo);
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true)
               setIsMeetingStarted(true)
               sethidecard(!hidecard)
-              // Route.push('/admin/courses/classRoom')       
+              
+              // Route.push('/admin/vctool')       
       
             }}
             startAudioenableFun={() => {
