@@ -44,7 +44,7 @@ export default function SampleFilePreview({
           {displayType === types.download && (
             <div className={`${styles.downloadBtn}`}>
               <p>Can't Preview this File</p>
-              <p>{sampleFile?.title}</p>
+              <p>{sampleFile?.title || sampleFile?.name}</p>
 
               <button
                 disabled={!sampleFile?.fileUrl}
@@ -73,7 +73,7 @@ export default function SampleFilePreview({
             <h3>Details</h3>
             <label>File Name</label>
 
-            <p>{sampleFile?.title || 'NA'}</p>
+            <p>{sampleFile?.title || sampleFile?.name || 'NA'}</p>
             <label>File Description</label>
 
             <p>{sampleFile?.description || 'NA'}</p>
