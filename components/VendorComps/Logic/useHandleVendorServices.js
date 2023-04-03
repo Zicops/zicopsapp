@@ -75,7 +75,7 @@ export default function useHandleVendorServices() {
 
       if (isError) return;
 
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateSubjectMatterExpertise;
       setSMEData(
@@ -150,7 +150,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateClassRoomTraining;
       setCTData(
@@ -224,7 +224,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateContentDevelopment;
       setCDData(
