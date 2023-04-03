@@ -193,6 +193,7 @@ export default function VendorMaster() {
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }
+          isEmailRemovable={!(isVendor && isIndividualVendor)}
           isLoading={isVendorAdminLoading}
         />
       </div>

@@ -1507,7 +1507,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     $description: String
     $languages: [String]
     $SME_expertise: [String]
-    $Classroom_expertise: [String]
+    $classroom_expertise: [String]
     $content_development: [String]
     $experience: [String]
     $experienceYear: String
@@ -1525,7 +1525,7 @@ export const CREATE_PROFILE_VENDOR = gql`
         description: $description
         languages: $languages
         sme_expertise: $SME_expertise
-        classroom_expertise: $Classroom_expertise
+        classroom_expertise: $classroom_expertise
         content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
@@ -1570,8 +1570,8 @@ export const UPDATE_PROFILE_VENDOR = gql`
     $photo: Upload
     $description: String
     $languages: [String]
-    $SME_Expertise: [String]
-    $Classroom_Expertise: [String]
+    $SME_expertise: [String]
+    $classroom_expertise: [String]
     $content_development: [String]
     $experience: [String]
     $experienceYear: String
@@ -1588,8 +1588,8 @@ export const UPDATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        sme_expertise: $SME_Expertise
-        classroom_expertise: $Classroom_Expertise
+        sme_expertise: $SME_expertise
+        classroom_expertise: $classroom_expertise
         content_development: $content_development
         experience: $experience
         experience_years: $experienceYear

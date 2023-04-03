@@ -1013,7 +1013,11 @@ export const GET_ALL_PROFILE_DETAILS = gql`
       content_development
       experience
       experience_years
+      sme
+      crt
+      cd
       is_speaker
+      lsp_id
       created_at
       created_by
       updated_at

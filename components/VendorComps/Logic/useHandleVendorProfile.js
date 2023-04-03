@@ -50,8 +50,8 @@ export default function useHandleVendorProfile() {
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
       languages: profileData?.languages || [],
-      SME_Expertise: profileData?.sme_expertises || [],
-      Classroom_Expertise: profileData?.crt_expertises || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      classroom_expertise: profileData?.crt_expertises || [],
       content_development: profileData?.content_development || [],
       // experience:
       //   profileData?.experience?.map((exp) =>
