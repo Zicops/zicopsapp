@@ -244,11 +244,12 @@
   }
 
   .detailsData {
-    padding-top: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px;
 
+    padding-top: 15px;
+    padding-bottom: 25px;
     span {
       color: $bgBody;
     }
@@ -271,7 +272,7 @@
       // border: 1px solid #747474;
       // border-radius: 5px;
       cursor: pointer;
-      width: 4%;
+      // width: 4%;
       margin-top: 5px;
     }
   }
