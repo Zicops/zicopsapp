@@ -74,7 +74,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
           handleClick={() => {
             addUpdateTopicClassroom()
               .catch((err) => console.log(err))
-              .finally(() => closePopUp());
+              .finally(() => closePopUp(true));
           }}
           display={!!topicClassroom?.id ? 'Update' : 'Save'}
         />

@@ -71,15 +71,25 @@ export default function TopicPopUp({
                 />
               )}
 
-              {isContent && (
-                <TopicContent topData={topicData} closePopUp={() => setConfirmClose(true)} />
-              )}
+              {isContent && <TopicContent topData={topicData} />}
 
               {isAssessment && (
-                <TopicAssessmentForm topData={topicData} closePopUp={() => setConfirmClose(true)} />
+                <TopicAssessmentForm
+                  topData={topicData}
+                  closePopUp={(isDirectClose = false) => {
+                    if (isDirectClose === true) return closePopUp();
+                    setConfirmClose(true);
+                  }}
+                />
               )}
               {isClassroom && (
-                <TopicClassroom topData={topicData} closePopUp={() => setConfirmClose(true)} />
+                <TopicClassroom
+                  topData={topicData}
+                  closePopUp={(isDirectClose = false) => {
+                    if (isDirectClose === true) return closePopUp();
+                    setConfirmClose(true);
+                  }}
+                />
               )}
             </>
           )}
