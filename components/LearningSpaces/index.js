@@ -179,7 +179,9 @@ const LearningSpaces = () => {
                     }
                     website={data?.subdomain}
                     status={data?.status}
-                    isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
+                    isDisabled={lspStatus?.[index]
+                      ?.toLowerCase()
+                      ?.includes(USER_MAP_STATUS?.disable)}
                     lspId={data?.lsp_id}
                     lspName={data?.name}
                     orgId={data?.org_id}
