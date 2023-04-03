@@ -211,7 +211,7 @@ export default function useHandleVendor() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
     getVendorAdmins(id);
   }
 
@@ -331,6 +331,7 @@ export default function useHandleVendor() {
 
   async function getSingleProfileInfo(email) {
     if (!email) return;
+    if (!vendorId) return;
 
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
@@ -835,8 +836,7 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        if (!!displaySuccessToaster)
-          setToastMsg({ type: 'success', message: 'Experience Created' });
+        if (!!displaySuccessToaster) setToastMsg({ type: 'success', message: 'Experience Added' });
 
         experienceData.push(res?.data?.createExperienceVendor);
         continue;

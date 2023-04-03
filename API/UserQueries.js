@@ -1039,6 +1039,7 @@ export const GET_SAMPLE_FILES = gql`
       rate
       currency
       unit
+      description
       actualFileType
       created_at
       created_by

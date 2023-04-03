@@ -1751,15 +1751,18 @@ export const CREATE_SAMPLE_FILE = gql`
       name
       fileType
       price
+      p_type
+      description
       file_url
-      rate
-      currency
-      unit
       created_at
       created_by
       updated_at
       updated_by
       status
+      rate
+      currency
+      unit
+      actualFileType
     }
   }
 `;
@@ -2030,23 +2033,23 @@ export const DELETE_SAMPLE_FILE = gql`
 
 export const ADD_ORDER = gql`
   mutation addOrder(
-    $order_id: String
-    $vendor_id: String
-    $lsp_id: String
+    $orderId: String
+    $vendorId: String
+    $lspId: String
     $total: Int
     $tax: Int
-    $grand_total: Int
+    $grandTotal: Int
     $status: String
   ) {
     addOrder(
       input: {
-        order_id: $order_id
-        vendor_id: $vendor_id
-        lsp_id: $lsp_id
+        order_id: $orderId
+        vendor_id: $vendorId
+        lsp_id: $lspId
         total: $total
         tax: $tax
-        grand_total: $grand_total
-        status: $Status
+        grand_total: $grandTotal
+        status: $status
       }
     ) {
       order_id
@@ -2065,23 +2068,23 @@ export const ADD_ORDER = gql`
 `;
 export const UPDATE_ORDER = gql`
   mutation updateOrder(
-    $order_id: String
-    $vendor_id: String
-    $lsp_id: String
+    $orderId: String
+    $vendorId: String
+    $lspId: String
     $total: Int
     $tax: Int
-    $grand_total: Int
+    $grandTotal: Int
     $status: String
   ) {
     updateOrder(
       input: {
-        order_id: $order_id
-        vendor_id: $vendor_id
-        lsp_id: $lsp_id
+        order_id: $orderId
+        vendor_id: $vendorId
+        lsp_id: $lspId
         total: $total
         tax: $tax
-        grand_total: $grand_total
-        status: $Status
+        grand_total: $grandTotal
+        status: $status
       }
     ) {
       order_id
@@ -2101,9 +2104,9 @@ export const UPDATE_ORDER = gql`
 
 export const ADD_ORDER_SERVICES = gql`
   mutation addOrderServies(
-    $service_id: String
-    $order_id: String
-    $service_type: String
+    $serviceId: String
+    $orderId: String
+    $serviceType: String
     $description: String
     $unit: String
     $currency: String
@@ -2115,9 +2118,9 @@ export const ADD_ORDER_SERVICES = gql`
     addOrderServies(
       input: [
         {
-          service_id: $service_id
-          order_id: $order_id
-          service_type: $service_type
+          service_id: $serviceId
+          order_id: $orderId
+          service_type: $serviceType
           description: $description
           unit: $unit
           currency: $currency
@@ -2148,9 +2151,9 @@ export const ADD_ORDER_SERVICES = gql`
 
 export const UPDATE_ORDER_SERVICES = gql`
   mutation updateOrderServices(
-    $service_id: String
-    $order_id: String
-    $service_type: String
+    $serviceId: String
+    $orderId: String
+    $serviceType: String
     $description: String
     $unit: String
     $currency: String
@@ -2161,9 +2164,9 @@ export const UPDATE_ORDER_SERVICES = gql`
   ) {
     updateOrderServices(
       input: {
-        service_id: $service_id
-        order_id: $order_id
-        service_type: $service_type
+        service_id: $serviceId
+        order_id: $orderId
+        service_type: $serviceType
         description: $description
         unit: $unit
         currency: $currency
