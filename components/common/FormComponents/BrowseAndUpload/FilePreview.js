@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react';
 import Button from '../../Button';
 import PopUp from '../../PopUp';
 import Spinner from '../../Spinner';
-import ViewDoc from '../../ViewDoc';
 import styles from '../formComponents.module.scss';
 
 const PREVIEW_FILE_TYPES = {
   download: 'download',
   image: 'image',
   video: 'video',
-  audio: 'audio',
-  docPreview: 'doc'
+  audio: 'audio'
+  // docPreview: 'doc'
 };
 
 export default function FilePreview({
@@ -73,7 +72,7 @@ export default function FilePreview({
             </div>
           )}
 
-          {fileSrc?.type === PREVIEW_FILE_TYPES.docPreview && <ViewDoc url={fileSrc?.url} />}
+          {/* {fileSrc?.type === PREVIEW_FILE_TYPES.docPreview && <ViewDoc url={fileSrc?.url} />} */}
           {fileSrc?.type === PREVIEW_FILE_TYPES.image && <img src={fileSrc?.url} />}
           {fileSrc?.type === PREVIEW_FILE_TYPES.video && <video src={fileSrc?.url} controls />}
           {fileSrc?.type === PREVIEW_FILE_TYPES.audio && <audio src={fileSrc?.url} controls />}
@@ -90,22 +89,22 @@ export default function FilePreview({
 function getFileType(fileType = null) {
   if (!fileType) return null;
 
-  if (
-    [
-      'pdf',
-      'ppt',
-      'doc',
-      'xls',
-      'csv',
-      'doc',
-      'txt',
-      'srt',
-      'vtt',
-      'text/plain',
-      'application/pdf'
-    ]?.includes(fileType?.toLowerCase())
-  )
-    return PREVIEW_FILE_TYPES.docPreview;
+  // if (
+  //   [
+  //     'pdf',
+  //     'ppt',
+  //     'doc',
+  //     'xls',
+  //     'csv',
+  //     'doc',
+  //     'txt',
+  //     'srt',
+  //     'vtt',
+  //     'text/plain',
+  //     'application/pdf'
+  //   ]?.includes(fileType?.toLowerCase())
+  // )
+  //   return PREVIEW_FILE_TYPES.docPreview;
   if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.audio;
   if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileType?.toLowerCase()))
