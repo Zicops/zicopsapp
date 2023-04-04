@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
 import styles from './vctoolMain.module.scss';
+import Script from 'next/script';
 
 export default function ClassroomTopicSection({ topicId }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
