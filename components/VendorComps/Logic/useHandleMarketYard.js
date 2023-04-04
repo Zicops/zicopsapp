@@ -17,7 +17,7 @@ import {
   UPDATE_ORDER_SERVICES,
   userClient
 } from '@/api/UserMutations';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { VENDOR_ORDER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
 import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
@@ -149,7 +149,7 @@ export default function useHandleMarketYard() {
       total: orderData?.total,
       tax: orderData?.tax,
       grandTotal: orderData?.grossTotal,
-      status: 'Added'
+      status: VENDOR_ORDER_STATUS.added
     };
     let isError = false;
     if (orderData?.orderId) {
@@ -175,37 +175,38 @@ export default function useHandleMarketYard() {
     // }
   }
 
-  async function addUpdateServices() {
+  async function addUpdateOrderServices() {
     const orderArray = [];
     if (servicesData?.sme?.length) {
-      orderArray.push(...servicesData?.sme);
+      orderArray.push(...(servicesData?.sme || []));
     }
     if (servicesData?.crt?.length) {
-      orderArray.push(...servicesData?.crt);
+      orderArray.push(...(servicesData?.crt || []));
     }
     if (servicesData?.cd?.length) {
-      orderArray.push(...servicesData?.cd);
+      orderArray.push(...(servicesData?.cd || []));
     }
     if (servicesData?.speakers?.length) {
-      orderArray.push(...servicesData?.speakers);
+      orderArray.push(...(servicesData?.speakers || []));
     }
 
     const serviceData = [];
     for (let i = 0; i < orderArray?.length; i++) {
+      const _orderArray = orderArray[i];
       const sendData = {
-        serviceType: orderArray[i]?.serviceType || '',
-        description: orderArray[i]?.description || '',
-        unit: orderArray[i]?.unit || 0,
+        serviceType: _orderArray?.serviceType || '',
+        description: _orderArray?.description || '',
+        unit: _orderArray?.unit || 0,
         currency: orderData?.currency || '',
-        rate: +orderArray[i]?.rate || 0,
-        quantity: orderArray[i]?.quantity || 0,
-        total: orderArray[i]?.total || 0,
-        status: 'Added'
+        rate: +_orderArray?.rate || 0,
+        quantity: _orderArray?.quantity || 0,
+        total: _orderArray?.total || 0,
+        status: VENDOR_ORDER_STATUS.added
       };
       let isError = false;
 
-      if (orderArray[i]?.serviceId) {
-        sendData.serviceId = orderArray[i]?.serviceId;
+      if (_orderArray?.serviceId) {
+        sendData.serviceId = _orderArray?.serviceId;
         await updateServices({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
@@ -233,7 +234,7 @@ export default function useHandleMarketYard() {
     getLspVendors,
     vendorDetails,
     addUpdateOrder,
-    addUpdateServices,
+    addUpdateOrderServices,
     getAllOrders,
     getOrderServices,
     orderDetails,

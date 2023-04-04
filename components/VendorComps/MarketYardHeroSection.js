@@ -1,4 +1,4 @@
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { VENDOR_MASTER_TYPE, VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
@@ -64,7 +64,7 @@ export default function MarketYardHeroSection({
               dropdownOptions={{
                 inputName: 'Service',
                 placeholder: isDemo ? 'All Services' : 'Training',
-                value: isDemo ? vendorService : 'crt',
+                value: isDemo ? vendorService : VENDOR_SERVICES_TYPE.crt.type,
                 isDisabled: !isDemo,
                 options: [
                   { label: 'All', value: null },

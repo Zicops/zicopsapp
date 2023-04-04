@@ -226,6 +226,13 @@ export const VENDOR_MASTER_STATUS = {
   disable: 'disable'
 };
 
+export const VENDOR_ORDER_STATUS = {
+  added: 'Added',
+  confirmed: 'Confirmed',
+  completed: 'Completed',
+  rejected: 'Rejected'
+};
+
 export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
 export const VENDOR_SERVICES_TYPE = {

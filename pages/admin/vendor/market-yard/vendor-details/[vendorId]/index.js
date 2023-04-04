@@ -54,7 +54,8 @@ export default function VendorInfo() {
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices, services, getVendorServices, addUpdateOrder } = useHandleMarketYard();
+  const { addUpdateOrderServices, services, getVendorServices, addUpdateOrder } =
+    useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -139,7 +140,7 @@ export default function VendorInfo() {
     if (currentComponent === 2) {
       setAddRate(false);
       setCompleteOrder(true);
-      await addUpdateServices();
+      await addUpdateOrderServices();
       const orderDetails = await addUpdateOrder();
       setOrderData(orderDetails);
     }
