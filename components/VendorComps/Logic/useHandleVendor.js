@@ -211,7 +211,7 @@ export default function useHandleVendor() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
     getVendorAdmins(id);
   }
 
@@ -331,6 +331,7 @@ export default function useHandleVendor() {
 
   async function getSingleProfileInfo(email) {
     if (!email) return;
+    if (!vendorId) return;
 
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
@@ -482,7 +483,9 @@ export default function useHandleVendor() {
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
       sampleFiles: smeData?.sample_files,
-      expertises: smeData?.expertise
+      expertises: smeData?.expertise,
+      isExpertiseOffline: smeData?.is_expertise_offline,
+      isExpertiseOnline: smeData?.is_expertise_online
     };
     setSMEData(getSMEServicesObject(smeDetails));
     return smeDetails;
@@ -505,7 +508,9 @@ export default function useHandleVendor() {
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
       sampleFiles: crtData?.sample_files,
-      expertises: crtData?.expertise
+      expertises: crtData?.expertise,
+      isExpertiseOffline: crtData?.is_expertise_offline,
+      isExpertiseOnline: crtData?.is_expertise_online
     };
     setCTData(getCTServicesObject(crtDetails));
     return crtDetails;
@@ -528,7 +533,9 @@ export default function useHandleVendor() {
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
       sampleFiles: cdData?.sample_files,
-      expertises: cdData?.expertise
+      expertises: cdData?.expertise,
+      isExpertiseOffline: cdData?.is_expertise_offline,
+      isExpertiseOnline: cdData?.is_expertise_online
     };
     setCDData(getCDServicesObject(cdDetails));
     return cdDetails;
@@ -594,8 +601,8 @@ export default function useHandleVendor() {
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
       languages: profileData?.languages || [],
-      SME_Expertise: profileData?.sme_expertises || [],
-      Classroom_expertise: profileData?.crt_expertises || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      classroom_expertise: profileData?.crt_expertises || [],
       content_development: profileData?.content_development || [],
       experience: [],
       experienceYear: profileData?.experienceYear || '',
@@ -603,8 +610,8 @@ export default function useHandleVendor() {
       status: VENDOR_MASTER_STATUS.active
     };
     if (
-      !sendData?.SME_Expertise?.length &&
-      !sendData?.Classroom_expertise?.length &&
+      !sendData?.SME_expertise?.length &&
+      !sendData?.classroom_expertise?.length &&
       !sendData?.content_development?.length
     ) {
       sendData.is_speaker = false;
@@ -835,8 +842,7 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        if (!!displaySuccessToaster)
-          setToastMsg({ type: 'success', message: 'Experience Created' });
+        if (!!displaySuccessToaster) setToastMsg({ type: 'success', message: 'Experience Added' });
 
         experienceData.push(res?.data?.createExperienceVendor);
         continue;

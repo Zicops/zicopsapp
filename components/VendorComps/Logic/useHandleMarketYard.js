@@ -157,20 +157,20 @@ export default function useHandleMarketYard() {
       await updateOrder({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'UPDATE ORDER ERROR' });
+        return setToastMsg({ type: 'danger', message: 'Update Order Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'ORDER UPDATED' });
+      setToastMsg({ type: 'success', message: 'Order Updated' });
       return;
     }
 
     const res = await addOrder({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add ORDER ERROR' });
+      return setToastMsg({ type: 'danger', message: 'Add Order Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'ORDER CREATED' });
+    setToastMsg({ type: 'success', message: 'Order Created' });
     return res?.data?.addOrder;
     // }
   }
@@ -209,10 +209,10 @@ export default function useHandleMarketYard() {
         await updateServices({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
-          return setToastMsg({ type: 'danger', message: 'UPDATE SERVICES ERROR' });
+          return setToastMsg({ type: 'danger', message: 'Update Services Error' });
         });
         if (isError) return;
-        setToastMsg({ type: 'success', message: 'SERVICES Updated' });
+        setToastMsg({ type: 'success', message: 'Services Updated' });
         serviceData.push(res?.data?.addOrderServies);
         continue;
       }
@@ -220,10 +220,10 @@ export default function useHandleMarketYard() {
       const res = await addServices({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'ADD SERVICES ERROR' });
+        return setToastMsg({ type: 'danger', message: 'Add Services Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SERVICES CREATED' });
+      setToastMsg({ type: 'success', message: 'Services Created' });
       serviceData.push(res?.data?.addOrderServies);
     }
     return serviceData;

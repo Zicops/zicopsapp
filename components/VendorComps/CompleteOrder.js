@@ -10,7 +10,7 @@ const CompleteOrder = ({ orderId }) => {
       </div>
       <p className={`${styles.text1}`}>New Order Added</p>
       <p className={`${styles.text2}`}>
-        A new order with Order ID "{orderId}" has been added.Do give your feedback of service post
+        A New Order with Order-ID "{orderId}" has been added. Do give your feedback of service post
         completion and delivery of the required services.
       </p>
       <div className={`${styles.newVendorAdd}`}>

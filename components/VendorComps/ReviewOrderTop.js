@@ -41,10 +41,10 @@ const ReviewOrderTop = ({ isConfirm }) => {
       )}
       {Object.keys(selectedServicesForOrder)?.map((service) => {
         return (
-          <div className={`${styles.OrderDetails}`} key={service}>
+          <>
             {servicesData?.[service]?.map((value, i) => {
               return (
-                <>
+                <div className={`${styles.OrderDetails}`} key={service}>
                   <div className={`${styles.checkBoxLabel}`}>
                     <LabeledRadioCheckbox
                       label={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
@@ -70,10 +70,10 @@ const ReviewOrderTop = ({ isConfirm }) => {
                       {value?.total} {orderData?.currency}
                     </span>
                   </div>
-                </>
+                </div>
               );
             })}
-          </div>
+          </>
         );
       })}
     </div>

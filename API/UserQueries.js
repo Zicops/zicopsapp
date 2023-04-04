@@ -1013,7 +1013,11 @@ export const GET_ALL_PROFILE_DETAILS = gql`
       content_development
       experience
       experience_years
+      sme
+      crt
+      cd
       is_speaker
+      lsp_id
       created_at
       created_by
       updated_at
@@ -1087,6 +1091,8 @@ export const GET_SME_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1107,6 +1113,8 @@ export const GET_CRT_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1127,6 +1135,8 @@ export const GET_CD_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
