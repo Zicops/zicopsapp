@@ -1,49 +1,56 @@
 .vctoolStartPageContainer {
-  width: 100%;
-  height: 100vh;
-  background-color: black;
-  //   display: flex;
-  padding-top: 5rem;
-  justify-content: center;
-  overflow: hidden;
-}
-.subDiv {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  padding: 5em;
+
+  position: relative;
+
+  width: 100%;
+  height: 80vh;
+  background-color: $black;
+  margin-top: $headerHeight;
+
+  overflow: hidden;
   text-align: center;
-  margin-top: -5rem;
-}
-.vctoolStartPageContainer > div > div {
-  margin-top: -6rem;
+
+  color: $darkThree;
+
+  .timeFrame {
+    position: absolute;
+    top: 2em;
+    right: 2em;
+  }
+
+  .backBtn {
+    position: absolute;
+    top: 2em;
+    left: 2em;
+
+    cursor: pointer;
+  }
+
+  .centerImg {
+    max-height: 50vh;
+  }
   h3 {
     font-weight: 600;
     font-size: 24px;
     color: #6bcfcf;
   }
+
   h4 {
     font-weight: 400;
     font-size: 18px;
     color: $white;
-    line-height: 28px;
   }
+
   p {
-    font-weight: 400;
-    font-size: 16px;
-    color: #acacac;
-    line-height: 28px;
+    color: $darkThree;
   }
 }
-.timeFrame {
-  height: 250px;
-  //   width: 20%;
-  display: flex;
-  align-items: center;
-  margin-top: 2rem;
-  margin-right: 12px;
-  justify-content: flex-end;
-}
+
 .vctoolTimeFrame {
   width: 200px;
   height: 150px;
@@ -83,7 +90,7 @@
 .timeUnite {
   font-weight: 400;
   font-size: 16px;
-  color: #000000
+  color: #000000;
 }
 .vcTimer > p {
   font-weight: 400;
