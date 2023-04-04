@@ -23,7 +23,7 @@ export const StartMeeting = (givenName, startingName, containerRef, email, toggl
       setToobar(true)
     }
   };
-  setApi(new JitsiMeetExternalAPI(domain, options));
+  setApi(new JitsiMeetExternalAPI(domain, options))
 
 };
 

@@ -5,6 +5,8 @@ import styles from './vctoolStartPage.module.scss';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useRecoilValue } from 'recoil';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import moment from 'moment';
+
 const monthName = [
   'January',
   'February',
@@ -25,15 +27,17 @@ const VCtoolStartPage = ({ topicId = null }) => {
   const topicClassroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
 
   const userData = useRecoilValue(UserStateAtom);
-  const [dateInfo, setDateInfo] = useState({
-    day: new Date(topicClassroomData.trainingStartTime * 1000).getDay(),
-    month: new Date(topicClassroomData.trainingStartTime * 1000).getMonth(),
-    year: new Date(topicClassroomData.trainingStartTime * 1000).getFullYear(),
-    hours: new Date(topicClassroomData.trainingStartTime * 1000).getHours(),
-    minute: new Date(topicClassroomData.trainingStartTime * 1000).getMinutes(),
-    second: 0
-  });
-  const [isVctoolActive, setIsVctoolActive] = useState();
+  const trainingStartTimeUnix = topicClassroomData?.trainingStartTime;
+  const startTime = new Date(trainingStartTimeUnix * 1000);
+  const year = startTime.getFullYear();
+  const month = startTime.getMonth() + 1;
+  const day = startTime.getDate();
+  const hour = startTime.getHours();
+  const minute = startTime.getMinutes();
+  const second = startTime.getSeconds();
+  const formattedDate = `${month}/${day}/${year} ${hour}:${minute}:${second}`;
+
+  const [isVctoolActive, setIsVctoolActive] = useState(false);
 
   useEffect(() => {
     setIsVctoolActive(new Date(topicClassroomData.trainingStartTime * 1000).getMinutes() <= 15);
@@ -45,36 +49,23 @@ const VCtoolStartPage = ({ topicId = null }) => {
     <>
       <div className={`${styles.vctoolStartPageContainer}`}>
         <div className={`${styles.timeFrame}`}>
-          {/* <TimeFrame givenTime={new Date("4/10/2023 00:00:00").getTime()} */}
-
-          <TimeFrame
-            setIsVctoolActive={setIsVctoolActive}
-            givenTime={new Date(`${new Date(
-              topicClassroomData.trainingStartTime * 1000
-            ).getMonth()}/
-            ${new Date(topicClassroomData.trainingStartTime * 1000).getDay()}/
-            ${new Date(topicClassroomData.trainingStartTime * 1000).getFullYear()} ${new Date(
-              topicClassroomData.trainingStartTime * 1000
-            ).getHours()}:
-        ${new Date(topicClassroomData.trainingStartTime * 1000).getMinutes()}:${
-              dateInfo.second
-            }`).getTime()}
-          />
+          {/* <TimeFrame givenTime={new Date('2023-04-4 2:6:00')} vcData={vcData} /> */}
+          <TimeFrame givenTime={startTime} vcData={vcData} setIsVctoolActive={setIsVctoolActive} />
         </div>
         <div className={`${styles.subDiv}`}>
           <img src="/images/svg/vctool/lamp.svg" />
           <div>
             <h3>This session has not started yet</h3>
             <h4>
-              Schedule: {new Date(topicClassroomData.trainingStartTime * 1000).getDate()}th{' '}
-              {monthName[new Date(topicClassroomData.trainingStartTime * 1000).getMonth()]}
-              {new Date(topicClassroomData.trainingStartTime * 1000).getFullYear()} -
-              {new Date(topicClassroomData.trainingStartTime * 1000).getHours()}:
-              {new Date(topicClassroomData.trainingStartTime * 1000).getMinutes()}
-              {new Date(topicClassroomData.trainingStartTime * 1000).getHours() > 12 ? (
-                <span>PM</span>
-              ) : (
+              Schedule: {moment.unix(vcData?.trainingStartTime).format('DD')}th{' '}
+              {monthName[moment.unix(vcData?.trainingStartTime).format('MM')]}
+              {new Date(vcData.trainingStartTime * 1000).getFullYear()} -
+              {new Date(vcData.trainingStartTime * 1000).getHours()}:
+              {new Date(vcData.trainingStartTime * 1000).getMinutes()}
+              {new Date(vcData.trainingStartTime * 1000).getHours() > 12 ? (
                 <span>AM</span>
+              ) : (
+                <span>PM</span>
               )}
             </h4>
             <p>This session will be opened 15 mins before the start time to join</p>

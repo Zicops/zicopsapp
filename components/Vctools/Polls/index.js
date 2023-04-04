@@ -58,8 +58,8 @@ const Poll = ({ hide = false,deletePollPopUp }) => {
 
             <div className={`${styles.pollScreen}`}>
                 {
-                    meetingIconsAtom.isModerator ?<>{showPollPopup(polltitle)}</>:''
-                    // :<ParticipantPollScreen/>
+                    meetingIconsAtom.isModerator ?<>{showPollPopup(polltitle)}</>
+                    :<ParticipantPollScreen/>
                 }
             </div>
         </div>
