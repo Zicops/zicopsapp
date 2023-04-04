@@ -253,6 +253,62 @@ const MainToolbar = ({
           }}
         />
       )
+    },
+    {
+      title: 'manageAccount',
+      component: (
+        <ManageAccount
+          hide={() => {
+            selectedButton === 'manageAccount'
+              ? setSelectedButton('')
+              : setSelectedButton('manageAccount');
+          }}
+        />
+      )
+    },
+    {
+      title: 'startSessionPopup',
+      component: (
+        <StartSessionPopUp
+          concelMeetingFunc={() => {
+            setSelectedButton('');
+          }}
+          startMeetingFunc={() => {
+            setMeetingIconAtom({
+              ...meetingIconsAtom,
+              isStartAdd: false,
+              isJoinedAsModerator: false
+            });
+            setSelectedButton('');
+          }}
+        />
+      )
+    },
+    {
+      title: 'deletePopUp',
+      component: (
+        <DeletePoUp
+          poUpOptions={{
+            popUpName: 'Poll',
+            popUpNotice:
+              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
+            poupBtnInfo1: 'Cancel',
+            poupBtnInfo2: 'Delete'
+          }}
+        />
+      )
+    },
+    {
+      title: 'SettingPopup',
+      component: (
+        <SettingPopup
+          hide={() => {
+            selectedButton === 'SettingPopup'
+              ? setSelectedButton('')
+              : setSelectedButton('SettingPopup');
+          }}
+        />
+      )
     }
   ];
   const clearTime = () => {
