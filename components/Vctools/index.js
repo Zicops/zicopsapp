@@ -1,40 +1,47 @@
+import { getFileNameFromUrl } from '@/helper/utils.helper';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { ActiveClassroomTopicIdAtom, TopicAtom } from '@/state/atoms/module.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
+  CurrentParticipantDataAtom,
   breakoutList,
+  getCurrentParticipantDataObj,
   joinMeeting,
-  pollArray,
   totalRoomno,
   vcMeetingIconAtom,
   vcModeratorControlls,
-  vctoolAlluserinfo,
   vctoolMetaData
 } from '@/state/atoms/vctool.atoms';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
-import { StartMeeting } from './help/vctool.helper';
 import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
+import { StartMeeting } from './help/vctool.helper';
 import styles from './vctoolMain.module.scss';
-import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
-import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 const VcMaintool = ({ vcData = {} }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
+  const topicData = useRecoilValue(TopicAtom);
+  const currentTopicData = topicData?.find((topic) => topic?.id === activeClassroomTopicId);
+
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
+
   const Route = useRouter();
+  const [api, setapi] = useState(null);
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData);
+  const [currentParticipantData, setCurrentParticipantData] = useRecoilState(
+    CurrentParticipantDataAtom
+  );
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [isMeetingStarted, setIsMeetingStarted] = useRecoilState(joinMeeting);
   const [controlls, setControlls] = useRecoilState(vcModeratorControlls);
-  const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
   const totalBreakoutrooms = useRecoilValue(totalRoomno);
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList);
-  const allUserinfo = useRecoilValue(vctoolAlluserinfo);
   const userData = useRecoilValue(UserStateAtom);
   const [isStarted, setisStarted] = useState(isStarted);
   // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -44,7 +51,6 @@ const VcMaintool = ({ vcData = {} }) => {
   const [toggleAudio, settoggleAudio] = useState(false);
   const [toggleVideo, settoggleVideo] = useState(false);
   // const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
-  const [api, setapi] = useState(null);
   const [Fullscreen, setFullscreen] = useState(false);
   const fullScreenRef = useRef(null);
   const [userinfo, setuserinfo] = useState([]);
@@ -77,22 +83,43 @@ const VcMaintool = ({ vcData = {} }) => {
     }
   }, [controlls]);
 
+  // useEffect(() => {
+  //   if (isMeetingStarted) {
+  //     if (meetingIconsAtom?.isStartAdd) {
+  //       api?.executeCommand('startShareVideo', 'https://www.youtube.com/watch?v=QNuILonXlRo');
+  //     } else if (!meetingIconsAtom?.isStartAdd) {
+  //       api?.executeCommand('stopShareVideo');
+  //     }
+  //   }
+  // }, [meetingIconsAtom?.isStartAdd]);
+
   useEffect(() => {
-    if (isMeetingStarted) {
-      if (meetingIconsAtom?.isStartAdd) {
-        api?.executeCommand('startShareVideo', 'https://www.youtube.com/watch?v=QNuILonXlRo');
-      } else if (!meetingIconsAtom?.isStartAdd) {
-        api?.executeCommand('stopShareVideo');
-      }
-    }
-  }, [meetingIconsAtom?.isStartAdd]);
-  const startName = userData?.first_name + ' ' + userData?.last_name;
+    if (!isMeetingStarted) return;
+    if (!api) return;
+
+    const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
+
+    api.executeCommand('displayName', `${userData?.first_name} ${userData.last_name}`);
+    api.executeCommand('email', userData?.email);
+    api.executeCommand('avatarUrl', userData?.photo_url);
+    api.executeCommand('toggleFilmStrip');
+
+    const allPartcipants = structuredClone(api?.getParticipantsInfo());
+    const _currentUser = allPartcipants?.find(
+      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id
+    );
+    const isModerator = modIdList?.includes(userData?.id);
+    if (isModerator) api.executeCommand('grantModerator', userData?.id);
+
+    setCurrentParticipantData(getCurrentParticipantDataObj({ ..._currentUser, isModerator }));
+  }, [isMeetingStarted]);
 
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
         {toolbar && (
           <MainToolbar
+            api={api}
             setAudio={() => {
               api.isAudioAvailable().then((available) => {
                 if (available) {
@@ -145,23 +172,24 @@ const VcMaintool = ({ vcData = {} }) => {
             }}
             mouseMoveFun={() => {
               // console.log(userData)
-              api.getRoomsInfo().then((rooms) => {
-                setuserinfo(rooms.rooms[0].participants);
-                setbreakoutListarr(rooms.rooms);
-                setallInfo(rooms.rooms[0].participants);
-                setVctoolInfo({
-                  ...vctoolInfo,
-                  allRoomInfo: rooms.rooms[0].participants
-                });
-              });
+              // api.getRoomsInfo().then((rooms) => {
+              //   setuserinfo(rooms.rooms[0].participants);
+              //   setbreakoutListarr(rooms.rooms);
+              //   setallInfo(rooms.rooms[0].participants);
+              //   setVctoolInfo({
+              //     ...vctoolInfo,
+              //     allRoomInfo: rooms.rooms[0].participants
+              //   });
+              // });
               //  allUserinfo
               // userinfo
-              userinfo.forEach((data) => {
-                api.executeCommand('grantModerator', data?.id);
-                if ([api.getEmail(data?.id)].toString().includes('@ziocps')) {
-                  api.executeCommand('grantModerator', data?.id);
-                }
-              });
+              // userinfo.forEach((data) => {
+              //   console.info(data, meetingIconsAtom);
+              // if (meetingIconsAtom?.isModerator) api.executeCommand('grantModerator', data?.id);
+              // if ([api.getEmail(data?.id)].toString().includes('@ziocps')) {
+              //   api.executeCommand('grantModerator', data?.id);
+              // }
+              // });
             }}
             fullscreen={Fullscreen}
             // getUesrId={userinfo}
@@ -195,10 +223,9 @@ const VcMaintool = ({ vcData = {} }) => {
               // Route.push('/admin/vctool')
 
               StartMeeting(
-                'sk',
-                userData.first_name,
+                // currentTopicData?.name,
+                'Sk',
                 containerRef,
-                userData.email,
                 toggleAudio,
                 settoobar,
                 setapi,

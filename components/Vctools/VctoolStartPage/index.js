@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import moment from 'moment';
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import VcMaintool from '..';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
-import { UserStateAtom } from '@/state/atoms/users.atom';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import moment from 'moment';
-import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 
 const monthName = [
   'January',
@@ -83,18 +83,7 @@ const VCtoolStartPage = ({ topicId = null }) => {
               <h3>This session has {!isSessionEnded ? 'not started yet' : 'ended'}</h3>
               <h4>
                 {!isSessionEnded && (
-                  <>
-                    Schedule: {moment.unix(topicClassroomData?.trainingStartTime).format('DD')}th{' '}
-                    {monthName[moment.unix(topicClassroomData?.trainingStartTime).format('MM')]}
-                    {new Date(topicClassroomData.trainingStartTime * 1000).getFullYear()} -
-                    {new Date(topicClassroomData.trainingStartTime * 1000).getHours()}:
-                    {new Date(topicClassroomData.trainingStartTime * 1000).getMinutes()}
-                    {new Date(topicClassroomData.trainingStartTime * 1000).getHours() > 12 ? (
-                      <span>AM</span>
-                    ) : (
-                      <span>PM</span>
-                    )}
-                  </>
+                  <>Schedule: {moment.unix(topicClassroomData?.trainingStartTime).format('LLL')}</>
                 )}
               </h4>
 
