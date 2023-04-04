@@ -14,6 +14,7 @@ export const StartMeeting = (
       startWithAudioMuted: !toggleAudio,
       startWithVideoMuted: !toggleVideo,
       prejoinPageEnabled: false,
+      notifications: [],
       disabledNotifications: ['notify.grantedTo'],
       disableFilmstripAutohiding: true
     },

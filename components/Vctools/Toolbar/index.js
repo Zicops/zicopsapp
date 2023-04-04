@@ -12,6 +12,7 @@ import ResourcePage from '../Resource';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
+import NotesContainer from '../NotesContainer';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import {
   allPartcipantinfo,
@@ -19,7 +20,8 @@ import {
   particiantPopup,
   pollArray,
   vcMeetingIconAtom,
-  vctoolAlluserinfo
+  vctoolAlluserinfo,
+  CurrentParticipantDataAtom
 } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
@@ -46,6 +48,7 @@ const MainToolbar = ({
   autoAssignRoom,
   showSettingFunc
 }) => {
+  const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(
     breakoutRoomselectedparticipant
@@ -110,7 +113,15 @@ const MainToolbar = ({
     },
     {
       title: 'whiteBoard',
-      component: <WhiteBoard />
+      component: (
+        <NotesContainer
+          hide={() => {
+            selectedButton === 'whiteBoard'
+              ? setSelectedButton('')
+              : setSelectedButton('whiteBoard');
+          }}
+        />
+      )
     },
     {
       title: 'poll',
@@ -307,6 +318,8 @@ const MainToolbar = ({
             <VctoolButton
               onClickfun={() => {
                 selectedButton === 'about' ? setSelectedButton('') : setSelectedButton('about');
+
+                setallInfo(structuredClone(api?.getParticipantsInfo()));
               }}
               toggle={selectedButton === 'about'}
               trueSrc={'/images/svg/vctool/info-active.svg'}
@@ -505,19 +518,22 @@ const MainToolbar = ({
                 customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'breakOutRoom'}
               />
-              <VctoolButton
-                onClickfun={() => {
-                  setShowSetting(!showSetting);
-                  selectedButton === 'SettingPopup'
-                    ? setSelectedButton('')
-                    : setSelectedButton('SettingPopup');
-                  // SettingPopup
-                }}
-                trueSrc={'/images/svg/vctool/settings.svg'}
-                falseSrc={'/images/svg/vctool/settings.svg'}
-                customId={showSetting ? `${styles.changeBackground}` : ''}
-                toggle={showSetting}
-              />
+
+              {!!currentParticipantData?.isModerator && (
+                <VctoolButton
+                  onClickfun={() => {
+                    setShowSetting(!showSetting);
+                    selectedButton === 'SettingPopup'
+                      ? setSelectedButton('')
+                      : setSelectedButton('SettingPopup');
+                    // SettingPopup
+                  }}
+                  trueSrc={'/images/svg/vctool/settings.svg'}
+                  falseSrc={'/images/svg/vctool/settings.svg'}
+                  customId={showSetting ? `${styles.changeBackground}` : ''}
+                  toggle={showSetting}
+                />
+              )}
 
               <VctoolButton
                 onClickfun={() => {
