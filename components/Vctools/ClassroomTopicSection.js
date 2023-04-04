@@ -1,11 +1,11 @@
 import { useTimeInterval } from '@/helper/hooks.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import moment from 'moment';
-import { useState } from 'react';
+import Script from 'next/script';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
 import styles from './vctoolMain.module.scss';
-import Script from 'next/script';
 
 export default function ClassroomTopicSection({ topicId }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
@@ -39,14 +39,22 @@ export default function ClassroomTopicSection({ topicId }) {
   };
   const oneMinute = 1000 * 60;
 
-  const cancel = useTimeInterval(() => {
+  useEffect(() => {
+    updateSessionStatus();
+  }, []);
+
+  const cancel = useTimeInterval(updateSessionStatus, oneMinute);
+
+  function updateSessionStatus() {
+    if (!classroomData?.trainingStartTime) return;
+
     const now = new Date();
     if (classroomStartTime.diff(now, 'minute') < 0) setSessionStatus('live');
 
     const endTime = moment(classroomData.trainingEndTime * 1000);
 
     if (endTime.diff(now, 'minute') < 0) setSessionStatus('ended');
-  }, oneMinute);
+  }
 
   // end  the timeout loop
   if (sessionStatus === 'ended') cancel();

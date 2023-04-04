@@ -19,10 +19,10 @@ import MainToolbar from './Toolbar';
 import styles from './vctoolMain.module.scss';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 const VcMaintool = ({ vcData = {} }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
-
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
@@ -188,7 +188,7 @@ const VcMaintool = ({ vcData = {} }) => {
         {/* all components ara going to append here */}
         {!hidecard ? (
           <MeetingCard
-            vcData={vcData}
+            vcData={classroomData}
             startMeeting={() => {
               if (Route.asPath?.includes('preview'))
                 return setToastMessage('Cannot Join Classroom in preview mode');

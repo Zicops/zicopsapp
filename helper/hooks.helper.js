@@ -1400,7 +1400,7 @@ export function useTimeout(callback, delay = fifteenSeconds) {
   return timeoutRef;
 }
 
-export function useTimeInterval(callback, delay = fifteenSeconds) {
+export function useTimeInterval(callback, delay = fifteenSeconds, dependencies = []) {
   const timeoutId = useRef(null);
   const savedCallback = useRef(callback);
 
@@ -1426,7 +1426,7 @@ export function useTimeInterval(callback, delay = fifteenSeconds) {
     handleTick();
 
     return () => window.clearTimeout(timeoutId.current);
-  }, [delay]);
+  }, [delay, ...(dependencies || [])]);
 
   const cancel = useCallback(function () {
     window.clearTimeout(timeoutId.current);

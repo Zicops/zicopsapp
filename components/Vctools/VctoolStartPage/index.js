@@ -29,8 +29,8 @@ const VCtoolStartPage = ({ topicId = null }) => {
     ActiveClassroomTopicIdAtom
   );
   const topicClassroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
-
   const userData = useRecoilValue(UserStateAtom);
+
   const trainingStartTimeUnix = topicClassroomData?.trainingStartTime;
   const startTime = new Date(trainingStartTimeUnix * 1000);
   const year = startTime.getFullYear();

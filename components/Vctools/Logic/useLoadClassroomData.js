@@ -1,5 +1,5 @@
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { useEffect } from 'react';
 import { useRecoilCallback } from 'recoil';
@@ -13,6 +13,7 @@ export default function useLoadClassroomData(topicId = null) {
 
   useEffect(() => {
     if (!topicId) return;
+
     loadClassRoomData()
       .then((classroomData) => {
         if (!classroomData?.id) return;
@@ -23,7 +24,7 @@ export default function useLoadClassroomData(topicId = null) {
   }, [topicId]);
 
   async function loadClassRoomData() {
-    const res = await loadAndCacheDataAsync(
+    const res = await loadQueryDataAsync(
       GET_TOPIC_CLASSROOM,
       { topicId: topicId },
       {},
