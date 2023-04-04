@@ -12,12 +12,16 @@ import {
 import { Router, useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { StartMeeting } from './help/vctool.helper';
 import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import styles from './vctoolMain.module.scss';
-const VcMaintool = (vcData = {}) => {
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+const VcMaintool = ({ vcData = {}, isStartedDefault = false }) => {
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
   const Route = useRouter();
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
@@ -28,7 +32,7 @@ const VcMaintool = (vcData = {}) => {
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList);
   const allUserinfo = useRecoilValue(vctoolAlluserinfo);
   const userData = useRecoilValue(UserStateAtom);
-  const [isStarted, setisStarted] = useState(false);
+  const [isStarted, setisStarted] = useState(isStartedDefault);
   // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const containerRef = useRef(null);
   const [toolbar, settoobar] = useState(false);
@@ -69,6 +73,25 @@ const VcMaintool = (vcData = {}) => {
     }
   }, [meetingIconsAtom?.isStartAdd]);
   const startName = userData?.first_name + ' ' + userData?.last_name;
+
+  useEffect(() => {
+    if (!isStartedDefault) return;
+
+    StartMeeting(
+      'sk',
+      userData.first_name,
+      containerRef,
+      userData.email,
+      toggleAudio,
+      settoobar,
+      setapi,
+      toggleVideo
+    );
+    // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
+    setisStarted(true);
+    setIsMeetingStarted(true);
+    sethidecard(!hidecard);
+  }, [isStartedDefault]);
   return (
     <div ref={fullScreenRef}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
@@ -105,6 +128,7 @@ const VcMaintool = (vcData = {}) => {
               setFullscreen(false);
               // setisStarted(false)
               setIsMeetingStarted(false);
+              Route.back();
             }}
             shareScreen={() => {
               api.executeCommand('toggleShareScreen');
@@ -171,24 +195,11 @@ const VcMaintool = (vcData = {}) => {
           <MeetingCard
             vcData={vcData}
             startMeeting={() => {
+              if (Route.asPath?.includes('preview'))
+                return setToastMessage('Cannot Join Classroom in preview mode');
               // Route.push('/admin/vctool')
 
-              StartMeeting(
-                'sk',
-                userData.first_name,
-                containerRef,
-                userData.email,
-                toggleAudio,
-                settoobar,
-                setapi,
-                toggleVideo
-              );
-              // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
-              setisStarted(true);
-              setIsMeetingStarted(true);
-              sethidecard(!hidecard);
-
-              // Route.push('/admin/vctool')
+              Route.push(`${Route.asPath}/classroom`);
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

@@ -39,36 +39,52 @@ const VCtoolStartPage = ({ topicId = null }) => {
 
   const [isVctoolActive, setIsVctoolActive] = useState(false);
 
-  useEffect(() => {
-    setIsVctoolActive(new Date(topicClassroomData.trainingStartTime * 1000).getMinutes() <= 15);
-  }, [dateInfo]);
+  const endTime = new Date(topicClassroomData?.trainingEndTime * 1000);
 
-  if (isVctoolActive) return <VcMaintool vcData={topicClassroomData} />;
+  const isSessionEnded = moment(endTime).diff(new Date(), 'minute') < 0;
+  const isSessionActive =
+    (moment(startTime).diff(new Date(), 'minute') < 15 || isVctoolActive) && !isSessionEnded;
+
+  if (isSessionActive) return <VcMaintool vcData={topicClassroomData} />;
 
   return (
     <>
       <div className={`${styles.vctoolStartPageContainer}`}>
         <div className={`${styles.timeFrame}`}>
           {/* <TimeFrame givenTime={new Date('2023-04-4 2:6:00')} vcData={vcData} /> */}
-          <TimeFrame givenTime={startTime} vcData={vcData} setIsVctoolActive={setIsVctoolActive} />
+          {!isSessionEnded && (
+            <TimeFrame
+              givenTime={startTime}
+              vcData={topicClassroomData}
+              setIsVctoolActive={setIsVctoolActive}
+            />
+          )}
         </div>
         <div className={`${styles.subDiv}`}>
           <img src="/images/svg/vctool/lamp.svg" />
           <div>
-            <h3>This session has not started yet</h3>
+            <h3>This session has {!isSessionEnded ? 'not started yet' : 'ended'}</h3>
             <h4>
-              Schedule: {moment.unix(vcData?.trainingStartTime).format('DD')}th{' '}
-              {monthName[moment.unix(vcData?.trainingStartTime).format('MM')]}
-              {new Date(vcData.trainingStartTime * 1000).getFullYear()} -
-              {new Date(vcData.trainingStartTime * 1000).getHours()}:
-              {new Date(vcData.trainingStartTime * 1000).getMinutes()}
-              {new Date(vcData.trainingStartTime * 1000).getHours() > 12 ? (
-                <span>AM</span>
-              ) : (
-                <span>PM</span>
+              {!isSessionEnded && (
+                <>
+                  Schedule: {moment.unix(topicClassroomData?.trainingStartTime).format('DD')}th{' '}
+                  {monthName[moment.unix(topicClassroomData?.trainingStartTime).format('MM')]}
+                  {new Date(topicClassroomData.trainingStartTime * 1000).getFullYear()} -
+                  {new Date(topicClassroomData.trainingStartTime * 1000).getHours()}:
+                  {new Date(topicClassroomData.trainingStartTime * 1000).getMinutes()}
+                  {new Date(topicClassroomData.trainingStartTime * 1000).getHours() > 12 ? (
+                    <span>AM</span>
+                  ) : (
+                    <span>PM</span>
+                  )}
+                </>
               )}
             </h4>
-            <p>This session will be opened 15 mins before the start time to join</p>
+            <p>
+              {!isSessionEnded
+                ? 'This session will be opened 15 mins before the start time to join'
+                : 'Recording will be available soon'}
+            </p>
           </div>
         </div>
       </div>
