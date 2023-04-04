@@ -23,6 +23,7 @@ export const StartMeeting = (
       BRAND_WATERMARK_LINK: '',
       DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
       TOOLBAR_ALWAYS_VISIBLE: true,
+      DISABLE_FOCUS_INDICATOR: true,
       TOOLBAR_BUTTONS: [],
       DEFAULT_REMOTE_DISPLAY_NAMEA: 'Zicops User'
     },
