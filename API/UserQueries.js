@@ -100,6 +100,36 @@ export const GET_USER_LSP_MAP_BY_LSPID = gql`
   }
 `;
 
+export const GET_LSP_USERS_ROLES = gql`
+  query getLspUsersRoles($lspId: String!, $userIds: [String], $userLspIds: [String]) {
+    getLspUsersRoles(lsp_id: $lspId, user_id: $userIds, user_lsp_id: $userLspIds) {
+      user {
+        id
+        first_name
+        last_name
+        status
+        role
+        is_verified
+        is_active
+        gender
+        created_by
+        updated_by
+        created_at
+        updated_at
+        email
+        phone
+        photo_url
+      }
+      roles {
+        user_role_id
+        role
+        user_lsp_id
+        updated_at
+      }
+      status
+    }
+  }
+`;
 // input CourseMapFilters {
 //   lsp_id: [String]
 //   is_mandatory: Boolean

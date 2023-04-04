@@ -1,5 +1,6 @@
-import { GET_USER_LSP_TAGS, notificationClient } from '@/api/NotificationClient';
+import { GET_TAG_USERS, GET_USER_LSP_TAGS, notificationClient } from '@/api/NotificationClient';
 import {
+  GET_LSP_USERS_ROLES,
   GET_LSP_USERS_WITH_ROLE,
   GET_USER_DETAIL,
   GET_USER_LSP_MAP_BY_LSPID,
@@ -79,14 +80,15 @@ export default function useAdminQuery() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
-  async function getTag(tagArr = []){
-    if(!tagArr?.length) return USER_TYPE?.external;
-    let tag = USER_TYPE?.external ;
-    for(let i = 0 ; i < tagArr?.length ; i++){
+  async function getTag(tagArr = []) {
+    if (!tagArr?.length) return USER_TYPE?.external;
+    let tag = USER_TYPE?.external;
+    for (let i = 0; i < tagArr?.length; i++) {
       const currentIndexTag = tagArr[i]?.toLowerCase();
-      if(currentIndexTag === USER_TYPE?.external || currentIndexTag === USER_TYPE?.internal ) tag = currentIndexTag ;
+      if (currentIndexTag === USER_TYPE?.external || currentIndexTag === USER_TYPE?.internal)
+        tag = currentIndexTag;
     }
-    return tag
+    return tag;
   }
   async function sortArray(arr, param) {
     const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
@@ -115,10 +117,10 @@ export default function useAdminQuery() {
       notificationClient
     );
 
-    const userTags = tags?.getUserLspIdTags ;
+    const userTags = tags?.getUserLspIdTags;
 
     const formatedUsers =
-      userDatas?.map(async (singleUser,index) => {
+      userDatas?.map(async (singleUser, index) => {
         let roles = singleUser?.roles;
         let roleData = {};
 
@@ -128,9 +130,12 @@ export default function useAdminQuery() {
         } else {
           roleData = roles?.[0];
         }
-        const vendorTag = roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor ? USER_TYPE?.external : USER_TYPE?.internal
-        const type = !!userTags?.[index] ? await getTag(userTags?.[index]?.tags) : vendorTag ;
-        
+        const vendorTag =
+          roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor
+            ? USER_TYPE?.external
+            : USER_TYPE?.internal;
+        const type = !!userTags?.[index] ? await getTag(userTags?.[index]?.tags) : vendorTag;
+
         return {
           ...singleUser?.user,
           role: roleData?.role,
@@ -151,7 +156,38 @@ export default function useAdminQuery() {
     return users;
   }
 
+  async function getLspUsersByType(UserType = 'internal', prevPageSnapShot = '', pageSize = 30) {
+    if (!userOrgData?.lsp_id) return;
+    const lspId = userOrgData?.lsp_id;
+    const tagUserResult = await loadQueryDataAsync(
+      GET_TAG_USERS,
+      { prevPageSnapShot: prevPageSnapShot, pageSize: pageSize, tags: [UserType] },
+      { context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } } },
+      notificationClient
+    );
+    console.log(tagUserResult, 'users');
+    // here we are seperating the user_id and user_lsp_ids respectively
+    const tagUsers = tagUserResult?.getTagUsers?.data || [];
+    const userMaps = {
+      userIds: tagUsers?.map((user) => user?.user_id) || [],
+      userLspIds: tagUsers?.map((user) => user?.user_lsp_id) || []
+    };
+
+    const usersRes = await loadQueryDataAsync(GET_LSP_USERS_ROLES, {
+      lspId: lspId,
+      userIds: userMaps?.userIds,
+      userLspIds: userMaps?.userLspIds
+    },{},userQueryClient);
+
+    console.log(usersRes,'userRes');
+
+    return { r:usersRes, b: tagUsers }
+
+    // const formatedUsers =  
+  }
+
   return {
-    getLspUsers
+    getLspUsers,
+    getLspUsersByType
   };
 }

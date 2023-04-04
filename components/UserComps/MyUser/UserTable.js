@@ -36,7 +36,7 @@ const MyUserTable = forwardRef(
     const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
     const router = useRouter();
 
-    const { getLspUsers } = useAdminQuery();
+    const { getLspUsers , getLspUsersByType} = useAdminQuery();
 
     // function exposed to parent
     useImperativeHandle(ref, () => ({
@@ -57,6 +57,8 @@ const MyUserTable = forwardRef(
     useEffect(async () => {
       // loadUserData();
       const lspUsers = await getLspUsers();
+      // const users = await getLspUsersByType();
+      // console.log(users,'ss');
       const _lspUsers = lspUsers?.filter((user) => !!user?.roleData) || [];
 
       const usersTableData = isAdministration

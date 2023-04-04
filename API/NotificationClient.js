@@ -114,3 +114,18 @@ export const GET_USER_LSP_TAGS = gql`
     }
   }
 `;
+
+
+export const GET_TAG_USERS = gql`
+query getTagUsers($prevPageSnapShot: String, $pageSize: Int, $tags: [String]){
+  getTagUsers(prevPageSnapShot: $prevPageSnapShot, pageSize: $pageSize, tags: $tags) {
+    data {
+      user_lsp_id
+      user_id
+      tags
+      lsp_id
+    }
+    prevPageSnapShot
+  }
+}
+`
