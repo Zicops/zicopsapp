@@ -1,586 +1,686 @@
 @import '../../styles/base.scss';
 
 .mainCard {
-    width: 100vw;
-    height: 85vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  width: 100vw;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .vcCard {
-    width: 480px;
-    height: 366px;
-    border: 1px solid #484848;
-    border-radius: 8px;
+  width: 520px;
+  height: 366px;
+  border: 1px solid #484848;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .videoPlayer {
-    width: 100%;
-    height: 270px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #262626;
+  width: 100%;
+  height: 270px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #262626;
 }
 
 .subvideo {
-    z-index: 100;
-    height: 200px;
-    width: 200px;
-    border-radius: 50%;
-    border: solid black 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: larger;
-    font-weight: bold;
-    color: white;
-    background-color: black;
+  z-index: 100;
+  height: 270px;
+  width: 519px;
+  // border-radius: 50%;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  border: solid black 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
+  font-weight: bold;
+  color: white;
+  background-color: #26292c;
+}
 
+.subVideo1 > img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.videoplay {
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
 }
 
 #btnsBg1 {
-    background-color: #202222;
+  background-color: #202222;
+}
+
+#audioBtn {
+  background-color: #202222;
+
+  img {
+    padding: 15px;
+  }
 }
 
 #btnsBg2 {
-    background-Color: #F53D41;
+  background-color: #f53d41;
 }
 
 .btns {
-    display: flex;
-    height: 93px;
-    width: auto;
-    align-items: center;
-    // padding-left: 1rem;
-    overflow: hidden;
-    background-color: #121212;
+  display: flex;
+  height: 93px;
+  width: auto;
+  align-items: center;
+  // padding-left: 1rem;
+  overflow: hidden;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  background-color: #121212;
 }
 
-.btns>button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 48px;
-    width: 48px;
-    border-radius: 50%;
-    background-color: #202222;
-    padding: 15px;
-    margin-left: 10px;
-    cursor: pointer;
-    border: none;
-    outline: none;
+.btns > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  width: 48px;
+  border-radius: 50%;
+  background-color: #202222;
+  padding: 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
-.joinBtn {
-    width: 100%;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    padding-right: 10px;
+.joinBtn,
+.joinModeratorBtn {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  padding-right: 10px;
 }
 
-.joinBtn>button {
-    width: 81px;
-    height: 48px;
-    border-radius: 3rem;
-    background-color: #6BCFCF;
-    cursor: pointer;
-    border: none;
-    outline: none;
+.joinBtn > button,
+.joinModeratorBtn > button {
+  width: 81px;
+  height: 48px;
+  border-radius: 3rem;
+  background-color: #6bcfcf;
+  font-weight: 400;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
-.meet {
-    z-index: 1000;
-    height: 99%;
-    width: 100%;
-    position: absolute;
-    // top:0;
-    // left: 0;
-    // right: 0;
-    // bottom: 0;
+.joinModeratorBtn > button {
+  width: 187px;
 }
 
 .disablevideo {
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 // Styling footertool
 #changeBackground {
-    background: #7d7d7d;
+  background: #7d7d7d;
 }
 
+.meet {
+  z-index: 1000;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background-color: $black;
+}
 .toolBar {
-    // opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 1010;
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    margin: 0;
-
+  // opacity: 0;
+  overflow: hidden;
+  // transition: opacity 0.2s;
+  z-index: 1000;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
 }
 
 .toolBarnav {
-    // opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 1010;
-    // z-index: 1010;
-    width: 100vw;
-    height: 88px;
-    // background-color: transparent;
-    background-image: linear-gradient(black, transparent);
-    position: absolute;
-    top: 0;
-    display: flex;
-    justify-content: right;
-    align-items: center;
+  // opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 1010;
+  // z-index: 1010;
+  width: 100vw;
+  height: 88px;
+  // background-color: transparent;
+  background-image: linear-gradient(black, transparent);
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 
-.toolBarnav>button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    // margin-left: 10px;
-    color: white;
-    background-color: #202222;
-    height: 48px;
-    border: none;
-    outline: none;
-    height: 48px;
-    width: 48px;
-    margin-right: 10px;
-    border-radius: 50px;
-    cursor: pointer;
+.toolBarnav > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  // margin-left: 10px;
+  color: white;
+  background-color: #202222;
+  height: 48px;
+  border: none;
+  outline: none;
+  height: 48px;
+  width: 48px;
+  margin-right: 10px;
+  border-radius: 50px;
+  cursor: pointer;
 }
 
 .screen {
-    z-index: 1010;
-    height: 100%;
-    width: 100vw;
+  // z-index: 1010;
+  height: 100vh;
+  overflow: hidden;
+  width: 100vw;
 }
 
+// .subScreen
+// {
+//     position: absolute;
+//     top: 88px;
+//     bottom: 88px;
+//     left: 0;
+//    right: 0;
+// }
 .toolBarFooter {
-    // opacity: 0;
-    transition: opacity 0.2s;
-    position: absolute;
-    bottom: 0;
-    z-index: 1010;
-    height: 88px;
-    width: 100vw;
-    background-image: linear-gradient(transparent, black);
-    display: flex;
-    align-items: center;
+  // opacity: 0;
+  transition: opacity 0.2s;
+  position: absolute;
+  bottom: 0;
+  z-index: 1010;
+  height: 88px;
+  width: 100vw;
+  background-image: linear-gradient(transparent, black);
+  display: flex;
+  align-items: center;
 }
 
 .footerLeft {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    width: 50%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 50%;
 }
 
 #footerLeftbtn1 {
-    background-color: #202222;
+  background-color: #202222;
 }
 
 #footerLeftbtn2 {
-    background-color: white;
-
+  background-color: white;
 }
 
-.footerLeft>div {
-    outline: none;
-    border: none;
+.footerLeft > div {
+  outline: none;
+  border: none;
 }
 
-.footerLeft>button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    background-color: #202222;
-    height: 48px;
-    height: 48px;
-    width: 48px;
-    margin-right: 10px;
-    border-radius: 50px;
-    cursor: pointer;
-    outline: none;
-    border: none;
+.footerLeft > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: #202222;
+  height: 48px;
+  height: 48px;
+  width: 48px;
+  margin-right: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  border: none;
 }
 
 .footerRight {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-    width: 50%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  width: 50%;
 }
 
-.footerRight>button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    // margin-left: 10px;
-    color: white;
-    background-color: #202222;
-    height: 48px;
-    width: 48px;
-    margin-right: 10px;
-    border-radius: 50px;
-    cursor: pointer;
-    outline: none;
-    border: none;
+.footerRight > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  // margin-left: 10px;
+  color: white;
+  background-color: #202222;
+  height: 48px;
+  width: 48px;
+  margin-right: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+  border: none;
 }
 
-.canselBtn {
-    height: 48px;
-    width: 127px;
-    border-radius: 4rem;
-    margin-right: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    margin-left: 10px;
-    color: white;
-    background-color: #F53D41;
-    cursor: pointer;
+.canselBtn,
+.startMeeting {
+  height: 48px;
+  width: 127px;
+  border-radius: 4rem;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 400;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  margin-left: 10px;
+  color: white;
+  background-color: #f53d41;
+  cursor: pointer;
 }
 
-.canselBtn>img {
-    margin-right: 10px;
+.startMeeting {
+  background-color: #6bcfcf;
+  color: $black;
+}
+
+.canselBtn > img,
+.startMeeting > img {
+  margin-right: 10px;
 }
 
 #fadein1 {
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 999;
+  visibility: hidden;
+  transition: visibility 0.2s;
+  // z-index: 999;
 }
 
 #fadeout1 {
-    opacity: 1011;
-    z-index: 1010;
+  visibility: visible;
+  transition: visibility 0.2s;
 }
 
 // /styling chatbar
 .chatbar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
 .chatbarHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.chatbarHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.chatbarHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .chatbarScreen {
-    width: 300px;
-    height: 72%;
-    overflow: scroll;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #292F2F;
+  width: 300px;
+  height: 72%;
+  overflow: scroll;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #292f2f;
 }
 
 .chatbarScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .chatbarInput {
-    margin-top: 20px;
-    height: 15%;
-    width: 300px;
-    border: 1px solid #292F2F;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 6px;
-    flex-direction: column;
+  margin-top: 20px;
+  height: 15%;
+  width: 300px;
+  border: 1px solid #292f2f;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 6px;
+  flex-direction: column;
 }
 
-.chatbarInput>input {
-    width: 270px;
-    font-size: 16px;
-    height: 24px;
-    color: white;
-    background-color: #1A1D21;
-    outline: none;
-    border: none;
-
+.chatbarInput > input {
+  width: 270px;
+  font-size: 16px;
+  height: 24px;
+  color: white;
+  background-color: #1a1d21;
+  outline: none;
+  border: none;
 }
 
 .chatSendFile {
-    width: 276px;
-    display: flex;
-    justify-content: space-between;
+  width: 276px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.chatSendFile>input {
-    color: white;
-    background-color: #1A1D21;
-    outline: none;
-    border: none;
+.chatSendFile > input {
+  color: white;
+  background-color: #1a1d21;
+  outline: none;
+  border: none;
 }
 
-.chatbar>input> ::placeholder {
-    color: #747474;
+.chatbar > input > ::placeholder {
+  color: #747474;
 }
 
 // styling AQ bar
 .qaBar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
 .qaBarHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.qaBarHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.qaBarHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .qaBarScreen {
-    width: 300px;
-    height: 75%;
-    overflow: scroll;
-    // padding-bottom: 20px;
+  width: 300px;
+  height: 76%;
+  overflow: scroll;
+  padding-bottom: 10px;
 }
 
 .qaBarScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .qaBarInput {
-    // margin-top: 20px;
-    height: 15%;
-    width: 300px;
-    border: 1px solid #292F2F;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius: 6px;
-    flex-direction: column;
+  margin-top: 5px;
+  height: 15%;
+  width: 300px;
+  border: 1px solid #292f2f;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 6px;
+  flex-direction: column;
 }
 
-.qaBarInput>input {
-    width: 270px;
-    font-size: 16px;
-    height: 20px;
-    color: white;
-    background-color: #1A1D21;
-    outline: none;
-    border: none;
-
+.qaBarInput > input {
+  width: 270px;
+  font-size: 16px;
+  height: 20px;
+  color: white;
+  background-color: #1a1d21;
+  outline: none;
+  border: none;
 }
 
 .qaSendFile {
-    width: 276px;
-    display: flex;
-    justify-content: space-between;
+  width: 276px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.qaSendFile>input {
-    color: white;
-    background-color: #1A1D21;
-    outline: none;
-    border: none;
+.qaSendFile > input {
+  color: white;
+  background-color: #1a1d21;
+  outline: none;
+  border: none;
 }
 
-.qaBtn>input> ::placeholder {
-    color: #747474;
+.qaBtn > input > ::placeholder {
+  color: #747474;
 }
 
 .qabarBtnContainer {
-    height: 86px;
-    width: 300px;
-    display: flex;
-    justify-content: right;
-    margin-top: 55px;
+  height: 86px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  // margin-top: 25px;
 }
 
 .qaBtn {
-    width: 161px;
-    height: 48px;
-    background: #6BCFCF;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
+  width: 100%;
+  height: 48px;
+  background: #6bcfcf;
+  border-radius: 4px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.moderatorQA {
+  width: 296px;
+  height: 99%;
+}
+
+.qaRoomIcon {
+  width: 55px;
+  height: 55px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.qaAddQuestion {
+  width: 296px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.qaQuetionAvailableAvailableHead {
+  width: 276px;
+  height: 28px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+  color: #acacac;
+}
+
+.qaAddQuestion > p {
+  width: 276px;
+  height: 24px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 8px;
+
+  text-align: center;
+  color: #747474;
 }
 
 // Stylling Polls
-.pollBar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+.pollBar,
+.vcToolSettingContainer {
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
-.pollHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+.pollHead,
+.vctToolSettingHead {
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.pollScreen {
-    height: 91%;
-    width: 296px;
+.pollScreen,
+.vcToolSettingScreen {
+  height: 91%;
+  width: 296px;
 }
 
-.pollHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.pollHead > button,
+.vctToolSettingHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .moderatorPoll {
-    width: 276px;
-    height: 90%;
+  width: 296px;
+  height: 90%;
 }
 
 .moderatorAddPoll {
-    width: 296px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  width: 296px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-
-.pollModeratorScree {
-    width: 296px;
-    height: 99%;
-
-}
-
-
 
 .pollIcon {
-    width: 55px;
-    height: 55px;
-    border: solid #292F2F 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 6px;
+  width: 55px;
+  height: 55px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 .pollAvailableHead {
-    width: 276px;
-    height: 28px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 28px;
-    text-align: center;
-    color: #ACACAC;
+  width: 276px;
+  height: 28px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+  color: #acacac;
 }
 
 .pollAvailablesubHead {
-    width: 276px;
-    height: 24px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    margin-top: 8px;
-    color: #747474;
+  width: 276px;
+  height: 24px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 8px;
+  color: #747474;
 }
 
 // .pollAvailableHead> {
 //     width: 276px;
 //     height: 24px;
-    
+
 //     font-style: normal;
 //     font-weight: 400;
 //     font-size: 16px;
@@ -590,352 +690,385 @@
 // }
 
 .addPollBtn {
-    width: 296px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #6BCFCF;
-    border-radius: 4px;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+  width: 296px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #6bcfcf;
+  border-radius: 4px;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
 }
 
-.addPollBtn>div {
-    width: 15px;
-    height: 23px;
-    font-size: 1.5rem;
-    margin-right: 14px;
+.addPollBtn > div {
+  width: 15px;
+  height: 23px;
+  font-size: 1.5rem;
+  margin-right: 14px;
 }
 
 // PollQA component
 
 .pollQA {
-    width: 296px;
-    height: 100%;
-    overflow: scroll;
-
+  width: 296px;
+  height: 100%;
+  overflow: scroll;
 }
 
 .pollQA::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
-.pollQA>p {
-    width: 276px;
-    height: 24px;
-    font-size: 16px;
-    // 
-    font-style: normal;
-    line-height: 24px;
-    display: flex;
-    justify-content: left;
-    color: white;
-    margin-top: 10px;
+.pollQA > p {
+  width: 276px;
+  height: 24px;
+  font-size: 16px;
+  //
+  font-style: normal;
+  line-height: 24px;
+  display: flex;
+  justify-content: left;
+  color: white;
+  margin-top: 10px;
 }
 
 .pollQaScreen {
-    width: 296px;
-    height: 100%;
+  width: 296px;
+  height: 100%;
 }
 
 .pollQuestion {
-    width: 296px;
-    height: 210px;
-    background-color: #26292C;
-    margin-top: 12px;
+  width: 296px;
+  height: 210px;
+  background-color: #26292c;
+  margin-top: 12px;
 }
 
 .pollName {
+  width: 276px;
+  padding-top: 1px;
+  // padding-left: 10px;
+
+  p {
     width: 276px;
-    padding-top: 1px;
-    // padding-left: 10px;
+    height: 24px;
+    display: flex;
+    justify-content: flex-start;
+    margin: 8px auto 6px 10px;
+    color: #acacac;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+  }
 
-    p {
-        width: 276px;
-        height: 24px;
-        display: flex;
-        justify-content: flex-start;
-        margin: 8px auto 6px 10px;
-        color: #ACACAC;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 24px;
-    }
-
-    input {
-        width: 276px;
-        height: 40px;
-        border: none;
-        outline: none;
-        margin: auto 10px;
-        background-color: #1A1D21;
-        padding: 5px;
-        color: white;
-    }
-}
-
-.pollInput {
+  input {
     width: 276px;
     height: 40px;
     border: none;
     outline: none;
-    margin-left: auto 10px;
-    background-color: #1A1D21;
+    margin: auto 10px;
+    background-color: #1a1d21;
     padding: 5px;
     color: white;
+  }
+}
+
+.pollInput {
+  width: 276px;
+  height: 40px;
+  border: none;
+  outline: none;
+  margin-left: auto 10px;
+  background-color: #1a1d21;
+  padding: 5px;
+  color: white;
 }
 
 .pollOption {
-    width: 296px;
-    height: 130px;
-    padding-top: 2px;
-    background-color: #26292C;
-    // margin: 7px 0 7px 0;
-    border-radius: 4px;
+  width: 296px;
+  height: 130px;
+  padding-top: 2px;
+  background-color: #26292c;
+  // margin: 7px 0 7px 0;
+  border-radius: 4px;
 
-    p {
-        width: 276px;
-        height: 24px;
-        display: flex;
-        justify-content: flex-start;
-        margin: 8px auto 6px 10px;
-        color: #ACACAC;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 24px;
+  p {
+    width: 276px;
+    height: 24px;
+    display: flex;
+    justify-content: flex-start;
+    margin: 8px auto 6px 10px;
+    color: #acacac;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  div {
+    width: 276px;
+    height: 76px;
+    background-color: #1a1d21;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: auto 10px;
+
+    input {
+      width: 276px;
+      height: 40px;
+      border: none;
+      outline: none;
+      background-color: #1a1d21;
+      padding: 5px;
+      color: white;
     }
 
-    div {
-        width: 276px;
-        height: 76px;
-        background-color: #1A1D21;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        margin: auto 10px;
-
-        input {
-            width: 276px;
-            height: 40px;
-            border: none;
-            outline: none;
-            background-color: #1A1D21;
-            padding: 5px;
-            color: white;
-        }
-
-        img {
-            width: 20px;
-            height: 20px;
-            margin: 6px 0 6px 10px;
-        }
+    img {
+      width: 20px;
+      height: 20px;
+      margin: 6px 0 6px 10px;
     }
+  }
 }
 
 .pollOptionLabel {
-    margin: 10px 0 10px 10px;
-    width: 276px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: white;
+  margin: 10px 0 10px 10px;
+  width: 276px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: white;
 }
 
 .pollOptionContainer {
-    width: 290px;
-    display: flex;
-    flex-direction: column;
+  width: 290px;
+  display: flex;
+  flex-direction: column;
 }
 
 .pollAddOptionBtn {
-    width: 296px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #1A1D21;
-    border-radius: 4px;
-    border: solid #262626 2px;
-    border-radius: 4px;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    color: white;
+  width: 296px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1d21;
+  border-radius: 4px;
+  border: solid #262626 2px;
+  border-radius: 4px;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: white;
 
-    div {
-        width: 15px;
-        height: 23px;
-        font-size: 1.5rem;
-        margin-right: 14px;
-    }
+  div {
+    width: 15px;
+    height: 23px;
+    font-size: 1.5rem;
+    margin-right: 14px;
+  }
 }
 
 .pollSaveBtns {
-    width: 296px;
-    height: 48px;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  width: 296px;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 
-    button {
-        width: 140px;
-        height: 48px;
-        border-radius: 4px;
-        // 
-        font-style: normal;
-        font-weight: 400;
-        font-size: 16px;
-        outline: none;
-        border: none;
-    }
+  button {
+    width: 140px;
+    height: 48px;
+    border-radius: 4px;
+    //
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    outline: none;
+    border: none;
+  }
 }
 
 .pollCancelBtn {
-    background-color: #26292C;
-    color: white;
+  background-color: #26292c;
+  color: white;
 }
 
 .pollSaveBtn {
-    background-color: #6BCFCF;
-    color: black;
+  background-color: #6bcfcf;
+  color: black;
 }
 
 .pollScreenContainer {
-    width: 100%;
-    height: 63vh;
-    overflow: scroll;
+  width: 100%;
+  height: 63vh;
+  overflow: scroll;
 }
 
 .pollScreenContainer::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
-
 .pollQuestionScreen {
-    width: 100%;
-    height: 50vh;
-    margin-top: 7px;
-    background-color: #121212;
-    padding-left: 10px;
-    // overflow: scroll;
-
+  width: 296px;
+  height: 100%;
+  margin-top: 7px;
+  background-color: #121212;
+  padding-left: 10px;
+  // overflow: scroll;
 }
 
 .pollQuestionhead {
-    display: flex;
-    width: 276px;
+  display: flex;
+  width: 296px;
 }
 
 .pollLable {
-    display: flex;
-    width: 30%;
-    justify-content: space-between;
+  display: flex;
+  width: 30%;
+  justify-content: space-between;
 }
 
 .publishPollHead {
-    margin-right: 24px;
-    color: #6BCFCF;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 24px;
+  margin-right: 24px;
+  color: #6bcfcf;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 .pollQuestions {
-    width: 100%;
-    height: auto;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: white;
-    background-color: #121212;
-
+  width: 100%;
+  height: auto;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: white;
+  background-color: #121212;
 }
 
 .pollSavedLabel {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #F6AC3C;
-    margin-bottom: 12px;
-    margin-top: 6px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #f6ac3c;
+  margin-bottom: 12px;
+  margin-top: 6px;
 }
 
 .pollBoxOptions {
-    width: 100%;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-right: 8px;
-    // height: 50%;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-right: 8px;
+  // height: 50%;
 }
 
-.pollBoxOptions>div {
-    width: 100%;
-    height: 50px;
-    border: solid #ACACAC .5px;
-    border-radius: 4px;
-    margin-top: 12px;
-    color: white;
-
+.pollBoxOptions > div {
+  width: 100%;
+  height: 50px;
+  border: solid #acacac 1px;
+  border-radius: 4px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  color: white;
 }
 
-.pollBoxBtns {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-right: 10px;
+.pollBoxOptions > div > img {
+  margin-right: 8px;
+}
 
+.pollBoxBtns,
+.quizBoxBtns {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  // margin-right: 10px;
+  margin-top: 12px;
 }
 
 .pollBoxEditBnt {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #FFFFFF;
+  //
+  width: 130px;
+  height: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
 }
 
-.pollBoxBtns>button {
-    width: 130px;
-    height: 40px;
-    border: 1px solid #292F2F;
-    border-radius: 4px;
-    background: #292F2F;
-    margin-right: 10px;
-    margin-top: 15px;
+.pollBoxBtns > button,
+.quizBoxBtns > button {
+  border: 1px solid #292f2f;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  margin-right: 8px;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+.pollBoxBtns > button {
+  background: #26292c;
+}
+
+.quizBoxEditBtn {
+  color: white;
+  background: #292f2f;
+  width: 135px;
+  height: 40px;
+}
+
+.quizBoxPublishBtn {
+  color: black;
+  background-color: #6bcfcf;
+  width: 135px;
+  height: 40px;
 }
 
 .pollBoxDeleteBnt {
-    color:#F53D41;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+  color: #f53d41;
+  width: 130px;
+  height: 40px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
 }
+
+.pollModeratorScreen {
+  width: 296px;
+  height: 99%;
+}
+
+// styling pollscreenParticipant
+
 // .publishPoll
 // {
 //     width: 100%;
 //     color: red;
-    
+
 //     font-style: normal;
 //     font-weight: 400;
 //     font-size: 16px;
@@ -943,988 +1076,1633 @@
 // }
 // styling Participants bar
 .participantsBar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
 .participantsHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.participantsHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.participantsHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .participantsScreen {
-    height: 90%;
-    width: 296px;
-    overflow: scroll;
-
+  height: 90%;
+  width: 296px;
+  overflow: scroll;
 }
 
 .participantsScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .participantsScreenhead {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #ACACAC;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .allInstructors {
-    width: 276px;
-    height: auto;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    color: white;
+  width: 276px;
+  height: auto;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  color: white;
 }
 
 // styling student frame
 
 .studentFrame {
-    display: flex;
-    width: 296px;
-    // justify-content:baseline;
-    align-items: center;
-
+  display: flex;
+  width: 296px;
+  // justify-content:baseline;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .studentFramename {
-    font-size: 13px;
-    margin-left: 10px;
+  width: 60%;
+  font-size: 13px;
+  margin-left: 10px;
 }
 
 .studentFrameicons {
-    width: 40%;
-    display: flex;
-    justify-content: right;
-    align-items: center;
+  width: 25%;
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 
-.studentFrameicons>img {
-    margin-left: 5px;
+.studentFrameicons > img {
+  margin-left: 5px;
 }
 
-.studentFrameicons>img {
-    margin-right: 4px;
+.studentFrameicons > img {
+  margin-right: 4px;
 }
 
 .avtar {
-    height: 40px;
-    width: 40px;
-    background-color: white;
-    color: black;
-    border-radius: 20rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 40px;
+  width: 40px;
+  background-color: white;
+  color: black;
+  border-radius: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // styling White board
 .whiteBoard {
-    z-index: 1010;
-    width: 100vw;
-    z-index: 1000;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    background-color: white;
+  z-index: 1010;
+  width: 100vw;
+  z-index: 1000;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  background-color: white;
 }
 
 .whitepage {
-    width: 100vw;
-    height: 85%;
-    overflow: scroll;
-    border: solid black 1px;
-    cursor: url(/images/svg/vctool/pen.svg ), auto;
+  width: 100vw;
+  height: 85%;
+  overflow: scroll;
+  border: solid black 1px;
+  cursor: url(/images/svg/vctool/pen.svg), auto;
 }
 
 .whitepage::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .whiteBoardControlls {
-    width: 20vw;
-    display: flex;
-    justify-content: space-around;
-    margin: auto;
-    align-items: center
+  width: 20vw;
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
+  align-items: center;
 }
 
-.whiteBoardControlls>div {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    line-height: 15px;
-    justify-content: center;
-    align-items: center;
+.whiteBoardControlls > div {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  line-height: 15px;
+  justify-content: center;
+  align-items: center;
 }
 
 // styling BreakoutRooms
 
 .breakoutRoombar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
 .breakoutHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.breakoutHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.breakoutHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .breakoutRoomscreen {
-    width: 296px;
-    height: 90%;
-    overflow: scrol;
+  width: 296px;
+  height: 90%;
+  overflow: scrol;
 }
 
 .breakoutRoomscreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .breakoutRoomparticipants::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .moderatorBreakoutroom {
-    width: 276px;
-    height: 90%;
+  width: 296px;
+  height: 99%;
 }
-
 
 .breakouRoomIcon {
-    width: 55px;
-    height: 55px;
-    border: solid #292F2F 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 6px;
+  width: 55px;
+  height: 55px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
 }
-
-
 
 .moderatorAddroom {
-    width: 296px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  width: 296px;
+  height: 93%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-
 
 .breakoutRoomAvailableHead {
-    width: 276px;
-    height: 28px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 28px;
-    text-align: center;
-    color: #ACACAC;
+  width: 276px;
+  height: 28px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+  color: #acacac;
 }
 
+.moderatorAddroom > p {
+  width: 276px;
+  height: 24px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 8px;
 
-
-.moderatorAddroom>p {
-    width: 276px;
-    height: 24px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    margin-top: 8px;
-
-    text-align: center;
-    color: #747474;
+  text-align: center;
+  color: #747474;
 }
 
 .addBreakoutroombtn {
-    width: 296px;
-    height: 48px;
-    background: #6BCFCF;
-    border-radius: 4px;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+  width: 296px;
+  height: 48px;
+  background: #6bcfcf;
+  border-radius: 4px;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .breakoutRoomDetails {
-    width: 296px;
-    height: 90%;
-    padding-top: 10px;
+  width: 296px;
+  height: 90%;
+  padding-top: 10px;
 }
 
 .breakoutRoomDetailsHead {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #FFFFFF;
-    margin-top: 8px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #ffffff;
+  margin-top: 8px;
 }
 
 .breakoutLable {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #ACACAC;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .breakoutRoominputbox {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
-.breakoutRoominputbox>input {
-    width: 296px;
-    height: 40px;
-    background-color: #1A1D21;
-    border: 1px solid #292F2F;
-    outline: none;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: white;
+.breakoutRoominputbox > input {
+  width: 296px;
+  height: 40px;
+  background-color: #1a1d21;
+  border: 1px solid #292f2f;
+  outline: none;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: white;
 }
 
 .breakoutRoomnumbers {
-    width: 296px;
-    display: flex;
-    justify-content: space-between;
+  width: 296px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.breakoutRoomnumbers>button {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    border-radius: 2px;
-    border: none;
-    justify-content: center;
-    align-items: center;
-    background-color: #292F2F;
-
+.breakoutRoomnumbers > button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  border-radius: 2px;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  background-color: #292f2f;
 }
 
-.breakoutRoomnumbers>div {
-    width: 210px;
-    height: 40px;
-    text-align: center;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 40px;
-    color: #ACACAC;
-    border: 1px solid #292F2F;
-    background-color: #1A1D21;
+.breakoutRoomnumbers > div {
+  width: 210px;
+  height: 40px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 40px;
+  color: #acacac;
+  border: 1px solid #292f2f;
+  background-color: #1a1d21;
 }
 
 .participantBreakoutroomsetting {
-    display: flex;
-    margin-top: 16px;
+  display: flex;
+  margin-top: 16px;
 }
 
-.participantBreakoutroomsetting>input {
-    width: 20.5px;
-    height: 20.5px;
-    margin-right: 10px;
+.participantBreakoutroomsetting > input {
+  width: 20.5px;
+  height: 20.5px;
+  margin-right: 10px;
 }
 
-.participantBreakoutroomsetting>p {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #747474;
+.participantBreakoutroomsetting > p {
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #747474;
 }
 
 .breakoutRoomsaveinfobtn {
-    width: 296px;
-    display: flex;
-    justify-content: space-around;
+  width: 296px;
+  display: flex;
+  justify-content: space-around;
 }
 
 .breakoutcancelinfo {
-    width: 140px;
-    height: 48px;
-    color: white;
-    background-color: #26292C;
-    border: none;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    border-radius: 4px;
+  width: 140px;
+  height: 48px;
+  color: white;
+  background-color: #26292c;
+  border: none;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 4px;
 }
 
 .breakoutsaveinfo {
-    width: 140px;
-    height: 48px;
-    color: rgb(0, 0, 0);
-    background: #6BCFCF;
-    border-radius: 4px;
-    border: none;
-    // 
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    border-radius: 4px;
+  width: 140px;
+  height: 48px;
+  color: rgb(0, 0, 0);
+  background: #6bcfcf;
+  border-radius: 4px;
+  border: none;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  border-radius: 4px;
 }
 
 .manageRooms {
-    width: 296px;
-    height: 90%;
+  width: 296px;
+  height: 90%;
 }
 
 .manageRoomshead {
-    display: flex;
-    margin-bottom: 12px;
-    margin-top: 12px;
+  display: flex;
+  margin-bottom: 12px;
+  margin-top: 12px;
 }
 
-.manageRoomshead>div {
-    width: 90%;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #ACACAC;
+.manageRoomshead > div {
+  width: 90%;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .manageRoombtns {
-    width: 296px;
-    display: flex;
-    justify-content: space-between;
+  width: 296px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .manageRoombtn1 {
-    width: 140px;
-    height: 40px;
-    background: #26292C;
-    border: 1px solid #292F2F;
-    border-radius: 4px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #6BCFCF;
+  width: 140px;
+  height: 40px;
+  background: #26292c;
+  border: 1px solid #292f2f;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #6bcfcf;
 }
 
 .manageRoombtn2 {
-    width: 140px;
-    height: 40px;
-    background: #6BCFCF;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    color: #0B0C0D;
+  width: 140px;
+  height: 40px;
+  background: #6bcfcf;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #0b0c0d;
 }
 
 .availableRoomcontainerhead {
-    margin-top: 12px;
-    margin-bottom: 12px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #ACACAC;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .availableRoomcontainer {
-    width: 296px;
-    height: 82%;
-    overflow: scroll;
+  width: 296px;
+  height: 82%;
+  overflow: scroll;
 }
 
 .availableRoomcontainer::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .breakoutRoomCard {
-    width: 296px;
-    height: 40px;
-    display: flex;
-    margin-top: 5px;
+  width: 296px;
+  height: 40px;
+  display: flex;
+  margin-top: 5px;
 }
 
 .breakoutRoomCardLeft {
-    display: flex;
-    width: 70%;
-    justify-content: left;
-    align-items: center;
-    color: white;
+  display: flex;
+  width: 70%;
+  justify-content: left;
+  align-items: center;
+  color: white;
 }
 
 .breakoutRoomCardLeftHeading {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    margin-left: 8px;
-    color: #FFFFFF;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  margin-left: 8px;
+  color: #ffffff;
 }
 
 .breakoutRoomCardIcon {
-    width: 40px;
-    height: 40px;
-    border-radius: 3px;
-    background-color: #2B60EA;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  background-color: #2b60ea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .breakoutRoomCardRight {
-    width: 30%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  width: 30%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
-.breakoutRoomCardRight>button {
-    outline: none;
-    background-color: transparent;
-    border: none;
+.breakoutRoomCardRight > button {
+  outline: none;
+  background-color: transparent;
+  border: none;
 }
 
 .BreakoutRoomtootips {
-    position: absolute;
-    width: 147px;
-    height: 130px;
-    left: 130px;
-    // top: 208px;
-    background: #0B0C0D;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  width: 147px;
+  height: 130px;
+  left: 130px;
+  // top: 208px;
+  background: #0b0c0d;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
 }
 
-.BreakoutRoomtootips>button {
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #FFFFFF;
-    background-color: transparent;
-    border: none;
-    outline: none;
+.BreakoutRoomtootips > button {
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+  background-color: transparent;
+  border: none;
+  outline: none;
 }
 
 .breakoutRoomparticipants {
-    width: 296px;
-    height: auto;
+  width: 296px;
+  height: auto;
 }
 
-.breakoutRoomparticipants>button {
-    width: 290px;
-    margin: 6px;
-    // 
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    background-color: transparent;
-    color: white;
-    border: 1px solid #292F2F;
-    height: 40px;
+.breakoutRoomparticipants > button {
+  width: 290px;
+  margin: 6px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid #292f2f;
+  height: 40px;
 }
 
 .breakoutRoomParticipantHeading {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #ACACAC;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .breakoutRoomParticipantScreen {
-    width: 296px;
-    height: 30vh;
-    overflow: scroll;
+  width: 296px;
+  height: 30vh;
+  overflow: scroll;
 }
 
 .breakoutRoomParticipantScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .addParticipantPopup {
-    height: 482px;
-    width: 510px;
-    position: absolute;
-    top: 15%;
-    right: 30%;
-    // bottom: 20%;
-    padding: 14px;
-    background: #1A1D21;
+  height: 482px;
+  width: 510px;
+  position: absolute;
+  top: 15%;
+  right: 30%;
+  // bottom: 20%;
+  padding: 14px;
+  background: #1a1d21;
 }
 
 .addParticipantPopupHead {
-    color: white;
-    font-weight: 500;
-    font-size: 20px;
-    // padding-left: 24px;
-    width: 440px;
-    padding-bottom: 14px;
-    margin: auto;
-    border-bottom: 1px solid #292F2F;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  // padding-left: 24px;
+  width: 440px;
+  padding-bottom: 14px;
+  margin: auto;
+  border-bottom: 1px solid #292f2f;
 }
 
 .addParticipantSubHead {
-    width: 440px;
-    display: flex;
-    color: #ACACAC;
-    padding-top: 14px;
-    font-weight: 400;
-    font-size: 18px;
-    margin: auto;
+  width: 440px;
+  display: flex;
+  color: #acacac;
+  padding-top: 14px;
+  font-weight: 400;
+  font-size: 18px;
+  margin: auto;
 }
 
-.addParticipantSubHead>div {
-    width: 90%;
+.addParticipantSubHead > div {
+  width: 90%;
 }
 
 .addParticipantPopupScreen {
-    width: 440px;
-    height: 65%;
-    margin: auto;
-    padding-top: 12px;
-    // background-color: #6BCFCF;
-    border-bottom: 1px solid #292F2F;
-    overflow: scroll;
+  width: 440px;
+  height: 65%;
+  margin: auto;
+  padding-top: 12px;
+  // background-color: #6BCFCF;
+  border-bottom: 1px solid #292f2f;
+  overflow: scroll;
 }
 
 .addParticipantPopupScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .addParticipantbtn {
-    padding-top: 12px;
-    width: 440px;
-    height: auto;
-    display: flex;
-    justify-content: space-around;
-    margin: auto;
+  padding-top: 12px;
+  width: 440px;
+  height: auto;
+  display: flex;
+  justify-content: space-around;
+  margin: auto;
 }
 
 .addParticipantbtn1 {
-    width: 209px;
-    height: 48px;
-    background: #26292C;
-    border: 1px solid #292F2F;
-    border-radius: 4px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #ACACAC;
+  width: 209px;
+  height: 48px;
+  background: #26292c;
+  border: 1px solid #292f2f;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #acacac;
 }
 
 .addParticipantbtn2 {
-    width: 209px;
-    height: 48px;
-    background: #6BCFCF;
-    border-radius: 4px;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
-    color: #000000;
+  width: 209px;
+  height: 48px;
+  background: #6bcfcf;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
 }
 
 // styling participantFrame
 .participantFrame {
-    width: 440px;
-    height: 40px;
-    display: flex;
-    margin-top: 8px;
-    align-items: centerS;
+  width: 440px;
+  height: 40px;
+  display: flex;
+  margin-top: 8px;
+  align-items: centerS;
 }
 
 .participantFrameicon {
-    width: 40px;
-    height: 40px;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .participantFramename {
-    margin-left: 12px;
-    
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    color: white;
+  margin-left: 12px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: white;
 }
 
-.participantFrame>div {
-    width: 90%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+.participantFrame > div {
+  width: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.participantFrame>input {
-    width: 24px;
-    height: 24px;
-    line-height: 40px;
+.participantFrame > input {
+  width: 24px;
+  height: 24px;
+  line-height: 40px;
 }
 
 // styling resources page
 .resourceBar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
-    color: black;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
+  color: black;
 }
 
 .resourceHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.resourceHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.resourceHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .resourceScreen {
-    height: 90%;
-    width: 296px;
-    overflow: scroll;
+  height: 90%;
+  width: 296px;
+  overflow: scroll;
 }
 
 .resourceScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .resourceScreenhead {
-    
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-    color: #ACACAC;
-    // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #acacac;
+  // box-shadow: 0px 0px 30px 25px rgba(0, 0, 0, 0.25);
 }
 
 //styling about page
 .aboutBar {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
 }
 
 .aboutScreenHeading {
-    margin-top: 15px;
-    padding-top: 10px;
-    width: 276px;
-    height: 56px;
-    font-size: 18xp;
-    line-height: 28px;
-    color: white;
+  margin-top: 15px;
+  padding-top: 10px;
+  width: 276px;
+  height: 56px;
+  font-size: 18xp;
+  line-height: 28px;
+  color: white;
 }
 
 .aboutScreenSessionHead {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    color: white;
-    font-size: 14px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: white;
+  font-size: 14px;
 }
 
 .aboutHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.aboutHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.aboutHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .aboutInstructor {
-    display: flex;
-    width: 276px;
-    justify-content: baseline;
-    border-bottom: solid #292F2F 1px;
-    margin-top: 10px;
-    align-items: center;
-    padding-bottom: 20px;
-    height: 48px;
-    margin-bottom: 15px;
+  display: flex;
+  width: 276px;
+  justify-content: baseline;
+  border-bottom: solid #292f2f 1px;
+  margin-top: 10px;
+  align-items: center;
+  padding-bottom: 20px;
+  height: 48px;
+  margin-bottom: 15px;
 }
 
 .aboutInstructorlogo {
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    background-color: white;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: white;
 }
 
 .intructorInfo {
-    width: 236px;
-    justify-content: center;
-    align-items: center;
-    margin-left: 10px;
-    font-size: 14px;
+  width: 236px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 14px;
 }
 
 .aboutScreen {
-    height: 88%;
+  height: 88%;
 }
 
 .aboutMeetingInfo {
-    display: flex;
-    width: 276px;
-    justify-content: baseline;
-    height: 48px;
-    margin-top: 10px;
-    align-items: center;
-    padding-bottom: 10px;
+  display: flex;
+  width: 276px;
+  justify-content: baseline;
+  height: 48px;
+  margin-top: 10px;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .aboutMeetingLogo {
-    height: 40px;
-    width: 40px;
-    border: solid #292F2F 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 40px;
+  width: 40px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.aboutMeetingLogo>img {
-    height: 20px;
-    width: 22.1px;
+.resourcesQAContainer {
+  width: 100%;
+}
+
+.resourcesQAContainer > p {
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.resourcesInputs {
+  width: 296px;
+  padding-top: 8px;
+  margin: auto;
+  background-color: #26292c;
+  padding-bottom: 12px;
+
+  p {
+    padding-left: 8px;
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #acacac;
+  }
+}
+
+.resourceInputLable {
+  width: 276px;
+  margin: auto;
+  background-color: #26292c;
+}
+
+.resourcedragAndDropContainer {
+  width: 296px;
+
+  p {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #acacac;
+  }
+}
+
+.resourcedragAndDrop {
+  width: 296px;
+  height: 200px;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23292F2FFF' stroke-width='4' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  margin-top: 12px;
+}
+.resourceBrowse {
+  height: 200px;
+}
+.resourceBrowse > input {
+  border: none;
+  outline: none;
+
+  height: 200px;
+}
+// styling resources QA
+.aboutMeetingLogo > img {
+  height: 20px;
+  width: 22.1px;
+}
+
+.resourceName {
+  width: 276px;
+  height: 35px;
+  // margin: auto;
+  font-size: 14px;
+  margin-left: 9px;
+  border: none;
+  padding-left: 8px;
+  outline: none;
+  background-color: #1a1d21;
+}
+.resourceUploadFile {
+  width: 100%;
+  height: 100%;
+
+  label {
+    font-weight: 400;
+  }
+
+  textarea {
+    width: 100%;
+    margin-top: 5px;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+  }
+
+  .button {
+    display: flex;
+    height: 150px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    align-items: center;
+    gap: 15px;
+    color: $white;
+    background-color: $secondary;
+    border: 1px dashed $secondaryWhite;
+    padding: 15px;
+    margin-top: 8px;
+  }
+}
+.resourcesBtns {
+  width: 100%;
+  height: 70px;
+  margin-top: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  button {
+    width: 140px;
+    height: 45px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+  }
+}
+.resourceCanselBtn {
+  background-color: $secondary;
+  color: $white;
+}
+.resourceAddBtn {
+  background-color: #6bcfcf;
 }
 
 // styling quiz bar
 .quiz {
-    z-index: 1020;
-    width: 336px;
-    position: absolute;
-    top: 88px;
-    bottom: 88px;
-    padding-left: 17px;
-    right: 0;
-    background-color: #1A1D21;
-    // height: 88vh;
-
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
+  // height: 88vh;
 }
 
 .quizeAttemtpsHead {
-    padding-top: 12px;
-    color: #ACACAC;
-    font-size: 14px;
+  padding-top: 12px;
+  color: #acacac;
+  font-size: 14px;
 }
 
 .quizScreen {
-    overflow: scroll;
-    height: 90%;
+  overflow: scroll;
+  height: 90%;
 }
 
 .quizScreen::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .quizHead {
-    padding-top: 20px;
-    width: 296px;
-    height: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: white;
-    border-bottom: 1px solid #292F2F;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
 }
 
-.quizHead>button {
-    background-color: transparent;
-    outline: none;
-    border: none;
+.quizHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
 }
 
 .quizUnattempted {
-    width: 276px;
+  width: 276px;
 }
 
 .quizAttempted {
-    width: 276px;
+  width: 276px;
 }
 
 .quizQuestion {
-    width: 276px;
-    margin-top: 12px;
+  width: 100%;
+  margin-top: 12px;
 }
 
 .quizQuestionhead {
-    display: flex;
-    width: 276px;
+  display: flex;
+  width: 296px;
 }
 
 .quizLable {
-    display: flex;
-    width: 30%;
-    justify-content: space-between;
+  display: flex;
+  width: 30%;
+  justify-content: space-between;
 }
 
 .quizeExpand {
-    width: 70%;
-    display: flex;
-    justify-content: right;
-}
+  width: 70%;
+  display: flex;
+  justify-content: right;
 
-.quizeExpand>img {
+  img {
     width: 12px;
+  }
 }
 
 .questionScreen {
-    height: 60vh;
-    margin-top: 7px;
-    background-color: #121212;
-
+  height: 60vh;
+  margin-top: 7px;
+  background-color: #121212;
 }
 
-.quizeExpand>button {
-    background-color: transparent;
+.quizeExpand > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.moderatorQuize,
+.resourceModeratorContainer {
+  width: 296px;
+  height: 90%;
+}
+
+.quizModeratorScreen,
+.resourceModeratorScreen {
+  width: 296px;
+  height: 99%;
+}
+
+.moderatorAddQuiz,
+.moderatorAddResource {
+  width: 296px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.quizAvailableHead,
+.resourceAvailableHead {
+  width: 276px;
+  height: 28px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  text-align: center;
+  color: #acacac;
+}
+
+.quizAvailablesubHead,
+.resourceAvailablesubHead {
+  width: 276px;
+  height: 24px;
+  //
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  margin-top: 8px;
+  color: #747474;
+}
+
+.addQuizBtn,
+.addResourceBtn {
+  width: 296px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #6bcfcf;
+  margin-top: 12px;
+  border-radius: 4px;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+
+  div {
+    font-weight: 300;
+    font-size: 1.7rem;
+    margin-right: 8px;
+  }
+}
+
+.quizIcon,
+.recourceIcon {
+  width: 55px;
+  height: 55px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.quizQAcontainer {
+  width: 296px;
+}
+
+.quizeQALabel {
+  width: 100%;
+  // margin-left: 10px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-weight: 400;
+  font-size: 16px;
+  color: white;
+}
+
+.quizQuestionBox {
+  width: 296px;
+  background-color: #26292c;
+  height: 200px;
+}
+
+.quizName {
+  width: 100%;
+}
+
+.quizName > div {
+  font-weight: 400;
+  font-size: 16px;
+  color: #acacac;
+  margin: 8px 0 0 8px;
+}
+
+.quizName > input {
+  width: 276px;
+  margin: 8px 0 0 8px;
+  height: 40px;
+  outline: none;
+  border: none;
+  padding-left: 6px;
+  color: white;
+  background: #1a1d21;
+  // background-color: ;
+}
+
+.quizQuestion {
+  width: 296px;
+  // padding-left: 8px;
+}
+
+.quizQA {
+  margin-bottom: 4px;
+  color: white;
+  padding-left: 6px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #acacac;
+}
+
+.quizQuestionBoxs {
+  display: flex;
+  width: 276px;
+  flex-direction: column;
+  // background-color: #26292C;
+  background: #1a1d21;
+  margin: auto;
+  padding-bottom: 12px;
+
+  input {
+    width: 276px;
+    height: 40px;
     outline: none;
     border: none;
+    background: #1a1d21;
+    padding-left: 6px;
+    color: white;
+  }
+
+  img {
+    width: 19px;
+    height: 19px;
+    margin-left: 6px;
+  }
+}
+
+.quizDifficultyLevel {
+  width: 296px;
+  font-size: 16px;
+  font-weight: 400px;
+  margin-top: 12px;
+  color: #acacac;
+}
+
+.quizeLevels {
+  width: 296px;
+  display: flex;
+
+  input {
+    background-color: #26292c;
+    border: none;
+    outline: none;
+    height: 30px;
+    width: 30px;
+    font-weight: 400;
+    font-size: 12px;
+    border: solid #747474 0.3px;
+    color: #acacac;
+    margin-top: 6px;
+  }
+}
+
+.quizOptionsLabel {
+  width: 296px;
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.quizOptionNotice {
+  width: 296px;
+  color: #acacac;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 10px;
+  line-height: 20px;
+  margin-bottom: 12px;
+}
+
+.quizHint {
+  width: 100%;
+  margin-top: 8px;
+
+  p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #acacac;
+  }
+
+  input {
+    background-color: #1a1d21;
+    width: 296px;
+    border: none;
+    border-radius: 4px;
+    padding-left: 5px;
+    height: 40px;
+    margin-top: 4px;
+    outline: none;
+    border: solid #26292c 1px;
+    color: white;
+  }
+}
+
+.quizOptionBoxContainer {
+  width: 296px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 130px;
+  // margin-top: 12px;
+  background-color: #26292c;
+  padding-top: 10px;
+  padding-bottom: 12px;
+}
+
+.quizSelectedOption {
+  display: flex;
+  width: 260px;
+
+  p {
+    color: #acacac;
+  }
+}
+
+.quizOptionInputBox {
+  width: 260px;
+  display: flex;
+  margin-top: 5px;
+  flex-direction: column;
+  background-color: #1a1d21;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  img {
+    width: 24px;
+    height: 24px;
+    padding-left: 5px;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    background-color: #1a1d21;
+    border: none;
+    outline: none;
+    padding-left: 5px;
+    color: white;
+  }
+}
+
+.quizQABtns {
+  width: 276px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+
+  button {
+    width: 130px;
+    height: 50px;
+    font-weight: 500;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}
+
+.quizeOptioncancelBtn {
+  background: #26292c;
+  color: white;
+}
+
+.quizeOptionSaveBtn {
+  background-color: #6bcfcf;
+  color: #0b0c0d;
+}
+
+.availableQuizSCreen {
+  width: 296px;
+  height: 60vh;
 }
 
 // styling create BreakoutRoom
 .createRoom {
-    width: 296px;
-    height: 44px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  width: 296px;
+  height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .createRoomhead {
-    font-size: 14px;
-    color: white;
-    font-weight: 400;
-    width: 40%;
+  font-size: 14px;
+  color: white;
+  font-weight: 400;
+  width: 40%;
 }
 
 .createRoombtns {
-    display: flex;
-    height: 44px;
-    width: 65%;
-    justify-content: right;
-    align-items: center;
+  display: flex;
+  height: 44px;
+  width: 65%;
+  justify-content: right;
+  align-items: center;
 }
 
-.createRoombtns>button {
-    width: 80px;
-    height: 25px;
-    font-size: 10px;
-    margin-left: 6px;
-    background-color: #2B60EA;
+.createRoombtns > button {
+  width: 80px;
+  height: 25px;
+  font-size: 10px;
+  margin-left: 6px;
+  background-color: #2b60ea;
+  color: white;
+}
+
+// manage account or host controlls
+.manageAccountBar {
+  z-index: 1020;
+  width: 336px;
+  position: absolute;
+  top: 88px;
+  bottom: 88px;
+  padding-left: 17px;
+  right: 0;
+  background-color: #1a1d21;
+}
+
+.manageAccountHead {
+  padding-top: 20px;
+  width: 296px;
+  height: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  //
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: white;
+  border-bottom: 1px solid #292f2f;
+  padding-bottom: 20px;
+}
+
+.manageAccountHead > button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+
+.manageAccountScreen {
+  height: 90%;
+  width: 296px;
+  overflow: scroll;
+}
+
+.manageAccountScreen::-webkit-scrollbar {
+  display: none;
+}
+
+.manageAccountScreenHeading {
+  font-weight: 400;
+  font-size: 14px;
+  color: #acacac;
+  margin-top: 12px;
+}
+
+.hostControlls {
+  display: flex;
+  height: 40px;
+  margin-top: 12px;
+}
+
+.hostControlls > div {
+  width: 75%;
+  display: flex;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  align-items: center;
+}
+
+// styling StartSessionPopUp
+
+.startSessionPopup {
+  width: 482px;
+  height: 332px;
+  background-color: #1a1d21;
+  position: absolute;
+  top: 25%;
+  left: 35%;
+  padding-top: 10px;
+}
+
+.starSessionInnerContainer {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+
+  p {
+    font-size: 20px;
+    font-weight: 500;
     color: white;
+    border-bottom: solid #292f2f 1px;
+    padding-bottom: 12px;
+  }
+}
+
+.startSessionInstruction {
+  margin-top: 10px;
+  line-height: 28px;
+  color: #acacac;
+  font-size: 18px;
+  font-weight: 400px;
+  border-bottom: solid #292f2f 1px;
+  padding-bottom: 12px;
+}
+
+.startSessionStartRecordBtn {
+  width: 100%;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.startSessionStartRecordBtn > div {
+  display: flex;
+  border-bottom: solid #292f2f 1px;
+  height: 4rem;
+  align-items: center;
+}
+
+.startSessionStartRecordBtn > div > p {
+  font-size: 18px;
+  font-weight: 500;
+  width: 85%;
+  border: none;
+  color: #747474;
+}
+
+.startSessionBtns {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+
+  button {
+    width: 209px;
+    height: 48px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+}
+
+.SessionCanselBtn {
+  background-color: #26292c;
+  border: solid #292f2f 1px;
+  color: #acacac;
+}
+
+.startSessionBtn {
+  background-color: #6bcfcf;
+  border: solid #292f2f 1px;
+  color: $black;
+}
+
+.joinSessionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
+
+  margin-left: 50px;
+
+  > div {
+    width: 100%;
+    text-align: center;
+  }
+
+  .joinSessionHead {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1em;
+
+    .after {
+      color: #f6ac3c;
+    }
+
+    .live {
+      color: #f53d41;
+    }
+  }
+
+  button {
+    width: 100%;
+
+    border-radius: 5px;
+    border-color: transparent;
+    outline-color: transparent;
+
+    padding: 0.5em 2em;
+    font-size: 1rem;
+
+    &.joinSessionBtn {
+      background: $primary;
+      color: $black;
+      font-weight: 600;
+    }
+
+    &.sessionEnded {
+      color: $white;
+      background-color: $darkTwo;
+    }
+  }
+
+  .joinsessionFooter {
+    display: flex;
+    justify-content: space-between;
+  }
 }

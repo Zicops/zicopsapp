@@ -26,6 +26,16 @@ export const TopicExamAtom = atom({
   default: getTopicExamObj()
 });
 
+export const TopicClassroomAtom = atom({
+  key: 'TopicClassroomAtom',
+  default: getTopicClassroomObj()
+});
+
+export const ActiveClassroomTopicIdAtom = atom({
+  key: 'ActiveClassroomTopicId',
+  default: null
+});
+
 export const TopicVideoAtom = atom({
   key: 'TopicVideo',
   default: []
@@ -143,6 +153,31 @@ export function getTopicExamObj(data = {}) {
     language: data.language || '',
     currentModule: data.currentModule || {},
     currentTopic: data.currentTopic || {}
+  };
+}
+
+export function getTopicClassroomObj(data = {}) {
+  return {
+    id: data.id || null,
+    topicId: data.topicId,
+    courseId: data.courseId,
+    language: data.language || '',
+    currentModule: data.currentModule || {},
+    currentTopic: data.currentTopic || {},
+    trainers: data?.trainers || [],
+    moderators: data?.moderators || [],
+    trainingStartTime: data?.trainingStartTime || null,
+    trainingEndTime: data?.trainingEndTime || null,
+    duration: data?.duration || '00',
+    breaktime: data?.breaktime || '',
+    language: data?.language || [],
+    isScreenShareEnabled: data?.isScreenShareEnabled || false,
+    isChatEnabled: data?.isChatEnabled || false,
+    isMicrophoneEnabled: data?.isMicrophoneEnabled || false,
+    isQaEnabled: data?.isQaEnabled || false,
+    isCameraEnabled: data?.isCameraEnabled || false,
+    isOverrideConfig: data?.isOverrideConfig || false,
+    status: data?.status || ''
   };
 }
 

@@ -23,7 +23,7 @@ export const StartMeeting = (givenName, startingName, containerRef, email, toggl
       setToobar(true)
     }
   };
-  setApi(new JitsiMeetExternalAPI(domain, options));
+  setApi(new JitsiMeetExternalAPI(domain, options))
 
 };
 
@@ -41,14 +41,17 @@ export function OnVideo(video, videoref) {
   video = videoref.current;
   videoref.current.style.display = "block"
   videoref.current.style.backgroundColor = "black"
-  videoref.current.style.width = "200px"
-  videoref.current.style.height = "200px"
-  videoref.current.style.borderRadius = "50%"
+  videoref.current.style.width = "516px"
+  videoref.current.style.height = "270px"
+  videoref.current.style.borderTopRightRadius= "8px";
+  videoref.current.style.borderTopLeftRadius= "8px";
+
+  // videoref.current.style.borderRadius = "50%"
   // nameRef.current.style.display="none"
   navigator.mediaDevices
     .getUserMedia(
       {
-        video: { width: 200, height: 200 }
+        video: { width: 516, height: 270 }
       }
     ).then((stream) => {
       video.srcObject = stream;

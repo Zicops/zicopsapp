@@ -13,8 +13,9 @@ import {
   TopicClassroomAtom,
   getTopicClassroomObject
 } from '@/state/atoms/courses.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilCallback, useRecoilState } from 'recoil';
 
 export default function useHandleTopicClassroom(topData = null) {
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
@@ -22,6 +23,9 @@ export default function useHandleTopicClassroom(topData = null) {
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(null);
   const [accordionOpenState, setAccordionOpenState] = useState(null);
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
 
   // reset state after some time
   useEffect(() => {
@@ -68,6 +72,7 @@ export default function useHandleTopicClassroom(topData = null) {
             isQaEnabled: _topicClassroom?.is_qa_enabled,
             isCameraEnabled: _topicClassroom?.is_camera_enabled,
             isOverrideConfig: _topicClassroom?.is_override_config,
+            language: _topicClassroom?.language?.split(', '),
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
@@ -100,12 +105,12 @@ export default function useHandleTopicClassroom(topData = null) {
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
-      trainers: classroomMaster?.trainers?.map((data) => data?.user_id || data) || [],
-      moderators: classroomMaster?.moderators?.map((data) => data?.user_id || data) || [],
+      trainers: topicClassroom?.trainers?.map((data) => data?.user_id || data) || [],
+      moderators: topicClassroom?.moderators?.map((data) => data?.user_id || data) || [],
       training_start_time: getUnixFromDate(topicClassroom?.trainingStartTime),
       training_end_time: getUnixFromDate(topicClassroom?.trainingEndTime),
       duration: topicClassroom?.duration,
-      breaktime: topicClassroom?.breaktime || '10',
+      breaktime: topicClassroom?.breaktime || '0',
       language: topicClassroom?.language?.join(', '),
       is_screen_share_enabled: topicClassroom?.isScreenShareEnabled,
       is_chat_enabled: topicClassroom?.isChatEnabled,
@@ -125,6 +130,8 @@ export default function useHandleTopicClassroom(topData = null) {
         viltMutationClient
       ).catch(() => setToastMessage('Topic classroom Update Error!'));
 
+      setToastMessage('Topic classroom update successfully', 'success');
+
       return resUpdate?.updateTopicClassroom || null;
     }
 
@@ -136,6 +143,7 @@ export default function useHandleTopicClassroom(topData = null) {
     ).catch(() => setToastMessage('Topic classroom Create Error!'));
 
     setTopicClassroom((prev) => ({ ...prev, id: res?.createTopicClassroom?.id }));
+    setToastMessage('Topic classroom added successfully', 'success');
 
     return res?.createTopicClassroom || null;
   }
