@@ -31,6 +31,11 @@ export const TopicClassroomAtom = atom({
   default: getTopicClassroomObj()
 });
 
+export const ActiveClassroomTopicIdAtom = atom({
+  key: 'ActiveClassroomTopicId',
+  default: null
+});
+
 export const TopicVideoAtom = atom({
   key: 'TopicVideo',
   default: []

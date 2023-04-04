@@ -6,7 +6,11 @@ import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import ZicopsCarousel from '@/components/ZicopsCarousel';
 import { getLatestCoursesByFilters } from '@/helper/data.helper';
 import useUserCourseData from '@/helper/hooks.helper';
-import { getTopicClassroomObj, getTopicExamObj, TopicClassroomAtom, TopicExamAtom } from '@/state/atoms/module.atoms';
+import {
+  ActiveClassroomTopicIdAtom,
+  getTopicExamObj,
+  TopicExamAtom
+} from '@/state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
 import ModuleContextProvider from '@/state/contexts/ModuleContext';
@@ -20,7 +24,9 @@ export default function Course() {
   const { fullCourse } = useContext(courseContext);
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
-  const [topicClassroomData, setTopicClassroomData] = useRecoilState(TopicClassroomAtom);
+  const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
+    ActiveClassroomTopicIdAtom
+  );
   const startPlayer = videoData.startPlayer;
 
   const [ongoingCourses, setOngoingCourses] = useState([]);
@@ -43,8 +49,14 @@ export default function Course() {
     setVideoData(getVideoObject());
     setStartPlayer(false);
     setTopicExamData(getTopicExamObj());
-    setTopicClassroomData(getTopicClassroomObj());
+    setActiveClassroomTopicId(null);
   }, []);
+
+  useEffect(() => {
+    if (!startPlayer && !topicExamData?.id) return;
+
+    setActiveClassroomTopicId(null);
+  }, [startPlayer, topicExamData?.id]);
 
   useEffect(async () => {
     const courseId = fullCourse?.id;
@@ -98,12 +110,12 @@ export default function Course() {
             overflowX: 'clip'
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
-          
-          {topicClassroomData?.id && <VCtoolStartPage vcData={topicClassroomData} isDisplayedInCourse={true}/>}
+
+          {!!activeClassroomTopicId && <VCtoolStartPage topicId={activeClassroomTopicId} />}
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
-          {!startPlayer && !topicExamData?.id && !topicClassroomData?.id && (
+          {!startPlayer && !topicExamData?.id && !activeClassroomTopicId && (
             <CourseHero set={setStartPlayer} />
           )}
 

@@ -2642,3 +2642,60 @@
   border: solid #292f2f 1px;
   color: $black;
 }
+
+.joinSessionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
+
+  margin-left: 50px;
+
+  > div {
+    width: 100%;
+    text-align: center;
+  }
+
+  .joinSessionHead {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1em;
+
+    .after {
+      color: #f6ac3c;
+    }
+
+    .live {
+      color: #f53d41;
+    }
+  }
+
+  button {
+    width: 100%;
+
+    border-radius: 5px;
+    border-color: transparent;
+    outline-color: transparent;
+
+    padding: 0.5em 2em;
+    font-size: 1rem;
+
+    &.joinSessionBtn {
+      background: $primary;
+      color: $black;
+      font-weight: 600;
+    }
+
+    &.sessionEnded {
+      color: $white;
+      background-color: $darkTwo;
+    }
+  }
+
+  .joinsessionFooter {
+    display: flex;
+    justify-content: space-between;
+  }
+}
