@@ -17,13 +17,13 @@ export default function VendorIndividualProfiles({ data }) {
     serviceArray.push('Speaker');
   }
   if (data?.sme_expertise?.length) {
-    serviceArray.push('SME');
+    serviceArray.push('Subject Matter');
   }
   if (data?.classroom_expertise?.length) {
-    serviceArray.push('CRT');
+    serviceArray.push('Classroom Training');
   }
   if (data?.content_development?.length) {
-    serviceArray.push('CD');
+    serviceArray.push('Content Development');
   }
 
   return (

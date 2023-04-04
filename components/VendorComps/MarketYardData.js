@@ -3,6 +3,8 @@ import { COMMON_LSPS } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 import styles from './vendorComps.module.scss';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useRecoilValue } from 'recoil';
 
 export default function MarketYardData({
   vendorType = null,
@@ -17,6 +19,7 @@ export default function MarketYardData({
   const [smeVendors, setSmeVendors] = useState([...Array(skeletonCardCount)]);
   const [crtVendors, setCrtVendors] = useState([...Array(skeletonCardCount)]);
   const [cdVendors, setCdVendors] = useState([...Array(skeletonCardCount)]);
+  const { isDemo } = useRecoilValue(FeatureFlagsAtom);
   // const [speakerVendors, setSpeakerVendors] = useState([...Array(skeletonCardCount)]);
 
   useEffect(async () => {
@@ -59,7 +62,7 @@ export default function MarketYardData({
         <ZicopsCarousel title="My Vendors" data={lspVendors} type="vendor" />
       )}
 
-      {displayRows?.isSmeDisplayed && !!smeVendors?.length && (
+      {isDemo && displayRows?.isSmeDisplayed && !!smeVendors?.length && (
         <ZicopsCarousel
           title="Subject Matter Experts Marketplace"
           data={smeVendors}
@@ -70,7 +73,7 @@ export default function MarketYardData({
         <ZicopsCarousel title="Training Fulfiller Marketplace" data={crtVendors} type="vendor" />
       )}
 
-      {displayRows?.isCdDisplayed && !!cdVendors?.length && (
+      {isDemo && displayRows?.isCdDisplayed && !!cdVendors?.length && (
         <ZicopsCarousel title="Content Development Marketplace" data={cdVendors} type="vendor" />
       )}
       {!!speakerDetails?.length && (

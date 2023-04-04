@@ -45,16 +45,16 @@ export default function VendorInfo() {
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
+  const [isShowTax, setShowTax] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] = useRecoilState(
-    VendorServicesListAtom
-  );
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices, services, getVendorServices } = useHandleMarketYard();
+  const { addUpdateServices, services, getVendorServices, addUpdateOrder } = useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -73,6 +73,30 @@ export default function VendorInfo() {
     isTotalcheck = true;
   }
 
+  const orderArray = [];
+  if (servicesData?.sme?.length) {
+    orderArray.push(...servicesData?.sme);
+  }
+  if (servicesData?.crt?.length) {
+    orderArray.push(...servicesData?.crt);
+  }
+  if (servicesData?.cd?.length) {
+    orderArray.push(...servicesData?.cd);
+  }
+  if (servicesData?.speakers?.length) {
+    orderArray.push(...servicesData?.speakers);
+  }
+
+  const grossTotal = orderArray?.map((data) => {
+    if (!data?.isActive) return null;
+    return 1;
+  });
+
+  const filteredGrossTotal = grossTotal.filter((x) => x != null);
+  let isGrosstotal = false;
+  if (!filteredGrossTotal?.length) {
+    isGrosstotal = true;
+  }
   useEffect(() => {
     if (!isIndividual) return;
     if (!vendorData?.users?.length) return;
@@ -109,14 +133,15 @@ export default function VendorInfo() {
     setShowPopup(true);
   };
 
-  const addRateHandler = () => {
+  const addRateHandler = async () => {
     setCurrentComponent(currentComponent + 1);
-    if (currentComponent === 0) {
-      // addUpdateServices();
-    }
+
     if (currentComponent === 2) {
-      setCompleteOrder(true);
       setAddRate(false);
+      setCompleteOrder(true);
+      await addUpdateServices();
+      const orderDetails = await addUpdateOrder();
+      setOrderData(orderDetails);
     }
   };
 
@@ -229,11 +254,21 @@ export default function VendorInfo() {
         submitBtn={{
           name: currentComponent === 2 ? 'Confirm' : 'Next',
           handleClick: addRateHandler,
-          disabled: isTotalcheck
+          disabled:
+            (currentComponent === 0 && isTotalcheck) ||
+            (currentComponent === 1 && !isShowTax) ||
+            (currentComponent === 1 && isGrosstotal) ||
+            (currentComponent === 2 && isGrosstotal)
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
-          {currentComponent === 1 && <ReviewAndTax setCurrentComponent={setCurrentComponent} />}
+          {currentComponent === 1 && (
+            <ReviewAndTax
+              setCurrentComponent={setCurrentComponent}
+              isShowTax={isShowTax}
+              setShowTax={setShowTax}
+            />
+          )}
           {currentComponent === 2 && (
             <ReviewAndTaxConfirm setCurrentComponent={setCurrentComponent} />
           )}
@@ -247,7 +282,7 @@ export default function VendorInfo() {
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
         submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
-        <CompleteOrder />
+        <CompleteOrder orderId={orderData?.order_id} />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>
     </>
