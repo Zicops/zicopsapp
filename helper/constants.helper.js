@@ -8,7 +8,8 @@ export const COURSE_MAP_STATUS = {
   assign: 'open',
   started: 'started',
   completed: 'completed',
-  disable: 'disable'
+  disable: 'disable',
+  invitedDisable: 'invited_disable'
 };
 export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
 export const USER_TYPE = { internal: 'internal', external: 'external' };

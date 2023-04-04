@@ -7,7 +7,7 @@ import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
 import ToolTip from '../../ToolTip';
 import styles from '../formComponents.module.scss';
 import DisplayImage from './DisplayImage';
-import PreviewImageVideo from './PreviewImageVideo';
+import FilePreview from './FilePreview';
 
 export default function BrowseAndUpload({
   handleFileUpload,
@@ -122,11 +122,19 @@ export default function BrowseAndUpload({
         )}
       </div>
 
-      {showPreview && (
+      {/* {showPreview && (
         <PreviewImageVideo
           fileName={previewData.fileName}
           filePath={previewData.filePath}
           isVideo={previewData.isVideo}
+          setShowPreview={setShowPreview}
+          showPreview={showPreview}
+        />
+      )} */}
+      {showPreview && (
+        <FilePreview
+          fileName={previewData.fileName}
+          filePath={previewData.filePath}
           setShowPreview={setShowPreview}
           showPreview={showPreview}
         />

@@ -480,6 +480,22 @@ $marginBetweenInputs: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+
+  height: 100%;
+  overflow: auto;
+
+  .vcSettingContainer {
+    .darkThreeText {
+      color: $darkThree;
+    }
+
+    .toggleBtnContainer {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      grid-gap: 0.5em;
+      margin: 1em auto;
+    }
+  }
 }
 
 // module pop up
