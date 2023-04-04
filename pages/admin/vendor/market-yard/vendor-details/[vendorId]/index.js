@@ -140,9 +140,9 @@ export default function VendorInfo() {
     if (currentComponent === 2) {
       setAddRate(false);
       setCompleteOrder(true);
-      await addUpdateOrderServices();
       const orderDetails = await addUpdateOrder();
       setOrderData(orderDetails);
+      await addUpdateOrderServices(orderDetails?.id);
     }
   };
 

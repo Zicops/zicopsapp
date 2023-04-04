@@ -175,7 +175,7 @@ export default function useHandleMarketYard() {
     // }
   }
 
-  async function addUpdateOrderServices() {
+  async function addUpdateOrderServices(_orderId) {
     const orderArray = [];
     if (servicesData?.sme?.length) {
       orderArray.push(...(servicesData?.sme || []));
@@ -194,6 +194,7 @@ export default function useHandleMarketYard() {
     for (let i = 0; i < orderArray?.length; i++) {
       const _orderArray = orderArray[i];
       const sendData = {
+        orderId: _orderId,
         serviceType: _orderArray?.serviceType || '',
         description: _orderArray?.description || '',
         unit: _orderArray?.unit || 0,
