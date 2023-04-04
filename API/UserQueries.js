@@ -1141,20 +1141,30 @@ export const GET_CD_DETAILS = gql`
   }
 `;
 
-export const GET_ALL_ORDERS = gql`
-  query getAllOrders($lspId: String) {
-    getAllOrders(lsp_id: $lspId) {
-      id
-      vendor_id
-      lsp_id
-      total
-      tax
-      grand_total
-      created_at
-      created_by
-      updated_at
-      updated_by
-      status
+export const GET_PAGINATED_VENDOR_ORDERS = gql`
+  query getAllOrders($lspId: String, $pageCursor: String, $Direction: String, $pageSize: Int) {
+    getAllOrders(
+      lsp_id: $lspId
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      orders {
+        id
+        vendor_id
+        lsp_id
+        total
+        tax
+        grand_total
+        created_at
+        created_by
+        updated_at
+        updated_by
+        status
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;

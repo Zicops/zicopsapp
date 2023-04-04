@@ -1,11 +1,10 @@
 import {
-  GET_ALL_ORDERS,
   GET_ORDER_SERVICES,
   GET_SPEAKERS,
-  GET_VENDORS_BY_LSP,
   GET_VENDOR_SERVICES,
   userQueryClient,
-  GET_PAGINATED_VENDORS
+  GET_PAGINATED_VENDORS,
+  GET_PAGINATED_VENDOR_ORDERS
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
@@ -19,7 +18,7 @@ import {
 } from '@/api/UserMutations';
 import { VENDOR_ORDER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
+import { AllServicesAtom, OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -30,6 +29,7 @@ export default function useHandleMarketYard() {
   const [updateServices] = useMutation(UPDATE_ORDER_SERVICES, { client: userClient });
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
@@ -106,12 +106,16 @@ export default function useHandleMarketYard() {
   async function getAllOrders(lspId, isDataReturn = false) {
     setLoading(true);
     const orderList = await loadQueryDataAsync(
-      GET_ALL_ORDERS,
-      { lspId: lspId },
+      GET_PAGINATED_VENDOR_ORDERS,
+      { lspId: lspId, pageSize: 28 },
       {},
       userQueryClient
     );
-    const _sortedData = sortArrByKeyInOrder(orderList?.getAllOrders || [], 'updated_at', false);
+    const _sortedData = sortArrByKeyInOrder(
+      orderList?.getAllOrders?.orders || [],
+      'updated_at',
+      false
+    );
     if (isDataReturn) {
       setLoading(false);
       return _sortedData;
@@ -137,7 +141,7 @@ export default function useHandleMarketYard() {
       setLoading(false);
       return _sortedData;
     }
-    setServicesDetails(_sortedData);
+    setAllServicesData(_sortedData);
     setLoading(false);
   }
 

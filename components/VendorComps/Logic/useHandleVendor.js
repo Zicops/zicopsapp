@@ -286,7 +286,7 @@ export default function useHandleVendor() {
     setIsVendorAdminLoading(false);
   }
 
-  async function getSingleVendorInfo() {
+  async function getSingleVendorInfo(vendorId) {
     if (!vendorId) return;
 
     const vendorInfo = await loadQueryDataAsync(
