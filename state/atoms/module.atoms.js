@@ -27,7 +27,7 @@ export const TopicExamAtom = atom({
 });
 
 export const TopicClassroomAtom = atom({
-  key: 'TopicClassroom',
+  key: 'TopicClassroomAtom',
   default: getTopicClassroomObj()
 });
 

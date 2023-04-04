@@ -18,7 +18,11 @@ import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import styles from './vctoolMain.module.scss';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 const VcMaintool = ({ vcData = {} }) => {
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
+
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
@@ -83,6 +87,7 @@ const VcMaintool = ({ vcData = {} }) => {
     }
   }, [meetingIconsAtom?.isStartAdd]);
   const startName = userData?.first_name + ' ' + userData?.last_name;
+
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
