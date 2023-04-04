@@ -66,7 +66,9 @@ export default function ManageVendorTabs() {
     if (shallowRoute) return;
     if (!vendorCurrentState?.isSaved) return;
 
-    setVendorCurrentState(getVendorCurrentStateObj({enabledServices: vendorCurrentState?.enabledServices}));
+    setVendorCurrentState(
+      getVendorCurrentStateObj({ enabledServices: vendorCurrentState?.enabledServices })
+    );
   }, [
     router.isReady,
     vendorData?.name,
@@ -90,7 +92,7 @@ export default function ManageVendorTabs() {
     loadVendorDetails();
 
     async function loadVendorDetails() {
-      const singleVendorInfo = await getSingleVendorInfo();
+      const singleVendorInfo = await getSingleVendorInfo(vendorId);
       const smeData = await getSmeDetails();
       const crtData = await getCrtDetails();
       const cdData = await getCdDetails();
