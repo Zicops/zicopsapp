@@ -3,16 +3,17 @@ import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import moment from 'moment';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import useLoadClassroomData from '../Logic/useLoadClassroomData';
-import styles from '../vctoolMain.module.scss';
+import useLoadClassroomData from './Logic/useLoadClassroomData';
+import styles from './vctoolMain.module.scss';
 
-const SessionJoinCard = ({ topicId = null }) => {
+export default function ClassroomTopicSection({ topicId }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
   const [sessionStatus, setSessionStatus] = useState('beforeStart');
 
   useLoadClassroomData(topicId);
 
   const classroomStartTime = moment(classroomData?.trainingStartTime * 1000);
+
   const cardData = {
     beforeStart: {
       text: 'Session has not started',
@@ -38,13 +39,15 @@ const SessionJoinCard = ({ topicId = null }) => {
   const oneMinute = 1000 * 60;
 
   const cancel = useTimeInterval(() => {
-    if (classroomStartTime.diff(new Date(), 'minute') < 0) setSessionStatus('live');
+    const now = new Date();
+    if (classroomStartTime.diff(now, 'minute') < 0) setSessionStatus('live');
 
     const endTime = moment(classroomData.trainingEndTime * 1000);
 
-    if (classroomStartTime.diff(endTime, 'minute') < 0) setSessionStatus('ended');
+    if (endTime.diff(now, 'minute') < 0) setSessionStatus('ended');
   }, oneMinute);
 
+  // end  the timeout loop
   if (sessionStatus === 'ended') cancel();
 
   return (
@@ -70,7 +73,9 @@ const SessionJoinCard = ({ topicId = null }) => {
           duration :{(classroomData?.duration || 0) / 60} min
         </div>
       </div>
+
+      {/* add script here to initite the jitsi class */}
+      <Script src="https://live.zicops.com/external_api.js"></Script>
     </div>
   );
-};
-export default SessionJoinCard;
+}

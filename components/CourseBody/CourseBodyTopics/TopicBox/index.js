@@ -42,6 +42,7 @@ import {
 } from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
 import styles from '../../courseBody.module.scss';
+import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
 
 let topicInstance = 0;
 
@@ -652,7 +653,7 @@ export default function TopicBox({
           )}
           {type === 'Classroom' && (
             <div className={`${styles.topic_player}`}>
-              <SessionJoinCard topicId={topic?.id} />
+              <ClassroomTopicSection topicId={topic?.id} />
             </div>
           )}
         </div>

@@ -92,6 +92,7 @@ const VcMaintool = ({ vcData = {}, isStartedDefault = false }) => {
     setIsMeetingStarted(true);
     sethidecard(!hidecard);
   }, [isStartedDefault]);
+
   return (
     <div ref={fullScreenRef}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
