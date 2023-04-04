@@ -42,7 +42,10 @@ export default function AboutProfile() {
         {accordianMarketyardDetails?.map((value, index) => {
           if (!value.expertiseData) return;
           return (
-            <ZicopsAccordian title={value.title} description={value.description}>
+            <ZicopsAccordian
+              title={value.title}
+              description={value.description}
+              defaultState={true}>
               <ProfileServices
                 data={value.expertiseData}
                 langData={data?.language}

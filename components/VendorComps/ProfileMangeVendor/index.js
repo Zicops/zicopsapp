@@ -88,7 +88,7 @@ const ProfileManageVendor = () => {
       </div>
       <VendorPopUp
         open={isOpenProfile}
-        title="Add profile"
+        title="Add Profile"
         popUpState={[isOpenProfile, setIsOpenProfile]}
         size="large"
         closeBtn={{ name: 'Cancel' }}
