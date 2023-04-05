@@ -1084,6 +1084,7 @@
   padding-left: 17px;
   right: 0;
   background-color: #1a1d21;
+  text-align: left;
 }
 
 .participantsHead {
@@ -1817,6 +1818,7 @@
 
 //styling about page
 .aboutBar {
+  text-align: left;
   z-index: 1020;
   width: 336px;
   position: absolute;
@@ -2661,7 +2663,6 @@
 
   > div {
     width: 100%;
-    text-align: center;
   }
 
   .joinSessionHead {
@@ -2705,4 +2706,16 @@
     display: flex;
     justify-content: space-between;
   }
+}
+
+.zicopsVcToolContainer {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+
+  height: 100vh;
+  width: 100vw;
+
+  // reduce this number to sane amount, add this because of current course page z index
+  z-index: 1001;
 }
