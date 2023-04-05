@@ -11,26 +11,27 @@ import OrderMaster from '@/components/VendorComps/EditOrder/OrderMaster';
 import OrderDetails from '@/components/VendorComps/EditOrder/OrderDetails';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { useRouter } from 'next/router';
-import { AllServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
+import { AllServicesAtom, ServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 
 export default function VendorInfo() {
   const [selectedServicesForOrder, setSelectedServicesForOrder] =
     useRecoilState(VendorServicesListAtom);
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const { getSingleVendorInfo } = useHandleVendor();
-  const {
-    orderDetails,
-    services,
-    servicesDetails,
-    getAllOrders,
-    getOrderServices,
-    getVendorServices
-  } = useHandleMarketYard();
+  const { orderDetails, services, getAllOrders, getOrderServices, getVendorServices } =
+    useHandleMarketYard();
 
   const router = useRouter();
   const orderId = router.query.orderId || null;
   const orderInfo = orderDetails?.filter((data) => data?.id === orderId);
+  let sme = false;
+  let crt = false;
+  let cd = false;
+  let smeArr = [];
+  let crtArr = [];
+  let cdArr = [];
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
@@ -43,20 +44,25 @@ export default function VendorInfo() {
   useEffect(() => {
     if (allServicesData?.length) {
       allServicesData?.map((data) => {
-        if (data?.service_type === VENDOR_SERVICES_TYPE?.sme?.type) {
-          setSelectedServicesForOrder({ ...selectedServicesForOrder, sme: true });
+        if (data?.service_type === VENDOR_SERVICES_TYPE?.sme.type) {
+          sme = true;
+          smeArr?.push(data);
         }
         if (data?.service_type === VENDOR_SERVICES_TYPE?.crt?.type) {
-          setSelectedServicesForOrder({ ...selectedServicesForOrder, crt: true });
+          crt = true;
+          crtArr?.push(data);
         }
         if (data?.service_type === VENDOR_SERVICES_TYPE?.cd?.type) {
-          setSelectedServicesForOrder({ ...selectedServicesForOrder, cd: true });
+          cd = true;
+          cdArr?.push(data);
         }
       });
+      setSelectedServicesForOrder({ ...selectedServicesForOrder, sme: sme, crt: crt, cd: cd });
+      setServicesData({ ...servicesData, sme: smeArr, crt: crtArr, cd: cdArr });
     }
   }, [allServicesData]);
 
-  console.info('selectedServicesForOrder', selectedServicesForOrder);
+  console.info(selectedServicesForOrder, allServicesData, servicesData);
   const tabData = [
     {
       name: 'Master',

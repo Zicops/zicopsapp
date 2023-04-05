@@ -47,9 +47,13 @@ const ReviewOrderTop = ({ isConfirm }) => {
                 <div className={`${styles.OrderDetails}`} key={service}>
                   <div className={`${styles.checkBoxLabel}`}>
                     <LabeledRadioCheckbox
-                      label={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      label={
+                        VENDOR_SERVICES_TYPE?.[value?.serviceType || value?.service_type]?.label
+                      }
                       type="checkbox"
-                      value={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      value={
+                        VENDOR_SERVICES_TYPE?.[value?.serviceType || value?.service_type]?.label
+                      }
                       isChecked={servicesData[service][i].isActive}
                       changeHandler={(e) => {
                         const { value, checked } = e.target;
@@ -62,12 +66,12 @@ const ReviewOrderTop = ({ isConfirm }) => {
                   <p className={`${styles.contentName}`}>{value?.description}</p>
                   <div className={`${styles.OrderValue}`}>
                     <p>
-                      {value?.rate} {orderData?.currency}
+                      {value?.rate} {orderData?.currency || value?.currency}
                       {value?.unit}
                     </p>
                     <span>{value?.quantity}</span>
                     <span>
-                      {value?.total} {orderData?.currency}
+                      {value?.total} {orderData?.currency || value?.currency}
                     </span>
                   </div>
                 </div>

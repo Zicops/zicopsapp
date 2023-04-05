@@ -247,3 +247,8 @@ export const VendorServicesListAtom = atom({
 export function getVendorServicesList() {
   return { sme: false, crt: false, cd: false, speakers: false };
 }
+
+export const AllServicesAtom = atom({
+  key: 'allservicesState',
+  default: []
+});
