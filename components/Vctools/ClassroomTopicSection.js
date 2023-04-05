@@ -76,7 +76,7 @@ export default function ClassroomTopicSection({ topicId, isRecordingAvailable = 
   }
 
   // end  the timeout loop
-  if (sessionStatus === 'ended') cancel();
+  if (sessionStatus === 'recording') cancel();
 
   if (isLoading) return <Spinner />;
 
