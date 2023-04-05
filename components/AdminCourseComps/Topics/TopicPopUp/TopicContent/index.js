@@ -10,7 +10,7 @@ import SubtitleForm from './SubtitleForm';
 import TopicContentForm from './TopicContentForm';
 import TopicQuiz from './TopicQuiz';
 
-export default function TopicContent({ topData = null, closePopUp = () => {} }) {
+export default function TopicContent({ topData = null }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
 
   const {
@@ -20,7 +20,7 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     handleChange,
     handleMp4FileInput,
     handleSubmit
-  } = useHandleTopicContent(topData, closePopUp);
+  } = useHandleTopicContent(topData);
 
   const [isAccordionDisabled, setIsAccordionDisabled] = useState(null);
 
