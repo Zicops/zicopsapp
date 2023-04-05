@@ -72,6 +72,7 @@ const Classroom = () => {
       {!!latestCourses?.length && (
         <ZicopsCarousel title="Courses from your learning space" data={latestCourses} />
       )}
+
       {/* 
       <ZicopsCarousel title="Subscribed Classroom Courses" data={classroomSlider1} />
       <ZicopsCarousel title="Recomended For You" data={classroomSlider2} /> */}
