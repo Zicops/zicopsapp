@@ -21,7 +21,7 @@ export default function SubtitleForm({ topData = null }) {
     useHandleTopicSubtitles(topData);
 
   const languageOptions = SUBTITLE_LANGUAGES?.filter(
-    (lang) => !topicSubtitle.find((sub) => sub.language === lang)
+    (lang) => !topicSubtitle?.find((sub) => sub.language === lang)
   )?.map((lang) => ({ label: lang, value: lang }));
 
   const subtitleList = topicSubtitle?.map((res, i) => ({ ...res, key: i }));
@@ -46,7 +46,7 @@ export default function SubtitleForm({ topData = null }) {
             },
             onDelete: () => {
               const _subtitleArr = structuredClone(topicSubtitle);
-              _subtitleArr.splice(index, 1);
+              _subtitleArr?.splice(index, 1);
 
               setTopicSubtitle(_subtitleArr);
             }

@@ -43,6 +43,7 @@ import {
 import useLoadExamData from '../../Logic/useLoadExamData';
 import styles from '../../courseBody.module.scss';
 import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 
 let topicInstance = 0;
 
@@ -64,6 +65,8 @@ export default function TopicBox({
   setSelectedModule,
   showResources
 }) {
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(topic?.id));
+
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
   // const duration = 3965;
@@ -458,13 +461,25 @@ export default function TopicBox({
             return setShowAlert(true);
 
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
-          if (type === 'Assessment') return loadTopicExam();
-          if (type === 'Classroom') return setActiveClassroomTopicId(topic?.id);
+          if (type === 'Assessment') {
+            setActiveClassroomTopicId(null);
+            setVideoData(getVideoObject());
+            return loadTopicExam();
+          }
+          if (type === 'Classroom') {
+            if (!classroomData?.id) return;
+
+            setVideoData(getVideoObject());
+            setTopicExamData(getTopicExamObj());
+            return setActiveClassroomTopicId(topic?.id);
+          }
 
           // if (type === 'Content') {
           if (!topicContent.length) return console.log('no topic content found');
 
           setTopicExamData(getTopicExamObj());
+          setActiveClassroomTopicId(null);
+
           updateVideoData(
             videoData,
             setVideoData,
@@ -495,7 +510,10 @@ export default function TopicBox({
           </div> */}
         </div>
 
-        <div className={`${styles.topic_loop} ${isTopicActive ? styles.activeTopic : ''}`}>
+        <div
+          className={`${styles.topic_loop} ${isTopicActive ? styles.activeTopic : ''}  ${
+            type === 'Classroom' && !classroomData?.id ? 'disabled' : ''
+          }`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>

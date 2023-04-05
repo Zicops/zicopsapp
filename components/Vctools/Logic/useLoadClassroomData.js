@@ -1,18 +1,24 @@
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { useEffect } from 'react';
+import {
+  TopicClassroomAtomFamily,
+  getClassroomMasterDataObj,
+  getTopicClassroomObject
+} from '@/state/atoms/courses.atom';
+import { useEffect, useState } from 'react';
 import { useRecoilCallback } from 'recoil';
 
 export default function useLoadClassroomData(topicId = null) {
   const setTopicClassroom = useRecoilCallback(
     ({ set }) =>
       (topicClassroomData = {}, topicId = null) =>
-        set(TopicClassroomAtomFamily(topicId), topicClassroomData)
+        set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData))
   );
+  const [isLoading, setIsLoading] = useState(null);
 
   useEffect(() => {
     if (!topicId) return;
+    setIsLoading(true);
 
     loadClassRoomData()
       .then((classroomData) => {
@@ -20,7 +26,8 @@ export default function useLoadClassroomData(topicId = null) {
 
         setTopicClassroom(classroomData, topicId);
       })
-      .catch((err) => console.log(err, 'at topicClassRoom'));
+      .catch((err) => console.log(err, 'at topicClassRoom'))
+      .finally(() => setIsLoading(false));
   }, [topicId]);
 
   async function loadClassRoomData() {
@@ -51,4 +58,6 @@ export default function useLoadClassroomData(topicId = null) {
       updatedBy: _topicClassroom?.updated_by
     };
   }
+
+  return { isLoading };
 }

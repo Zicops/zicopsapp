@@ -106,7 +106,10 @@ export default function TopicPopUp({
             <ZicopsButton
               customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
               isDisabled={!topicContentList?.length || isSubmitDisabled}
-              handleClick={handleSubmit}
+              handleClick={() => {
+                handleSubmit();
+                closePopUp();
+              }}
               display={'Design'}
             />
           </div>

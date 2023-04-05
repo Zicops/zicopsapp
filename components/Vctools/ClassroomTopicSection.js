@@ -6,14 +6,17 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
 import styles from './vctoolMain.module.scss';
+import Spinner from '../common/Spinner';
 
 export default function ClassroomTopicSection({ topicId }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
   const [sessionStatus, setSessionStatus] = useState('beforeStart');
 
-  useLoadClassroomData(topicId);
+  const { isLoading } = useLoadClassroomData(topicId);
 
-  const classroomStartTime = moment(classroomData?.trainingStartTime * 1000);
+  const classroomStartTime = !!classroomData?.trainingStartTime
+    ? moment(classroomData?.trainingStartTime * 1000)
+    : null;
 
   const cardData = {
     beforeStart: {
@@ -40,8 +43,10 @@ export default function ClassroomTopicSection({ topicId }) {
   const oneMinute = 1000 * 60;
 
   useEffect(() => {
+    if (!classroomData?.trainingStartTime) return;
+
     updateSessionStatus();
-  }, []);
+  }, [classroomData?.trainingStartTime]);
 
   const cancel = useTimeInterval(updateSessionStatus, oneMinute);
 
@@ -52,12 +57,15 @@ export default function ClassroomTopicSection({ topicId }) {
     if (classroomStartTime.diff(now, 'minute') < 0) setSessionStatus('live');
 
     const endTime = moment(classroomData.trainingEndTime * 1000);
+    console.info(classroomData, endTime, endTime.diff(now, 'minute'));
 
-    if (endTime.diff(now, 'minute') < 0) setSessionStatus('ended');
+    if (endTime.diff(now, 'minute') > 0) setSessionStatus('ended');
   }
 
   // end  the timeout loop
   if (sessionStatus === 'ended') cancel();
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className={`${styles.joinSessionContainer}`}>
@@ -76,10 +84,12 @@ export default function ClassroomTopicSection({ topicId }) {
       </div>
 
       <div className={`${styles.joinsessionFooter}`}>
-        <div className={`${styles.meetingLiveDate}`}>{classroomStartTime.format('LLL')} IST</div>
+        <div className={`${styles.meetingLiveDate}`}>
+          {!!classroomStartTime ? `${classroomStartTime?.format('LLL')} IST` : 'N/A'}
+        </div>
 
         <div className={`${styles.meetingDuration}`}>
-          duration :{(classroomData?.duration || 0) / 60} min
+          Duration :{(classroomData?.duration || 0) / 60} min
         </div>
       </div>
 

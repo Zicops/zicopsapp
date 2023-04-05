@@ -29,23 +29,15 @@ const VCtoolStartPage = ({ topicId = null }) => {
     ActiveClassroomTopicIdAtom
   );
   const topicClassroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
-  const userData = useRecoilValue(UserStateAtom);
 
   const trainingStartTimeUnix = topicClassroomData?.trainingStartTime;
   const startTime = new Date(trainingStartTimeUnix * 1000);
-  const year = startTime.getFullYear();
-  const month = startTime.getMonth() + 1;
-  const day = startTime.getDate();
-  const hour = startTime.getHours();
-  const minute = startTime.getMinutes();
-  const second = startTime.getSeconds();
-  const formattedDate = `${month}/${day}/${year} ${hour}:${minute}:${second}`;
 
   const [isVctoolActive, setIsVctoolActive] = useState(false);
 
   const endTime = new Date(topicClassroomData?.trainingEndTime * 1000);
 
-  const isSessionEnded = moment(endTime).diff(new Date(), 'minute') < 0;
+  const isSessionEnded = moment(endTime).diff(new Date(), 'minute') > 0;
   const isSessionActive =
     (moment(startTime).diff(new Date(), 'minute') < 15 || isVctoolActive) && !isSessionEnded;
 
