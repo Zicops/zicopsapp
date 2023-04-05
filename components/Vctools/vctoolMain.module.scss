@@ -1885,7 +1885,14 @@
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  background-color: white;
+  background-color: $darkThree;
+  overflow: hidden;
+
+  object-fit: contain;
+  img {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .intructorInfo {
@@ -2718,4 +2725,18 @@
 
   // reduce this number to sane amount, add this because of current course page z index
   z-index: 1001;
+}
+
+.profilePic {
+  height: 2em;
+  width: 2em;
+  border-radius: 50%;
+  overflow: hidden;
+
+  object-fit: contain;
+
+  img {
+    height: 100%;
+    width: 100%;
+  }
 }

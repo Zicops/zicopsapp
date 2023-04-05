@@ -1,26 +1,31 @@
-import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { getUserDetails } from '@/helper/userData.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom, TopicAtom } from '@/state/atoms/module.atoms';
-import styles from '../vctoolMain.module.scss';
-import { vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import styles from '../vctoolMain.module.scss';
 
 const About = ({ showHide = false }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
   const topicData = useRecoilValue(TopicAtom);
-  const userList = useRecoilValue(vctoolAlluserinfo);
   const currentTopicData = topicData?.find((topic) => topic?.id === activeClassroomTopicId);
-  const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
+  const [hostUsersData, setHostUsersData] = useState({ mod: null, trainer: null });
 
-  const modList = [];
-  userList?.forEach((user) => {
-    // user id is present in the user profule picture storage path
-    const pattern = /profiles\/([A-za-z0-9]+)\//;
-    const userId = user?.avatarURL?.match(pattern)?.[1];
+  useEffect(() => {
+    if (!classroomData?.moderators?.length && !classroomData?.trainers?.length) return;
+    if (hostUsersData?.mod && hostUsersData?.trainer) return;
 
-    if (modIdList?.includes(userId)) return modList.push(user);
-  });
+    getUserDetails([classroomData?.moderators?.[0], classroomData?.trainers?.[0]]).then(
+      (userDetails) => {
+        setHostUsersData({
+          mod: userDetails?.find((user) => user?.id === classroomData?.moderators?.[0]) || null,
+          trainer: userDetails?.find((user) => user?.id === classroomData?.trainers?.[0]) || null
+        });
+      }
+    );
+  }, [classroomData?.moderators?.length, classroomData?.trainers?.length]);
 
   return (
     <div className={`${styles.aboutBar}`}>
@@ -38,7 +43,9 @@ const About = ({ showHide = false }) => {
         <div className={`${styles.aboutScreenHeading}`}>{currentTopicData?.description}</div>
         <div className={`${styles.aboutScreenSessionHead}`}>{currentTopicData?.name}</div>
         <div className={`${styles.aboutInstructor}`}>
-          <div className={`${styles.aboutInstructorlogo}`}></div>
+          <div className={`${styles.aboutInstructorlogo}`}>
+            <img src={hostUsersData?.trainer?.photo_url} alt="" />
+          </div>
           <div className={`${styles.intructorInfo}`}>
             <div
               style={{
@@ -50,7 +57,9 @@ const About = ({ showHide = false }) => {
               style={{
                 color: 'white'
               }}>
-              Fekete Csanád
+              {!hostUsersData?.trainer
+                ? 'No Instructor Added'
+                : `${hostUsersData?.trainer?.first_name} ${hostUsersData?.trainer?.last_name}`}
             </div>
           </div>
         </div>
@@ -92,7 +101,9 @@ const About = ({ showHide = false }) => {
                 style={{
                   color: 'white'
                 }}>
-                {modList?.[0]?.displayName || modList?.[0]?.formattedDisplayName}
+                {!hostUsersData?.mod
+                  ? 'No Moderator Added'
+                  : `${hostUsersData?.mod?.first_name} ${hostUsersData?.mod?.last_name}`}
               </div>
             </div>
           </div>

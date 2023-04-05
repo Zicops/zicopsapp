@@ -301,9 +301,10 @@ export default function About() {
                   // label: 'Total Duration:',
                   placeholder: 'Auto pupulated',
                   value:
-                    moment(classroomMaster?.courseEndDate)
-                      .diff(classroomMaster?.courseStartDate)
-                      .valueOf() || 0,
+                    moment(classroomMaster?.courseEndDate).diff(
+                      classroomMaster?.courseStartDate,
+                      'day'
+                    ) || 0,
                   isDisabled: true
                 }}
                 styleClass={`${styles.inputName1}`}

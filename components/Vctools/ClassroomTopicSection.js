@@ -4,9 +4,10 @@ import moment from 'moment';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import Spinner from '../common/Spinner';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
 import styles from './vctoolMain.module.scss';
-import Spinner from '../common/Spinner';
+import { getSessionStatus } from './help/vctool.helper';
 
 export default function ClassroomTopicSection({ topicId }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
@@ -53,13 +54,14 @@ export default function ClassroomTopicSection({ topicId }) {
   function updateSessionStatus() {
     if (!classroomData?.trainingStartTime) return;
 
-    const now = new Date();
-    if (classroomStartTime.diff(now, 'minute') < 0) setSessionStatus('live');
+    const status = getSessionStatus(
+      +classroomData?.trainingStartTime,
+      +classroomData?.trainingEndTime
+    );
 
-    const endTime = moment(classroomData.trainingEndTime * 1000);
-    console.info(classroomData, endTime, endTime.diff(now, 'minute'));
-
-    if (endTime.diff(now, 'minute') > 0) setSessionStatus('ended');
+    if (status === null) setSessionStatus('beforeStart');
+    if (status === 1) return setSessionStatus('live');
+    if (status === 2) return setSessionStatus('ended');
   }
 
   // end  the timeout loop

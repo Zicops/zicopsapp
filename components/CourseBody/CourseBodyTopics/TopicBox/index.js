@@ -44,6 +44,8 @@ import useLoadExamData from '../../Logic/useLoadExamData';
 import styles from '../../courseBody.module.scss';
 import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { getSessionStatus } from '@/components/Vctools/help/vctool.helper';
+import moment from 'moment';
 
 let topicInstance = 0;
 
@@ -469,8 +471,44 @@ export default function TopicBox({
           if (type === 'Classroom') {
             if (!classroomData?.id) return;
 
-            setVideoData(getVideoObject());
+            const status = getSessionStatus(
+              +classroomData?.trainingStartTime,
+              +classroomData?.trainingEndTime
+            );
+            const endTime = moment(classroomData.trainingEndTime * 1000);
             setTopicExamData(getTopicExamObj());
+
+            const isRecordingAvailable = moment().diff(endTime, 'minute') >= 5;
+            console.info(isRecordingAvailable, status, topicContent, topicData);
+
+            if (status === 2 && isRecordingAvailable) {
+              updateVideoData(
+                { ...(videoData || {}), videoSrc: '/videos/classroom-recording-demo.mp4' },
+                setVideoData,
+                { moduleId: moduleId, topicId: topic.id },
+                topicData,
+                [
+                  {
+                    topicId: topic?.id,
+                    moduleId: topic?.moduleId,
+                    id: 'uniqueId',
+                    language: classroomData?.language,
+                    type: 'mp4',
+                    duration: classroomData?.duration,
+                    is_default: true,
+                    contentUrl: '/videos/classroom-recording-demo.mp4'
+                  }
+                ],
+                allModuleOptions,
+                currrentModule,
+                setSelectedModule,
+                userCourseData,
+                setUserCourseData
+              );
+              return;
+            }
+
+            setVideoData(getVideoObject());
             return setActiveClassroomTopicId(topic?.id);
           }
 

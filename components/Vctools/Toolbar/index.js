@@ -336,9 +336,9 @@ const MainToolbar = ({
           ''
         ) : (
           <>
-            <button>
+            {/* <button>
               <img src="/images/svg/vctool/folder-open.svg" />
-            </button>
+            </button> */}
 
             <VctoolButton
               onClickfun={() => {
@@ -383,17 +383,19 @@ const MainToolbar = ({
               customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
             />
 
-            <VctoolButton
-              onClickfun={() => {
-                selectedButton === 'manageAccount'
-                  ? setSelectedButton('')
-                  : setSelectedButton('manageAccount');
-              }}
-              toggle={selectedButton === 'manageAccount'}
-              trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
-              falseSrc={'/images/svg/vctool/manage-accounts.svg'}
-              customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
-            />
+            {!!currentParticipantData?.isModerator && (
+              <VctoolButton
+                onClickfun={() => {
+                  selectedButton === 'manageAccount'
+                    ? setSelectedButton('')
+                    : setSelectedButton('manageAccount');
+                }}
+                toggle={selectedButton === 'manageAccount'}
+                trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
+                falseSrc={'/images/svg/vctool/manage-accounts.svg'}
+                customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+              />
+            )}
           </>
         )}
         {/* */}
@@ -526,7 +528,6 @@ const MainToolbar = ({
                 customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'qaBar'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'chatBar'
@@ -538,7 +539,6 @@ const MainToolbar = ({
                 customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'chatBar'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
@@ -548,7 +548,6 @@ const MainToolbar = ({
                 customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'poll'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'participants'
@@ -562,7 +561,6 @@ const MainToolbar = ({
                 customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'participants'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'breakOutRoom'
@@ -575,21 +573,19 @@ const MainToolbar = ({
                 toggle={selectedButton === 'breakOutRoom'}
               />
 
-              {!!currentParticipantData?.isModerator && (
-                <VctoolButton
-                  onClickfun={() => {
-                    setShowSetting(!showSetting);
-                    selectedButton === 'SettingPopup'
-                      ? setSelectedButton('')
-                      : setSelectedButton('SettingPopup');
-                    // SettingPopup
-                  }}
-                  trueSrc={'/images/svg/vctool/settings.svg'}
-                  falseSrc={'/images/svg/vctool/settings.svg'}
-                  customId={showSetting ? `${styles.changeBackground}` : ''}
-                  toggle={showSetting}
-                />
-              )}
+              <VctoolButton
+                onClickfun={() => {
+                  setShowSetting(!showSetting);
+                  selectedButton === 'SettingPopup'
+                    ? setSelectedButton('')
+                    : setSelectedButton('SettingPopup');
+                  // SettingPopup
+                }}
+                trueSrc={'/images/svg/vctool/settings.svg'}
+                falseSrc={'/images/svg/vctool/settings.svg'}
+                customId={showSetting ? `${styles.changeBackground}` : ''}
+                toggle={showSetting}
+              />
 
               <VctoolButton
                 onClickfun={() => {
