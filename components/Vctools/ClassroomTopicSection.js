@@ -102,7 +102,7 @@ export default function ClassroomTopicSection({ topicId, isRecordingAvailable = 
         </div>
 
         <div className={`${styles.meetingDuration}`}>
-          Duration :{(classroomData?.duration || 0) / 60} min
+          Duration : {(classroomData?.duration || 0) / 60} min
         </div>
       </div>
 
