@@ -65,7 +65,7 @@ export default function FilePreview({
           {!!(fileSrc?.type == null && fileSrc?.url == null) && <Spinner />}
 
           {/* fallback */}
-          {fileSrc?.type == null && fileSrc?.url === '' && (
+          {fileSrc?.type == null && fileSrc?.url !== null && (
             <div className={`${styles.filePreviewFallBack}`}>
               <p>Can't Preview this File</p>
               <small>{fileName}</small>
@@ -87,6 +87,7 @@ export default function FilePreview({
 }
 
 function getFileType(fileType = null) {
+  // console.info(fileType);
   if (!fileType) return null;
 
   // if (
@@ -105,7 +106,8 @@ function getFileType(fileType = null) {
   //   ]?.includes(fileType?.toLowerCase())
   // )
   //   return PREVIEW_FILE_TYPES.docPreview;
-  if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileType?.toLowerCase()))
+
+  if (['mp3', 'audio/webm', 'audio/wav', 'audio/mpeg']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.audio;
   if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.video;
