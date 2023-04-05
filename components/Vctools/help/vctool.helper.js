@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const StartMeeting = (
   givenName,
   containerRef,
@@ -103,4 +105,24 @@ export function Draw(e, canvasRef, ctx, lineWidth, Color, isDrawing, timeout) {
   }, 1);
 }
 
-//  export const meetingInfo=[{img:"sandeep",}]
+// null -> not started
+// 1 -> live
+// 2 -> ended
+export function getSessionStatus(startTimeUnix = null, endTimeUnix = null) {
+  // return null if args are not proper
+  if (!+startTimeUnix) return null;
+  if (!+endTimeUnix) return null;
+
+  // now > start time  -> session live
+  // now > end time  -> session ended
+  const startTime = moment(+startTimeUnix * 1000);
+  const now = new Date();
+  const endTime = moment(+endTimeUnix * 1000);
+
+  const isEnded = endTime.diff(now, 'minute') < 0;
+
+  if (startTime.diff(now, 'minute') <= 0 && !isEnded) return 1;
+  if (isEnded) return 2;
+
+  return null;
+}

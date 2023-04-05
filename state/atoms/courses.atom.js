@@ -228,7 +228,7 @@ export function getTopicClassroomObject(data = {}) {
     trainingEndTime: data?.trainingEndTime || null,
     duration: data?.duration || '00',
     breaktime: data?.breaktime || '',
-    language: data?.language || [],
+    language: data?.language || '',
     isScreenShareEnabled: data?.isScreenShareEnabled || false,
     isChatEnabled: data?.isChatEnabled || false,
     isMicrophoneEnabled: data?.isMicrophoneEnabled || false,

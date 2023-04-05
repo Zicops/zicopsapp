@@ -45,7 +45,10 @@ const Participants = ({ hide = false, Info, Iframe }) => {
         <div className={`${styles.participantsScreenhead}`}>Moderators</div>
         <div className={`${styles.allInstructors}`}>
           {modList.map((data) => (
-            <StudentFrame name={data?.displayName || data?.formattedDisplayName} />
+            <StudentFrame
+              name={data?.displayName || data?.formattedDisplayName}
+              avatarUrl={data?.avatarURL}
+            />
           ))}
 
           {!modList?.length && <small>No Moderators Joined</small>}
@@ -54,7 +57,10 @@ const Participants = ({ hide = false, Info, Iframe }) => {
         <div className={`${styles.participantsScreenhead}`}>Learners</div>
         <div className={`${styles.allInstructors}`}>
           {learnerList.map((data) => (
-            <StudentFrame name={data?.displayName || data?.formattedDisplayName} />
+            <StudentFrame
+              name={data?.displayName || data?.formattedDisplayName}
+              avatarUrl={data?.avatarURL}
+            />
           ))}
 
           {!learnerList?.length && <small>No Learners Joined</small>}

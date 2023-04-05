@@ -114,6 +114,8 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
           const index = _allModules?.findIndex((m) => m?.id === modData?.id);
           if (index < 0) return;
 
+          if (!_allModules?.[index]?.topics?.length) _allModules[index].topics = [];
+
           _allModules?.[index]?.topics?.push(res?.addCourseTopic);
           setAllModules(_allModules);
           setTopicData({ ...topicData, id: res?.addCourseTopic?.id });
@@ -232,7 +234,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
   }
 
   async function addSubtitle() {
-    for (let i = 0; i < topicSubtitle.length; i++) {
+    for (let i = 0; i < topicSubtitle?.length; i++) {
       const subtitle = topicSubtitle[i];
       if (!subtitle?.file) continue;
 

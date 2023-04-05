@@ -1,10 +1,10 @@
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
-import { UserStateAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import VcMaintool from '..';
+import { getSessionStatus } from '../help/vctool.helper';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
 
@@ -29,23 +29,20 @@ const VCtoolStartPage = ({ topicId = null }) => {
     ActiveClassroomTopicIdAtom
   );
   const topicClassroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
-  const userData = useRecoilValue(UserStateAtom);
 
   const trainingStartTimeUnix = topicClassroomData?.trainingStartTime;
   const startTime = new Date(trainingStartTimeUnix * 1000);
-  const year = startTime.getFullYear();
-  const month = startTime.getMonth() + 1;
-  const day = startTime.getDate();
-  const hour = startTime.getHours();
-  const minute = startTime.getMinutes();
-  const second = startTime.getSeconds();
-  const formattedDate = `${month}/${day}/${year} ${hour}:${minute}:${second}`;
 
   const [isVctoolActive, setIsVctoolActive] = useState(false);
 
   const endTime = new Date(topicClassroomData?.trainingEndTime * 1000);
 
-  const isSessionEnded = moment(endTime).diff(new Date(), 'minute') < 0;
+  const status = getSessionStatus(
+    +topicClassroomData?.trainingStartTime,
+    +topicClassroomData?.trainingEndTime
+  );
+
+  const isSessionEnded = status === 2;
   const isSessionActive =
     (moment(startTime).diff(new Date(), 'minute') < 15 || isVctoolActive) && !isSessionEnded;
 

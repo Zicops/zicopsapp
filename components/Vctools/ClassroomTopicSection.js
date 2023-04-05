@@ -4,16 +4,20 @@ import moment from 'moment';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import Spinner from '../common/Spinner';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
+import { getSessionStatus } from './help/vctool.helper';
 import styles from './vctoolMain.module.scss';
 
-export default function ClassroomTopicSection({ topicId }) {
+export default function ClassroomTopicSection({ topicId, isRecordingAvailable = null }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
   const [sessionStatus, setSessionStatus] = useState('beforeStart');
 
-  useLoadClassroomData(topicId);
+  const { isLoading } = useLoadClassroomData(topicId);
 
-  const classroomStartTime = moment(classroomData?.trainingStartTime * 1000);
+  const classroomStartTime = !!classroomData?.trainingStartTime
+    ? moment(classroomData?.trainingStartTime * 1000)
+    : null;
 
   const cardData = {
     beforeStart: {
@@ -35,29 +39,46 @@ export default function ClassroomTopicSection({ topicId }) {
       buttonText: 'Recording will be available soon',
       btnClass: `${styles.sessionEnded}`,
       textClass: `${styles.after}`
+    },
+    recording: {
+      text: 'Session Ended',
+      imgSrc: '/images/svg/vctool/sensors-off.svg',
+      buttonText: 'Click To Play Recording',
+      btnClass: `${styles.sessionEnded}`,
+      textClass: `${styles.after}`
     }
   };
   const oneMinute = 1000 * 60;
 
   useEffect(() => {
+    if (!classroomData?.trainingStartTime) return;
+
     updateSessionStatus();
-  }, []);
+  }, [classroomData?.trainingStartTime]);
 
   const cancel = useTimeInterval(updateSessionStatus, oneMinute);
 
   function updateSessionStatus() {
     if (!classroomData?.trainingStartTime) return;
 
-    const now = new Date();
-    if (classroomStartTime.diff(now, 'minute') < 0) setSessionStatus('live');
+    const status = getSessionStatus(
+      +classroomData?.trainingStartTime,
+      +classroomData?.trainingEndTime
+    );
 
-    const endTime = moment(classroomData.trainingEndTime * 1000);
+    const isRecordingAvailable =
+      status === 2 && moment().diff(moment(+classroomData?.trainingEndTime * 1000), 'minute') >= 5;
 
-    if (endTime.diff(now, 'minute') < 0) setSessionStatus('ended');
+    if (isRecordingAvailable) return setSessionStatus('recording');
+    if (status === 2) return setSessionStatus('ended');
+    if (status === 1) return setSessionStatus('live');
+    if (status === null) return setSessionStatus('beforeStart');
   }
 
   // end  the timeout loop
-  if (sessionStatus === 'ended') cancel();
+  if (sessionStatus === 'recording') cancel();
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className={`${styles.joinSessionContainer}`}>
@@ -76,10 +97,12 @@ export default function ClassroomTopicSection({ topicId }) {
       </div>
 
       <div className={`${styles.joinsessionFooter}`}>
-        <div className={`${styles.meetingLiveDate}`}>{classroomStartTime.format('LLL')} IST</div>
+        <div className={`${styles.meetingLiveDate}`}>
+          {!!classroomStartTime ? `${classroomStartTime?.format('LLL')} IST` : 'N/A'}
+        </div>
 
         <div className={`${styles.meetingDuration}`}>
-          duration :{(classroomData?.duration || 0) / 60} min
+          Duration :{(classroomData?.duration || 0) / 60} min
         </div>
       </div>
 

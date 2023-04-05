@@ -108,6 +108,8 @@ export default function CourseHero({ isPreview = false }) {
           {/* </Link> */}
         </span>
 
+        <div className={`${style.courseType} ${style[fullCourse?.type]}`}>{fullCourse?.type}</div>
+
         <div className={`${style.course_header_text}`}>
           <CourseHeader
             courseTitle={courseTitle}

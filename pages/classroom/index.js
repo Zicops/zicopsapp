@@ -48,7 +48,8 @@ const Classroom = () => {
       .then((data) => setMyCourses(data))
       .catch(() => setMyCourses([]));
 
-    getLatestCoursesByFilters({ Type: COURSE_TYPES.classroom }, 30)
+    const _lspId = sessionStorage?.getItem('lsp_id');
+    getLatestCoursesByFilters({ Type: COURSE_TYPES.classroom, LspId: _lspId }, 30)
       .then(({ latestCourses }) => setLatestCourses(latestCourses?.courses))
       .catch(() => setLatestCourses([]));
   }, []);
@@ -67,10 +68,13 @@ const Classroom = () => {
         ))}
       </HeroSliderContainer>
       {!!myCourses?.length && <ZicopsCarousel title="My Classroom Courses" data={myCourses} />}
-      {!!latestCourses?.length && <ZicopsCarousel title="Classroom Courses" data={latestCourses} />}
+      {!!latestCourses?.length && (
+        <ZicopsCarousel title="Courses from your learning space" data={latestCourses} />
+      )}
 
+      {/* 
       <ZicopsCarousel title="Subscribed Classroom Courses" data={classroomSlider1} />
-      <ZicopsCarousel title="Recomended For You" data={classroomSlider2} />
+      <ZicopsCarousel title="Recomended For You" data={classroomSlider2} /> */}
 
       {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">

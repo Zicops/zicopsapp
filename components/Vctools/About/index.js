@@ -1,26 +1,37 @@
-import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { getUserDetails } from '@/helper/userData.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom, TopicAtom } from '@/state/atoms/module.atoms';
-import styles from '../vctoolMain.module.scss';
-import { vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import styles from '../vctoolMain.module.scss';
 
 const About = ({ showHide = false }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
   const topicData = useRecoilValue(TopicAtom);
-  const userList = useRecoilValue(vctoolAlluserinfo);
   const currentTopicData = topicData?.find((topic) => topic?.id === activeClassroomTopicId);
-  const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
+  const [hostUsersData, setHostUsersData] = useState({ mod: null, trainer: null });
 
-  const modList = [];
-  userList?.forEach((user) => {
-    // user id is present in the user profule picture storage path
-    const pattern = /profiles\/([A-za-z0-9]+)\//;
-    const userId = user?.avatarURL?.match(pattern)?.[1];
+  useEffect(() => {
+    if (!classroomData?.moderators?.length && !classroomData?.trainers?.length) return;
+    if (hostUsersData?.mod && hostUsersData?.trainer) return;
 
-    if (modIdList?.includes(userId)) return modList.push(user);
-  });
+    getUserDetails([...(classroomData?.moderators || []), ...(classroomData?.trainers || [])]).then(
+      (userDetailsArr) => {
+        const modUsers = [];
+        const trainers = [];
+        userDetailsArr.forEach((user) => {
+          const userName = `${user?.first_name} ${user?.last_name}`;
+
+          if (classroomData?.moderators?.includes(user?.id)) modUsers.push(userName);
+          if (classroomData?.trainers?.includes(user?.id)) trainers.push(userName);
+        });
+
+        setHostUsersData({ mod: modUsers, trainer: trainers });
+      }
+    );
+  }, [classroomData?.moderators?.length, classroomData?.trainers?.length]);
 
   return (
     <div className={`${styles.aboutBar}`}>
@@ -50,7 +61,9 @@ const About = ({ showHide = false }) => {
               style={{
                 color: 'white'
               }}>
-              Fekete Csanád
+              {!hostUsersData?.trainer?.length
+                ? 'No Instructor Added'
+                : hostUsersData?.trainer?.join(', ')}
             </div>
           </div>
         </div>
@@ -72,7 +85,7 @@ const About = ({ showHide = false }) => {
                 style={{
                   color: 'white'
                 }}>
-                {classroomData?.language?.join(', ')}
+                {classroomData?.language}
               </div>
             </div>
           </div>
@@ -92,7 +105,9 @@ const About = ({ showHide = false }) => {
                 style={{
                   color: 'white'
                 }}>
-                {modList?.[0]?.displayName || modList?.[0]?.formattedDisplayName}
+                {!hostUsersData?.mod?.length
+                  ? 'No Moderator Added'
+                  : hostUsersData?.mod?.join(', ')}
               </div>
             </div>
           </div>

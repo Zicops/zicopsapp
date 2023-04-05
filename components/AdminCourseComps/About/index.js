@@ -294,16 +294,19 @@ export default function About() {
           <div
             className={`${styles.totalDurationLable} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
             <div>
-              <label className={`${styles.durationLabel}`}>Total Duration :</label>
+              <label className={`${styles.durationLabel}`}>
+                Total Duration : <small>(In Days)</small>
+              </label>
               <LabeledInput
                 inputOptions={{
                   inputName: 'name',
                   // label: 'Total Duration:',
                   placeholder: 'Auto pupulated',
                   value:
-                    moment(classroomMaster?.courseEndDate)
-                      .diff(classroomMaster?.courseStartDate)
-                      .valueOf() || 0,
+                    moment(classroomMaster?.courseEndDate).diff(
+                      classroomMaster?.courseStartDate,
+                      'day'
+                    ) || 0,
                   isDisabled: true
                 }}
                 styleClass={`${styles.inputName1}`}
