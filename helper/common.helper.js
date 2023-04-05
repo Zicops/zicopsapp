@@ -92,6 +92,18 @@ export async function convertUrlToFile(dataUrl, fileName = 'file.jpg') {
   return new File([data], fileName, metadata);
 }
 
+export async function getUrlFromFile(file) {
+  if (!file) return;
+
+  let fileUrl = await new Promise((resolve) => {
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => resolve(fileReader?.result);
+    fileReader?.readAsDataURL(file);
+  });
+
+  return fileUrl;
+}
+
 //
 export function getNotificationMsg(type = '', msgObj = {}) {
   if (type === '') {

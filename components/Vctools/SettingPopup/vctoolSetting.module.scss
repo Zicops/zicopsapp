@@ -1,0 +1,49 @@
+.audioAndVideoSettingContainer,
+.vctoolPerformanceContainer,
+.vctoolLayout {
+    width: 100%;
+    background-color: #26292C;
+    padding-top: 8px;
+    padding-left: 8px;
+    padding-bottom: 12px;
+}
+
+.audioAndVideoSettingContainer>p .vctoolPerformanceContainer>p
+.vctoolLayout>p {
+    font-weight: 400;
+    font-size: 14px;
+    color: white;
+}
+
+.audioAndVideoSettingContainer>p {
+    color: white;
+}
+
+.settingInputLable {
+    width: 276px;
+    outline: none;
+}
+
+.audioAndVideoSettingContainer>div>p {
+    font-weight: 400;
+    font-size: 16px;
+    color: #ACACAC;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.vctoolPerformanceContainer>p {
+    color: white;
+}
+.vctoolPerformanceContainer
+{
+    margin-top: 14px;
+}
+.vctoolLayout >p 
+{
+    color: white;
+}
+.vctoolLayout
+{
+    margin-top: 14px;
+}

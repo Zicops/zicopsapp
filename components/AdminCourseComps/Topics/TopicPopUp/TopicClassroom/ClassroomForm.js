@@ -1,5 +1,3 @@
-import useHandleCourseData from '@/components/AdminCourseComps/Logic/useHandleCourseData';
-import useHandleTopicClassroom from '@/components/AdminCourseComps/Logic/useHandleTopicClassroom';
 import InputTimePicker from '@/components/common/FormComponents/InputTimePicker';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
@@ -10,42 +8,14 @@ import {
   CourseMetaDataAtom,
   TopicClassroomAtom
 } from '@/state/atoms/courses.atom';
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 
-export default function ClassroomForm({ topData = {} }) {
-  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
-  const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
+export default function ClassroomForm({ handleChange = () => {}, closeAccordion = () => {} }) {
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
+  const topicClassroom = useRecoilValue(TopicClassroomAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
-  const {
-    getTrainersAndModerators,
-    trainerCandidates,
-    moderatorCandidates,
-    handleClassroomMasterChange
-  } = useHandleCourseData();
 
-  const { handleTopicClassroomChange, addUpdateTopicClassroom } = useHandleTopicClassroom();
-
-  useEffect(() => {
-    if (trainers?.length || moderators?.length) return;
-    getTrainersAndModerators().then((data) => {
-      // console.log(data, 'sdasd');s
-    });
-  }, []);
-
-  let trainers = trainerCandidates?.map((user) => ({
-    name: user?.full_name,
-    isSelected: false,
-    email: user?.email,
-    user_id: user?.id
-  }));
-  let moderators = moderatorCandidates?.map((user) => ({
-    name: user?.full_name,
-    isSelected: false,
-    email: user?.email,
-    user_id: user?.id
-  }));
   return (
     <>
       {/* instructor and moderator */}
@@ -58,13 +28,12 @@ export default function ClassroomForm({ topData = {} }) {
             placeholder: 'Select or add trainer',
             isSearchEnable: true,
             isMulti: true,
-            options: trainers?.map((trainee, index) => ({
-              label: trainee.name,
-              value: trainee.name,
+            options: classroomMaster?.trainers?.map((trainee, index) => ({
+              label: trainee.value,
               ...trainee
             })),
-            value: !!classroomMaster?.trainers?.length
-              ? classroomMaster?.trainers?.map((trainee) => ({
+            value: !!topicClassroom?.trainers?.length
+              ? topicClassroom?.trainers?.map((trainee) => ({
                   label: trainee?.value,
                   value: trainee?.value,
                   ...trainee
@@ -74,7 +43,7 @@ export default function ClassroomForm({ topData = {} }) {
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
           changeHandler={(e) =>
-            handleClassroomMasterChange({
+            handleChange({
               trainers: e?.map((item, index) => ({
                 value: item?.value,
                 email: item?.email,
@@ -92,13 +61,12 @@ export default function ClassroomForm({ topData = {} }) {
             placeholder: 'Select or add trainer',
             isSearchEnable: true,
             isMulti: true,
-            options: moderators?.map((mod, index) => ({
-              label: mod.name,
-              value: mod.name,
+            options: classroomMaster?.moderators?.map((mod, index) => ({
+              label: mod.value,
               ...mod
             })),
-            value: !!classroomMaster?.moderators?.length
-              ? classroomMaster?.moderators?.map((mod) => ({
+            value: !!topicClassroom?.moderators?.length
+              ? topicClassroom?.moderators?.map((mod) => ({
                   label: mod?.value,
                   value: mod?.value,
                   ...mod
@@ -108,7 +76,7 @@ export default function ClassroomForm({ topData = {} }) {
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
           changeHandler={(e) =>
-            handleClassroomMasterChange({
+            handleChange({
               moderators: e?.map((item, index) => ({
                 value: item?.value,
                 email: item?.email,
@@ -127,7 +95,7 @@ export default function ClassroomForm({ topData = {} }) {
             selectedDate={topicClassroom?.trainingStartTime}
             minDate={new Date()}
             changeHandler={(date) => {
-              handleTopicClassroomChange({ trainingStartTime: date });
+              handleChange({ trainingStartTime: date });
             }}
             // styleClass={`${styles.datePicker}`}
             // isDisabled={isPreview}
@@ -139,7 +107,7 @@ export default function ClassroomForm({ topData = {} }) {
           <InputTimePicker
             selected={topicClassroom?.trainingStartTime}
             changeHandler={(date) => {
-              handleTopicClassroomChange({ trainingStartTime: date });
+              handleChange({ trainingStartTime: date });
             }}
             // isDisabled={isPreview}
           />
@@ -152,14 +120,14 @@ export default function ClassroomForm({ topData = {} }) {
           // inputClass={!courseMetaData?.name?.length && error?.includes('name') ? 'error' : ''}
           inputOptions={{
             inputName: 'duration',
-            label: 'Duration :',
-            placeholder: '00',
-            value: topicClassroom?.duration,
+            label: 'Duration : (Mins)',
+            placeholder: '0',
+            value: topicClassroom?.duration / 60,
             // isDisabled: isDisabled,
             isNumericOnly: true
           }}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleTopicClassroomChange({ duration: e?.target?.value })}
+          changeHandler={(e) => handleChange({ duration: e?.target?.value * 60 })}
         />
 
         <LabeledDropdown
@@ -169,20 +137,15 @@ export default function ClassroomForm({ topData = {} }) {
             placeholder: 'Select language',
             isSearchEnable: true,
             menuPlacement: 'top',
-            isMulti: true,
             options: !!courseMetaData?.language?.length
               ? courseMetaData?.language?.map((lang) => ({ label: lang, value: lang }))
               : null,
-            value: !!topicClassroom?.language?.length
-              ? topicClassroom?.language?.map((lang) => ({ label: lang, value: lang }))
-              : null
-            // isDisabled: isDisabled
+            value: { label: topicClassroom?.language, value: topicClassroom?.language }
+            // isDisabled: topicClassroom?.language?.length === 1
           }}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) =>
-            handleTopicClassroomChange({ language: e?.map((item) => item?.value) })
-          }
+          changeHandler={(e) => handleChange({ language: e?.value })}
         />
       </div>
 
@@ -190,11 +153,7 @@ export default function ClassroomForm({ topData = {} }) {
         display={'Add'}
         float="right"
         padding="0.5em 1em"
-        handleClick={() => {
-          console.log(topData);
-
-          addUpdateTopicClassroom(topData?.id);
-        }}
+        handleClick={closeAccordion}
       />
     </>
   );

@@ -1,9 +1,21 @@
 import { PlusIcon } from '@/common/ZicopsIcons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../../adminCourseComps.module.scss';
 
-export default function TopicAccordian({ title, description, children, isDisabled = false }) {
+export default function TopicAccordian({
+  title,
+  description,
+  children,
+  isDisabled = false,
+  isOpen = null
+}) {
   const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (isOpen == null) return;
+
+    setIsActive(isOpen);
+  }, [isOpen]);
 
   return (
     <div className={`${styles.topicAccordianContainer}`}>

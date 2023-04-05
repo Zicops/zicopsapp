@@ -115,7 +115,7 @@ export default function AdminCourseTabs() {
         {!!courseMetaData?.id && (
           <Button
             customStyles={{ float: 'right' }}
-            clickHandler={() => router.push(`/course/${courseId}/devPage`)}
+            clickHandler={() => router.push(`/preview?courseId=${courseId}`)}
             text="Preview"
           />
         )}

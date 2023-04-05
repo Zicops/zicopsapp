@@ -1,5 +1,5 @@
 import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
-import { atom } from 'recoil';
+import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
   key: 'ActiveCourseTabName',
@@ -208,6 +208,11 @@ export function getTopicResourcesObject(data) {
   };
 }
 
+export const TopicClassroomAtomFamily = atomFamily({
+  key: 'TopicClassroomGrp',
+  default: () => getTopicClassroomObject()
+});
+
 export const TopicClassroomAtom = atom({
   key: 'TopicClassroom',
   default: getTopicClassroomObject()
@@ -219,11 +224,11 @@ export function getTopicClassroomObject(data = {}) {
     topicId: data?.topicId || '',
     trainers: data?.trainers || [],
     moderators: data?.moderators || [],
-    trainingStartTime: data?.trainingStartTime || '',
-    trainingEndTime: data?.trainingEndTime || '',
+    trainingStartTime: data?.trainingStartTime || null,
+    trainingEndTime: data?.trainingEndTime || null,
     duration: data?.duration || '00',
     breaktime: data?.breaktime || '',
-    language: data?.language || [],
+    language: data?.language || '',
     isScreenShareEnabled: data?.isScreenShareEnabled || false,
     isChatEnabled: data?.isChatEnabled || false,
     isMicrophoneEnabled: data?.isMicrophoneEnabled || false,

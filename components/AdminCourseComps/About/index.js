@@ -13,9 +13,9 @@ import {
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import styles from '../adminCourseComps.module.scss';
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
+import styles from '../adminCourseComps.module.scss';
 import BulletPointInput from './BulletPointInput';
 
 export default function About() {
@@ -34,11 +34,10 @@ export default function About() {
   const [typeMOderator, settypeModerator] = useState('internal');
 
   useEffect(() => {
-    getTrainersAndModerators().then((data) => {
-      console.log(data, 'sdasd');
-    });
-  }, []);
+    if (trainerCandidates?.length && moderatorCandidates?.length) return;
 
+    getTrainersAndModerators().catch((err) => console.log(err));
+  }, []);
 
   function showDropdown(title) {
     if (title === '') return <></>;
@@ -61,18 +60,17 @@ export default function About() {
   //   }
   // ];
 
-  let trainers = trainerCandidates?.map((user) => ({
-    name: user?.full_name,
-    isSelected: false,
-    email: user?.email,
-    user_id: user?.id
-  }));
-  let moderators = moderatorCandidates?.map((user) => ({
-    name: user?.full_name,
-    isSelected: false,
-    email: user?.email,
-    user_id: user?.id
-  }));
+  let trainers = trainerCandidates?.map(getUserListObject);
+  let moderators = moderatorCandidates?.map(getUserListObject);
+
+  function getUserListObject(user) {
+    return {
+      name: user?.full_name,
+      isSelected: false,
+      email: user?.email,
+      user_id: user?.id
+    };
+  }
   // const Moderators = [
   //   {
   //     name: 'sandeep1',
@@ -154,17 +152,18 @@ export default function About() {
                     }))
                   })
                 }
+                isLoading={trainerCandidates == null}
               />
               <div className={`${styles.aboutCheckbox}`}>
                 <LabeledRadioCheckbox
                   type="checkbox"
                   label={''}
-                   // value={''}
-                   isChecked={classroomMaster?.isTrainerdecided}
-                   // isDisabled={''}
-                   changeHandler={(e) => {
-                     handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
-                   }}
+                  // value={''}
+                  isChecked={classroomMaster?.isTrainerdecided}
+                  // isDisabled={''}
+                  changeHandler={(e) => {
+                    handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
+                  }}
                 />
                 <label>To be Decided</label>
               </div>
@@ -206,6 +205,7 @@ export default function About() {
                     : null,
                   isDisabled: isDisabled
                 }}
+                isLoading={moderatorCandidates == null}
                 isFullWidth={true}
                 changeHandler={(e) =>
                   handleClassroomMasterChange({
@@ -278,13 +278,13 @@ export default function About() {
                 <LabeledRadioCheckbox
                   type="checkbox"
                   label={''}
-                 // value={isTrue}
-                 isChecked={classroomMaster?.isEndDatedecided}
-                 // isDisabled={''}
-                 changeHandler={(e) => {
-                   console.log(e.target.checked,'sd');
-                   handleClassroomMasterChange({ isEndDatedecided: e?.target?.checked });
-                 }}
+                  // value={isTrue}
+                  isChecked={classroomMaster?.isEndDatedecided}
+                  // isDisabled={''}
+                  changeHandler={(e) => {
+                    console.log(e.target.checked, 'sd');
+                    handleClassroomMasterChange({ isEndDatedecided: e?.target?.checked });
+                  }}
                 />
                 <label>To be Decided</label>
               </div>
@@ -294,16 +294,19 @@ export default function About() {
           <div
             className={`${styles.totalDurationLable} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
             <div>
-              <label className={`${styles.durationLabel}`}>Total Duration :</label>
+              <label className={`${styles.durationLabel}`}>
+                Total Duration : <small>(In Days)</small>
+              </label>
               <LabeledInput
                 inputOptions={{
                   inputName: 'name',
                   // label: 'Total Duration:',
                   placeholder: 'Auto pupulated',
                   value:
-                    moment(classroomMaster?.courseEndDate)
-                      .diff(classroomMaster?.courseStartDate)
-                      .valueOf() || 0,
+                    moment(classroomMaster?.courseEndDate).diff(
+                      classroomMaster?.courseStartDate,
+                      'day'
+                    ) || 0,
                   isDisabled: true
                 }}
                 styleClass={`${styles.inputName1}`}
