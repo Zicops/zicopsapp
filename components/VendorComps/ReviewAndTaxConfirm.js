@@ -4,7 +4,7 @@ import ReviewOrderTop from './ReviewOrderTop';
 import ReviewOrderBottom from './ReviewOrderBottom';
 import { useRecoilState } from 'recoil';
 import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
-const ReviewAndTaxConfirm = () => {
+const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
@@ -40,7 +40,11 @@ const ReviewAndTaxConfirm = () => {
 
   return (
     <div>
-      <p className={`${styles.addLineText}`}>Confirm</p>
+      {isViewOrder ? (
+        <p className={`${styles.addLineText}`}>Order #123 has been {orderStatus}</p>
+      ) : (
+        <p className={`${styles.addLineText}`}>Confirm</p>
+      )}
       <div className={`${styles.hr}`} />
       <ReviewOrderTop isConfirm={true} />
       <div className={`${styles.hr}`}></div>

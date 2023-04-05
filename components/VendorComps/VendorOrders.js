@@ -4,6 +4,7 @@ import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
+import useHandleVendor from './Logic/useHandleVendor';
 
 // const data = [
 //   {
@@ -82,14 +83,28 @@ import useHandleMarketYard from './Logic/useHandleMarketYard';
 
 const VendorOrders = () => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
+  const { getSingleVendorInfo } = useHandleVendor();
+  const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
 
   const router = useRouter();
-  useEffect(() => {
+
+  useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
-    getAllOrders(lspId);
-    // setOrderTableData(orderData);
+    await getAllOrders(lspId);
   }, []);
-  console.info(orderDetails);
+  useEffect(async () => {
+    const vendorIds = orderDetails?.map((data) => data?.vendor_id);
+    let vendorDataArray = [];
+    for (let i = 0; i < vendorIds?.length; i++) {
+      const vendorDetails = await getSingleVendorInfo(vendorIds[i]);
+      vendorDataArray.push(vendorDetails);
+    }
+    const vendorDatails = orderDetails?.map((item, index) =>
+      Object.assign({}, item, vendorDataArray[index])
+    );
+    setVendorOrderDetails(vendorDatails);
+    // setOrderTableData(orderData);
+  }, [orderDetails]);
   const columns = [
     {
       field: 'id',
@@ -98,13 +113,13 @@ const VendorOrders = () => {
       flex: 0.6
     },
     {
-      field: 'vendor_name',
+      field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Vendor Name',
       flex: 1
     },
     {
-      field: 'vendor_type',
+      field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
       flex: 0.8
@@ -125,41 +140,16 @@ const VendorOrders = () => {
       headerClassName: 'course-list-header',
       flex: 0.5,
       renderCell: (params) => {
-        // let status = '';
-        // if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        // let _lspStatus = params?.row?.lsp_status;
-        // if (status === 'disable') {
-        //   _lspStatus = USER_MAP_STATUS.disable;
-        // }
-
-        // let isLearner = false;
-        // let isAdmin = false;
-        // isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-        // isLearner = !isAdmin;
-
-        // if (adminLearnerList?.admins?.includes(params?.row?.id)) {
-        //   isLearner = false;
-        //   isAdmin = true;
-        // }
-        // if (adminLearnerList?.learners?.includes(params?.row?.id)) {
-        //   isLearner = true;
-        //   isAdmin = false;
-        // }
-
         const buttonArr = [
-          // { handleClick: () => router.push(`/edit-order`) },
           {
             text: 'Edit',
             handleClick: () => router.push(`/admin/vendor/orders/edit-order/${params.row.id}`)
           },
           {
-            text: 'Disable'
+            text: 'View',
+            handleClick: () => router.push(`/admin/vendor/orders/view-order/${params.row.id}`)
           }
         ];
-
-        // if(params?.row?.role?.toLowerCase() === 'learner'){
-        //   buttonArr.push({text:'Demote Admin', handleClick:()=>{setIsMakeAdminAlert(true),updateUserRole(params?.row)}})
-        // }
         return (
           <>
             <EllipsisMenu buttonArr={buttonArr} />
@@ -174,7 +164,8 @@ const VendorOrders = () => {
         columns={columns}
         tableHeight="70vh"
         pageSize={getPageSizeBasedOnScreen()}
-        data={orderDetails}
+        data={vendorOrderDetails}
+        loading={vendorOrderDetails == null}
       />
     </>
   );
