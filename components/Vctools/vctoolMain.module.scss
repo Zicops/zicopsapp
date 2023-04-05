@@ -170,7 +170,8 @@
 
 .toolBarnav {
   // opacity: 0;
-  transition: opacity 0.2s;
+  // transition: opacity 0.2s;
+  transition: all 800ms;
   z-index: 1010;
   // z-index: 1010;
   width: 100vw;
@@ -222,7 +223,8 @@
 // }
 .toolBarFooter {
   // opacity: 0;
-  transition: opacity 0.2s;
+  // transition: opacity 0.2s;
+  transition: all 800ms;
   position: absolute;
   bottom: 0;
   z-index: 1010;
@@ -335,13 +337,13 @@
 
 #fadein1 {
   visibility: hidden;
-  transition: visibility 0.2s;
+  // transition: visibility 0.2s;
   // z-index: 999;
 }
 
 #fadeout1 {
   visibility: visible;
-  transition: visibility 0.2s;
+  // transition: visibility 0.2s;
 }
 
 // /styling chatbar
@@ -1885,14 +1887,7 @@
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  background-color: $darkThree;
-  overflow: hidden;
-
-  object-fit: contain;
-  img {
-    height: 100%;
-    width: 100%;
-  }
+  background-color: $white;
 }
 
 .intructorInfo {
@@ -2739,4 +2734,11 @@
     height: 100%;
     width: 100%;
   }
+}
+
+.slideUp {
+  margin-top: -100px;
+}
+.slideDown {
+  margin-bottom: -100px;
 }

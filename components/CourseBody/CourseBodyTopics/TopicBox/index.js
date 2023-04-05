@@ -479,7 +479,6 @@ export default function TopicBox({
             setTopicExamData(getTopicExamObj());
 
             const isRecordingAvailable = moment().diff(endTime, 'minute') >= 5;
-            console.info(isRecordingAvailable, status, topicContent, topicData);
 
             if (status === 2 && isRecordingAvailable) {
               updateVideoData(

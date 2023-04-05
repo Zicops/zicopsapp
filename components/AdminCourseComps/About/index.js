@@ -294,7 +294,9 @@ export default function About() {
           <div
             className={`${styles.totalDurationLable} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
             <div>
-              <label className={`${styles.durationLabel}`}>Total Duration :</label>
+              <label className={`${styles.durationLabel}`}>
+                Total Duration : <small>(In Days)</small>
+              </label>
               <LabeledInput
                 inputOptions={{
                   inputName: 'name',

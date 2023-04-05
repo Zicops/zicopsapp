@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Spinner from '../common/Spinner';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
-import styles from './vctoolMain.module.scss';
 import { getSessionStatus } from './help/vctool.helper';
+import styles from './vctoolMain.module.scss';
 
-export default function ClassroomTopicSection({ topicId }) {
+export default function ClassroomTopicSection({ topicId, isRecordingAvailable = null }) {
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
   const [sessionStatus, setSessionStatus] = useState('beforeStart');
 
@@ -39,6 +39,13 @@ export default function ClassroomTopicSection({ topicId }) {
       buttonText: 'Recording will be available soon',
       btnClass: `${styles.sessionEnded}`,
       textClass: `${styles.after}`
+    },
+    recording: {
+      text: 'Session Ended',
+      imgSrc: '/images/svg/vctool/sensors-off.svg',
+      buttonText: 'Click To Play Recording',
+      btnClass: `${styles.sessionEnded}`,
+      textClass: `${styles.after}`
     }
   };
   const oneMinute = 1000 * 60;
@@ -59,9 +66,13 @@ export default function ClassroomTopicSection({ topicId }) {
       +classroomData?.trainingEndTime
     );
 
-    if (status === null) setSessionStatus('beforeStart');
-    if (status === 1) return setSessionStatus('live');
+    const isRecordingAvailable =
+      status === 2 && moment().diff(moment(+classroomData?.trainingEndTime * 1000), 'minute') >= 5;
+
+    if (isRecordingAvailable) return setSessionStatus('recording');
     if (status === 2) return setSessionStatus('ended');
+    if (status === 1) return setSessionStatus('live');
+    if (status === null) return setSessionStatus('beforeStart');
   }
 
   // end  the timeout loop

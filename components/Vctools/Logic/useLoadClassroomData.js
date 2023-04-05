@@ -42,7 +42,7 @@ export default function useLoadClassroomData(topicId = null) {
     return {
       ..._topicClassroom,
       topicId: _topicClassroom?.topic_id,
-      language: _topicClassroom?.language?.split(', '),
+      language: _topicClassroom?.language,
       trainingStartTime: _topicClassroom?.training_start_time,
       trainingEndTime: _topicClassroom?.training_end_time,
       isScreenShareEnabled: _topicClassroom?.is_screen_share_enabled,
@@ -51,7 +51,6 @@ export default function useLoadClassroomData(topicId = null) {
       isQaEnabled: _topicClassroom?.is_qa_enabled,
       isCameraEnabled: _topicClassroom?.is_camera_enabled,
       isOverrideConfig: _topicClassroom?.is_override_config,
-      language: _topicClassroom?.language?.split(', '),
       createdAt: _topicClassroom?.created_at,
       createdBy: _topicClassroom?.created_by,
       updatedAt: _topicClassroom?.updated_at,

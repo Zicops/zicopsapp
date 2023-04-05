@@ -17,12 +17,18 @@ const About = ({ showHide = false }) => {
     if (!classroomData?.moderators?.length && !classroomData?.trainers?.length) return;
     if (hostUsersData?.mod && hostUsersData?.trainer) return;
 
-    getUserDetails([classroomData?.moderators?.[0], classroomData?.trainers?.[0]]).then(
-      (userDetails) => {
-        setHostUsersData({
-          mod: userDetails?.find((user) => user?.id === classroomData?.moderators?.[0]) || null,
-          trainer: userDetails?.find((user) => user?.id === classroomData?.trainers?.[0]) || null
+    getUserDetails([...(classroomData?.moderators || []), ...(classroomData?.trainers || [])]).then(
+      (userDetailsArr) => {
+        const modUsers = [];
+        const trainers = [];
+        userDetailsArr.forEach((user) => {
+          const userName = `${user?.first_name} ${user?.last_name}`;
+
+          if (classroomData?.moderators?.includes(user?.id)) modUsers.push(userName);
+          if (classroomData?.trainers?.includes(user?.id)) trainers.push(userName);
         });
+
+        setHostUsersData({ mod: modUsers, trainer: trainers });
       }
     );
   }, [classroomData?.moderators?.length, classroomData?.trainers?.length]);
@@ -43,9 +49,7 @@ const About = ({ showHide = false }) => {
         <div className={`${styles.aboutScreenHeading}`}>{currentTopicData?.description}</div>
         <div className={`${styles.aboutScreenSessionHead}`}>{currentTopicData?.name}</div>
         <div className={`${styles.aboutInstructor}`}>
-          <div className={`${styles.aboutInstructorlogo}`}>
-            <img src={hostUsersData?.trainer?.photo_url} alt="" />
-          </div>
+          <div className={`${styles.aboutInstructorlogo}`}></div>
           <div className={`${styles.intructorInfo}`}>
             <div
               style={{
@@ -57,9 +61,9 @@ const About = ({ showHide = false }) => {
               style={{
                 color: 'white'
               }}>
-              {!hostUsersData?.trainer
+              {!hostUsersData?.trainer?.length
                 ? 'No Instructor Added'
-                : `${hostUsersData?.trainer?.first_name} ${hostUsersData?.trainer?.last_name}`}
+                : hostUsersData?.trainer?.join(', ')}
             </div>
           </div>
         </div>
@@ -81,7 +85,7 @@ const About = ({ showHide = false }) => {
                 style={{
                   color: 'white'
                 }}>
-                {classroomData?.language?.join(', ')}
+                {classroomData?.language}
               </div>
             </div>
           </div>
@@ -101,9 +105,9 @@ const About = ({ showHide = false }) => {
                 style={{
                   color: 'white'
                 }}>
-                {!hostUsersData?.mod
+                {!hostUsersData?.mod?.length
                   ? 'No Moderator Added'
-                  : `${hostUsersData?.mod?.first_name} ${hostUsersData?.mod?.last_name}`}
+                  : hostUsersData?.mod?.join(', ')}
               </div>
             </div>
           </div>
