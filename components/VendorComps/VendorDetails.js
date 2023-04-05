@@ -1,4 +1,6 @@
 import styles from './vendorComps.module.scss';
+import { useRecoilValue } from 'recoil';
+import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 
 export default function VendorDetails({ data }) {
   // const socialMediaDa = [
@@ -8,11 +10,17 @@ export default function VendorDetails({ data }) {
   //   { label: 'Instagram', value: data.instagramURL || 'NA' }
   // ];
 
+  const individualVendorState = useRecoilValue(VendorProfileAtom);
   const vendorDetails = [
     { label: 'Name', value: data?.name || 'NA' },
     { label: 'Address', value: data?.address || 'NA' },
     { label: 'Website', value: data?.website || 'NA' },
     { label: 'Type', value: data?.type || 'NA' }
+  ];
+
+  const individualVendorDetails = [
+    { label: 'Years of Experience', value: individualVendorState?.experienceYear || 'NA' },
+    { label: 'Speaker', value: individualVendorState?.is_speaker ? 'Yes' : 'No' }
   ];
 
   const socialMediaData = [
@@ -47,6 +55,12 @@ export default function VendorDetails({ data }) {
         <h4>Details</h4>
         <div className={`${styles.detailsData}`}>
           {vendorDetails?.map((data, index) => (
+            <div key={index}>
+              <span>{data?.label}</span>
+              <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
+            </div>
+          ))}
+          {individualVendorDetails?.map((data, index) => (
             <div key={index}>
               <span>{data?.label}</span>
               <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
