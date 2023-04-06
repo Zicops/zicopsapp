@@ -102,7 +102,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add SME Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Services Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createSubjectMatterExpertise;
     setSMEData(
@@ -182,7 +182,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Services Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createClassRoomTraining;
     setCTData(
@@ -263,7 +263,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'CD Created Error' });
     });
     if (isError) return;
-    if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
+    if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createContentDevelopment;
     setCDData(
