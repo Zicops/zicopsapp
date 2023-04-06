@@ -39,9 +39,7 @@ export default function PreviewCourse() {
   }, []);
 
   useEffect(() => {
-    if (!startPlayer && !topicExamData?.id) return;
-
-    setActiveClassroomTopicId(null);
+    if (startPlayer || topicExamData?.id) setActiveClassroomTopicId(null);
   }, [startPlayer, topicExamData?.id]);
 
   return (

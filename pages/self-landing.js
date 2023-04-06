@@ -115,7 +115,7 @@ export default function Self() {
       //   )
       // );
 
-      const getLatestCourses = await getLatestCoursesByFilters({}, pageSize);
+      const getLatestCourses = await getLatestCoursesByFilters({ Type: COURSE_TYPES[0] }, pageSize);
       setLatestCourses(
         getLatestCourses?.latestCourses?.courses?.filter(
           (c) =>
@@ -128,7 +128,7 @@ export default function Self() {
 
       if (baseSubcategoryObj?.sub_category) {
         let baseSubCatCourses = await getLatestCoursesByFilters(
-          { SubCategory: baseSubcategory },
+          { SubCategory: baseSubcategory, Type: COURSE_TYPES[0] },
           pageSize
         );
         setBaseSubcategoryCourses(
@@ -148,7 +148,7 @@ export default function Self() {
       if (!!parentOfBase) {
         setParentOfBaseSubcategory(parentOfBase);
         let baseSubCatParentCourses = await getLatestCoursesByFilters(
-          { Category: parentOfBase },
+          { Category: parentOfBase, Type: COURSE_TYPES[0] },
           pageSize
         );
         setParentOfBaseSubcategoryCourses(
@@ -165,7 +165,10 @@ export default function Self() {
         setParentOfBaseSubcategoryCourses([]);
       }
 
-      const getLSPCourses = await getLatestCoursesByFilters({ LspId: userOrg?.lsp_id }, pageSize);
+      const getLSPCourses = await getLatestCoursesByFilters(
+        { LspId: userOrg?.lsp_id, Type: COURSE_TYPES[0] },
+        pageSize
+      );
       setLearningSpaceCourses(
         getLSPCourses?.latestCourses?.courses?.filter(
           (c) =>

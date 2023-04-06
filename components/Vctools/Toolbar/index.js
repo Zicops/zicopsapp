@@ -12,14 +12,24 @@ import ResourcePage from '../Resource';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
+import NotesContainer from '../NotesContainer';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import { allPartcipantinfo, breakoutRoomselectedparticipant, particiantPopup, pollArray, vcMeetingIconAtom } from '@/state/atoms/vctool.atoms';
+import {
+  allPartcipantinfo,
+  breakoutRoomselectedparticipant,
+  particiantPopup,
+  pollArray,
+  vcMeetingIconAtom,
+  vctoolAlluserinfo,
+  CurrentParticipantDataAtom
+} from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
 import DeletePoUp from '../DeletePopUp';
 import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
+  api = null,
   audiotoggle,
   videotoggle,
   setAudio,
@@ -38,20 +48,34 @@ const MainToolbar = ({
   autoAssignRoom,
   showSettingFunc
 }) => {
-
-  const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(breakoutRoomselectedparticipant)
-  const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup)
+  const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
+  const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
+  const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(
+    breakoutRoomselectedparticipant
+  );
+  const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup);
   const [fade1, setfade1] = useState(true);
   const [hand, sethand] = useState(true);
   const userData = useRecoilValue(UserStateAtom);
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
-  const [deletedPoupTitel, setDeletedPouptitle] = useState('')
-  const participantPopuppanel = useRecoilValue(particiantPopup)
-  const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo)
-  const [pollInfo, setPollInfo] = useRecoilState(pollArray)
-  const [showSetting, setShowSetting] = useState(false)
-  const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom)
+  const [deletedPoupTitel, setDeletedPouptitle] = useState('');
+  const participantPopuppanel = useRecoilValue(particiantPopup);
+  const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo);
+  const [pollInfo, setPollInfo] = useRecoilState(pollArray);
+  const [showSetting, setShowSetting] = useState(false);
+  const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
+  const [hideToolBar, setHideToolbar] = useState(null);
+  const timer = null;
+
+  useEffect(() => {
+    clearTimeout(timer);
+    if (hideToolBar === false) return;
+
+    timer = setTimeout(() => setHideToolbar(true), 3000);
+
+    return () => clearTimeout(timer);
+  }, [hideToolBar]);
 
   function getClickedComponent(title) {
     if (title === '') return <></>;
@@ -70,8 +94,9 @@ const MainToolbar = ({
               : setSelectedButton('breakOutRoom');
           }}
           createRooms={() => {
-            CreateBreakoutroomlist()
-          }} />
+            CreateBreakoutroomlist();
+          }}
+        />
       )
     },
     {
@@ -99,7 +124,15 @@ const MainToolbar = ({
     },
     {
       title: 'whiteBoard',
-      component: <WhiteBoard />
+      component: (
+        <NotesContainer
+          hide={() => {
+            selectedButton === 'whiteBoard'
+              ? setSelectedButton('')
+              : setSelectedButton('whiteBoard');
+          }}
+        />
+      )
     },
     {
       title: 'poll',
@@ -109,8 +142,9 @@ const MainToolbar = ({
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
           deletePollPopUp={() => {
-            setDeletedPouptitle('deletePopUp')
-          }} />
+            setDeletedPouptitle('deletePopUp');
+          }}
+        />
       )
     },
     {
@@ -168,82 +202,153 @@ const MainToolbar = ({
     {
       title: 'AddParticipantpopup',
       component: (
-        <AddParticipantpopup presetRoom={breakoutRoomtotalno.presentRoom} totalRooms={breakoutRoomtotalno.totalRoomno}
-          autoAssignRoom={autoAssignRoom} />
+        <AddParticipantpopup
+          presetRoom={breakoutRoomtotalno.presentRoom}
+          totalRooms={breakoutRoomtotalno.totalRoomno}
+          autoAssignRoom={autoAssignRoom}
+        />
       )
     },
     {
       title: 'manageAccount',
       component: (
-        <ManageAccount hide={() => {
-          selectedButton === 'manageAccount' ? setSelectedButton('') : setSelectedButton('manageAccount')
-        }} />
+        <ManageAccount
+          hide={() => {
+            selectedButton === 'manageAccount'
+              ? setSelectedButton('')
+              : setSelectedButton('manageAccount');
+          }}
+        />
       )
     },
     {
       title: 'startSessionPopup',
-      component: (<StartSessionPopUp concelMeetingFunc={() => {
-        setSelectedButton("")
-      }}
-        startMeetingFunc={() => {
-          setMeetingIconAtom({
-            ...meetingIconsAtom,
-            isStartAdd: false,
-            isJoinedAsModerator: false
-          })
-          setSelectedButton("")
-        }} />
+      component: (
+        <StartSessionPopUp
+          concelMeetingFunc={() => {
+            setSelectedButton('');
+          }}
+          startMeetingFunc={() => {
+            setMeetingIconAtom({
+              ...meetingIconsAtom,
+              isStartAdd: false,
+              isJoinedAsModerator: false
+            });
+            setSelectedButton('');
+          }}
+        />
       )
     },
     {
       title: 'deletePopUp',
-      component: (<DeletePoUp poUpOptions={{
-        popUpName: "Poll",
-        popUpNotice: "Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?",
-        poupBtnInfo1: "Cancel",
-        poupBtnInfo2: "Delete"
-      }}
-      />)
+      component: (
+        <DeletePoUp
+          poUpOptions={{
+            popUpName: 'Poll',
+            popUpNotice:
+              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
+            poupBtnInfo1: 'Cancel',
+            poupBtnInfo2: 'Delete'
+          }}
+        />
+      )
     },
     {
       title: 'SettingPopup',
       component: (
-       <SettingPopup hide={()=>
-      {
-        selectedButton === 'SettingPopup' ? setSelectedButton('') : setSelectedButton('SettingPopup')
-      }}/>
+        <SettingPopup
+          hide={() => {
+            selectedButton === 'SettingPopup'
+              ? setSelectedButton('')
+              : setSelectedButton('SettingPopup');
+          }}
+        />
+      )
+    },
+    {
+      title: 'manageAccount',
+      component: (
+        <ManageAccount
+          hide={() => {
+            selectedButton === 'manageAccount'
+              ? setSelectedButton('')
+              : setSelectedButton('manageAccount');
+          }}
+        />
+      )
+    },
+    {
+      title: 'startSessionPopup',
+      component: (
+        <StartSessionPopUp
+          concelMeetingFunc={() => {
+            setSelectedButton('');
+          }}
+          startMeetingFunc={() => {
+            setMeetingIconAtom({
+              ...meetingIconsAtom,
+              isStartAdd: false,
+              isJoinedAsModerator: false
+            });
+            setSelectedButton('');
+          }}
+        />
+      )
+    },
+    {
+      title: 'deletePopUp',
+      component: (
+        <DeletePoUp
+          poUpOptions={{
+            popUpName: 'Poll',
+            popUpNotice:
+              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
+            poupBtnInfo1: 'Cancel',
+            poupBtnInfo2: 'Delete'
+          }}
+        />
+      )
+    },
+    {
+      title: 'SettingPopup',
+      component: (
+        <SettingPopup
+          hide={() => {
+            selectedButton === 'SettingPopup'
+              ? setSelectedButton('')
+              : setSelectedButton('SettingPopup');
+          }}
+        />
       )
     }
   ];
-  const clearTime = () => {
-    setTimeout(() => {
-      setfade1(false)
-    }, 3000);
-  }
+
   return (
-    <div className={`${styles.toolBar}`}
+    <div
+      className={`${styles.toolBar}`}
       onMouseMove={(e) => {
         mouseMoveFun();
+        if (hideToolBar === false) return;
+        setHideToolbar(null);
       }}
       onMouseOver={() => {
         mouseMoveFun();
       }}>
-      <div className={`${styles.toolBarnav}`}
+      <div
+        className={`${styles.toolBarnav} ${!!hideToolBar ? styles.slideUp : ''}`}
         id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
-        onMouseOver={() => {
-          // setfade1(true);
-          
-        }}>
-
-        {
-          meetingIconsAtom.isStartAdd ? "" : (<>
-            <button>
+        onMouseEnter={() => setHideToolbar(false)}
+        onMouseLeave={() => setHideToolbar(null)}>
+        {meetingIconsAtom.isStartAdd ? (
+          ''
+        ) : (
+          <>
+            {/* <button>
               <img src="/images/svg/vctool/folder-open.svg" />
-            </button>
+            </button> */}
 
             <VctoolButton
               onClickfun={() => {
-
                 selectedButton === 'resourceBar'
                   ? setSelectedButton('')
                   : setSelectedButton('resourceBar');
@@ -256,7 +361,6 @@ const MainToolbar = ({
 
             <VctoolButton
               onClickfun={() => {
-
                 selectedButton === 'whiteBoard'
                   ? setSelectedButton('')
                   : setSelectedButton('whiteBoard');
@@ -267,10 +371,7 @@ const MainToolbar = ({
             />
             <VctoolButton
               onClickfun={() => {
-
-                selectedButton === 'quiz'
-                  ? setSelectedButton('')
-                  : setSelectedButton('quiz');
+                selectedButton === 'quiz' ? setSelectedButton('') : setSelectedButton('quiz');
               }}
               trueSrc={'/images/svg/vctool/quiz-active.svg'}
               falseSrc={'/images/svg/vctool/quiz.svg'}
@@ -279,10 +380,9 @@ const MainToolbar = ({
             />
             <VctoolButton
               onClickfun={() => {
+                selectedButton === 'about' ? setSelectedButton('') : setSelectedButton('about');
 
-                selectedButton === 'about'
-                  ? setSelectedButton('')
-                  : setSelectedButton('about');
+                setallInfo(structuredClone(api?.getParticipantsInfo()));
               }}
               toggle={selectedButton === 'about'}
               trueSrc={'/images/svg/vctool/info-active.svg'}
@@ -290,22 +390,22 @@ const MainToolbar = ({
               customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
             />
 
-            <VctoolButton
-              onClickfun={() => {
-
-                selectedButton === 'manageAccount'
-                  ? setSelectedButton('')
-                  : setSelectedButton('manageAccount');
-              }}
-              toggle={selectedButton === 'manageAccount'}
-              trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
-              falseSrc={'/images/svg/vctool/manage-accounts.svg'}
-              customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
-            />
-          </>)
-        }
+            {!!currentParticipantData?.isModerator && (
+              <VctoolButton
+                onClickfun={() => {
+                  selectedButton === 'manageAccount'
+                    ? setSelectedButton('')
+                    : setSelectedButton('manageAccount');
+                }}
+                toggle={selectedButton === 'manageAccount'}
+                trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
+                falseSrc={'/images/svg/vctool/manage-accounts.svg'}
+                customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+              />
+            )}
+          </>
+        )}
         {/* */}
-
       </div>
       <div
         className={`${styles.screen}`}
@@ -314,58 +414,59 @@ const MainToolbar = ({
           // setfade1(true);
           // clearTimeout(clearTime())
         }}>
-        <>{getClickedComponent(selectedButton)}
+        <>
+          {getClickedComponent(selectedButton)}
           {getClickedComponent(participantPopuppanel.roomId)}
           {getClickedComponent(deletedPoupTitel)}
         </>
       </div>
 
-      <div className={`${styles.toolBarFooter}`}
-        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`} 
-        onMouseOver={() => {
-        }}>
+      <div
+        className={`${styles.toolBarFooter} ${!!hideToolBar ? styles.slideDown : ''}`}
+        id={fade1 ? `${styles.fadeout1}` : `${styles.fadein1}`}
+        onMouseEnter={() => setHideToolbar(false)}
+        onMouseLeave={() => setHideToolbar(null)}>
         <div className={`${styles.footerLeft}`}>
-          {
-            meetingIconsAtom.isJoinedAsModerator ? (
-              <>
-                <div>
-                  <VctoolButton
-                    onClickfun={() => {
-                      setSelectedButton('startSessionPopup')
-                    }}
-                    trueSrc={'/images/svg/vctool/Union.svg'}
-                    falseSrc={'/images/svg/vctool/Union.svg'}
-                    customStyle={`${styles.startMeeting}`}
-                    btnValue={'Start'}
-                  />
-                </div>
-                <div>
-                  <VctoolButton
-                    onClickfun={() => {
-                      endMeetng();
-                      setbreakoutRoomparticipant(null)
-                      setbreakoutRoompopup({
-                        roomId: "",
-                        isRoom: false
-                      })
-
-                    }}
-                    trueSrc={'/images/svg/vctool/logout.svg'}
-                    falseSrc={'/images/svg/vctool/logout.svg'}
-                    customStyle={`${styles.canselBtn}`}
-                    btnValue={'Leave'}
-                  />
-                </div>
-              </>
-            ) : <div>
+          {meetingIconsAtom.isJoinedAsModerator ? (
+            <>
+              <div>
+                <VctoolButton
+                  onClickfun={() => {
+                    setSelectedButton('startSessionPopup');
+                  }}
+                  trueSrc={'/images/svg/vctool/Union.svg'}
+                  falseSrc={'/images/svg/vctool/Union.svg'}
+                  customStyle={`${styles.startMeeting}`}
+                  btnValue={'Start'}
+                />
+              </div>
+              <div>
+                <VctoolButton
+                  onClickfun={() => {
+                    endMeetng();
+                    setbreakoutRoomparticipant(null);
+                    setbreakoutRoompopup({
+                      roomId: '',
+                      isRoom: false
+                    });
+                  }}
+                  trueSrc={'/images/svg/vctool/logout.svg'}
+                  falseSrc={'/images/svg/vctool/logout.svg'}
+                  customStyle={`${styles.canselBtn}`}
+                  btnValue={'Leave'}
+                />
+              </div>
+            </>
+          ) : (
+            <div>
               <VctoolButton
                 onClickfun={() => {
                   endMeetng();
-                  setbreakoutRoomparticipant(null)
+                  setbreakoutRoomparticipant(null);
                   setbreakoutRoompopup({
-                    roomId: "",
+                    roomId: '',
                     isRoom: false
-                  })
+                  });
                 }}
                 trueSrc={'/images/svg/vctool/logout.svg'}
                 falseSrc={'/images/svg/vctool/logout.svg'}
@@ -373,18 +474,21 @@ const MainToolbar = ({
                 btnValue={'Leave'}
               />
             </div>
-          }
+          )}
 
           {/*  */}
-          {
-            meetingIconsAtom.isStartAdd ? "" : (<>
+          {meetingIconsAtom.isStartAdd ? (
+            ''
+          ) : (
+            <>
               <VctoolButton
                 onClickfun={() => {
                   setAudio();
                 }}
                 trueSrc={'/images/svg/vctool/mic-on.svg'}
                 falseSrc={'/images/svg/vctool/mic-off.svg'}
-                toggle={audiotoggle} customId={!audiotoggle ? `${styles.changeBackground}` : ''}
+                toggle={audiotoggle}
+                customId={!audiotoggle ? `${styles.changeBackground}` : ''}
               />
 
               <VctoolButton
@@ -415,28 +519,25 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/back-hand-on.svg'}
                 customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
               />
-            </>)
-          }
+            </>
+          )}
         </div>
         <div className={`${styles.footerRight}`}>
-          {
-            meetingIconsAtom.isStartAdd ? "" : (<>
+          {meetingIconsAtom.isStartAdd ? (
+            ''
+          ) : (
+            <>
               <VctoolButton
                 onClickfun={() => {
-
-                  selectedButton === 'qaBar'
-                    ? setSelectedButton('')
-                    : setSelectedButton('qaBar');
+                  selectedButton === 'qaBar' ? setSelectedButton('') : setSelectedButton('qaBar');
                 }}
                 trueSrc={'/images/svg/vctool/help-active.svg'}
                 falseSrc={'/images/svg/vctool/help.svg'}
                 customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'qaBar'}
               />
-
               <VctoolButton
                 onClickfun={() => {
-
                   selectedButton === 'chatBar'
                     ? setSelectedButton('')
                     : setSelectedButton('chatBar');
@@ -446,32 +547,28 @@ const MainToolbar = ({
                 customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'chatBar'}
               />
-
               <VctoolButton
                 onClickfun={() => {
-
-                  selectedButton === 'poll'
-                    ? setSelectedButton('')
-                    : setSelectedButton('poll');
+                  selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
                 }}
                 trueSrc={'/images/svg/vctool/insert-chart-active.svg'}
                 falseSrc={'/images/svg/vctool/insert-chart.svg'}
                 customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'poll'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'participants'
                     ? setSelectedButton('')
                     : setSelectedButton('participants');
+
+                  setallInfo(structuredClone(api?.getParticipantsInfo()));
                 }}
                 trueSrc={'/images/svg/vctool/group-active.svg'}
                 falseSrc={'/images/svg/vctool/group.svg'}
                 customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'participants'}
               />
-
               <VctoolButton
                 onClickfun={() => {
                   selectedButton === 'breakOutRoom'
@@ -483,13 +580,14 @@ const MainToolbar = ({
                 customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'breakOutRoom'}
               />
+
               <VctoolButton
                 onClickfun={() => {
-                  setShowSetting(!showSetting)
+                  setShowSetting(!showSetting);
                   selectedButton === 'SettingPopup'
                     ? setSelectedButton('')
                     : setSelectedButton('SettingPopup');
-            // SettingPopup
+                  // SettingPopup
                 }}
                 trueSrc={'/images/svg/vctool/settings.svg'}
                 falseSrc={'/images/svg/vctool/settings.svg'}
@@ -504,10 +602,9 @@ const MainToolbar = ({
                 toggle={fullscreen}
                 trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
                 falseSrc={'/images/svg/vctool/fullscreen.svg'}
-
               />
-            </>)
-          }
+            </>
+          )}
           {/* */}
         </div>
       </div>
