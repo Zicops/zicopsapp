@@ -482,7 +482,7 @@ export default function TopicBox({
 
             if (status === 2 && isRecordingAvailable) {
               updateVideoData(
-                { ...(videoData || {}), videoSrc: '/videos/classroom-recording-demo.mp4' },
+                { ...(videoData || {}), videoSrc: '/videos/classroom-recording-demo.webm' },
                 setVideoData,
                 { moduleId: moduleId, topicId: topic.id },
                 topicData,
@@ -495,7 +495,7 @@ export default function TopicBox({
                     type: 'mp4',
                     duration: classroomData?.duration,
                     is_default: true,
-                    contentUrl: '/videos/classroom-recording-demo.mp4'
+                    contentUrl: '/videos/classroom-recording-demo.webm'
                   }
                 ],
                 allModuleOptions,

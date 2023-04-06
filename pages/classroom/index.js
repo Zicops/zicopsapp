@@ -12,6 +12,7 @@ import {
 import HeroSliderContainer from '../../components/HeroSliderContainer';
 import ZicopsCarousel from '../../components/ZicopsCarousel';
 import BigCardSlider from '../../components/medium/BigCardSlider';
+import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 
 const skeletonCardCount = 5;
 
@@ -45,7 +46,9 @@ const Classroom = () => {
   useEffect(async () => {
     const filters = { type: COURSE_TYPES.classroom };
     getUserAssignCourses(filters)
-      .then((data) => setMyCourses(data))
+      .then((data) =>
+        setMyCourses(data?.filter((d) => d?.course_status !== COURSE_MAP_STATUS.disable))
+      )
       .catch(() => setMyCourses([]));
 
     const _lspId = sessionStorage?.getItem('lsp_id');
@@ -74,7 +77,7 @@ const Classroom = () => {
 
       {/* 
       <ZicopsCarousel title="Subscribed Classroom Courses" data={classroomSlider1} />
-      <ZicopsCarousel title="Recomended For You" data={classroomSlider2} /> */}
+       */}
 
       {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">
@@ -86,8 +89,10 @@ const Classroom = () => {
       </div> */}
       {/* <SelfPacedMiddle /> */}
 
-      <ZicopsCarousel title="Trending" data={classroomSliderImages} />
-      <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
+      <ZicopsCarousel title="Trending Courses" data={classroomSliderImages} />
+      <ZicopsCarousel title="Courses from your Preferred Sub-Categories" data={classroomSlider2} />
+
+      <BigCardSlider title="Categories" data={bigImages} slide={realSquare} />
       {/* <ZicopsCarousel title="Live Events" data={sliderImages} />
       <ZicopsCarousel title="Your Attended Events" data={sliderImages} />
       <ZicopsCarousel title="Upcoming Events" data={sliderImages} />

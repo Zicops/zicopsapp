@@ -10,14 +10,16 @@ import { sanitizeFormData } from '@/helper/common.helper';
 import { getDateObjFromUnix, getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
+  CourseMetaDataAtom,
   TopicClassroomAtom,
   getTopicClassroomObject
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilCallback, useRecoilState } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleTopicClassroom(topData = null) {
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
 
@@ -105,6 +107,8 @@ export default function useHandleTopicClassroom(topData = null) {
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
+      module_id: topData?.moduleId || null,
+      course_id: courseMetaData?.id,
       trainers: topicClassroom?.trainers?.map((data) => data?.user_id || data) || [],
       moderators: topicClassroom?.moderators?.map((data) => data?.user_id || data) || [],
       training_start_time: getUnixFromDate(topicClassroom?.trainingStartTime),

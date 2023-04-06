@@ -53,23 +53,62 @@ export const classroomSlider2 = [
 ];
 
 export const classroomSliderImages = [
-  { type: 'classroom', name: 'Course Name', id: 0, img: '/images/courses/workplace design.png' },
-  { type: 'classroom', name: 'Course Name', id: 1, img: '/images/courses/website_developer.png' },
-  { type: 'classroom', name: 'Course Name', id: 2, img: '/images/courses/scripting with python.png' },
-  { type: 'classroom', name: 'Course Name', id: 3, img: '/images/courses/sre and devops.png' },
-  { type: 'classroom', name: 'Course Name', id: 4, img: '/images/courses/47.png' },
-  { type: 'classroom', name: 'Course Name', id: 5, img: '/images/courses/46.png' },
-  { type: 'classroom', name: 'Course Name', id: 6, img: '/images/courses/14.png' },
-  { type: 'classroom', name: 'Course Name', id: 7, img: '/images/courses/49.png' },
-  { type: 'classroom', name: 'Course Name', id: 8, img: '/images/courses/45.png' },
-  { type: 'classroom', name: 'Course Name', id: 9, img: '/images/courses/6.png' },
-  { type: 'classroom', name: 'Course Name', id: 10, img: '/images/courses/5.png' },
-  { type: 'classroom', name: 'Course Name', id: 11, img: '/images/courses/4.png' },
-  { type: 'classroom', name: 'Course Name', id: 12, img: '/images/courses/3.png' },
-  { type: 'classroom', name: 'Course Name', id: 13, img: '/images/courses/2.png' },
-  { type: 'classroom', name: 'Course Name', id: 14, img: '/images/courses/1.png' }
+  { type: 'classroom', name: 'Course Name', id: 0, img: '/images/classroom/App Development.jpg' },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 1,
+    img: '/images/classroom/Autodesk AutoCAD Training Courses.jpg'
+  },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 2,
+    img: '/images/classroom/Customer Service over the Telephone.jpg'
+  },
+  { type: 'classroom', name: 'Course Name', id: 3, img: '/images/classroom/Email Etiquette.jpg' },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 4,
+    img: '/images/classroom/Financial planning and Analysis.jpg'
+  },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 5,
+    img: '/images/classroom/Introduction to Microsoft PowerPoint Training.jpg'
+  },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 6,
+    img: '/images/classroom/Introduction to MS Access.jpg'
+  },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 7,
+    img: '/images/classroom/Online Tally Course.jpg'
+  },
+  { type: 'classroom', name: 'Course Name', id: 8, img: '/images/classroom/Oracle DBA.jpg' },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 9,
+    img: '/images/classroom/Photoshop masterclass.jpg'
+  },
+  {
+    type: 'classroom',
+    name: 'Course Name',
+    id: 10,
+    img: '/images/classroom/Presentation Skills.jpg'
+  },
+  { type: 'classroom', name: 'Course Name', id: 11, img: '/images/classroom/Time Management.jpg' },
+  { type: 'classroom', name: 'Course Name', id: 12, img: '/images/classroom/5.png' },
+  { type: 'classroom', name: 'Course Name', id: 13, img: '/images/classroom/9.png' },
+  { type: 'classroom', name: 'Course Name', id: 14, img: '/images/classroom/1.png' }
 ];
-
 
 export const eventSlider1 = [
   { type: 'event', name: 'Course Name', id: 0, img: '/images/classroom/ai.png' },
