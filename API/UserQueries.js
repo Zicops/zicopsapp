@@ -1270,6 +1270,53 @@ export const GET_VENDOR_SERVICES = gql`
   }
 `;
 
+export const GET_VENDORS_DETAILS = gql`
+  query getAllVendors($vendorIds: [String]) {
+    getAllVendors(vendor_ids: $vendorIds) {
+      vendorId
+      type
+      level
+      name
+      phone
+      lsp_id
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      services
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+      vendor_lsp_status
+    }
+  }
+`;
+
+export const GET_VENDOR_ORDER = gql`
+  query getOrders($orderId: [String]) {
+    getOrders(order_id: $orderId) {
+      id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+
 // DASHBOARD QUERIES START
 export const GET_COURSE_CONSUMPTION_STATS = gql`
   query getCourseConsumptionStats(
