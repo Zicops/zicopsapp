@@ -12,7 +12,7 @@ export default function ViewOrderInfo() {
   const [currentComponent, setCurrentComponent] = useState(0);
 
   const router = useRouter();
-  const orderId = router.query.orderId || null;
+  const orderId = router.query.Id || null;
 
   const confirmOrderHandler = async () => {
     setCurrentComponent(currentComponent + 1);
