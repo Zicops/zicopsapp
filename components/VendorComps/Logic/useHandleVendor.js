@@ -27,6 +27,7 @@ import {
   GET_USER_LSP_ROLES,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_VENDORS_DETAILS,
   GET_VENDOR_ADMINS,
   GET_VENDOR_DETAILS,
   GET_VENDOR_EXPERIENCES,
@@ -112,6 +113,7 @@ export default function useHandleVendor() {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
+  const [vendorInfo, setVendorInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vendorCourses, setVendorCourses] = useState([[...Array(skeletonCardCount)]]);
 
@@ -250,6 +252,19 @@ export default function useHandleVendor() {
     const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
 
     setVendorDetails(_sortedData);
+    setLoading(false);
+  }
+
+  async function getVendors(vendorIds) {
+    setLoading(true);
+    const vendorDetails = await loadQueryDataAsync(
+      GET_VENDORS_DETAILS,
+      { vendorIds: vendorIds },
+      {},
+      userQueryClient
+    );
+
+    setVendorInfo(vendorDetails?.getAllVendors);
     setLoading(false);
   }
 
@@ -1034,6 +1049,8 @@ export default function useHandleVendor() {
     vendorAdminUsers,
     disableVendor,
     getVendorCourses,
-    vendorCourses
+    vendorCourses,
+    getVendors,
+    vendorInfo
   };
 }

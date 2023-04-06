@@ -83,7 +83,7 @@ import useHandleVendor from './Logic/useHandleVendor';
 
 const VendorOrders = () => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
-  const { getSingleVendorInfo } = useHandleVendor();
+  const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
 
   const router = useRouter();
@@ -94,13 +94,14 @@ const VendorOrders = () => {
   }, []);
   useEffect(async () => {
     const vendorIds = orderDetails?.map((data) => data?.vendor_id);
-    let vendorDataArray = [];
-    for (let i = 0; i < vendorIds?.length; i++) {
-      const vendorDetails = await getSingleVendorInfo(vendorIds[i]);
-      vendorDataArray.push(vendorDetails);
-    }
+    // let vendorDataArray = [];
+    // for (let i = 0; i < vendorIds?.length; i++) {
+    //   const vendorDetails = await getSingleVendorInfo(vendorIds[i]);
+    //   vendorDataArray.push(vendorDetails);
+    // }
+    await getVendors(vendorIds);
     const vendorDatails = orderDetails?.map((item, index) =>
-      Object.assign({}, item, vendorDataArray[index])
+      Object.assign({}, item, vendorInfo[index])
     );
     setVendorOrderDetails(vendorDatails);
     // setOrderTableData(orderData);
