@@ -15,7 +15,7 @@ export default function OrderMaster({ orderData, services }) {
   const statusTypeServie = [
     { label: 'Status', value: orderData?.status },
     { label: 'Vendor Type', value: vendorData?.type },
-    { label: 'Services', value: services?.toString() }
+    { label: 'Services', value: services?.toString().toUpperCase() }
   ];
 
   return (

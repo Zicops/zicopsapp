@@ -6,7 +6,6 @@ import {
   VendorServicesListAtom,
   VendorStateAtom
 } from '@/state/atoms/vendor.atoms';
-import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
 const ReviewOrderTop = ({ isConfirm }) => {
@@ -16,20 +15,6 @@ const ReviewOrderTop = ({ isConfirm }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const selectedServicesForOrder = useRecoilValue(VendorServicesListAtom);
-
-  const orderArray = [];
-  if (servicesData?.sme?.length) {
-    orderArray.push(...servicesData?.sme);
-  }
-  if (servicesData?.crt?.length) {
-    orderArray.push(...servicesData?.crt);
-  }
-  if (servicesData?.cd?.length) {
-    orderArray.push(...servicesData?.cd);
-  }
-  if (servicesData?.speakers?.length) {
-    orderArray.push(...servicesData?.speakers);
-  }
 
   return (
     <div>

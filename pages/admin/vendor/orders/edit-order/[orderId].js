@@ -20,8 +20,14 @@ export default function VendorInfo() {
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const { getSingleVendorInfo } = useHandleVendor();
-  const { orderDetails, services, getAllOrders, getOrderServices, getVendorServices } =
-    useHandleMarketYard();
+  const {
+    orderDetails,
+    services,
+    getAllOrders,
+    getOrderServices,
+    getVendorServices,
+    addUpdateOrderServices
+  } = useHandleMarketYard();
 
   const router = useRouter();
   const orderId = router.query.orderId || null;
@@ -46,15 +52,15 @@ export default function VendorInfo() {
       allServicesData?.map((data) => {
         if (data?.service_type === VENDOR_SERVICES_TYPE?.sme.type) {
           sme = true;
-          smeArr?.push(data);
+          smeArr?.push({ ...data, isActive: true });
         }
         if (data?.service_type === VENDOR_SERVICES_TYPE?.crt?.type) {
           crt = true;
-          crtArr?.push(data);
+          crtArr?.push({ ...data, isActive: true });
         }
         if (data?.service_type === VENDOR_SERVICES_TYPE?.cd?.type) {
           cd = true;
-          cdArr?.push(data);
+          cdArr?.push({ ...data, isActive: true });
         }
       });
       setSelectedServicesForOrder({ ...selectedServicesForOrder, sme: sme, crt: crt, cd: cd });
@@ -90,7 +96,7 @@ export default function VendorInfo() {
             footerObj={{
               showFooter: true,
               handleSubmit: () => {
-                addUpdateVendor();
+                addUpdateOrderServices();
               },
               status: VENDOR_MASTER_STATUS.draft.toUpperCase()
             }}

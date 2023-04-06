@@ -1,14 +1,9 @@
-import TabContainer from '@/common/TabContainer';
 import AdminHeader from '@/components/common/AdminHeader';
 import MainBody from '@/components/common/MainBody';
-import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
-import { VENDOR_MASTER_STATUS, VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import { useEffect, useState } from 'react';
-import OrderMaster from '@/components/VendorComps/EditOrder/OrderMaster';
-import OrderDetails from '@/components/VendorComps/EditOrder/OrderDetails';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { useRouter } from 'next/router';
 import { AllServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';

@@ -124,7 +124,7 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
-  async function getOrderServices(orderId, isDataReturn = false) {
+  async function getOrderServices(orderId) {
     setLoading(true);
     const servicesData = await loadAndCacheDataAsync(
       GET_ORDER_SERVICES,
@@ -132,16 +132,18 @@ export default function useHandleMarketYard() {
       {},
       userQueryClient
     );
-    const _sortedData = sortArrByKeyInOrder(
-      servicesData?.getOrderServices || [],
-      'updated_at',
-      false
-    );
-    if (isDataReturn) {
-      setLoading(false);
-      return _sortedData;
+    const _serviceData = [];
+    for (let i = 0; i < servicesData?.getOrderServices?.length; i++) {
+      const services = servicesData?.getOrderServices[i];
+      const newServiceData = {
+        ...services,
+        serviceId: services?.service_id,
+        serviceType: services?.service_type
+      };
+      _serviceData.push(newServiceData);
     }
-    setAllServicesData(_sortedData);
+
+    setAllServicesData(_serviceData);
     setLoading(false);
   }
 
@@ -202,7 +204,7 @@ export default function useHandleMarketYard() {
         serviceType: _orderArray?.serviceType || '',
         description: _orderArray?.description || '',
         unit: _orderArray?.unit || 0,
-        currency: orderData?.currency || '',
+        currency: orderData?.currency || _orderArray?.currency || '',
         rate: +_orderArray?.rate || 0,
         quantity: _orderArray?.quantity || 0,
         total: _orderArray?.total || 0,

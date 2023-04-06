@@ -154,8 +154,18 @@ export default function VendorInfo() {
     setCurrentComponent(currentComponent - 1);
   };
 
-  const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
-  const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
+  const onOrderCompleteHandler = () => {
+    router.push('/admin/vendor/manage-vendor');
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+  };
+  const backMarketYardHandler = () => {
+    router.push('/admin/vendor/market-yard');
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+  };
 
   const tabData = [
     {
