@@ -1,17 +1,17 @@
 import { getUrlFromFile, truncateToN } from '@/helper/common.helper';
+import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
 import Button from '../../Button';
 import PopUp from '../../PopUp';
 import Spinner from '../../Spinner';
-import ViewDoc from '../../ViewDoc';
 import styles from '../formComponents.module.scss';
 
 const PREVIEW_FILE_TYPES = {
   download: 'download',
   image: 'image',
   video: 'video',
-  audio: 'audio',
-  docPreview: 'doc'
+  audio: 'audio'
+  // docPreview: 'doc'
 };
 
 export default function FilePreview({
@@ -26,8 +26,9 @@ export default function FilePreview({
     if (fileSrc?.type != null && fileSrc?.url != null) return;
 
     if (typeof filePath === 'string' && fileSrc?.type == null) {
-      let type = getFileType(filePath);
-      if (!type) type = await checkImage(fileSrc?.url).catch((err) => console.log(err));
+      const decodedFileName = getEncodedFileNameFromUrl(filePath);
+      let type = getFileType(decodedFileName?.split('.')?.[1]);
+      if (!type) type = await checkImage(filePath).catch((err) => console.log(err));
 
       return setFileSrc({ type: type, url: filePath });
     }
@@ -36,8 +37,6 @@ export default function FilePreview({
       .then((src) => setFileSrc({ type: getFileType(filePath?.type), url: src }))
       .catch((err) => setFileSrc({ type: null, url: '' }));
   }, [fileName, filePath]);
-
-  console.info(fileSrc, fileName, filePath);
 
   async function checkImage(url) {
     return new Promise((resolve, reject) => {
@@ -48,7 +47,7 @@ export default function FilePreview({
         const str = request?.getAllResponseHeaders()?.split('\r\ncontent-type: ');
         const contentType = str?.[1]?.split('\r\n')?.[0];
 
-        resolve(contentType);
+        resolve(getFileType(contentType));
       };
 
       request.onerror = () => reject(null);
@@ -73,7 +72,7 @@ export default function FilePreview({
             </div>
           )}
 
-          {fileSrc?.type === PREVIEW_FILE_TYPES.docPreview && <ViewDoc url={fileSrc?.url} />}
+          {/* {fileSrc?.type === PREVIEW_FILE_TYPES.docPreview && <ViewDoc url={fileSrc?.url} />} */}
           {fileSrc?.type === PREVIEW_FILE_TYPES.image && <img src={fileSrc?.url} />}
           {fileSrc?.type === PREVIEW_FILE_TYPES.video && <video src={fileSrc?.url} controls />}
           {fileSrc?.type === PREVIEW_FILE_TYPES.audio && <audio src={fileSrc?.url} controls />}
@@ -87,28 +86,28 @@ export default function FilePreview({
   );
 }
 
-function getFileType(fileName = null) {
-  if (!fileName) return null;
+function getFileType(fileType = null) {
+  if (!fileType) return null;
 
-  if (
-    [
-      'pdf',
-      'ppt',
-      'doc',
-      'xls',
-      'csv',
-      'doc',
-      'txt',
-      'srt',
-      'vtt',
-      'text/plain',
-      'application/pdf'
-    ]?.includes(fileName?.toLowerCase())
-  )
-    return PREVIEW_FILE_TYPES.docPreview;
-  if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileName?.toLowerCase()))
+  // if (
+  //   [
+  //     'pdf',
+  //     'ppt',
+  //     'doc',
+  //     'xls',
+  //     'csv',
+  //     'doc',
+  //     'txt',
+  //     'srt',
+  //     'vtt',
+  //     'text/plain',
+  //     'application/pdf'
+  //   ]?.includes(fileType?.toLowerCase())
+  // )
+  //   return PREVIEW_FILE_TYPES.docPreview;
+  if (['mp3', 'audio/webm', 'audio/wav']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.audio;
-  if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileName?.toLowerCase()))
+  if (['mp4', 'webm', 'video/webm', 'video/mpeg', 'video/mp4']?.includes(fileType?.toLowerCase()))
     return PREVIEW_FILE_TYPES.video;
   if (
     [
@@ -122,7 +121,7 @@ function getFileType(fileName = null) {
       'image/png',
       'image/gif',
       'image/jpeg'
-    ]?.includes(fileName?.toLowerCase())
+    ]?.includes(fileType?.toLowerCase())
   )
     return PREVIEW_FILE_TYPES.image;
 

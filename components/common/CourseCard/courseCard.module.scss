@@ -1,11 +1,6 @@
 @import '../../../styles/base.scss';
 @import url('https://fonts.googleapis.com/css2?family=Grape+Nuts&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-$selfPacedBorder: $primary;
-$testSeriesBorder: $zicopsPink;
-$classroomBorder: $warning;
-$eventBorder: $zicopsSky;
-
 .smallCardWrapper {
   .smallCard {
     position: relative;

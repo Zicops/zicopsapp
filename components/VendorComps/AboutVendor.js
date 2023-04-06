@@ -54,12 +54,10 @@ export default function AboutVendor({ data }) {
       type: 'cd'
     }
   ];
+
   if (vendorId && vendorData?.vendorId !== vendorId)
-    return (
-      <div style={{ minHeight: '50vh' }}>
-        <Loader customStyles={{ height: '100%', background: 'transparent' }} />
-      </div>
-    );
+    return <Loader customStyles={{ height: '300px', background: 'transparent' }} />;
+
   return (
     <div className={`${styles.aboutVendorMainContainer}`}>
       <div className={`${styles.vendorDescription}`}>
@@ -70,7 +68,10 @@ export default function AboutVendor({ data }) {
         {accordianMarketyardDetails.map((value, index) => {
           if (!value?.serviceData?.isApplicable) return;
           return (
-            <ZicopsAccordian title={value.title} description={value.description}>
+            <ZicopsAccordian
+              title={value.title}
+              description={value.description}
+              defaultState={true}>
               <VendorServices data={value.serviceData} type={value?.type} />
             </ZicopsAccordian>
           );

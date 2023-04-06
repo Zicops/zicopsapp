@@ -34,13 +34,14 @@ const MeetingCard = ({
   }, [video1]);
 
   useEffect(() => {
-    if ([vcData.moderators].includes(userData.id) || [vcData.trainers].includes(userData.id)) {
-      setMeetingIconAtom({
-        ...meetingIconsAtom,
-        isModerator: true
-      });
-    }
-  }, [userData]);
+    if (!userData?.id) return;
+
+    const isModerator =
+      vcData.moderators?.includes(userData?.id) || vcData.trainers?.includes(userData?.id);
+
+    setMeetingIconAtom({ ...meetingIconsAtom, isModerator: isModerator });
+  }, [userData?.id]);
+
   return (
     <div className={`${styles.vcCard}`}>
       <div className={`${styles.videoPlayer}`}>

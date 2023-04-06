@@ -52,17 +52,17 @@ const TimeFrame = ({ stratDate, givenTime, setIsVctoolActive }) => {
     <div className={`${styles.vctoolTimeFrame}`}>
       <div className={`${styles.vcTimer}`}>
         <div>
-          <div>{hours < 9 ? `0 ${hours}` : hours}</div>
+          <div>{hours < 9 ? `0 ${hours}` : hours || '0'}</div>
           <p className={`${styles.timeUnite}`}>hh</p>
         </div>
         <p>:</p>
         <div>
-          <div>{minutes < 9 ? `0${minutes}` : minutes}</div>
+          <div>{minutes < 9 ? `0${minutes}` : minutes || '0'}</div>
           <p className={`${styles.timeUnite}`}>mm</p>
         </div>
         <p>:</p>
         <div>
-          <div>{seconds < 9 ? `0${seconds}` : seconds}</div>
+          <div>{seconds < 9 ? `0${seconds}` : seconds || '0'}</div>
           <p className={`${styles.timeUnite}`}>ss</p>
         </div>
       </div>

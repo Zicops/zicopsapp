@@ -3,35 +3,11 @@ import styles from './vendorComps.module.scss';
 export default function ProfileDetails({ data }) {
   const vendorDetails = [
     { label: 'Name', value: data?.first_name + ' ' + data?.last_name || 'NA' },
-    { label: 'Type', value: 'Organisation' }
+    { label: 'Type', value: 'Organisation' },
+    { label: 'Description', value: data?.description || 'NA' },
+    { label: 'Years of Experience', value: `${data?.experience_years} years` },
+    { label: 'Speaker', value: data?.is_speaker ? 'Yes' : 'No' }
   ];
-
-  //   const socialMediaData = [
-  //     {
-  //       title: 'Facebook',
-  //       inputName: 'facebookURL',
-  //       value: data?.facebookURL,
-  //       imageUrl: data?.facebookURL ? '/images/svg/Facebook.svg' : ''
-  //     },
-  //     {
-  //       title: 'Instagram',
-  //       inputName: 'instagramURL',
-  //       value: data?.instagramURL,
-  //       imageUrl: data?.instagramURL ? '/images/svg/Instagram.svg' : ''
-  //     },
-  //     {
-  //       title: 'Twitter',
-  //       inputName: 'twitterURL',
-  //       value: data?.twitterURL,
-  //       imageUrl: '/images/svg/Twitter.svg'
-  //     },
-  //     {
-  //       title: 'LinkedIn',
-  //       inputName: 'linkedinURL',
-  //       value: data?.linkedinURL,
-  //       imageUrl: data?.linkedinURL ? '/images/svg/Linkedin.svg' : ''
-  //     }
-  //   ];
 
   return (
     <div className={`${styles.vendorDetailsContainer}`}>
@@ -44,11 +20,6 @@ export default function ProfileDetails({ data }) {
               <p>{data?.value}</p>
             </div>
           ))}
-        </div>
-        <hr />
-        <div>Social Media</div>
-        <div className={`${styles.marketyardSocialMediaIcons}`}>
-          <small>No Social Media Available</small>
         </div>
       </div>
     </div>

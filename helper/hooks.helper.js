@@ -1,4 +1,3 @@
-import { API_LINKS } from '@/api/api.helper';
 import {
   GET_CATS_AND_SUB_CAT_MAIN,
   GET_COURSE,
@@ -16,8 +15,8 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
-  userClient,
-  USER_LOGIN
+  USER_LOGIN,
+  userClient
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -32,16 +31,17 @@ import {
   GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
+import { API_LINKS } from '@/api/api.helper';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
-  getUserObject,
   InviteUserAtom,
   IsUpdatedAtom,
+  UserStateAtom,
   UsersOrganizationAtom,
-  UserStateAtom
+  getUserObject
 } from '@/state/atoms/users.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -50,7 +50,7 @@ import {
   validatePhoneNumberLength
 } from 'libphonenumber-js';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
@@ -1376,4 +1376,61 @@ export function useDebounce(value, delay) {
   );
 
   return debouncedValue;
+}
+
+const fifteenSeconds = 1000 * 15;
+// https://www.joshwcomeau.com/snippets/react-hooks/use-timeout/
+export function useTimeout(callback, delay = fifteenSeconds) {
+  const timeoutRef = useRef(null);
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    const tick = () => savedCallback.current();
+
+    if (typeof delay === 'number') {
+      timeoutRef.current = window.setTimeout(tick, delay);
+      return () => window.clearTimeout(timeoutRef.current);
+    }
+  }, [delay]);
+
+  return timeoutRef;
+}
+
+export function useTimeInterval(callback, delay = fifteenSeconds, dependencies = []) {
+  const timeoutId = useRef(null);
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    savedCallback.current();
+  }, []);
+
+  useEffect(() => {
+    if (typeof delay !== 'number') return;
+
+    const handleTick = () => {
+      timeoutId.current = window.setTimeout(() => {
+        savedCallback.current();
+
+        handleTick();
+      }, delay);
+    };
+
+    handleTick();
+
+    return () => window.clearTimeout(timeoutId.current);
+  }, [delay, ...(dependencies || [])]);
+
+  const cancel = useCallback(function () {
+    window.clearTimeout(timeoutId.current);
+  }, []);
+
+  return cancel;
 }

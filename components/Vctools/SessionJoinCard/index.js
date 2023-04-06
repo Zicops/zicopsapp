@@ -1,61 +1,73 @@
-import { useEffect, useState } from 'react';
-import styles from './sessionJoin.module.scss';
+import { useTimeInterval } from '@/helper/hooks.helper';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import moment from 'moment';
-const SessionJoinCard = ({ classroomData = {} }) => {
-  const meetingStart =new Date(classroomData?.trainingStartTime*1000).getTime();
-  const meetingEnd = new Date(classroomData?.trainingEndTime*1000).getTime();
-  
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import useLoadClassroomData from '../Logic/useLoadClassroomData';
+import styles from '../vctoolMain.module.scss';
 
-  const meetingDuration = classroomData?.duration / 60;
-  {/* <TimeFrame givenTime={new Date("4/3/2023 18:55:00").getTime()}/> */}
-  const [meetingType, setMeetingType] = useState();
-  useEffect(() => {
-    var now = new Date().getTime();
-    if (now >= meetingStart && now <= meetingEnd) {
-      setMeetingType('MeetingStarted');
-    } else if (now < meetingStart) {
-      setMeetingType('JoinSession');
-    } else if(now > meetingEnd) {
-      setMeetingType('MeetingEnded');
+const SessionJoinCard = ({ topicId = null }) => {
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
+  const [sessionStatus, setSessionStatus] = useState('beforeStart');
+
+  useLoadClassroomData(topicId);
+
+  const classroomStartTime = moment(classroomData?.trainingStartTime * 1000);
+  const cardData = {
+    beforeStart: {
+      text: 'Session has not started',
+      buttonText: 'Join Session',
+      btnClass: `${styles.joinSessionBtn}`,
+      textClass: `${styles.before}`
+    },
+    live: {
+      text: 'Live Now',
+      imgSrc: '/images/svg/vctool/sensors-on.svg',
+      buttonText: 'Join Session',
+      btnClass: `${styles.joinSessionBtn}`,
+      textClass: `${styles.live}`
+    },
+    ended: {
+      text: 'Session Ended',
+      imgSrc: '/images/svg/vctool/sensors-off.svg',
+      buttonText: 'Recording will be available soon',
+      btnClass: `${styles.sessionEnded}`,
+      textClass: `${styles.after}`
     }
-  },[]);
-  const title = ['Session has not started', 'Live now', 'Session Ended'];
+  };
+  const oneMinute = 1000 * 60;
+
+  const cancel = useTimeInterval(() => {
+    if (classroomStartTime.diff(new Date(), 'minute') < 0) setSessionStatus('live');
+
+    const endTime = moment(classroomData.trainingEndTime * 1000);
+
+    if (classroomStartTime.diff(endTime, 'minute') < 0) setSessionStatus('ended');
+  }, oneMinute);
+
+  if (sessionStatus === 'ended') cancel();
+
   return (
     <div className={`${styles.joinSessionContainer}`}>
+      <div className={`${styles.joinSessionHead}`}>
+        <span className={cardData?.[sessionStatus]?.textClass}>
+          {cardData?.[sessionStatus]?.text}
+        </span>
+
+        {!!cardData?.[sessionStatus]?.imgSrc && <img src={cardData?.[sessionStatus]?.imgSrc} />}
+      </div>
+
       <div>
-        <div className={`${styles.joinSessionHead}`}>
-          {/* <div>Session has not started</div> */}
-          {meetingType === 'JoinSession' && <div>{title[0]}</div>}
-          {meetingType === 'MeetingStarted' && (
-            <div className={`${styles.meetingLive}`}>
-              {title[1]} <img src="/images/svg/vctool/sensors-on.svg" />
-            </div>
-          )}
-          {meetingType === 'MeetingEnded' && (
-            <div className={`${styles.sessionEnd}`}>
-              {title[2]} <img src="/images/svg/vctool/sensors-off.svg" />
-            </div>
-          )}
-        </div>
-        {/* <button className={`${styles.JoinSessionBtn}`}>Join Session</button> */}
-        {meetingType === 'JoinSession' && (
-          <button className={`${styles.JoinSessionBtn}`}>Join Session</button>
-        )}
-        {meetingType === 'MeetingStarted' && (
-          <button className={`${styles.JoinSessionBtn}`}>Join Session</button>
-        )}
-        {meetingType === 'MeetingEnded' && (
-          <button className={`${styles.sessionEnded}`}>Recording will be available soon</button>
-        )}
-        <div className={`${styles.joinsessionFooter}`}>
-          <div className={`${styles.meetingLiveDate}`}>{`${moment.unix(classroomData?.trainingStartTime).format('MM')}-${moment.unix(classroomData?.trainingStartTime).format('DD')}
-          -${moment.unix(classroomData?.trainingStartTime).format('YYYY')},
-          ${moment.unix(classroomData?.trainingStartTime).format(' h')}
-          :${moment.unix(classroomData?.trainingStartTime).format('mm')} IST`}</div>
-          <div className={`${styles.meetingDuration}`}>
-            duration :<div className={`${styles.durationTime}`}>{classroomData?.duration / 60} min</div>
-          </div>
-          <div></div>
+        <button className={cardData?.[sessionStatus]?.btnClass}>
+          {cardData?.[sessionStatus]?.buttonText}
+        </button>
+      </div>
+
+      <div className={`${styles.joinsessionFooter}`}>
+        <div className={`${styles.meetingLiveDate}`}>{classroomStartTime.format('LLL')} IST</div>
+
+        <div className={`${styles.meetingDuration}`}>
+          duration :{(classroomData?.duration || 0) / 60} min
         </div>
       </div>
     </div>

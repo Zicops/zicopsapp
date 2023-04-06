@@ -10,14 +10,16 @@ import { sanitizeFormData } from '@/helper/common.helper';
 import { getDateObjFromUnix, getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
-  getTopicClassroomObject,
-  TopicClassroomAtom
+  CourseMetaDataAtom,
+  TopicClassroomAtom,
+  getTopicClassroomObject
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilCallback, useRecoilState } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleTopicClassroom(topData = null) {
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
 
@@ -57,13 +59,13 @@ export default function useHandleTopicClassroom(topData = null) {
         const moderators = moderatorsList?.filter((u) =>
           _topicClassroom?.moderators?.find((userId) => u?.user_id === userId)
         );
-
         setTopicClassroom(
           getTopicClassroomObject({
             ..._topicClassroom,
             trainers,
             moderators,
             topicId: _topicClassroom?.topic_id,
+            language: _topicClassroom?.language?.split(', '),
             trainingStartTime: getDateObjFromUnix(_topicClassroom?.training_start_time),
             trainingEndTime: getDateObjFromUnix(_topicClassroom?.training_end_time),
             isScreenShareEnabled: _topicClassroom?.is_screen_share_enabled,
@@ -72,7 +74,7 @@ export default function useHandleTopicClassroom(topData = null) {
             isQaEnabled: _topicClassroom?.is_qa_enabled,
             isCameraEnabled: _topicClassroom?.is_camera_enabled,
             isOverrideConfig: _topicClassroom?.is_override_config,
-            language: _topicClassroom?.language?.length ? [_topicClassroom?.language]:[],
+            language: _topicClassroom?.language,
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
@@ -101,16 +103,19 @@ export default function useHandleTopicClassroom(topData = null) {
 
   async function addUpdateTopicClassroom() {
     if (!topData?.id) return;
+    setIsSubmitDisabled(true);
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
+      module_id: topData?.moduleId || null,
+      course_id: courseMetaData?.id,
       trainers: topicClassroom?.trainers?.map((data) => data?.user_id || data) || [],
       moderators: topicClassroom?.moderators?.map((data) => data?.user_id || data) || [],
       training_start_time: getUnixFromDate(topicClassroom?.trainingStartTime),
       training_end_time: getUnixFromDate(topicClassroom?.trainingEndTime),
       duration: topicClassroom?.duration,
-      breaktime: topicClassroom?.breaktime || '10',
-      language: topicClassroom?.language?.join(', '),
+      breaktime: topicClassroom?.breaktime || '0',
+      language: topicClassroom?.language,
       is_screen_share_enabled: topicClassroom?.isScreenShareEnabled,
       is_chat_enabled: topicClassroom?.isChatEnabled,
       is_microphone_enabled: topicClassroom?.isMicrophoneEnabled,
@@ -129,7 +134,7 @@ export default function useHandleTopicClassroom(topData = null) {
         viltMutationClient
       ).catch(() => setToastMessage('Topic classroom Update Error!'));
 
-      setToastMessage('Topic classroom update successfully','success');
+      setToastMessage('Topic classroom update successfully', 'success');
 
       return resUpdate?.updateTopicClassroom || null;
     }
@@ -142,7 +147,7 @@ export default function useHandleTopicClassroom(topData = null) {
     ).catch(() => setToastMessage('Topic classroom Create Error!'));
 
     setTopicClassroom((prev) => ({ ...prev, id: res?.createTopicClassroom?.id }));
-    setToastMessage('Topic classroom added successfully','success');
+    setToastMessage('Topic classroom added successfully', 'success');
 
     return res?.createTopicClassroom || null;
   }

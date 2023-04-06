@@ -11,7 +11,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 
-export default function ClassroomForm({ handleChange = {}, closeAccordion = () => {} }) {
+export default function ClassroomForm({ handleChange = () => {}, closeAccordion = () => {} }) {
   const classroomMaster = useRecoilValue(ClassroomMasterAtom);
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
@@ -137,18 +137,15 @@ export default function ClassroomForm({ handleChange = {}, closeAccordion = () =
             placeholder: 'Select language',
             isSearchEnable: true,
             menuPlacement: 'top',
-            isMulti: true,
             options: !!courseMetaData?.language?.length
               ? courseMetaData?.language?.map((lang) => ({ label: lang, value: lang }))
               : null,
-            value: !!topicClassroom?.language?.length
-              ? topicClassroom?.language?.map((lang) => ({ label: lang, value: lang }))
-              : null,
-            isDisabled: topicClassroom?.language?.length === 1
+            value: { label: topicClassroom?.language, value: topicClassroom?.language }
+            // isDisabled: topicClassroom?.language?.length === 1
           }}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleChange({ language: e?.map((item) => item?.value) })}
+          changeHandler={(e) => handleChange({ language: e?.value })}
         />
       </div>
 

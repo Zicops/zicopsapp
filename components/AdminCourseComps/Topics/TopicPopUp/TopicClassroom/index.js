@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
 import TopicAccordian from '../TopicAccordian';
 import ClassroomForm from './ClassroomForm';
-import VcSettings from './VcSettings';
+import VcSetting from './VcSetting';
 
 export default function TopicClassroom({ topData = null, closePopUp = () => {} }) {
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
@@ -44,12 +44,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
     },
     {
       title: 'VC Setting',
-      body: (
-        <VcSettings
-          handleChange={handleTopicClassroomChange}
-          closeAccordion={() => setAccordionOpenState(1)}
-        />
-      )
+      body: <VcSetting handleChange={handleTopicClassroomChange} />
     }
   ];
 
@@ -76,7 +71,11 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
         <ZicopsButton
           customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
           isDisabled={isSubmitDisabled}
-          handleClick={addUpdateTopicClassroom}
+          handleClick={() => {
+            addUpdateTopicClassroom()
+              .catch((err) => console.log(err))
+              .finally(() => closePopUp(true));
+          }}
           display={!!topicClassroom?.id ? 'Update' : 'Save'}
         />
       </div>

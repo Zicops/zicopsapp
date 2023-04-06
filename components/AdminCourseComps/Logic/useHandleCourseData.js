@@ -185,10 +185,9 @@ export default function useHandleCourseData() {
     const users = await getUsersForAdmin();
     // filtering users based on lsp status
     const filteredUsers =
-      users
-        ?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate)
-        ?.slice(0, 10) || [];
+      users?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate) || [];
 
+    console.info(filteredUsers);
     setTrainerCandidates([...(filteredUsers || [])]);
     setModeratorCandidates([...(filteredUsers || [])]);
     return filteredUsers;

@@ -60,8 +60,8 @@ export default function useEditModule(refetchDataAndUpdateRecoil) {
       await updateCourseModule({
         variables: {
           ...editModule,
-          name: editModule?.name?.toLowerCase(),
-          description: editModule?.description?.toLowerCase()
+          name: editModule?.name?.trim(),
+          description: editModule?.description?.trim()
         }
       }).catch((err) => {
         if (err?.message?.includes(CUSTOM_ERROR_MESSAGE?.nothingToUpdate)) return;

@@ -66,7 +66,7 @@ export default function LabeledDropdown({
             customDropdownStyles
           )}
           isSearchable={!!isSearchEnable}
-          isDisabled={!!isDisabled}
+          isDisabled={!!isDisabled || isLoading}
           isLoading={isLoading}
           isOptionDisabled={(option) => option.disabled}
           noOptionsMessage={() => noOptionsMessage}
