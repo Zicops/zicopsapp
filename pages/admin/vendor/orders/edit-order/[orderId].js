@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { AllServicesAtom, ServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 
-export default function VendorInfo() {
+export default function OrderInfo() {
   const [selectedServicesForOrder, setSelectedServicesForOrder] =
     useRecoilState(VendorServicesListAtom);
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
