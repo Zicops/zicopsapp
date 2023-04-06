@@ -107,8 +107,9 @@ export default function TopicPopUp({
               customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
               isDisabled={!topicContentList?.length || isSubmitDisabled}
               handleClick={() => {
-                handleSubmit();
-                closePopUp();
+                handleSubmit()
+                  .finally((err) => console.log(err))
+                  .finally(() => closePopUp());
               }}
               display={'Design'}
             />

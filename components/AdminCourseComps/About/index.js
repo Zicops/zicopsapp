@@ -314,13 +314,15 @@ export default function About() {
               />
             </div>
             <div>
-              <label className={`${styles.durationLabel}`}>Learning Duration :</label>
+              <label className={`${styles.durationLabel}`}>
+                Learning Duration : <small>(In Minutes)</small>
+              </label>
               <LabeledInput
                 inputOptions={{
                   inputName: 'name',
                   // label:'Learning Duration:',
                   placeholder: 'Auto populated',
-                  value: courseMetaData?.duration,
+                  value: (courseMetaData?.duration || 0) / 60,
                   isDisabled: true
                 }}
                 styleClass={`${styles.inputName1}`}
