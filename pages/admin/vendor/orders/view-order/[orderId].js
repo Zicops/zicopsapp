@@ -13,7 +13,6 @@ import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketY
 import { useRouter } from 'next/router';
 import { AllServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
-import VendorOrders from '@/components/VendorComps/VendorOrders';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
 
