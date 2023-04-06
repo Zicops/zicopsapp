@@ -60,7 +60,9 @@ export default function useHandleVendorServices() {
       languages: smeData?.languages || [],
       output_deliveries: smeData?.formats || [],
       sample_files: smeData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: smeData?.isExpertiseOnline,
+      isExpertiseOffline: smeData?.isExpertiseOffline
     };
 
     let isError = false;
@@ -75,7 +77,7 @@ export default function useHandleVendorServices() {
 
       if (isError) return;
 
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateSubjectMatterExpertise;
       setSMEData(
@@ -86,7 +88,9 @@ export default function useHandleVendorServices() {
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries
+          formats: data?.output_deliveries,
+          isExpertiseOffline: data?.is_expertise_offline,
+          isExpertiseOnline: data?.is_expertise_online
         })
       );
       return res?.data?.updateSubjectMatterExpertise;
@@ -98,7 +102,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add SME Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Services Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createSubjectMatterExpertise;
     setSMEData(
@@ -109,7 +113,9 @@ export default function useHandleVendorServices() {
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries
+        formats: data?.output_deliveries,
+        isExpertiseOffline: data?.is_expertise_offline,
+        isExpertiseOnline: data?.is_expertise_online
       })
     );
     return res?.data?.createSubjectMatterExpertise;
@@ -135,7 +141,9 @@ export default function useHandleVendorServices() {
       languages: ctData?.languages || [],
       output_deliveries: ctData?.formats || [],
       sample_files: ctData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: ctData?.isExpertiseOnline,
+      isExpertiseOffline: ctData?.isExpertiseOffline
     };
 
     let isError = false;
@@ -150,7 +158,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateClassRoomTraining;
       setCTData(
@@ -161,7 +169,9 @@ export default function useHandleVendorServices() {
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries
+          formats: data?.output_deliveries,
+          isExpertiseOffline: data?.is_expertise_offline,
+          isExpertiseOnline: data?.is_expertise_online
         })
       );
       return res?.data?.updateClassRoomTraining;
@@ -172,7 +182,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Services Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createClassRoomTraining;
     setCTData(
@@ -183,7 +193,9 @@ export default function useHandleVendorServices() {
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries
+        formats: data?.output_deliveries,
+        isExpertiseOffline: data?.is_expertise_offline,
+        isExpertiseOnline: data?.is_expertise_online
       })
     );
     return res?.data?.createClassRoomTraining;
@@ -208,7 +220,9 @@ export default function useHandleVendorServices() {
       languages: cdData?.languages || [],
       output_deliveries: cdData?.formats || [],
       sample_files: cdData?.sampleFiles?.map((file) => file?.name + '.' + file?.fileType) || [],
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
+      isExpertiseOnline: cdData?.isExpertiseOnline,
+      isExpertiseOffline: cdData?.isExpertiseOffline
     };
     if (typeof sendData?.photo === 'string') sendData.photo = null;
 
@@ -224,7 +238,7 @@ export default function useHandleVendorServices() {
       });
 
       if (isError) return;
-      if (displayToaster) setToastMsg({ type: 'success', message: 'Services Updated' });
+      if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Updated' });
 
       const data = res?.data?.updateContentDevelopment;
       setCDData(
@@ -235,7 +249,9 @@ export default function useHandleVendorServices() {
           serviceDescription: data?.description,
           languages: data?.languages,
           expertises: data?.expertise,
-          formats: data?.output_deliveries
+          formats: data?.output_deliveries,
+          isExpertiseOffline: data?.is_expertise_offline,
+          isExpertiseOnline: data?.is_expertise_online
         })
       );
       return res?.data?.updateContentDevelopment;
@@ -247,7 +263,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'CD Created Error' });
     });
     if (isError) return;
-    if (displayToaster) setToastMsg({ type: 'success', message: 'Services Created' });
+    if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Created' });
 
     const data = res?.data?.createContentDevelopment;
     setCDData(
@@ -258,7 +274,9 @@ export default function useHandleVendorServices() {
         serviceDescription: data?.description,
         languages: data?.languages,
         expertises: data?.expertise,
-        formats: data?.output_deliveries
+        formats: data?.output_deliveries,
+        isExpertiseOffline: data?.is_expertise_offline,
+        isExpertiseOnline: data?.is_expertise_online
       })
     );
     return res?.data?.createContentDevelopment;

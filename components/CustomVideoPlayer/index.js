@@ -279,7 +279,7 @@ export default function CustomVideo({ set }) {
               nextBtnObj={{ isVisible: false }}
               stayBtnObj={{
                 text: 'Topic Completed',
-                classes: styles.skipIntroBtn,
+                classes: `${styles.skipIntroBtn} ${styles.topicCompleted}`,
                 clickHandler: async () => {
                   const isCompleted = await syncVideoProgress(true);
                   setScormCompleted(isCompleted);

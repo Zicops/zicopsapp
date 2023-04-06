@@ -2,11 +2,8 @@ import { pollArray } from "@/state/atoms/vctool.atoms";
 import { useEffect, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
-const PollBox = ({ pollNumber, publish, pollQuestion }) => {
+const PollBox = ({ pollNumber, publish, pollQuestion, options,deletePoll }) => {
     const [expand, setexpand] = useState(true)
-    const [pollInfo, setPollInfo] = useRecoilState(pollArray)
-  
-
     return (
         <div className={`${styles.quizQuestion}`}>
             <div className={`${styles.pollQuestionhead}`} >
@@ -35,10 +32,19 @@ const PollBox = ({ pollNumber, publish, pollQuestion }) => {
                         <div className={`${styles.pollSavedLabel}`}>Saved</div>
                         <div className={`${styles.pollQuestions}`}>{pollQuestion}</div>
                         <div className={`${styles.pollBoxOptions}`}>
-                           
+                            {
+                                options.map((data) => {
+                                    return (
+                                        <div>{data.value}</div>
+                                    )
+                                })
+                            }
                         </div>
                         <div className={`${styles.pollBoxBtns}`}>
-                            <button className={`${styles.pollBoxDeleteBnt}`}>Delete</button>
+                            <button className={`${styles.pollBoxDeleteBnt}`} onClick={()=>
+                            {
+                                deletePoll();
+                            }}>Delete</button>
                             <button className={`${styles.pollBoxEditBnt}`}>Edit</button>
                         </div>
                         {/* <button className={`${styles.publishPoll}`}>Publish</button> */}

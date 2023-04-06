@@ -24,6 +24,8 @@ export default function AddTopicForm({
     );
   }
 
+  const isTypeDisabled = [COURSE_TYPES.testSeries]?.includes(courseMetaData.type);
+
   return (
     <>
       <div className={`${styles.addTopicForm}`}>
@@ -33,7 +35,7 @@ export default function AddTopicForm({
             label: 'Topic Name:',
             placeholder: 'Enter topic name ( in less than 60 characters )',
             maxLength: 60,
-            value: topicData.name
+            value: topicData?.name
           }}
           changeHandler={(e) => setTopicData({ ...topicData, name: e.target.value })}
         />
@@ -61,8 +63,8 @@ export default function AddTopicForm({
               placeholder: 'Select topic type',
               options: types,
               menuPlacement: 'top',
-              value: topicData.type ? { value: topicData.type, label: topicData.type } : null,
-              isDisabled: courseMetaData.type !== COURSE_TYPES.selfPaced
+              value: topicData?.type ? { value: topicData.type, label: topicData.type } : null,
+              isDisabled: isTypeDisabled
             }}
             changeHandler={(e) => setTopicData({ ...topicData, type: e.value })}
           />

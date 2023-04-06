@@ -4,20 +4,26 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import { COURSE_EXPERTISE_LEVEL, COURSE_TYPES } from '@/constants/course.constants';
 import { LANGUAGES } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
-import { CourseCurrentStateAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import {
+  ClassroomMasterAtom,
+  CourseCurrentStateAtom,
+  CourseMetaDataAtom
+} from '@/state/atoms/courses.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRecoilValue } from 'recoil';
 import styles from './adminCourseComps.module.scss';
-import NextBtn from './NextBtn';
 import { courseTabs } from './Logic/adminCourseComps.helper';
 import useHandleCourseData from './Logic/useHandleCourseData';
+import NextBtn from './NextBtn';
 
 export default function CourseMaster() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const { ownerList, handleChange, handleExpertise } = useHandleCourseData();
+  const { ownerList, handleCourseMetaChange, handleClassroomMasterChange, handleExpertise } =
+    useHandleCourseData();
   const { catSubCat, setActiveCatId } = useHandleCatSubCat();
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
@@ -35,7 +41,7 @@ export default function CourseMaster() {
           isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
-        changeHandler={(e) => handleChange({ name: e?.target?.value })}
+        changeHandler={(e) => handleCourseMetaChange({ name: e?.target?.value })}
       />
 
       {/* category and subcategory */}
@@ -58,7 +64,7 @@ export default function CourseMaster() {
           styleClass={`${styles.makeLabelInputColumnWise}`}
           changeHandler={(e) => {
             setActiveCatId(e);
-            handleChange({ category: e?.value, subCategory: '' });
+            handleCourseMetaChange({ category: e?.value, subCategory: '' });
           }}
         />
 
@@ -78,7 +84,7 @@ export default function CourseMaster() {
           isFullWidth={true}
           isLoading={!catSubCat?.isDataLoaded}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleChange({ subCategory: e?.value })}
+          changeHandler={(e) => handleCourseMetaChange({ subCategory: e?.value })}
         />
       </div>
 
@@ -136,10 +142,10 @@ export default function CourseMaster() {
           isFullWidth={true}
           isLoading={ownerList === null}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleChange({ owner: e?.value })}
+          changeHandler={(e) => handleCourseMetaChange({ owner: e?.value })}
         />
 
-        <LabeledDropdown
+        {/* <LabeledDropdown
           isError={!courseMetaData?.publisher?.length && error?.includes('publisher')}
           dropdownOptions={{
             inputName: 'publisher',
@@ -155,7 +161,20 @@ export default function CourseMaster() {
           isFullWidth={true}
           // isLoading={ownerList === null}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleChange({ publisher: e?.value })}
+          changeHandler={(e) => handleCourseMetaChange({ publisher: e?.value })}
+        /> */}
+
+        <LabeledInput
+          inputClass={!courseMetaData?.publisher?.length && error?.includes('publisher')}
+          inputOptions={{
+            inputName: 'publisher',
+            label: 'Provisioner :',
+            placeholder: 'Enter Provisioner',
+            value: courseMetaData?.publisher,
+            isDisabled: isDisabled
+          }}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleCourseMetaChange({ publisher: e?.target?.value })}
         />
       </div>
 
@@ -178,21 +197,26 @@ export default function CourseMaster() {
           }}
           isFullWidth={true}
           styleClass={`${styles.makeLabelInputColumnWise}`}
-          changeHandler={(e) => handleChange({ language: e?.map((item) => item?.value) })}
+          changeHandler={(e) => handleCourseMetaChange({ language: e?.map((item) => item?.value) })}
         />
 
         {!!isClassroomCourse && (
           <LabeledInput
-            // inputClass={!courseMetaData?.name?.length && error?.includes('name') ? 'error' : ''}
+            inputClass={
+              !classroomMaster?.noOfLearners?.length && error?.includes('noOfLearners')
+                ? 'error'
+                : ''
+            }
             inputOptions={{
-              inputName: 'noOfLearner',
+              inputName: 'noOfLearners',
               label: 'No.of Learners :',
               placeholder: '00',
-              value: '',
-              isDisabled: isDisabled
+              value: classroomMaster?.noOfLearners,
+              isDisabled: isDisabled,
+              isNumericOnly: true
             }}
             styleClass={`${styles.makeLabelInputColumnWise}`}
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => handleClassroomMasterChange({ noOfLearners: e.target.value })}
           />
         )}
       </div>
@@ -208,7 +232,7 @@ export default function CourseMaster() {
               isError={!courseMetaData?.lspId?.length && error?.includes('lspId')}
               label={'Organization Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.defaultLsp}
-              changeHandler={(e) => handleChange({ lspId: userOrgData?.defaultLsp })}
+              changeHandler={(e) => handleCourseMetaChange({ lspId: userOrgData?.defaultLsp })}
               isDisabled={true}
               // isDisabled={isDisabled}
             />
@@ -218,7 +242,7 @@ export default function CourseMaster() {
               isError={!courseMetaData?.lspId?.length && error?.includes('lspId')}
               label={'Learning space Level'}
               isChecked={courseMetaData?.lspId === userOrgData?.lsp_id}
-              changeHandler={(e) => handleChange({ lspId: userOrgData?.lsp_id })}
+              changeHandler={(e) => handleCourseMetaChange({ lspId: userOrgData?.lsp_id })}
               isDisabled={true}
               // isDisabled={isDisabled}
             />
@@ -233,7 +257,7 @@ export default function CourseMaster() {
               type="radio"
               label={'Open'}
               isChecked={courseMetaData?.isDisplay}
-              changeHandler={() => handleChange({ isDisplay: true })}
+              changeHandler={() => handleCourseMetaChange({ isDisplay: true })}
               isDisabled={isDisabled}
             />
 
@@ -241,7 +265,7 @@ export default function CourseMaster() {
               type="radio"
               label={'Closed'}
               isChecked={!courseMetaData?.isDisplay}
-              changeHandler={() => handleChange({ isDisplay: false })}
+              changeHandler={() => handleCourseMetaChange({ isDisplay: false })}
               isDisabled={isDisabled}
             />
           </div>

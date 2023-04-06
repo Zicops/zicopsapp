@@ -69,6 +69,7 @@ export default function CourseTabs() {
   }, [fullCourse?.status, isCourseSaved]);
 
   useEffect(() => {
+    if (!fullCourse?.id) return;
     if (!fullCourse?.qa_required) setCourseStatus(COURSE_STATUS.save);
   }, [fullCourse?.qa_required]);
 

@@ -895,6 +895,7 @@ export const GET_VENDOR_ADMINS = gql`
       email
       phone
       photo_url
+      user_lsp_status
     }
   }
 `;
@@ -905,6 +906,7 @@ export const GET_VENDOR_DETAILS = gql`
       vendorId
       type
       level
+      lsp_id
       name
       description
       photo_url
@@ -920,6 +922,7 @@ export const GET_VENDOR_DETAILS = gql`
       updated_at
       updated_by
       status
+      vendor_lsp_status
     }
   }
 `;
@@ -1010,7 +1013,11 @@ export const GET_ALL_PROFILE_DETAILS = gql`
       content_development
       experience
       experience_years
+      sme
+      crt
+      cd
       is_speaker
+      lsp_id
       created_at
       created_by
       updated_at
@@ -1028,9 +1035,11 @@ export const GET_SAMPLE_FILES = gql`
       fileType
       price
       file_url
+      description
       rate
       currency
       unit
+      description
       actualFileType
       created_at
       created_by
@@ -1082,6 +1091,8 @@ export const GET_SME_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1102,6 +1113,8 @@ export const GET_CRT_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1122,6 +1135,8 @@ export const GET_CD_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1200,6 +1215,7 @@ export const GET_PAGINATED_VENDORS = gql`
         updated_at
         updated_by
         status
+        vendor_lsp_status
       }
       pageCursor
       direction

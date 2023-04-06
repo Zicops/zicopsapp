@@ -19,7 +19,7 @@ import {
 } from '@/api/UserMutations';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { OrderAtom, SevicesAtom } from '@/state/atoms/vendor.atoms';
+import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -29,7 +29,7 @@ export default function useHandleMarketYard() {
   const [addServices] = useMutation(ADD_ORDER_SERVICES, { client: userClient });
   const [updateServices] = useMutation(UPDATE_ORDER_SERVICES, { client: userClient });
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
-  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
@@ -143,72 +143,92 @@ export default function useHandleMarketYard() {
   async function addUpdateOrder() {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
-      vendor_id: vendorId,
-      lsp_id: lspId,
+      orderId: orderData?.orderId,
+      vendorId: vendorId,
+      lspId: lspId,
       total: orderData?.total,
       tax: orderData?.tax,
-      grand_total: orderData?.grand_total,
-      Status: VENDOR_MASTER_STATUS.active
+      grandTotal: orderData?.grossTotal,
+      status: 'Added'
     };
     let isError = false;
-    if (orderData?.order_id) {
-      sendData.order_id = smeData?.order_id;
+    if (orderData?.orderId) {
+      sendData.orderId = smeData?.orderId;
       await updateOrder({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Update ORDER Error' });
+        return setToastMsg({ type: 'danger', message: 'Update Order Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'ORDER Updated' });
+      setToastMsg({ type: 'success', message: 'Order Updated' });
       return;
     }
-    // if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
+
     const res = await addOrder({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add ORDER Error' });
+      return setToastMsg({ type: 'danger', message: 'Add Order Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'ORDER Created' });
-    return res;
+    setToastMsg({ type: 'success', message: 'Order Created' });
+    return res?.data?.addOrder;
     // }
   }
 
   async function addUpdateServices() {
-    const sendData = {
-      service_id: servicesData?.service_id || '',
-      order_id: servicesData?.order_id || '',
-      service_type: servicesData?.service_type || '',
-      description: servicesData?.description || '',
-      unit: servicesData?.unit || 0,
-      currency: servicesData?.currency || '',
-      rate: servicesData?.rate || 0,
-      quantity: servicesData?.quantity || 0,
-      total: servicesData?.rate * servicesData?.quantity || 0,
-      status: VENDOR_MASTER_STATUS.active
-    };
-    let isError = false;
-    if (servicesData?.service_id) {
-      sendData.service_id = smeData?.service_id;
-      await updateServices({ variables: sendData }).catch((err) => {
+    const orderArray = [];
+    if (servicesData?.sme?.length) {
+      orderArray.push(...servicesData?.sme);
+    }
+    if (servicesData?.crt?.length) {
+      orderArray.push(...servicesData?.crt);
+    }
+    if (servicesData?.cd?.length) {
+      orderArray.push(...servicesData?.cd);
+    }
+    if (servicesData?.speakers?.length) {
+      orderArray.push(...servicesData?.speakers);
+    }
+
+    const serviceData = [];
+    for (let i = 0; i < orderArray?.length; i++) {
+      const sendData = {
+        serviceId: orderArray[i]?.serviceId || '',
+        orderId: orderArray[i]?.orderId || '',
+        serviceType: orderArray[i]?.serviceType || '',
+        description: orderArray[i]?.description || '',
+        unit: orderArray[i]?.unit || 0,
+        currency: orderData?.currency || '',
+        rate: +orderArray[i]?.rate || 0,
+        quantity: orderArray[i]?.quantity || 0,
+        total: orderArray[i]?.total || 0,
+        status: 'Added'
+      };
+      let isError = false;
+
+      if (orderArray[i]?.serviceId) {
+        sendData.serviceId = orderArray[i]?.serviceId;
+        await updateServices({ variables: sendData }).catch((err) => {
+          console.log(err);
+          isError = !!err;
+          return setToastMsg({ type: 'danger', message: 'Update Services Error' });
+        });
+        if (isError) return;
+        setToastMsg({ type: 'success', message: 'Services Updated' });
+        serviceData.push(res?.data?.addOrderServies);
+        continue;
+      }
+
+      const res = await addServices({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Update SERVICES Error' });
+        return setToastMsg({ type: 'danger', message: 'Add Services Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'SERVICES Updated' });
-      return;
+      setToastMsg({ type: 'success', message: 'Services Created' });
+      serviceData.push(res?.data?.addOrderServies);
     }
-    // if (smeData?.serviceDescription && smeData?.expertises?.length && smeData?.languages?.length) {
-    const res = await addServices({ variables: sendData }).catch((err) => {
-      console.log(err);
-      isError = !!err;
-      return setToastMsg({ type: 'danger', message: 'Add SERVICES Error' });
-    });
-    if (isError) return;
-    setToastMsg({ type: 'success', message: 'SERVICES Created' });
-    return res;
-    // }
+    return serviceData;
   }
 
   return {

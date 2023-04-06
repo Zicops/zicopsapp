@@ -53,19 +53,21 @@ export default function useLoadVendorData() {
     return sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
   }
 
-  async function getPaginatedVendors(pageCursor = '') {
+  async function getPaginatedVendors(pageCursor = '', filters) {
     const lspId = sessionStorage?.getItem('lsp_id');
     if (!lspId) return [];
 
     const vendorList = await loadQueryDataAsync(
       GET_PAGINATED_VENDORS,
-      { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: {} },
+      { lsp_id: lspId, pageCursor, Direction: '', pageSize: 30, filters: filters },
       {},
       userQueryClient
-    ).catch((err) => setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' }));
+    ).catch((err) => setToastMsg({ type: 'danger', message: 'Vendor Data Load Error' }));
 
-    if (vendorList.error || !vendorList?.getPaginatedVendors?.vendors) {
-      setToastMsg({ type: 'Danger', message: 'Vendor Data Load Error' });
+    if (!vendorList?.getPaginatedVendors?.vendors) return [];
+
+    if (vendorList.error) {
+      setToastMsg({ type: 'danger', message: 'Vendor Data Load Error' });
       return [];
     }
 

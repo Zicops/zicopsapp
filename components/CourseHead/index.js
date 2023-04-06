@@ -1,5 +1,7 @@
 import { snakeCaseToTitleCase } from '@/helper/common.helper';
 import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
@@ -20,15 +22,19 @@ export default function CourseHead({
   const [showSitemap, setShowSitemap] = useState(false);
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   const router = useRouter();
+  const disabledList = [2];
+  if (!isDev) disabledList.push(1);
+
   const options = Array(COURSE_TYPES?.length)
     .fill(null)
     .map((v, i) => {
       return {
         value: COURSE_TYPES[i],
         label: snakeCaseToTitleCase(COURSE_TYPES[i]),
-        isDisabled: [1, 2].includes(i)
+        isDisabled: disabledList.includes(i)
       };
     });
   // const options = [
@@ -39,7 +45,7 @@ export default function CourseHead({
   // ];
   const route = router.route;
   function gotoAddcourse() {
-    router.push('/admin/courses');
+    router.push(isDev ? '/admin/course/my-courses/add' : '/admin/courses');
   }
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);

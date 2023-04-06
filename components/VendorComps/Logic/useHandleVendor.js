@@ -6,6 +6,7 @@ import {
   CREATE_PROFILE_VENDOR,
   CREATE_SAMPLE_FILE,
   DELETE_SAMPLE_FILE,
+  DISABLE_VENDOR_LSP_MAP,
   INVITE_USERS_WITH_ROLE,
   UPDATE_EXPERIENCE_VENDOR,
   UPDATE_PROFILE_VENDOR,
@@ -79,6 +80,7 @@ export default function useHandleVendor() {
   const [updateExperienceVendor] = useMutation(UPDATE_EXPERIENCE_VENDOR, { client: userClient });
   const [createSampleFiles] = useMutation(CREATE_SAMPLE_FILE, { client: userClient });
   const [deleteFile] = useMutation(DELETE_SAMPLE_FILE, { client: userClient });
+  const [disableVendorLspMap] = useMutation(DISABLE_VENDOR_LSP_MAP, { client: userClient });
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
@@ -209,7 +211,7 @@ export default function useHandleVendor() {
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    setToastMsg({ type: 'success', message: `Emails send successfully!` });
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
     getVendorAdmins(id);
   }
 
@@ -295,6 +297,7 @@ export default function useHandleVendor() {
     );
     const singleData = {
       ...vendorInfo?.getVendorDetails,
+      lspId: vendorInfo?.getVendorDetails?.lsp_id,
       facebookURL: vendorInfo?.getVendorDetails?.facebook_url,
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
@@ -328,6 +331,7 @@ export default function useHandleVendor() {
 
   async function getSingleProfileInfo(email) {
     if (!email) return;
+    if (!vendorId) return;
 
     setLoading(true);
     const profileInfo = await loadQueryDataAsync(
@@ -479,7 +483,9 @@ export default function useHandleVendor() {
       languages: smeData?.languages,
       formats: smeData?.output_deliveries,
       sampleFiles: smeData?.sample_files,
-      expertises: smeData?.expertise
+      expertises: smeData?.expertise,
+      isExpertiseOffline: smeData?.is_expertise_offline,
+      isExpertiseOnline: smeData?.is_expertise_online
     };
     setSMEData(getSMEServicesObject(smeDetails));
     return smeDetails;
@@ -502,7 +508,9 @@ export default function useHandleVendor() {
       languages: crtData?.languages,
       formats: crtData?.output_deliveries,
       sampleFiles: crtData?.sample_files,
-      expertises: crtData?.expertise
+      expertises: crtData?.expertise,
+      isExpertiseOffline: crtData?.is_expertise_offline,
+      isExpertiseOnline: crtData?.is_expertise_online
     };
     setCTData(getCTServicesObject(crtDetails));
     return crtDetails;
@@ -525,7 +533,9 @@ export default function useHandleVendor() {
       languages: cdData?.languages,
       formats: cdData?.output_deliveries,
       sampleFiles: cdData?.sample_files,
-      expertises: cdData?.expertise
+      expertises: cdData?.expertise,
+      isExpertiseOffline: cdData?.is_expertise_offline,
+      isExpertiseOnline: cdData?.is_expertise_online
     };
     setCDData(getCDServicesObject(cdDetails));
     return cdDetails;
@@ -591,14 +601,21 @@ export default function useHandleVendor() {
       photo: profileData?.profileImage || null,
       description: profileData?.description.trim() || '',
       languages: profileData?.languages || [],
-      SME_Expertise: profileData?.sme_expertises || [],
-      Classroom_expertise: profileData?.crt_expertises || [],
+      SME_expertise: profileData?.sme_expertises || [],
+      classroom_expertise: profileData?.crt_expertises || [],
       content_development: profileData?.content_development || [],
       experience: [],
       experienceYear: profileData?.experienceYear || '',
       is_speaker: profileData?.isSpeaker || false,
       status: VENDOR_MASTER_STATUS.active
     };
+    if (
+      !sendData?.SME_expertise?.length &&
+      !sendData?.classroom_expertise?.length &&
+      !sendData?.content_development?.length
+    ) {
+      sendData.is_speaker = false;
+    }
     if (typeof sendData?.photo === 'string') sendData.photo = null;
     if (profileData?.profileId) {
       sendData.profileId = profileData?.profileId;
@@ -713,6 +730,37 @@ export default function useHandleVendor() {
 
     let isError = false;
 
+    const currentLsp = sessionStorage?.getItem('lsp_id');
+    // vendor admin is removed from other lsp than vendor creation lsp,
+    // then disable user lsp map for that particular lsp
+    if (currentLsp !== vendorData?.lspId) {
+      const userData = userDataArr?.find((data) => data?.lsp_id === currentLsp);
+      if (!userData?.lsp_id)
+        return setToastMsg({ type: 'danger', message: 'User Lsp Data Not Found' });
+
+      await updateUserLspMap({
+        variables: {
+          user_lsp_id: userData?.user_lsp_id,
+          user_id: vendorAdmin?.id,
+          lsp_id: userData?.lsp_id,
+          status: USER_MAP_STATUS.disable
+        }
+      })
+        .then((res) => {
+          if (!res?.data?.updateUserLspMap)
+            return setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+
+          setToastMsg({ type: 'success', message: 'User Removed Successfully From Lsp' });
+        })
+        .catch(() => {
+          isError = true;
+          setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
+        });
+      return;
+    }
+
+    // vendor admin is removed from vendor and all lsps that user is mapped
+    // if the current lsp is vendor creation lsp
     for (let i = 0; i < userDataArr.length; i++) {
       const userData = userDataArr[i];
 
@@ -737,7 +785,7 @@ export default function useHandleVendor() {
     });
 
     if (isError) {
-      setToastMsg({ type: 'success', message: 'User Removed Successfully' });
+      setToastMsg({ type: 'success', message: 'User Removed Successfully From Vendor' });
       return true;
     }
 
@@ -794,8 +842,7 @@ export default function useHandleVendor() {
           return setToastMsg({ type: 'danger', message: 'Add Experience Error' });
         });
         if (isError) continue;
-        if (!!displaySuccessToaster)
-          setToastMsg({ type: 'success', message: 'Experience Created' });
+        if (!!displaySuccessToaster) setToastMsg({ type: 'success', message: 'Experience Added' });
 
         experienceData.push(res?.data?.createExperienceVendor);
         continue;
@@ -899,6 +946,25 @@ export default function useHandleVendor() {
 
     let isError = false;
 
+    // disable vendor from lsp if current lsp is not vendor creation lsp
+    const currentLsp = sessionStorage?.getItem('lsp_id');
+    if (currentLsp !== vendorData?.lspId) {
+      disableVendorLspMap({
+        variables: { vendorId: vendorTableData?.vendorId, lspId: currentLsp }
+      })
+        .then((res) => {
+          if (!res?.data?.disableVendorLspMap)
+            return setToastMsg({ type: 'danger', message: 'Vendor Disabled Failed' });
+
+          onSuccess();
+
+          setToastMsg({ type: 'success', message: 'Vendor Disabled From Lsp' });
+        })
+        .catch((err) => setToastMsg({ type: 'danger', message: 'Disable Vendor Error' }));
+      return;
+    }
+
+    // mutation for vendor creation lsp
     const res = await updateVendor({
       variables: sendData,
       update: (_, { data }) => {

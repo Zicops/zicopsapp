@@ -1,5 +1,5 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { USER_MAP_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   CdServicesAtom,
@@ -64,10 +64,24 @@ export default function ManageVendorTabs() {
   useEffect(() => {
     if (!router.isReady) return;
     if (shallowRoute) return;
-    if (vendorCurrentState?.isSaved) return;
+    if (!vendorCurrentState?.isSaved) return;
 
-    setVendorCurrentState(getVendorCurrentStateObj());
-  }, [router.isReady, vendorData, smeData, ctData, cdData]);
+    setVendorCurrentState(getVendorCurrentStateObj({enabledServices: vendorCurrentState?.enabledServices}));
+  }, [
+    router.isReady,
+    vendorData?.name,
+    vendorData?.address,
+    vendorData?.vendorAdminUsers,
+    vendorData?.website,
+    vendorData?.facebookURL,
+    vendorData?.instagramURL,
+    vendorData?.twitterURL,
+    vendorData?.linkedinURL,
+    vendorData?.description,
+    smeData,
+    ctData,
+    cdData
+  ]);
 
   useEffect(() => {
     if (shallowRoute) return;
@@ -99,7 +113,11 @@ export default function ManageVendorTabs() {
   }, [vendorId]);
 
   useEffect(() => {
-    setEmailId(vendorAdminUsers?.map((user) => user?.email) || []);
+    setEmailId(
+      vendorAdminUsers
+        ?.map((user) => (user?.user_lsp_status !== USER_MAP_STATUS.disable ? user?.email : null))
+        ?.filter((email) => email) || []
+    );
 
     if (isIndividual && vendorAdminUsers?.[0]?.email)
       getSingleProfileInfo(vendorAdminUsers?.[0]?.email);
@@ -206,7 +224,7 @@ export default function ManageVendorTabs() {
           const crtData = await addUpdateCrt(tab === tabData[1].name);
           const cdData = await addUpdateCd(tab === tabData[1].name);
 
-          const enabledServices = [];
+          const enabledServices = structuredClone([...vendorCurrentState.enabledServices]);
 
           if (smeData?.is_applicable) enabledServices.push('sme');
           if (crtData?.is_applicable) enabledServices.push('crt');

@@ -2,6 +2,7 @@ import { GET_USER_EXAM_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { BookmarkStartTimeAtom } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { getEndTime } from '@/components/LearnerExamComp/Logic/exam.helper.js';
+import SessionJoinCard from '@/components/Vctools/SessionJoinCard';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -19,27 +20,32 @@ import {
   filterTopicContent
 } from '../../../../helper/data.helper';
 import {
-  getTopicExamObj,
-  isLoadingAtom,
+  ActiveClassroomTopicIdAtom,
   QuizAtom,
   TopicAtom,
   TopicContentAtom,
-  TopicExamAtom
+  TopicExamAtom,
+  getTopicExamObj,
+  isLoadingAtom
 } from '../../../../state/atoms/module.atoms';
 import {
-  getVideoObject,
   QuizProgressDataAtom,
   UserCourseDataAtom,
-  VideoAtom
+  VideoAtom,
+  getVideoObject
 } from '../../../../state/atoms/video.atom';
-import styles from '../../courseBody.module.scss';
 import { updateVideoData } from '../../Logic/courseBody.helper';
 import {
+  ShowNotAssignedErrorAtom,
   imageTypeTopicBox,
-  passingCriteriaSymbol,
-  ShowNotAssignedErrorAtom
+  passingCriteriaSymbol
 } from '../../Logic/topicBox.helper';
 import useLoadExamData from '../../Logic/useLoadExamData';
+import styles from '../../courseBody.module.scss';
+import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { getSessionStatus } from '@/components/Vctools/help/vctool.helper';
+import moment from 'moment';
 
 let topicInstance = 0;
 
@@ -61,6 +67,8 @@ export default function TopicBox({
   setSelectedModule,
   showResources
 }) {
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(topic?.id));
+
   const { name, description, type } = topic;
   const duration = topicContent[0]?.duration.toString();
   // const duration = 3965;
@@ -78,6 +86,9 @@ export default function TopicBox({
 
   const bookmarkStartTime = useRecoilValue(BookmarkStartTimeAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
+  const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
+    ActiveClassroomTopicIdAtom
+  );
   const [switchToTopic, setSwitchToTopic] = useRecoilState(SwitchToTopicAtom);
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [quizData, setQuizData] = useRecoilState(QuizAtom);
@@ -452,40 +463,60 @@ export default function TopicBox({
             return setShowAlert(true);
 
           // if (!userCourseData?.userCourseMapping?.user_course_id) return;
-          if (type === 'Assessment') return loadTopicExam();
+          if (type === 'Assessment') {
+            setActiveClassroomTopicId(null);
+            setVideoData(getVideoObject());
+            return loadTopicExam();
+          }
           if (type === 'Classroom') {
-            const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topicData, moduleId);
-            const currentTopicIndex = filteredTopicData.findIndex((t) => t.id === topic.id);
+            if (!classroomData?.id) return;
 
-            const currentModuleIndex = allModuleOptions.findIndex(
-              (m) => m.value === currrentModule.value
+            const status = getSessionStatus(
+              +classroomData?.trainingStartTime,
+              +classroomData?.trainingEndTime
             );
+            const endTime = moment(classroomData.trainingEndTime * 1000);
+            setTopicExamData(getTopicExamObj());
 
-            return setVideoData({
-              ...videoData,
-              videoSrc: null,
-              type: 'classroom',
-              startPlayer: true,
-              isPreview: false,
-              currentTopicIndex: currentTopicIndex,
+            const isRecordingAvailable = moment().diff(endTime, 'minute') >= 5;
 
-              topicContent: [],
-              currentTopicContentIndex: 0,
-              currentSubtitleIndex: 0,
+            if (status === 2 && isRecordingAvailable) {
+              updateVideoData(
+                { ...(videoData || {}), videoSrc: '/videos/classroom-recording-demo.webm' },
+                setVideoData,
+                { moduleId: moduleId, topicId: topic.id },
+                topicData,
+                [
+                  {
+                    topicId: topic?.id,
+                    moduleId: topic?.moduleId,
+                    id: 'uniqueId',
+                    language: classroomData?.language,
+                    type: 'mp4',
+                    duration: classroomData?.duration,
+                    is_default: true,
+                    contentUrl: '/videos/classroom-recording-demo.webm'
+                  }
+                ],
+                allModuleOptions,
+                currrentModule,
+                setSelectedModule,
+                userCourseData,
+                setUserCourseData
+              );
+              return;
+            }
 
-              allModuleTopic: filteredTopicData,
-              currentModuleId: moduleId,
-
-              allModuleOptions: allModuleOptions,
-              currentModuleIndex: currentModuleIndex,
-              setNewModule: setSelectedModule
-            });
+            setVideoData(getVideoObject());
+            return setActiveClassroomTopicId(topic?.id);
           }
 
           // if (type === 'Content') {
           if (!topicContent.length) return console.log('no topic content found');
 
           setTopicExamData(getTopicExamObj());
+          setActiveClassroomTopicId(null);
+
           updateVideoData(
             videoData,
             setVideoData,
@@ -516,7 +547,10 @@ export default function TopicBox({
           </div> */}
         </div>
 
-        <div className={`${styles.topic_loop} ${isTopicActive ? styles.activeTopic : ''}`}>
+        <div
+          className={`${styles.topic_loop} ${isTopicActive ? styles.activeTopic : ''}  ${
+            type === 'Classroom' && !classroomData?.id ? 'disabled' : ''
+          }`}>
           <div className={`${styles.topic_img}`}>
             <img src={`${topicImageLink}`} alt="" />
           </div>
@@ -560,12 +594,14 @@ export default function TopicBox({
 
           {type === 'Content' && (
             <div className={`${styles.topic_player}`}>
-              {!isDocument && (
+              {!isDocument ? (
                 <div className={`${styles.progress_bar}`}>
                   <div className={`${styles.progressBarFill}`} style={progressBarStyles}>
                     {/* <img src="images/progressTriangle.png" alt="" /> */}
                   </div>
                 </div>
+              ) : (
+                <div className={`${styles.startReading}`}>Start Reading</div>
               )}
               <div className={`${styles.details}`}>
                 <div>{isDocument ? 'Document' : 'e-Content'}</div>
@@ -671,7 +707,9 @@ export default function TopicBox({
             </div>
           )}
           {type === 'Classroom' && (
-            <div className={`${styles.topic_player}`}>Click here to open classroom</div>
+            <div className={`${styles.topic_player}`}>
+              <ClassroomTopicSection topicId={topic?.id} />
+            </div>
           )}
         </div>
       </div>

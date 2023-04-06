@@ -17,7 +17,7 @@ import DragDrop from './DragAndDrop';
 export default function CourseDetails() {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
-  const { handleChange, handleFileInput } = useHandleCourseData();
+  const { handleCourseMetaChange, handleFileInput } = useHandleCourseData();
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
   function getFileName(key = '', limit = 45) {
@@ -61,7 +61,9 @@ export default function CourseDetails() {
             isDisabled: isDisabled
           }}
           styleClass={`${styles.makeLabelInputColumnWise} ${styles.marginBetweenInputs}`}
-          changeHandler={(e) => handleChange({ expectedCompletion: e?.target?.value || null })}
+          changeHandler={(e) =>
+            handleCourseMetaChange({ expectedCompletion: e?.target?.value || null })
+          }
         />
       )}
 
@@ -83,7 +85,7 @@ export default function CourseDetails() {
           isDisabled: isDisabled
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
-        changeHandler={(e) => handleChange({ summary: e?.target?.value })}
+        changeHandler={(e) => handleCourseMetaChange({ summary: e?.target?.value })}
       />
 
       <div className={`${styles.makeLabelInputColumnWise} ${styles.marginBetweenInputs}`}>

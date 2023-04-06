@@ -17,13 +17,13 @@ export default function VendorIndividualProfiles({ data }) {
     serviceArray.push('Speaker');
   }
   if (data?.sme_expertise?.length) {
-    serviceArray.push('SME');
+    serviceArray.push('Subject Matter');
   }
   if (data?.classroom_expertise?.length) {
-    serviceArray.push('CRT');
+    serviceArray.push('Classroom Training');
   }
   if (data?.content_development?.length) {
-    serviceArray.push('CD');
+    serviceArray.push('Content Development');
   }
 
   return (
@@ -44,14 +44,20 @@ export default function VendorIndividualProfiles({ data }) {
       <div className={`${styles.rightSide}`}>
         <div className={`${styles.servicesPillContainer}`}>
           <div className={`${styles.servicesPill}`}>
-            {data?.sme_expertise?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.sme_expertise?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
-            {data?.classroom_expertise?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.classroom_expertise?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
-            {data?.content_development?.map((expert) => (
-              <p className={`${styles.vendorExpertise}`}>{expert}</p>
+            {data?.content_development?.map((expert, index) => (
+              <p className={`${styles.vendorExpertise}`} key={index}>
+                {expert}
+              </p>
             ))}
           </div>
         </div>

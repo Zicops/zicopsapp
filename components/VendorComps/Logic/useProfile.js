@@ -80,7 +80,15 @@ export default function useProfile() {
     setTempSmeExpertise(smeData?.expertises);
     setTempCdExpertise(cdData?.expertises);
     setTempCrtExpertise(ctData?.expertises);
-  }, [vendorData?.type]);
+  }, [
+    vendorData?.type,
+    smeData?.expertises,
+    cdData?.expertises,
+    ctData?.expertises,
+    smeData?.languages,
+    ctData?.languages,
+    cdData?.languages
+  ]);
 
   const completeExperienceHandler = () => {
     const _experienceData = {

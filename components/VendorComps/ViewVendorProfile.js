@@ -12,7 +12,7 @@ const ViewVendorProfile = ({ data }) => {
         <div className={`${styles.profileDetails}`}>
           <p className={`${styles.profileName}`}>{data?.first_name + ' ' + data?.last_name}</p>
           {data?.sme_expertise?.map((expert, index) => (
-            <span>
+            <span key={index}>
               {expert} {index + 1 !== data?.expertise?.length ? ' | ' : ''}
             </span>
           ))}
