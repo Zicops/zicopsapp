@@ -198,7 +198,10 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add experiences"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setIsOpenExpriences(true)}
+              handleClick={() => {
+                setIsOpenExpriences(true);
+                setExperiencesData(getExperiencesObject());
+              }}
               isDisabled={isViewPage}
             />
           ) : (
