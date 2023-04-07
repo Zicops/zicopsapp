@@ -424,7 +424,8 @@ const AddVendorProfile = ({ data = {} }) => {
         open={isOpenExpriences}
         title={`${
           experiencesData?.expId ||
-          experiencesData?.localIndex !== profileData?.experienceData?.length
+          (experiencesData?.localIndex !== profileData?.experienceData?.length &&
+            experiencesData?.localIndex !== null)
             ? 'Edit'
             : 'Add'
         } Experience`}
