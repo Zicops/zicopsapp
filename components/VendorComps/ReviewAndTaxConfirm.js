@@ -2,10 +2,9 @@ import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ReviewOrderTop from './ReviewOrderTop';
 import ReviewOrderBottom from './ReviewOrderBottom';
 import { useRecoilState } from 'recoil';
-import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
-const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus }) => {
+import { OrderAtom } from '@/state/atoms/vendor.atoms';
+const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus, currency }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
-  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
 
   const taxAmount = (orderData?.total * orderData?.tax) / 100;
 
@@ -19,7 +18,7 @@ const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus }) => {
       <div className={`${styles.hr}`} />
       <ReviewOrderTop isConfirm={true} />
       <div className={`${styles.hr}`}></div>
-      <ReviewOrderBottom isTax={false} taxAmount={taxAmount} />
+      <ReviewOrderBottom isTax={false} taxAmount={taxAmount} currency={currency} />
       <div className={`${styles.hr}`}></div>
     </div>
   );

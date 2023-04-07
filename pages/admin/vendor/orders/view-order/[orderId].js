@@ -5,7 +5,7 @@ import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import ViewOrder from '@/components/VendorComps/ViewOrder';
 
-export default function EditOrderInfo() {
+export default function ViewOrderInfo() {
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />
