@@ -2,6 +2,7 @@ import Select from 'react-select';
 import Creatable from 'react-select/creatable';
 import { labeledDropdownWrapper } from '../formComponents.module.scss';
 import { customSelectStyles } from '../Logic/formComponents.helper';
+import CustomMenu from './CustomMenu';
 
 export default function LabeledDropdown({
   dropdownOptions,
@@ -13,7 +14,8 @@ export default function LabeledDropdown({
   isFiftyFifty = false,
   isFullWidth = false,
   customDropdownStyles = {},
-  isCreateable = false
+  isCreateable = false,
+  isDisplayButton = false
 }) {
   let {
     inputName,
@@ -37,6 +39,9 @@ export default function LabeledDropdown({
   let selectedValue = null;
   if (value?.value) selectedValue = value;
   if (isMulti && value?.length) selectedValue = value;
+
+  let customComponents = '';
+  if (isDisplayButton) customComponents = CustomMenu;
 
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass}`}>
@@ -72,6 +77,7 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
+          components={{ Menu: customComponents }}
         />
       ) : (
         <Creatable
@@ -97,6 +103,7 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
+          components={{ Menu: customComponents }}
         />
       )}
     </div>
