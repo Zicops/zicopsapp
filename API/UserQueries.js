@@ -1299,7 +1299,7 @@ export const GET_VENDORS_DETAILS = gql`
   }
 `;
 
-export const GET_VENDOR_ORDER = gql`
+export const GET_ORDERS_ORDERID = gql`
   query getOrders($orderId: [String]) {
     getOrders(order_id: $orderId) {
       id

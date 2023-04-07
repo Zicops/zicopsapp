@@ -39,7 +39,7 @@ export default function OrderMaster({ orderData, services }) {
         </div>
       </div>
       <div className={`${styles.orderDescription}`}>
-        <p>Order Description</p>
+        <p>Order Description : </p>
         <p className={`${styles.valueDescription}`}>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is
           simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy

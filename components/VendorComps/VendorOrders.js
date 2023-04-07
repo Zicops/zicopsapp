@@ -5,83 +5,23 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 import useHandleVendor from './Logic/useHandleVendor';
-
-// const data = [
-//   {
-//     id: '1001',
-//     order_id: 110,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Company',
-//     services: 'SME, Content development',
-//     status: 'Added'
-//   },
-//   {
-//     id: '1001',
-//     order_id: 111,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Freelancer',
-//     services: 'SME, Content development',
-//     status: 'Confirmed'
-//   },
-//   {
-//     id: '1002',
-//     order_id: 112,
-//     vendor_name: 'Mnop learning',
-//     vendor_type: 'Company',
-//     services: 'SME, Content development',
-//     status: 'Added'
-//   },
-//   {
-//     id: '1003',
-//     order_id: 113,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Freelancer',
-//     services: 'Training',
-//     status: 'Added'
-//   },
-//   {
-//     id: '1004',
-//     order_id: 114,
-//     vendor_name: 'Mnop learning',
-//     vendor_type: 'Company',
-//     services: 'SME, Content development',
-//     status: 'Confirmed'
-//   },
-//   {
-//     id: '1005',
-//     order_id: 115,
-//     vendor_name: 'Mnop learning',
-//     vendor_type: 'Company',
-//     services: 'Training',
-//     status: 'Added'
-//   },
-//   {
-//     id: '1006',
-//     order_id: 116,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Company',
-//     services: 'SME, Content development',
-//     status: 'Confirmed'
-//   },
-//   {
-//     id: '1007',
-//     order_id: 117,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Company',
-//     services: 'Training',
-//     status: 'Added'
-//   },
-//   {
-//     id: '1008',
-//     order_id: 118,
-//     vendor_name: 'Abcd learning ',
-//     vendor_type: 'Company',
-//     services: 'SME, Content development',
-//     status: 'Added'
-//   }
-// ];
+import {
+  getVendorOrderObject,
+  OrderAtom,
+  ServicesAtom,
+  VendorServicesListAtom,
+  getVendorServicesList,
+  getVendorServicesObject
+} from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { AllServicesAtom } from '@/state/atoms/vendor.atoms';
 
 const VendorOrders = () => {
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
+  const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const { getAllOrders, orderDetails } = useHandleMarketYard();
   const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
@@ -91,21 +31,23 @@ const VendorOrders = () => {
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
     await getAllOrders(lspId);
+    setAllServicesData([]);
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
   }, []);
   useEffect(async () => {
     const vendorIds = orderDetails?.map((data) => data?.vendor_id);
-    // let vendorDataArray = [];
-    // for (let i = 0; i < vendorIds?.length; i++) {
-    //   const vendorDetails = await getSingleVendorInfo(vendorIds[i]);
-    //   vendorDataArray.push(vendorDetails);
-    // }
     await getVendors(vendorIds);
+  }, [orderDetails]);
+
+  useEffect(() => {
     const vendorDatails = orderDetails?.map((item, index) =>
       Object.assign({}, item, vendorInfo[index])
     );
     setVendorOrderDetails(vendorDatails);
-    // setOrderTableData(orderData);
-  }, [orderDetails]);
+  }, [vendorInfo]);
+
   const columns = [
     {
       field: 'id',
@@ -129,7 +71,10 @@ const VendorOrders = () => {
       field: 'services',
       headerClassName: 'course-list-header',
       headerName: 'Services',
-      flex: 1.5
+      flex: 1.5,
+      renderCell: (params) => {
+        return params?.row?.services?.join(', ').toUpperCase();
+      }
     },
     {
       field: 'status',

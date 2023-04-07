@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import VendorPopUp from './common/VendorPopUp';
 import ReviewAndTaxConfirm from './ReviewAndTaxConfirm';
+import { useRouter } from 'next/router';
 
 const ViewOrder = () => {
   const [viewOrder, setViewOrder] = useState(true);
   const [currentComponent, setCurrentComponent] = useState(0);
-
+  const router = useRouter();
   const confirmOrderHandler = async () => {
     setCurrentComponent(currentComponent + 1);
 

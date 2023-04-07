@@ -26,7 +26,9 @@ export default function OrderInfo() {
     getAllOrders,
     getOrderServices,
     getVendorServices,
-    addUpdateOrderServices
+    addUpdateOrderServices,
+    getOrders,
+    addUpdateOrder
   } = useHandleMarketYard();
 
   const router = useRouter();
@@ -45,6 +47,7 @@ export default function OrderInfo() {
     await getOrderServices(orderInfo[0]?.id);
     await getSingleVendorInfo(orderInfo[0]?.vendor_id);
     await getVendorServices(orderInfo[0]?.vendor_id);
+    await getOrders(orderId);
   }, [orderInfo[0]?.vendor_id, orderInfo[0]?.id]);
 
   useEffect(() => {
@@ -68,7 +71,6 @@ export default function OrderInfo() {
     }
   }, [allServicesData]);
 
-  console.info(selectedServicesForOrder, allServicesData, servicesData);
   const tabData = [
     {
       name: 'Master',
@@ -95,8 +97,11 @@ export default function OrderInfo() {
             setTab={setTab}
             footerObj={{
               showFooter: true,
-              handleSubmit: () => {
-                addUpdateOrderServices();
+              submitDisplay: 'Update',
+              cancelDisplay: 'Cancel',
+              handleSubmit: async () => {
+                await addUpdateOrderServices(orderId);
+                await addUpdateOrder(orderInfo[0]?.vendor_id, orderId);
               },
               status: VENDOR_MASTER_STATUS.draft.toUpperCase()
             }}

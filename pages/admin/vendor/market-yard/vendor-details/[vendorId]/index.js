@@ -40,6 +40,9 @@ export default function VendorInfo() {
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const vendorSingleProfiles = useRecoilValue(VendorProfileAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
@@ -47,9 +50,6 @@ export default function VendorInfo() {
   const [completeOrder, setCompleteOrder] = useState(false);
   const [isShowTax, setShowTax] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] =
-    useRecoilState(VendorServicesListAtom);
-  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -140,7 +140,7 @@ export default function VendorInfo() {
     if (currentComponent === 2) {
       setAddRate(false);
       setCompleteOrder(true);
-      const orderDetails = await addUpdateOrder();
+      const orderDetails = await addUpdateOrder(vendorId);
       setOrderData(orderDetails);
       await addUpdateOrderServices(orderDetails?.id);
     }

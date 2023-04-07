@@ -4,7 +4,8 @@ import {
   GET_VENDOR_SERVICES,
   userQueryClient,
   GET_PAGINATED_VENDORS,
-  GET_PAGINATED_VENDOR_ORDERS
+  GET_PAGINATED_VENDOR_ORDERS,
+  GET_ORDERS_ORDERID
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
@@ -126,7 +127,7 @@ export default function useHandleMarketYard() {
 
   async function getOrderServices(orderId) {
     setLoading(true);
-    const servicesData = await loadAndCacheDataAsync(
+    const servicesData = await loadQueryDataAsync(
       GET_ORDER_SERVICES,
       { order_id: orderId },
       {},
@@ -147,7 +148,19 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
-  async function addUpdateOrder() {
+  async function getOrders(orderId) {
+    setLoading(true);
+    const orders = await loadQueryDataAsync(
+      GET_ORDERS_ORDERID,
+      { orderId: orderId },
+      {},
+      userQueryClient
+    );
+    setOrderData(orders?.getOrders[0]);
+    setLoading(false);
+  }
+
+  async function addUpdateOrder(vendorId, orderId) {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
       vendorId: vendorId,
@@ -158,8 +171,8 @@ export default function useHandleMarketYard() {
       status: VENDOR_ORDER_STATUS.added
     };
     let isError = false;
-    if (orderData?.orderId) {
-      sendData.orderId = smeData?.orderId;
+    if (orderId) {
+      sendData.orderId = orderId;
       await updateOrder({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
@@ -249,6 +262,7 @@ export default function useHandleMarketYard() {
     getLspSpeakers,
     speakerDetails,
     getVendorServices,
-    services
+    services,
+    getOrders
   };
 }
