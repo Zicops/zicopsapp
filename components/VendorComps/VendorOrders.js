@@ -53,7 +53,7 @@ const VendorOrders = () => {
       field: 'id',
       headerClassName: 'course-list-header',
       headerName: 'Order ID',
-      flex: 0.6
+      flex: 0.9
     },
     {
       field: 'name',
@@ -71,7 +71,7 @@ const VendorOrders = () => {
       field: 'services',
       headerClassName: 'course-list-header',
       headerName: 'Services',
-      flex: 1.5,
+      flex: 1.1,
       renderCell: (params) => {
         return params?.row?.services?.join(', ').toUpperCase();
       }
@@ -83,7 +83,9 @@ const VendorOrders = () => {
       flex: 0.8
     },
     {
+      field: 'action',
       headerClassName: 'course-list-header',
+      headerName: 'Action',
       flex: 0.5,
       renderCell: (params) => {
         const buttonArr = [
@@ -111,7 +113,7 @@ const VendorOrders = () => {
         tableHeight="70vh"
         pageSize={getPageSizeBasedOnScreen()}
         data={vendorOrderDetails}
-        loading={vendorOrderDetails == null}
+        loading={!vendorOrderDetails?.length}
       />
     </>
   );
