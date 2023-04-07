@@ -79,9 +79,7 @@ export default function VendorDetails({ data }) {
               )}
             </>
           ))}
-          <small>
-            {socialMediaData.every((data) => !data?.value) && 'No Social Media Available'}
-          </small>
+          <small>{socialMediaData.every((data) => !data?.value) && 'NA'}</small>
         </div>
       </div>
     </div>
