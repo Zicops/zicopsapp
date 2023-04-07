@@ -92,6 +92,9 @@ export default function useHandleVendorMaster() {
       const _id = res.data.addVendor.vendorId;
       router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
       return _id;
+    } else {
+      setToastMsg({ type: 'warning', message: 'Please Enter your Vendor Name' });
+      setLoading(false);
     }
   }
 

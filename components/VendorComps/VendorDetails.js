@@ -20,7 +20,7 @@ export default function VendorDetails({ data }) {
 
   const individualVendorDetails = [
     { label: 'Years of Experience', value: individualVendorState?.experienceYear || 'NA' },
-    { label: 'Speaker', value: individualVendorState?.is_speaker ? 'Yes' : 'No' }
+    { label: 'Speaker', value: individualVendorState?.isSpeaker ? 'Yes' : 'No' }
   ];
 
   const socialMediaData = [
@@ -79,9 +79,7 @@ export default function VendorDetails({ data }) {
               )}
             </>
           ))}
-          <small>
-            {socialMediaData.every((data) => !data?.value) && 'No Social Media Available'}
-          </small>
+          <small>{socialMediaData.every((data) => !data?.value) && 'NA'}</small>
         </div>
       </div>
     </div>

@@ -102,7 +102,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add SME Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Service Details Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Added' });
 
     const data = res?.data?.createSubjectMatterExpertise;
     setSMEData(
@@ -124,7 +124,7 @@ export default function useHandleVendorServices() {
   async function addUpdateCrt(displayToaster = true) {
     if (!(ctData?.isApplicable || vendorCurrentState?.enabledServices?.includes('crt'))) return;
     if (
-      !ctData?.serviceDescription.length ||
+      !ctData?.serviceDescription.lengths ||
       !ctData?.expertises?.length ||
       !ctData?.languages?.length
     )
@@ -182,7 +182,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'Add CRT Error' });
     });
     if (isError) return;
-    setToastMsg({ type: 'success', message: 'Service Details Created' });
+    setToastMsg({ type: 'success', message: 'Service Details Added' });
 
     const data = res?.data?.createClassRoomTraining;
     setCTData(
@@ -263,7 +263,7 @@ export default function useHandleVendorServices() {
       return setToastMsg({ type: 'danger', message: 'CD Created Error' });
     });
     if (isError) return;
-    if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Created' });
+    if (displayToaster) setToastMsg({ type: 'success', message: 'Service Details Added' });
 
     const data = res?.data?.createContentDevelopment;
     setCDData(
