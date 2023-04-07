@@ -1,0 +1,68 @@
+.lobbyPageContainer {
+  height: 20em;
+  width: 35em;
+  overflow: hidden;
+
+  margin: auto;
+
+  border: 1px solid $secondary;
+  background-color: $darkTwo;
+  border-radius: 10px;
+
+  display: grid;
+  grid-template-rows: 80% 20%;
+
+  .preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+
+    video,
+    img {
+      height: 100%;
+    }
+
+    img {
+      border-radius: 50%;
+      overflow: hidden;
+
+      background-color: $darkThree;
+
+      height: 10em;
+      width: 10em;
+    }
+  }
+
+  .actionBtns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+
+    background-color: $darkOne;
+
+    div {
+      display: flex;
+      gap: 1em;
+    }
+
+    .offIcon {
+      background-color: $error;
+      border-color: transparent;
+    }
+
+    .activeIcon {
+      background-color: $secondary;
+      border-color: transparent;
+    }
+
+    .joinBtn {
+      border: none;
+      outline: none;
+      background-color: $primary;
+      padding: 0.6em 1em;
+      border-radius: 50px;
+    }
+  }
+}

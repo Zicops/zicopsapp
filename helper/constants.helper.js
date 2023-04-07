@@ -266,3 +266,6 @@ export const FILE_TYPES = {
     '.webm'
   ].join(', ')
 };
+
+// LIBRARY CONSTANTS
+export const JITSI_SELF_HOSTED_DOMAIN = 'live.zicops.com';

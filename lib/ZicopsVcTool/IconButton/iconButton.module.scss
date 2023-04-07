@@ -1,0 +1,29 @@
+$size: 35px;
+
+.iconBtn {
+  color: $white;
+  border: 1px solid $white;
+  outline: none;
+  background-color: transparent;
+
+  border-radius: 50%;
+  height: $size;
+  width: $size;
+
+  object-fit: contain;
+  overflow: hidden;
+
+  padding: 0.6em;
+
+  cursor: pointer;
+
+  &.active {
+    background-color: $secondary;
+    border-color: transparent;
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+  }
+}

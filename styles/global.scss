@@ -19,6 +19,10 @@ body {
   // overflow-y: overlay;
 }
 
+button {
+  cursor: pointer;
+}
+
 .adminContent {
   background-color: $darkOne;
   float: right;

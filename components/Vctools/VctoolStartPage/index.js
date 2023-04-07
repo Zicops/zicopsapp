@@ -7,6 +7,7 @@ import VcMaintool from '..';
 import { getSessionStatus } from '../help/vctool.helper';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
+import ClassroomMeetingPage from './ClassroomMeetingPage';
 
 const monthName = [
   'January',
@@ -57,8 +58,9 @@ const VCtoolStartPage = ({ topicId = null }) => {
           <img src="/images/bigarrowleft.png" alt="" />
         </span>
 
+        {/* <VcMaintool vcData={topicClassroomData} /> */}
         {isSessionActive ? (
-          <VcMaintool vcData={topicClassroomData} />
+          <ClassroomMeetingPage />
         ) : (
           <>
             {!isSessionEnded && (

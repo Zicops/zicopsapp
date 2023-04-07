@@ -1,0 +1,39 @@
+.toolbarBottom {
+  position: absolute;
+  bottom: 0em;
+
+  width: 100%;
+
+  padding: 0.8em 1em;
+  display: flex;
+  justify-content: space-between;
+
+  section {
+    display: flex;
+    gap: 1em;
+  }
+
+  .leaveBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+
+    background-color: red;
+    border: none;
+    outline: none;
+
+    border-radius: 20px;
+    padding: 0.5em 1em;
+    color: $white;
+  }
+
+  .inactiveBtn {
+    background-color: $secondary;
+    border-color: transparent;
+  }
+
+  .handRaised {
+    background-color: $white;
+  }
+}
