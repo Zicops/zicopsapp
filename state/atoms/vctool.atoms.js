@@ -10,7 +10,6 @@ export const vcModeratorControlls = atom({
     onVideo: false
   }
 });
-
 export const vcResource = atom({
   key: 'vcResource',
   default: [
@@ -81,6 +80,21 @@ export const pollArray = atom({
     }
   ]
 });
+export const vcActivePoll=atom({
+  key:'vcActivePoll',
+  default:[]
+});
+export const vcEndedPoll=atom({
+  key:'vcEndedPoll',
+  default:[]
+})
+export const participantPoll=atom({
+  key:"participantPoll",
+  default:{
+    savedPoll:[],
+    endedPoll:[]
+  }
+})
 
 export const quizArray = atom({
   key: 'quizArray',

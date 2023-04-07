@@ -924,6 +924,8 @@
 .pollQuestionScreen {
   width: 296px;
   height: 100%;
+  padding-bottom: 6px;
+  padding-top: 6px;
   margin-top: 7px;
   background-color: #121212;
   padding-left: 10px;
@@ -939,6 +941,15 @@
   display: flex;
   width: 30%;
   justify-content: space-between;
+  align-items: center;
+  div {
+    color: $white;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+#endedPoll {
+  color: #f53d41;
 }
 
 .publishPollHead {
@@ -960,20 +971,36 @@
   font-size: 14px;
   line-height: 24px;
   color: white;
+  display: flex;
   background-color: #121212;
 }
 
-.pollSavedLabel {
+.pollSavedLabel,
+.pollActiveLabel,
+.pollEndedLabel {
   //
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
-  color: #f6ac3c;
   margin-bottom: 12px;
   margin-top: 6px;
+  display: flex;
 }
-
+.pollSavedLabel {
+  color: #f6ac3c;
+}
+.pollActiveLabel {
+  color: #26ba4d;
+}
+.pollEndedLabel {
+  color: #acacac;
+}
+.pollScreenLable
+{
+  display: flex;
+  margin-top: 12px;
+}
 .pollBoxOptions {
   width: 100%;
   margin: auto;
@@ -1019,7 +1046,16 @@
   line-height: 24px;
   color: #ffffff;
 }
-
+.publishPoll {
+  width: 276px;
+  margin-right: 6px;
+  height: 40px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  color: black;
+  background-color: #6bcfcf;
+}
 .pollBoxBtns > button,
 .quizBoxBtns > button {
   border: 1px solid #292f2f;
@@ -1063,19 +1099,45 @@
   width: 296px;
   height: 99%;
 }
-
+.endPollBtn {
+  width: 276px;
+  margin-right: 6px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #26292c;
+  border: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 16px;
+  color: #f53d41;
+  margin-top: 8px;
+}
 // styling pollscreenParticipant
 
-// .publishPoll
-// {
-//     width: 100%;
-//     color: red;
+.participantPollBoxOptions > div {
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border: 1px solid #292f2f;
+  margin-top: 10px;
+  margin-left: -4px;
+}
+.participantPollBoxBtns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 4px;
 
-//     font-style: normal;
-//     font-weight: 400;
-//     font-size: 16px;
-//     line-height: 24px;
-// }
+  button {
+    width: 90px;
+    height: 40px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #6bcfcf;
+  }
+}
 // styling Participants bar
 .participantsBar {
   z-index: 1020;
@@ -2137,12 +2199,18 @@
   width: 70%;
   display: flex;
   justify-content: right;
+  align-items: center;
 
   img {
     width: 12px;
   }
 }
-
+#endPoll {
+  color: #f53d41;
+}
+#endedPoll {
+  color: #747474;
+}
 .questionScreen {
   height: 60vh;
   margin-top: 7px;
