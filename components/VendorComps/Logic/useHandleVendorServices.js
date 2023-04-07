@@ -122,8 +122,6 @@ export default function useHandleVendorServices() {
   }
 
   async function addUpdateCrt(displayToaster = true) {
-    console.info(ctData?.isApplicable, vendorCurrentState?.enabledServices);
-
     if (!(ctData?.isApplicable || vendorCurrentState?.enabledServices?.includes('crt'))) return;
     if (
       !ctData?.serviceDescription.lengths ||
