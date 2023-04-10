@@ -712,7 +712,21 @@
   font-size: 1.5rem;
   margin-right: 14px;
 }
-
+//  styling delete pollPopup
+.canceldeletPoll
+{
+  background-color: #26292C;
+  color: #ACACAC;
+  border: none;
+  outline: none;
+}
+.deletePoll
+{
+  background-color: #F53D41;
+  border: none;
+  outline: none;
+  color: white;
+}
 // PollQA component
 
 .pollQA {

@@ -3,8 +3,17 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 const PollBox = ({ pollData }) => {
-  const { pollNumber, publish, pollQuestion, options, deletePoll, publishData, pollType, endPoll } =
-    pollData;
+  const {
+    pollNumber,
+    publish,
+    pollQuestion,
+    options,
+    deletePoll,
+    publishData,
+    pollType,
+    endPoll,
+    editPollFunc
+  } = pollData;
   const [expand, setexpand] = useState(true);
   return (
     <div className={`${styles.quizQuestion}`}>
@@ -83,7 +92,9 @@ const PollBox = ({ pollData }) => {
                     }}>
                     Delete
                   </button>
-                  <button className={`${styles.pollBoxEditBnt}`}>Edit</button>
+                  <button className={`${styles.pollBoxEditBnt}`} onClick={() => editPollFunc()}>
+                    Edit
+                  </button>
                 </div>
                 <button
                   className={`${styles.publishPoll}`}

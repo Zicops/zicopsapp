@@ -24,7 +24,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
     if (title === '')
       return (
         <>
-          {pollInfo.length > 1 || activePoll.length > 1 || endedPoll.length > 1
+          {pollInfo.length > 1 || activePoll.length >= 1 || endedPoll.length >= 1
             ? pollComponent[2].component
             : pollComponent[1].component}{' '}
         </>
@@ -67,10 +67,13 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
           setPollTitle={() => {
             setPollTitle('pollQA');
           }}
-          deletePoll={() => {
-            deletePollPopUp();
+          deletePoll={(index) => {
+            deletePollPopUp(index);
           }}
-        />
+        editPollFunc={()=>
+        {
+          setPollTitle('pollQA');
+        }}/>
       )
     }
   ];

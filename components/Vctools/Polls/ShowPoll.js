@@ -8,7 +8,7 @@ import {
 import { useRecoilState } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 import PollBox from './PollBox';
-const ShowPoll = ({ setPollTitle, deletePoll }) => {
+const ShowPoll = ({ setPollTitle, deletePoll,editPollFunc }) => {
   // participantPoll
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
   const [participantPollArr, setParticipantPollArr] = useRecoilState(participantPoll);
@@ -32,14 +32,14 @@ const ShowPoll = ({ setPollTitle, deletePoll }) => {
                     pollQuestion: data.pollQuestion,
                     options: pollInfo[index].pollOptions,
                     deletePoll: () => {
-                      deletePoll();
+                      deletePoll(index);
                     },
                     publishData: () => {
                       setParticipantPollArr({
                         ...participantPollArr,
                         savedPoll: [pollInfo[index]]
                       });
-
+                         
                       setActivePoll([...activePoll, pollInfo[index]]);
                       setPollInfo(
                         pollInfo.filter((publishedPoll, publishedIndex) => {
@@ -47,6 +47,10 @@ const ShowPoll = ({ setPollTitle, deletePoll }) => {
                         })
                       );
                       console.log(participantPollArr);
+                    },
+                    editPollFunc:()=>
+                    {
+                      editPollFunc()
                     }
                   }}
                 />

@@ -25,7 +25,7 @@ import {
 } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
-import DeletePoUp from '../DeletePopUp';
+import DeletePopUp from '../DeletePopUp';
 import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
@@ -66,6 +66,7 @@ const MainToolbar = ({
   const [showSetting, setShowSetting] = useState(false);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [hideToolBar, setHideToolbar] = useState(null);
+  const [pollDeleteIndex, setPollDeleteIndex] = useState();
   const timer = null;
 
   useEffect(() => {
@@ -141,8 +142,9 @@ const MainToolbar = ({
           hide={() => {
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
-          deletePollPopUp={() => {
+          deletePollPopUp={(index) => {
             setDeletedPouptitle('deletePopUp');
+            setPollDeleteIndex(index);
           }}
         />
       )
@@ -239,20 +241,7 @@ const MainToolbar = ({
         />
       )
     },
-    {
-      title: 'deletePopUp',
-      component: (
-        <DeletePoUp
-          poUpOptions={{
-            popUpName: 'Poll',
-            popUpNotice:
-              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
-            poupBtnInfo1: 'Cancel',
-            poupBtnInfo2: 'Delete'
-          }}
-        />
-      )
-    },
+
     {
       title: 'SettingPopup',
       component: (
@@ -298,13 +287,26 @@ const MainToolbar = ({
     {
       title: 'deletePopUp',
       component: (
-        <DeletePoUp
+        <DeletePopUp
           poUpOptions={{
             popUpName: 'Poll',
             popUpNotice:
               'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
             poupBtnInfo1: 'Cancel',
             poupBtnInfo2: 'Delete'
+          }}
+          styleBtns={{
+            cancelPopupClass: `${styles.canceldeletPoll}`,
+            deletePopupclass: `${styles.deletePoll}`
+          }}
+          cancelFunc={() => setDeletedPouptitle('')}
+          deletePollFunc={() => {
+            setPollInfo(
+              pollInfo.filter((data, dataIndex) => {
+                return dataIndex !== pollDeleteIndex;
+              })
+            );
+            setDeletedPouptitle('');
           }}
         />
       )
