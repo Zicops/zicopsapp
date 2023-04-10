@@ -103,7 +103,7 @@ export default function EditOrderInfo() {
                 await addUpdateOrderServices(orderId);
                 await addUpdateOrder(orderInfo[0]?.vendor_id, orderId);
               },
-              status: VENDOR_MASTER_STATUS.draft.toUpperCase()
+              status: orderInfo[0]?.status.toUpperCase()
             }}
           />
         </MainBodyBox>

@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import VendorPopUp from './common/VendorPopUp';
 import ReviewAndTaxConfirm from './ReviewAndTaxConfirm';
-import { useRouter } from 'next/router';
 import { AllServicesAtom, ServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 import { useRecoilState } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
+import Loader from '../common/Loader';
 
-const ViewOrder = ({ orderId = null }) => {
-  const [viewOrder, setViewOrder] = useState(true);
+const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
   const [currentComponent, setCurrentComponent] = useState(0);
-  const router = useRouter();
   const [selectedServicesForOrder, setSelectedServicesForOrder] =
     useRecoilState(VendorServicesListAtom);
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
@@ -35,7 +33,7 @@ const ViewOrder = ({ orderId = null }) => {
     await getSingleVendorInfo(orderInfo[0]?.vendor_id);
     await getVendorServices(orderInfo[0]?.vendor_id);
     await getOrders(orderId);
-  }, [orderInfo[0]?.vendor_id, orderInfo[0]?.id]);
+  }, [orderInfo[0]?.vendor_id, orderInfo[0]?.id, orderId]);
 
   useEffect(() => {
     if (allServicesData?.length) {
@@ -57,16 +55,21 @@ const ViewOrder = ({ orderId = null }) => {
       setServicesData({ ...servicesData, sme: smeArr, crt: crtArr, cd: cdArr });
     }
   }, [allServicesData]);
+
   const confirmOrderHandler = async () => {
     setCurrentComponent(currentComponent + 1);
 
     if (currentComponent === 2) {
       setViewOrder(false);
+      setCurrentComponent(0);
+      setAllServicesData([]);
     }
   };
   const rejectOrderHandler = async () => {
     setViewOrder(false);
+    setAllServicesData([]);
   };
+
   return (
     <VendorPopUp
       open={viewOrder}
@@ -80,26 +83,32 @@ const ViewOrder = ({ orderId = null }) => {
         handleClick: confirmOrderHandler
       }}>
       <div>
-        {currentComponent === 0 && (
-          <ReviewAndTaxConfirm
-            isViewOrder={true}
-            orderStatus="Added"
-            currency={allServicesData[0]?.currency}
-          />
-        )}
-        {currentComponent === 1 && (
-          <ReviewAndTaxConfirm
-            isViewOrder={true}
-            orderStatus="Confirmed"
-            currency={allServicesData[0]?.currency}
-          />
-        )}
-        {currentComponent === 2 && (
-          <ReviewAndTaxConfirm
-            isViewOrder={true}
-            orderStatus="Completed"
-            currency={allServicesData[0]?.currency}
-          />
+        {!allServicesData?.length ? (
+          <Loader customStyles={{ height: '100%', background: 'transparent' }} />
+        ) : (
+          <>
+            {currentComponent === 0 && (
+              <ReviewAndTaxConfirm
+                isViewOrder={true}
+                orderStatus="Added"
+                currency={allServicesData[0]?.currency}
+              />
+            )}
+            {currentComponent === 1 && (
+              <ReviewAndTaxConfirm
+                isViewOrder={true}
+                orderStatus="Confirmed"
+                currency={allServicesData[0]?.currency}
+              />
+            )}
+            {currentComponent === 2 && (
+              <ReviewAndTaxConfirm
+                isViewOrder={true}
+                orderStatus="Completed"
+                currency={allServicesData[0]?.currency}
+              />
+            )}
+          </>
         )}
       </div>
     </VendorPopUp>

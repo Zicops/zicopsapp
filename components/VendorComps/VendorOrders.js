@@ -27,6 +27,7 @@ const VendorOrders = () => {
   const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
   const [selectedVendor, setSelectedVendor] = useState(null);
+  const [viewOrder, setViewOrder] = useState(false);
   const router = useRouter();
 
   useEffect(async () => {
@@ -67,7 +68,10 @@ const VendorOrders = () => {
       field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
-      flex: 0.8
+      flex: 0.8,
+      renderCell: (params) => {
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>;
+      }
     },
     {
       field: 'services',
@@ -82,7 +86,10 @@ const VendorOrders = () => {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
-      flex: 0.8
+      flex: 0.8,
+      renderCell: (params) => {
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.status}</span>;
+      }
     },
     {
       field: 'action',
@@ -97,7 +104,10 @@ const VendorOrders = () => {
           },
           {
             text: 'View',
-            handleClick: () => setSelectedVendor(params.row.id)
+            handleClick: () => {
+              setSelectedVendor(params.row.id);
+              setViewOrder(true);
+            }
           }
         ];
         return (
@@ -117,7 +127,9 @@ const VendorOrders = () => {
         data={vendorOrderDetails}
         loading={!vendorOrderDetails?.length}
       />
-      {!!selectedVendor && <ViewOrder orderId={selectedVendor} />}
+      {!!selectedVendor && (
+        <ViewOrder orderId={selectedVendor} viewOrder={viewOrder} setViewOrder={setViewOrder} />
+      )}
     </>
   );
 };
