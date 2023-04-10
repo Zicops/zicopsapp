@@ -2,7 +2,8 @@ import { breakoutList, breakoutRoomId } from "@/state/atoms/vctool.atoms";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
-const BreakoutRoomCard = ({ roomNumber, showAddparticipantpopup, roomLength }) => {
+import StudentFrame from "../StudentFrame";
+const BreakoutRoomCard = ({ roomNumber, showAddparticipantpopup, roomLength ,joinedParticipant}) => {
     const [cardTitle, setCardTitle] = useState("")
     const [showDropdown, setShowDropdown] = useState(false)
     const [clickedRoomid, setClikcedRoomid] = useRecoilState(breakoutRoomId)
@@ -55,9 +56,16 @@ const BreakoutRoomCard = ({ roomNumber, showAddparticipantpopup, roomLength }) =
                         <button onClick={() => {
                             showAddparticipantpopup()
                         }} >Add participants</button>
-                        <div className={`${styles.breakoutRoomParticipantHeading}`}>Participants (0)</div>
+                        <div className={`${styles.breakoutRoomParticipantHeading}`}>Participants ({roomLength})</div>
                         <div className={`${styles.breakoutRoomParticipantScreen}`}>
-
+                           {
+                            joinedParticipant.map((data,index)=>
+                            {
+                                return(
+                                    <StudentFrame/>
+                                )
+                            })
+                           }
                         </div>
                     </div></>
                 )

@@ -113,7 +113,7 @@ const VcMaintool = ({ vcData = {} }) => {
 
     setCurrentParticipantData(getCurrentParticipantDataObj({ ..._currentUser, isModerator }));
   }, [isMeetingStarted]);
-
+  
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
@@ -172,24 +172,15 @@ const VcMaintool = ({ vcData = {} }) => {
             }}
             mouseMoveFun={() => {
               // console.log(userData)
-              // api.getRoomsInfo().then((rooms) => {
-              //   setuserinfo(rooms.rooms[0].participants);
-              //   setbreakoutListarr(rooms.rooms);
-              //   setallInfo(rooms.rooms[0].participants);
-              //   setVctoolInfo({
-              //     ...vctoolInfo,
-              //     allRoomInfo: rooms.rooms[0].participants
-              //   });
-              // });
-              //  allUserinfo
-              // userinfo
-              // userinfo.forEach((data) => {
-              //   console.info(data, meetingIconsAtom);
-              // if (meetingIconsAtom?.isModerator) api.executeCommand('grantModerator', data?.id);
-              // if ([api.getEmail(data?.id)].toString().includes('@ziocps')) {
-              //   api.executeCommand('grantModerator', data?.id);
-              // }
-              // });
+              api?.getRoomsInfo().then((rooms) => {
+                setuserinfo(rooms.rooms[0].participants);
+                setbreakoutListarr(rooms.rooms);
+                // setallInfo(rooms.rooms[0].participants);
+                setVctoolInfo({
+                  ...vctoolInfo,
+                  allRoomInfo: rooms.rooms[0].participants
+                });
+              });
             }}
             fullscreen={Fullscreen}
             // getUesrId={userinfo}

@@ -593,8 +593,8 @@ const MainToolbar = ({
                 }}
                 trueSrc={'/images/svg/vctool/settings.svg'}
                 falseSrc={'/images/svg/vctool/settings.svg'}
-                customId={showSetting ? `${styles.changeBackground}` : ''}
-                toggle={showSetting}
+                customId={selectedButton === 'SettingPopup' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'SettingPopup' }
               />
 
               <VctoolButton
