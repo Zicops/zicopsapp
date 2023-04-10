@@ -87,7 +87,11 @@ export default function ManageVendorTabs() {
 
   useEffect(() => {
     if (shallowRoute) return;
-    if (!vendorId) return setEmailId([]);
+    if (!vendorId) {
+      setVendorCurrentState(getVendorCurrentStateObj());
+      setEmailId([]);
+      return;
+    }
 
     loadVendorDetails();
 
@@ -101,6 +105,7 @@ export default function ManageVendorTabs() {
       if (smeData?.isApplicable) enabledServices.push('sme');
       if (crtData?.isApplicable) enabledServices.push('crt');
       if (cdData?.isApplicable) enabledServices.push('cd');
+
       setVendorCurrentState(getVendorCurrentStateObj({ enabledServices }));
 
       getVendorAdmins();
