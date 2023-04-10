@@ -15,6 +15,7 @@ import {
 } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { AllServicesAtom } from '@/state/atoms/vendor.atoms';
+import ViewOrder from './ViewOrder';
 
 const VendorOrders = () => {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
@@ -25,7 +26,7 @@ const VendorOrders = () => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
   const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
-
+  const [selectedVendor, setSelectedVendor] = useState(null);
   const router = useRouter();
 
   useEffect(async () => {
@@ -42,6 +43,7 @@ const VendorOrders = () => {
   }, [orderDetails]);
 
   useEffect(() => {
+    if (!vendorInfo?.length) return;
     const vendorDatails = orderDetails?.map((item, index) =>
       Object.assign({}, item, vendorInfo[index])
     );
@@ -95,7 +97,7 @@ const VendorOrders = () => {
           },
           {
             text: 'View',
-            handleClick: () => router.push(`/admin/vendor/orders/view-order/${params.row.id}`)
+            handleClick: () => setSelectedVendor(params.row.id)
           }
         ];
         return (
@@ -115,6 +117,7 @@ const VendorOrders = () => {
         data={vendorOrderDetails}
         loading={!vendorOrderDetails?.length}
       />
+      {!!selectedVendor && <ViewOrder orderId={selectedVendor} />}
     </>
   );
 };

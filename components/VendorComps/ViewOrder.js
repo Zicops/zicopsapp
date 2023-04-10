@@ -8,7 +8,7 @@ import { useRecoilState } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor';
 import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 
-const ViewOrder = () => {
+const ViewOrder = ({ orderId = null }) => {
   const [viewOrder, setViewOrder] = useState(true);
   const [currentComponent, setCurrentComponent] = useState(0);
   const router = useRouter();
@@ -20,7 +20,6 @@ const ViewOrder = () => {
   const { orderDetails, getAllOrders, getOrderServices, getVendorServices, getOrders } =
     useHandleMarketYard();
 
-  const orderId = router.query.orderId || null;
   const orderInfo = orderDetails?.filter((data) => data?.id === orderId);
   let sme = false;
   let crt = false;
@@ -63,12 +62,10 @@ const ViewOrder = () => {
 
     if (currentComponent === 2) {
       setViewOrder(false);
-      router.push(`/admin/vendor/orders`);
     }
   };
   const rejectOrderHandler = async () => {
     setViewOrder(false);
-    router.push(`/admin/vendor/orders`);
   };
   return (
     <VendorPopUp
