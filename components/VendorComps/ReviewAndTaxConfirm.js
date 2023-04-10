@@ -11,7 +11,9 @@ const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus, currency }) => 
   return (
     <div>
       {isViewOrder ? (
-        <p className={`${styles.addLineText}`}>Order #123 has been {orderStatus}</p>
+        <p className={`${styles.addLineText}`}>
+          Order "{orderData?.id}" has been {orderStatus}
+        </p>
       ) : (
         <p className={`${styles.addLineText}`}>Confirm</p>
       )}

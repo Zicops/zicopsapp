@@ -26,7 +26,7 @@ const VendorOrders = () => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
   const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
-  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [viewOrder, setViewOrder] = useState(false);
   const router = useRouter();
 
@@ -45,8 +45,8 @@ const VendorOrders = () => {
 
   useEffect(() => {
     if (!vendorInfo?.length) return;
-    const vendorDatails = orderDetails?.map((item, index) =>
-      Object.assign({}, item, vendorInfo[index])
+    const vendorDatails = vendorInfo?.map((item, index) =>
+      Object.assign({}, item, orderDetails[index])
     );
     setVendorOrderDetails(vendorDatails);
   }, [vendorInfo]);
@@ -105,7 +105,7 @@ const VendorOrders = () => {
           {
             text: 'View',
             handleClick: () => {
-              setSelectedVendor(params.row.id);
+              setSelectedOrder(params.row.id);
               setViewOrder(true);
             }
           }
@@ -127,8 +127,8 @@ const VendorOrders = () => {
         data={vendorOrderDetails}
         loading={!vendorOrderDetails?.length}
       />
-      {!!selectedVendor && (
-        <ViewOrder orderId={selectedVendor} viewOrder={viewOrder} setViewOrder={setViewOrder} />
+      {!!selectedOrder && (
+        <ViewOrder orderId={selectedOrder} viewOrder={viewOrder} setViewOrder={setViewOrder} />
       )}
     </>
   );
