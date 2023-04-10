@@ -1,14 +1,14 @@
 import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
-import { statusTypeServie } from '../Logic/vendorComps.helper';
 import styles from '../vendorComps.module.scss';
 import { useRecoilState } from 'recoil';
+import moment from 'moment';
+import Loader from '@/components/common/Loader';
 
 export default function OrderMaster({ orderData, services }) {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
 
-  console.info(services);
   const dateNameID = [
-    { label: 'Date', value: '23/02/2023' },
+    { label: 'Date', value: moment.unix(orderData?.created_at).format('YYYY-MM-DD') },
     { label: 'Vendor Name', value: vendorData?.name },
     { label: 'Order ID', value: orderData?.id }
   ];
@@ -17,6 +17,9 @@ export default function OrderMaster({ orderData, services }) {
     { label: 'Vendor Type', value: vendorData?.type },
     { label: 'Services', value: services?.toString().toUpperCase() }
   ];
+
+  if (!orderData || !services || !vendorData)
+    return <Loader customStyles={{ height: '100%', background: 'transparent' }} />;
 
   return (
     <div className={`${styles.orderMasterContainer}`}>
