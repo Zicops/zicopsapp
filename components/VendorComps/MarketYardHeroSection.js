@@ -1,5 +1,6 @@
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
-import { useState } from 'react';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
+import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
 import { serviceOptions } from './Logic/vendorComps.helper';
 import styles from './vendorComps.module.scss';
@@ -29,12 +30,16 @@ export default function MarketYardHeroSection({
   vendorType,
   setVendorType,
   vendorService,
-  setVendorService
+  setVendorService,
+  searchText = '',
+  setSearchText = () => {}
 }) {
+  const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
+
   return (
     <>
       <div className={`${styles.marketYardFrameContainer}`}>
-        <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} />
+        {/* <img src="/images/marketyardFrame.png" className={`${styles.frameImage}`} /> */}
         <div className={`${styles.frameText}`}>
           <div className={`${styles.vendorDropDownContainer}`}>
             <LabeledDropdown
@@ -44,7 +49,10 @@ export default function MarketYardHeroSection({
                 value: vendorType,
                 options: [
                   { label: 'All', value: null },
-                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({ label: val, value: val }))
+                  ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({
+                    label: <span style={{ textTransform: 'capitalize' }}>{val}</span>,
+                    value: val
+                  }))
                 ]
               }}
               changeHandler={(val) => setVendorType(val)}
@@ -55,18 +63,25 @@ export default function MarketYardHeroSection({
             <LabeledDropdown
               dropdownOptions={{
                 inputName: 'Service',
-                placeholder: 'All Services',
-                value: vendorService,
+                placeholder: isDemo ? 'All Services' : 'Training',
+                value: isDemo ? vendorService : 'crt',
+                isDisabled: !isDemo,
                 options: [
                   { label: 'All', value: null },
-                  ...Object.values(serviceOptions)?.map((val) => ({ label: val, value: val }))
+                  ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev))
                 ]
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}
               customDropdownStyles={customDropdownStyleObj}
             />
-            <input type="text" placeholder="Search" className={`${styles.vendorSearch}`} />
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className={`${styles.vendorSearch}`}
+            />
           </div>
 
           <div className={`${styles.vendorTextContainer}`}>

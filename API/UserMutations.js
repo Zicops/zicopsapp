@@ -1,9 +1,11 @@
 import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { API_LINKS, authLink } from './api.helper';
+import customFetch from './customFetch';
 
 const httpLink = createUploadLink({
-  uri: API_LINKS.userClient
+  uri: API_LINKS.userClient,
+  fetch: customFetch
 });
 
 export const userClient = new ApolloClient({
@@ -93,6 +95,9 @@ export const INVITE_USERS_WITH_ROLE = gql`
   mutation inviteUsersWithRole($emails: [String!]!, $lsp_id: String, $role: String) {
     inviteUsersWithRole(emails: $emails, lsp_id: $lsp_id, role: $role) {
       email
+      message
+      user_id
+      user_lsp_id
       message
     }
   }
@@ -1380,6 +1385,7 @@ export const ADD_VENDOR = gql`
     ) {
       vendorId
       type
+      lsp_id
       level
       name
       description
@@ -1436,6 +1442,7 @@ export const UPDATE_VENDOR = gql`
     ) {
       vendorId
       level
+      lsp_id
       type
       name
       photo_url
@@ -1455,6 +1462,40 @@ export const UPDATE_VENDOR = gql`
   }
 `;
 
+export const ADD_VENDOR_USER_MAP = gql`
+  mutation createVendorUserMap($vendorId: String, $userId: String, $status: String) {
+    createVendorUserMap(vendor_id: $vendorId, user_id: $userId, status: $status) {
+      vendor_id
+      user_id
+      created_at
+      created_by
+      status
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const UPDATE_VENDOR_USER_MAP = gql`
+  mutation updateVendorUserMap($vendorId: String, $userId: String, $status: String) {
+    updateVendorUserMap(vendor_id: $vendorId, user_id: $userId, status: $status) {
+      vendor_id
+      user_id
+      created_at
+      created_by
+      status
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const DISABLE_VENDOR_LSP_MAP = gql`
+  mutation disableVendorLspMap($vendorId: String, $lspId: String) {
+    disableVendorLspMap(vendor_id: $vendorId, lsp_id: $lspId)
+  }
+`;
+
 export const CREATE_PROFILE_VENDOR = gql`
   mutation createProfileVendor(
     $vendor_id: String!
@@ -1466,7 +1507,7 @@ export const CREATE_PROFILE_VENDOR = gql`
     $description: String
     $languages: [String]
     $SME_expertise: [String]
-    $Classroom_expertise: [String]
+    $classroom_expertise: [String]
     $content_development: [String]
     $experience: [String]
     $experienceYear: String
@@ -1484,7 +1525,7 @@ export const CREATE_PROFILE_VENDOR = gql`
         description: $description
         languages: $languages
         sme_expertise: $SME_expertise
-        classroom_expertise: $Classroom_expertise
+        classroom_expertise: $classroom_expertise
         content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
@@ -1507,6 +1548,9 @@ export const CREATE_PROFILE_VENDOR = gql`
       experience_years
       experience
       is_speaker
+      sme
+      crt
+      cd
       created_at
       created_by
       updated_at
@@ -1526,15 +1570,12 @@ export const UPDATE_PROFILE_VENDOR = gql`
     $photo: Upload
     $description: String
     $languages: [String]
-    $SME_Expertise: [String]
-    $Classroom_Expertise: [String]
+    $SME_expertise: [String]
+    $classroom_expertise: [String]
     $content_development: [String]
     $experience: [String]
     $experienceYear: String
     $is_speaker: Boolean
-    $sme: Boolean
-    $crt: Boolean
-    $cd: Boolean
     $status: String!
   ) {
     updateProfileVendor(
@@ -1547,15 +1588,12 @@ export const UPDATE_PROFILE_VENDOR = gql`
         photo: $photo
         description: $description
         languages: $languages
-        sme_expertise: $SME_Expertise
-        classroom_expertise: $Classroom_Expertise
+        sme_expertise: $SME_expertise
+        classroom_expertise: $classroom_expertise
         content_development: $content_development
         experience: $experience
         experience_years: $experienceYear
         is_speaker: $is_speaker
-        sme: $sme
-        crt: $crt
-        cd: $cd
         status: $status
       }
     ) {
@@ -1588,28 +1626,28 @@ export const UPDATE_PROFILE_VENDOR = gql`
 
 export const CREATE_EXPERIENCE_VENDOR = gql`
   mutation createExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $title: String
     $email: String!
-    $company_name: String
-    $employement_type: String
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     createExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {
@@ -1634,30 +1672,30 @@ export const CREATE_EXPERIENCE_VENDOR = gql`
 
 export const UPDATE_EXPERIENCE_VENDOR = gql`
   mutation updateExperienceVendor(
-    $vendor_id: String
+    $vendorId: String
     $expId: String
     $title: String
-    $email: String
-    $company_name: String
-    $employement_type: String
+    $email: String!
+    $companyName: String
+    $employeeType: String
     $location: String
-    $location_type: String
-    $start_date: Int
-    $end_date: Int
+    $locationType: String
+    $startDate: Int
+    $endDate: Int
     $status: String
   ) {
     updateExperienceVendor(
       input: {
-        vendor_id: $vendor_id
+        vendor_id: $vendorId
         exp_id: $expId
         title: $title
         email: $email
-        company_name: $company_name
-        employement_type: $employement_type
+        company_name: $companyName
+        employement_type: $employeeType
         location: $location
-        location_type: $location_type
-        start_date: $start_date
-        end_date: $end_date
+        location_type: $locationType
+        start_date: $startDate
+        end_date: $endDate
         status: $status
       }
     ) {
@@ -1689,6 +1727,9 @@ export const CREATE_SAMPLE_FILE = gql`
     $pricing: String!
     $file: Upload!
     $fileType: String
+    $rate: Int
+    $currency: String
+    $unit: String
     $status: String
   ) {
     uploadSampleFile(
@@ -1700,6 +1741,9 @@ export const CREATE_SAMPLE_FILE = gql`
         pricing: $pricing
         file: $file
         fileType: $fileType
+        rate: $rate
+        currency: $currency
+        unit: $unit
         status: $status
       }
     ) {
@@ -1707,12 +1751,18 @@ export const CREATE_SAMPLE_FILE = gql`
       name
       fileType
       price
+      p_type
+      description
       file_url
       created_at
       created_by
       updated_at
       updated_by
       status
+      rate
+      currency
+      unit
+      actualFileType
     }
   }
 `;
@@ -1727,7 +1777,9 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
+    $status: String
   ) {
     createSubjectMatterExpertise(
       input: {
@@ -1739,7 +1791,9 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        Status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       vendor_id
@@ -1755,6 +1809,8 @@ export const CREATE_SUBJECT_MATTER_EXPERTISE = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1769,7 +1825,9 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
+    $status: String
   ) {
     updateSubjectMatterExpertise(
       input: {
@@ -1781,7 +1839,9 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        Status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       vendor_id
@@ -1797,6 +1857,8 @@ export const UPDATE_SUBJECT_MATTER_EXPERTISE = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1811,7 +1873,8 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $is_expertise_online: Boolean
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     createClassRoomTraining(
@@ -1824,8 +1887,9 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        is_expertise_online: $is_expertise_online
         status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       crt_id
@@ -1836,12 +1900,13 @@ export const CREATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      is_expertise_online
       created_at
       created_by
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1856,7 +1921,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $is_expertise_online: Boolean
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     updateClassRoomTraining(
@@ -1869,7 +1935,8 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        is_expertise_online: $is_expertise_online
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
         status: $status
       }
     ) {
@@ -1881,12 +1948,13 @@ export const UPDATE_CLASS_ROOM_TRANING = gql`
       languages
       output_deliveries
       sample_files
-      is_expertise_online
       created_at
       created_by
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1901,6 +1969,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
+    $isExpertiseOnline: Boolean
+    $isExpertiseOffline: Boolean
     $status: String
   ) {
     createContentDevelopment(
@@ -1914,6 +1984,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
         output_deliveries: $output_deliveries
         sample_files: $sample_files
         status: $status
+        is_expertise_online: $isExpertiseOnline
+        is_expertise_offline: $isExpertiseOffline
       }
     ) {
       cd_id
@@ -1929,6 +2001,8 @@ export const CREATE_CONTENT_DEVELOPMENT = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1943,7 +2017,7 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
     $languages: [String]
     $output_deliveries: [String]
     $sample_files: [String]
-    $Status: String
+    $status: String
   ) {
     updateContentDevelopment(
       input: {
@@ -1955,7 +2029,7 @@ export const UPDATE_CONTENT_DEVELOPMENT = gql`
         languages: $languages
         output_deliveries: $output_deliveries
         sample_files: $sample_files
-        Status: $Status
+        status: $status
       }
     ) {
       cd_id
@@ -1983,23 +2057,23 @@ export const DELETE_SAMPLE_FILE = gql`
 
 export const ADD_ORDER = gql`
   mutation addOrder(
-    $order_id: String
-    $vendor_id: String
-    $lsp_id: String
+    $orderId: String
+    $vendorId: String
+    $lspId: String
     $total: Int
     $tax: Int
-    $grand_total: Int
+    $grandTotal: Int
     $status: String
   ) {
     addOrder(
       input: {
-        order_id: $order_id
-        vendor_id: $vendor_id
-        lsp_id: $lsp_id
+        order_id: $orderId
+        vendor_id: $vendorId
+        lsp_id: $lspId
         total: $total
         tax: $tax
-        grand_total: $grand_total
-        status: $Status
+        grand_total: $grandTotal
+        status: $status
       }
     ) {
       order_id
@@ -2018,23 +2092,23 @@ export const ADD_ORDER = gql`
 `;
 export const UPDATE_ORDER = gql`
   mutation updateOrder(
-    $order_id: String
-    $vendor_id: String
-    $lsp_id: String
+    $orderId: String
+    $vendorId: String
+    $lspId: String
     $total: Int
     $tax: Int
-    $grand_total: Int
+    $grandTotal: Int
     $status: String
   ) {
     updateOrder(
       input: {
-        order_id: $order_id
-        vendor_id: $vendor_id
-        lsp_id: $lsp_id
+        order_id: $orderId
+        vendor_id: $vendorId
+        lsp_id: $lspId
         total: $total
         tax: $tax
-        grand_total: $grand_total
-        status: $Status
+        grand_total: $grandTotal
+        status: $status
       }
     ) {
       order_id
@@ -2054,9 +2128,9 @@ export const UPDATE_ORDER = gql`
 
 export const ADD_ORDER_SERVICES = gql`
   mutation addOrderServies(
-    $service_id: String
-    $order_id: String
-    $service_type: String
+    $serviceId: String
+    $orderId: String
+    $serviceType: String
     $description: String
     $unit: String
     $currency: String
@@ -2066,18 +2140,20 @@ export const ADD_ORDER_SERVICES = gql`
     $status: String
   ) {
     addOrderServies(
-      input: [{
-        service_id: $service_id
-        order_id: $order_id
-        service_type: $service_type
-        description: $description
-        unit: $unit
-        currency: $currency
-        rate: $rate
-        quantity: $quantity
-        total: $total
-        status: $status
-      }]
+      input: [
+        {
+          service_id: $serviceId
+          order_id: $orderId
+          service_type: $serviceType
+          description: $description
+          unit: $unit
+          currency: $currency
+          rate: $rate
+          quantity: $quantity
+          total: $total
+          status: $status
+        }
+      ]
     ) {
       service_id
       order_id
@@ -2099,9 +2175,9 @@ export const ADD_ORDER_SERVICES = gql`
 
 export const UPDATE_ORDER_SERVICES = gql`
   mutation updateOrderServices(
-    $service_id: String
-    $order_id: String
-    $service_type: String
+    $serviceId: String
+    $orderId: String
+    $serviceType: String
     $description: String
     $unit: String
     $currency: String
@@ -2112,9 +2188,9 @@ export const UPDATE_ORDER_SERVICES = gql`
   ) {
     updateOrderServices(
       input: {
-        service_id: $service_id
-        order_id: $order_id
-        service_type: $service_type
+        service_id: $serviceId
+        order_id: $orderId
+        service_type: $serviceType
         description: $description
         unit: $unit
         currency: $currency

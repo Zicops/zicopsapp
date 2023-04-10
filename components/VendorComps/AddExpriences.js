@@ -5,10 +5,13 @@ import { changeHandler } from '@/helper/common.helper';
 import styles from './vendorComps.module.scss';
 import { optionEmploymentTypeArray, optionLocationTypeArray } from './Logic/vendorComps.helper';
 import useExperience from './Logic/useExperience';
+import { useRecoilState } from 'recoil';
+import { VendorExperiencesAtom } from '@/state/atoms/vendor.atoms';
 
 const AddExpriences = () => {
-  const { experiencesData, setExperiencesData, optionMonthArray, optionYearArray } =
-    useExperience();
+  const [experiencesData, setExperiencesData] = useRecoilState(VendorExperiencesAtom);
+  const { optionMonthArray, optionYearArray } = useExperience();
+
   return (
     <div className={`${styles.addExpriencesForm}`}>
       <div className={`${styles.title}`}>
@@ -17,6 +20,7 @@ const AddExpriences = () => {
           inputOptions={{
             inputName: 'title',
             placeholder: 'Enter title',
+            maxLength: 60,
             value: experiencesData?.title
           }}
           changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -29,6 +33,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'companyName',
               placeholder: 'Enter company name',
+              maxLength: 60,
               value: experiencesData?.companyName
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -58,6 +63,7 @@ const AddExpriences = () => {
             inputOptions={{
               inputName: 'location',
               placeholder: 'Ex. Pune, Maharashtra',
+              maxLength: 160,
               value: experiencesData?.location
             }}
             changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
@@ -84,11 +90,18 @@ const AddExpriences = () => {
       </div>
       <div className={`${styles.checkBoxRole}`}>
         <LabeledRadioCheckbox
-          label="Curranty working in this role"
+          label="Currently Working in this Role"
           type="checkbox"
           name="isWorking"
           isChecked={experiencesData?.isWorking}
-          changeHandler={(e) => changeHandler(e, experiencesData, setExperiencesData)}
+          changeHandler={(e) => {
+            const isChecked = e.target.checked;
+            const _experienceData = structuredClone(experiencesData);
+            _experienceData.isWorking = isChecked;
+            _experienceData.endMonth = null;
+            _experienceData.endYear = null;
+            setExperiencesData(_experienceData);
+          }}
         />
       </div>
       <div>
@@ -102,7 +115,9 @@ const AddExpriences = () => {
                 label: experiencesData?.startMonth,
                 value: experiencesData?.startMonth
               },
-              options: optionMonthArray
+              options: optionMonthArray,
+              isSearchEnable: true,
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startMonth')
@@ -114,10 +129,12 @@ const AddExpriences = () => {
               inputName: 'startYear',
               placeholder: 'year',
               options: optionYearArray,
+              isSearchEnable: true,
               value: {
                 label: experiencesData?.startYear,
                 value: experiencesData?.startYear
-              }
+              },
+              menuPlacement: 'top'
             }}
             changeHandler={(e) =>
               changeHandler(e, experiencesData, setExperiencesData, 'startYear')
@@ -133,11 +150,13 @@ const AddExpriences = () => {
                 inputName: 'endMonth',
                 placeholder: 'Month',
                 options: optionMonthArray,
+                isSearchEnable: true,
                 value: {
                   label: experiencesData?.endMonth,
                   value: experiencesData?.endMonth
                 },
-                isDisabled: experiencesData?.isWorking ? true : false
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endMonth')
@@ -149,11 +168,13 @@ const AddExpriences = () => {
                 inputName: 'endYear',
                 placeholder: 'year',
                 options: optionYearArray,
+                isSearchEnable: true,
                 value: {
                   label: experiencesData?.endYear,
                   value: experiencesData?.endYear
                 },
-                isDisabled: experiencesData?.isWorking ? true : false
+                menuPlacement: 'top',
+                isDisabled: experiencesData?.isWorking
               }}
               changeHandler={(e) =>
                 changeHandler(e, experiencesData, setExperiencesData, 'endYear')

@@ -45,8 +45,7 @@ export default function AddTopicContentForm({
   const languageOptions = [];
   lanuages?.map((lang) => languageOptions.push({ value: lang, label: lang }));
 
-  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5'];
-  if (isDemo) types.push('document');
+  const types = ['SCORM', 'TinCan', 'Web HTML5', 'mp4', 'CMi5', 'document'];
 
   const typeOptions = [];
   types?.map((type) => typeOptions.push({ value: type, label: type }));
@@ -55,6 +54,9 @@ export default function AddTopicContentForm({
 
   // .WEBM, .MPG, .MP2, .MPEG, .MPE, .MPV, .OGG, .MP4, .M4P, .M4V, .AVI, .WMV, .MOV, .QT, .FLV, .SWF, AVCHD,
   if (newTopicContent?.type === types[3]) acceptedFiles = ['.mp4'].join(', ');
+
+  const maxFileSize =
+    newTopicContent?.type === 'document' ? LIMITS.documentFile : LIMITS.topicVideoSize;
 
   return (
     <div className={`${styles.popUpFormContainer}`}>
@@ -107,18 +109,16 @@ export default function AddTopicContentForm({
                   display: 'flex',
                   justifyContent: 'flex-end'
                 }}>
-                Max: {Math.ceil(LIMITS.topicVideoSize / ONE_MB_IN_BYTES)} Mb
+                Max: {Math.ceil(maxFileSize / ONE_MB_IN_BYTES)} Mb
               </small>
               <BrowseAndUpload
                 handleFileUpload={(e) => {
                   const file = e.target.files?.[0];
 
-                  if (file?.size > LIMITS.topicVideoSize)
+                  if (file?.size > maxFileSize)
                     return setToastMsg({
                       type: 'danger',
-                      message: `File Size limit is ${Math.ceil(
-                        LIMITS.topicVideoSize / ONE_MB_IN_BYTES
-                      )} mb`
+                      message: `File Size limit is ${Math.ceil(maxFileSize / ONE_MB_IN_BYTES)} mb`
                     });
 
                   if (newTopicContent?.type === types[3]) handleTopicVideoInput(e);
@@ -163,7 +163,7 @@ export default function AddTopicContentForm({
                 isFiftyFifty={true}
                 inputOptions={{
                   inputName: 'duration',
-                  label: 'Duration:',
+                  label: newTopicContent?.type === 'document' ? 'Read Time' : 'Duration:',
                   maxLength: 16,
                   isDisabled: !!topicContent?.length || newTopicContent?.type === 'mp4',
                   value: topicContent?.length

@@ -28,7 +28,7 @@ export default function ConfirmPopUp({ title, message, btnObj = {} }) {
 
           <div className={`${styles.alert_text}`}>
             <img src={'/images/svg/error_outline.svg'} width={30} />
-            <span className={`${styles.text}`}>Alert: {title}!</span>
+            <span className={`${styles.text}`}>Alert: {title}</span>
           </div>
 
           <div className={`${styles.desc}`}>{message}</div>

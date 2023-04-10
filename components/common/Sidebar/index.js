@@ -1,3 +1,5 @@
+import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
+import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { PRODUCT_TOUR_PATHS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
@@ -5,7 +7,8 @@ import {
   ProductTourIndex,
   ProductTourVisible
 } from '@/state/atoms/productTour.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { VendorStateAtom } from '@/state/atoms/vendor.atoms';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useRef, useState } from 'react';
@@ -21,6 +24,8 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
   const [index, setIndex] = useRecoilState(ProductTourIndex);
   const [showProductTour, setShowProductTour] = useRecoilState(ProductTourVisible);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const [vendorDetails, setVendorDetails] = useRecoilState(VendorStateAtom);
+  const userDetails = useRecoilValue(UserStateAtom);
 
   const router = useRouter();
   const lastItem = useRef();
@@ -40,6 +45,19 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
 
     if (lastItem?.current) observer.observe(lastItem?.current);
   }, []);
+
+  useEffect(async () => {
+    if (!isVendor) return;
+    if (vendorDetails?.vendorId) return;
+    const vendorDetail = await loadAndCacheDataAsync(
+      GET_USER_VENDORS,
+      { user_id: userDetails?.id },
+      {},
+      userQueryClient
+    );
+    if (!vendorDetail?.getUserVendor?.[0]?.vendorId) return;
+    setVendorDetails(vendorDetail?.getUserVendor[0]);
+  }, [userDetails?.id]);
 
   const isProductTourValid = PRODUCT_TOUR_PATHS.includes(router?.asPath?.split('/')?.[2]);
 
@@ -76,8 +94,13 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
               let isActive = currentUrl === pathUrl[pathUrl.length - 1];
               const tourData = activeTour?.id === val?.tourId ? activeTour : null;
 
+              let path = val.link;
               if (val?.isHidden && !isDemo && !isDev) return null;
+              if (val?.isDev && !isDev) return null;
+              if (val?.isDemo && !isDemo) return null;
               if (isVendor && !val?.isVendor) return null;
+              if (isVendor && val?.isCustomRoute)
+                path = `/admin/vendor/manage-vendor/update-vendor/${vendorDetails?.vendorId}`;
 
               // temp fix: Change page route for edit course later
               if (
@@ -96,12 +119,8 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                       // tooltipIsOpen={true}
                       placement="right-start">
                       <span>
-                        <Link href={val.link} key={key} className="row">
-                          <a
-                            className={isActive ? styles.active : ''}
-                            onClick={() => {
-                              router.pathname = val.link;
-                            }}>
+                        <Link href={path} key={key} className="row">
+                          <a className={isActive ? styles.active : ''}>
                             <div>{val.title}</div>
                           </a>
                         </Link>
@@ -110,12 +129,8 @@ export default function Sidebar({ sidebarItemsArr, isProductTooltip, proproductT
                   ) : (
                     <ToolTip title={val.description} placement="right">
                       <span>
-                        <Link href={val.link} key={key} className="row">
-                          <a
-                            className={isActive ? styles.active : ''}
-                            onClick={() => {
-                              router.pathname = val.link;
-                            }}>
+                        <Link href={path} key={key} className="row">
+                          <a className={isActive ? styles.active : ''}>
                             <div>{val.title}</div>
                           </a>
                         </Link>

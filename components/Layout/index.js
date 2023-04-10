@@ -48,12 +48,6 @@ export default function Layout({ children }) {
 
     if (userAboutData?.isUserUpdated) return loadUserData();
 
-    // const userLearningSpaceData =  await loadQueryDataAsync(GET_USER_LEARNINGSPACES_DETAILS,{user_id:userId,lsp_id:<lsp_id>},{},userQueryClient);
-    // if(userLearningSpaceData?.error) return console.log('User lsp load error!');
-    // //temporary solution only valid for one lsp...need to change later!
-    // sessionStorage?.setItem('lspData',JSON.stringify(userLearningSpaceData?.getUserLspByLspId));
-    // // console.log(userLearningSpaceData?.getUserLspByLspId?.user_lsp_id,'lsp')
-    // setUserOrgData(getUserOrgObject({user_lsp_id:userLearningSpaceData?.getUserLspByLspId?.user_lsp_id}));
     return;
   }, []);
 
@@ -101,30 +95,34 @@ export default function Layout({ children }) {
             handleClickLeft: async () => {
               setDisableBtn(true);
 
-              let isDeleted = 'localDelete';
-              const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
+              try {
+                let isDeleted = 'localDelete';
+                const isBeforeDeleteSuccess = await deleteConfirmData?.beforeDelete();
 
-              if (!isBeforeDeleteSuccess) {
+                if (!isBeforeDeleteSuccess) {
+                  setDisableBtn(false);
+                  return setDeleteConfirmData(getDeleteConfirmDataObj());
+                }
+
+                if (deleteConfirmData?.id) {
+                  isDeleted = await deleteData(deleteConfirmData?.mutation, {
+                    id: deleteConfirmData?.id,
+                    ...deleteConfirmData?.variableObj
+                  });
+                }
+
+                setDeleteConfirmData(getDeleteConfirmDataObj());
+
+                if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+                  setDisableBtn(false);
+                  return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
+                }
+
+                deleteConfirmData?.onDelete();
                 setDisableBtn(false);
-                return setDeleteConfirmData(getDeleteConfirmDataObj());
-              }
-
-              if (deleteConfirmData?.id) {
-                isDeleted = await deleteData(deleteConfirmData?.mutation, {
-                  id: deleteConfirmData?.id,
-                  ...deleteConfirmData?.variableObj
-                });
-              }
-
-              setDeleteConfirmData(getDeleteConfirmDataObj());
-
-              if (isDeleted !== 'localDelete' && !isDeleted?.[deleteConfirmData?.resKey]) {
+              } catch {
                 setDisableBtn(false);
-                return setToastMsg({ type: 'danger', message: 'Failed to Delete' });
               }
-
-              deleteConfirmData?.onDelete();
-              setDisableBtn(false);
             },
             handleClickRight: () => setDeleteConfirmData(getDeleteConfirmDataObj())
           }}

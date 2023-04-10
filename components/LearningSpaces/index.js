@@ -27,8 +27,7 @@ const LearningSpaces = () => {
   const [userGlobalData, setUserGlobalData] = useRecoilState(UserDataAtom);
   const [userProfileData, setUserProfileData] = useRecoilState(UserStateAtom);
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
-  const { isDev } = useRecoilValue(FeatureFlagsAtom);
-  const skeletonCardCount = isDev ? 1 : 0;
+  const skeletonCardCount = 1;
 
   const [lspIds, setLspIds] = useState([]);
   const [lspsDetails, setLspsDetails] = useState([]);
@@ -166,72 +165,42 @@ const LearningSpaces = () => {
           // sub_heading={'Select your Learning space'}
         />
         <div className={`${styles.login_body}`}>
-          {!isDev ? (
-            <>
-              {orglspData?.map((data, index) => {
+          {!orglspData?.length ? (
+            <span>No LSP Found</span>
+          ) : (
+            orglspData?.map((data, index) => {
+              if (!data)
                 return (
-                  <LspCard
-                    image={data?.profile_url || '/images/zicopsIcon.png'}
-                    path={
-                      lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS.invite
-                        ? '/account-setup'
-                        : '/'
-                    }
-                    website={data?.subdomain}
-                    status={data?.status}
-                    isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
-                    lspId={data?.lsp_id}
-                    lspName={data?.name}
-                    orgId={data?.org_id}
-                    logo={data?.org_logo_url}
-                    ouId={data?.ou_id}
-                    userLspId={userLspIds?.[index]}
-                    userId={userDetails?.id}
-                    lspLogo={data?.logo_url}
+                  <Skeleton
+                    key={index}
+                    sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
+                    variant="rectangular"
+                    width={250}
+                    height={200}
                   />
                 );
-              })}
-            </>
-          ) : (
-            <>
-              {!orglspData?.length ? (
-                <span>No LSP Found</span>
-              ) : (
-                orglspData?.map((data, index) => {
-                  if (!data)
-                    return (
-                      <Skeleton
-                        key={index}
-                        sx={{ bgcolor: 'dimgray', borderRadius: '5px' }}
-                        variant="rectangular"
-                        width={250}
-                        height={200}
-                      />
-                    );
-                  return (
-                    <LspCard
-                      image={data?.profile_url || '/images/zicopsIcon.png'}
-                      path={
-                        lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS.invite
-                          ? '/account-setup'
-                          : '/'
-                      }
-                      website={data?.subdomain}
-                      status={data?.status}
-                      isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
-                      lspId={data?.lsp_id}
-                      lspName={data?.name}
-                      orgId={data?.org_id}
-                      logo={data?.org_logo_url}
-                      ouId={data?.ou_id}
-                      userLspId={userLspIds?.[index]}
-                      userId={userDetails?.id}
-                      lspLogo={data?.logo_url}
-                    />
-                  );
-                })
-              )}
-            </>
+              return (
+                <LspCard
+                  image={data?.profile_url || '/images/zicopsIcon.png'}
+                  path={
+                    lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS.invite
+                      ? '/account-setup'
+                      : '/'
+                  }
+                  website={data?.subdomain}
+                  status={data?.status}
+                  isDisabled={lspStatus?.[index]?.toLowerCase() === USER_MAP_STATUS?.disable}
+                  lspId={data?.lsp_id}
+                  lspName={data?.name}
+                  orgId={data?.org_id}
+                  logo={data?.org_logo_url}
+                  ouId={data?.ou_id}
+                  userLspId={userLspIds?.[index]}
+                  userId={userDetails?.id}
+                  lspLogo={data?.logo_url}
+                />
+              );
+            })
           )}
           <>
             {/* only for owners to request for creating new lsp */}

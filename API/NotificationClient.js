@@ -97,3 +97,20 @@ export const SEND_EMAIL = gql`
     )
   }
 `;
+
+export const ADD_USER_TAGS = gql`
+  mutation addUserTags($ids: [UserDetails], $tags: [String]) {
+    addUserTags(ids: $ids, tags: $tags)
+  }
+`;
+
+export const GET_USER_LSP_TAGS = gql`
+  query getUserLspIdTags($user_lsp_ids: [String]) {
+    getUserLspIdTags(user_lsp_id: $user_lsp_ids) {
+      user_lsp_id
+      user_id
+      tags
+      lsp_id
+    }
+  }
+`;

@@ -25,6 +25,7 @@ export const COURSE_MAP_STATUS = {
   started: 'started',
   completed: 'completed',
   disable: 'disable',
+  invitedDisable: 'invited_disable',
 };
 // COURSE CONSTANTS END
 
@@ -34,6 +35,7 @@ export const USER_STATUS = { invite: 'Invited', activate: 'Active', disable: 'Di
 export const USER_MAP_STATUS = { invite: '', activate: 'active', disable: 'disable' };
 
 export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
+export const USER_TYPE = { internal: 'internal', external: 'external' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
 export const THUMBNAIL_GAP = 25;
@@ -42,7 +44,7 @@ export const GIBBERISH_VALUE_FOR_LOGIN_STATE = '32Xnwiqodh98bjkxqw';
 
 //need to delete chorot later
 export const ASSIGNED_COURSES = ['cohort', 'admin', 'chorot'];
-
+export const VC_TOOL_ROLE = ['moderator', 'instructor', 'participant'];
 export const PUBLIC_PATHS = [
   '/login',
   '/auth-verify',
@@ -101,6 +103,9 @@ export const CUSTOM_ERROR_MESSAGE = {
   phoneError: 'PHONE_NUMBER_EXISTS',
   nothingToUpdate: 'nothing to update',
   shortNumber: 'INVALID_PHONE_NUMBER : TOO_SHORT',
+  emailAlreadyExist: 'User already exists',
+  selfInvite: 'Inviting himself',
+  newUsers: 'New user',
 };
 
 export const COURSE_TYPES = ['self-paced', 'classroom', 'labs', 'test-series'];
@@ -178,9 +183,13 @@ export const COURSE_SELF_ASSIGN_LIMIT = 30;
 // https://stackoverflow.com/a/49490014/13419786
 export const ONE_MB_IN_BYTES = 1_048_576;
 export const LIMITS = {
+  previewVideo: ONE_MB_IN_BYTES * 50,
+  documentFile: ONE_MB_IN_BYTES * 25,
+  // remove previewVideoSize later
   previewVideoSize: ONE_MB_IN_BYTES * 50,
   topicVideoSize: ONE_MB_IN_BYTES * 500,
   questionOptionSize: ONE_MB_IN_BYTES * 250,
+  vendorSampleSize: ONE_MB_IN_BYTES * 50,
 };
 
 export const EMAIL_TEMPLATE_IDS = {
@@ -231,7 +240,40 @@ export const VENDOR_MASTER_STATUS = {
 
 export const VENDOR_MASTER_TYPE = { company: 'company', individual: 'individual' };
 
+export const VENDOR_SERVICES_TYPE = {
+  sme: { label: 'Subject Matter', type: 'sme' },
+  crt: { label: 'Classroom Training', type: 'crt' },
+  cd: { label: 'Content Development', type: 'cd' },
+};
+
 //Vendor Constant End
 
 // GENERIC CONSTANTS
 export const USER_ROLES_WITH_ADMIN_ACCESS = ['admin', 'vendor'];
+
+export const FILE_TYPES = {
+  coursePreviewVideo: 'video/mp4',
+  courseDisplayImage: '.jpg, .jpeg, .png, .gif,',
+  courseTileImage: '.jpg, .jpeg, .png, .gif,',
+  vendorSampleFiles: [
+    '.zip',
+    '.rar',
+    '.pdf',
+    '.ppt',
+    '.pptx',
+    '.doc',
+    '.docx',
+    '.xls',
+    '.xlsx',
+    '.txt',
+    '.srt',
+    '.vtt',
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.mp3',
+    '.mp4',
+    '.webm',
+  ].join(', '),
+};

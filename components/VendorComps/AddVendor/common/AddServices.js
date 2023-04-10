@@ -6,17 +6,8 @@ import { changeHandler } from '@/helper/common.helper';
 import {
   VENDOR_FILE_FORMATS,
   VENDOR_LANGUAGES,
-  VENDOR_MASTER_STATUS
+  VENDOR_MASTER_TYPE
 } from '@/helper/constants.helper';
-import { useState, useEffect } from 'react';
-import AddVendorProfile from '../../AddVendorProfile';
-import ProfileManageVendor from '../../ProfileMangeVendor';
-import styles from '../../vendorComps.module.scss';
-import VendorPopUp from '../../common/VendorPopUp';
-import AddExpertise from './AddExpertise';
-import useHandleVendor from '../../Logic/useHandleVendor';
-import AddSample from '../../AddSample';
-import FileManageVendor from '../../FileManageVendor';
 import {
   allProfileAtom,
   CdServicesAtom,
@@ -25,9 +16,23 @@ import {
   getSampleObject,
   SampleAtom,
   SmeServicesAtom,
-  VendorProfileAtom
+  VendorCurrentStateAtom,
+  VendorProfileAtom,
+  VendorStateAtom
 } from '@/state/atoms/vendor.atoms';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import AddSample from '../../AddSample';
+import AddVendorProfile from '../../AddVendorProfile';
+import VendorPopUp from '../../common/VendorPopUp';
+import FileManageVendor from '../../FileManageVendor';
+import useHandleVendor from '../../Logic/useHandleVendor';
+import ProfileManageVendor from '../../ProfileMangeVendor';
+import styles from '../../vendorComps.module.scss';
+import AddExpertise from './AddExpertise';
+import SampleFilePreview from '../../VendorServices/SampleFilePreview';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 
 export default function AddServices({ data, setData = () => {}, inputName, experticeName, pType }) {
   const [isOpenProflie, setIsOpenProfile] = useState(false);
@@ -38,15 +43,37 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteProfile, setCompleteProfile] = useState(false);
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
-  const [selectedExpertise, setSelectedExpertise] = useState([]);
-  const [selectedLanguages, setSelectedLanguages] = useState([]);
-  const [selectedFormats, setSelectedFormats] = useState([]);
+  const [selectedSampleId, setSelectedSampleId] = useState(null);
+  const [sampleDetails, setSampleDetails] = useState(false);
+
+  const [selectedExpertise, setSelectedExpertise] = useState(data?.expertises);
+  const [tempExpertise, setTempExpertise] = useState(data?.expertises);
+
+  const [selectedLanguages, setSelectedLanguages] = useState(data?.languages);
+  const [tempLanguages, setTempLanguages] = useState(data?.languages);
+
+  const [selectedFormats, setSelectedFormats] = useState(data?.formats);
+  const [tempFormats, setTempFormats] = useState(data?.formats);
+
   const [sampleData, setSampleData] = useRecoilState(SampleAtom);
   const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
   const [profileDetails, setProfileDetails] = useRecoilState(allProfileAtom);
   const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
   const [ctData, setCTData] = useRecoilState(CtServicesAtom);
   const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const { isSaved } = useRecoilValue(VendorCurrentStateAtom);
+  const vendorData = useRecoilValue(VendorStateAtom);
+
+  const [newOPFormat, setNewOPFormat] = useState('');
+  const [previewState, setPreviewState] = useState(null);
+
+  const router = useRouter();
+  const isViewPage = router.asPath?.includes('view-vendor');
+
+  const [displayFormats, setDisplayFormats] = useState([...VENDOR_FILE_FORMATS, ...data?.formats]);
+
+  const isIndividual =
+    vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
   const {
     addUpdateProfile,
@@ -55,8 +82,17 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     addSampleFile,
     getSMESampleFiles,
     getCRTSampleFiles,
-    getCDSampleFiles
+    getCDSampleFiles,
+    deleteSample
   } = useHandleVendor();
+
+  useEffect(() => {
+    if (!isSaved) return;
+
+    setTempExpertise(selectedExpertise);
+    setTempLanguages(selectedLanguages);
+    setTempFormats(selectedFormats);
+  }, [isSaved]);
 
   let getSampleFiles;
   if (pType === 'sme') {
@@ -68,11 +104,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   }
   let fileData = [];
   if (pType === 'sme') {
-    fileData.push(smeData?.sampleFiles);
+    fileData.push(...(smeData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else if (pType === 'crt') {
-    fileData.push(ctData?.sampleFiles);
+    fileData.push(...(ctData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   } else {
-    fileData.push(cdData?.sampleFiles);
+    fileData.push(...(cdData?.sampleFiles?.map((file, index) => ({ id: index, ...file })) || []));
   }
 
   const completeProfileHandler = async () => {
@@ -86,7 +122,30 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
 
   const addExpertiseHandler = () => {
     setData({ ...data, expertises: [...selectedExpertise] });
+    setTempExpertise([...selectedExpertise]);
     setExpertisePopupState(false);
+  };
+
+  const handleAddRemoveExpertise = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedExpertise([...selectedExpertise, value]);
+    } else {
+      setData({ ...data, expertises: [...data?.expertises?.filter((lang) => lang !== value)] });
+      setSelectedExpertise([...selectedExpertise?.filter((lang) => lang !== value)]);
+    }
+  };
+
+  const closeExpertiseHandler = () => {
+    setSelectedExpertise([...tempExpertise]);
+    setTempExpertise([...tempExpertise]);
+    setExpertisePopupState(false);
+  };
+
+  const addLanguagesHandler = () => {
+    setData({ ...data, languages: [...selectedLanguages] });
+    setTempLanguages([...selectedLanguages]);
+    setLanguagePopupState(false);
   };
 
   const handleLanguageSelection = (e) => {
@@ -97,10 +156,36 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
       setSelectedLanguages(selectedLanguages.filter((lang) => lang !== value));
     }
   };
+  const handleAddRemoveLanguage = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedLanguages([...selectedLanguages, value]);
+    } else {
+      setData({ ...data, languages: [...data?.languages?.filter((lang) => lang !== value)] });
+      setSelectedLanguages([...selectedLanguages?.filter((lang) => lang !== value)]);
+    }
+  };
 
-  const addLanguagesHandler = () => {
-    setData({ ...data, languages: [...selectedLanguages] });
+  const closeLanguagesHandler = () => {
+    setSelectedLanguages([...tempLanguages]);
+    setTempLanguages([...tempLanguages]);
     setLanguagePopupState(false);
+  };
+
+  const addFormatsHandler = () => {
+    setData({ ...data, formats: [...selectedFormats] });
+    setTempFormats([...selectedFormats]);
+    setOPDeliverablePopupState(false);
+  };
+
+  const handleAddRemoveFormats = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedFormats([...selectedFormats, value]);
+    } else {
+      setData({ ...data, formats: [...data?.formats?.filter((lang) => lang !== value)] });
+      setSelectedFormats([...selectedFormats.filter((lang) => lang !== value)]);
+    }
   };
 
   const handleFileSelection = (e) => {
@@ -112,17 +197,26 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
     }
   };
 
-  const addFormatsHandler = () => {
-    setData({ ...data, formats: [...selectedFormats] });
+  const closeFormatsHandler = () => {
+    setSelectedFormats([...tempFormats]);
+    setTempFormats([...tempFormats]);
     setOPDeliverablePopupState(false);
   };
 
   const addSampleFileHandler = async () => {
-    await addSampleFile(pType);
+    const isSaved = await addSampleFile(pType);
+    if (!isSaved) return;
+
     getSampleFiles();
     setSamplePopupState(false);
     setShowCompleteFile(true);
     setSampleData(getSampleObject());
+  };
+
+  const handleDeleteFile = async (sf_id) => {
+    await deleteSample(sf_id, pType);
+    setSelectedSampleId(null);
+    getSampleFiles();
   };
 
   return (
@@ -134,8 +228,30 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             type="checkbox"
             name={inputName}
             isChecked={data[`${inputName}`]}
+            isDisabled={isViewPage}
             changeHandler={(e) => changeHandler(e, data, setData)}
           />
+        </div>
+        <div className={`${styles.serviceMode}`}>
+          <label>Training Mode: </label>
+          <div className={`${styles.modeCheckbox}`}>
+            <LabeledRadioCheckbox
+              label="Online"
+              type="checkbox"
+              name="isExpertiseOnline"
+              isChecked={data?.isExpertiseOnline}
+              isDisabled={isViewPage || !data?.isApplicable}
+              changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+            <LabeledRadioCheckbox
+              label="Offline"
+              type="checkbox"
+              isDisabled={isViewPage || !data?.isApplicable}
+              name="isExpertiseOffline"
+              isChecked={data?.isExpertiseOffline}
+              changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+          </div>
         </div>
         <div className={`${styles.serviceDescriptionExpertise}`}>
           <div className={`${styles.serviceDescription}`}>
@@ -144,7 +260,9 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
               inputOptions={{
                 inputName: 'serviceDescription',
                 placeholder: 'Describe your service in 160 characters',
-                value: data.serviceDescription
+                maxLength: 160,
+                value: data.serviceDescription,
+                isDisabled: isViewPage || !data?.isApplicable
               }}
               changeHandler={(e) => changeHandler(e, data, setData)}
             />
@@ -157,18 +275,23 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 text={experticeName}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
-                handleClick={() => setExpertisePopupState(true)}
+                handleClick={() => {
+                  setExpertisePopupState(true);
+                }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.expertises?.map((expert, index) => (
+                  {tempExpertise?.map((expert, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={expert}
                         value={expert}
-                        isChecked={true}
+                        isChecked={selectedExpertise?.includes(expert)}
+                        changeHandler={handleAddRemoveExpertise}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -177,7 +300,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setExpertisePopupState(true)}
+                  handleClick={() => {
+                    setExpertisePopupState(true);
+                    setSelectedExpertise([...selectedExpertise]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -192,17 +319,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setLanguagePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.languages?.map((lang, index) => (
+                  {tempLanguages?.map((lang, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={lang}
                         value={lang}
-                        isChecked={true}
+                        isChecked={selectedLanguages?.includes(lang)}
+                        changeHandler={handleAddRemoveLanguage}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -211,7 +341,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setLanguagePopupState(true)}
+                  handleClick={() => {
+                    setLanguagePopupState(true);
+                    setSelectedLanguages([...selectedLanguages]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -224,17 +358,20 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => setOPDeliverablePopupState(true)}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
                 <div className={`${styles.languages}`}>
-                  {data?.formats?.map((format, index) => (
+                  {tempFormats?.map((format, index) => (
                     <div className={`${styles.singleLanguage}`} key={index}>
                       <LabeledRadioCheckbox
                         type="checkbox"
                         label={format}
                         value={format}
-                        isChecked={true}
+                        isChecked={selectedFormats?.includes(format)}
+                        changeHandler={handleAddRemoveFormats}
+                        isDisabled={isViewPage || !data?.isApplicable}
                       />
                     </div>
                   ))}
@@ -243,7 +380,11 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   text="Add more"
                   styleClass={`${styles.button}`}
                   imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setOPDeliverablePopupState(true)}
+                  handleClick={() => {
+                    setOPDeliverablePopupState(true);
+                    setSelectedFormats([...selectedFormats]);
+                  }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
@@ -252,7 +393,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <div className={`${styles.addSampleFilesProfiles}`}>
           <div className={`${styles.addSampleFiles}`}>
             <label for="sampleFiles">Sample Files: </label>
-            {!fileData[0]?.length ? (
+            {!fileData?.length ? (
               <IconButton
                 text="Add sample files"
                 styleClass={`${styles.button}`}
@@ -261,14 +402,29 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                   setSamplePopupState(true);
                   getSampleFiles();
                 }}
+                isDisabled={isViewPage || !data?.isApplicable}
               />
             ) : (
               <>
                 <div className={`${styles.showFilesMain}`}>
-                  {fileData[0]?.map((file) => (
+                  {fileData?.map((file) => (
                     <div className={`${styles.showFiles}`}>
                       <img src="/images/svg/description.svg" alt="" />
-                      {typeof file === 'string' ? file : file?.name + '.' + file?.fileType}
+                      {typeof file === 'string' ? file : file?.name}
+                      {/* <div className={`${styles.actionIcons}`}> */}
+                      <img
+                        src="/images/svg/eye-line.svg"
+                        className={`${styles.previewIcon}`}
+                        onClick={() => {
+                          setPreviewState(+file.id);
+                        }}
+                      />
+                      <img
+                        className={`${styles.deleteIcon}`}
+                        src="/images/svg/delete-outline.svg"
+                        onClick={() => setSelectedSampleId(file.sf_id)}
+                      />
+                      {/* </div> */}
                     </div>
                   ))}
                 </div>
@@ -280,41 +436,41 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
                     setSamplePopupState(true);
                     getSampleFiles();
                   }}
+                  isDisabled={isViewPage || !data?.isApplicable}
                 />
               </>
             )}
           </div>
-          <div className={`${styles.addProfiles}`}>
-            <label for="profiles">Add profiles: </label>
-            {!profileDetails?.length ? (
+
+          {!isIndividual && (
+            <div className={`${styles.addProfiles}`}>
+              <label for="profiles">Add profiles: </label>
+              <div className={`${styles.showFilesMain}`}>
+                {profileDetails?.map((data) => {
+                  if (pType === 'sme' && !data?.sme_expertise?.length) return null;
+                  if (pType === 'crt' && !data?.classroom_expertise?.length) return null;
+                  if (pType === 'cd' && !data?.content_development?.length) return null;
+
+                  return (
+                    <div className={`${styles.showFiles}`}>
+                      <img src="/images/svg/account_circle.svg" alt="" />
+                      {data?.first_name + '(' + data?.email + ')'}
+                    </div>
+                  );
+                })}
+              </div>
               <IconButton
-                text="Add profiles"
+                text={!profileDetails?.length ? 'Add more' : 'Add Profiles'}
                 styleClass={`${styles.button}`}
                 imgUrl="/images/svg/add_circle.svg"
+                isDisabled={isViewPage || !data?.isApplicable}
                 handleClick={() => {
-                  setProfileData(getProfileObject());
+                  if (!profileDetails?.length) setProfileData(getProfileObject());
                   setIsOpenProfile(true);
                 }}
               />
-            ) : (
-              <>
-                <div className={`${styles.showFilesMain}`}>
-                  {profileDetails?.map((data) => (
-                    <div className={`${styles.showFiles}`}>
-                      <img src="/images/svg/account_circle.svg" alt="" />
-                      {data?.first_name + '&' + data?.email}
-                    </div>
-                  ))}
-                </div>
-                <IconButton
-                  text="Add more"
-                  styleClass={`${styles.button}`}
-                  imgUrl="/images/svg/add_circle.svg"
-                  handleClick={() => setIsOpenProfile(true)}
-                />
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
       <VendorPopUp
@@ -322,7 +478,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[expertisePopupState, setExpertisePopupState]}
         size="large"
         title="Add expertise"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeExpertiseHandler }}
         submitBtn={{ name: 'Add', handleClick: addExpertiseHandler }}>
         <AddExpertise
           expertiseValue={expertiseSearch}
@@ -357,7 +513,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[languagePopupState, setLanguagePopupState]}
         size="small"
         title="Add language"
-        closeBtn={{ name: 'Cancel' }}
+        closeBtn={{ name: 'Cancel', handleClick: closeLanguagesHandler }}
         submitBtn={{ name: 'Add', handleClick: addLanguagesHandler }}>
         {VENDOR_LANGUAGES.map((data, index) => {
           return (
@@ -378,10 +534,21 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         popUpState={[opdeliverablePopupState, setOPDeliverablePopupState]}
         size="medium"
         title="Add O/P deliverable formats"
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}>
+        closeBtn={{
+          name: 'Cancel',
+          handleClick: closeFormatsHandler,
+          handleClick: () => {
+            setNewOPFormat('');
+            setOPDeliverablePopupState(false);
+          }
+        }}
+        submitBtn={{ name: 'Add', handleClick: addFormatsHandler }}
+        onCloseWithCross={() => {
+          setNewOPFormat('');
+          setOPDeliverablePopupState(false);
+        }}>
         <h4>Select Format</h4>
-        {VENDOR_FILE_FORMATS.map((data, index) => {
+        {displayFormats.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox}`}>
               <LabeledRadioCheckbox
@@ -399,15 +566,23 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         <LabeledInput
           inputOptions={{
             inputName: 'fileFormat',
-            placeholder: 'Enter O/P deliverable format name'
+            placeholder: 'Enter O/P deliverable format name',
+            value: newOPFormat
           }}
           styleClass={`${styles.opdInput}`}
+          changeHandler={(e) => setNewOPFormat(e.target.value)}
         />
         <IconButton
           text="Create"
           imgUrl="/images/edit.png"
           styleClass="btnGrey"
           styleClasses={`${styles.opdCreateButton}`}
+          handleClick={() => {
+            if (!newOPFormat?.trim()?.length) return;
+            setDisplayFormats([...displayFormats, newOPFormat]);
+            setSelectedFormats([...selectedFormats, newOPFormat]);
+            setNewOPFormat();
+          }}
         />
       </VendorPopUp>
       <VendorPopUp
@@ -417,7 +592,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         title="Add Sample"
         closeBtn={{ name: 'Cancel' }}
         submitBtn={{
-          name: 'Add',
+          name: 'Done',
           handleClick: () => {
             setSamplePopupState(false);
           }
@@ -436,6 +611,55 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
         }}>
         <AddSample />
       </VendorPopUp>
+
+      {previewState != null && (
+        <VendorPopUp
+          open={previewState}
+          popUpState={[true, setPreviewState]}
+          title={fileData?.[previewState]?.name}
+          size="large"
+          headerComps={
+            <div className={`${styles.sampleDetailButton}`}>
+              <img
+                src="/images/svg/info.svg"
+                alt=""
+                onClick={() => setSampleDetails(!sampleDetails)}
+              />
+            </div>
+          }
+          isFooterVisible={false}>
+          <SampleFilePreview
+            sampleFile={{
+              ...fileData?.[previewState],
+              fileUrl: fileData?.[previewState]?.file_url
+            }}
+            isDetailsOpen={sampleDetails}
+            handleNextClick={() => {
+              let updatedIndex = +previewState + 1;
+              if (updatedIndex === fileData?.length) updatedIndex = 0;
+              setPreviewState(+updatedIndex);
+            }}
+            handlePrevClick={() => {
+              let updatedIndex = +previewState - 1;
+              if (updatedIndex < 0) updatedIndex = fileData?.length - 1;
+              setPreviewState(+updatedIndex);
+            }}
+          />
+        </VendorPopUp>
+      )}
+
+      {!!selectedSampleId && (
+        <ConfirmPopUp
+          title={`Are you sure to delete this sample file?`}
+          btnObj={{
+            handleClickLeft: (e) => {
+              e.currentTarget.disabled = true;
+              handleDeleteFile(selectedSampleId);
+            },
+            handleClickRight: () => setSelectedSampleId(null)
+          }}
+        />
+      )}
     </>
   );
 }

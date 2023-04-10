@@ -1,52 +1,42 @@
-import TabContainer from '@/common/TabContainer';
 import AdminHeader from '@/components/common/AdminHeader';
 import MainBody from '@/components/common/MainBody';
 import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import AddVendorCourses from '@/components/VendorComps/AddVendor/AddVendorCourses';
-import AddVendorServices from '@/components/VendorComps/AddVendor/AddVendorServices';
-import VendorMaster from '@/components/VendorComps/AddVendor/VendorMaster';
-import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
-import ProfileManageVendor from '@/components/VendorComps/ProfileMangeVendor';
-import VendorOrders from '@/components/VendorComps/VendorOrders';
-import VendorUsers from '@/components/VendorComps/VendorUsers';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
-import { useState } from 'react';
-import useHandleVendorMaster from '@/components/VendorComps/Logic/useHandleVendorMaster';
-import useHandleVendorServices from '@/components/VendorComps/Logic/useHandleVendorServices';
 import ManageVendorTabs from '@/components/VendorComps/ManageVendorTabs';
+import {
+  CdServicesAtom,
+  CtServicesAtom,
+  getCDServicesObject,
+  getCTServicesObject,
+  getProfileObject,
+  getSMEServicesObject,
+  getVendorObject,
+  SmeServicesAtom,
+  VendorProfileAtom,
+  VendorStateAtom,
+  vendorUserInviteAtom
+} from '@/state/atoms/vendor.atoms';
+import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
 
 export default function VendorInfo() {
-  const tabData = [
-    {
-      name: 'Master',
-      component: <VendorMaster />
-    },
-    {
-      name: 'Services',
-      component: <AddVendorServices />
-    },
-    {
-      name: 'Profiles',
-      component: <ProfileManageVendor />
-    },
-    {
-      name: 'Courses',
-      component: <AddVendorCourses />
-    },
-    {
-      name: 'Orders',
-      component: <VendorOrders />
-    },
-    {
-      name: 'Users',
-      component: <VendorUsers />
-    }
-  ];
+  const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
+  const [smeData, setSMEData] = useRecoilState(SmeServicesAtom);
+  const [ctData, setCTData] = useRecoilState(CtServicesAtom);
+  const [cdData, setCDData] = useRecoilState(CdServicesAtom);
+  const [profileData, setProfileData] = useRecoilState(VendorProfileAtom);
+  const [emailId, setEmailId] = useRecoilState(vendorUserInviteAtom);
 
-  const [tab, setTab] = useState(tabData[0].name);
-
+  // reset all recoil state
+  useEffect(() => {
+    setVendorData(getVendorObject({ type: vendorData?.type, lspId: vendorData?.lspId }));
+    setSMEData(getSMEServicesObject());
+    setCTData(getCTServicesObject());
+    setCDData(getCDServicesObject());
+    setProfileData(getProfileObject());
+    setEmailId([]);
+  }, []);
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />

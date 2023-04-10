@@ -6,12 +6,11 @@
       "@/components/*": ["components/*"],
       "@/common/*": ["components/common/*"],
       "@/helper/*": ["helper/*"],
+      "@/constants/*": ["constants/*"],
       "@/state/*": ["state/*"],
       "@/styles/*": ["styles/*"],
       "@/api/*": ["API/*"],
       "@/utils/*": ["utils/*"]
-      //   "/jsx-dev-runtime": ["/jsx-dev-runtime.js"],
-      // "/jsx-runtime": ["/jsx-runtime.js"]
     }
   }
 }

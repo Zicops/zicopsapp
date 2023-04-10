@@ -283,14 +283,24 @@
 
 .cardVendorContainer {
   width: 100%;
-  // height: 10vh;
   color: white;
-
-  .cardInnerVendorContainer {
+  border: 2px solid transparent;
+  &:hover {
+    transform: scale(1.2);
+    transition: all 300ms 0.6s;
+    & .vendorImage{
+      box-shadow: 0 0 10px 0 $black;
+    }
   }
 
   .vendorImage {
-    width: 100%;
+    background-color: $darkThree;
+    border-radius: 20px;
+    img {
+      border-radius: 10px;
+      aspect-ratio: 1/1;
+      width: 100%;
+    }
   }
   .vendorTitle {
     font-size: 1em;
@@ -299,5 +309,6 @@
   .vendorType {
     font-size: 0.7em;
     color: $bgBody;
+    text-transform: capitalize
   }
 }

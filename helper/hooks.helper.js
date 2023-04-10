@@ -1,4 +1,3 @@
-import { API_LINKS } from '@/api/api.helper';
 import {
   GET_CATS_AND_SUB_CAT_MAIN,
   GET_COURSE,
@@ -16,8 +15,8 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
-  userClient,
-  USER_LOGIN
+  USER_LOGIN,
+  userClient
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -32,16 +31,17 @@ import {
   GET_USER_PREFERENCES_DETAILS,
   userQueryClient
 } from '@/api/UserQueries';
+import { API_LINKS } from '@/api/api.helper';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
 import { CatSubCatAtom, FeatureFlagsAtom, UserDataAtom } from '@/state/atoms/global.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import {
   DisabledUserAtom,
-  getUserObject,
   InviteUserAtom,
   IsUpdatedAtom,
+  UserStateAtom,
   UsersOrganizationAtom,
-  UserStateAtom
+  getUserObject
 } from '@/state/atoms/users.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -50,7 +50,7 @@ import {
   validatePhoneNumberLength
 } from 'libphonenumber-js';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from './api.helper';
 import { getCurrentEpochTime } from './common.helper';
@@ -89,7 +89,7 @@ export function useHandleCatSubCat(selectedCategory) {
 
     const _lspId = sessionStorage?.getItem('lsp_id');
     const zicopsLsp = COMMON_LSPS.zicops;
-    const loadDataFunction = isDev ? loadAndCacheDataAsync : loadQueryDataAsync;
+    const loadDataFunction = loadQueryDataAsync;
     const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
       lsp_ids: [zicopsLsp]
     });
@@ -1013,15 +1013,6 @@ export function useUpdateUserAboutData() {
   async function updateUserLsp(userData = null) {
     userData = userData ? userData : newUserAboutData;
 
-    //     console.log(userData,'userData');
-    //  return ;
-    // if (disabledUserList)
-
-    // finding is admin is trying to disable the recent user or not
-    // if (disabledUserList?.includes(userData?.id)) return setToastMsg({ type: 'info', message: 'User is already disabled!' });
-    // if (userData?.status?.toLowerCase() === 'disabled')
-    //   return setToastMsg({ type: 'info', message: 'User is already disabled!' });
-
     if (userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()) {
       const res = await getPrefData({
         variables: { user_id: userData?.id, user_lsp_id: userData?.user_lsp_id }
@@ -1042,10 +1033,12 @@ export function useUpdateUserAboutData() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Update User LSP Error' });
     });
-    // console.log(res);
+
     if (sendLspData?.status === '') {
       setInvitedUsers((prev) => [...prev, userData?.user_id]);
     }
+
+    if (!isError) setNewUserAboutData((prev) => ({ ...prev, status: userData.status }));
     return !isError;
   }
 
@@ -1124,8 +1117,6 @@ export function useUpdateUserAboutData() {
     for (let i = 0; i < users?.length; i++) {
       const user = users[i];
       if (user?.id === userDataAbout?.id) continue;
-      if (disabledUserList?.includes(user?.id)) continue;
-      // console.log(disabledUserList,'fs',user?.lsp_status)
       if (user?.lsp_status?.toLowerCase() !== USER_MAP_STATUS?.disable?.toLowerCase()) {
         const userSendLspData = {
           id: user?.id,
@@ -1140,11 +1131,7 @@ export function useUpdateUserAboutData() {
         userIds?.push(user?.id);
       }
     }
-    if (!isError) {
-      if (!userIds?.length) return !isError;
-      setDisabledUserList((prev) => [...prev, ...userIds]);
-    }
-    // console.log(isError);
+    if (!isError && !userIds?.length) return !isError;
     return !isError;
   }
   async function updateMultiUserAbout() {
@@ -1365,4 +1352,85 @@ export function useAsync(asyncFn, onSuccess) {
       isActive = false;
     };
   }, [asyncFn, onSuccess]);
+}
+
+// https://usehooks.com/useDebounce/
+export function useDebounce(value, delay) {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+      // Cancel the timeout if value changes (also on delay change or unmount)
+      // This is how we prevent debounced value from updating if value is changed ...
+      // .. within the delay period. Timeout gets cleared and restarted.
+      return () => {
+        clearTimeout(handler);
+      };
+    },
+    [value, delay] // Only re-call effect if value or delay changes
+  );
+
+  return debouncedValue;
+}
+
+const fifteenSeconds = 1000 * 15;
+// https://www.joshwcomeau.com/snippets/react-hooks/use-timeout/
+export function useTimeout(callback, delay = fifteenSeconds) {
+  const timeoutRef = useRef(null);
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    const tick = () => savedCallback.current();
+
+    if (typeof delay === 'number') {
+      timeoutRef.current = window.setTimeout(tick, delay);
+      return () => window.clearTimeout(timeoutRef.current);
+    }
+  }, [delay]);
+
+  return timeoutRef;
+}
+
+export function useTimeInterval(callback, delay = fifteenSeconds, dependencies = []) {
+  const timeoutId = useRef(null);
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    savedCallback.current();
+  }, []);
+
+  useEffect(() => {
+    if (typeof delay !== 'number') return;
+
+    const handleTick = () => {
+      timeoutId.current = window.setTimeout(() => {
+        savedCallback.current();
+
+        handleTick();
+      }, delay);
+    };
+
+    handleTick();
+
+    return () => window.clearTimeout(timeoutId.current);
+  }, [delay, ...(dependencies || [])]);
+
+  const cancel = useCallback(function () {
+    window.clearTimeout(timeoutId.current);
+  }, []);
+
+  return cancel;
 }

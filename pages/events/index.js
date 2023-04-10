@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { bigImages, classroomSlider1, classroomSlider2, sliderImages } from '../../API/DemoSliderData';
+import { bigImages, eventSlider1, eventSlider2, eventSliderImages, sliderImages } from '../../API/DemoSliderData';
 import CommonCalendar from '../../components/common/CommonCalendar';
 import { useRouter } from 'next/router';
 import Options from '../../components/Exams/Options';
@@ -9,6 +9,8 @@ import FavouriteDndCourses from '../../components/FavouriteDndCourses';
 import BigCardSlider from '../../components/medium/BigCardSlider';
 import ZicopsCarousel from '../../components/ZicopsCarousel';
 import EventGrid from '@/components/EventGrid';
+import { eventData } from '@/components/ClassRoomBanner/eventBanner.helper';
+import ClassRoomBanner from '@/components/ClassRoomBanner';
 
 const Events = () => {
   const router = useRouter();
@@ -136,18 +138,18 @@ const Events = () => {
     <div
       style={{
         backgroundColor: 'var(--tile-bg)',
-        overflow: 'hidden',
+        overflow: 'clip',
         margin: 0,
-        padding: '0 0 0 0'
+        padding: '0 0 20px 0'
       }}>
-      {/* <HeroSliderContainer> */}
-        <EventGrid />
-        {/* {imageLink.map((item) => (
-          <img src={item} alt="" />
-        ))} */}
-      {/* </HeroSliderContainer> */}
-      <ZicopsCarousel title="Subscribed Classroom Courses" data={classroomSlider1} />
-      <ZicopsCarousel title="Recomended For You" data={classroomSlider2} />
+      {/* <EventGrid /> */}
+      <HeroSliderContainer>
+        {eventData.map((item) => (
+          <ClassRoomBanner data={item} />
+        ))}
+      </HeroSliderContainer>
+      <ZicopsCarousel title="Currently Live Events" data={eventSlider1} />
+      <ZicopsCarousel title="Your Registered Events" data={eventSlider2} />
 
       {/* <div style={{ display: 'flex', padding: '70px 0', backgroundColor: 'var(--black)' }}>
         <div className="w-60 border_right">
@@ -159,12 +161,12 @@ const Events = () => {
       </div> */}
       {/* <SelfPacedMiddle /> */}
 
-      <ZicopsCarousel title="Trending" data={sliderImages} />
-      <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
+      <ZicopsCarousel title="Events From Your Organization" data={eventSliderImages} />
+      {/* <BigCardSlider title="Recomended Premier Courses" data={bigImages} slide={realSquare} />
       <ZicopsCarousel title="Live Events" data={sliderImages} />
       <ZicopsCarousel title="Your Attended Events" data={sliderImages} />
       <ZicopsCarousel title="Upcoming Events" data={sliderImages} />
-      <ZicopsCarousel title="Live Events" data={sliderImages} />
+      <ZicopsCarousel title="Live Events" data={sliderImages} /> */}
 
       {/* <Link href="/courses">
       <a>Courses</a>

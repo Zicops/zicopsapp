@@ -11,6 +11,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    .servicesHeading {
+      color: $white;
+    }
   }
 }
 
@@ -31,6 +35,7 @@
   .expertisePill {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
   }
 
   .expertisePill p {
@@ -55,6 +60,7 @@
 
   .languagesPill {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
   }
 
@@ -103,10 +109,43 @@
   .sampleFiles {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-    img {
-      width: 20%;
+
+    .sampleFile {
+      border: 1px solid $secondary;
+      background-color: $darkTwo;
+      width: 20em;
+      padding: 15px;
+
+      display: flex;
+      align-items: center;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       cursor: pointer;
+
+      .sampleFileImage {
+        width: 30%;
+        background-color: $secondary;
+        img {
+          width: 100%;
+          cursor: pointer;
+        }
+      }
+
+      .sampleFileDetails {
+        display: flex;
+        flex-direction: column;
+        padding: 0 15px;
+        gap: 15px;
+        width: 70%;
+
+        .sampleFileRate {
+          color: $bgBody;
+        }
+      }
     }
   }
 }
@@ -118,15 +157,16 @@
   position: relative;
 
   .sampleFilePreview {
+    height: 60vh;
     object-fit: contain;
-    height: 100%;
-    width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: auto;
 
-    img {
+    img,
+    video {
       height: 100%;
     }
   }
@@ -180,23 +220,23 @@
 }
 
 .sampleDetailButton {
-  margin-left: 550px;
+  flex: 1;
+  text-align: right;
+  margin: auto 1em;
 }
 
 .vendorDetailsContainer {
   width: 100%;
-  height: 400px;
-  display: flex;
-  justify-content: space-between;
+
   margin-top: 20px;
   box-shadow: 0 0 20px 0 rgba($darkOne, 0.5);
   color: $white;
 
   .details {
-    width: 49%;
+    width: 100%;
     height: 100%;
     background-color: $darkOne;
-    border-radius: 8px;
+    border-radius: 4px;
     border: 2px solid $accent;
     font-weight: 400;
     padding-left: 25px;
@@ -204,35 +244,37 @@
   }
 
   .detailsData {
-    padding-top: 30px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 15px;
 
+    padding-top: 15px;
+    padding-bottom: 25px;
     span {
       color: $bgBody;
     }
   }
 
-  .socialMedia {
-    width: 49%;
-    height: 100%;
-    background-color: $darkOne;
-    border-radius: 8px;
-    border: 2px solid $accent;
-    padding-left: 25px;
-    padding-top: 30px;
+  hr {
+    margin-top: 30px;
+    width: 62em;
+    margin-bottom: 20px;
+    border: 0.5px solid $secondary;
   }
-}
 
-.courseVendorContainer {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 30%);
-  gap: 15px;
+  .marketyardSocialMediaIcons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    margin-bottom: 4%;
 
-  img {
-    width: 100%;
+    img {
+      // border: 1px solid #747474;
+      // border-radius: 5px;
+      cursor: pointer;
+      // width: 4%;
+      margin-top: 5px;
+    }
   }
 }
 
@@ -243,13 +285,13 @@
     width: 100%;
     height: 50px;
     border-radius: 5px;
-    background-color: #5c5c5c;
-    color: white;
+    background-color: $darkTwo;
+    color: $white;
     border: 1px solid #5c5c5c;
     padding-left: 15px;
     background-image: url('/images/search3.png');
     background-repeat: no-repeat;
-    background-position: right center;
+    background-position: calc(100% - 15px) center;
   }
   ::placeholder {
     color: $white;
@@ -259,10 +301,10 @@
 
 .vendorIndividualProfilesContainer {
   width: 100%;
-  height: 198px;
   border: 1px solid $secondaryWhite;
   border-radius: 5px;
   margin-top: 15px;
+  padding: 10px;
   display: flex;
   // justify-content: space-evenly;
   align-items: center;
@@ -272,12 +314,8 @@
     width: 50%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 35px;
-    .arrowImage {
-      margin-right: 20px;
-      cursor: pointer;
-    }
   }
 
   .profileImage {
@@ -302,27 +340,37 @@
   .profileExperience {
     color: $bgBody;
   }
+  .rightSide {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    .servicesPillContainer {
+      .servicesPill {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        p {
+          background-color: transparent;
+          border: 1px solid $secondaryBlack;
+          color: $bgBody;
+        }
+      }
 
-  .servicesPillContainer {
-    .servicesPill {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
       p {
-        background-color: transparent;
-        border: 1px solid $secondaryBlack;
-        color: $bgBody;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        background-color: $secondary;
+        border-radius: 5px;
       }
     }
-
-    p {
-      padding-left: 15px;
-      padding-right: 15px;
-      padding-bottom: 5px;
-      padding-top: 5px;
-      background-color: $secondary;
-      border-radius: 5px;
-    }
+  }
+  .arrowImage {
+    margin-right: 20px;
+    cursor: pointer;
   }
 }
 
@@ -456,6 +504,10 @@
       color: $white;
     }
   }
+
+  .email {
+    margin-top: 20px;
+  }
 }
 
 .viewProfilesContainer {
@@ -559,6 +611,18 @@
 .addServiceContainer {
   color: $white;
 
+  .serviceMode {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+
+    .modeCheckbox {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+  }
+
   .serviceDescriptionExpertise {
     display: flex;
     margin-top: 15px;
@@ -572,6 +636,10 @@
         margin-top: 10px;
         border: 1px solid $secondaryWhite;
         border-radius: 4px;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
 
@@ -594,13 +662,17 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
       .languages {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         margin-top: 8px;
- 
+
         .singleLanguage {
           background: $bgTile;
           padding: 12px 16px;
@@ -633,20 +705,24 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
-        .languages {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-    
-          .singleLanguage {
-            background: $bgTile;
-            padding: 12px 16px;
-            border-radius: 4px;
-          }
-        }
+    .languages {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+
+      .singleLanguage {
+        background: $bgTile;
+        padding: 12px 16px;
+        border-radius: 4px;
+      }
+    }
 
     .addOPFormat {
       width: 50%;
@@ -666,6 +742,10 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
   }
@@ -694,15 +774,18 @@
         border-radius: 5px;
         margin-top: 10px;
         cursor: pointer;
+
+        &:disabled {
+          opacity: 0.3;
+        }
       }
     }
-    .showFilesMain{
+    .showFilesMain {
       display: flex;
       flex-direction: column;
       gap: 5px;
-      
 
-      .showFiles{
+      .showFiles {
         display: flex;
         gap: 10px;
         width: fit-content;
@@ -710,10 +793,28 @@
         background: $bgTile;
         border: 1px solid $secondary;
         border-radius: 4px;
-        img{
-          width: 30px;
-          height: 30px;
+        > img {
+          width: 20px;
+          // height: 30px;
         }
+
+        .previewIcon,
+        .deleteIcon {
+          cursor: pointer;
+
+          &:disabled {
+            opacity: 0.3;
+          }
+        }
+        // .actionIcons {
+        //   display: flex;
+        //   width: 20px;
+        //   object-fit: cover;
+        //   gap: 5px;
+        //   img {
+        //     width: 100%;
+        //   }
+        // }
       }
     }
 
@@ -743,7 +844,7 @@
 
 .marketHeroContainer {
   background-image: url('/images/svg/vendorHero.svg');
-  height: 60vh;
+  height: max(50vh, 350px);
   background-size: cover;
   background-repeat: no-repeat;
   .marketHeroDetails {
@@ -752,6 +853,12 @@
       padding-top: 10px;
       font-size: 20px;
       font-weight: 600;
+      color: $white;
+    }
+    .company {
+      padding-top: 0px;
+      font-size: 18px;
+      font-weight: 400;
       color: $white;
     }
     .courseImage {
@@ -896,7 +1003,7 @@
   }
   .OrderValue {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     p {
       color: $bgBody;
     }
@@ -904,8 +1011,8 @@
 }
 
 .ReviewBottomContainer {
-  padding-left: 30%;
-  padding-right: 10%;
+  padding-left: 65%;
+  // padding-right: 10%;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -938,7 +1045,7 @@
     border: 1px solid #747474;
     border-radius: 4px;
     text-align: center;
-    padding: 7px 0px;
+    width: 100px;
     margin-top: 10px;
   }
 }
@@ -1001,31 +1108,30 @@
       margin-top: 8px;
       cursor: pointer;
     }
-        .exButton {
-          background-color: $bgTile !important;
-          width: max-content;
-          flex-direction: row;
-          span{
-            display: flex;
-            align-items: center;
-            img{
-              width: 24px;
-              height: 24px;
-            }
-
-          }
-        }
-  }
-  .languages{
+    .exButton {
+      background-color: $bgTile !important;
+      width: max-content;
+      flex-direction: row;
+      span {
         display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 8px;
-          .singleLanguage{
-                background: $bgTile;
-                  padding: 12px 16px;
-                  border-radius: 4px;
-          }
+        align-items: center;
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+    .singleLanguage {
+      background: $bgTile;
+      padding: 12px 16px;
+      border-radius: 4px;
+    }
   }
 }
 
@@ -1111,7 +1217,8 @@
 .dropDownMain {
   margin-top: 8px;
 }
-.singleProfileContainer , .singleFileContainer{
+.singleProfileContainer,
+.singleFileContainer {
   max-height: 146px;
   padding: 16px;
   background: #1a1a1a;
@@ -1156,37 +1263,38 @@
   .editIcon {
     cursor: pointer;
   }
-  .singleFileDetails{
+  .singleFileDetails {
     display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 70%;
-      color: $white;
-      .fileName{
-        font-size: 20px;
-      }
-      .filePrice{
-        display: flex;
-          width: 100%;
-          font-size: 18px;
-          justify-content: space-between;
-          align-items: center;
-          color: $bgBody;
-      }
-  }
-    .deleteIcon {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-     width: 20px;
-    height: 20px;
-      img {
-       width: 100%;
-       height: 100%;
-      }
+    flex-direction: column;
+    justify-content: space-between;
+    width: 70%;
+    color: $white;
+    .fileName {
+      font-size: 20px;
     }
+    .filePrice {
+      display: flex;
+      width: 100%;
+      font-size: 18px;
+      justify-content: space-between;
+      align-items: center;
+      color: $bgBody;
+    }
+  }
+  .deleteIcon {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
-.manageVendorProfileMain , .vendorFileMain {
+.manageVendorProfileMain,
+.vendorFileMain {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -1215,6 +1323,10 @@
     padding-right: 15px;
     border-radius: 5px;
     cursor: pointer;
+
+    &:disabled {
+      opacity: 0.3;
+    }
   }
 }
 
@@ -1320,7 +1432,7 @@
     width: 33%;
 
     .currencyDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 
@@ -1328,20 +1440,18 @@
     width: 33%;
 
     .unitDropDown {
-      margin-top: 10px;
+      margin-top: 12px;
     }
   }
 }
 
 .marketYardFrameContainer {
   height: 50vh;
-  background: linear-gradient(
-    265.52deg,
-    #6bcfcf -12.05%,
-    #52b7bd -1.4%,
-    #369caa 72.51%,
-    #369caa 105.51%
-  );
+  background-image: url('/images/shop-transparent.png'),
+    linear-gradient(265.52deg, #6bcfcf -12.05%, #52b7bd -1.4%, #369caa 72.51%, #369caa 105.51%);
+  background-size: 60%, 100%;
+  background-position: bottom left;
+  background-repeat: no-repeat;
   position: relative;
 
   .frameImage {
@@ -1375,6 +1485,7 @@
         background-repeat: no-repeat;
         background-position: 5% 50%;
         outline: none;
+        color: $white;
       }
 
       ::placeholder {
@@ -1477,4 +1588,120 @@
       margin-top: 10px;
     }
   }
+}
+
+.merketExprienceContainer {
+  background-color: $darkOne;
+  border-radius: 8px;
+  padding: 24px;
+  color: $white;
+  .experienceHeading {
+    padding-bottom: 10px;
+    font-size: 18px;
+  }
+  .experienceLine {
+    border: 1px solid #292f2f;
+  }
+  .experienceMain {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    .companyImage {
+      width: 80px;
+      height: 80px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+    .companyExperienceDetails {
+      .companyPosition {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .companyName {
+        font-size: 16px;
+      }
+      .companyExperiencDate {
+        font-size: 16px;
+        color: #acacac;
+        .dot {
+          height: 3px;
+          width: 3px;
+          margin: 4px;
+          background-color: $white;
+          border-radius: 50%;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.experienceContainer {
+  color: $white;
+  height: 300px;
+  background-color: $darkTwo;
+
+  .individualExperience {
+    .individualExperienceContainer {
+      display: flex;
+      align-items: center;
+
+      .companyLogo {
+        width: 15%;
+
+        img {
+          width: 100%;
+        }
+      }
+
+      .details {
+        .dates {
+          color: $bgBody;
+        }
+      }
+    }
+  }
+}
+
+.fallback {
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  text-align: center;
+  margin: 2em;
+
+  color: $white;
+}
+.vendorCourseTab {
+  padding: 2em;
+}
+
+.downloadBtn {
+  text-align: center;
+
+  button {
+    background-color: transparent;
+    color: $primary;
+    border: 2px solid $primary;
+    padding: 0.5em 1em;
+    margin: 1em;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary;
+      color: $black;
+    }
+  }
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

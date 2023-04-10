@@ -74,17 +74,21 @@ export default function TabContainer({
     <>
       <nav className={`${styles.tabHeader}`}>
         <ul>
-          {tabData.map((t) => (
-            <li
-              key={t.name}
-              className={tab === t.name ? `${styles.tabli} ${styles.active}` : `${styles.tabli}`}
-              onClick={() => {
-                if (isDisabled) return;
-                setTab(t.name);
-              }}>
-              {t.name}
-            </li>
-          ))}
+          {tabData.map((t) => {
+            if (t?.isHidden) return null;
+
+            return (
+              <li
+                key={t.name}
+                className={tab === t.name ? `${styles.tabli} ${styles.active}` : `${styles.tabli}`}
+                onClick={() => {
+                  if (isDisabled) return;
+                  setTab(t.name);
+                }}>
+                {t.name}
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
@@ -103,7 +107,7 @@ export default function TabContainer({
             )}
           </div>
 
-          {children}
+          <div className={`${styles.centerSlot}`}>{children}</div>
 
           <div className={`${styles.rightText}`}>
             <ToolTip title={cancelButtonTitle} placement="left">

@@ -17,7 +17,13 @@ const Notifications = ({ isNav = false }) => {
       {notification?.length ? (
         <AllNotifications isNav={isNav} data={notification?.slice(0, 4)} />
       ) : (
-        <strong className={`${styles.fallbackMsg}`}>No new notifications</strong>
+        <div className={`${styles.notificationFallbackMsg}`}>
+          <strong >No new notifications</strong>
+          <span>
+            Please ensure that notifications are enabled in your browser settings to receive timely
+            updates.
+          </span>
+        </div>
       )}
 
       <div className={`${styles.notification_footer}`}>
