@@ -203,6 +203,16 @@
   }
 }
 
+.columnWise {
+  flex-direction: column;
+  gap: 0.5em;
+
+  label {
+    width: 100%;
+    align-items: baseline;
+  }
+}
+
 .disabledInput {
   border: 2px solid $darkThree;
 }

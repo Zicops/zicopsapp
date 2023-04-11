@@ -10,8 +10,8 @@ import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 import { useRecoilState } from 'recoil';
-import styles from '../../../adminCourseComps.module.scss';
-import ContentBar from './ContentBar';
+import styles from '../../adminCourseComps.module.scss';
+import DataRowWithThreeSection from '../../common/DataRowWithThreeSection';
 
 export default function ResourceForm({ topData = null }) {
   const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
@@ -32,7 +32,7 @@ export default function ResourceForm({ topData = null }) {
       {topicResources == null && <Spinner customStyles={{ margin: '2em auto' }} />}
 
       {resourcesList?.map((res, index) => (
-        <ContentBar
+        <DataRowWithThreeSection
           key={res?.key}
           type={index + 1}
           description={res?.file?.name || getEncodedFileNameFromUrl(res?.url)}
@@ -46,7 +46,7 @@ export default function ResourceForm({ topData = null }) {
               _resources.splice(index, 1);
 
               setTopicResources(_resources);
-            }
+            },
           }}
         />
       ))}
@@ -62,10 +62,10 @@ export default function ResourceForm({ topData = null }) {
                   placeholder: 'Select Resources Type',
                   options: Object.values(TOPIC_RESOURCE_TYPES)?.map((type) => ({
                     value: type,
-                    label: type
+                    label: type,
                   })),
                   isSearchEnable: true,
-                  value: type ? { value: type, label: type } : null
+                  value: type ? { value: type, label: type } : null,
                 }}
                 changeHandler={handleResourceInput}
               />
@@ -79,7 +79,7 @@ export default function ResourceForm({ topData = null }) {
                     inputName: 'name',
                     placeholder: 'Enter document name',
                     maxLength: 20,
-                    value: name
+                    value: name,
                   }}
                   changeHandler={handleResourceInput}
                 />
@@ -100,7 +100,7 @@ export default function ResourceForm({ topData = null }) {
                     inputOptions={{
                       inputName: 'url',
                       placeholder: 'Enter document url',
-                      value: resourceFormData.url
+                      value: resourceFormData.url,
                     }}
                     changeHandler={handleResourceInput}
                   />

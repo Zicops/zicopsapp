@@ -226,20 +226,14 @@ $marginBetweenInputs: 1em;
   color: white;
 }
 
-.aboutDatePicker > div {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
+.aboutDatePicker {
+  position: relative;
 
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
   }
-}
-
-.datePicker {
-  display: flex;
-  flex-direction: column;
 }
 
 .totalDurationLable > div {

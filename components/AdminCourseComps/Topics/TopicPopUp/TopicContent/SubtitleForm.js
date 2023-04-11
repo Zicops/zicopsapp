@@ -1,6 +1,7 @@
 import { DELETE_SUBTITLE } from '@/api/Mutations';
-import RoundedBtn from '@/components/AdminCourseComps/common/RoundedBtn';
 import useHandleTopicSubtitles from '@/components/AdminCourseComps/Logic/useHandleTopicSubtitles';
+import DataRowWithThreeSection from '@/components/AdminCourseComps/common/DataRowWithThreeSection';
+import RoundedBtn from '@/components/AdminCourseComps/common/RoundedBtn';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import IconButton from '@/components/common/IconButton';
@@ -11,7 +12,6 @@ import { SUBTITLE_LANGUAGES } from '@/helper/constants.helper';
 import { CourseMetaDataAtom, TopicSubtitlesAtom } from '@/state/atoms/courses.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
-import ContentBar from './ContentBar';
 
 export default function SubtitleForm({ topData = null }) {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
@@ -21,7 +21,7 @@ export default function SubtitleForm({ topData = null }) {
     useHandleTopicSubtitles(topData);
 
   const languageOptions = SUBTITLE_LANGUAGES?.filter(
-    (lang) => !topicSubtitle?.find((sub) => sub.language === lang)
+    (lang) => !topicSubtitle?.find((sub) => sub.language === lang),
   )?.map((lang) => ({ label: lang, value: lang }));
 
   const subtitleList = topicSubtitle?.map((res, i) => ({ ...res, key: i }));
@@ -30,7 +30,7 @@ export default function SubtitleForm({ topData = null }) {
   return (
     <>
       {subtitleList?.map((subtitle, index) => (
-        <ContentBar
+        <DataRowWithThreeSection
           key={subtitle?.key}
           type={index + 1}
           description={subtitle?.language}
@@ -42,14 +42,14 @@ export default function SubtitleForm({ topData = null }) {
             variableObj: {
               courseId: courseMetaData?.id,
               topicId: subtitle?.topicId,
-              fileName: /\/subtitles\/(.*?)\?/.exec(subtitle?.subtitleUrl)?.[1]
+              fileName: /\/subtitles\/(.*?)\?/.exec(subtitle?.subtitleUrl)?.[1],
             },
             onDelete: () => {
               const _subtitleArr = structuredClone(topicSubtitle);
               _subtitleArr?.splice(index, 1);
 
               setTopicSubtitle(_subtitleArr);
-            }
+            },
           }}
         />
       ))}
@@ -68,7 +68,7 @@ export default function SubtitleForm({ topData = null }) {
                     isSearchEnable: false,
                     value: subtitleFormData.language
                       ? { value: subtitleFormData.language, label: subtitleFormData.language }
-                      : null
+                      : null,
                   }}
                   changeHandler={handleSubtitleInput}
                 />

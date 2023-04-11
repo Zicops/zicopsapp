@@ -12,7 +12,7 @@ import {
   UPLOAD_STATIC_CONTENT,
   UPLOAD_TOPIC_CONTENT_SUBTITLE,
   UPLOAD_TOPIC_CONTENT_VIDEO,
-  UPLOAD_TOPIC_RESOURCE
+  UPLOAD_TOPIC_RESOURCE,
 } from '@/api/Mutations';
 import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import { COURSE_TYPES, TOPIC_CONTENT_TYPES, TOPIC_TYPES } from '@/constants/course.constants';
@@ -29,12 +29,12 @@ import {
   TopicQuizAtom,
   TopicResourcesAtom,
   TopicSubtitlesAtom,
-  TopicUploadProgressAtom
+  TopicUploadProgressAtom,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
-import { getTopicDataObj } from './adminCourseComps.helper';
+import { addTopicResources, getTopicDataObj } from './adminCourseComps.helper';
 
 export default function useHandleTopic(modData = null, chapData = null, topData = null) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
@@ -58,8 +58,8 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
       courseId: courseMetaData?.id,
       moduleId: modData?.id,
       chapterId: chapData?.id,
-      sequence: modData?.topics?.length + 1
-    })
+      sequence: modData?.topics?.length + 1,
+    }),
   );
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
 
   async function addUpdateTopic(e) {
     const isNameSame = !!modData?.topics?.find(
-      (top) => top?.id !== topicData?.id && isWordSame(top?.name, topicData?.name)
+      (top) => top?.id !== topicData?.id && isWordSame(top?.name, topicData?.name),
     );
     if (isNameSame) return setToastMessage('Topic with same name already exists in this module');
 
@@ -135,7 +135,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
 
         const updatedChap = res?.updateCourseTopic;
         _allModules[index].topics = _allModules?.[index]?.topics?.map((chap) =>
-          chap?.id === updatedChap?.id ? updatedChap : chap
+          chap?.id === updatedChap?.id ? updatedChap : chap,
         );
         setAllModules(_allModules);
       })
@@ -153,12 +153,12 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         moduleId: modData?.id,
         language: content.language,
         type: content.type,
-        duration: content.duration,
-        startTime: binge.startTime,
-        skipIntroDuration: binge.skipIntroDuration,
-        nextShowTime: binge.nextShowTime,
-        fromEndTime: binge.fromEndTime,
-        is_default: content.isDefault || false
+        duration: content.duration || 0,
+        startTime: binge.startTime || 0,
+        skipIntroDuration: binge.skipIntroDuration || 0,
+        nextShowTime: binge.nextShowTime || 0,
+        fromEndTime: binge.fromEndTime || 0,
+        is_default: content.isDefault || false,
       };
       if (!content.id) {
         // add topic content
@@ -196,7 +196,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
     const sendVideoData = {
       contentId: content.id,
       courseId: courseMetaData?.id,
-      file: content?.file
+      file: content?.file,
     };
 
     // mp4 and document type
@@ -205,9 +205,10 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         context: {
           fetchOptions: {
             useUpload: true,
-            onProgress: (ev) => setTopicUploadProgress({ [content.language]: ev.loaded / ev.total })
-          }
-        }
+            onProgress: (ev) =>
+              setTopicUploadProgress({ [content.language]: ev.loaded / ev.total }),
+          },
+        },
       }).catch((err) => {
         console.log(err);
         setToastMessage(`Topic Content File Upload Failed for ${content?.language} language`);
@@ -223,9 +224,10 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         context: {
           fetchOptions: {
             useUpload: true,
-            onProgress: (ev) => setTopicUploadProgress({ [content.language]: ev.loaded / ev.total })
-          }
-        }
+            onProgress: (ev) =>
+              setTopicUploadProgress({ [content.language]: ev.loaded / ev.total }),
+          },
+        },
       }).catch((err) => {
         console.log(err);
         setToastMessage(`Topic Content File Upload Failed for ${content?.language} language`);
@@ -242,7 +244,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         topicId: subtitle.topicId,
         courseId: courseMetaData?.id,
         file: subtitle.file,
-        language: subtitle.language
+        language: subtitle.language,
       };
       await mutateData(UPLOAD_TOPIC_CONTENT_SUBTITLE, sendData).catch((err) => {
         console.log(err);
@@ -260,7 +262,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         name: resource.name,
         type: resource.type,
         topicId: resource.topicId,
-        courseId: courseMetaData.id
+        courseId: courseMetaData.id,
       };
       if (resource.file && resource.type !== 'LINK') {
         sendData.file = resource.file;
@@ -289,7 +291,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
       // TODO: remove or update later
       createdBy: 'Zicops',
       updatedBy: 'Zicops',
-      status: QUESTION_STATUS[1]
+      status: QUESTION_STATUS[1],
     };
 
     // add files if available
@@ -306,7 +308,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
     // add update question
     const questionRes = await mutateData(
       isEdit ? UPDATE_QUESTION_BANK_QUESTION : ADD_QUESTION_BANK_QUESTION,
-      sendQuestionData
+      sendQuestionData,
     ).catch(() => (isError = true));
 
     if (!questionRes || isError) {
@@ -331,7 +333,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
 
         // TODO: remove or update later
         createdBy: 'Zicops',
-        updatedBy: 'Zicops'
+        updatedBy: 'Zicops',
       };
 
       // add files
@@ -346,12 +348,12 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
 
       await mutateData(
         isOptionEdit ? UPDATE_QUESTION_OPTIONS : ADD_QUESTION_OPTIONS,
-        sendOptionData
+        sendOptionData,
       ).catch(() =>
         setToastMsg({
           type: 'danger',
-          message: `${isOptionEdit ? 'Update' : 'Add'} Option (${i + 1}) Error`
-        })
+          message: `${isOptionEdit ? 'Update' : 'Add'} Option (${i + 1}) Error`,
+        }),
       );
     }
 
@@ -376,9 +378,9 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
             difficulty: quiz.difficulty || 1,
             hint: quiz?.hint,
             questionFile: quiz?.questionFile,
-            attachmentType: quiz?.attachmentType
+            attachmentType: quiz?.attachmentType,
           },
-          quiz?.options
+          quiz?.options,
         );
       }
 
@@ -394,7 +396,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
         weightage: 1,
         sequence: i + 1,
         startTime: startTime,
-        questionId: questionId
+        questionId: questionId,
       };
 
       if (!questionId) {
@@ -407,7 +409,7 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
       const isQuizEdit = !!sendQuizData?.id;
 
       mutateData(isQuizEdit ? UPDATE_TOPIC_QUIZ : ADD_TOPIC_QUIZ, sendQuizData).catch(() =>
-        setToastMsg({ type: 'danger', message: `${isQuizEdit ? 'Update' : 'Add'} Quiz Error` })
+        setToastMsg({ type: 'danger', message: `${isQuizEdit ? 'Update' : 'Add'} Quiz Error` }),
       );
     }
   }
@@ -416,7 +418,14 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
     setIsSubmitDisabled(true);
     await addUpdateTopicContent();
     await addSubtitle();
-    await addResources();
+
+    // topic resources
+    const _topicResources = topicResources?.map((res) => ({
+      ...res,
+      courseId: courseMetaData?.id,
+    }));
+    await addTopicResources(_topicResources);
+
     await addUpdateQuiz();
 
     setToastMessage('Topic Content And Resources Uploaded', 'success');
@@ -432,6 +441,6 @@ export default function useHandleTopic(modData = null, chapData = null, topData 
     isEditTopicFormVisible,
     toggleEditTopicForm,
     handleSubmit,
-    handleClose
+    handleClose,
   };
 }

@@ -14,7 +14,7 @@ import { getFileNameFromUrl } from '@/helper/utils.helper';
 import {
   QuestionBankDataAtom,
   TopicContentListAtom,
-  TopicQuizAtom
+  TopicQuizAtom,
 } from '@/state/atoms/courses.atom';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
@@ -25,7 +25,7 @@ export default function QuizForm({
   isQuizReady = null,
   handleQuizInput = () => {},
   handleCancel = () => {},
-  handleSubmit = () => {}
+  handleSubmit = () => {},
 }) {
   const topicQuiz = useRecoilValue(TopicQuizAtom);
   const questionBankData = useRecoilValue(QuestionBankDataAtom);
@@ -42,7 +42,7 @@ export default function QuizForm({
     'image/svg+xml',
     'audio/mpeg',
     'audio/mp3',
-    'video/mp4'
+    'video/mp4',
   ];
 
   return (
@@ -65,7 +65,7 @@ export default function QuizForm({
               inputName: 'name',
               placeholder: 'Enter Quiz name',
               maxLength: 20,
-              value: quizFormData.name
+              value: quizFormData.name,
             }}
             changeHandler={handleQuizInput}
           />
@@ -149,8 +149,8 @@ export default function QuizForm({
                   value: { value: quizFormData?.type, label: quizFormData?.type },
                   options: [
                     { value: 'MCQ', label: 'MCQ' },
-                    { value: 'Descriptive', label: 'Descriptive', disabled: true }
-                  ]
+                    { value: 'Descriptive', label: 'Descriptive', disabled: true },
+                  ],
                 }}
                 changeHandler={handleQuizInput}
               />
@@ -191,7 +191,7 @@ export default function QuizForm({
                     inputName: 'hint',
                     placeholder: 'Enter hint in less than 300 characters.',
                     rows: 4,
-                    value: quizFormData?.hint
+                    value: quizFormData?.hint,
                   }}
                   changeHandler={handleQuizInput}
                 />
@@ -222,7 +222,7 @@ export default function QuizForm({
                         getFileNameFromUrl(quizFormData?.options[index]?.attachment),
                       inputValue: quizFormData?.options[index]?.option,
                       isCorrect: quizFormData?.options[index]?.isCorrect,
-                      inputName: 'option'
+                      inputName: 'option',
                     }}
                   />
                 ))}
@@ -256,7 +256,7 @@ export default function QuizForm({
                 value: { value: quizFormData?.questionId, label: quizFormData?.question },
                 isSearchEnable: true,
                 menuPlacement: 'top',
-                noOptionsMessage: 'No Quiz Questions Available'
+                noOptionsMessage: 'No Quiz Questions Available',
               }}
               changeHandler={(e) =>
                 setQuizFormData({ ...quizFormData, question: e?.label, questionId: e?.value })
