@@ -146,7 +146,9 @@ export default function useAddQuiz(courseId = '', topicId = '', isScrom = false)
 
     const nextShowTime = parseInt(binge?.showTimeMin || 0) * 60 + parseInt(binge?.showTimeSec || 0);
 
-    const bingeTime = !binge.isFromEnd ? nextShowTime : videoDuration - nextShowTime;
+    const bingeTime = !binge.isFromEnd
+      ? nextShowTime || videoDuration
+      : videoDuration - nextShowTime;
 
     const startTime = +startTimeMin * 60 + +startTimeSec;
 
