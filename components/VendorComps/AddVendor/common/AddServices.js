@@ -44,6 +44,7 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
   const [showCompleteFile, setShowCompleteFile] = useState(false);
   const [expertiseSearch, setExpertiseSearch] = useState('');
   const [selectedSampleId, setSelectedSampleId] = useState(null);
+  const [sampleDetails, setSampleDetails] = useState(false);
 
   const [selectedExpertise, setSelectedExpertise] = useState(data?.expertises);
   const [tempExpertise, setTempExpertise] = useState(data?.expertises);
@@ -230,6 +231,27 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
             isDisabled={isViewPage}
             changeHandler={(e) => changeHandler(e, data, setData)}
           />
+        </div>
+        <div className={`${styles.serviceMode}`}>
+          <label>Training Mode: </label>
+          <div className={`${styles.modeCheckbox}`}>
+            <LabeledRadioCheckbox
+              label="Online"
+              type="checkbox"
+              name="isExpertiseOnline"
+              isChecked={data?.isExpertiseOnline}
+              isDisabled={isViewPage || !data?.isApplicable}
+              changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+            <LabeledRadioCheckbox
+              label="Offline"
+              type="checkbox"
+              isDisabled={isViewPage || !data?.isApplicable}
+              name="isExpertiseOffline"
+              isChecked={data?.isExpertiseOffline}
+              changeHandler={(e) => changeHandler(e, data, setData)}
+            />
+          </div>
         </div>
         <div className={`${styles.serviceDescriptionExpertise}`}>
           <div className={`${styles.serviceDescription}`}>
@@ -596,12 +618,22 @@ export default function AddServices({ data, setData = () => {}, inputName, exper
           popUpState={[true, setPreviewState]}
           title={fileData?.[previewState]?.name}
           size="large"
+          headerComps={
+            <div className={`${styles.sampleDetailButton}`}>
+              <img
+                src="/images/svg/info.svg"
+                alt=""
+                onClick={() => setSampleDetails(!sampleDetails)}
+              />
+            </div>
+          }
           isFooterVisible={false}>
           <SampleFilePreview
             sampleFile={{
               ...fileData?.[previewState],
               fileUrl: fileData?.[previewState]?.file_url
             }}
+            isDetailsOpen={sampleDetails}
             handleNextClick={() => {
               let updatedIndex = +previewState + 1;
               if (updatedIndex === fileData?.length) updatedIndex = 0;

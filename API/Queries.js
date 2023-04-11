@@ -100,6 +100,16 @@ export const GET_SUB_CATS_BY_CAT = gql`
   }
 `;
 
+// LspId: String;
+// Category: String;
+// SubCategory: String;
+// Language: String;
+// DurationMin: Int;
+// DurationMax: Int;
+// Type: String;
+// SearchText: String;
+// Owner: String;
+// Publisher: String;
 export const GET_LATEST_COURSES = gql`
   query LatestCourses(
     $publish_time: Int

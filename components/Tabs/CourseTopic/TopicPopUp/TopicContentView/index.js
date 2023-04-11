@@ -79,12 +79,7 @@ export default function TopicContentView({ topicContent, toggleTopicContentForm 
                     // }}
                     onDelete={() => {
                       const _topicContentArr = structuredClone(topicContentArr);
-                      const currentTopicIndex = _topicContentArr?.findIndex(
-                        (tc) => tc?.id === content?.id
-                      );
-                      if (currentTopicIndex >= 0) {
-                        _topicContentArr?.splice(currentTopicIndex, 1);
-                      }
+                      _topicContentArr?.splice(index, 1);
 
                       if (!_topicContentArr?.length) toggleTopicContentForm();
                       setTopicContentArr(_topicContentArr);

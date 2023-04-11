@@ -1,3 +1,4 @@
+import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { filterTopicContent } from '../../../../helper/data.helper';
@@ -45,6 +46,18 @@ export default function useAddTopicContent(topic) {
     );
   }, [newTopicContent, newTopicVideo]);
 
+  useEffect(() => {
+    if (!isTopicContentFormVisible) return;
+    if (topicContent?.[0]?.type !== TOPIC_CONTENT_TYPES.document) return;
+
+    setNewTopicContent(
+      getTopicContentObject({
+        ...newTopicContent,
+        duration: topicContent?.[0]?.duration,
+        type: TOPIC_CONTENT_TYPES.document
+      })
+    );
+  }, [isTopicContentFormVisible]);
   // add topic id
   useEffect(() => {
     const isDefault = filterTopicContent(topicContent, topic?.id).length === 0;

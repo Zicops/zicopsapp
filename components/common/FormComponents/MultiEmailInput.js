@@ -9,9 +9,10 @@ export default function MultiEmailInput({
   items = [],
   setItems,
   beforeRemoveEmail = async () => true,
-  isDisabled = false
+  isLoading = false,
+  isDisabled = false,
+  isEmailRemovable = true
 }) {
-  console.info(beforeRemoveEmail);
   const [removeEmail, setRemoveEmail] = useState({
     emailListAfterRemoval: [],
     isConfirmDisplayed: false,
@@ -73,13 +74,7 @@ export default function MultiEmailInput({
   }
 
   const defaultStyles = customSelectStyles(false, '100%', false, false, {
-    controlStyles: {
-      '&:hover': isDisabled
-        ? {
-            cursor: 'no-drop'
-          }
-        : {}
-    }
+    controlStyles: { '&:hover': isDisabled && !isEmailRemovable ? { cursor: 'no-drop' } : {} }
   });
   const customStyles = {
     ...defaultStyles,
@@ -124,7 +119,10 @@ export default function MultiEmailInput({
 
       marginLeft: '5px',
       borderRadius: '50%',
-      backgroundColor: 'var(--dark_three)'
+      backgroundColor: 'var(--dark_three)',
+      ':hover': {
+        cursor: 'pointer'
+      }
     })
   };
 
@@ -153,11 +151,13 @@ export default function MultiEmailInput({
           styles={customStyles}
           isMulti={true}
           isClearable={false}
-          isDisabled={isDisabled}
+          isLoading={isLoading}
+          isDisabled={isDisabled || isLoading}
           onInputChange={handleChange}
           onKeyDown={handleKeyDown}
           onChange={(removedEmailList, actionType) => {
-            if (isDisabled) return;
+            if (!isEmailRemovable) return;
+
             if (actionType?.action === 'remove-value') {
               setRemoveEmail({
                 emailListAfterRemoval: removedEmailList.map((email) => email.value),
@@ -179,7 +179,6 @@ export default function MultiEmailInput({
             btnObj={{
               handleClickLeft: async () => {
                 const shouldRemove = await beforeRemoveEmail(removeEmail?.removeEmail);
-                console.info(shouldRemove);
 
                 if (shouldRemove) setItems(removeEmail?.emailListAfterRemoval);
 

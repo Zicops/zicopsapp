@@ -109,7 +109,7 @@ const SingleProfile = ({ data }) => {
       </div>
       <VendorPopUp
         open={isOpen}
-        title="Add profile"
+        title="Edit profile"
         popUpState={[isOpen, setIsOpen]}
         size="large"
         closeBtn={{ name: 'Cancel' }}

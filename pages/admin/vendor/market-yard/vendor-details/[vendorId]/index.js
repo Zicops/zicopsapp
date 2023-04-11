@@ -1,6 +1,5 @@
 import Sidebar from '@/components/common/Sidebar';
 import { vendorSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
-import { coursesVendor, serviceType } from '@/components/VendorComps/Logic/vendorComps.helper.js';
 import TabContainer from '@/common/TabContainer';
 import { useState, useEffect } from 'react';
 import AboutVendor from '@/components/VendorComps/AboutVendor';
@@ -10,41 +9,52 @@ import MarketYardHero from '@/components/VendorComps/MarketYardHero';
 import MainBody from '@/components/common/MainBody';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import AddLineItem from '@/components/VendorComps/AddLineItem';
 import CompleteOrder from '@/components/VendorComps/CompleteOrder';
-import ReviewOrderTop from '@/components/VendorComps/ReviewOrderTop';
-import ReviewOrderBottom from '@/components/VendorComps/ReviewOrderBottom';
 import styles from '@/components/VendorComps/vendorComps.module.scss';
 import ProfileVendor from '@/components/VendorComps/ProfileVendor';
 import useHandleVendor from '@/components/VendorComps/Logic/useHandleVendor';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   allProfileAtom,
-  SevicesAtom,
+  ServicesAtom,
   VendorProfileAtom,
-  VendorStateAtom
+  VendorStateAtom,
+  VendorServicesListAtom,
+  getVendorServicesObject,
+  getServicesObject,
+  getVendorServicesList,
+  OrderAtom,
+  getVendorOrderObject
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import ProfileExperience from '@/components/VendorComps/ProfileExperience';
+import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
+import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
+import ReviewAndTax from '@/components/VendorComps/ReviewAndTax';
+import AddLineComp from '@/components/VendorComps/AddLineComp';
+
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const vendorSingleProfiles = useRecoilValue(VendorProfileAtom);
-  const [servicesData, setServicesData] = useRecoilState(SevicesAtom);
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
-  const [addTax, setAddTax] = useState(false);
-  const [confirmTax, setConfirmTax] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
+  const [isShowTax, setShowTax] = useState(false);
+  const [currentComponent, setCurrentComponent] = useState(0);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices } = useHandleMarketYard();
+  const { addUpdateServices, services, getVendorServices, addUpdateOrder } = useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -52,6 +62,41 @@ export default function VendorInfo() {
   const isIndividual =
     vendorData?.type.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
 
+  let isTotalcheck = false;
+  if (servicesData?.sme?.length && servicesData?.sme[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+  if (servicesData?.crt?.length && servicesData?.crt[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+  if (servicesData?.cd?.length && servicesData?.cd[0]?.total <= 0) {
+    isTotalcheck = true;
+  }
+
+  const orderArray = [];
+  if (servicesData?.sme?.length) {
+    orderArray.push(...servicesData?.sme);
+  }
+  if (servicesData?.crt?.length) {
+    orderArray.push(...servicesData?.crt);
+  }
+  if (servicesData?.cd?.length) {
+    orderArray.push(...servicesData?.cd);
+  }
+  if (servicesData?.speakers?.length) {
+    orderArray.push(...servicesData?.speakers);
+  }
+
+  const grossTotal = orderArray?.map((data) => {
+    if (!data?.isActive) return null;
+    return 1;
+  });
+
+  const filteredGrossTotal = grossTotal.filter((x) => x != null);
+  let isGrosstotal = false;
+  if (!filteredGrossTotal?.length) {
+    isGrosstotal = true;
+  }
   useEffect(() => {
     if (!isIndividual) return;
     if (!vendorData?.users?.length) return;
@@ -62,9 +107,13 @@ export default function VendorInfo() {
   useEffect(() => {
     getAllProfileInfo();
     getSingleVendorInfo(vendorId);
+    getVendorServices(vendorId);
   }, []);
 
   const onOpenPopup = () => {
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
     setShowPopup(true);
   };
 
@@ -73,9 +122,10 @@ export default function VendorInfo() {
     setShowPopup(false);
   };
 
-  const addOrderHandler = () => {
+  const addOrderHandler = (e) => {
     setAddRate(true);
     setAddOrder(false);
+    setCurrentComponent(0);
   };
 
   const backFirstPopUpHandler = () => {
@@ -83,35 +133,26 @@ export default function VendorInfo() {
     setShowPopup(true);
   };
 
-  const addRateHandler = () => {
-    setAddTax(true);
-    setAddRate(false);
-    addUpdateServices();
+  const addRateHandler = async () => {
+    setCurrentComponent(currentComponent + 1);
+
+    if (currentComponent === 2) {
+      setAddRate(false);
+      setCompleteOrder(true);
+      await addUpdateServices();
+      const orderDetails = await addUpdateOrder();
+      setOrderData(orderDetails);
+    }
   };
 
   const backAddOrderHandler = () => {
-    setAddRate(false);
-    setAddOrder(true);
-  };
-  const addTaxHandler = () => {
-    setConfirmTax(true);
-    setAddTax(false);
-  };
-
-  const backAddRateHandler = () => {
-    setAddTax(false);
-    setAddRate(true);
+    if (currentComponent === 0) {
+      setAddRate(false);
+      setAddOrder(true);
+    }
+    setCurrentComponent(currentComponent - 1);
   };
 
-  const onConfirmTaxHandler = () => {
-    setCompleteOrder(true);
-    setConfirmTax(false);
-  };
-
-  const backAddTaxHandler = () => {
-    setConfirmTax(false);
-    setAddTax(true);
-  };
   const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
   const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
 
@@ -126,7 +167,7 @@ export default function VendorInfo() {
     },
     {
       name: 'Profile',
-      component: <ProfileVendor profileData={vendorProfileData} />,
+      component: <ProfileVendor profileData={vendorProfileData || []} />,
       isHidden: isIndividual
     },
     {
@@ -171,12 +212,34 @@ export default function VendorInfo() {
         size="small"
         isMarketYard={true}
         closeBtn={{ name: 'Back', handleClick: backFirstPopUpHandler }}
-        submitBtn={{ name: 'Next', handleClick: addOrderHandler }}>
+        submitBtn={{
+          name: 'Next',
+          handleClick: addOrderHandler,
+          disabled: Object.values(selectedServicesForOrder).some((v) => v) ? false : true
+        }}>
         <p>Choose Service Type</p>
-        {serviceType?.map((data, index) => {
+        {services?.map((data, index) => {
           return (
             <div className={`${styles.expertiseCheckbox1}`}>
-              <LabeledRadioCheckbox type="checkbox" label={data} />
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
+                value={VENDOR_SERVICES_TYPE?.[data]?.label || ''}
+                isChecked={selectedServicesForOrder?.[data]}
+                changeHandler={(e) => {
+                  const { value, checked } = e.target;
+                  const _orderList = structuredClone(selectedServicesForOrder);
+                  _orderList[data] = checked;
+
+                  const _serviceData = structuredClone(servicesData);
+                  _serviceData[data] = checked
+                    ? [getServicesObject({ serviceType: data, isActive: true })]
+                    : [];
+                  setServicesData(_serviceData);
+
+                  setSelectedServicesForOrder(_orderList);
+                }}
+              />
             </div>
           );
         })}
@@ -188,42 +251,30 @@ export default function VendorInfo() {
         size="large"
         isMarketYard={true}
         closeBtn={{ name: 'Back', handleClick: backAddOrderHandler }}
-        submitBtn={{ name: 'Next', handleClick: addRateHandler }}>
-        <p className={`${styles.addLineText}`}>Add Line Item</p>
-        <div className={`${styles.hr}`}></div>
-        <AddLineItem />
-        <div className={`${styles.hr}`}></div>
+        submitBtn={{
+          name: currentComponent === 2 ? 'Confirm' : 'Next',
+          handleClick: addRateHandler,
+          disabled:
+            (currentComponent === 0 && isTotalcheck) ||
+            (currentComponent === 1 && !isShowTax) ||
+            (currentComponent === 1 && isGrosstotal) ||
+            (currentComponent === 2 && isGrosstotal)
+        }}>
+        <div>
+          {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
+          {currentComponent === 1 && (
+            <ReviewAndTax
+              setCurrentComponent={setCurrentComponent}
+              isShowTax={isShowTax}
+              setShowTax={setShowTax}
+            />
+          )}
+          {currentComponent === 2 && (
+            <ReviewAndTaxConfirm setCurrentComponent={setCurrentComponent} />
+          )}
+        </div>
       </VendorPopUp>
-      <VendorPopUp
-        open={addTax}
-        popUpState={[addTax, setAddTax]}
-        title="Add Order"
-        size="small"
-        isMarketYard={true}
-        closeBtn={{ name: 'Back', handleClick: backAddRateHandler }}
-        submitBtn={{ name: 'Next', handleClick: addTaxHandler }}>
-        <p className={`${styles.addLineText}`}>Review and Add Tax</p>
-        <div className={`${styles.hr}`}></div>
-        <ReviewOrderTop isConfirm={false} />
-        <div className={`${styles.hr}`}></div>
-        <ReviewOrderBottom isTax={true} />
-        <div className={`${styles.hr}`}></div>
-      </VendorPopUp>
-      <VendorPopUp
-        open={confirmTax}
-        popUpState={[confirmTax, setConfirmTax]}
-        title="Add Order"
-        size="small"
-        isMarketYard={true}
-        closeBtn={{ name: 'Back', handleClick: backAddTaxHandler }}
-        submitBtn={{ name: 'Confirm', handleClick: onConfirmTaxHandler }}>
-        <p className={`${styles.addLineText}`}>Confirm</p>
-        <div className={`${styles.hr}`}></div>
-        <ReviewOrderTop isConfirm={true} />
-        <div className={`${styles.hr}`}></div>
-        <ReviewOrderBottom isTax={false} />
-        <div className={`${styles.hr}`}></div>
-      </VendorPopUp>
+
       <VendorPopUp
         open={completeOrder}
         popUpState={[completeOrder, setCompleteOrder]}
@@ -231,7 +282,7 @@ export default function VendorInfo() {
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
         submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
-        <CompleteOrder />
+        <CompleteOrder orderId={orderData?.order_id} />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>
     </>

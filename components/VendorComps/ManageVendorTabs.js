@@ -1,5 +1,5 @@
 import styles from '@/components/VendorComps/vendorComps.module.scss';
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { USER_MAP_STATUS, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import {
   CdServicesAtom,
@@ -64,15 +64,34 @@ export default function ManageVendorTabs() {
   useEffect(() => {
     if (!router.isReady) return;
     if (shallowRoute) return;
-    if (vendorId) return;
     if (!vendorCurrentState?.isSaved) return;
 
-    setVendorCurrentState(getVendorCurrentStateObj());
-  }, [router.isReady, vendorData, smeData, ctData, cdData]);
+    setVendorCurrentState(
+      getVendorCurrentStateObj({ enabledServices: vendorCurrentState?.enabledServices })
+    );
+  }, [
+    router.isReady,
+    vendorData?.name,
+    vendorData?.address,
+    vendorData?.vendorAdminUsers,
+    vendorData?.website,
+    vendorData?.facebookURL,
+    vendorData?.instagramURL,
+    vendorData?.twitterURL,
+    vendorData?.linkedinURL,
+    vendorData?.description,
+    smeData,
+    ctData,
+    cdData
+  ]);
 
   useEffect(() => {
     if (shallowRoute) return;
-    if (!vendorId) return setEmailId([]);
+    if (!vendorId) {
+      setVendorCurrentState(getVendorCurrentStateObj());
+      setEmailId([]);
+      return;
+    }
 
     loadVendorDetails();
 
@@ -86,6 +105,7 @@ export default function ManageVendorTabs() {
       if (smeData?.isApplicable) enabledServices.push('sme');
       if (crtData?.isApplicable) enabledServices.push('crt');
       if (cdData?.isApplicable) enabledServices.push('cd');
+
       setVendorCurrentState(getVendorCurrentStateObj({ enabledServices }));
 
       getVendorAdmins();
@@ -96,12 +116,18 @@ export default function ManageVendorTabs() {
       const isIndividualVendor =
         singleVendorInfo?.type?.toLowerCase() === VENDOR_MASTER_TYPE.individual.toLowerCase();
       if (!isIndividualVendor) return getAllProfileInfo();
-      if (isIndividualVendor) return getSingleProfileInfo(singleVendorInfo?.users?.[0]);
     }
   }, [vendorId]);
 
   useEffect(() => {
-    setEmailId(vendorAdminUsers?.map((user) => user?.email) || []);
+    setEmailId(
+      vendorAdminUsers
+        ?.map((user) => (user?.user_lsp_status !== USER_MAP_STATUS.disable ? user?.email : null))
+        ?.filter((email) => email) || []
+    );
+
+    if (isIndividual && vendorAdminUsers?.[0]?.email)
+      getSingleProfileInfo(vendorAdminUsers?.[0]?.email);
   }, [vendorAdminUsers]);
 
   useEffect(() => {
@@ -156,7 +182,8 @@ export default function ManageVendorTabs() {
         ...profileData,
         firstName: firstName || '',
         lastName: lastName || '',
-        email: vendorData?.users?.[0] || '',
+        email:
+          emailId?.map((item) => item?.props?.children?.[0] || item)?.filter((e) => !!e)?.[0] || '',
         description: vendorData?.description,
         photoUrl: vendorData?.photoUrl,
         profileImage: vendorData?.vendorProfileImage,
@@ -166,7 +193,7 @@ export default function ManageVendorTabs() {
         content_development: cdData?.isApplicable ? cdData?.expertises : []
       })
     );
-  }, [vendorData, smeData, cdData, ctData]);
+  }, [vendorData, smeData, cdData, ctData, emailId]);
 
   const _tabDataObj = { ...vendorTabData };
   _tabDataObj.orders.isHidden = !isDev;
@@ -189,18 +216,22 @@ export default function ManageVendorTabs() {
         showFooter: true,
         submitDisplay: vendorData.vendorId ? 'Update' : 'Save',
         handleSubmit: async () => {
-          setVendorCurrentState({ ...vendorCurrentState, isUpdating: true });
+          const _currentState = structuredClone(vendorCurrentState);
+          _currentState.isUpdating = true;
+          if (!vendorId) _currentState.isSaved = true;
+          setVendorCurrentState(_currentState);
+
           addUpdateVendor(tab === tabData[0].name).then((id) => {
             if (!id) return;
 
             syncIndividualVendorProfile(id, tab === vendorTabData.experience.name);
-            handleMail();
+            handleMail(id);
           });
           const smeData = await addUpdateSme(tab === tabData[1].name);
           const crtData = await addUpdateCrt(tab === tabData[1].name);
           const cdData = await addUpdateCd(tab === tabData[1].name);
 
-          const enabledServices = [];
+          const enabledServices = structuredClone([...vendorCurrentState.enabledServices]);
 
           if (smeData?.is_applicable) enabledServices.push('sme');
           if (crtData?.is_applicable) enabledServices.push('crt');

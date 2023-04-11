@@ -22,8 +22,8 @@ export default function ProfileServices({ data, type = 'sme', langData }) {
           <span>Expertise</span>
         </div>
         <div className={`${styles.expertisePill}`}>
-          {data?.map((value, key) => {
-            return <p>{value}</p>;
+          {data?.map((value, index) => {
+            return <p key={index}>{value}</p>;
           })}
         </div>
       </div>

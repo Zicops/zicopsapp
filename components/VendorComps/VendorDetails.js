@@ -1,4 +1,6 @@
 import styles from './vendorComps.module.scss';
+import { useRecoilValue } from 'recoil';
+import { VendorProfileAtom } from '@/state/atoms/vendor.atoms';
 
 export default function VendorDetails({ data }) {
   // const socialMediaDa = [
@@ -8,6 +10,7 @@ export default function VendorDetails({ data }) {
   //   { label: 'Instagram', value: data.instagramURL || 'NA' }
   // ];
 
+  const individualVendorState = useRecoilValue(VendorProfileAtom);
   const vendorDetails = [
     { label: 'Name', value: data?.name || 'NA' },
     { label: 'Address', value: data?.address || 'NA' },
@@ -15,30 +18,35 @@ export default function VendorDetails({ data }) {
     { label: 'Type', value: data?.type || 'NA' }
   ];
 
+  const individualVendorDetails = [
+    { label: 'Years of Experience', value: individualVendorState?.experienceYear || 'NA' },
+    { label: 'Speaker', value: individualVendorState?.isSpeaker ? 'Yes' : 'No' }
+  ];
+
   const socialMediaData = [
     {
       title: 'Facebook',
       inputName: 'facebookURL',
       value: data?.facebookURL,
-      imageUrl: data?.facebookURL ? '/images/svg/Facebook.svg' : ''
+      imageUrl: '/images/svg/Facebook.svg'
     },
     {
       title: 'Instagram',
       inputName: 'instagramURL',
       value: data?.instagramURL,
-      imageUrl: data?.instagramURL ? '/images/svg/Instagram.svg' : ''
+      imageUrl: '/images/svg/Instagram.svg'
     },
     {
       title: 'Twitter',
       inputName: 'twitterURL',
       value: data?.twitterURL,
-      imageUrl: data?.twitterURL ? '/images/svg/Twitter.svg' : ''
+      imageUrl: '/images/svg/Twitter.svg'
     },
     {
       title: 'LinkedIn',
       inputName: 'linkedinURL',
       value: data?.linkedinURL,
-      imageUrl: data?.linkedinURL ? '/images/svg/Linkedin.svg' : ''
+      imageUrl: '/images/svg/Linkedin.svg'
     }
   ];
   return (
@@ -52,14 +60,26 @@ export default function VendorDetails({ data }) {
               <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
             </div>
           ))}
+          {individualVendorDetails?.map((data, index) => (
+            <div key={index}>
+              <span>{data?.label}</span>
+              <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
+            </div>
+          ))}
         </div>
         <hr />
         <div>Social Media</div>
         <div className={`${styles.marketyardSocialMediaIcons}`}>
           {socialMediaData?.map((media, i) => (
-            <img src={`${media?.imageUrl}`} />
+            <>
+              {!!media?.value && (
+                <a href={media?.value} target="blank">
+                  <img src={`${media?.imageUrl}`} />
+                </a>
+              )}
+            </>
           ))}
-          {/* <small>{!socialMediaData?.value && 'No Social Media Available'}</small> */}
+          <small>{socialMediaData.every((data) => !data?.value) && 'NA'}</small>
         </div>
       </div>
     </div>

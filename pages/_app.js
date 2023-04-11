@@ -1,8 +1,10 @@
+import { mutationClient } from '@/api/Mutations';
 import AuthChecker from '@/components/AuthChecker';
 import FeatureFlagsLayout from '@/components/Layout/FeatureFlagsLayout';
 import PushNotificationLayout from '@/components/Layout/PushNotificationLayout';
 import { logger } from '@/helper/utils.helper';
 import { AuthUserProvider } from '@/state/contexts/AuthUserContext';
+import { ApolloProvider } from '@apollo/client';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -62,21 +64,23 @@ manages and elevates the entire learning environment."
       <ErrorBoundary>
         <AuthUserProvider>
           <RecoilRoot>
-            <FeatureFlagsLayout>
-              <PushNotificationLayout>
-                <CourseContextProvider>
-                  <UserContextProvider>
-                    <AuthChecker>
-                      <Layout>
-                        <Component {...pageProps} />
+            <ApolloProvider client={mutationClient}>
+              <FeatureFlagsLayout>
+                <PushNotificationLayout>
+                  <CourseContextProvider>
+                    <UserContextProvider>
+                      <AuthChecker>
+                        <Layout>
+                          <Component {...pageProps} />
 
-                        <Toaster />
-                      </Layout>
-                    </AuthChecker>
-                  </UserContextProvider>
-                </CourseContextProvider>
-              </PushNotificationLayout>
-            </FeatureFlagsLayout>
+                          <Toaster />
+                        </Layout>
+                      </AuthChecker>
+                    </UserContextProvider>
+                  </CourseContextProvider>
+                </PushNotificationLayout>
+              </FeatureFlagsLayout>
+            </ApolloProvider>
           </RecoilRoot>
         </AuthUserProvider>
       </ErrorBoundary>

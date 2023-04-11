@@ -65,6 +65,7 @@ export async function loadQueryDataAsync(
   return response?.data || {};
 }
 
+// load current lsp data by default
 export async function loadMultipleLspDataWithMultipleQueries(
   QUERY,
   variableObj = {},
@@ -118,6 +119,23 @@ export async function deleteData(
     .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
     .catch((err) => {
       console.log(`Delete Data error:`, err);
+    });
+
+  if (response?.error) return response;
+
+  return response?.data || {};
+}
+
+export async function mutateData(
+  MUTATION,
+  variableObj = {},
+  options = {},
+  client = mutationClient
+) {
+  const response = await client
+    .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
+    .catch((err) => {
+      console.log(`Mutation error:`, err);
     });
 
   if (response?.error) return response;

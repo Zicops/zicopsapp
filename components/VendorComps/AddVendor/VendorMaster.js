@@ -9,12 +9,12 @@ import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import {
-  VendorAdminsAtom,
+  IsVendorAdminLoadingAtom,
   VendorStateAtom,
   vendorUserInviteAtom
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import VendorPopUp from '../common/VendorPopUp';
 import useHandleVendor from '../Logic/useHandleVendor';
@@ -24,14 +24,14 @@ import AddUrl from './common/AddUrl';
 export default function VendorMaster() {
   const [emails, setEmails] = useRecoilState(vendorUserInviteAtom);
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
-  const [vendorAdminUsers, setVendorAdminUsers] = useRecoilState(VendorAdminsAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
+  const isVendorAdminLoading = useRecoilValue(IsVendorAdminLoadingAtom);
 
   const [openSocialMedia, setOpenSocialMedia] = useState(null);
   const [socialMediaInput, setSocialMediaInput] = useState('');
 
-  const { handlePhotoInput, handleRemoveUser } = useHandleVendor();
+  const { handlePhotoInput, handleRemoveUser, getVendorAdmins } = useHandleVendor();
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
@@ -186,12 +186,15 @@ export default function VendorMaster() {
           items={emails}
           setItems={setEmails}
           beforeRemoveEmail={async (email) => {
-            console.info('function passed', email);
             await handleRemoveUser(email);
+            getVendorAdmins();
           }}
+          isEmailRemovable={!(isVendor && isIndividualVendor)}
           isDisabled={
             isViewPage || isVendor || (isDev ? false : isIndividualVendor && emails?.length)
           }
+          isEmailRemovable={!(isVendor && isIndividualVendor)}
+          isLoading={isVendorAdminLoading}
         />
       </div>
 

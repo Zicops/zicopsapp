@@ -1,0 +1,14 @@
+.participantPollContainer
+{
+    height: 100%;
+}
+.activePollHead,.endedPollHead {
+  margin-top: 6px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ACACAC;
+}
+.activePoll,.endedPoll
+{
+    height: auto;
+}

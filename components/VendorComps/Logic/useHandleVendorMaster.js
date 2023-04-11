@@ -24,6 +24,7 @@ export default function useHandleVendorMaster() {
   async function addUpdateVendor(displayToaster = true) {
     setLoading(true);
     const sendData = {
+      lsp_id: vendorData?.lspId || null,
       name: vendorData?.name?.trim() || '',
       level: vendorData?.level?.trim() || '',
       type: vendorData?.type?.trim() || '',
@@ -55,16 +56,6 @@ export default function useHandleVendorMaster() {
             onProgress: (ev) =>
               setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
           }
-        },
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => ({
-              getVendorDetails: { ...cachedData?.getVendorDetails, ...data?.updateVendor }
-            }),
-            userQueryClient
-          );
         }
       }).catch((err) => {
         console.log(err);
@@ -79,7 +70,7 @@ export default function useHandleVendorMaster() {
       const _id = res.data.updateVendor.vendorId;
       return _id;
     }
-    if (vendorData?.name && vendorData?.level && vendorData?.type && vendorData?.address) {
+    if (vendorData?.name && vendorData?.level && vendorData?.type) {
       const res = await addNewVendor({
         variables: sendData,
         context: {
@@ -88,26 +79,11 @@ export default function useHandleVendorMaster() {
             onProgress: (ev) =>
               setVendorData({ ...vendorData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
           }
-        },
-        update: (_, { data }) => {
-          handleCacheUpdate(
-            GET_VENDOR_DETAILS,
-            { vendor_id: vendorId },
-            (cachedData) => {
-              const _cachedData = structuredClone(cachedData?.getVendorDetails);
-              const _updatedCache = data?.addVendor?.[0]
-                ? [data?.addVendor?.[0], ..._cachedData]
-                : _cachedData;
-
-              return { getVendorDetails: _updatedCache };
-            },
-            userQueryClient
-          );
         }
       }).catch((err) => {
         console.log(err);
         isError = !!err;
-        return setToastMsg({ type: 'danger', message: 'Add Vendor Error' });
+        return setToastMsg({ type: 'danger', message: err.message || 'Add Vendor Error' });
       });
       setLoading(false);
       if (isError) return null;
@@ -116,6 +92,9 @@ export default function useHandleVendorMaster() {
       const _id = res.data.addVendor.vendorId;
       router.push(`/admin/vendor/manage-vendor/update-vendor/${_id}`);
       return _id;
+    } else {
+      setToastMsg({ type: 'warning', message: 'Please Enter your Vendor Name' });
+      setLoading(false);
     }
   }
 

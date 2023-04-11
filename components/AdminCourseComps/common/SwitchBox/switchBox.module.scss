@@ -1,0 +1,25 @@
+.switchRadioBox {
+  display: flex;
+  padding: 0.5em 1em;
+
+  border: 1px solid $darkThree;
+  border-radius: 5px;
+
+  .label {
+    font-weight: bold;
+  }
+  .description {
+    color: $darkThree;
+  }
+
+  &.active {
+    border-color: $primary;
+  }
+}
+.switchBox {
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

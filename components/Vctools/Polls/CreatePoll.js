@@ -4,12 +4,10 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "../vctoolMain.module.scss"
 import PollQA from "./PollQA";
 const CreatePOll = ({ addPoll, setPollTitle }) => {
-    // const pollArr=useRecoilValue(pollArray);
-    const [pollInfo, setPollInfo] = useRecoilState(pollArray)
     return (
         <div className={`${styles.moderatorPoll}`}>
 
-            <div className={`${styles.pollModeratorScree}`}>
+            <div className={`${styles.pollModeratorScreen}`}>
                 <div className={`${styles.moderatorAddPoll}`}>
                     <div className={styles.pollIcon}><img src='/images/svg/vctool/insert-chart.svg' /></div>
                     <div className={`${styles.pollAvailableHead}`}>No Polls added !</div>

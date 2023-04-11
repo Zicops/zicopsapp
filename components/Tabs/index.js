@@ -2,21 +2,21 @@ import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { STATUS } from '@/state/atoms/utils.atoms';
+import moment from 'moment';
 import Router, { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseContext } from '../../state/contexts/CourseContext';
 import Button from '../common/Button';
 import TabContainer from '../common/TabContainer';
-import styles from './courseTabs.module.scss';
 import {
   CourseTabAtom,
-  getDateTimeFromUnix,
   IsCourseSavedAtom,
   isCourseUploadingAtom,
   tabData
 } from './Logic/tabs.helper';
 import useSaveCourse from './Logic/useSaveCourse';
+import styles from './courseTabs.module.scss';
 export default function CourseTabs() {
   const courseContextData = useContext(courseContext);
 
@@ -69,6 +69,7 @@ export default function CourseTabs() {
   }, [fullCourse?.status, isCourseSaved]);
 
   useEffect(() => {
+    if (!fullCourse?.id) return;
     if (!fullCourse?.qa_required) setCourseStatus(COURSE_STATUS.save);
   }, [fullCourse?.qa_required]);
 
@@ -153,7 +154,7 @@ export default function CourseTabs() {
 
   const displayTime =
     fullCourse.updated_at || fullCourse.created_at
-      ? `(at ${getDateTimeFromUnix(fullCourse.updated_at || fullCourse.created_at)})`
+      ? `(at ${moment((fullCourse.updated_at || fullCourse.created_at) * 1000).format('LLL')})`
       : '';
 
   function getSubmitBtnText() {

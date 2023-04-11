@@ -1,6 +1,11 @@
 import { atom } from 'recoil';
 import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
 
+export const IsVendorAdminLoadingAtom = atom({
+  key: 'IsVendorAdminLoading',
+  default: null
+});
+
 export const VendorCurrentStateAtom = atom({
   key: 'VendorCurrentState',
   default: getVendorCurrentStateObj()
@@ -11,7 +16,7 @@ export function getVendorCurrentStateObj(data = {}) {
     isUpdating: data?.isUpdating || false,
     isSaved: data?.isSaved || false,
     errors: data?.errors || [],
-    enabledServices: data?.enabledServices || []
+    enabledServices: [...new Set(data?.enabledServices || [])]
   };
 }
 
@@ -23,6 +28,7 @@ export const VendorStateAtom = atom({
 export function getVendorObject(data) {
   return {
     vendorId: data?.vendorId || null,
+    lspId: data?.lspId || null,
     name: data?.name || '',
     type: data?.type || 'company',
     level: data?.level || 'lsp',
@@ -122,7 +128,9 @@ export function getSMEServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || []
+    sampleFiles: data?.sampleFiles || [],
+    isExpertiseOnline: data?.isExpertiseOnline || false,
+    isExpertiseOffline: data?.isExpertiseOffline || false
   };
 }
 
@@ -139,7 +147,9 @@ export function getCTServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || []
+    sampleFiles: data?.sampleFiles || [],
+    isExpertiseOnline: data?.isExpertiseOnline || false,
+    isExpertiseOffline: data?.isExpertiseOffline || false
   };
 }
 
@@ -156,7 +166,9 @@ export function getCDServicesObject(data) {
     languages: data?.languages || [],
     expertises: data?.expertises || [],
     formats: data?.formats || [],
-    sampleFiles: data?.sampleFiles || []
+    sampleFiles: data?.sampleFiles || [],
+    isExpertiseOnline: data?.isExpertiseOnline || false,
+    isExpertiseOffline: data?.isExpertiseOffline || false
   };
 }
 
@@ -189,34 +201,49 @@ export const vendorUserInviteAtom = atom({
 
 export const OrderAtom = atom({
   key: 'orderState',
-  default: getOrderObject()
+  default: getVendorOrderObject()
 });
-export function getOrderObject(data) {
+export function getVendorOrderObject(data) {
   return {
-    order_id: data?.order_id || '',
-    vendor_id: data?.vendor_id || '',
-    lsp_id: data?.lsp_id || '',
+    orderId: data?.orderId || '',
+    vendorId: data?.vendorId || '',
+    lspId: data?.lspId || '',
     total: data?.total || 0,
     tax: data?.tax || 0,
-    grand_total: data?.grand_total || 0,
-    status: data?.status || ''
+    grossTotal: data?.grossTotal || 0,
+    status: data?.status || '',
+    currency: data?.currency || ''
   };
 }
-export const SevicesAtom = atom({
+export const ServicesAtom = atom({
   key: 'servicesState',
-  default: getServicesObject()
+  default: getVendorServicesObject()
 });
+
+export function getVendorServicesObject() {
+  return { sme: [], crt: [], cd: [], speakers: [] };
+}
+
 export function getServicesObject(data) {
   return {
-    service_id: data?.service_id || '',
-    order_id: data?.order_id || '',
-    service_type: data?.service_type || '',
+    serviceId: data?.serviceId || '',
+    orderId: data?.orderId || '',
+    serviceType: data?.serviceType || '',
     description: data?.description || '',
     unit: data?.unit || 0,
-    currency: data?.currency || '',
     rate: data?.rate || 0,
     quantity: data?.quantity || 0,
     total: data?.total || 0,
-    status: data?.status || ''
+    status: data?.status || '',
+    isActive: data?.isActive || false
   };
+}
+
+export const VendorServicesListAtom = atom({
+  key: 'vendorServicesList',
+  default: getVendorServicesList()
+});
+
+export function getVendorServicesList() {
+  return { sme: false, crt: false, cd: false, speakers: false };
 }

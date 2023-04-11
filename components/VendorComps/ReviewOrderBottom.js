@@ -1,11 +1,16 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import { changeHandler } from '@/helper/common.helper';
+import { OrderAtom } from '@/state/atoms/vendor.atoms';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import LabeledInput from '../common/FormComponents/LabeledInput';
 import styles from './vendorComps.module.scss';
-const ReviewOrderBottom = ({ isTax }) => {
-  const [isShowTax, setShowTax] = useState(false);
+const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, setShowTax }) => {
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const onShowTaxHandler = () => {
     setShowTax(true);
   };
+
   return (
     <div className={`${styles.ReviewBottomContainer}`}>
       <div className={`${styles.subTotal}`}>
@@ -16,30 +21,51 @@ const ReviewOrderBottom = ({ isTax }) => {
               <LabeledDropdown
                 dropdownOptions={{
                   inputName: 'percentage',
-                  placeholder: '%'
+                  placeholder: '%',
+                  value: { label: '%', value: '%' },
+                  options: [{ label: '%', value: '%' }]
                 }}
               />
             </div>
           )}
         </div>
         <div>
-          <p>4,00,000 INR</p>
+          <p>
+            {orderData?.total} {orderData?.currency}
+          </p>
           {isTax && !isShowTax && (
             <div className={`${styles.taxAdd}`} onClick={onShowTaxHandler}>
               <span className={`${styles.pluse}`}>+</span>
               <span>Add Tax</span>
             </div>
           )}
-          {isShowTax && <div className={`${styles.taxValue}`}>10</div>}
+          {isShowTax && (
+            <LabeledInput
+              inputOptions={{
+                inputName: 'tax',
+                value: orderData?.tax,
+                isNumericOnly: true,
+                placeholder: '0'
+              }}
+              inputClass={`${styles.taxValue}`}
+              changeHandler={(e) => {
+                changeHandler(e, orderData, setOrderData);
+              }}
+            />
+          )}
         </div>
       </div>
       <div className={`${styles.TaxAmount}`}>
         <p>Tax Amount</p>
-        <p>0 INR</p>
+        <p>
+          {taxAmount || 0} {orderData?.currency}
+        </p>
       </div>
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
-        <p>4,00,000 INR</p>
+        <p>
+          {orderData?.grossTotal} {orderData?.currency}
+        </p>
       </div>
     </div>
   );
