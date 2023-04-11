@@ -68,7 +68,6 @@ export default function LearnerExams() {
   const [inputText, setInputText] = useState('');
   const inputHandler = (e) => {
     let lowerCase = e.target.value.toLowerCase();
-    console.log('lowerCase', lowerCase);
     setInputText(lowerCase);
   };
   const realSquare = {
@@ -230,10 +229,7 @@ export default function LearnerExams() {
   }, [userGlobalData?.preferences]);
 
   useEffect(() => {
-    console.info(examResults, 'examresult');
     if (!examResults?.length) return;
-
-    console.info('examCourseMapping', examCourseMapping);
 
     //loop to finally add results and course name
     const examFinalResult = [];
@@ -258,7 +254,7 @@ export default function LearnerExams() {
         }
       }
     }
-    console.info('examFinalResult', examFinalResult);
+
     // console.log(examFinalResult, 'final reult');
     // formating exam result table data
     const uniqueArray = examFinalResult.reduce((acc, curr) => {
@@ -280,7 +276,7 @@ export default function LearnerExams() {
       examScore: exam?.score,
       totalMarks: exam?.total
     }));
-    console.info('examsResult', examsResult);
+
     if (!examsResult?.length) return;
     let filteredData = examsResult?.filter((el) => {
       if (inputText === '') {
@@ -306,7 +302,6 @@ export default function LearnerExams() {
   );
 
   useEffect(() => {
-    console.log(onGoingExam, 'examreso');
     if (!onGoingExam?.length) return setOnOgingData([]);
 
     //loop to finally add results and course name
@@ -315,7 +310,7 @@ export default function LearnerExams() {
     for (let i = 0; i < onGoingExam?.length; i++) {
       if (!examCourseMapping?.scheduleExam?.length) return;
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-      console.log(examCourseMapping);
+
       for (let j = 0; j < examCourseMapping?.scheduleExam?.length; j++) {
         if (onGoingExam[i]?.exam_id === examCourseMapping?.scheduleExam[j]?.examId) {
           examOngoing.push({ ...onGoingExam[i], ...examCourseMapping?.scheduleExam[j] });
@@ -325,14 +320,13 @@ export default function LearnerExams() {
     for (let i = 0; i < onGoingExam?.length; i++) {
       if (!examCourseMapping?.takeAnyTime?.length) return;
       // examFinalResult.push({...examResults[i] ,...examCourseMapping[`${examResults[i]?.exam_id}`] })
-      console.log(examCourseMapping);
       for (let j = 0; j < examCourseMapping?.takeAnyTime?.length; j++) {
         if (onGoingExam[i]?.exam_id === examCourseMapping?.takeAnyTime[j]?.examId) {
           examOngoing.push({ ...onGoingExam[i], ...examCourseMapping?.takeAnyTime[j] });
         }
       }
     }
-    console.log(examOngoing, 'final reult');
+
     //formating exam result table data
     const uniqueArray = examOngoing.reduce((acc, curr) => {
       if (!acc[curr.user_ea_id]) {
@@ -354,7 +348,6 @@ export default function LearnerExams() {
       tileImage: exam?.tileImage,
       duration: exam?.Duration
     }));
-    console.log('examsResult', examsResult);
 
     if (!examsResult?.length) return setOnOgingData([]);
     setOnOgingData(examsResult);
@@ -379,7 +372,7 @@ export default function LearnerExams() {
       }
     }
     if (!takeAnyTimeExamArray?.length) setTakeAnyTimeExamsData([]);
-    console.log(takeAnyTimeExamArray, 'sfoho');
+
     setTakeAnyTimeExamsData([
       ...takeAnyTimeExamArray?.map((exam) => ({
         examData: [exam?.Name, exam?.courseName, `${exam?.Duration / 60} mins`],
@@ -402,7 +395,7 @@ export default function LearnerExams() {
       {},
       userQueryClient
     );
-    console.info(resAttempts);
+
     if (resAttempts?.error)
       return setToastMsg({ type: 'danger', message: 'Error while loading user attempts' });
 
