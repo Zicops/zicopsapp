@@ -40,6 +40,7 @@ const ReviewOrderTop = ({ isConfirm }) => {
                         VENDOR_SERVICES_TYPE?.[value?.serviceType || value?.service_type]?.label
                       }
                       isChecked={servicesData[service][i].isActive}
+                      isDisabled={isConfirm}
                       changeHandler={(e) => {
                         const { value, checked } = e.target;
                         const tempArray = structuredClone(servicesData);
