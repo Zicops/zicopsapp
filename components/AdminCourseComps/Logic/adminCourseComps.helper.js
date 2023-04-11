@@ -10,8 +10,8 @@ export const courseTabs = {
   details: { name: 'Details', component: <CourseDetails /> },
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
-  commercials: { name: 'Commercials', component: <Commercials /> },
-  configuration: { name: 'Configuration', component: <Configuration /> }
+  commercials: { name: 'Commercials', component: <Commercials />, isHidden: true },
+  configuration: { name: 'Configuration', component: <Configuration /> },
 };
 
 export function getModuleDataObject(data = {}) {
@@ -27,7 +27,7 @@ export function getModuleDataObject(data = {}) {
     duration: data?.duration || 0,
 
     owner: data?.owner || '',
-    setGlobal: data?.setGlobal || false
+    setGlobal: data?.setGlobal || false,
   };
 }
 
@@ -38,7 +38,7 @@ export function getChapterDataObject(data = {}) {
     moduleId: data?.moduleId || null,
     sequence: data?.sequence || 1,
     name: data?.name || '',
-    description: data?.description || ''
+    description: data?.description || '',
   };
 }
 
@@ -52,7 +52,7 @@ export function getTopicDataObj(data = {}) {
     sequence: data?.sequence || 1,
     name: data?.name || '',
     description: data?.description || '',
-    type: data?.type || ''
+    type: data?.type || '',
   };
 }
 
@@ -66,7 +66,7 @@ export function getTopicContentDataObj(data = {}) {
     language: data?.language || '',
     duration: data?.duration || '',
     isDefault: data?.isDefault || false,
-    file: data?.file || ''
+    file: data?.file || '',
   };
 }
 
@@ -78,6 +78,6 @@ export function getTopicAssessmentObj(data = {}) {
     examId: data?.examId || null,
     language: data?.language || '',
     category: data?.category || '',
-    subCategory: data?.subCategory || ''
+    subCategory: data?.subCategory || '',
   };
 }
