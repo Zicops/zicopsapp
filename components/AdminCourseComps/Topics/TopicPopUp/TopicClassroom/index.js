@@ -4,11 +4,11 @@ import { TopicClassroomAtom } from '@/state/atoms/courses.atom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
+import ResourceForm from '../ResourceForm';
 import TopicAccordian from '../TopicAccordian';
 import TopicQuiz from '../TopicQuiz';
 import ClassroomForm from './ClassroomForm';
 import VcSetting from './VcSetting';
-import ResourceForm from '../ResourceForm';
 
 export default function TopicClassroom({ topData = null, closePopUp = () => {} }) {
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
@@ -20,7 +20,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
     accordionOpenState,
     setAccordionOpenState,
     handleTopicClassroomChange,
-    addUpdateTopicClassroom,
+    handleSubmit,
   } = useHandleTopicClassroom(topData);
 
   const topicAccordians = [
@@ -87,7 +87,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
           customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
           isDisabled={isSubmitDisabled}
           handleClick={() => {
-            addUpdateTopicClassroom()
+            handleSubmit()
               .catch((err) => console.log(err))
               .finally(() => closePopUp(true));
           }}

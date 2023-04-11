@@ -1,7 +1,7 @@
 import {
   CREATE_TOPIC_CLASSROOM,
   UPDATE_TOPIC_CLASSROOM,
-  viltMutationClient
+  viltMutationClient,
 } from '@/api/ViltMutations';
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { TOPIC_CLASS_ROOM_STATUS } from '@/constants/course.constants';
@@ -11,17 +11,24 @@ import { getDateObjFromUnix, getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
   CourseMetaDataAtom,
+  QuestionBankDataAtom,
   TopicClassroomAtom,
-  getTopicClassroomObject
+  TopicQuizAtom,
+  TopicResourcesAtom,
+  getTopicClassroomObject,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { addTopicResources, addUpdateTopicQuiz } from './adminCourseComps.helper';
 
 export default function useHandleTopicClassroom(topData = null) {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
-  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
+  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
+  const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
+  const questionBankData = useRecoilValue(QuestionBankDataAtom);
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(null);
   const [accordionOpenState, setAccordionOpenState] = useState(null);
@@ -54,10 +61,10 @@ export default function useHandleTopicClassroom(topData = null) {
         const trainersList = structuredClone(classroomMaster?.trainers || []);
 
         const trainers = trainersList?.filter((u) =>
-          _topicClassroom?.trainers?.find((userId) => u?.user_id === userId)
+          _topicClassroom?.trainers?.find((userId) => u?.user_id === userId),
         );
         const moderators = moderatorsList?.filter((u) =>
-          _topicClassroom?.moderators?.find((userId) => u?.user_id === userId)
+          _topicClassroom?.moderators?.find((userId) => u?.user_id === userId),
         );
         setTopicClassroom(
           getTopicClassroomObject({
@@ -78,10 +85,10 @@ export default function useHandleTopicClassroom(topData = null) {
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
-            updatedBy: _topicClassroom?.updated_by
-          })
+            updatedBy: _topicClassroom?.updated_by,
+          }),
         );
-      }
+      },
     );
   }, [topicClassroom?.topicId]);
 
@@ -122,7 +129,7 @@ export default function useHandleTopicClassroom(topData = null) {
       is_qa_enabled: topicClassroom?.isQaEnabled,
       is_camera_enabled: topicClassroom?.isCameraEnabled,
       is_override_config: topicClassroom?.isOverrideConfig,
-      status: TOPIC_CLASS_ROOM_STATUS?.active
+      status: TOPIC_CLASS_ROOM_STATUS?.active,
     });
 
     if (!!topicClassroom?.id) {
@@ -131,7 +138,7 @@ export default function useHandleTopicClassroom(topData = null) {
         UPDATE_TOPIC_CLASSROOM,
         { input: _topicClassroomData },
         {},
-        viltMutationClient
+        viltMutationClient,
       ).catch(() => setToastMessage('Topic classroom Update Error!'));
 
       setToastMessage('Topic classroom update successfully', 'success');
@@ -143,7 +150,7 @@ export default function useHandleTopicClassroom(topData = null) {
       CREATE_TOPIC_CLASSROOM,
       { input: _topicClassroomData },
       {},
-      viltMutationClient
+      viltMutationClient,
     ).catch(() => setToastMessage('Topic classroom Create Error!'));
 
     setTopicClassroom((prev) => ({ ...prev, id: res?.createTopicClassroom?.id }));
@@ -152,11 +159,31 @@ export default function useHandleTopicClassroom(topData = null) {
     return res?.createTopicClassroom || null;
   }
 
+  async function handleSubmit() {
+    const { id, category } = courseMetaData;
+
+    // topic resources
+    const res = topicResources?.map((res) => ({ ...res, courseId: id }));
+    await addTopicResources(res, setToastMessage);
+
+    // topic quiz
+    const quiz = topicQuiz?.map((q) => ({ ...q, courseId: id, category: category }));
+    await addUpdateTopicQuiz(questionBankData, quiz, setToastMessage);
+
+    await addUpdateTopicClassroom().catch((err) => {
+      console.log(err);
+      setToastMessage('Something Went Wrong!');
+    });
+
+    setTopicResources(null);
+    setTopicQuiz(null);
+  }
+
   return {
     isSubmitDisabled,
     accordionOpenState,
     setAccordionOpenState,
     handleTopicClassroomChange,
-    addUpdateTopicClassroom
+    handleSubmit,
   };
 }

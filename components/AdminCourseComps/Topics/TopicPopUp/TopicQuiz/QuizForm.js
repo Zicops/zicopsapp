@@ -264,13 +264,14 @@ export default function QuizForm({
             />
           </>
         )}
+
         {/* footer btn */}
         <div className={`center-element-with-flex ${styles.marginBetweenInputs}`}>
           <RoundedBtn display="Cancel" handleClick={handleCancel} />
 
           <ToolTip title={ADMIN_COURSES.myCourses.subtitles}>
             <RoundedBtn
-              display={quizFormData?.id || !!quizFormData?.editIndex ? 'Update' : 'Add'}
+              display={quizFormData?.id || quizFormData?.editIndex != null ? 'Update' : 'Add'}
               isDisabled={!isQuizReady}
               isActive={isQuizReady}
               handleClick={handleSubmit}
