@@ -8,7 +8,7 @@ import { COURSE_TYPES } from '@/constants/course.constants';
 import {
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
-  CourseMetaDataAtom
+  CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
 import styles from '../adminCourseComps.module.scss';
 import BulletPointInput from './BulletPointInput';
+import { courseTabs } from '../Logic/adminCourseComps.helper';
 
 export default function About() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
@@ -27,7 +28,7 @@ export default function About() {
     getTrainersAndModerators,
     handleClassroomMasterChange,
     trainerCandidates,
-    moderatorCandidates
+    moderatorCandidates,
   } = useHandleCourseData();
 
   const [title, settitle] = useState('');
@@ -68,7 +69,7 @@ export default function About() {
       name: user?.full_name,
       isSelected: false,
       email: user?.email,
-      user_id: user?.id
+      user_id: user?.id,
     };
   }
   // const Moderators = [
@@ -105,8 +106,8 @@ export default function About() {
             External
           </button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
@@ -130,17 +131,17 @@ export default function About() {
                   options: trainers?.map((trainee, index) => ({
                     label: trainee.name,
                     value: trainee.name,
-                    ...trainee
+                    ...trainee,
                   })),
                   // options: Trainers?.map((trainee) => ({ label: trainee, value: trainee })),
                   value: !!classroomMaster?.trainers?.length
                     ? classroomMaster?.trainers?.map((trainee) => ({
                         label: trainee?.value,
                         value: trainee?.value,
-                        ...trainee
+                        ...trainee,
                       }))
                     : null,
-                  isDisabled: isDisabled
+                  isDisabled: isDisabled,
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
@@ -148,8 +149,8 @@ export default function About() {
                     trainers: e?.map((item, index) => ({
                       value: item?.value,
                       email: item?.email,
-                      user_id: item?.user_id
-                    }))
+                      user_id: item?.user_id,
+                    })),
                   })
                 }
                 isLoading={trainerCandidates == null}
@@ -193,17 +194,17 @@ export default function About() {
                   options: moderators?.map((mod, index) => ({
                     label: mod?.name,
                     value: mod?.name,
-                    ...mod
+                    ...mod,
                   })),
                   // options: Moderators?.map((trainee) => ({ label: trainee, value: trainee })),
                   value: !!classroomMaster?.moderators?.length
                     ? classroomMaster?.moderators?.map((mod) => ({
                         label: mod?.value,
                         value: mod?.value,
-                        ...mod
+                        ...mod,
                       }))
                     : null,
-                  isDisabled: isDisabled
+                  isDisabled: isDisabled,
                 }}
                 isLoading={moderatorCandidates == null}
                 isFullWidth={true}
@@ -212,8 +213,8 @@ export default function About() {
                     moderators: e?.map((item, index) => ({
                       value: item?.value,
                       email: item?.email,
-                      user_id: item?.user_id
-                    }))
+                      user_id: item?.user_id,
+                    })),
                   })
                 }
               />
@@ -305,9 +306,9 @@ export default function About() {
                   value:
                     moment(classroomMaster?.courseEndDate).diff(
                       classroomMaster?.courseStartDate,
-                      'day'
+                      'day',
                     ) || 0,
-                  isDisabled: true
+                  isDisabled: true,
                 }}
                 styleClass={`${styles.inputName1}`}
                 // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -323,7 +324,7 @@ export default function About() {
                   // label:'Learning Duration:',
                   placeholder: 'Auto populated',
                   value: (courseMetaData?.duration || 0) / 60,
-                  isDisabled: true
+                  isDisabled: true,
                 }}
                 styleClass={`${styles.inputName1}`}
                 // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
@@ -346,7 +347,7 @@ export default function About() {
           rows: 5,
           maxLength: 160,
           value: courseMetaData?.description,
-          isDisabled: isDisabled
+          isDisabled: isDisabled,
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
         changeHandler={(e) => handleCourseMetaChange({ description: e?.target?.value })}
@@ -441,7 +442,7 @@ export default function About() {
         </div>
       )}
 
-      <NextBtn />
+      <NextBtn switchTabName={courseTabs?.topics?.name} />
     </>
   );
 }
