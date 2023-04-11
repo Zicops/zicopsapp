@@ -84,7 +84,7 @@ export const useExamData = () => {
       {},
       queryClient
     );
-    console.log(examRes);
+
     if (examRes?.error) return [];
     if (!examRes?.getTopicExamsByCourseIds?.length) return [];
     return [...examRes?.getTopicExamsByCourseIds];
@@ -204,9 +204,6 @@ export const useExamData = () => {
 
     allAttempts?.push(...examAttempt);
 
-    console.info('examAttempt', examAttempt);
-    console.info('allAttempts', allAttempts);
-
     setExamAttempts([...allAttempts], setIsAttemptsLoaded(true));
 
     const onGoingAttempts = allAttempts?.filter(
@@ -216,14 +213,8 @@ export const useExamData = () => {
     setOnGoingExam([...onGoingAttempts]);
 
     const completedAttempts = allAttempts?.filter((attemp) => {
-      console.log(
-        attemp?.attempt_status?.toLowerCase(),
-        attemp?.attempt_status?.toLowerCase() === 'completed'
-      );
       return attemp?.attempt_status?.toLowerCase() === 'completed';
     });
-
-    console.info('completedAttempts', completedAttempts);
     const UniqueCompleteAttempt = completedAttempts.reduce((acc, curr) => {
       if (!acc[curr.user_ea_id]) {
         acc[curr.user_ea_id] = curr;
@@ -232,7 +223,6 @@ export const useExamData = () => {
     }, {});
 
     const completedUniquAttemps = Object.values(UniqueCompleteAttempt);
-    console.info('completedUniquAttemps', completedUniquAttemps);
 
     let newCompleteAttempts = [];
     if (!userData?.id) return [];
@@ -246,8 +236,6 @@ export const useExamData = () => {
         userQueryClient
       );
       if (results?.getUserExamResults) {
-        console.info('results?.getUserExamResults', results?.getUserExamResults);
-        console.info('completedAttempts', completedAttempts);
         completedUniquAttemps?.map((r) => {
           if (results?.getUserExamResults[0]?.user_ea_id === r?.user_ea_id) {
             newCompleteAttempts.push({
@@ -268,7 +256,6 @@ export const useExamData = () => {
     }, {});
 
     const uniquAttemps = Object.values(UniqueCompleteAttempts);
-    console.info('uniquAttemps', uniquAttemps);
     if (newCompleteAttempts?.length) {
       setExamResults([...uniquAttemps]);
     }
