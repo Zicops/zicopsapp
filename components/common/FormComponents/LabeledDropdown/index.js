@@ -40,8 +40,8 @@ export default function LabeledDropdown({
   if (value?.value) selectedValue = value;
   if (isMulti && value?.length) selectedValue = value;
 
-  let customComponents = '';
-  if (isDisplayButton) customComponents = CustomMenu;
+  // let customComponents = '';
+  // if (isDisplayButton) customComponents = CustomMenu;
 
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass}`}>
@@ -77,7 +77,7 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
-          components={{ Menu: customComponents }}
+          // components={{ Menu: customComponents }}
         />
       ) : (
         <Creatable
@@ -103,7 +103,7 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
-          components={{ Menu: customComponents }}
+          // components={{ Menu: CustomMenu }}
         />
       )}
     </div>
