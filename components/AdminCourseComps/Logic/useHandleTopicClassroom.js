@@ -18,6 +18,7 @@ import {
   getTopicClassroomObject,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { addTopicResources, addUpdateTopicQuiz } from './adminCourseComps.helper';
@@ -92,6 +93,24 @@ export default function useHandleTopicClassroom(topData = null) {
     );
   }, [topicClassroom?.topicId]);
 
+  function getMaxDuration(
+    courseEndDate = new Date(),
+    trainingStartDate = new Date(),
+    durationInSeconds = 0,
+  ) {
+    const endDate = new Date(courseEndDate);
+    const topicEndDate = new Date(trainingStartDate);
+    // set date to next date as it is the max time we get from classroom master
+    endDate.setHours(24);
+
+    // add current duration to start time to get new end time
+    const endDateWithDuration = moment(topicEndDate).add(+durationInSeconds, 'second');
+    const diff = moment(endDate).diff(endDateWithDuration, 'minute');
+
+    if (diff >= 0) return +durationInSeconds;
+    return moment(endDate).diff(moment(topicEndDate), 'second');
+  }
+
   function handleTopicClassroomChange(toBeUpdatedKeyValue = {}) {
     const duration = toBeUpdatedKeyValue?.duration || topicClassroom?.duration || 0;
     const startTime = toBeUpdatedKeyValue?.trainingStartTime || topicClassroom?.trainingStartTime;
@@ -105,7 +124,8 @@ export default function useHandleTopicClassroom(topData = null) {
       _updatedValue.trainingEndTime = endTime;
     }
 
-    setTopicClassroom((prev) => ({ ...prev, ..._updatedValue }));
+    const maxDuration = getMaxDuration(classroomMaster?.courseEndDate, startTime, duration);
+    setTopicClassroom((prev) => ({ ...prev, ..._updatedValue, duration: maxDuration }));
   }
 
   async function addUpdateTopicClassroom() {
