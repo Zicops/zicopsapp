@@ -2,40 +2,45 @@ import PopUp from '@/components/common/PopUp';
 import ViewDoc from '@/components/common/ViewDoc';
 import ZicopsTabs from '@/components/common/ZicopsTabs';
 import { useMemo } from 'react';
-import { useRecoilState } from 'recoil';
-import { SelectedResourceDataAtom } from '../atoms/learnerCourseComps.atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  CourseActiveTabAtom,
+  SelectedResourceDataAtom,
+  activeCourseTabNames,
+} from '../atoms/learnerCourseComps.atom';
 import AboutTab from './AboutTab';
 import ResourcesTab from './ResourcesTab';
 import TopicTab from './TopicTab';
 
 export default function CourseBody() {
   const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);
+  const courseActiveTab = useRecoilValue(CourseActiveTabAtom);
 
   const courseBodyTabs = useMemo(
     () => [
       {
         id: 1,
-        title: 'Topics',
+        title: activeCourseTabNames.topic,
         body: <TopicTab />,
       },
       {
         id: 2,
-        title: 'Resources',
+        title: activeCourseTabNames.resources,
         body: <ResourcesTab />,
       },
       {
         id: 3,
-        title: 'Notes',
+        title: activeCourseTabNames.notes,
         body: <>Notes Body Comp</>,
       },
       {
         id: 4,
-        title: 'Discussion',
+        title: activeCourseTabNames.discussion,
         body: <>Discussion Body Comp</>,
       },
       {
         id: 5,
-        title: 'About',
+        title: activeCourseTabNames.about,
         body: <AboutTab />,
       },
     ],
@@ -44,7 +49,7 @@ export default function CourseBody() {
 
   return (
     <>
-      <ZicopsTabs tabData={courseBodyTabs} />
+      <ZicopsTabs tabData={courseBodyTabs} activeTab={courseActiveTab || null} />
 
       {/* resource view popup */}
       {!!selectedResourceData?.url && (

@@ -4,7 +4,10 @@ import { atom, atomFamily } from 'recoil';
 export const courseHeroObj = {
   courseMetaPreview: 'courseMetaPreview',
   coursePreviewVideo: 'coursePreviewVideo',
-  topicPreview: 'topicPreview',
+  content: 'content',
+  classroom: 'classroom',
+  assessment: 'assessment',
+  labs: 'labs',
 };
 
 // used for displaying different sections in course hero
@@ -113,6 +116,20 @@ export function getUserTopicProgressDataObj(data = {}) {
     updatedBy: data?.updatedBy || '',
   };
 }
+
+export const activeCourseTabNames = {
+  topic: 'Topics',
+  resources: 'Resources',
+  notes: 'Notes',
+  discussion: 'Discussion',
+  about: 'About',
+};
+
+// used to set active course body tab
+export const CourseActiveTabAtom = atom({
+  key: 'CourseActiveTabAtom',
+  default: null,
+});
 
 // used to set active topic and display topic preview accordingly
 export const ActiveCourseDataAtom = atom({

@@ -7,6 +7,7 @@ import VcMaintool from '..';
 import { getSessionStatus } from '../help/vctool.helper';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
+import { ActiveCourseHeroAtom } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 
 const monthName = [
   'January',
@@ -20,13 +21,14 @@ const monthName = [
   'September',
   'October',
   'November',
-  'December'
+  'December',
 ];
 const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const VCtoolStartPage = ({ topicId = null }) => {
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
-    ActiveClassroomTopicIdAtom
+    ActiveClassroomTopicIdAtom,
   );
   const topicClassroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
 
@@ -39,7 +41,7 @@ const VCtoolStartPage = ({ topicId = null }) => {
 
   const status = getSessionStatus(
     +topicClassroomData?.trainingStartTime,
-    +topicClassroomData?.trainingEndTime
+    +topicClassroomData?.trainingEndTime,
   );
 
   const isSessionEnded = status === 2;
@@ -53,7 +55,12 @@ const VCtoolStartPage = ({ topicId = null }) => {
         ref={(elem) =>
           elem?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
         }>
-        <span onClick={() => setActiveClassroomTopicId(null)} className={`${styles.backBtn}`}>
+        <span
+          onClick={() => {
+            setActiveHero(null);
+            setActiveClassroomTopicId(null);
+          }}
+          className={`${styles.backBtn}`}>
           <img src="/images/bigarrowleft.png" alt="" />
         </span>
 

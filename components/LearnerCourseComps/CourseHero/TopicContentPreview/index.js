@@ -1,19 +1,24 @@
+import Spinner from '@/components/common/Spinner';
 import { truncateToN } from '@/helper/common.helper';
 import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
+import useHandleTopicView from '../../Logic/useHandleTopicView';
+import useLoadTopicData from '../../Logic/useLoadTopicData';
 import {
   ActiveCourseDataAtom,
+  ActiveCourseHeroAtom,
+  CourseActiveTabAtom,
   CourseMetaDataAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
   TopicQuizAtom,
   TopicQuizAttemptsAtom,
+  activeCourseTabNames,
 } from '../../atoms/learnerCourseComps.atom';
 import VideoPlayer from '../../common/VideoPlayer';
 import ZicopsButton from '../../common/ZicopsButton';
 import styles from '../../learnerCourseComps.module.scss';
-import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
-import useHandleTopicView from '../../Logic/useHandleTopicView';
 import CourseHeroTopBar from '../CourseHeroTopBar';
 import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
@@ -21,6 +26,8 @@ import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
 
 export default function TopicContentPreview() {
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
+  const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
@@ -30,6 +37,7 @@ export default function TopicContentPreview() {
 
   const { containerRef, selectedTopicContent, videoStartTime } = useHandleTopicProgress();
   const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
+  const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
 
   const toolbarItems = useMemo(
     () => [
@@ -48,7 +56,7 @@ export default function TopicContentPreview() {
       {
         id: 2,
         btnImg: '/images/svg/forum.svg',
-        handleClick: () => toggleActiveBox(2),
+        handleClick: () => setCourseActiveTab(activeCourseTabNames.discussion),
       },
       {
         id: 3,
@@ -88,13 +96,16 @@ export default function TopicContentPreview() {
     [activeCourseData?.topicId],
   );
 
+  if (isLoading) return <Spinner />;
+
   return (
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={() =>
-            setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }))
-          }
+          handleBackBtnClick={() => {
+            setActiveHero(null);
+            setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }));
+          }}
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {

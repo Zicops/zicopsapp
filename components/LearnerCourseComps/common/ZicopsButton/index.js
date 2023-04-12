@@ -21,24 +21,27 @@ export default function ZicopsButton({
 }) {
   if (!display) return null;
 
+  const customStyleObj = {
+    padding,
+    color,
+    backgroundColor,
+    border,
+    fontSize,
+    fontWeight,
+  };
+
+  if (paddingX) customStyleObj.paddingLeft = paddingX;
+  if (paddingX) customStyleObj.paddingRight = paddingX;
+  if (paddingY) customStyleObj.paddingTop = paddingY;
+  if (paddingY) customStyleObj.paddingBottom = paddingY;
+
   return (
     <>
       <button
         className={`${styles.zicopsButton} ${!!padding ? styles.shrink : ''} ${
           isError ? styles.error : ''
         } ${isLoading ? styles.loading : ''}`}
-        style={{
-          padding,
-          paddingLeft: paddingX,
-          paddingRight: paddingX,
-          paddingTop: paddingY,
-          paddingBottom: paddingY,
-          color,
-          backgroundColor,
-          border,
-          fontSize,
-          fontWeight,
-        }}
+        style={customStyleObj}
         onClick={(e) => {
           if (isLoading || isDisabled) return;
 

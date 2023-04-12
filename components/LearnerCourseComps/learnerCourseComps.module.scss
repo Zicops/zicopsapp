@@ -420,11 +420,13 @@ $heroSectionPadding: 2em;
     min-width: 15em;
 
     .resourceBtn {
-      margin: 0.2em 0;
-      padding: 5px 10px;
+      display: inline-block;
+      margin: 0.2em;
+      padding: 0.2em 0.5em;
 
       width: 18em;
       font-size: 14px;
+      text-align: center;
 
       background-color: transparent;
       border: 1px solid $primary;

@@ -19,34 +19,32 @@ export default function ResourcesList() {
   return (
     <>
       <div className={`${styles.boxContainer} ${styles.resourceBox}`}>
-        <section className="h-95">
-          {!!filteredResources?.length ? (
-            filteredResources?.map((resource) => (
-              <>
-                {resource?.type === 'LINK' ? (
-                  <a
-                    href={resource?.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.resourceBtn}>
-                    Visit Link ({resource?.type})
-                  </a>
-                ) : (
-                  <ButtonWithNoStyles
-                    key={resource?.id}
-                    styleClass={styles.resourceBtn}
-                    handleClick={() => setSelectedResourceData(resource)}>
-                    {truncateToN(resource?.name, 25)} ({resource?.type})
-                  </ButtonWithNoStyles>
-                )}
-              </>
-            ))
-          ) : (
-            <section className={`${styles.notFound}`}>
-              <p>No Resources Added</p>
-            </section>
-          )}
-        </section>
+        {!!filteredResources?.length ? (
+          filteredResources?.map((resource) => (
+            <>
+              {resource?.type === 'LINK' ? (
+                <a
+                  href={resource?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.resourceBtn}>
+                  Visit Link ({resource?.type})
+                </a>
+              ) : (
+                <ButtonWithNoStyles
+                  key={resource?.id}
+                  styleClass={styles.resourceBtn}
+                  handleClick={() => setSelectedResourceData(resource)}>
+                  {truncateToN(resource?.name, 30)} ({resource?.type})
+                </ButtonWithNoStyles>
+              )}
+            </>
+          ))
+        ) : (
+          <section className={`${styles.notFound}`}>
+            <p>No Resources Added</p>
+          </section>
+        )}
       </div>
     </>
   );

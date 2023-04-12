@@ -1,16 +1,16 @@
 import useLoadTopicData from '@/components/LearnerCourseComps/Logic/useLoadTopicData';
+import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
 import PropTypes from 'prop-types';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { getTopicCardImages } from '../../../Logic/learnerCourseComps.helper';
 import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
-  courseHeroObj,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
 } from '../../../atoms/learnerCourseComps.atom';
 import styles from '../../../learnerCourseComps.module.scss';
-import { getTopicCardImages } from '../../../Logic/learnerCourseComps.helper';
 import TopicContentDetails from './TopicContentDetails';
 
 export default function TopicCard({ topicId }) {
@@ -31,7 +31,7 @@ export default function TopicCard({ topicId }) {
           activeCourseData?.topicId === topicData?.id ? styles.activeTopic : ''
         }`}
         onClick={() => {
-          setActiveHero(courseHeroObj.topicPreview);
+          setActiveHero(topicData?.type?.toLowerCase());
           setActiveCourseData({
             ...activeCourseData,
             moduleId: topicData?.moduleId,
@@ -73,7 +73,12 @@ export default function TopicCard({ topicId }) {
             isLoading={isLoading}
           />
         )}
-        {topicData?.type !== COURSE_TOPIC_TYPES.content && topicData?.type}
+        {topicData?.type === COURSE_TOPIC_TYPES.classroom && (
+          <ClassroomTopicSection topicId={topicData?.id} />
+        )}
+
+        {topicData?.type === COURSE_TOPIC_TYPES.assessment && 'Assessment'}
+        {topicData?.type === COURSE_TOPIC_TYPES.lab && 'Labs'}
       </div>
     </>
   );

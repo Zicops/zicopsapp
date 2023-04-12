@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react';
 import TabHeaderCenter from './TabHeaderCenter';
 import styles from './zicopsTabs.module.scss';
 
-export default function ZicopsTabs({ tabData, getActiveTab }) {
+export default function ZicopsTabs({ tabData, getActiveTab, activeTab = null }) {
   const [activeTabData, setActiveTabData] = useState(null);
 
   useEffect(() => {
-    setActiveTabData(tabData[0]);
-  }, [tabData]);
+    setActiveTabData(!!activeTab ? activeTab : tabData[0]);
+  }, [tabData, activeTab]);
 
   useEffect(() => {
     getActiveTab(activeTabData);
