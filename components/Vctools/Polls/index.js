@@ -90,11 +90,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       </div>
 
       <div className={`${styles.pollScreen}`}>
-        {!!currentParticipantData?.isModerator ? (
           <>{showPollPopup(polltitle)}</>
-        ) : (
-          <ParticipantPollScreen />
-        )}
       </div>
     </div>
   );

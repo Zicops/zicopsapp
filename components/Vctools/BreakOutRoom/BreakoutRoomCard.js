@@ -33,6 +33,7 @@ const BreakoutRoomCard = ({ roomNumber, showAddparticipantpopup, roomLength ,joi
                     <div className={`${styles.breakoutRoomCardLeftHeading}`}>Room {roomNumber} ({roomLength})</div>
                 </div>
                 <div className={`${styles.breakoutRoomCardRight}`}>
+                    <button className={`${styles.joinRoomBtn}`}>Join</button>
                     <button onClick={() => {
                         setShowDropdown(!showDropdown)
                     }}>

@@ -713,16 +713,14 @@
   margin-right: 14px;
 }
 //  styling delete pollPopup
-.canceldeletPoll
-{
-  background-color: #26292C;
-  color: #ACACAC;
+.canceldeletPoll {
+  background-color: #26292c;
+  color: #acacac;
   border: none;
   outline: none;
 }
-.deletePoll
-{
-  background-color: #F53D41;
+.deletePoll {
+  background-color: #f53d41;
   border: none;
   outline: none;
   color: white;
@@ -1010,8 +1008,7 @@
 .pollEndedLabel {
   color: #acacac;
 }
-.pollScreenLable
-{
+.pollScreenLable {
   display: flex;
   margin-top: 12px;
 }
@@ -1422,6 +1419,7 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
+  display: flex;
   line-height: 24px;
   color: #ffffff;
   margin-top: 8px;
@@ -1430,6 +1428,8 @@
 .breakoutLable {
   //
   font-style: normal;
+  display: flex;
+  margin-bottom: 6px;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
@@ -1438,6 +1438,12 @@
 
 .breakoutRoominputbox {
   margin-top: 10px;
+}
+.roomNoticeText {
+  text-align: justify;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 8px;
 }
 
 .breakoutRoominputbox > input {
@@ -1552,6 +1558,7 @@
 .manageRoomshead > div {
   width: 90%;
   //
+  display: flex;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -1591,6 +1598,7 @@
 .availableRoomcontainerhead {
   margin-top: 12px;
   margin-bottom: 12px;
+  display: flex;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -1648,7 +1656,12 @@
   justify-content: space-around;
   align-items: center;
 }
-
+.joinRoomBtn {
+  font-weight: 500;
+  font-size: 14px;
+  color: #6BCFCF;
+  margin-right: 16px;
+}
 .breakoutRoomCardRight > button {
   outline: none;
   background-color: transparent;
@@ -1701,6 +1714,7 @@
 
 .breakoutRoomParticipantHeading {
   font-weight: 400;
+  display: flex;
   font-size: 14px;
   line-height: 24px;
   color: #acacac;
@@ -1911,7 +1925,7 @@
   margin-top: 15px;
   padding-top: 10px;
   width: 276px;
-  height:auto;
+  height: auto;
   font-size: 18xp;
   line-height: 28px;
   color: white;
@@ -2205,8 +2219,11 @@
 
 .quizLable {
   display: flex;
-  width: 30%;
-  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  div {
+    margin-left: 12px;
+  }
 }
 
 .quizeExpand {
@@ -2217,6 +2234,9 @@
 
   img {
     width: 12px;
+  }
+  p {
+    margin-right: 12px;
   }
 }
 #endPoll {
@@ -2327,6 +2347,7 @@
 .quizeQALabel {
   width: 100%;
   // margin-left: 10px;
+  display: flex;
   margin-top: 12px;
   margin-bottom: 12px;
   font-weight: 400;
@@ -2345,6 +2366,7 @@
 }
 
 .quizName > div {
+  display: flex;
   font-weight: 400;
   font-size: 16px;
   color: #acacac;
@@ -2352,6 +2374,7 @@
 }
 
 .quizName > input {
+  display: flex;
   width: 276px;
   margin: 8px 0 0 8px;
   height: 40px;
@@ -2369,6 +2392,7 @@
 }
 
 .quizQA {
+  display: flex;
   margin-bottom: 4px;
   color: white;
   padding-left: 6px;
@@ -2405,6 +2429,7 @@
 
 .quizDifficultyLevel {
   width: 296px;
+  display: flex;
   font-size: 16px;
   font-weight: 400px;
   margin-top: 12px;
@@ -2433,11 +2458,13 @@
   width: 296px;
   color: white;
   font-weight: 400;
+  display: flex;
   font-size: 16px;
   margin-top: 12px;
 }
 
 .quizOptionNotice {
+  display: flex;
   width: 296px;
   color: #acacac;
   font-size: 14px;
@@ -2452,6 +2479,7 @@
   margin-top: 8px;
 
   p {
+    display: flex;
     font-weight: 400;
     font-size: 16px;
     color: #acacac;
@@ -2548,8 +2576,12 @@
 }
 
 .availableQuizSCreen {
-  width: 296px;
+  width: 100%;
   height: 60vh;
+  overflow: scroll;
+}
+.availableQuizSCreen::-webkit-scrollbar {
+  display: none;
 }
 
 // styling create BreakoutRoom
@@ -2560,7 +2592,10 @@
   justify-content: space-between;
   align-items: center;
 }
-
+.publishRoomBnt
+{
+  background-color: #6BCFCF;
+}
 .createRoomhead {
   font-size: 14px;
   color: white;

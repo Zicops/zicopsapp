@@ -1,6 +1,6 @@
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { ActiveClassroomTopicIdAtom, TopicAtom } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom, TopicAtom, VcApi } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -113,7 +113,7 @@ const VcMaintool = ({ vcData = {} }) => {
 
     setCurrentParticipantData(getCurrentParticipantDataObj({ ..._currentUser, isModerator }));
   }, [isMeetingStarted]);
-  
+
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
@@ -175,7 +175,6 @@ const VcMaintool = ({ vcData = {} }) => {
               api?.getRoomsInfo().then((rooms) => {
                 setuserinfo(rooms.rooms[0].participants);
                 setbreakoutListarr(rooms.rooms);
-                // setallInfo(rooms.rooms[0].participants);
                 setVctoolInfo({
                   ...vctoolInfo,
                   allRoomInfo: rooms.rooms[0].participants
@@ -225,8 +224,6 @@ const VcMaintool = ({ vcData = {} }) => {
               setisStarted(true);
               setIsMeetingStarted(true);
               sethidecard(!hidecard);
-
-              // Route.push(`${Route.asPath}/classroom`);
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

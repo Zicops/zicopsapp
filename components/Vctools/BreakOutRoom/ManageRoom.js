@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 import BreakoutRoomCard from './BreakoutRoomCard';
-const ManageRoom = ({ addAgain }) => {
+const ManageRoom = ({ addAgain ,publishRoom}) => {
   // breakoutList
   const breakoutLists = useRecoilValue(breakoutList);
   const participantbreakoutpopup = useRecoilValue(particiantPopup);
@@ -26,7 +26,7 @@ const ManageRoom = ({ addAgain }) => {
             }}>
             Add Room
           </button>
-          <button className={`${styles.manageRoombtn2}`}>Publish All</button>
+          <button className={`${styles.manageRoombtn2}`} onClick={()=>publishRoom()}>Publish All</button>
         </div>
         <div className={`${styles.availableRoomcontainerhead}`}>Available rooms</div>
         <div className={`${styles.availableRoomcontainer}`}>

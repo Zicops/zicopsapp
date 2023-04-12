@@ -1,4 +1,11 @@
 import { atom } from 'recoil';
+export const participantJoinData=atom({
+  key:"participantJoinData",
+  default:{
+    modList:[],
+    LearnerList:[]
+  }
+})
 export const joinMeeting = atom({
   key: 'joinMeeting',
   default: false //check whether meeting is started or not
@@ -114,6 +121,10 @@ export const quizArray = atom({
     }
   ]
 });
+export const activequizArr=atom({
+  key:'activequizArr',
+  default:[]
+})
 export const VcChatMessageAtom = atom({
   key: 'VcChatMessageAtom',
   default: getMesaageObj()

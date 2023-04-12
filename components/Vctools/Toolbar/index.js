@@ -46,7 +46,8 @@ const MainToolbar = ({
   startAdvertisement,
   stopAdvertisement,
   autoAssignRoom,
-  showSettingFunc
+  showSettingFunc,
+  frameIcons
 }) => {
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
@@ -60,6 +61,7 @@ const MainToolbar = ({
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
   const [deletedPoupTitel, setDeletedPouptitle] = useState('');
+  const [publishRoom, setPublishRoom] = useState('');
   const participantPopuppanel = useRecoilValue(particiantPopup);
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo);
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
@@ -97,6 +99,28 @@ const MainToolbar = ({
           createRooms={() => {
             CreateBreakoutroomlist();
           }}
+          publishRoom={() => {
+            setPublishRoom('publishRoom');
+          }}
+        />
+      )
+    },
+    {
+      title: 'publishRoom',                // publish Breakout Room Popup
+      component: (
+        <DeletePopUp
+          poUpOptions={{
+            popUpName: 'rooms',
+            popUpNotice:
+              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
+            poupBtnInfo1: 'Cancel',
+            poupBtnInfo2: 'Publish'
+          }}
+          styleBtns={{
+            cancelPopupClass: `${styles.canceldeletPoll}`,
+            deletePopupclass: `${styles.publishRoomBnt}`
+          }}
+          cancelFunc={() => setPublishRoom('')}
         />
       )
     },
@@ -110,6 +134,7 @@ const MainToolbar = ({
               : setSelectedButton('participants');
           }}
           Info={getUesrId}
+          api={api}
         />
       )
     },
@@ -420,6 +445,7 @@ const MainToolbar = ({
           {getClickedComponent(selectedButton)}
           {getClickedComponent(participantPopuppanel.roomId)}
           {getClickedComponent(deletedPoupTitel)}
+          {getClickedComponent(publishRoom)}
         </>
       </div>
 
@@ -594,7 +620,7 @@ const MainToolbar = ({
                 trueSrc={'/images/svg/vctool/settings.svg'}
                 falseSrc={'/images/svg/vctool/settings.svg'}
                 customId={selectedButton === 'SettingPopup' ? `${styles.changeBackground}` : ''}
-                toggle={selectedButton === 'SettingPopup' }
+                toggle={selectedButton === 'SettingPopup'}
               />
 
               <VctoolButton
