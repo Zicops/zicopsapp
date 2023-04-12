@@ -1,4 +1,4 @@
-import { pollArray } from '@/state/atoms/vctool.atoms';
+import { CurrentParticipantDataAtom, pollArray } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
@@ -15,6 +15,7 @@ const PollBox = ({ pollData }) => {
     editPollFunc
   } = pollData;
   const [expand, setexpand] = useState(true);
+  const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   return (
     <div className={`${styles.quizQuestion}`}>
       <div className={`${styles.pollQuestionhead}`}>
@@ -23,33 +24,39 @@ const PollBox = ({ pollData }) => {
           <div>{pollNumber}</div>
         </div>
         <div className={`${styles.quizeExpand}`}>
-          {publish === 'publish' && (
-            <div
-              className={`${styles.publishPollHead}`}
-              onClick={() => {
-                publishData();
-              }}>
-              {publish}
-            </div>
-          )}
+          {!!currentParticipantData?.isModerator ? (
+            <>
+              {publish === 'publish' && (
+                <div
+                  className={`${styles.publishPollHead}`}
+                  onClick={() => {
+                    publishData();
+                  }}>
+                  {publish}
+                </div>
+              )}
 
-          {publish === 'End Poll' && (
-            <div
-              id={publish === 'End Poll' ? `${styles.endPoll}` : ''}
-              className={`${styles.publishPollHead}`}
-              onClick={() => {
-                endPoll();
-              }}>
-              {publish}
-            </div>
-          )}
+              {publish === 'End Poll' && (
+                <div
+                  id={publish === 'End Poll' ? `${styles.endPoll}` : ''}
+                  className={`${styles.publishPollHead}`}
+                  onClick={() => {
+                    endPoll();
+                  }}>
+                  {publish}
+                </div>
+              )}
 
-          {publish === 'ENDED' && (
-            <div
-              id={publish === 'ENDED' ? `${styles.endedPoll}` : ''}
-              className={`${styles.publishPollHead}`}>
-              {publish}
-            </div>
+              {publish === 'ENDED' && (
+                <div
+                  id={publish === 'ENDED' ? `${styles.endedPoll}` : ''}
+                  className={`${styles.publishPollHead}`}>
+                  {publish}
+                </div>
+              )}
+            </>
+          ) : (
+            ''
           )}
 
           <button
@@ -82,38 +89,42 @@ const PollBox = ({ pollData }) => {
               })}
             </div>
 
-            {publish === 'publish' && (
+            {!!currentParticipantData?.isModerator && (
               <>
-                <div className={`${styles.pollBoxBtns}`}>
-                  <button
-                    className={`${styles.pollBoxDeleteBnt}`}
-                    onClick={() => {
-                      deletePoll();
-                    }}>
-                    Delete
-                  </button>
-                  <button className={`${styles.pollBoxEditBnt}`} onClick={() => editPollFunc()}>
-                    Edit
-                  </button>
-                </div>
-                <button
-                  className={`${styles.publishPoll}`}
-                  onClick={() => {
-                    publishData();
-                  }}>
-                  Publish
-                </button>
-              </>
-            )}
-            {publish === 'End Poll' && (
-              <>
-                <button
-                  className={`${styles.endPollBtn}`}
-                  onClick={() => {
-                    endPoll();
-                  }}>
-                  End Poll
-                </button>
+                {publish === 'publish' && (
+                  <>
+                    <div className={`${styles.pollBoxBtns}`}>
+                      <button
+                        className={`${styles.pollBoxDeleteBnt}`}
+                        onClick={() => {
+                          deletePoll();
+                        }}>
+                        Delete
+                      </button>
+                      <button className={`${styles.pollBoxEditBnt}`} onClick={() => editPollFunc()}>
+                        Edit
+                      </button>
+                    </div>
+                    <button
+                      className={`${styles.publishPoll}`}
+                      onClick={() => {
+                        publishData();
+                      }}>
+                      Publish
+                    </button>
+                    {publish === 'End Poll' && (
+                      <>
+                        <button
+                          className={`${styles.endPollBtn}`}
+                          onClick={() => {
+                            endPoll();
+                          }}>
+                          End Poll
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
               </>
             )}
           </div>

@@ -1,5 +1,6 @@
 import {
   CurrentParticipantDataAtom,
+  participantPoll,
   pollArray,
   vcActivePoll,
   vcEndedPoll,
@@ -20,6 +21,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
   const [endedPoll, setEndedPoll] = useRecoilState(vcEndedPoll);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
+  const [participantPollArr, setParticipantPollArr] = useRecoilState(participantPoll);
   function showPollPopup(title) {
     if (title === '')
       return (
@@ -90,7 +92,13 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       </div>
 
       <div className={`${styles.pollScreen}`}>
-          <>{showPollPopup(polltitle)}</>
+
+        {
+          !!currentParticipantData?.isModerator ? ( <>{showPollPopup(polltitle)}</>):
+          participantPollArr?.savedPoll.length < 1 && participantPollArr?.endedPoll.length<1 ?
+          <CreatePOll/> :  <ShowPoll/>
+        }
+         
       </div>
     </div>
   );

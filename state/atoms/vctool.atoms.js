@@ -128,6 +128,13 @@ export const quizArray = atom({
     }
   ]
 });
+export const particiapntQuiz=atom({
+  key:"particiapntQuiz",
+  default:{
+    attemtedQuiz:[],
+    unAttemptedQuiz:[]
+  }
+})
 export const activequizArr=atom({
   key:'activequizArr',
   default:[]
