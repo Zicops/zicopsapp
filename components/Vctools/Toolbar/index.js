@@ -21,7 +21,9 @@ import {
   pollArray,
   vcMeetingIconAtom,
   vctoolAlluserinfo,
-  CurrentParticipantDataAtom
+  CurrentParticipantDataAtom,
+  publishBreakoutRoom,
+  breakoutList
 } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
@@ -69,6 +71,8 @@ const MainToolbar = ({
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [hideToolBar, setHideToolbar] = useState(null);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
+  const [publishRoomAtom,setPublishRoomAtom]=useRecoilState(publishBreakoutRoom)
+  const [breakoutLists,setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
 
   useEffect(() => {
@@ -121,6 +125,15 @@ const MainToolbar = ({
             deletePopupclass: `${styles.publishRoomBnt}`
           }}
           cancelFunc={() => setPublishRoom('')}
+          deletePollFunc={()=>
+          {
+            setPublishRoomAtom({
+              ...publishRoomAtom,
+              isRoomPublished:true,
+              publishedRoomArr:[...breakoutLists]
+            })
+            setPublishRoom('')
+          }}
         />
       )
     },

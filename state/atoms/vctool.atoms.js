@@ -1,4 +1,11 @@
 import { atom } from 'recoil';
+export const publishBreakoutRoom=atom({
+  key:'publishBreakoutRoom',
+  default:{
+    isRoomPublished:false,
+    publishedRoomArr:[]
+  }
+})
 export const participantJoinData=atom({
   key:"participantJoinData",
   default:{

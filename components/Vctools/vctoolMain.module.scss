@@ -1584,15 +1584,25 @@
   color: #6bcfcf;
 }
 
-.manageRoombtn2 {
+.manageRoombtn2,
+.manageUnpublishBtn {
   width: 140px;
   height: 40px;
-  background: #6bcfcf;
+
   border-radius: 4px;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+}
+.manageRoombtn2 {
   color: #0b0c0d;
+  background: #6bcfcf;
+}
+.manageUnpublishBtn {
+  background-color: #26292C;
+  color: #ACACAC;
+  border: none;
+  outline: none;
 }
 
 .availableRoomcontainerhead {
@@ -1659,8 +1669,8 @@
 .joinRoomBtn {
   font-weight: 500;
   font-size: 14px;
-  color: #6BCFCF;
-  margin-right: 16px;
+  color: #6bcfcf;
+  width: 50px;
 }
 .breakoutRoomCardRight > button {
   outline: none;
@@ -1672,7 +1682,7 @@
   position: absolute;
   width: 147px;
   height: 130px;
-  left: 130px;
+  left: 140px;
   // top: 208px;
   background: #0b0c0d;
   display: flex;
@@ -2592,9 +2602,8 @@
   justify-content: space-between;
   align-items: center;
 }
-.publishRoomBnt
-{
-  background-color: #6BCFCF;
+.publishRoomBnt {
+  background-color: #6bcfcf;
 }
 .createRoomhead {
   font-size: 14px;
