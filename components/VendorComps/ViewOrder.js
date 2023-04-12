@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import VendorPopUp from './common/VendorPopUp';
 import ReviewAndTaxConfirm from './ReviewAndTaxConfirm';
-import { AllServicesAtom, ServicesAtom, VendorServicesListAtom } from '@/state/atoms/vendor.atoms';
+import {
+  AllServicesAtom,
+  OrderAtom,
+  ServicesAtom,
+  VendorServicesListAtom,
+  getVendorOrderObject,
+  getVendorServicesList,
+  getVendorServicesObject
+} from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
 import { useRecoilState } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor';
-import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
+import { VENDOR_ORDER_STATUS, VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import Loader from '../common/Loader';
 
 const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
@@ -14,9 +22,16 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
     useRecoilState(VendorServicesListAtom);
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const { getSingleVendorInfo } = useHandleVendor();
-  const { orderDetails, getAllOrders, getOrderServices, getVendorServices, getOrders } =
-    useHandleMarketYard();
+  const {
+    addUpdateOrder,
+    orderDetails,
+    getAllOrders,
+    getOrderServices,
+    getVendorServices,
+    getOrders
+  } = useHandleMarketYard();
 
   const orderInfo = orderDetails?.filter((data) => data?.id === orderId);
   let sme = false;
@@ -58,15 +73,30 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
 
   const confirmOrderHandler = async () => {
     setCurrentComponent(currentComponent + 1);
-
+    if (currentComponent === 0) {
+      setOrderData({ ...orderData, status: VENDOR_ORDER_STATUS?.confirmed });
+      await addUpdateOrder(orderInfo[0]?.vendor_id, orderInfo[0]?.id);
+    }
+    if (currentComponent === 1) {
+      setOrderData({ ...orderData, status: VENDOR_ORDER_STATUS?.completed });
+      await addUpdateOrder(orderInfo[0]?.vendor_id, orderInfo[0]?.id);
+    }
     if (currentComponent === 2) {
       setViewOrder(false);
       setCurrentComponent(0);
+      setServicesData(getVendorServicesObject());
+      setSelectedServicesForOrder(getVendorServicesList());
+      setOrderData(getVendorOrderObject());
       setAllServicesData([]);
     }
   };
   const rejectOrderHandler = async () => {
+    setOrderData({ ...orderData, status: VENDOR_ORDER_STATUS?.rejected });
+    await addUpdateOrder(orderInfo[0]?.vendor_id, orderInfo[0]?.id);
     setViewOrder(false);
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
     setAllServicesData([]);
   };
 
@@ -78,6 +108,10 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
       size="large"
       closeBtn={{ name: 'Reject', handleClick: rejectOrderHandler }}
       isCloseButton={currentComponent === 0}
+      onCloseWithCross={() => {
+        setCurrentComponent(0);
+        setAllServicesData([]);
+      }}
       submitBtn={{
         name: currentComponent === 0 ? 'Confirm' : 'OK',
         handleClick: confirmOrderHandler
@@ -114,5 +148,4 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder }) => {
     </VendorPopUp>
   );
 };
-
 export default ViewOrder;

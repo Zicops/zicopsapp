@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { VENDOR_MASTER_STATUS, VENDOR_ORDER_STATUS } from '@/helper/constants.helper';
 
 export const IsVendorAdminLoadingAtom = atom({
   key: 'IsVendorAdminLoading',
@@ -211,7 +211,8 @@ export function getVendorOrderObject(data) {
     total: data?.total || 0,
     tax: data?.tax || 0,
     grossTotal: data?.grossTotal || 0,
-    status: data?.status || '',
+    description: data?.description || '',
+    status: data?.status || VENDOR_ORDER_STATUS?.added,
     currency: data?.currency || ''
   };
 }

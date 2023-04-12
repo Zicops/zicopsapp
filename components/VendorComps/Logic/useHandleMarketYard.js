@@ -168,7 +168,7 @@ export default function useHandleMarketYard() {
       total: orderData?.total,
       tax: orderData?.tax,
       grandTotal: orderData?.grossTotal,
-      status: VENDOR_ORDER_STATUS.added
+      status: orderData?.status
     };
     let isError = false;
     if (orderId) {
@@ -233,7 +233,7 @@ export default function useHandleMarketYard() {
           return setToastMsg({ type: 'danger', message: 'Update Services Error' });
         });
         if (isError) return;
-        setToastMsg({ type: 'success', message: 'Services Updated' });
+        // setToastMsg({ type: 'success', message: 'Services Updated' });
         serviceData.push(res?.data?.addOrderServies);
         continue;
       }
@@ -244,7 +244,7 @@ export default function useHandleMarketYard() {
         return setToastMsg({ type: 'danger', message: 'Add Services Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
+      // setToastMsg({ type: 'success', message: 'Services Created' });
       serviceData.push(res?.data?.addOrderServies);
     }
     return serviceData;

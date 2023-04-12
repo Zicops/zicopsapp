@@ -34,6 +34,9 @@ import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
 import ReviewAndTax from '@/components/VendorComps/ReviewAndTax';
 import AddLineComp from '@/components/VendorComps/AddLineComp';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import { changeHandler } from '@/helper/common.helper';
 
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
@@ -45,6 +48,7 @@ export default function VendorInfo() {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
+  const [isShowDesc, setShowDesc] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
@@ -124,9 +128,8 @@ export default function VendorInfo() {
   };
 
   const addOrderHandler = (e) => {
-    setAddRate(true);
+    setShowDesc(true);
     setAddOrder(false);
-    setCurrentComponent(0);
   };
 
   const backFirstPopUpHandler = () => {
@@ -134,6 +137,15 @@ export default function VendorInfo() {
     setShowPopup(true);
   };
 
+  const handleDescription = () => {
+    setShowDesc(false);
+    setAddRate(true);
+    setCurrentComponent(0);
+  };
+  const backDescHandler = () => {
+    setShowDesc(false);
+    setAddOrder(true);
+  };
   const addRateHandler = async () => {
     setCurrentComponent(currentComponent + 1);
 
@@ -149,7 +161,7 @@ export default function VendorInfo() {
   const backAddOrderHandler = () => {
     if (currentComponent === 0) {
       setAddRate(false);
-      setAddOrder(true);
+      setShowDesc(true);
     }
     setCurrentComponent(currentComponent - 1);
   };
@@ -254,6 +266,28 @@ export default function VendorInfo() {
             </div>
           );
         })}
+      </VendorPopUp>
+      <VendorPopUp
+        open={isShowDesc}
+        popUpState={[isShowDesc, setShowDesc]}
+        title="Add Order"
+        size="small"
+        isMarketYard={true}
+        closeBtn={{ name: 'Back', handleClick: backDescHandler }}
+        submitBtn={{ name: 'Next', handleClick: handleDescription }}>
+        <p className={`${styles.addOrderText}`}>Order Description:</p>
+        <LabeledTextarea
+          inputOptions={{
+            placeholder: 'Enter order discription',
+            rows: 5,
+            maxLength: 160,
+            value: orderData?.description
+            // isDisabled: isDisabled
+          }}
+          changeHandler={(e) => {
+            setOrderData({ ...orderData, description: e.target.value });
+          }}
+        />
       </VendorPopUp>
       <VendorPopUp
         open={addRate}
