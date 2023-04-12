@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import AboutCard from './AboutCard';
 import Inclusions from './Inclusions';
 import Lists from './Lists';
 import SectionTitle from './SectionTitle';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function AboutTab() {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);

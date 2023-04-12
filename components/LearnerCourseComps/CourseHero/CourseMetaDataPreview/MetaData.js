@@ -5,7 +5,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseHeroAtom,
   courseHeroObj,
-  CourseMetaDataAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
 } from '../../atoms/learnerCourseComps.atom';
@@ -16,6 +15,7 @@ import styles from '../../learnerCourseComps.module.scss';
 import { getCourseCompletePercent } from '../../Logic/learnerCourseComps.helper';
 import CourseBtn from './CourseBtn';
 import CourseTitle from './CourseTitle';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function MetaData() {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);

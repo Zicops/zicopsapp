@@ -1,9 +1,9 @@
 import { useRecoilValue } from 'recoil';
-import { CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
 import SectionTitle from './SectionTitle';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function AboutCard({ isLoading = false }) {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);

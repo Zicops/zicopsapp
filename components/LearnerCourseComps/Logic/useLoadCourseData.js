@@ -13,7 +13,11 @@ import {
 } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
-import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
+import {
+  AllCourseModulesDataAtom,
+  CourseMetaDataAtom,
+  getCourseMetaDataObj,
+} from '@/state/atoms/courses.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { sortArrByKeyInOrder } from '@/utils/array.utils';
 import { useRouter } from 'next/router';
@@ -22,7 +26,6 @@ import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
-  CourseMetaDataAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
   TopicQuizAtom,
@@ -30,7 +33,6 @@ import {
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
   courseHeroObj,
-  getCourseMetaDataObj,
   getUserCourseMapDataObj,
   getUserTopicProgressDataObj,
 } from '../atoms/learnerCourseComps.atom';
@@ -64,12 +66,18 @@ export default function useLoadCourseData() {
     if (!router?.isReady) return;
 
     loadCourseMetaData();
-    loadUserCourseMap();
     loadModuleAndChapterData();
     loadUserTopicProgress();
 
     loadAllTopicResources();
   }, [router.isReady]);
+
+  // load user course map and topic progress
+  useEffect(() => {
+    if (!userId) return;
+
+    loadUserCourseMap();
+  }, [userId]);
 
   // set topic id in active state if present if url
   useEffect(() => {

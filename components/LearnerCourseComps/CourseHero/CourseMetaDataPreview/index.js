@@ -1,10 +1,10 @@
 import { EditIcon, SendIcon, ShareIcon } from '@/common/ZicopsIcons';
 import PropTypes from 'prop-types';
 import { useRecoilValue } from 'recoil';
-import { CourseMetaDataAtom } from '../../atoms/learnerCourseComps.atom';
 import BackArrowBtn from '../../common/BackArrowBtn';
 import styles from '../../learnerCourseComps.module.scss';
 import MetaData from './MetaData';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function CourseMetaDataPreview() {
   const { backgroundImageUrl } = useRecoilValue(CourseMetaDataAtom);

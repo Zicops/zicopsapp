@@ -1,3 +1,4 @@
+import ExamLanding from '@/components/Exams/ExamLanding';
 import VCtoolStartPage from '@/components/Vctools/VctoolStartPage';
 import { useRecoilValue } from 'recoil';
 import useLoadCourseData from '../Logic/useLoadCourseData';
@@ -9,6 +10,7 @@ import {
 import CourseMetaDataPreview from './CourseMetaDataPreview';
 import CoursePreviewVideo from './CoursePreviewVideo';
 import TopicContentPreview from './TopicContentPreview';
+import AssessmentPreview from './AssessmentPreview';
 
 export default function CourseHero() {
   const activeHero = useRecoilValue(ActiveCourseHeroAtom);
@@ -23,6 +25,7 @@ export default function CourseHero() {
   const isLabs = courseHeroObj.labs === activeHero;
 
   if (isClassroom) return <VCtoolStartPage topicId={activeCourseData?.topicId} />;
+  if (isAssessment) return <AssessmentPreview />;
   if (isTopicContent) return <TopicContentPreview />;
   if (isCoursePreview) return <CoursePreviewVideo />;
 

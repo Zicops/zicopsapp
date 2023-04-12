@@ -8,7 +8,6 @@ import useLoadTopicData from '../../Logic/useLoadTopicData';
 import {
   ActiveCourseDataAtom,
   CourseActiveTabAtom,
-  CourseMetaDataAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
   TopicQuizAtom,
@@ -23,6 +22,7 @@ import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
 import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function TopicContentPreview() {
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);

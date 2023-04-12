@@ -11,21 +11,24 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { getTopicCardImages } from '../../../Logic/learnerCourseComps.helper';
 import {
   ActiveCourseDataAtom,
+  CourseTopicAssessmentAtomFamily,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
   UserCourseMapDataAtom,
 } from '../../../atoms/learnerCourseComps.atom';
 import styles from '../../../learnerCourseComps.module.scss';
+import TopicAssessment from './TopicAssessment';
 import TopicContentDetails from './TopicContentDetails';
 
 export default function TopicCard({ topicId }) {
-  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useRecoilState(
     PopUpStatesAtomFamily('CourseAssignPopUp'),
   );
+  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(topicId));
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
+  const topicExamData = useRecoilValue(CourseTopicAssessmentAtomFamily(topicId));
   const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
 
   const { isLoading } = useLoadTopicData(topicId, topicData?.type);
@@ -37,6 +40,7 @@ export default function TopicCard({ topicId }) {
   let isTopicDisabled = false;
   if (topicData?.type === TOPIC_TYPES.content && !defaultTopicContent?.id) isTopicDisabled = true;
   if (topicData?.type === TOPIC_TYPES.classroom && !classroomData?.id) isTopicDisabled = true;
+  if (topicData?.type === TOPIC_TYPES.assessment && !topicExamData?.examId) isTopicDisabled = true;
 
   const isCourseAssigned =
     userCourseMapData?.userCourseId &&
@@ -97,7 +101,10 @@ export default function TopicCard({ topicId }) {
           <ClassroomTopicSection topicId={topicData?.id} />
         )}
 
-        {topicData?.type === COURSE_TOPIC_TYPES.assessment && 'Assessment'}
+        {topicData?.type === COURSE_TOPIC_TYPES.assessment && (
+          <TopicAssessment topicId={topicData?.id} />
+        )}
+
         {topicData?.type === COURSE_TOPIC_TYPES.lab && 'Labs'}
       </div>
 
