@@ -1590,6 +1590,17 @@
     }
   }
 }
+.nextArrow{
+  p{
+    color: $primary;
+  }
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-end;
+  padding-top: 30px;
+  cursor: pointer;
+}
 
 .merketExprienceContainer {
   background-color: $darkOne;
