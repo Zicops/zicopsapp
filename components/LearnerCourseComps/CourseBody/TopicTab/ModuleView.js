@@ -1,41 +1,59 @@
-import PropTypes from 'prop-types';
-import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { CourseModulesAtomFamily } from '../../atoms/learnerCourseComps.atom';
+import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../../atoms/learnerCourseComps.atom';
 import LineTextWithDescription from '../../common/LineTextWithDescription';
 import TopicCard from './TopicCard';
 
-export default function ModuleView({ moduleId }) {
-  const moduleData = useRecoilValue(CourseModulesAtomFamily(moduleId));
+export default function ModuleView() {
+  const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
+  const moduleData = useRecoilValue(CourseModulesAtomFamily(activeCourseData?.moduleId));
 
   return (
     <>
-      {moduleData?.chapters?.map((chapterData, i) => {
-        return (
-          <Fragment key={chapterData?.id}>
-            {!!chapterData?.name && (
-              <LineTextWithDescription
-                title={`Chapter ${chapterData?.sequence}: ${chapterData?.name}`}
-                description={chapterData?.description}
-              />
-            )}
+      {moduleData?.isChapter ? (
+        <>
+          {/* chapters wise */}
+          {moduleData?.chapters?.map((chapterData) => {
+            return (
+              <>
+                {!!chapterData?.name && (
+                  <LineTextWithDescription
+                    title={`Chapter ${chapterData?.sequence}: ${chapterData?.name}`}
+                    description={chapterData?.description}
+                  />
+                )}
 
-            <section>
-              {chapterData?.topicIds?.map((topicId) => (
-                <TopicCard key={topicId} topicId={topicId} />
-              ))}
-            </section>
-          </Fragment>
-        );
-      })}
+                {/* topic */}
+                {moduleData?.topics?.map((topic) => {
+                  if (chapterData?.id !== topic?.chapterId) return;
+
+                  return (
+                    <section>
+                      <TopicCard key={topic.id} topicId={topic.id} />
+                    </section>
+                  );
+                })}
+              </>
+            );
+          })}
+        </>
+      ) : (
+        <>
+          {/* topics */}
+          {moduleData?.topics?.map((topic) => {
+            if (!!topic?.chapterId) return;
+
+            return (
+              <section>
+                <TopicCard key={topic.id} topicId={topic.id} />
+              </section>
+            );
+          })}
+        </>
+      )}
     </>
   );
 }
 
-ModuleView.defaultProps = {
-  moduleId: null,
-};
+ModuleView.defaultProps = {};
 
-ModuleView.propTypes = {
-  moduleId: PropTypes.string,
-};
+ModuleView.propTypes = {};

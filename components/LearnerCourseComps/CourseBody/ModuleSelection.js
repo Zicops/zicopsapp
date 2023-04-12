@@ -1,20 +1,14 @@
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  ActiveCourseDataAtom,
-  CourseModuleIdsAtom,
-  CourseModulesAtomFamily,
-} from '../atoms/learnerCourseComps.atom';
+import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../atoms/learnerCourseComps.atom';
 import ZicopsSkeleton from '../common/ZicopsSkeleton';
 import styles from '../learnerCourseComps.module.scss';
 
 export default function ModuleSelection() {
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
-  const courseModuleIds = useRecoilValue(CourseModuleIdsAtom);
+  const allModules = useRecoilValue(AllCourseModulesDataAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(activeCourseData?.moduleId));
-
-  let moduleIndex = courseModuleIds?.findIndex((modId) => modId === activeCourseData?.moduleId);
-  if (moduleIndex < 0) moduleIndex = null;
 
   const moduleId = activeCourseData?.moduleId;
   const isLoading = !moduleId || moduleData?.length === 0;
@@ -25,10 +19,16 @@ export default function ModuleSelection() {
         dropdownOptions={{
           inputName: 'moduleSelection',
           placeholder: 'Select course module',
-          options: courseModuleIds?.map((modId, i) => ({ value: modId, label: `MODULE ${i + 1}` })),
-          value: { value: activeCourseData?.moduleId, label: `MODULE ${moduleIndex + 1 || ''}` },
+          options: allModules?.map((mod, i) => ({
+            value: mod?.id,
+            label: `MODULE ${mod?.sequence || ''}`,
+          })),
+          value: {
+            value: activeCourseData?.moduleId,
+            label: `MODULE ${moduleData?.sequence || ''}`,
+          },
           isSearchEnable: true,
-          isDisabled: !courseModuleIds?.length,
+          isDisabled: !allModules?.length,
         }}
         styleClass={`${styles.moduleDropdown}`}
         changeHandler={(e) =>

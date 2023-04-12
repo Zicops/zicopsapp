@@ -148,21 +148,6 @@ export function getActiveCourseDataObj(data = {}) {
   };
 }
 
-export const CourseModuleIdsAtom = atom({
-  key: 'CourseModuleIds',
-  default: null,
-});
-
-export const CourseTopcIdsAtom = atom({
-  key: 'CourseTopcIds',
-  default: null,
-});
-
-export const AllCourseModulesDataAtom = atom({
-  key: 'AllCourseModulesData',
-  default: null,
-});
-
 export const CourseModulesAtomFamily = atomFamily({
   key: 'CourseModules',
   default: null,

@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
-  CourseTopcIdsAtom,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
   UserTopicProgressDataAtom,
@@ -11,16 +10,15 @@ import {
 export default function useHandleTopicProgress() {
   const containerRef = useRef();
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
-  const allTopicIds = useRecoilValue(CourseTopcIdsAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
   const topicProgressData = useRecoilValue(UserTopicProgressDataAtom);
 
   const currentTopicContentId = activeCourseData?.topicContentId || topicContent?.[0]?.id;
-  const currentTopicIndex = allTopicIds?.findIndex((id) => activeCourseData?.topicId === id);
   const selectedTopicContent =
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
 
+  // set other data if only topic id is set
   useEffect(() => {
     if (!activeCourseData?.topicId) return;
     if (!topicData) return;
@@ -29,6 +27,8 @@ export default function useHandleTopicProgress() {
     const { moduleId, chapterId, topicContentId, language, subTitle } = _activeData;
     const { contentUrl, language: selectedLang, subTitleUrl } = selectedTopicContent;
     const { chapterId: selectedChapId, moduleId: selectedModId } = topicData;
+
+    if (!topicContentId) return;
 
     if (!!currentTopicContentId && topicContentId !== currentTopicContentId)
       _activeData.topicContentId = currentTopicContentId;

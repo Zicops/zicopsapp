@@ -1,37 +1,57 @@
 import useLoadTopicData from '@/components/LearnerCourseComps/Logic/useLoadTopicData';
 import ClassroomTopicSection from '@/components/Vctools/ClassroomTopicSection';
-import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
+import ConfirmPopUp from '@/components/common/ConfirmPopUp';
+import { TOPIC_TYPES } from '@/constants/course.constants';
+import { COURSE_MAP_STATUS, COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { getTopicCardImages } from '../../../Logic/learnerCourseComps.helper';
 import {
   ActiveCourseDataAtom,
-  ActiveCourseHeroAtom,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
+  UserCourseMapDataAtom,
 } from '../../../atoms/learnerCourseComps.atom';
 import styles from '../../../learnerCourseComps.module.scss';
 import TopicContentDetails from './TopicContentDetails';
 
 export default function TopicCard({ topicId }) {
+  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
+  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useRecoilState(
+    PopUpStatesAtomFamily('CourseAssignPopUp'),
+  );
   const topicData = useRecoilValue(CourseTopicsAtomFamily(topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(topicId));
-  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
-  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(topicId));
+  const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
 
   const { isLoading } = useLoadTopicData(topicId, topicData?.type);
+  const [notAssignedAlert, setNotAssignedAlert] = useState(null);
 
   // default topic content is the first because we sort based on is_default (check loadTopicContent() in useLoadTopicData)
   const defaultTopicContent = topicContent?.[0] || null;
+
+  let isTopicDisabled = false;
+  if (topicData?.type === TOPIC_TYPES.content && !defaultTopicContent?.id) isTopicDisabled = true;
+  if (topicData?.type === TOPIC_TYPES.classroom && !classroomData?.id) isTopicDisabled = true;
+
+  const isCourseAssigned =
+    userCourseMapData?.userCourseId &&
+    userCourseMapData?.courseStatus !== COURSE_MAP_STATUS.disable;
 
   return (
     <>
       <div
         className={`${styles.topicCard} ${
           activeCourseData?.topicId === topicData?.id ? styles.activeTopic : ''
-        }`}
+        } ${isTopicDisabled ? 'disabled' : ''}`}
         onClick={() => {
-          setActiveHero(topicData?.type?.toLowerCase());
+          if (isTopicDisabled) return;
+          if (!isCourseAssigned) return setNotAssignedAlert(true);
+
           setActiveCourseData({
             ...activeCourseData,
             moduleId: topicData?.moduleId,
@@ -80,6 +100,22 @@ export default function TopicCard({ topicId }) {
         {topicData?.type === COURSE_TOPIC_TYPES.assessment && 'Assessment'}
         {topicData?.type === COURSE_TOPIC_TYPES.lab && 'Labs'}
       </div>
+
+      {!!notAssignedAlert && (
+        <ConfirmPopUp
+          title="Course Not Assigned!!"
+          message="Please assign course to access the course contents"
+          btnObj={{
+            textLeft: 'Assign',
+            textRight: 'Close',
+            handleClickLeft: () => {
+              setNotAssignedAlert(null);
+              setIsAssignPopUpOpen(true);
+            },
+            handleClickRight: () => setNotAssignedAlert(null),
+          }}
+        />
+      )}
     </>
   );
 }

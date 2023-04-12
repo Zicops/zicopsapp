@@ -3,7 +3,7 @@ import { FolderIcon, PlusIcon } from '@/components/common/ZicopsIcons';
 import { parseJson } from '@/helper/utils.helper';
 import { isWordMatched } from '@/utils/string.utils';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import {
   CourseMetaDataAtom,
   getUserCourseMapDataObj,
@@ -13,12 +13,15 @@ import AssignCourse from '../../common/AssignCourse';
 import { unassignSelfAssignedCourse } from '../../common/AssignCourse/Logic/assignCourse.helper';
 import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 
 export default function CourseTitle({ isLoading = false, isAssigned = false }) {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
   const [userCourseMapData, setUserCourseMapData] = useRecoilState(UserCourseMapDataAtom);
+  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useRecoilState(
+    PopUpStatesAtomFamily('CourseAssignPopUp'),
+  );
 
-  const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useState(false);
   const [isConfirmBoxShown, setIsConfirmBoxShown] = useState(false);
 
   const isSelfAssigned =

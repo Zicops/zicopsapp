@@ -1,3 +1,4 @@
+import { ActiveCourseDataAtom } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import moment from 'moment';
@@ -7,7 +8,6 @@ import VcMaintool from '..';
 import { getSessionStatus } from '../help/vctool.helper';
 import TimeFrame from './TimeFrame';
 import styles from './vctoolStartPage.module.scss';
-import { ActiveCourseHeroAtom } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 
 const monthName = [
   'January',
@@ -26,7 +26,7 @@ const monthName = [
 const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const VCtoolStartPage = ({ topicId = null }) => {
-  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
+  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
     ActiveClassroomTopicIdAtom,
   );
@@ -57,7 +57,7 @@ const VCtoolStartPage = ({ topicId = null }) => {
         }>
         <span
           onClick={() => {
-            setActiveHero(null);
+            setActiveCourseData((prev) => ({ ...prev, topicId: null }));
             setActiveClassroomTopicId(null);
           }}
           className={`${styles.backBtn}`}>

@@ -11,8 +11,9 @@ import {
   GET_USER_COURSE_PROGRESS,
   userQueryClient,
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { sortArrByKeyInOrder } from '@/utils/array.utils';
 import { useRouter } from 'next/router';
@@ -21,20 +22,17 @@ import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
-  AllCourseModulesDataAtom,
-  courseHeroObj,
   CourseMetaDataAtom,
-  CourseModuleIdsAtom,
   CourseModulesAtomFamily,
-  CourseTopcIdsAtom,
   CourseTopicsAtomFamily,
-  getCourseMetaDataObj,
-  getUserCourseMapDataObj,
-  getUserTopicProgressDataObj,
   TopicQuizAtom,
   TopicResourcesAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
+  courseHeroObj,
+  getCourseMetaDataObj,
+  getUserCourseMapDataObj,
+  getUserTopicProgressDataObj,
 } from '../atoms/learnerCourseComps.atom';
 
 export default function useLoadCourseData() {
@@ -43,12 +41,12 @@ export default function useLoadCourseData() {
   const [courseMeta, setCourseMeta] = useRecoilState(CourseMetaDataAtom);
   const [userCourseMapData, setUserCourseMapData] = useRecoilState(UserCourseMapDataAtom);
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
-  const [moduleIds, setModuleIds] = useRecoilState(CourseModuleIdsAtom);
-  const [topicIds, setTopicIds] = useRecoilState(CourseTopcIdsAtom);
   const [resources, setResources] = useRecoilState(TopicResourcesAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);
+
+  const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
 
   // callback for atom family
   const addModuleToRecoil = useRecoilCallback(({ set }) => (moduleData, id) => {
@@ -65,11 +63,6 @@ export default function useLoadCourseData() {
   useEffect(() => {
     if (!router?.isReady) return;
 
-    if (topicId && activeCourseData?.topicId !== topicId) {
-      setActiveCourseData({ ...activeCourseData, topicId });
-      setActiveHero(courseHeroObj.topicPreview);
-    }
-
     loadCourseMetaData();
     loadUserCourseMap();
     loadModuleAndChapterData();
@@ -78,6 +71,32 @@ export default function useLoadCourseData() {
     loadAllTopicResources();
   }, [router.isReady]);
 
+  // set topic id in active state if present if url
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!topicId) return;
+    if (activeCourseData?.topicId === topicId) return;
+
+    setActiveCourseData({ ...activeCourseData, topicId });
+  }, [router.isReady]);
+
+  // set course hero type based on topic id
+  useEffect(() => {
+    if (!activeCourseData?.topicId) return setActiveHero(courseHeroObj.courseMetaPreview);
+
+    setActiveHero(topicData?.type?.toLowerCase());
+  }, [activeCourseData?.topicId]);
+
+  // remove active topic id if active topic preivew is closed
+  useEffect(() => {
+    if (![courseHeroObj.courseMetaPreview, courseHeroObj?.coursePreviewVideo]?.includes(activeHero))
+      return;
+    if (activeCourseData?.topicId == null) return;
+
+    setActiveCourseData((prev) => ({ ...prev, topicId: null }));
+  }, [activeHero]);
+
+  // set and remove user course progress on course assign and unassign
   useEffect(() => {
     if (!userCourseMapData?.userCourseId) return clearUserProgress();
     if (userCourseMapData?.courseStatus === COURSE_MAP_STATUS.disable) return clearUserProgress();
@@ -91,19 +110,24 @@ export default function useLoadCourseData() {
     }
   }, [userCourseMapData?.userCourseId, userCourseMapData?.courseStatus]);
 
+  // set first module as default when the modules are loaded
   useEffect(() => {
-    if (!moduleIds?.length) return;
+    if (!allModules?.length) return;
     if (activeCourseData?.moduleId) return;
     if (topicId) return;
 
-    setActiveCourseData({ ...activeCourseData, moduleId: moduleIds[0] });
-  }, [moduleIds?.length]);
+    setActiveCourseData({ ...activeCourseData, moduleId: allModules?.[0]?.id });
+  }, [allModules?.length]);
 
+  // load topic quiz
   useEffect(() => {
-    if (!topicIds?.length) return;
+    if (!allModules?.length) return;
+    if (topicQuiz?.length) return;
 
+    const topicIds = [];
+    allModules?.forEach((mod) => mod?.topics?.forEach((top) => topicIds.push(top?.id)));
     loadAllTopicQuiz(topicIds);
-  }, [topicIds?.length]);
+  }, [allModules?.length]);
 
   async function loadCourseMetaData() {
     if (!courseId) return;
@@ -214,17 +238,33 @@ export default function useLoadCourseData() {
 
   async function loadModuleAndChapterData() {
     if (!courseId) return;
-    if (moduleIds?.length != null) return;
 
-    const moduleRes = loadAndCacheDataAsync(GET_COURSE_MODULES, { course_id: courseId });
-    const chapterRes = loadAndCacheDataAsync(GET_COURSE_CHAPTERS, { course_id: courseId });
-    const topicRes = loadAndCacheDataAsync(GET_COURSE_TOPICS, { course_id: courseId });
+    const moduleRes = loadQueryDataAsync(GET_COURSE_MODULES, { course_id: courseId });
+    const chapterRes = loadQueryDataAsync(GET_COURSE_CHAPTERS, { course_id: courseId });
+    const topicRes = loadQueryDataAsync(GET_COURSE_TOPICS, { course_id: courseId });
 
-    saveCourseModulesChaptersTopicInRecoil(
-      (await moduleRes)?.getCourseModules,
-      (await chapterRes)?.getCourseChapters,
-      (await topicRes)?.getTopics,
-    );
+    const sortedModuleDataArr = sortArrByKeyInOrder((await moduleRes)?.getCourseModules);
+    const sortedChapterDataArr = sortArrByKeyInOrder((await chapterRes)?.getCourseChapters);
+    const sortedTopicDataArr = sortArrByKeyInOrder((await topicRes)?.getTopics);
+
+    let allChapters = [...sortedChapterDataArr];
+    let allTopics = [...sortedTopicDataArr];
+    const _allModules = [];
+
+    allTopics?.forEach((top) => addTopicToRecoil(top, top?.id));
+
+    sortedModuleDataArr?.forEach((mod) => {
+      mod.chapters = [];
+      mod.topics = [];
+
+      allChapters?.forEach((chap) => chap?.moduleId === mod?.id && mod?.chapters?.push(chap));
+      allTopics?.forEach((topic) => topic?.moduleId === mod?.id && mod?.topics?.push(topic));
+
+      addModuleToRecoil(mod, mod?.id);
+      _allModules.push(mod);
+    });
+
+    setAllModules(_allModules);
   }
 
   async function loadAllTopicResources() {
@@ -253,73 +293,6 @@ export default function useLoadCourseData() {
       const allQuiz = [];
       res?.map((obj) => allQuiz.push(...obj.value));
       setTopicQuiz(allQuiz);
-    });
-  }
-
-  // helper functions
-  function saveCourseModulesChaptersTopicInRecoil(moduleDataArr, chapterDataArr, topicDataArr) {
-    const sortedModuleDataArr = sortArrByKeyInOrder(moduleDataArr);
-    const sortedChapterDataArr = sortArrByKeyInOrder(chapterDataArr);
-    const sortedTopicDataArr = sortArrByKeyInOrder(topicDataArr);
-
-    let allChapters = [...sortedChapterDataArr];
-    let allTopics = [...sortedTopicDataArr];
-    const _allModules = [];
-    const _moduleIds = [];
-    const _topicIds = [];
-
-    sortedModuleDataArr?.forEach((mod) => {
-      if (!mod?.chapters) mod.chapters = [];
-
-      // if no chapters are present, filter topics by module id
-      if (!allChapters?.length) {
-        const chapterData = { generatedId: Math.random(), topicIds: [], topics: [] };
-
-        allTopics = getFilteredTopicData(allTopics, mod?.id, null, chapterData);
-
-        mod?.chapters?.push(chapterData);
-      }
-
-      allChapters = allChapters?.filter((chap) => {
-        const isChapterMatched = chap?.moduleId === mod?.id;
-        const chapterData = { ...chap, topicIds: [], topics: [] };
-
-        allTopics = isChapterMatched
-          ? getFilteredTopicData(allTopics, mod?.id, chap?.id, chapterData)
-          : allTopics;
-
-        _topicIds.push(...chapterData?.topicIds);
-        mod?.chapters?.push(chapterData);
-
-        return !isChapterMatched;
-      });
-
-      _allModules.push(mod);
-      _moduleIds.push(mod?.id);
-      addModuleToRecoil(mod, mod?.id);
-    });
-
-    setTopicIds(_topicIds);
-    setAllModules(_allModules);
-    setModuleIds(_moduleIds);
-  }
-
-  function getFilteredTopicData(topicArr, moduleId, chapterId, chapterData) {
-    const _topicArr = structuredClone(topicArr);
-
-    return _topicArr?.filter((topic) => {
-      const isTopicMatched = !!chapterId
-        ? topic?.chapterId === chapterId
-        : topic?.moduleId === moduleId;
-
-      if (isTopicMatched) {
-        chapterData?.topicIds?.push(topic?.id);
-        chapterData?.topics?.push(topic);
-      }
-
-      addTopicToRecoil(topic, topic?.id);
-
-      return !isTopicMatched;
     });
   }
 }

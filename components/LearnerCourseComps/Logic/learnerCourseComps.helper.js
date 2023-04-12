@@ -18,5 +18,5 @@ export function getCourseCompletePercent(allTopicProgress = []) {
 
   const courseCompletePercent = (topicsCompleted * 100) / allTopicProgress?.length;
 
-  return courseCompletePercent;
+  return Math.ceil(courseCompletePercent);
 }

@@ -1,13 +1,14 @@
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { AllCourseModulesDataAtom, TopicQuizAtom } from '../../atoms/learnerCourseComps.atom';
+import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
+import { useRecoilValue } from 'recoil';
+import { TopicQuizAtom } from '../../atoms/learnerCourseComps.atom';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import SectionTitle from './SectionTitle';
 
 export default function Inclusions({ languages = [] }) {
   const allModules = useRecoilValue(AllCourseModulesDataAtom);
-  const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
+  const topicQuiz = useRecoilValue(TopicQuizAtom);
 
   let chapterCount = 0;
   let topicCount = 0;

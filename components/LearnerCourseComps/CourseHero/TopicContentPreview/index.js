@@ -7,7 +7,6 @@ import useHandleTopicView from '../../Logic/useHandleTopicView';
 import useLoadTopicData from '../../Logic/useLoadTopicData';
 import {
   ActiveCourseDataAtom,
-  ActiveCourseHeroAtom,
   CourseActiveTabAtom,
   CourseMetaDataAtom,
   CourseModulesAtomFamily,
@@ -26,7 +25,6 @@ import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
 
 export default function TopicContentPreview() {
-  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
@@ -102,10 +100,9 @@ export default function TopicContentPreview() {
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={() => {
-            setActiveHero(null);
-            setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }));
-          }}
+          handleBackBtnClick={() =>
+            setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }))
+          }
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {
