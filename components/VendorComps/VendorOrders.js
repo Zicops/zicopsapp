@@ -17,7 +17,7 @@ import { useRecoilState } from 'recoil';
 import { AllServicesAtom } from '@/state/atoms/vendor.atoms';
 import ViewOrder from './ViewOrder';
 
-const VendorOrders = () => {
+const VendorOrders = ({ isVendor = false }) => {
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [selectedServicesForOrder, setSelectedServicesForOrder] =
     useRecoilState(VendorServicesListAtom);
@@ -29,6 +29,8 @@ const VendorOrders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [viewOrder, setViewOrder] = useState(false);
   const router = useRouter();
+
+  const vendorId = router.query.vendorId || null;
 
   useEffect(async () => {
     const lspId = sessionStorage?.getItem('lsp_id');
@@ -48,7 +50,12 @@ const VendorOrders = () => {
     const vendorDatails = vendorInfo?.map((item, index) =>
       Object.assign({}, item, orderDetails[index])
     );
-    setVendorOrderDetails(vendorDatails);
+    if (!isVendor) {
+      setVendorOrderDetails(vendorDatails);
+    } else {
+      const singleVendorOrders = vendorDatails?.filter((data) => data?.vendorId === vendorId);
+      setVendorOrderDetails(singleVendorOrders);
+    }
   }, [vendorInfo]);
 
   const columns = [

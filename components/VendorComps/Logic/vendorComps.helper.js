@@ -14,7 +14,7 @@ export const vendorTabData = {
   profiles: { name: 'Profiles', component: <ProfileManageVendor /> },
   experience: { name: 'Experience', component: <AddIndividualVendorExperience />, isHidden: true },
   courses: { name: 'Courses', component: <AddVendorCourses /> },
-  orders: { name: 'Orders', component: <VendorOrders /> },
+  orders: { name: 'Orders', component: <VendorOrders isVendor={true} /> },
   users: { name: 'Users', component: <VendorUsers /> }
 };
 
