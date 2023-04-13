@@ -165,7 +165,7 @@ export default function useAdminQuery() {
       { context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } } },
       notificationClient
     );
-    console.log(tagUserResult, 'users');
+
     // here we are seperating the user_id and user_lsp_ids respectively
     const tagUsers = tagUserResult?.getTagUsers?.data || [];
     const userMaps = {
@@ -173,17 +173,51 @@ export default function useAdminQuery() {
       userLspIds: tagUsers?.map((user) => user?.user_lsp_id) || []
     };
 
-    const usersRes = await loadQueryDataAsync(GET_LSP_USERS_ROLES, {
-      lspId: lspId,
-      userIds: userMaps?.userIds,
-      userLspIds: userMaps?.userLspIds
-    },{},userQueryClient);
+    const usersRes = await loadQueryDataAsync(
+      GET_LSP_USERS_ROLES,
+      {
+        lspId: lspId,
+        userIds: userMaps?.userIds,
+        userLspIds: userMaps?.userLspIds
+      },
+      {},
+      userQueryClient
+    );
 
-    console.log(usersRes,'userRes');
+    const formatedUsers = usersRes?.getLspUsersRoles?.map(async (singleUser, index) => {
+      let roles = singleUser?.roles;
+      let roleData = {};
 
-    return { r:usersRes, b: tagUsers }
+      if (roles?.length > 1) {
+        const latestUpdatedRole = await sortArray(roles, 'updated_at');
+        roleData = latestUpdatedRole?.pop();
+      } else {
+        roleData = roles?.[0];
+      }
+      const vendorTag =
+        roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor
+          ? USER_TYPE?.external
+          : USER_TYPE?.internal;
+      const type = !!tagUsers?.[index] ? await getTag(tagUsers?.[index]?.tags) : vendorTag;
 
-    // const formatedUsers =  
+      return {
+        ...singleUser?.user,
+        role: roleData?.role,
+        roleData: roleData,
+        id: singleUser?.user?.id,
+        email: singleUser?.user?.email,
+        first_name: singleUser?.user?.first_name,
+        last_name: singleUser?.user?.last_name,
+        full_name: `${singleUser?.user?.first_name} ${singleUser?.user?.last_name}`,
+        user_lsp_id: roleData?.user_lsp_id,
+        lsp_status: singleUser?.status,
+        type: type
+      };
+    });
+
+    const users = Promise?.all(formatedUsers);
+
+    return users;
   }
 
   return {
