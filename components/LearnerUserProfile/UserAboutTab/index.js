@@ -12,20 +12,26 @@ import { loadQueryDataAsync } from '@/helper/api.helper';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUserData } from '@/helper/loggeduser.helper';
 import { UserDataAtom } from '@/state/atoms/global.atom';
-import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useLazyQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import CategoryPreferences from '../CategoryPreferences';
 import styles from '../learnerUserProfile.module.scss';
 import useCommonHelper from '../Logic/common.helper';
 import useHandleUserUpdate from '../Logic/useHandleUserUpdate';
 import { orgData, profilePref, userData } from '../Logic/userData.helper.js';
 import SingleUserDetail from '../SingleUserDetail';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 
 const UserAboutTab = () => {
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
   const userDataGlobal = useRecoilValue(UserDataAtom);
+  const [userDetails, setUserDetails] = useRecoilState(UserStateAtom);
+  const [userOgData, setUserOgData] = useState(userDetails);
 
   const [isEditable, setIsEditable] = useState(null);
   const { updateUserOrganizationDetails } = useHandleUserUpdate();
@@ -110,6 +116,12 @@ const UserAboutTab = () => {
     }));
   }, [userDataGlobal?.preferences]);
 
+  useEffect(() => {
+    if (userDetails?.id === userOgData?.id) return;
+
+    setUserOgData(userDetails);
+  }, [userDetails]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -129,7 +141,13 @@ const UserAboutTab = () => {
         toggleEditable={() => setIsEditable((prev) => (prev === 1 ? null : 1))}
         headingText={'Personal Details'}
         userData={userData}
-        updateHandle={updateAboutUser}
+        updateHandle={() => {
+          updateAboutUser().then((isError) => {
+            if (!isError) return setToastMessage('User Details Updated', 'success');
+
+            setUserDetails(userOgData);
+          });
+        }}
       />
       {!(userAccountDetails?.user_lsp_role === USER_LSP_ROLE.vendor) && (
         <>

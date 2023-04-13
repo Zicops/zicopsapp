@@ -198,7 +198,10 @@ const AddVendorProfile = ({ data = {} }) => {
               text="Add experiences"
               styleClass={`${styles.button}`}
               imgUrl="/images/svg/add_circle.svg"
-              handleClick={() => setIsOpenExpriences(true)}
+              handleClick={() => {
+                setIsOpenExpriences(true);
+                setExperiencesData(getExperiencesObject());
+              }}
               isDisabled={isViewPage}
             />
           ) : (
@@ -424,7 +427,8 @@ const AddVendorProfile = ({ data = {} }) => {
         open={isOpenExpriences}
         title={`${
           experiencesData?.expId ||
-          experiencesData?.localIndex !== profileData?.experienceData?.length
+          (experiencesData?.localIndex !== profileData?.experienceData?.length &&
+            experiencesData?.localIndex !== null)
             ? 'Edit'
             : 'Add'
         } Experience`}

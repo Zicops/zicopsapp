@@ -1,55 +1,72 @@
-import { useState } from "react";
-import styles from "../vctoolMain.module.scss"
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import StudentFrame from "../StudentFrame";
-import { vctoolAlluserinfo } from "@/state/atoms/vctool.atoms";
-import { VC_TOOL_ROLE } from "@/helper/constants.helper";
-const Participants = ({ showHide = false, Info, Iframe }) => {
-    const userData = useRecoilValue(UserStateAtom)
-    const meetingInfo=useRecoilValue(vctoolAlluserinfo)
-    const startName = userData.first_name + " " + userData.last_name
+import { vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { useRecoilValue } from 'recoil';
+import StudentFrame from '../StudentFrame';
+import styles from '../vctoolMain.module.scss';
 
-    return (
-        <div className={`${styles.participantsBar}`}>
-            <div className={`${styles.participantsHead}`}>
-                <div>Participants</div>
-                <button onClick={() => {
-                    showHide()
-                }}>
-                    <img src="/images/svg/vctool/close.svg" />
-                </button>
-            </div>
+const Participants = ({ hide = false, Info, Iframe }) => {
+  const userData = useRecoilValue(UserStateAtom);
+  const userList = useRecoilValue(vctoolAlluserinfo);
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
+  const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
 
-            <div className={`${styles.participantsScreen}`}>
-                <div className={`${styles.participantsScreenhead}`}>Instructors</div>
-                <div className={`${styles.allInstructors}`}>
-                </div>
+  const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
 
-                <div className={`${styles.participantsScreenhead}`}>Moderators</div>
-                <div className={`${styles.allInstructors}`}>
-                    {
-                        meetingInfo.map((data) => {
-                            return (data?.role == VC_TOOL_ROLE[0]) && <StudentFrame name={data.displayName} />
-                            // return (userData.role != "Learner") && <StudentFrame name={data.displayName} />
-                        })
-                    }
-                </div>
+  const modList = [];
+  const learnerList = [];
+  userList?.forEach((user) => {
+    // user id is present in the user profule picture storage path
+    const pattern = /profiles\/([A-za-z0-9]+)\//;
+    const userId = user?.avatarURL?.match(pattern)?.[1];
 
-                <div className={`${styles.participantsScreenhead}`}>Learners</div>
-                <div className={`${styles.allInstructors}`}>
-                    {
-                        meetingInfo.map((data) => {
-                            return (data?.role !== VC_TOOL_ROLE[0]) && <StudentFrame name={data.displayName} />
-                            // return (userData.role == "Learner") && <StudentFrame name={data.displayName} />
-                        })
+    if (modIdList?.includes(userId)) return modList.push(user);
 
+    learnerList.push(user);
+  });
 
-                    }
-                </div>
+  return (
+    <div className={`${styles.participantsBar}`}>
+      <div className={`${styles.participantsHead}`}>
+        <div>Participants</div>
+        <button
+          onClick={() => {
+            hide();
+          }}>
+          <img src="/images/svg/vctool/close.svg" />
+        </button>
+      </div>
 
-            </div>
+      <div className={`${styles.participantsScreen}`}>
+        {/* <div className={`${styles.participantsScreenhead}`}>Instructors</div> */}
+        {/* <div className={`${styles.allInstructors}`}></div> */}
+
+        <div className={`${styles.participantsScreenhead}`}>Moderators</div>
+        <div className={`${styles.allInstructors}`}>
+          {modList.map((data) => (
+            <StudentFrame
+              name={data?.displayName || data?.formattedDisplayName}
+              avatarUrl={data?.avatarURL}
+            />
+          ))}
+
+          {!modList?.length && <small>No Moderators Joined</small>}
         </div>
-    )
+
+        <div className={`${styles.participantsScreenhead}`}>Learners</div>
+        <div className={`${styles.allInstructors}`}>
+          {learnerList.map((data) => (
+            <StudentFrame
+              name={data?.displayName || data?.formattedDisplayName}
+              avatarUrl={data?.avatarURL}
+            />
+          ))}
+
+          {!learnerList?.length && <small>No Learners Joined</small>}
+        </div>
+      </div>
+    </div>
+  );
 };
 export default Participants;

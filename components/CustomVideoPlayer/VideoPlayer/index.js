@@ -191,13 +191,9 @@ export default function VideoPlayer({
           </div>
         </>
       )}
-      {videoData?.type === 'classroom' && (
-        <iframe
-          style={{ height: '85vh', width: '100%', marginTop: '-40px' }}
-          frameBorder="0"
-          src={`https://zicops.whereby.com/${wherebyRoomId}?background=off&logo=off`}
-          allow="camera; microphone; fullscreen; speaker; display-capture"></iframe>
-      )}
+      {/* {videoData?.type === 'classroom' && (
+      <VCtoolStartPage/>
+      )} */}
       {videoData.type === 'document' && (
         <>
           <TopicPdfViews url={videoData?.videoSrc} />

@@ -20,6 +20,27 @@
     rgba(0, 0, 0, 0) 100%
   );
 }
+.courseType {
+  position: absolute;
+  background-color: $selfPacedBorder;
+  color: $black;
+
+  top: 4em;
+  right: 6em;
+  border-radius: 4px;
+  padding: 0.2em 1em;
+  text-transform: capitalize;
+
+  &.test-series {
+    background-color: $testSeriesBorder;
+  }
+  &.classroom {
+    background-color: $classroomBorder;
+  }
+  &.event {
+    background-color: $eventBorder;
+  }
+}
 .back_btn {
   position: absolute;
   left: 50px;

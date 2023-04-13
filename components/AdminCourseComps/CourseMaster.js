@@ -145,7 +145,7 @@ export default function CourseMaster() {
           changeHandler={(e) => handleCourseMetaChange({ owner: e?.value })}
         />
 
-        <LabeledDropdown
+        {/* <LabeledDropdown
           isError={!courseMetaData?.publisher?.length && error?.includes('publisher')}
           dropdownOptions={{
             inputName: 'publisher',
@@ -162,6 +162,19 @@ export default function CourseMaster() {
           // isLoading={ownerList === null}
           styleClass={`${styles.makeLabelInputColumnWise}`}
           changeHandler={(e) => handleCourseMetaChange({ publisher: e?.value })}
+        /> */}
+
+        <LabeledInput
+          inputClass={!courseMetaData?.publisher?.length && error?.includes('publisher')}
+          inputOptions={{
+            inputName: 'publisher',
+            label: 'Provisioner :',
+            placeholder: 'Enter Provisioner',
+            value: courseMetaData?.publisher,
+            isDisabled: isDisabled
+          }}
+          styleClass={`${styles.makeLabelInputColumnWise}`}
+          changeHandler={(e) => handleCourseMetaChange({ publisher: e?.target?.value })}
         />
       </div>
 

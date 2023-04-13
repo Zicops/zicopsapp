@@ -40,6 +40,12 @@ $cardTileRatio: 1.75;
 $courseTitle: 22px;
 $courseTitleSmall: 18px;
 
+// course card colors based on types
+$selfPacedBorder: $primary;
+$testSeriesBorder: $zicopsPink;
+$classroomBorder: $warning;
+$eventBorder: $zicopsSky;
+
 :export {
   primary: $primary;
   secondary: $secondary;
@@ -73,6 +79,11 @@ $courseTitleSmall: 18px;
   cardTileRatio: $cardTileRatio;
   courseTitle: $courseTitle;
   courseTitleSmall: $courseTitleSmall;
+
+  selfPacedBorder: $selfPacedBorder;
+  testSeriesBorder: $testSeriesBorder;
+  classroomBorder: $classroomBorder;
+  eventBorder: $eventBorder;
 }
 // function for generating transparent color from base colors
 @function getLowOpacityColor($colorInHex, $opacityInHex) {

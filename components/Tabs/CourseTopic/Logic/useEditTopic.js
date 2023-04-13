@@ -304,7 +304,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         uploadResourcesLoading
     );
 
-    console.log(topicContent);
+    // console.log(topicContent);
     for (let index = 0; index < topicContent.length; index++) {
       const content = topicContent[index];
       const startTime = parseInt(binge.startTimeMin || 0) * 60 + parseInt(binge.startTimeSec || 0);
@@ -318,7 +318,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         type: content.type,
         duration: content.duration,
         startTime: startTime,
-        skipIntroDuration: binge.skipIntroDuration,
+        skipIntroDuration: binge.skipIntroDuration || 0,
         nextShowTime: !binge.isFromEnd ? showTime : 0,
         fromEndTime: binge.isFromEnd ? showTime : 0,
         is_default: content.is_default
@@ -336,7 +336,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
           )
         )?.data;
       } else {
-        console.log('sendContentData', sendContentData);
+        // console.log('sendContentData', sendContentData);
         data = await (
           await addCourseTopicContent({ variables: sendContentData }).catch((err) =>
             console.log(err)
@@ -344,7 +344,7 @@ export default function useEditTopic(refetchDataAndUpdateRecoil) {
         ).data;
       }
 
-      console.log(`Topic Content Uploaded with language ${content.language}`);
+      // console.log(`Topic Content Uploaded with language ${content.language}`);
 
       if (data.addTopicContent || content.id) {
         const videoData = topicVideo?.find((data) => data?.language === content?.language) || null;

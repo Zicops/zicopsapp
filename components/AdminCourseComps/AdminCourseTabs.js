@@ -1,7 +1,6 @@
 import TabContainer from '@/common/TabContainer';
 import { COURSE_STATUS } from '@/constants/course.constants';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
-import { getDateTimeFromUnix } from '@/helper/utils.helper';
 import {
   ActiveCourseTabNameAtom,
   CourseCurrentStateAtom,
@@ -9,6 +8,7 @@ import {
 } from '@/state/atoms/courses.atom';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Button from '../common/Button';
@@ -60,7 +60,9 @@ export default function AdminCourseTabs() {
           {displayStatus}{' '}
           <span style={{ fontSize: '12px', fontWeight: '400' }}>
             {(courseMetaData.updatedAt || courseMetaData.createdAt) &&
-              `(at ${getDateTimeFromUnix(courseMetaData.updatedAt || courseMetaData.createdAt)})`}
+              `(at ${moment((courseMetaData.updatedAt || courseMetaData.createdAt) * 1000)?.format(
+                'LLL'
+              )})`}
           </span>
         </>
       );
@@ -115,7 +117,7 @@ export default function AdminCourseTabs() {
         {!!courseMetaData?.id && (
           <Button
             customStyles={{ float: 'right' }}
-            clickHandler={() => router.push(`/course/${courseId}/devPage`)}
+            clickHandler={() => router.push(`/preview?courseId=${courseId}`)}
             text="Preview"
           />
         )}

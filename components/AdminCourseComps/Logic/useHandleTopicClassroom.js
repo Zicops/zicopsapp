@@ -10,18 +10,24 @@ import { sanitizeFormData } from '@/helper/common.helper';
 import { getDateObjFromUnix, getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
+  CourseMetaDataAtom,
   TopicClassroomAtom,
   getTopicClassroomObject
 } from '@/state/atoms/courses.atom';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useHandleTopicClassroom(topData = null) {
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [topicClassroom, setTopicClassroom] = useRecoilState(TopicClassroomAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(null);
   const [accordionOpenState, setAccordionOpenState] = useState(null);
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
 
   // reset state after some time
   useEffect(() => {
@@ -68,6 +74,7 @@ export default function useHandleTopicClassroom(topData = null) {
             isQaEnabled: _topicClassroom?.is_qa_enabled,
             isCameraEnabled: _topicClassroom?.is_camera_enabled,
             isOverrideConfig: _topicClassroom?.is_override_config,
+            language: _topicClassroom?.language,
             createdAt: _topicClassroom?.created_at,
             createdBy: _topicClassroom?.created_by,
             updatedAt: _topicClassroom?.updated_at,
@@ -100,13 +107,15 @@ export default function useHandleTopicClassroom(topData = null) {
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
-      trainers: classroomMaster?.trainers?.map((data) => data?.user_id || data) || [],
-      moderators: classroomMaster?.moderators?.map((data) => data?.user_id || data) || [],
+      module_id: topData?.moduleId || null,
+      course_id: courseMetaData?.id,
+      trainers: topicClassroom?.trainers?.map((data) => data?.user_id || data) || [],
+      moderators: topicClassroom?.moderators?.map((data) => data?.user_id || data) || [],
       training_start_time: getUnixFromDate(topicClassroom?.trainingStartTime),
       training_end_time: getUnixFromDate(topicClassroom?.trainingEndTime),
       duration: topicClassroom?.duration,
-      breaktime: topicClassroom?.breaktime || '10',
-      language: topicClassroom?.language?.join(', '),
+      breaktime: topicClassroom?.breaktime || '0',
+      language: topicClassroom?.language,
       is_screen_share_enabled: topicClassroom?.isScreenShareEnabled,
       is_chat_enabled: topicClassroom?.isChatEnabled,
       is_microphone_enabled: topicClassroom?.isMicrophoneEnabled,
@@ -125,6 +134,8 @@ export default function useHandleTopicClassroom(topData = null) {
         viltMutationClient
       ).catch(() => setToastMessage('Topic classroom Update Error!'));
 
+      setToastMessage('Topic classroom update successfully', 'success');
+
       return resUpdate?.updateTopicClassroom || null;
     }
 
@@ -136,6 +147,7 @@ export default function useHandleTopicClassroom(topData = null) {
     ).catch(() => setToastMessage('Topic classroom Create Error!'));
 
     setTopicClassroom((prev) => ({ ...prev, id: res?.createTopicClassroom?.id }));
+    setToastMessage('Topic classroom added successfully', 'success');
 
     return res?.createTopicClassroom || null;
   }
