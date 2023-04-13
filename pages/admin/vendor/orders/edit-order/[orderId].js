@@ -20,6 +20,7 @@ export default function EditOrderInfo() {
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const { getSingleVendorInfo } = useHandleVendor();
+
   const {
     orderDetails,
     services,
@@ -74,16 +75,20 @@ export default function EditOrderInfo() {
   const tabData = [
     {
       name: 'Master',
-      component: <OrderMaster orderData={orderInfo[0]} services={services} />
+      component: (
+        <OrderMaster
+          orderData={orderInfo[0]}
+          services={services}
+          nextTab={() => setTab(tabData[1].name)}
+        />
+      )
     },
     {
       name: 'Order Details',
       component: <OrderDetails />
     }
   ];
-
   const [tab, setTab] = useState(tabData[0].name);
-
   return (
     <>
       <Sidebar sidebarItemsArr={vendorSideBarData} />

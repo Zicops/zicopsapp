@@ -26,7 +26,7 @@ const VendorOrders = ({ isVendor = false }) => {
   const { getAllOrders, orderDetails } = useHandleMarketYard();
   const { getVendors, vendorInfo } = useHandleVendor();
   const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [viewOrder, setViewOrder] = useState(false);
   const router = useRouter();
 
@@ -112,7 +112,7 @@ const VendorOrders = ({ isVendor = false }) => {
           {
             text: 'View',
             handleClick: () => {
-              setSelectedOrder(params.row.id);
+              setSelectedOrderId(params.row.id);
               setViewOrder(true);
             }
           }
@@ -134,8 +134,21 @@ const VendorOrders = ({ isVendor = false }) => {
         data={vendorOrderDetails}
         loading={!vendorOrderDetails?.length}
       />
-      {!!selectedOrder && (
-        <ViewOrder orderId={selectedOrder} viewOrder={viewOrder} setViewOrder={setViewOrder} />
+      {!!selectedOrderId && (
+        <ViewOrder
+          orderId={selectedOrderId}
+          viewOrder={viewOrder}
+          setViewOrder={setViewOrder}
+          onSuccess={(status) => {
+            setVendorOrderDetails((prev) => {
+              const _data = structuredClone(prev);
+              const index = _data?.findIndex((v) => v?.id === selectedOrderId);
+              if (index >= 0) _data[index].status = status;
+
+              return _data;
+            });
+          }}
+        />
       )}
     </>
   );

@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import moment from 'moment';
 import Loader from '@/components/common/Loader';
 
-export default function OrderMaster({ orderData, services }) {
+export default function OrderMaster({ orderData = {}, services = {}, nextTab = () => {} }) {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
 
   const dateNameID = [
@@ -51,7 +51,7 @@ export default function OrderMaster({ orderData, services }) {
           </p>
         </div>
       </div>
-      <div className={`${styles.nextArrow}`}>
+      <div className={`${styles.nextArrow}`} onClick={nextTab}>
         <p>Next</p>
         <img src="/images/svg/arrow_forward_primary.svg" alt="" />
       </div>
