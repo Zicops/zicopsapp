@@ -14,7 +14,6 @@ export default function useHandleTopicProgress() {
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
   const topicProgressData = useRecoilValue(UserTopicProgressDataAtom);
 
-  const currentTopicContentId = activeCourseData?.topicContentId || topicContent?.[0]?.id;
   const selectedTopicContent =
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
 
@@ -25,13 +24,14 @@ export default function useHandleTopicProgress() {
 
     const _activeData = structuredClone(activeCourseData);
     const { moduleId, chapterId, topicContentId, language, subTitle } = _activeData;
-    const { contentUrl, language: selectedLang, subTitleUrl } = selectedTopicContent;
+    const { id, contentUrl, language: selectedLang, subTitleUrl } = selectedTopicContent;
     const { chapterId: selectedChapId, moduleId: selectedModId } = topicData;
+
+    const tcId = id || topicContent?.[0]?.id;
 
     if (!topicContentId) return;
 
-    if (!!currentTopicContentId && topicContentId !== currentTopicContentId)
-      _activeData.topicContentId = currentTopicContentId;
+    if (!!tcId && topicContentId !== tcId) _activeData.topicContentId = tcId;
     if (!!selectedChapId && chapterId !== selectedChapId) _activeData.chapterId = selectedChapId;
     if (!!selectedModId && moduleId !== selectedModId) _activeData.moduleId = selectedModId;
     if (!!selectedLang && language !== selectedLang) _activeData.language = selectedLang;
@@ -39,7 +39,7 @@ export default function useHandleTopicProgress() {
       _activeData.subTitle = subTitleUrl;
 
     setActiveCourseData(_activeData);
-  }, [activeCourseData?.topicId, currentTopicContentId, selectedTopicContent]);
+  }, [activeCourseData?.topicId, selectedTopicContent]);
 
   const currentTopicProgress = topicProgressData?.find(
     (progress) => progress?.topicId === activeCourseData?.topicId,

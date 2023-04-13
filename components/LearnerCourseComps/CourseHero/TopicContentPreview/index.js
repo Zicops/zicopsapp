@@ -23,6 +23,7 @@ import IconButtonWithBox from './IconButtonWithBox';
 import ResourcesList from './ResourcesList';
 import SubtitleBox from './SubtitleBox';
 import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import useHandleTopicSwitch from '../../Logic/useHandleTopicSwitch';
 
 export default function TopicContentPreview() {
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
@@ -36,6 +37,7 @@ export default function TopicContentPreview() {
   const { containerRef, selectedTopicContent, videoStartTime } = useHandleTopicProgress();
   const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
+  const { getNextTopicId } = useHandleTopicSwitch();
 
   const toolbarItems = useMemo(
     () => [
@@ -95,6 +97,8 @@ export default function TopicContentPreview() {
   );
 
   if (isLoading) return <Spinner />;
+
+  const { topicId: nextTopicId, moduleId: nextModuleId } = getNextTopicId();
 
   return (
     <>
@@ -158,6 +162,14 @@ export default function TopicContentPreview() {
             startFrom: videoStartTime,
             isSubtitleShown: activeCourseData?.subTitle != null,
             subtitleUrl: activeCourseData?.subTitle,
+            handleNextClick: !nextTopicId
+              ? null
+              : () =>
+                  setActiveCourseData((prev) => ({
+                    ...prev,
+                    topicId: nextTopicId,
+                    moduleId: nextModuleId,
+                  })),
           }}
           getVideoData={getVideoData}
         />

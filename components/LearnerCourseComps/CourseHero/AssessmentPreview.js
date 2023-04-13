@@ -30,6 +30,7 @@ import {
   UserTopicProgressDataAtom,
 } from '../atoms/learnerCourseComps.atom';
 import styles from '../learnerCourseComps.module.scss';
+import Spinner from '@/components/common/Spinner';
 
 export default function AssessmentPreview() {
   const [loadMaster, { error: loadMasterError }] = useLazyQuery(GET_EXAM_META, {
@@ -68,6 +69,7 @@ export default function AssessmentPreview() {
   });
   const [isAttemptHistoryOpen, setIsAttempyHistoryOpen] = useState(null);
   const [counter, setCounter] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   const router = useRouter();
   const isPreview = router?.asPath?.includes('preview');
@@ -230,7 +232,6 @@ export default function AssessmentPreview() {
     }
 
     setLearnerExamData(_examData);
-    // console.log(switchToTopic);
   }, [topicExamData?.examId, topicExamData?.topicId, isPreview]);
 
   useEffect(() => {
@@ -275,12 +276,12 @@ export default function AssessmentPreview() {
 
   const nextTopicData = getNextTopicId();
 
+  if (isLoading) return <Spinner />;
+  // if (!topicExamData?.id)
+  //   return <div className={`center-element-with-flex h-100 text-primary`}>No Exam Added</div>;
+
   return (
-    <div
-      className={`${styles.exam_landing}`}
-      ref={(elem) =>
-        elem?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
-      }>
+    <div className={`${styles.exam_landing}`}>
       <div className={`${styles.exam_landing_head}`}>
         <button
           className={`${styles.exam_landing_head_btn}`}
@@ -288,31 +289,37 @@ export default function AssessmentPreview() {
           <img src="/images/Back.png" />
         </button>
 
-        <div className={`${styles.exam_landing_head_container}`}>
-          <p id={`${styles.exam_landing_head_testSeries}`}>
-            {learnerExamData?.landingPageData?.testSeries}
-          </p>
-          <p id={`${styles.exam_landing_head_testDescription}`}>
-            {learnerExamData?.landingPageData?.testSequence} : {learnerExamData?.examData?.name}
-          </p>
-        </div>
+        {!!topicExamData?.id && (
+          <div className={`${styles.exam_landing_head_container}`}>
+            <p id={`${styles.exam_landing_head_testSeries}`}>
+              {learnerExamData?.landingPageData?.testSeries}
+            </p>
+            <p id={`${styles.exam_landing_head_testDescription}`}>
+              {learnerExamData?.landingPageData?.testSequence} : {learnerExamData?.examData?.name}
+            </p>
+          </div>
+        )}
       </div>
 
-      <ExamPreview
-        examName={learnerExamData?.examData?.name}
-        scheduleType={learnerExamData?.examData?.scheduleType}
-        scheduleDate={learnerExamData?.examData?.examStart || new Date()}
-        difficulty={learnerExamData?.landingPageData?.expertiseLevel}
-        duration={learnerExamData?.examData?.duration}
-        isProctoring={learnerExamData?.landingPageData?.isProctoring}
-        totalQuestions={learnerExamData?.landingPageData?.totalQuestions}
-        isNegativeMarking={learnerExamData?.landingPageData?.isNegativeMarking}
-        noAttempts={
-          +learnerExamData?.examData?.noAttempts > 0
-            ? learnerExamData?.examData?.noAttempts
-            : 'Unlimited'
-        }
-      />
+      {topicExamData?.id ? (
+        <ExamPreview
+          examName={learnerExamData?.examData?.name}
+          scheduleType={learnerExamData?.examData?.scheduleType}
+          scheduleDate={learnerExamData?.examData?.examStart || new Date()}
+          difficulty={learnerExamData?.landingPageData?.expertiseLevel}
+          duration={learnerExamData?.examData?.duration}
+          isProctoring={learnerExamData?.landingPageData?.isProctoring}
+          totalQuestions={learnerExamData?.landingPageData?.totalQuestions}
+          isNegativeMarking={learnerExamData?.landingPageData?.isNegativeMarking}
+          noAttempts={
+            +learnerExamData?.examData?.noAttempts > 0
+              ? learnerExamData?.examData?.noAttempts
+              : 'Unlimited'
+          }
+        />
+      ) : (
+        <div className={`center-element-with-flex h-100 text-primary`}>No Exam Added</div>
+      )}
 
       <div className={`${styles.btnContainer} ${styles.exam_landing_btn_container1}`}>
         <section className={`${styles.centerBtns}`}>
@@ -340,9 +347,11 @@ export default function AssessmentPreview() {
                 `${router.asPath}/topic/${topicExamData?.topicId}/exam/${topicExamData?.examId}`,
               );
             }}
-            disabled={!userExamData?.isBtnActive}
+            disabled={!(topicExamData?.id && userExamData?.isBtnActive)}
             className={`${styles.exam_landing_btn} ${
-              !userExamData?.isBtnActive ? styles.exam_landing_btn_takeExam : ''
+              !(topicExamData?.id && userExamData?.isBtnActive)
+                ? styles.exam_landing_btn_takeExam
+                : ''
             }`}>
             Take Exam Now
           </button>

@@ -322,8 +322,7 @@ $heroSectionPadding: 2em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 50px;
-  height: 75vh;
+  height: 100%;
   width: 100%;
   padding: 50px 40px 30px;
   background: $black;
@@ -338,7 +337,6 @@ $heroSectionPadding: 2em;
   .exam_landing_head {
     width: 100%;
     display: flex;
-    padding: 0 20px;
 
     .exam_landing_head_btn {
       cursor: pointer;

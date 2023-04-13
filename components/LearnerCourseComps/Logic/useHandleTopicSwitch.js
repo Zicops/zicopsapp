@@ -14,12 +14,12 @@ export default function useHandleTopicSwitch() {
 
   // returns a object of module id and topic id
   function getNextTopicId() {
-    if (!activeCourseData?.topicId) return;
+    const nextTopicData = { moduleId: null, topicId: null };
+    if (!activeCourseData?.topicId) return nextTopicData;
 
     const topicId = activeCourseData?.topicId;
     const moduleId = topicData?.moduleId;
 
-    const nextTopicData = { moduleId: null, topicId: null };
     const currentTopicIndex = moduleData?.topics?.findIndex((top) => top?.id === topicId);
     const currentModuleIndex = allModules?.findIndex((mod) => mod?.id === moduleId);
 
