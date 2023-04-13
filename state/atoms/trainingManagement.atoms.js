@@ -15,6 +15,7 @@ export function getTrainerDataObj(data = {}) {
     expertise: data?.expertise || [],
     status: data?.status || '',
     tag: data?.tag || null,
-    vendorId: data?.vendorId || null
+    vendorId: data?.vendorId || null,
+    inviteEmails: data?.inviteEmails || ''
   };
 }

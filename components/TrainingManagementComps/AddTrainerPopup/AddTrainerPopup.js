@@ -9,7 +9,7 @@ import Button from '@/components/common/Button';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
 export default function AddTrainerPopup({ popUpState = [] }) {
-  const { addUpdateTrainer } = useHandleTrainerData();
+  const { addUpdateTrainer, handleMail } = useHandleTrainerData();
 
   const tabData = [
     {
@@ -40,12 +40,13 @@ export default function AddTrainerPopup({ popUpState = [] }) {
           <AddTrainingExpertise />
         </div>
 
-        <div>
+        <div className={`${styles.footerButton}`}>
           <Button text={'Cancel'} />
           <Button
             text={'Save'}
             clickHandler={() => {
-              addUpdateTrainer();
+              addUpdateTrainer(tab === tabData[0].name);
+              handleMail(tab === tabData[1].name);
             }}
           />
           <Button text={'Save & Add More'} />
