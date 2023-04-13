@@ -1,6 +1,6 @@
 import Select from 'react-select';
 import Creatable from 'react-select/creatable';
-import { labeledDropdownWrapper } from '../formComponents.module.scss';
+import { labeledDropdownWrapper, columnWise } from '../formComponents.module.scss';
 import { customSelectStyles } from '../Logic/formComponents.helper';
 import CustomMenu from './CustomMenu';
 
@@ -15,7 +15,10 @@ export default function LabeledDropdown({
   isFullWidth = false,
   customDropdownStyles = {},
   isCreateable = false,
-  isDisplayButton = false
+  isDisplayButton = false,
+  closeMenuOnSelect = true,
+  hideSelectedOptions = true,
+  isColumnWise = false
 }) {
   let {
     inputName,
@@ -44,7 +47,7 @@ export default function LabeledDropdown({
   // if (isDisplayButton) customComponents = CustomMenu;
 
   return (
-    <div className={`${labeledDropdownWrapper} ${styleClass}`}>
+    <div className={`${labeledDropdownWrapper} ${styleClass} ${isColumnWise ? columnWise : ''}`}>
       {!!label && (
         <label
           htmlFor={inputName}
@@ -77,6 +80,8 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
+          closeMenuOnSelect={closeMenuOnSelect}
+          hideSelectedOptions={hideSelectedOptions}
           // components={{ Menu: customComponents }}
         />
       ) : (
@@ -103,6 +108,8 @@ export default function LabeledDropdown({
           noOptionsMessage={() => noOptionsMessage}
           isMulti={!!isMulti}
           isClearable={false}
+          closeMenuOnSelect={closeMenuOnSelect}
+          hideSelectedOptions={hideSelectedOptions}
           // components={{ Menu: CustomMenu }}
         />
       )}

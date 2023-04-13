@@ -5,7 +5,6 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { trainerSideBarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import MyVendor from '@/components/VendorComps/MyVendor';
-import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import AddVendor from '@/components/VendorComps/AddVendor';
 import { useRouter } from 'next/router';
 import { changeHandler } from '@/helper/common.helper';
@@ -15,12 +14,18 @@ import { USER_LSP_ROLE, VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import MyTrainers from '@/components/TrainingManagementComps/MyTrainers';
 import AddTrainerPopup from '@/components/TrainingManagementComps/AddTrainerPopup/AddTrainerPopup';
+import Button from '@/components/common/Button';
+import useHandleTrainerData from '@/components/TrainingManagementComps/Logic/useHandleTrainerData';
+import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms';
 export default function Trainers() {
   const [vendorData, setVendorData] = useRecoilState(VendorStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+
+  const { addUpdateTrainer } = useHandleTrainerData();
+  const [isOpen, setIsOpen] = useState(false);
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
   return (
     <>
@@ -31,29 +36,16 @@ export default function Trainers() {
           isAddShown={true}
           handleClickForPlus={() => {
             setIsOpen(true);
-            // const currentLsp = sessionStorage?.getItem('lsp_id');
 
-            // setVendorData(getVendorObject({ lspId: currentLsp }));
+            const currentLsp = sessionStorage?.getItem('lsp_id');
+
+            setTrainerData(getTrainerDataObj({ lspId: currentLsp }));
           }}
           isProductTooltip={false}
         />
         <MainBodyBox>
           <MyTrainers />
-          <VendorPopUp
-            open={isOpen}
-            title="Add Trainer"
-            popUpState={[isOpen, setIsOpen]}
-            size="large"
-            closeBtn={{ name: 'Cancel' }}
-            submitBtn={{
-              name: 'Next',
-              handleClick: () => {
-                router.push('/admin/vendor/manage-vendor/add-vendor');
-              }
-            }}
-            isFooterVisible={true}>
-            <AddTrainerPopup />
-          </VendorPopUp>
+          <AddTrainerPopup popUpState={[isOpen, setIsOpen]} />
         </MainBodyBox>
       </MainBody>
     </>

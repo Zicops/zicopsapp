@@ -72,6 +72,11 @@
   align-items: baseline;
   flex: 1;
 
+  &.columnWise {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   label {
     width: 25%;
     color: $white;

@@ -2,10 +2,12 @@ import useHandleCourseData from '@/components/AdminCourseComps/Logic/useHandleCo
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown/index.js';
 import { useEffect, useState } from 'react';
 import styles from './../trainingComps.module.scss';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
+import { useRecoilState } from 'recoil';
+import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 
 export default function SelectExistingUser() {
-  const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState([]);
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const { getTrainersAndModerators, trainerCandidates } = useHandleCourseData();
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function SelectExistingUser() {
       name: user?.full_name,
       isSelected: false,
       email: user?.email,
-      user_id: user?.id,
+      userId: user?.id,
       photo: user?.photo_url
     };
   }
@@ -39,20 +41,23 @@ export default function SelectExistingUser() {
   return (
     <div>
       <div>
-        <label>Select User:</label>
         <LabeledDropdown
           dropdownOptions={{
             inputName: 'Trainers',
             placeholder: 'Select User',
+            label: 'Select User :',
             isSearchEnable: true,
             menuPlacement: 'bottom',
-            isMulti: true,
             options: trainers?.map((trainee, index) => ({
               label: (
                 <div className={`${styles.trainerOptions}`}>
                   {/*<div>
-                <LabeledRadioCheckbox type="checkbox" />
-              </div>*/}
+                    <LabeledRadioCheckbox
+                      type="checkbox"
+                      changeHandler={handleExpertiseSelection}
+                      value={trainee.name}
+                    />
+                  </div>*/}
                   <div className={`${styles.trainerImage}`}>
                     <img src={trainee.photo} />
                   </div>
@@ -62,22 +67,28 @@ export default function SelectExistingUser() {
                   </div>
                 </div>
               ),
-              value: trainee.name,
+              value: trainee.userId,
               ...trainee
-            }))
-            // options: Trainers?.map((trainee) => ({ label: trainee, value: trainee })),
-            // value: !!classroomMaster?.trainers?.length
-            //   ? classroomMaster?.trainers?.map((trainee) => ({
-            //       label: trainee?.value,
-            //       value: trainee?.value,
-            //       ...trainee
-            //     }))
-            //   : null,
-            // isDisabled: isDisabled
+            })),
+            value: {
+              label: `${trainerData?.name || ''} (${trainerData?.email || ''}) - ${
+                trainerData?.tags || 'Internal'
+              }`,
+              value: trainerData?.name
+            }
           }}
           isFullWidth={true}
-          changeHandler={(e) => setUsername(e.value)}
+          changeHandler={(e) =>
+            setTrainerData((prev) => ({
+              ...prev,
+              userId: e.userId,
+              name: e.name,
+              email: e.email,
+              photo: e.photo
+            }))
+          }
           isLoading={trainerCandidates == null}
+          isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />
       </div>

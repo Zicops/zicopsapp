@@ -3,27 +3,33 @@ import SearchBar from '@/components/common/FormComponents/SearchBar';
 import Loader from '@/components/common/Loader';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { isWordIncluded } from '@/helper/utils.helper';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './../trainingComps.module.scss';
+import { changeHandler } from '@/helper/common.helper';
+import { useRecoilState } from 'recoil';
+import { TrainerExpertiseListAtom, TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 
-const AddTrainingExpertise = ({
-  expertiseValue,
-  setExpertise,
-  selectedExpertise,
-  setSelectedExpertise
-}) => {
+const AddTrainingExpertise = () => {
   //   useEffect(() => {
   //     setExpertise('');
   //   }, []);
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
+  const [expertiseSearchValue, setExpertiseSearchValue] = useState('');
 
-  //   const handleExpretiseSelection = (e) => {
-  //     const { value, checked } = e.target;
-  //     if (checked) {
-  //       setSelectedExpertise([...(selectedExpertise || []), value]);
-  //     } else {
-  //       setSelectedExpertise(selectedExpertise?.filter((lang) => lang !== value));
-  //     }
-  //   };
+  const handleExpertiseSelection = (e) => {
+    const { value, checked } = e.target;
+    // const _trainerData = structuredClone(trainerData);
+    const expertiseArr = trainerData?.expertise?.filter((exp) => exp);
+    if (checked) {
+      expertiseArr?.push(value);
+      setTrainerData((prev) => ({ ...prev, expertise: expertiseArr }));
+    } else {
+      setTrainerData((prev) => ({
+        ...prev,
+        expertise: prev?.expertise?.filter((expertise) => expertise !== value)
+      }));
+    }
+  };
 
   const { catSubCat } = useHandleCatSubCat();
 
@@ -44,15 +50,15 @@ const AddTrainingExpertise = ({
           inputOptions: {
             inputName: 'filter',
             placeholder: 'Search...',
-            value: expertiseValue
+            value: expertiseSearchValue
           }
-          //   changeHandler: (e) => setExpertise(e.target.value)
         }}
+        changeHandler={(e) => setExpertiseSearchValue(e.target.value)}
         styleClass={`${styles.expertiseSearchBar}`}
       />
       {Object.values(catSubCat?.subCatGrp)?.map((obj) => {
         const filteredSubcat = obj?.subCat?.filter((sc) =>
-          isWordIncluded(sc?.Name, expertiseValue)
+          isWordIncluded(sc?.Name, expertiseSearchValue)
         );
         if (!filteredSubcat.length) return;
         return (
@@ -65,8 +71,8 @@ const AddTrainingExpertise = ({
                     type="checkbox"
                     label={subCat.Name}
                     value={subCat.Name}
-                    // isChecked={selectedExpertise?.includes(subCat.Name)}
-                    // changeHandler={handleExpretiseSelection}
+                    isChecked={trainerData?.expertise?.includes(subCat.Name)}
+                    changeHandler={handleExpertiseSelection}
                   />
                 </div>
               );
