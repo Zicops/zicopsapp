@@ -19,8 +19,9 @@ import {
   GET_QUESTION_PAPER_META,
   queryClient,
 } from '../../../API/Queries';
-import { LearnerExamAtom } from '../../../state/atoms/exams.atoms';
+import { LearnerExamAtom, getLearnerExamObj } from '../../../state/atoms/exams.atoms';
 import { ToastMsgAtom } from '../../../state/atoms/toast.atom';
+import useHandleTopicSwitch from '../Logic/useHandleTopicSwitch';
 import {
   ActiveCourseDataAtom,
   CourseModulesAtomFamily,
@@ -59,11 +60,11 @@ export default function AssessmentPreview() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [learnerExamData, setLearnerExamData] = useRecoilState(LearnerExamAtom);
 
+  const { getNextTopicId } = useHandleTopicSwitch();
   const [userExamData, setUserExamData] = useState({
     userAttempts: [],
     cpId: '',
     isBtnActive: false,
-    nextTopic: null,
   });
   const [isAttemptHistoryOpen, setIsAttempyHistoryOpen] = useState(null);
   const [counter, setCounter] = useState(null);
@@ -73,7 +74,7 @@ export default function AssessmentPreview() {
 
   useEffect(async () => {
     const examId = topicExamData?.examId || null;
-    if (!examId) return;
+    if (!examId) return setLearnerExamData(getLearnerExamObj());
 
     // load master data
     let isError = false;
@@ -225,7 +226,6 @@ export default function AssessmentPreview() {
         userAttempts: examAttemptData,
         cpId: userCourseProgressId,
         isBtnActive: getIsExamAccessible(examAttemptData, _examData),
-        nextTopic: getNextTopicId(),
       });
     }
 
@@ -273,12 +273,7 @@ export default function AssessmentPreview() {
     return isAccessible;
   }
 
-  // TODO: add logic for next topic
-  function getNextTopicId() {
-    let nextTopic = null;
-
-    return nextTopic;
-  }
+  const nextTopicData = getNextTopicId();
 
   return (
     <div
@@ -370,11 +365,14 @@ export default function AssessmentPreview() {
         <section>
           {/* <button className={`${styles.exam_landing_btn}`}>View Full Course</button> */}
           <button
-            disabled={!userExamData?.nextTopic}
+            disabled={!nextTopicData?.topicId}
             className={`${styles.exam_landing_btn} ${
-              !userExamData?.nextTopic ? styles.exam_landing_btn_takeExam : ''
+              !nextTopicData?.topicId ? styles.exam_landing_btn_takeExam : ''
             }`}
-            onClick={() => alert(userExamData?.nextTopic)}>
+            onClick={() => {
+              const { topicId, moduleId } = nextTopicData;
+              setActiveCourseData((prev) => ({ ...prev, topicId, moduleId }));
+            }}>
             {userExamData?.userAttempts?.length ? 'Next' : 'Skip'}
           </button>
         </section>
