@@ -2062,6 +2062,7 @@ export const ADD_ORDER = gql`
     $total: Int
     $tax: Int
     $grandTotal: Int
+    $description: String
     $status: String
   ) {
     addOrder(
@@ -2071,6 +2072,7 @@ export const ADD_ORDER = gql`
         total: $total
         tax: $tax
         grand_total: $grandTotal
+        description: $description
         status: $status
       }
     ) {
@@ -2080,6 +2082,7 @@ export const ADD_ORDER = gql`
       total
       tax
       grand_total
+      description
       created_at
       created_by
       updated_at
@@ -2096,6 +2099,7 @@ export const UPDATE_ORDER = gql`
     $total: Int
     $tax: Int
     $grandTotal: Int
+    $description: String
     $status: String
   ) {
     updateOrder(
@@ -2106,6 +2110,7 @@ export const UPDATE_ORDER = gql`
         total: $total
         tax: $tax
         grand_total: $grandTotal
+        description: $description
         status: $status
       }
     ) {
@@ -2115,6 +2120,7 @@ export const UPDATE_ORDER = gql`
       total
       tax
       grand_total
+      description
       created_at
       created_by
       updated_at

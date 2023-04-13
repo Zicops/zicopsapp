@@ -7,7 +7,7 @@ import {
   GET_PAGINATED_VENDOR_ORDERS,
   GET_ORDERS_ORDERID
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import {
@@ -160,7 +160,7 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
-  async function addUpdateOrder(vendorId, orderId) {
+  async function addUpdateOrder(vendorId, orderId, status = null) {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
       vendorId: vendorId,
@@ -168,7 +168,8 @@ export default function useHandleMarketYard() {
       total: orderData?.total,
       tax: orderData?.tax,
       grandTotal: orderData?.grossTotal,
-      status: orderData?.status
+      description: orderData?.description,
+      status: status || orderData?.status
     };
     let isError = false;
     if (orderId) {
