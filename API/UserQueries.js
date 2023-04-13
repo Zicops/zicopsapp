@@ -1308,6 +1308,7 @@ export const GET_ORDERS_ORDERID = gql`
       total
       tax
       grand_total
+      description
       created_at
       created_by
       updated_at
