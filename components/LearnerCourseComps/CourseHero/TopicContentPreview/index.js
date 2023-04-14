@@ -47,6 +47,8 @@ export default function TopicContentPreview() {
 
     showBingeButton,
     handleWatchCreditClick,
+    syncTopicProgress,
+    resetBinge,
   } = useHandleTopicProgress(videoState);
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
 
@@ -117,7 +119,10 @@ export default function TopicContentPreview() {
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={closePlayer}
+          handleBackBtnClick={() => {
+            closePlayer();
+            resetBinge();
+          }}
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {
@@ -175,10 +180,12 @@ export default function TopicContentPreview() {
                 startFrom: videoStartTime,
                 isSubtitleShown: activeCourseData?.subTitle != null,
                 subtitleUrl: activeCourseData?.subTitle,
+                videoDuration: selectedTopicContent?.duration || null,
                 handleNextClick,
                 handlePreviousClick,
               }}
               getVideoData={getVideoData}
+              handleContainerClick={syncTopicProgress}
             />
 
             {/* skip intro button */}

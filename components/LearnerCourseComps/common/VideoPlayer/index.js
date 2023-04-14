@@ -17,8 +17,10 @@ export default function VideoPlayer({
     startFrom: 0,
     handleNextClick: null,
     handlePreviousClick: null,
+    videoDuration: null,
   },
   containerRef,
+  handleContainerClick = () => {},
   getVideoData = () => {},
 }) {
   const {
@@ -53,7 +55,7 @@ export default function VideoPlayer({
     );
 
   return (
-    <div className={`${styles.videoPlayer}`} ref={videoContainerRef}>
+    <div className={`${styles.videoPlayer}`} ref={videoContainerRef} onClick={handleContainerClick}>
       {!!isBuffering && (
         <Spinner
           customStyles={{

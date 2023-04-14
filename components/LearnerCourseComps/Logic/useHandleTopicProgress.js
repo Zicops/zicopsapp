@@ -32,6 +32,7 @@ export default function useHandleTopicProgress(videoState = {}) {
 
   const [videoStartTime, setVideoStartTime] = useState(null);
   const [isSyncing, setIsSyncing] = useState(null);
+  const [syncCount, setSyncCount] = useState(null);
   const [showSkipIntroButton, setShowSkipIntroButton] = useState(false);
   const [showBingeButton, setShowBingeButton] = useState(false);
 
@@ -93,16 +94,15 @@ export default function useHandleTopicProgress(videoState = {}) {
     setTopicProgressData(_topicProgressData);
   }, [videoState?.progressPercent]);
 
-  // on pause sync and stop the timer
+  // sync on video play
   useEffect(() => {
     if (!isTypeVideo) return;
-    if (videoState?.isPlaying) return;
+    if (!videoState?.isPlaying) return;
 
-    syncTopicProgress();
-    cancel();
+    if (syncCount < 20) return setSyncCount(+syncCount + 1);
 
-    return () => cancel();
-  }, [videoState?.isPlaying]);
+    syncTopicProgress().then(() => setSyncCount(0));
+  }, [videoState?.progressPercent]);
 
   // binge next topic button logic
   useEffect(() => {
@@ -125,11 +125,6 @@ export default function useHandleTopicProgress(videoState = {}) {
     }, fiveSecondsTimer);
 
     setShowBingeButton(timer);
-
-    function resetBinge() {
-      clearTimeout(showBingeButton);
-      if (!!showBingeButton) setShowBingeButton(false);
-    }
   }, [
     selectedTopicContent?.duration,
     videoState?.isVideoLoaded,
@@ -138,9 +133,9 @@ export default function useHandleTopicProgress(videoState = {}) {
   ]);
 
   // sync progress at every 15 seconds
-  const cancel = useTimeInterval(syncTopicProgress, SYNC_DATA_IN_SECONDS * 1000, [
-    videoState?.isPlaying,
-  ]);
+  // const cancel = useTimeInterval(syncTopicProgress, SYNC_DATA_IN_SECONDS * 1000, [
+  //   videoState?.isPlaying,
+  // ]);
 
   const currentTopicProgress = topicProgressData?.find(
     (progress) => progress?.topicId === activeCourseData?.topicId,
@@ -176,7 +171,7 @@ export default function useHandleTopicProgress(videoState = {}) {
 
     setIsSyncing(true);
 
-    const { timestamp, progressPercent } = videoState;
+    const { currentTime, progressPercent } = videoState;
     const _topicProgressData = structuredClone(topicProgressData);
     const topicProgressIndex = _topicProgressData?.findIndex((tp) => tp?.topicId === topicData?.id);
     const currentTopicProgress = _topicProgressData?.[topicProgressIndex];
@@ -198,15 +193,18 @@ export default function useHandleTopicProgress(videoState = {}) {
       userCourseId: userCourseMapData?.userCourseId,
       topicId: topicData?.id,
       topicType: topicData?.type,
-      status: started,
       videoProgress: progress || '0',
-      timestamp: timestamp || '00:00:00',
+      timestamp: `${currentTime || 0}-${selectedTopicContent?.duration || 0}`,
+      status: status || started,
     };
 
     // skip update if the topic progress is not completed and progress is less then updated progress
     if (status !== completed && +videoProgress < progress) return setIsSyncing(false);
 
-    if (progress === 100) sendData.status = completed;
+    if (progress >= 99) {
+      sendData.status = completed;
+      sendData.videoProgress = '100';
+    }
 
     const res = await mutateData(UPDATE_USER_COURSE_PROGRESS, sendData, {}, userClient).catch(() =>
       setToastMessage('Add Course Progress Error'),
@@ -241,6 +239,11 @@ export default function useHandleTopicProgress(videoState = {}) {
         }));
       };
 
+  function resetBinge() {
+    clearTimeout(showBingeButton);
+    if (!!showBingeButton) setShowBingeButton(false);
+  }
+
   return {
     containerRef,
     selectedTopicContent,
@@ -254,5 +257,8 @@ export default function useHandleTopicProgress(videoState = {}) {
 
     showBingeButton,
     handleWatchCreditClick,
+
+    syncTopicProgress,
+    resetBinge,
   };
 }

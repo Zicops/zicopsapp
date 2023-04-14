@@ -78,5 +78,5 @@ CourseBtn.propTypes = {
   suggestedDurationInSeconds: PropTypes.number,
 
   isAssigned: PropTypes.bool,
-  completionDateUnix: PropTypes.number,
+  completionDateUnix: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };

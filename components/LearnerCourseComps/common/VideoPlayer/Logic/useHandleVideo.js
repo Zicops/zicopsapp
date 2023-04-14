@@ -84,14 +84,22 @@ export default function useHandleVideo(
     if (!videoData?.src) return;
 
     dispatch({ type: 'updateVideoData', payload: { videoSrc: videoData?.src } });
+  }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
+
+  // move video time based on props
+  useEffect(() => {
+    if (!videoRef?.current) return;
 
     // restart video if the start time is close to video end time
-    if (!playerState?.videoSrc && videoRef?.current?.duration - 3 < videoData?.startFrom) return;
+    const isVideoAtEnd =
+      !playerState?.videoSrc && videoData?.videoDuration - 3 < videoData?.startFrom;
 
-    const isVideoStartTimeSet = videoRef?.current?.currentTime === videoData?.startFrom;
+    const startVideoTime = !!isVideoAtEnd ? 0 : videoData?.startFrom || 0;
+    const isVideoStartTimeSet = videoRef?.current?.currentTime === startVideoTime;
+    if (isVideoStartTimeSet) return;
 
-    if (!isVideoStartTimeSet) updateVideoProgress(videoData?.startFrom || 0, false);
-  }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
+    updateVideoProgress(startVideoTime, false);
+  }, [videoData?.startFrom]);
 
   // auto play video
   useEffect(() => {
@@ -102,11 +110,17 @@ export default function useHandleVideo(
 
   // update video element for play pause
   useEffect(() => {
-    if (videoRef?.current?.paused && playerState?.isPlaying)
-      return videoRef?.current?.play().catch((e) => toggleIsPlaying(false));
-
     playerState?.isPlaying ? videoRef?.current?.play() : videoRef?.current?.pause();
-  }, [playerState?.isPlaying, videoRef?.current?.paused]);
+  }, [playerState?.isPlaying]);
+
+  // sync play pause state
+  useEffect(() => {
+    if (!videoRef?.current) return;
+    if (videoRef?.current?.currentTime < videoData?.videoDuration && playerState?.isPlaying)
+      return toggleIsPlaying(true);
+
+    toggleIsPlaying(false);
+  }, [videoRef?.current?.paused]);
 
   // play pause video based on props
   useEffect(() => {
@@ -121,7 +135,7 @@ export default function useHandleVideo(
     if (playerState.volume > 0 && playerState.isMuted) return toggleMute(false);
   }, [playerState.volume]);
 
-  // reset video change state
+  // reset video change state (center flash)
   useEffect(() => {
     let timeout = null;
     if (!videoStateChange) return clearTimeout(timeout);
@@ -129,13 +143,6 @@ export default function useHandleVideo(
 
     return () => clearTimeout(timeout);
   }, [videoStateChange]);
-
-  // on video end
-  useEffect(() => {
-    if (!playerState?.videoSrc) return;
-
-    if (videoRef?.current?.currentTime === videoRef?.current?.duration) toggleIsPlaying(false);
-  }, [videoRef?.current?.currentTime]);
 
   // play or pause video
   const toggleIsPlaying = useCallback(
@@ -195,7 +202,7 @@ export default function useHandleVideo(
   // update progressPercent on specific time
   const updateVideoProgress = useCallback(
     (seconds = 0) => {
-      videoRef.current.currentTime = seconds;
+      videoRef.current.currentTime = seconds || 0;
     },
     [videoRef?.current],
   );
