@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  ActiveCourseDataAtom,
-  ActiveCourseHeroAtom,
-  CourseActiveTabAtom,
-  SelectedResourceDataAtom,
-  courseHeroObj,
-} from '../atoms/learnerCourseComps.atom';
+import { useRecoilValue } from 'recoil';
+import { SelectedResourceDataAtom } from '../atoms/learnerCourseComps.atom';
 
 export default function useHandleTopicView() {
-  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
-  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const selectedResourceData = useRecoilValue(SelectedResourceDataAtom);
 
   // shouldplay === false --> pause video
@@ -52,10 +44,5 @@ export default function useHandleTopicView() {
     setActiveBox((prev) => (prev === id ? null : id));
   }
 
-  function closePlayer() {
-    setActiveHero(courseHeroObj.courseMetaPreview);
-    setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }));
-  }
-
-  return { activeBox, videoState, getVideoData, toggleActiveBox, closePlayer };
+  return { activeBox, videoState, getVideoData, toggleActiveBox };
 }

@@ -183,11 +183,17 @@ export default function useHandleVideo(
     if (e.code === 'ArrowLeft') return moveVideoProgressBy(-10);
   }
 
-  // update progressPercent on video progress
-  const updateStateProgress = useCallback(() => {
+  function getProgressPercent() {
     const currentTime = +videoRef?.current?.currentTime || 0;
     const videoDuration = +videoRef?.current?.duration?.toFixed(2) || 0;
     const progress = +((currentTime / videoDuration) * 100).toFixed(2) || 0;
+
+    return { currentTime, videoDuration, progress };
+  }
+
+  // update progressPercent on video progress
+  const updateStateProgress = useCallback(() => {
+    const { currentTime, videoDuration, progress } = getProgressPercent();
 
     dispatch({
       type: 'updateProgress',
@@ -279,6 +285,7 @@ export default function useHandleVideo(
     canvasRef,
     videoContainerRef,
     playerState,
+    getProgressPercent,
     updateStateProgress,
     updateVideoProgress,
     toggleIsPlaying,

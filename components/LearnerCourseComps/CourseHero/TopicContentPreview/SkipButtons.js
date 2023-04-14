@@ -17,13 +17,13 @@ export default function SkipButtons({ nextBtnObj = {}, stayBtnObj = {} }) {
   return (
     <div className={`${styles.bingeClasses}`}>
       {!!stayBtnText && (
-        <div className={`${stayClasses}`} style={stayStyles}>
-          <div onClick={stayClickHandler}>{stayBtnText}</div>
+        <div className={`${stayClasses}`} style={stayStyles} onClick={stayClickHandler}>
+          <div>{stayBtnText}</div>
         </div>
       )}
       {!!nextBtnText && (
-        <div className={`${nextClasses}`} style={nextStyles}>
-          <div onClick={nextClickHandler}>{nextBtnText}</div>
+        <div className={`${nextClasses}`} style={nextStyles} onClick={nextClickHandler}>
+          <div>{nextBtnText}</div>
         </div>
       )}
     </div>

@@ -33,8 +33,7 @@ export default function TopicContentPreview() {
   const quizData = useRecoilValue(TopicQuizAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
-  const { activeBox, videoState, getVideoData, toggleActiveBox, closePlayer } =
-    useHandleTopicView();
+  const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
   const {
     containerRef,
     selectedTopicContent,
@@ -48,7 +47,7 @@ export default function TopicContentPreview() {
     showBingeButton,
     handleWatchCreditClick,
     syncTopicProgress,
-    resetBinge,
+    closePlayer,
   } = useHandleTopicProgress(videoState);
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
 
@@ -119,10 +118,7 @@ export default function TopicContentPreview() {
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={() => {
-            closePlayer();
-            resetBinge();
-          }}
+          handleBackBtnClick={closePlayer}
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {

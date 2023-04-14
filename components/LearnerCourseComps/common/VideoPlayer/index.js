@@ -28,6 +28,7 @@ export default function VideoPlayer({
     canvasRef,
     videoContainerRef,
     playerState,
+    getProgressPercent,
     updateStateProgress,
     updateVideoProgress,
     toggleIsPlaying,
@@ -38,6 +39,10 @@ export default function VideoPlayer({
     handleVolume,
     isBuffering,
   } = useHandleVideo(videoData, containerRef, getVideoData);
+
+  // play next video if video is completed
+  if (playerState?.progressPercent > 99 && !!videoData?.handleNextClick)
+    videoData?.handleNextClick();
 
   if (!videoData?.src) return <div className={`${styles.noVideoPresent}`}>No Video URL Found</div>;
 
@@ -55,7 +60,15 @@ export default function VideoPlayer({
     );
 
   return (
-    <div className={`${styles.videoPlayer}`} ref={videoContainerRef} onClick={handleContainerClick}>
+    <div
+      className={`${styles.videoPlayer}`}
+      ref={videoContainerRef}
+      onClick={() =>
+        handleContainerClick({
+          videoProgress: getProgressPercent().progress,
+          time: videoRef?.current?.currentTime,
+        })
+      }>
       {!!isBuffering && (
         <Spinner
           customStyles={{

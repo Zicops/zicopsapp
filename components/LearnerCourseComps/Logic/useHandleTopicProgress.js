@@ -1,8 +1,6 @@
 import { UPDATE_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
 import { COURSE_PROGRESS_STATUS, TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
-import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
-import { useTimeInterval } from '@/helper/hooks.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -10,10 +8,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
+  ActiveCourseHeroAtom,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
+  courseHeroObj,
 } from '../atoms/learnerCourseComps.atom';
 import useHandleTopicSwitch from './useHandleTopicSwitch';
 
@@ -23,6 +23,7 @@ export default function useHandleTopicProgress(videoState = {}) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
+  const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
@@ -99,7 +100,8 @@ export default function useHandleTopicProgress(videoState = {}) {
     if (!isTypeVideo) return;
     if (!videoState?.isPlaying) return;
 
-    if (syncCount < 20) return setSyncCount(+syncCount + 1);
+    setSyncCount(+syncCount + 1);
+    if (syncCount !== null && syncCount < 20) return;
 
     syncTopicProgress().then(() => setSyncCount(0));
   }, [videoState?.progressPercent]);
@@ -164,7 +166,7 @@ export default function useHandleTopicProgress(videoState = {}) {
     setShowBingeButton(null);
   }
 
-  async function syncTopicProgress() {
+  async function syncTopicProgress(topicProgress = null) {
     if (isSyncing) return;
     if (!videoState) return;
     if (!topicProgressData?.length) return;
@@ -198,8 +200,14 @@ export default function useHandleTopicProgress(videoState = {}) {
       status: status || started,
     };
 
+    if (topicProgress) {
+      const { videoProgress, time } = topicProgress;
+      sendData.videoProgress = videoProgress || 0;
+      sendData.timestamp = `${time || 0}-${selectedTopicContent?.duration || 0}`;
+    }
+
     // skip update if the topic progress is not completed and progress is less then updated progress
-    if (status !== completed && +videoProgress < progress) return setIsSyncing(false);
+    if (sendData?.status !== completed && +videoProgress < progress) return setIsSyncing(false);
 
     if (progress >= 99) {
       sendData.status = completed;
@@ -210,7 +218,7 @@ export default function useHandleTopicProgress(videoState = {}) {
       setToastMessage('Add Course Progress Error'),
     );
 
-    const progressRes = res?.addUserCourseProgress?.[0];
+    const progressRes = res?.updateUserCourseProgress;
 
     if (!progressRes) return setIsSyncing(false);
 
@@ -244,6 +252,12 @@ export default function useHandleTopicProgress(videoState = {}) {
     if (!!showBingeButton) setShowBingeButton(false);
   }
 
+  function closePlayer() {
+    resetBinge();
+    setActiveHero(courseHeroObj.courseMetaPreview);
+    setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }));
+  }
+
   return {
     containerRef,
     selectedTopicContent,
@@ -259,6 +273,6 @@ export default function useHandleTopicProgress(videoState = {}) {
     handleWatchCreditClick,
 
     syncTopicProgress,
-    resetBinge,
+    closePlayer,
   };
 }
