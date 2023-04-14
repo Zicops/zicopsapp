@@ -1,3 +1,4 @@
+import { useIsMouseIdleForSeconds } from '@/helper/hooks.helper';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SelectedResourceDataAtom } from '../atoms/learnerCourseComps.atom';
@@ -26,6 +27,9 @@ export default function useHandleTopicView() {
     isVideoLoaded: false,
   });
   const [activeBox, setActiveBox] = useState(null);
+  const [isTopBottomBarHidden, setIsTopBottomBarHidden] = useState(false);
+
+  const { isIdle } = useIsMouseIdleForSeconds();
 
   useEffect(() => {
     // pause video if resources pop up is open
@@ -36,13 +40,43 @@ export default function useHandleTopicView() {
       setVideoState((prev) => ({ ...prev, shouldPlay: true }));
   }, [selectedResourceData?.url]);
 
+  // hide top bottom bar if mouse is idle
+  useEffect(() => {
+    if (isIdle && isTopBottomBarHidden) return;
+    if (isTopBottomBarHidden == null) return;
+
+    setIsTopBottomBarHidden(!!isIdle);
+  }, [isIdle]);
+
+  // clear open box state on top bar hide
+  useEffect(() => {
+    if (!isTopBottomBarHidden && !activeBox) return;
+
+    setActiveBox(null);
+  }, [isTopBottomBarHidden]);
+
   function getVideoData(videoData) {
     setVideoState((prev) => ({ ...prev, ...videoData }));
   }
 
   function toggleActiveBox(id) {
+    if (activeBox !== id) setIsTopBottomBarHidden(null);
+
     setActiveBox((prev) => (prev === id ? null : id));
   }
 
-  return { activeBox, videoState, getVideoData, toggleActiveBox };
+  function toggleTopBottomBarDisplay(val = false) {
+    const _val = val === null ? null : !!val;
+
+    setIsTopBottomBarHidden(_val);
+  }
+
+  return {
+    activeBox,
+    videoState,
+    getVideoData,
+    toggleActiveBox,
+    isTopBottomBarHidden,
+    toggleTopBottomBarDisplay,
+  };
 }

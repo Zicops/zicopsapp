@@ -29,6 +29,7 @@ export default memo(function ControlBar({
   handlePreviousClick = null,
   handleMute = () => {},
   handleVolumeChange = () => {},
+  timelineOverlay = null,
 }) {
   const [videoStateChange, setVideoStateChange] = useRecoilState(VideoStateChangeAtom);
 
@@ -116,6 +117,7 @@ export default memo(function ControlBar({
     <>
       <div className={`${styles.controlBar}`}>
         <Timeline
+          timelineOverlay={timelineOverlay}
           playerState={playerState}
           videoRef={videoRef}
           canvasRef={canvasRef}

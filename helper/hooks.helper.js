@@ -1441,3 +1441,28 @@ export function useTimeInterval(callback, delay = fifteenSeconds, dependencies =
 
   return cancel;
 }
+
+export function useIsMouseIdleForSeconds(seconds = 5) {
+  const [isIdle, setIsIdle] = useState(null);
+
+  let timer = null;
+  function handleMouseMove() {
+    clearTimeout(timer);
+
+    setIsIdle(false);
+    timer = setTimeout(() => {
+      setIsIdle(true);
+    }, +seconds * 1000);
+  }
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return { isIdle };
+}

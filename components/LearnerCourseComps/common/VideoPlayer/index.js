@@ -22,6 +22,12 @@ export default function VideoPlayer({
   containerRef,
   handleContainerClick = () => {},
   getVideoData = () => {},
+  timelineOverlay = null,
+  controlBarData = {
+    isHidden: null,
+    handleMouseEnter: () => {},
+    handleMouseLeave: () => {},
+  },
 }) {
   const {
     videoRef,
@@ -92,19 +98,25 @@ export default function VideoPlayer({
         handleKeyDown={handleKeyDown}
       />
 
-      <ControlBar
-        playerState={playerState}
-        videoRef={videoRef}
-        canvasRef={canvasRef}
-        toggleIsPlaying={toggleIsPlaying}
-        moveVideoProgressBy={moveVideoProgressBy}
-        updateVideoProgress={updateVideoProgress}
-        toggleVideoFullScreen={toggleVideoFullScreen}
-        handleNextClick={videoData?.handleNextClick}
-        handlePreviousClick={videoData?.handlePreviousClick}
-        handleMute={toggleMute}
-        handleVolumeChange={handleVolume}
-      />
+      <div
+        className={`${controlBarData?.isHidden ? 'slideDown' : ''}`}
+        onMouseEnter={controlBarData?.handleMouseEnter}
+        onMouseLeave={controlBarData?.handleMouseLeave}>
+        <ControlBar
+          playerState={playerState}
+          videoRef={videoRef}
+          canvasRef={canvasRef}
+          toggleIsPlaying={toggleIsPlaying}
+          moveVideoProgressBy={moveVideoProgressBy}
+          updateVideoProgress={updateVideoProgress}
+          toggleVideoFullScreen={toggleVideoFullScreen}
+          handleNextClick={videoData?.handleNextClick}
+          handlePreviousClick={videoData?.handlePreviousClick}
+          handleMute={toggleMute}
+          handleVolumeChange={handleVolume}
+          timelineOverlay={timelineOverlay}
+        />
+      </div>
     </div>
   );
 }

@@ -321,3 +321,42 @@ body::-webkit-scrollbar-thumb {
 .text-primary {
   color: $primary;
 }
+
+// element slide up
+.slideUp {
+  @include animateWithKeyFrame(slideUp) {
+    0%,
+    50% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    60%,
+    100% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.slideDown {
+  @include animateWithKeyFrame(slideDown) {
+    0%,
+    50% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    60%,
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  transform: translateY(100%);
+  opacity: 0;
+}

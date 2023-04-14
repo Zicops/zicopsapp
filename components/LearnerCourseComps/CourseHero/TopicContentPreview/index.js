@@ -1,4 +1,5 @@
 import Spinner from '@/components/common/Spinner';
+import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { truncateToN } from '@/helper/common.helper';
 import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useMemo } from 'react';
@@ -23,7 +24,6 @@ import IconButtonWithBox from './IconButtonWithBox';
 import ResourcesList from './ResourcesList';
 import SkipButtons from './SkipButtons';
 import SubtitleBox from './SubtitleBox';
-import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 
 export default function TopicContentPreview() {
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
@@ -33,7 +33,14 @@ export default function TopicContentPreview() {
   const quizData = useRecoilValue(TopicQuizAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
-  const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
+  const {
+    activeBox,
+    videoState,
+    getVideoData,
+    toggleActiveBox,
+    isTopBottomBarHidden,
+    toggleTopBottomBarDisplay,
+  } = useHandleTopicView();
   const {
     containerRef,
     selectedTopicContent,
@@ -119,6 +126,9 @@ export default function TopicContentPreview() {
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
           handleBackBtnClick={closePlayer}
+          isHidden={isTopBottomBarHidden}
+          handleMouseEnter={() => toggleTopBottomBarDisplay(null)}
+          handleMouseLeave={() => toggleTopBottomBarDisplay(false)}
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {
@@ -180,6 +190,12 @@ export default function TopicContentPreview() {
                 handleNextClick,
                 handlePreviousClick,
               }}
+              controlBarData={{
+                isHidden: isTopBottomBarHidden,
+                handleMouseEnter: () => toggleTopBottomBarDisplay(null),
+                handleMouseLeave: () => toggleTopBottomBarDisplay(false),
+              }}
+              timelineOverlay={<div className={`${styles.quizBookmarkOverlay}`}></div>}
               getVideoData={getVideoData}
               handleContainerClick={syncTopicProgress}
             />

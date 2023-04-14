@@ -239,6 +239,15 @@ $eventBorder: $zicopsSky;
   }
 }
 
+// general mixin to create keyframe animations
+@mixin animateWithKeyFrame($name, $duration: 1s, $method: ease-in-out, $times: 1) {
+  animation: $name $duration $method $times;
+
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
 .courseColor {
   color: $white;
 }

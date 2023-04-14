@@ -13,6 +13,7 @@ export default function Timeline({
 
   videoRef = null,
   canvasRef = null,
+  timelineOverlay = null,
   customStyles = {},
 }) {
   const currentTime = +videoRef.current?.currentTime || 0;
@@ -33,6 +34,8 @@ export default function Timeline({
       )}
 
       <div className={`${styles.progressContainer}`}>
+        {timelineOverlay}
+
         <div
           className={`${styles.progressBar} ${!!isSelected ? styles.activeDrag : ''}`}
           style={customStyles}

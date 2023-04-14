@@ -8,11 +8,17 @@ export default function CourseHeroTopBar({
   leftSideComps = null,
   centerComps = null,
   rightComps = null,
+  isHidden = null,
+  handleMouseEnter = () => {},
+  handleMouseLeave = () => {},
 }) {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
 
   return (
-    <section className={`${styles.topBar}`}>
+    <section
+      className={`${styles.topBar} ${isHidden ? 'slideUp' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       <div className={`${styles.backBtn}`}>
         <BackArrowBtn
           handleClick={(e) => {
