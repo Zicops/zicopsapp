@@ -1,12 +1,18 @@
 import SwitchButton from "@/components/common/FormComponents/SwitchButton";
-import { vcModeratorControlls } from "@/state/atoms/vctool.atoms";
-import { useState } from "react";
+import { ClassRoomFlagsInput, vcModeratorControlls } from "@/state/atoms/vctool.atoms";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styles from "../vctoolMain.module.scss"
+import { collection, onSnapshot } from "firebase/firestore";
+import useLoadClassroomData from "../Logic/useLoadClassroomData";
 const ManageAccount = ({ hide }) => {
-    const [controlls, setControlls] = useRecoilState(vcModeratorControlls)
-    const [isMicOn, setIsMicOn] = useState(controlls.onMic)
-    const [isVideoOn, setIsVideoOn] = useState(controlls.onVideo)
+    const {addUpdateClassRoom}=useLoadClassroomData();
+    const [controlls, setControlls] = useRecoilState(ClassRoomFlagsInput);
+
+    useEffect(()=>
+    {
+        console.log(controlls)
+    },[controlls])
     return (
         <div className={`${styles.manageAccountBar}`}>
             <div className={`${styles.manageAccountHead}`}>
@@ -24,27 +30,23 @@ const ManageAccount = ({ hide }) => {
                     <div>Turn on their microphone</div>
                     <SwitchButton
                         inputName="qa_required"
-                        isChecked={isMicOn}
+                        isChecked={controlls?.is_trainer_joined}
                         handleChange={() => {
-                            setIsMicOn(!isMicOn)
                             setControlls({
                                 ...controlls,
-                                onMic: isMicOn
+                                is_trainer_joined:!controlls?.is_trainer_joined
                             })
+                            // addUpdateClassRoom()
                         }}
                     />
                 </div>
                 <div className={`${styles.hostControlls}`}>
-                    <div>Turn on their vidoe</div>
+                    <div>Turn on their video</div>
                     <SwitchButton
                         inputName="qa_required"
-                        isChecked={isVideoOn}
+                        isChecked={''}
                         handleChange={() => {
-                            setIsVideoOn(!isVideoOn)
-                            setControlls({
-                                ...controlls,
-                                onVideo: isVideoOn
-                            })
+                           
                         }}
                     />
                 </div>

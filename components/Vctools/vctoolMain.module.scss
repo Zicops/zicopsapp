@@ -1599,8 +1599,8 @@
   background: #6bcfcf;
 }
 .manageUnpublishBtn {
-  background-color: #26292C;
-  color: #ACACAC;
+  background-color: #26292c;
+  color: #acacac;
   border: none;
   outline: none;
 }
@@ -2247,12 +2247,10 @@
   }
   p {
     margin-right: 12px;
-   
   }
 }
-#quizPublishBtn
-{
-  color: #6BCFCF;
+#quizPublishBtn {
+  color: #6bcfcf;
 }
 #endPoll {
   color: #f53d41;
@@ -2589,8 +2587,7 @@
   background-color: #6bcfcf;
   color: #0b0c0d;
 }
-.quizTypeHeading
-{
+.quizTypeHeading {
   display: flex;
   margin-top: 6px;
 }
@@ -2876,4 +2873,64 @@
 }
 .slideDown {
   margin-bottom: -100px;
+}
+
+// styling tool Tips
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; 
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width:fit-content;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip .topToolTips {
+  width: 120px;
+  margin-top: 6px;
+  height: 30px;
+  top: 100%;
+  left: 50%;
+  margin-left: -85px; 
+}
+// leaveTooltip
+.tooltip .tooltipLefttNav {
+  width:160px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -25px;
+}
+// tooltipRightNav
+.tooltip .tooltipRightNav {
+  
+  width: 120px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -88px;
+}
+// tooltipRightNavFullscreen
+.tooltip .tooltipRightNavFullscreen {
+  
+  width: 130px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -98px;
 }

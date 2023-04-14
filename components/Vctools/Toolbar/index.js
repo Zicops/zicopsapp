@@ -397,6 +397,8 @@ const MainToolbar = ({
               falseSrc={'/images/svg/vctool/library-books.svg'}
               toggle={selectedButton === 'resourceBar'}
               customId={selectedButton === 'resourceBar' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Resources'}
             />
 
             <VctoolButton
@@ -408,6 +410,8 @@ const MainToolbar = ({
               trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
               falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
               customId={selectedButton === 'whiteBoard' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Notes'}
             />
             <VctoolButton
               onClickfun={() => {
@@ -417,6 +421,8 @@ const MainToolbar = ({
               falseSrc={'/images/svg/vctool/quiz.svg'}
               toggle={selectedButton === 'quiz'}
               customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Quizzes'}
             />
             <VctoolButton
               onClickfun={() => {
@@ -428,6 +434,8 @@ const MainToolbar = ({
               trueSrc={'/images/svg/vctool/info-active.svg'}
               falseSrc={'/images/svg/vctool/info.svg'}
               customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Session Info'}
             />
 
             {!!currentParticipantData?.isModerator && (
@@ -441,6 +449,8 @@ const MainToolbar = ({
                 trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
                 falseSrc={'/images/svg/vctool/manage-accounts.svg'}
                 customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.topToolTips}`}
+                toolTipName={'Host controls'}
               />
             )}
           </>
@@ -479,6 +489,8 @@ const MainToolbar = ({
                   falseSrc={'/images/svg/vctool/Union.svg'}
                   customStyle={`${styles.startMeeting}`}
                   btnValue={'Start'}
+                  toolTipClass={`${styles.tooltipLefttNav}`}
+                
                 />
               </div>
               <div>
@@ -495,6 +507,8 @@ const MainToolbar = ({
                   falseSrc={'/images/svg/vctool/logout.svg'}
                   customStyle={`${styles.canselBtn}`}
                   btnValue={'Leave'}
+                  toolTipClass={`${styles.tooltipLefttNav}`}
+                  toolTipName={'Leave the session'}
                 />
               </div>
             </>
@@ -513,6 +527,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/logout.svg'}
                 customStyle={`${styles.canselBtn}`}
                 btnValue={'Leave'}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Leave the session'}
               />
             </div>
           )}
@@ -530,6 +546,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/mic-off.svg'}
                 toggle={audiotoggle}
                 customId={!audiotoggle ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={!audiotoggle ? 'Turn on microphone':'Turn off microphone'}
               />
 
               <VctoolButton
@@ -540,6 +558,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/videocam-off.svg'}
                 toggle={videotoggle}
                 customId={!videotoggle ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={!videotoggle ?'Turn on camera':'Turn off camera'}
               />
 
               <VctoolButton
@@ -548,6 +568,8 @@ const MainToolbar = ({
                 }}
                 trueSrc={'/images/svg/vctool/present-to-all.svg'}
                 falseSrc={'/images/svg/vctool/present-to-all.svg'}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Share screen'}
               />
 
               <VctoolButton
@@ -559,6 +581,8 @@ const MainToolbar = ({
                 trueSrc={'/images/svg/vctool/back-hand.svg'}
                 falseSrc={'/images/svg/vctool/back-hand-on.svg'}
                 customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Raise hand'}
               />
             </>
           )}
@@ -576,6 +600,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/help.svg'}
                 customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'qaBar'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Q & A'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -587,6 +613,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/chat-bubble.svg'}
                 customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'chatBar'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Chat'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -596,6 +624,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/insert-chart.svg'}
                 customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'poll'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Polls'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -609,6 +639,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/group.svg'}
                 customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'participants'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Participants'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -620,6 +652,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/account-tree.svg'}
                 customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'breakOutRoom'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Breakout rooms'}
               />
 
               <VctoolButton
@@ -634,6 +668,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/settings.svg'}
                 customId={selectedButton === 'SettingPopup' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'SettingPopup'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Settings'}
               />
 
               <VctoolButton
@@ -643,6 +679,8 @@ const MainToolbar = ({
                 toggle={fullscreen}
                 trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
                 falseSrc={'/images/svg/vctool/fullscreen.svg'}
+                toolTipClass={`${styles.tooltipRightNavFullscreen}`}
+                toolTipName={!fullscreen?'Enter full screen':'Exit full screen'}
               />
             </>
           )}
