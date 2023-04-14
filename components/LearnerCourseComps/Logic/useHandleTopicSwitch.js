@@ -45,5 +45,40 @@ export default function useHandleTopicSwitch() {
     return nextTopicData;
   }
 
-  return { getNextTopicId };
+  // returns a object of module id and topic id
+  function getPreviousTopicId() {
+    const previousTopicData = { moduleId: null, topicId: null };
+    if (!activeCourseData?.topicId) return previousTopicData;
+
+    const topicId = activeCourseData?.topicId;
+    const moduleId = topicData?.moduleId;
+
+    const currentTopicIndex = moduleData?.topics?.findIndex((top) => top?.id === topicId);
+    const currentModuleIndex = allModules?.findIndex((mod) => mod?.id === moduleId);
+
+    if (currentModuleIndex === 0) return previousTopicData;
+
+    // next module first topic if current topic is last topic of current module
+    if (currentTopicIndex === 0) {
+      // loop until you get next module with topic
+      allModules?.forEach((mod, i) => {
+        if (i > currentModuleIndex + 1) return;
+        if (!!previousTopicData.topicId) return;
+        if (!mod?.topics?.length) return;
+
+        previousTopicData.moduleId = mod?.id;
+        previousTopicData.topicId = mod?.topics?.[mod?.topics?.length - 1]?.id;
+      });
+
+      return previousTopicData;
+    }
+
+    const _previousTopicData = moduleData?.topics?.[currentTopicIndex - 1];
+    previousTopicData.moduleId = _previousTopicData?.moduleId;
+    previousTopicData.topicId = _previousTopicData?.id;
+
+    return previousTopicData;
+  }
+
+  return { getNextTopicId, getPreviousTopicId };
 }

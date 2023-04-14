@@ -23,6 +23,7 @@ import IconButtonWithBox from './IconButtonWithBox';
 import ResourcesList from './ResourcesList';
 import SkipButtons from './SkipButtons';
 import SubtitleBox from './SubtitleBox';
+import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 
 export default function TopicContentPreview() {
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
@@ -39,6 +40,7 @@ export default function TopicContentPreview() {
     selectedTopicContent,
     videoStartTime,
     handleNextClick,
+    handlePreviousClick,
 
     showSkipIntroButton,
     handleSkipIntroClick,
@@ -105,6 +107,10 @@ export default function TopicContentPreview() {
     [activeCourseData?.topicId],
   );
 
+  const isTypeVideo = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.mp4;
+  const isTypeDocument = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.document;
+  const isTypeScrom = !isTypeVideo && !isTypeDocument;
+
   if (isLoading) return <Spinner />;
 
   return (
@@ -158,49 +164,54 @@ export default function TopicContentPreview() {
           }
         />
 
-        <VideoPlayer
-          containerRef={containerRef}
-          videoData={{
-            src: selectedTopicContent?.contentUrl || '',
-            isAutoPlay: true,
-            pauseVideo: videoState?.shouldPlay,
-            startFrom: videoStartTime,
-            isSubtitleShown: activeCourseData?.subTitle != null,
-            subtitleUrl: activeCourseData?.subTitle,
-            handleNextClick: handleNextClick,
-          }}
-          getVideoData={getVideoData}
-        />
+        {isTypeVideo && (
+          <>
+            <VideoPlayer
+              containerRef={containerRef}
+              videoData={{
+                src: selectedTopicContent?.contentUrl || '',
+                isAutoPlay: true,
+                pauseVideo: videoState?.shouldPlay,
+                startFrom: videoStartTime,
+                isSubtitleShown: activeCourseData?.subTitle != null,
+                subtitleUrl: activeCourseData?.subTitle,
+                handleNextClick,
+                handlePreviousClick,
+              }}
+              getVideoData={getVideoData}
+            />
 
-        {/* skip intro button */}
-        {showSkipIntroButton && (
-          <SkipButtons
-            nextBtnObj={{
-              text: 'Skip Intro',
-              classes: styles.skipIntroBtn,
-              clickHandler: handleSkipIntroClick,
-            }}
-          />
-        )}
+            {/* skip intro button */}
+            {showSkipIntroButton && (
+              <SkipButtons
+                nextBtnObj={{
+                  text: 'Skip Intro',
+                  classes: styles.skipIntroBtn,
+                  clickHandler: handleSkipIntroClick,
+                }}
+              />
+            )}
 
-        {/* next binge button  */}
-        {!!showBingeButton && (
-          <SkipButtons
-            nextBtnObj={{
-              text: 'Next Topic',
-              classes: styles.nextPlayBtn,
-              clickHandler: () => {
-                if (!handleNextClick) return;
+            {/* next binge button  */}
+            {!!showBingeButton && (
+              <SkipButtons
+                nextBtnObj={{
+                  text: 'Next Topic',
+                  classes: styles.nextPlayBtn,
+                  clickHandler: () => {
+                    if (!handleNextClick) return;
 
-                handleNextClick();
-              },
-            }}
-            stayBtnObj={{
-              text: 'Watch Credits',
-              classes: styles.watchCreditsBtn,
-              clickHandler: handleWatchCreditClick,
-            }}
-          />
+                    handleNextClick();
+                  },
+                }}
+                stayBtnObj={{
+                  text: 'Watch Credits',
+                  classes: styles.watchCreditsBtn,
+                  clickHandler: handleWatchCreditClick,
+                }}
+              />
+            )}
+          </>
         )}
       </div>
     </>

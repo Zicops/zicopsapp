@@ -1,5 +1,5 @@
 import { UPDATE_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
-import { COURSE_PROGRESS_STATUS } from '@/constants/course.constants';
+import { COURSE_PROGRESS_STATUS, TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
 import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
 import { useTimeInterval } from '@/helper/hooks.helper';
@@ -35,14 +35,17 @@ export default function useHandleTopicProgress(videoState = {}) {
   const [showSkipIntroButton, setShowSkipIntroButton] = useState(false);
   const [showBingeButton, setShowBingeButton] = useState(false);
 
-  const { getNextTopicId } = useHandleTopicSwitch();
+  const { getNextTopicId, getPreviousTopicId } = useHandleTopicSwitch();
   const { topicId: nextTopicId, moduleId: nextModuleId } = getNextTopicId();
+  const { topicId: previousTopicId, moduleId: previousModuleId } = getPreviousTopicId();
 
   const selectedTopicContent =
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
+  const isTypeVideo = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.mp4;
 
   // set time from which the video should start initially
   useEffect(() => {
+    if (!isTypeVideo) return;
     if (!activeCourseData?.topicContentId) return;
     if (!selectedTopicContent?.duration) return;
     if (!currentTopicProgress?.videoProgress) return setVideoStartTime(0);
@@ -79,6 +82,7 @@ export default function useHandleTopicProgress(videoState = {}) {
   }, [activeCourseData?.topicId, selectedTopicContent]);
 
   useEffect(() => {
+    if (!isTypeVideo) return;
     if (!topicData?.id) return;
     const _topicProgressData = structuredClone(topicProgressData);
     const topicProgressIndex = _topicProgressData?.findIndex((tp) => tp?.topicId === topicData?.id);
@@ -91,14 +95,18 @@ export default function useHandleTopicProgress(videoState = {}) {
 
   // on pause sync and stop the timer
   useEffect(() => {
+    if (!isTypeVideo) return;
     if (videoState?.isPlaying) return;
 
     syncTopicProgress();
     cancel();
+
+    return () => cancel();
   }, [videoState?.isPlaying]);
 
   // binge next topic button logic
   useEffect(() => {
+    if (!isTypeVideo) return;
     if (!selectedTopicContent?.duration) return resetBinge();
     if (!videoState?.isVideoLoaded) return resetBinge();
     if (!nextTopicId) return resetBinge();
@@ -144,6 +152,7 @@ export default function useHandleTopicProgress(videoState = {}) {
     videoState?.currentTime <
       selectedTopicContent?.startTime + selectedTopicContent?.skipIntroDuration;
   if (
+    isTypeVideo &&
     displaySkipIntroBtn !== showSkipIntroButton &&
     showSkipIntroButton != null &&
     videoState?.isVideoLoaded
@@ -222,12 +231,23 @@ export default function useHandleTopicProgress(videoState = {}) {
         setActiveCourseData((prev) => ({ ...prev, topicId: nextTopicId, moduleId: nextModuleId }));
       };
 
+  const handlePreviousClick = !previousTopicId
+    ? null
+    : function () {
+        setActiveCourseData((prev) => ({
+          ...prev,
+          topicId: previousTopicId,
+          moduleId: previousModuleId,
+        }));
+      };
+
   return {
     containerRef,
     selectedTopicContent,
     currentTopicProgress,
     videoStartTime,
     handleNextClick,
+    handlePreviousClick,
 
     showSkipIntroButton,
     handleSkipIntroClick,
