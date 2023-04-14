@@ -1156,6 +1156,7 @@ export const GET_PAGINATED_VENDOR_ORDERS = gql`
         total
         tax
         grand_total
+        description
         created_at
         created_by
         updated_at

@@ -257,6 +257,7 @@ export default function useHandleMarketYard() {
     addUpdateOrder,
     addUpdateOrderServices,
     getAllOrders,
+    setOrderDetails,
     getOrderServices,
     orderDetails,
     servicesDetails,

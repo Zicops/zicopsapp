@@ -11,19 +11,25 @@ import {
   getVendorServicesObject
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from './Logic/useHandleMarketYard';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useHandleVendor from './Logic/useHandleVendor';
-import { VENDOR_ORDER_STATUS, VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
+import {
+  USER_LSP_ROLE,
+  VENDOR_ORDER_STATUS,
+  VENDOR_SERVICES_TYPE
+} from '@/helper/constants.helper';
 import Loader from '../common/Loader';
 import ConfirmPopUp from '../common/ConfirmPopUp';
+import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 
 const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => {} }) => {
-  const [currentComponent, setCurrentComponent] = useState(0);
+  const [currentComponent, setCurrentComponent] = useState('');
   const [selectedServicesForOrder, setSelectedServicesForOrder] =
     useRecoilState(VendorServicesListAtom);
   const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
+  const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [isRejectOrder, setRejectOrder] = useState(false);
   const [isConfirmOrder, setConfirmOrder] = useState(false);
   const { getSingleVendorInfo } = useHandleVendor();
@@ -31,11 +37,13 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
     addUpdateOrder,
     orderDetails,
     getAllOrders,
+    setOrderDetails,
     getOrderServices,
     getVendorServices,
     getOrders
   } = useHandleMarketYard();
 
+  const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
   const orderInfo = orderDetails?.filter((data) => data?.id === orderId);
   let sme = false;
   let crt = false;
@@ -74,6 +82,18 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
     }
   }, [allServicesData]);
 
+  useEffect(() => {
+    if (orderData?.status === VENDOR_ORDER_STATUS?.added) {
+      setCurrentComponent(0);
+    }
+    if (orderData?.status === VENDOR_ORDER_STATUS?.confirmed) {
+      setCurrentComponent(1);
+    }
+    if (orderData?.status === VENDOR_ORDER_STATUS?.completed) {
+      setCurrentComponent(2);
+    }
+  }, [orderData]);
+
   const confirmOrderHandler = async () => {
     setCurrentComponent(currentComponent + 1);
     const _orderData = structuredClone(orderData);
@@ -85,8 +105,15 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
         VENDOR_ORDER_STATUS?.confirmed
       );
       setConfirmOrder(false);
+      setViewOrder(false);
+      setCurrentComponent('');
+      setServicesData(getVendorServicesObject());
+      setSelectedServicesForOrder(getVendorServicesList());
+      setOrderData(getVendorOrderObject());
+      setOrderDetails([]);
+      setAllServicesData([]);
     }
-    if (currentComponent === 1) {
+    if (currentComponent === 1 && orderData?.status === VENDOR_ORDER_STATUS?.confirmed) {
       _orderData.status = VENDOR_ORDER_STATUS?.completed;
       await addUpdateOrder(
         orderInfo[0]?.vendor_id,
@@ -96,11 +123,12 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
     }
     if (currentComponent === 2) {
       setViewOrder(false);
-      setCurrentComponent(0);
-      // setServicesData(getVendorServicesObject());
-      // setSelectedServicesForOrder(getVendorServicesList());
-      // setOrderData(getVendorOrderObject());
-      // setAllServicesData([]);
+      setCurrentComponent('');
+      setOrderDetails([]);
+      setServicesData(getVendorServicesObject());
+      setSelectedServicesForOrder(getVendorServicesList());
+      setOrderData(getVendorOrderObject());
+      setAllServicesData([]);
     }
 
     onSuccess(_orderData.status);
@@ -114,10 +142,11 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
     setOrderData(_orderData);
     setViewOrder(false);
     setRejectOrder(false);
-    // setServicesData(getVendorServicesObject());
-    // setSelectedServicesForOrder(getVendorServicesList());
-    // setOrderData(getVendorOrderObject());
-    // setAllServicesData([]);
+    setOrderDetails([]);
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+    setAllServicesData([]);
   };
 
   return (
@@ -129,12 +158,22 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
         size="large"
         closeBtn={{ name: 'Reject', handleClick: () => setRejectOrder(true) }}
         isCloseButton={currentComponent === 0}
+        isSubmitButton={
+          (isVendor && currentComponent === 0) || currentComponent === 1 || currentComponent === 2
+        }
         onCloseWithCross={() => {
-          setCurrentComponent(0);
-          // setAllServicesData([]);
+          setCurrentComponent('');
+          setViewOrder(false);
+          setAllServicesData([]);
+          setOrderDetails([]);
         }}
         submitBtn={{
-          name: currentComponent === 0 ? 'Confirm' : 'OK',
+          name:
+            isVendor && currentComponent === 0
+              ? 'Confirm'
+              : !isVendor && currentComponent === 1
+              ? 'Complete'
+              : 'Ok',
           handleClick: () => {
             if (currentComponent === 0) {
               setConfirmOrder(true);
@@ -145,7 +184,7 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
         }}>
         <div>
           {!allServicesData?.length ? (
-            <Loader customStyles={{ height: '100%', background: 'transparent' }} />
+            <Loader customStyles={{ height: '300px', background: 'transparent' }} />
           ) : (
             <>
               {currentComponent === 0 && (
