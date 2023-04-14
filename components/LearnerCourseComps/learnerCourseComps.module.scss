@@ -72,7 +72,7 @@ $heroSectionPadding: 2em;
 
   .container {
     height: 100%;
-    width: 50%;
+    width: 55vw;
 
     display: flex;
     justify-content: space-between;
@@ -315,6 +315,62 @@ $heroSectionPadding: 2em;
 .courseHeroContainer {
   height: 100%;
   width: 100%;
+}
+
+// binge skip and next btns
+.bingeClasses {
+  position: absolute;
+  bottom: 140px;
+  right: 2%;
+
+  > div {
+    margin-bottom: 15px;
+  }
+
+  .nextPlayBtn,
+  .skipIntroBtn,
+  .watchCreditsBtn {
+    border-radius: 0;
+    padding: 10px;
+    width: 200px;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+
+    border: 4px solid $primary;
+    background: linear-gradient(to left, $black 50%, $primary 50%);
+    background-position: left top;
+    background-size: 200% 100%;
+    transition: all 5s ease-in;
+    animation: fill 5s;
+    color: $primary;
+
+    div {
+      mix-blend-mode: difference;
+    }
+  }
+
+  .watchCreditsBtn {
+    border-color: $darkThree;
+    background: none;
+    color: $darkThree;
+
+    &:hover {
+      border-color: $primary;
+    }
+  }
+  .skipIntroBtn {
+    box-shadow: 0 0 10px 0 $primary;
+    top: 70%;
+  }
+  @keyframes fill {
+    0% {
+      background-position: right top;
+    }
+    100% {
+      background-position: left top;
+    }
+  }
 }
 
 // assessment preview

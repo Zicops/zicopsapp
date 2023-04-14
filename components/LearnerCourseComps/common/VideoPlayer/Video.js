@@ -8,6 +8,7 @@ export default function Video({
   videoSrc = '',
   updateStateProgress = () => {},
   toggleIsPlaying = () => {},
+  handleKeyDown = () => {},
   playerState = {},
   isSubtitleShown = false,
   subtitleUrl = null,
@@ -43,6 +44,7 @@ export default function Video({
           ref={videoRef}
           onTimeUpdate={() => updateStateProgress()}
           muted={playerState?.isMute}
+          onKeyDown={handleKeyDown}
           src={videoSrc}>
           {!!(isSubtitleShown && subtitleUrl?.url) && (
             <track

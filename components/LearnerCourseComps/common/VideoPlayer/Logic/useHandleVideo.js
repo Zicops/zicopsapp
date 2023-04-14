@@ -1,12 +1,13 @@
 import { theme } from '@/helper/theme.helper';
+import { limitValueInRange } from '@/helper/utils.helper';
 import { getSecondsToHMS } from '@/utils/date.utils';
 import { toggleFullScreen } from '@/utils/general.utils';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
+  VideoStateChangeAtom,
   getPlayerState,
   playerStateReducer,
-  VideoStateChangeAtom,
   videoStateChangeList,
 } from './videoPlayer.helper';
 
@@ -22,10 +23,6 @@ export default function useHandleVideo(
   const [isBuffering, setIsBuffering] = useState(false);
 
   const [videoStateChange, setVideoStateChange] = useRecoilState(VideoStateChangeAtom);
-
-  useEffect(() => {
-    getVideoData(playerState);
-  }, [playerState]);
 
   // initial video load setup
   useEffect(() => {
@@ -49,7 +46,7 @@ export default function useHandleVideo(
 
     videoElem.onerror = () => {
       setIsBuffering(false);
-      console.error(`Error ${videoElem.error.code}; details: ${videoElem.error.message}`);
+      console.error(`Error ${videoElem?.error?.code}; details: ${videoElem?.error?.message}`);
     };
 
     return () => {
@@ -60,6 +57,18 @@ export default function useHandleVideo(
       videoElem.removeEventListener('playing', deactivateBuffer);
     };
   }, [videoData?.src]);
+
+  // pass the data to parent via a callback function
+  useEffect(() => {
+    // https://stackoverflow.com/a/8685070 (answer for ready state)
+    getVideoData({
+      ...playerState,
+      currentTime: videoRef?.current?.currentTime,
+      isVideoLoaded: videoRef?.current?.readyState > 1,
+    });
+
+    setIsBuffering(videoRef?.current?.readyState < 2);
+  }, [playerState, videoRef?.current?.readyState]);
 
   // for displaying video buffer loaded
   useEffect(() => {
@@ -73,13 +82,15 @@ export default function useHandleVideo(
   useEffect(() => {
     if (!videoRef?.current) return;
     if (!videoData?.src) return;
-    setIsBuffering(true);
 
     dispatch({ type: 'updateVideoData', payload: { videoSrc: videoData?.src } });
-    const isVideoStartTimeSet = videoRef?.current?.currentTime === videoData?.startFrom;
-    if (!isVideoStartTimeSet) moveVideoProgressBy(videoData?.startFrom || 0, false);
 
-    setIsBuffering(false);
+    // restart video if the start time is close to video end time
+    if (!playerState?.videoSrc && videoRef?.current?.duration - 3 < videoData?.startFrom) return;
+
+    const isVideoStartTimeSet = videoRef?.current?.currentTime === videoData?.startFrom;
+
+    if (!isVideoStartTimeSet) updateVideoProgress(videoData?.startFrom || 0, false);
   }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
 
   // auto play video
@@ -90,7 +101,6 @@ export default function useHandleVideo(
   }, [videoData?.isAutoPlay, videoData?.src]);
 
   // update video element for play pause
-
   useEffect(() => {
     if (videoRef?.current?.paused && playerState?.isPlaying)
       return videoRef?.current?.play().catch((e) => toggleIsPlaying(false));
@@ -120,6 +130,13 @@ export default function useHandleVideo(
     return () => clearTimeout(timeout);
   }, [videoStateChange]);
 
+  // on video end
+  useEffect(() => {
+    if (!playerState?.videoSrc) return;
+
+    if (videoRef?.current?.currentTime === videoRef?.current?.duration) toggleIsPlaying(false);
+  }, [videoRef?.current?.currentTime]);
+
   // play or pause video
   const toggleIsPlaying = useCallback(
     (isPlaying) => {
@@ -134,6 +151,30 @@ export default function useHandleVideo(
     },
     [playerState.isPlaying],
   );
+
+  // keyboard events
+  function handleKeyDown(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.code === 'Space') return toggleIsPlaying();
+
+    if (e.code === 'KeyR' && e.shiftKey) return updateVideoProgress(0);
+
+    if (e.code === 'KeyP' && e.shiftKey && !!videoData?.handlePreviousClick)
+      return videoData?.handlePreviousClick();
+    if (e.code === 'KeyN' && e.shiftKey && !!videoData?.handleNextClick)
+      return videoData?.handleNextClick();
+
+    if (e.code === 'KeyF') return toggleVideoFullScreen();
+    if (e.code === 'KeyM') return toggleMute();
+
+    if (e.code === 'ArrowUp') return handleVolume(+playerState?.volume + 0.1);
+    if (e.code === 'ArrowDown') return handleVolume(+playerState?.volume - 0.1);
+
+    if (e.code === 'ArrowRight') return moveVideoProgressBy(10);
+    if (e.code === 'ArrowLeft') return moveVideoProgressBy(-10);
+  }
 
   // update progressPercent on video progress
   const updateStateProgress = useCallback(() => {
@@ -153,13 +194,13 @@ export default function useHandleVideo(
 
   // update progressPercent on specific time
   const updateVideoProgress = useCallback(
-    (progressPercent = 0) => {
-      videoRef.current.currentTime = progressPercent;
+    (seconds = 0) => {
+      videoRef.current.currentTime = seconds;
     },
     [videoRef?.current],
   );
 
-  // update progressPercent on specific time
+  // move forward or backward by seconds
   const moveVideoProgressBy = useCallback(
     (secondsToAdd = 0, showCenterIcon = true) => {
       videoRef.current.currentTime = videoRef?.current?.currentTime + secondsToAdd;
@@ -198,10 +239,11 @@ export default function useHandleVideo(
 
   const handleVolume = useCallback(
     (volume) => {
-      dispatch({ type: 'updateVolume', payload: { volume: +volume } });
-      videoRef.current.volume = volume;
+      const _volume = limitValueInRange(+volume, 0, 1);
+      dispatch({ type: 'updateVolume', payload: { volume: +_volume } });
+      videoRef.current.volume = _volume;
       setVideoStateChange(
-        volume > 0 ? videoStateChangeList.volumeUp : videoStateChangeList.volumeDown,
+        _volume > 0 ? videoStateChangeList.volumeUp : videoStateChangeList.volumeDown,
       );
     },
     [videoRef?.current],
@@ -235,6 +277,7 @@ export default function useHandleVideo(
     toggleIsPlaying,
     moveVideoProgressBy,
     toggleVideoFullScreen,
+    handleKeyDown,
     toggleMute,
     handleVolume,
     isBuffering,

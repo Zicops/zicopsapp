@@ -1,7 +1,5 @@
 import { UPDATE_USER_COURSE, userClient } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS_BY_COURSE_ID, userQueryClient } from '@/api/UserQueries';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
-import { handleCacheUpdate } from '@/utils/general.utils';
 
 export function getMinCourseAssignDate(suggestedCompletionDays = 1) {
   const date = new Date();
@@ -39,22 +37,22 @@ export async function unassignSelfAssignedCourse(userCourseMap = null) {
     .mutate({
       mutation: UPDATE_USER_COURSE,
       variables: sendData,
-      update: (_, { data }) => {
-        handleCacheUpdate(
-          GET_USER_COURSE_MAPS_BY_COURSE_ID,
-          { userId: userCourseMap?.userId, courseId: userCourseMap?.courseId },
-          (cachedData) => {
-            const resData = data?.updateUserCourse || null;
-            const _cachedData = structuredClone(cachedData);
-            const assignedData = _cachedData?.getUserCourseMapByCourseID?.[0];
-            assignedData.course_status = resData?.course_status || sendData?.courseStatus;
-            assignedData.added_by = resData?.added_by || sendData?.addedBy;
-
-            return _cachedData;
-          },
-          userQueryClient,
-        );
-      },
+      // update: (_, { data }) => {
+      // handleCacheUpdate(
+      //   GET_USER_COURSE_MAPS_BY_COURSE_ID,
+      //   { userId: userCourseMap?.userId, courseId: userCourseMap?.courseId },
+      //   (cachedData) => {
+      //     const resData = data?.updateUserCourse || null;
+      //     const _cachedData = structuredClone(cachedData);
+      //     const assignedData = _cachedData?.getUserCourseMapByCourseID?.[0];
+      //     console.info(resData, _cachedData);
+      //     assignedData.course_status = resData?.course_status || sendData?.courseStatus;
+      //     assignedData.added_by = resData?.added_by || sendData?.addedBy;
+      //     return _cachedData;
+      //   },
+      //   userQueryClient,
+      // );
+      // },
     })
     ?.catch((err) => (isError = !!err));
 

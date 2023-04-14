@@ -1,9 +1,11 @@
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import { FolderIcon, PlusIcon } from '@/components/common/ZicopsIcons';
 import { parseJson } from '@/helper/utils.helper';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
 import { isWordMatched } from '@/utils/string.utils';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   UserCourseMapDataAtom,
   getUserCourseMapDataObj,
@@ -12,8 +14,6 @@ import AssignCourse from '../../common/AssignCourse';
 import { unassignSelfAssignedCourse } from '../../common/AssignCourse/Logic/assignCourse.helper';
 import ZicopsSkeleton from '../../common/ZicopsSkeleton';
 import styles from '../../learnerCourseComps.module.scss';
-import { PopUpStatesAtomFamily } from '@/state/atoms/popUp.atom';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 
 export default function CourseTitle({ isLoading = false, isAssigned = false }) {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
@@ -67,7 +67,9 @@ export default function CourseTitle({ isLoading = false, isAssigned = false }) {
         <ConfirmPopUp
           title={'Are you sure you want to remove this course?'}
           btnObj={{
-            handleClickLeft: async () => {
+            handleClickLeft: async (e) => {
+              e.target.disabled = true;
+
               const res = await unassignSelfAssignedCourse(userCourseMapData);
               setUserCourseMapData(
                 getUserCourseMapDataObj({

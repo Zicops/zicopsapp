@@ -1,5 +1,6 @@
 import Spinner from '@/components/common/Spinner';
 import { truncateToN } from '@/helper/common.helper';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
@@ -11,7 +12,6 @@ import {
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
   TopicQuizAtom,
-  TopicQuizAttemptsAtom,
   activeCourseTabNames,
 } from '../../atoms/learnerCourseComps.atom';
 import VideoPlayer from '../../common/VideoPlayer';
@@ -21,23 +21,32 @@ import CourseHeroTopBar from '../CourseHeroTopBar';
 import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
 import ResourcesList from './ResourcesList';
+import SkipButtons from './SkipButtons';
 import SubtitleBox from './SubtitleBox';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
-import useHandleTopicSwitch from '../../Logic/useHandleTopicSwitch';
 
 export default function TopicContentPreview() {
   const [courseActiveTab, setCourseActiveTab] = useRecoilState(CourseActiveTabAtom);
-  const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
+  const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const quizData = useRecoilValue(TopicQuizAtom);
-  const quizAttempts = useRecoilValue(TopicQuizAttemptsAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
-  const { containerRef, selectedTopicContent, videoStartTime } = useHandleTopicProgress();
-  const { activeBox, videoState, getVideoData, toggleActiveBox } = useHandleTopicView();
+  const { activeBox, videoState, getVideoData, toggleActiveBox, closePlayer } =
+    useHandleTopicView();
+  const {
+    containerRef,
+    selectedTopicContent,
+    videoStartTime,
+    handleNextClick,
+
+    showSkipIntroButton,
+    handleSkipIntroClick,
+
+    showBingeButton,
+    handleWatchCreditClick,
+  } = useHandleTopicProgress(videoState);
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
-  const { getNextTopicId } = useHandleTopicSwitch();
 
   const toolbarItems = useMemo(
     () => [
@@ -98,15 +107,11 @@ export default function TopicContentPreview() {
 
   if (isLoading) return <Spinner />;
 
-  const { topicId: nextTopicId, moduleId: nextModuleId } = getNextTopicId();
-
   return (
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={() =>
-            setActiveCourseData((prev) => ({ ...prev, topicId: null, topicContentId: null }))
-          }
+          handleBackBtnClick={closePlayer}
           leftSideComps={
             <>
               {toolbarItems.slice(0, 3).map((item) => {
@@ -162,17 +167,41 @@ export default function TopicContentPreview() {
             startFrom: videoStartTime,
             isSubtitleShown: activeCourseData?.subTitle != null,
             subtitleUrl: activeCourseData?.subTitle,
-            handleNextClick: !nextTopicId
-              ? null
-              : () =>
-                  setActiveCourseData((prev) => ({
-                    ...prev,
-                    topicId: nextTopicId,
-                    moduleId: nextModuleId,
-                  })),
+            handleNextClick: handleNextClick,
           }}
           getVideoData={getVideoData}
         />
+
+        {/* skip intro button */}
+        {showSkipIntroButton && (
+          <SkipButtons
+            nextBtnObj={{
+              text: 'Skip Intro',
+              classes: styles.skipIntroBtn,
+              clickHandler: handleSkipIntroClick,
+            }}
+          />
+        )}
+
+        {/* next binge button  */}
+        {!!showBingeButton && (
+          <SkipButtons
+            nextBtnObj={{
+              text: 'Next Topic',
+              classes: styles.nextPlayBtn,
+              clickHandler: () => {
+                if (!handleNextClick) return;
+
+                handleNextClick();
+              },
+            }}
+            stayBtnObj={{
+              text: 'Watch Credits',
+              classes: styles.watchCreditsBtn,
+              clickHandler: handleWatchCreditClick,
+            }}
+          />
+        )}
       </div>
     </>
   );

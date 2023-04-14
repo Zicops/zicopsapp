@@ -1,33 +1,48 @@
 // components\CourseComps\Logic\useHandleCourseAssign.js
 
+import { GET_COURSE_TOPICS } from '@/api/Queries';
 import {
+  ADD_TOPIC_PROGRESS,
   ADD_USER_COURSE,
   ADD_USER_COURSE_PROGRESS,
   UPDATE_USER_COURSE,
   userClient,
 } from '@/api/UserMutations';
-import { GET_USER_COURSE_MAPS_BY_COURSE_ID, GET_USER_COURSE_PROGRESS_ID } from '@/api/UserQueries';
-import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
 import {
-  getUserCourseMapDataObj,
+  GET_USER_COURSE_MAPS_BY_COURSE_ID,
+  GET_USER_COURSE_PROGRESS,
+  GET_USER_COURSE_PROGRESS_ID,
+  userQueryClient,
+} from '@/api/UserQueries';
+import {
   UserCourseMapDataAtom,
+  UserTopicProgressDataAtom,
+  getUserCourseMapDataObj,
+  getUserTopicProgressDataObj,
 } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
-import { loadAndCacheDataAsync, sendEmail, sendNotificationWithLink } from '@/helper/api.helper';
+import { IsDataPresentAtom } from '@/components/common/PopUp/Logic/popUp.helper';
+import { COURSE_PROGRESS_STATUS } from '@/constants/course.constants';
+import {
+  loadQueryDataAsync,
+  mutateData,
+  sendEmail,
+  sendNotificationWithLink,
+} from '@/helper/api.helper';
 import { getNotificationMsg } from '@/helper/common.helper';
 import {
   COURSE_MAP_STATUS,
-  COURSE_PROGRESS_STATUS,
   EMAIL_TEMPLATE_IDS,
   NOTIFICATION_TITLES,
 } from '@/helper/constants.helper';
 import { getUnixFromDate, parseJson } from '@/helper/utils.helper';
+import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { getCourseAssignDataObj, getMinCourseAssignDate } from './assignCourse.helper';
 
 export default function useHandleCourseAssign({
@@ -49,10 +64,15 @@ export default function useHandleCourseAssign({
   const [updateUserCouse] = useMutation(UPDATE_USER_COURSE, { client: userClient });
   const [addUserCourseProgress] = useMutation(ADD_USER_COURSE_PROGRESS, { client: userClient });
 
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
   const [userCourseMapData, setUserCourseMapData] = useRecoilState(UserCourseMapDataAtom);
+  const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
 
+  const allModules = useRecoilValue(AllCourseModulesDataAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const fcmToken = useRecoilValue(FcmTokenAtom);
@@ -113,7 +133,7 @@ export default function useHandleCourseAssign({
 
     // update user course map
     if (data) {
-      const progressRes = await loadAndCacheDataAsync(
+      const progressRes = await loadQueryDataAsync(
         GET_USER_COURSE_PROGRESS_ID,
         { userId: userData?.id, userCourseId: [data?.userCourseId] },
         {},
@@ -127,7 +147,7 @@ export default function useHandleCourseAssign({
       if (!!isCourseStarted) {
         let cpLength = 0;
         progressRes?.getUserCourseProgressByMapId?.forEach((courseProgress) => {
-          if (courseProgress?.status === COURSE_PROGRESS_STATUS[2]) cpLength++;
+          if (courseProgress?.status === COURSE_PROGRESS_STATUS.completed) cpLength++;
         });
         isCompleted = cpLength === progressRes?.getUserCourseProgressByMapId?.length ? true : false;
         if (isCompleted) courseStatus = COURSE_MAP_STATUS?.completed;
@@ -162,6 +182,15 @@ export default function useHandleCourseAssign({
       }
       _courseMapData = userCourseMapRes?.data?.addUserCourse?.[0];
     }
+
+    // add topic progress
+    isTopicProgressAdded(_courseMapData?.user_course_id)
+      .then((isProgressPresent) => {
+        if (isProgressPresent) return;
+
+        addTopicProgress(_courseMapData?.user_course_id);
+      })
+      .catch((err) => console.log('Topic Progress Load Error :', err));
 
     setUserCourseMapData(
       getUserCourseMapDataObj({
@@ -243,7 +272,7 @@ export default function useHandleCourseAssign({
 
   async function getAssignCourseData(userId, courseId) {
     // load course map for current course for updating if map is already created
-    const userCourse = await loadAndCacheDataAsync(
+    const userCourse = await loadQueryDataAsync(
       GET_USER_COURSE_MAPS_BY_COURSE_ID,
       { userId, courseId },
       {},
@@ -274,6 +303,78 @@ export default function useHandleCourseAssign({
       createdBy: mapData?.created_by,
       updatedBy: mapData?.updated_by,
     };
+  }
+
+  async function isTopicProgressAdded(userCourseId = null) {
+    if (!userIdForCourseAssign) return;
+    if (!userCourseId) return;
+    if (topicProgressData?.[0]?.courseId === courseId) return !!topicProgressData?.length;
+
+    const res = await loadQueryDataAsync(
+      GET_USER_COURSE_PROGRESS,
+      { userId: userIdForCourseAssign, userCourseId },
+      {},
+      userQueryClient,
+    ).catch((err) => console.error('Topic Progress Load Err:', err));
+
+    return !!res?.getUserCourseProgressByMapId?.length;
+  }
+
+  async function getAllCourseTopics() {
+    // return data from recoil if present
+    if (allModules?.[0]?.courseId === courseId) {
+      const allTopics = [];
+      allModules?.forEach((mod) => allTopics.push(...mod?.topics));
+      return allTopics;
+    }
+
+    // return data by querying
+    const topicRes = await loadQueryDataAsync(GET_COURSE_TOPICS, { course_id: courseId });
+    return topicRes?.getTopics;
+  }
+
+  async function addTopicProgress(userCourseId) {
+    if (!userIdForCourseAssign) return;
+    if (!userCourseId) return;
+
+    const allTopics = await getAllCourseTopics();
+
+    const sendData = allTopics?.map((topic) => ({
+      user_id: userIdForCourseAssign,
+      user_course_id: userCourseId,
+      topic_id: topic?.id,
+      topic_type: topic?.type,
+      status: COURSE_PROGRESS_STATUS.notStarted,
+      video_progress: '',
+      time_stamp: '',
+    }));
+
+    const progressRes = await mutateData(
+      ADD_TOPIC_PROGRESS,
+      { input: sendData },
+      {},
+      userClient,
+    ).catch(() => setToastMessage('Add Topic Progress Error'));
+
+    setTopicProgressData(
+      progressRes?.addUserCourseProgress?.map((progress) =>
+        getUserTopicProgressDataObj({
+          userCpId: progress?.user_cp_id,
+          userId: progress?.user_id,
+          userCourseId: progress?.user_course_id,
+          topicId: progress?.topic_id,
+          topicType: progress?.topic_type,
+          status: progress?.status,
+          videoProgress: progress?.video_progress,
+          timestamp: progress?.time_stamp,
+
+          createdBy: progress?.created_by,
+          updatedBy: progress?.updated_by,
+          createdAt: progress?.created_at,
+          updatedAt: progress?.updated_at,
+        }),
+      ),
+    );
   }
 
   return { courseAssignData, setCourseAssignData, assignCourseToUser, isSaveDisabled };

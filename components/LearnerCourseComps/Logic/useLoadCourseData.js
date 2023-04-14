@@ -108,7 +108,7 @@ export default function useLoadCourseData() {
   useEffect(() => {
     if (!userCourseMapData?.userCourseId) return clearUserProgress();
     if (userCourseMapData?.courseStatus === COURSE_MAP_STATUS.disable) return clearUserProgress();
-    if (userCourseMapData?.userCourseId && topicProgressData !== null) return;
+    if (userCourseMapData?.userCourseId && !!topicProgressData?.length) return;
 
     loadUserCourseMap();
     loadUserTopicProgress();
@@ -171,12 +171,7 @@ export default function useLoadCourseData() {
     if (!userId) return;
     if (userCourseMapData?.courseId === courseId && !!userCourseMapData?.userCourseId) return;
 
-    loadAndCacheDataAsync(
-      GET_USER_COURSE_MAPS_BY_COURSE_ID,
-      { userId, courseId },
-      {},
-      userQueryClient,
-    )
+    loadQueryDataAsync(GET_USER_COURSE_MAPS_BY_COURSE_ID, { userId, courseId }, {}, userQueryClient)
       .then((courseMapRes) => {
         const _courseMapData = structuredClone(courseMapRes?.getUserCourseMapByCourseID?.[0] || {});
 
@@ -209,7 +204,7 @@ export default function useLoadCourseData() {
     if (userCourseMapData?.courseStatus === COURSE_MAP_STATUS.disable) return;
     if (topicProgressData?.length != null) return;
 
-    loadAndCacheDataAsync(
+    loadQueryDataAsync(
       GET_USER_COURSE_PROGRESS,
       { userId, userCourseId: userCourseMapData?.userCourseId },
       {},
@@ -241,7 +236,7 @@ export default function useLoadCourseData() {
           ),
         );
       })
-      .catch((err) => console.error('Course Map Load Err:', err));
+      .catch((err) => console.error('Topic Progress Load Err:', err));
   }
 
   async function loadModuleAndChapterData() {
@@ -279,7 +274,7 @@ export default function useLoadCourseData() {
     if (!courseId) return;
     if (userCourseMapData?.courseId === courseId && !!userCourseMapData?.userCourseId) return;
 
-    loadAndCacheDataAsync(GET_TOPIC_RESOURCES_BY_COURSE_ID, { course_id: courseId }, {})
+    loadQueryDataAsync(GET_TOPIC_RESOURCES_BY_COURSE_ID, { course_id: courseId }, {})
       .then((resourcesRes) => {
         const resourcesData = structuredClone(resourcesRes?.getResourcesByCourseId || []);
 
@@ -292,7 +287,7 @@ export default function useLoadCourseData() {
     if (!allTopicIds?.length) return;
 
     const _allTopicQuiz = allTopicIds?.map((topicId) => {
-      return loadAndCacheDataAsync(GET_TOPIC_QUIZ, { topic_id: topicId }).then(
+      return loadQueryDataAsync(GET_TOPIC_QUIZ, { topic_id: topicId }).then(
         (res) => res?.getTopicQuizes || [],
       );
     });

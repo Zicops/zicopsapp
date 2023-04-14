@@ -31,12 +31,26 @@ export default function VideoPlayer({
     toggleIsPlaying,
     moveVideoProgressBy,
     toggleVideoFullScreen,
+    handleKeyDown,
     toggleMute,
     handleVolume,
     isBuffering,
   } = useHandleVideo(videoData, containerRef, getVideoData);
 
   if (!videoData?.src) return <div className={`${styles.noVideoPresent}`}>No Video URL Found</div>;
+
+  // set startFrom to some value other than null to play video
+  if (videoData?.startFrom === null)
+    return (
+      <Spinner
+        customStyles={{
+          zIndex: 1,
+          position: 'absolute',
+          pointerEvents: 'none',
+          backgroundColor: playerState?.isPlaying ? 'transparent' : '',
+        }}
+      />
+    );
 
   return (
     <div className={`${styles.videoPlayer}`} ref={videoContainerRef}>
@@ -60,6 +74,7 @@ export default function VideoPlayer({
         playerState={playerState}
         subtitleUrl={videoData?.subtitleUrl}
         isSubtitleShown={videoData?.isSubtitleShown}
+        handleKeyDown={handleKeyDown}
       />
 
       <ControlBar

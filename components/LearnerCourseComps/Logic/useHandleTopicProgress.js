@@ -1,21 +1,58 @@
-import { useEffect, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { UPDATE_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
+import { COURSE_PROGRESS_STATUS } from '@/constants/course.constants';
+import { mutateData } from '@/helper/api.helper';
+import { SYNC_DATA_IN_SECONDS } from '@/helper/constants.helper';
+import { useTimeInterval } from '@/helper/hooks.helper';
+import { limitValueInRange } from '@/helper/utils.helper';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
+  UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
 } from '../atoms/learnerCourseComps.atom';
+import useHandleTopicSwitch from './useHandleTopicSwitch';
 
-export default function useHandleTopicProgress() {
+export default function useHandleTopicProgress(videoState = {}) {
   const containerRef = useRef();
+
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
+  const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
-  const topicProgressData = useRecoilValue(UserTopicProgressDataAtom);
+  const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
+  const userData = useRecoilValue(UserStateAtom);
+
+  const [videoStartTime, setVideoStartTime] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(null);
+  const [showSkipIntroButton, setShowSkipIntroButton] = useState(false);
+  const [showBingeButton, setShowBingeButton] = useState(false);
+
+  const { getNextTopicId } = useHandleTopicSwitch();
+  const { topicId: nextTopicId, moduleId: nextModuleId } = getNextTopicId();
 
   const selectedTopicContent =
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
+
+  // set time from which the video should start initially
+  useEffect(() => {
+    if (!activeCourseData?.topicContentId) return;
+    if (!selectedTopicContent?.duration) return;
+    if (!currentTopicProgress?.videoProgress) return setVideoStartTime(0);
+
+    setVideoStartTime((selectedTopicContent?.duration * currentTopicProgress?.videoProgress) / 100);
+  }, [
+    activeCourseData?.topicContentId,
+    selectedTopicContent?.duration,
+    currentTopicProgress?.videoProgress,
+  ]);
 
   // set other data if only topic id is set
   useEffect(() => {
@@ -41,11 +78,161 @@ export default function useHandleTopicProgress() {
     setActiveCourseData(_activeData);
   }, [activeCourseData?.topicId, selectedTopicContent]);
 
+  useEffect(() => {
+    if (!topicData?.id) return;
+    const _topicProgressData = structuredClone(topicProgressData);
+    const topicProgressIndex = _topicProgressData?.findIndex((tp) => tp?.topicId === topicData?.id);
+
+    if (topicProgressIndex < 0) return;
+
+    _topicProgressData[topicProgressIndex].videoProgress = Math.ceil(videoState?.progressPercent);
+    setTopicProgressData(_topicProgressData);
+  }, [videoState?.progressPercent]);
+
+  // on pause sync and stop the timer
+  useEffect(() => {
+    if (videoState?.isPlaying) return;
+
+    syncTopicProgress();
+    cancel();
+  }, [videoState?.isPlaying]);
+
+  // binge next topic button logic
+  useEffect(() => {
+    if (!selectedTopicContent?.duration) return resetBinge();
+    if (!videoState?.isVideoLoaded) return resetBinge();
+    if (!nextTopicId) return resetBinge();
+    if (showBingeButton == null) return;
+
+    const nextTopicBingeTime =
+      selectedTopicContent?.nextShowTime ||
+      selectedTopicContent?.duration - selectedTopicContent?.fromEndTime;
+    const displayNextTopicBtn = videoState?.currentTime >= nextTopicBingeTime;
+    if (!displayNextTopicBtn && !!showBingeButton) return resetBinge();
+    if (displayNextTopicBtn === !!showBingeButton) return;
+
+    const fiveSecondsTimer = 1000 * 5;
+    const timer = setTimeout(() => {
+      setActiveCourseData((prev) => ({ ...prev, topicId: nextTopicId, moduleId: nextModuleId }));
+    }, fiveSecondsTimer);
+
+    setShowBingeButton(timer);
+
+    function resetBinge() {
+      clearTimeout(showBingeButton);
+      if (!!showBingeButton) setShowBingeButton(false);
+    }
+  }, [
+    selectedTopicContent?.duration,
+    videoState?.isVideoLoaded,
+    nextTopicId,
+    videoState?.currentTime,
+  ]);
+
+  // sync progress at every 15 seconds
+  const cancel = useTimeInterval(syncTopicProgress, SYNC_DATA_IN_SECONDS * 1000, [
+    videoState?.isPlaying,
+  ]);
+
   const currentTopicProgress = topicProgressData?.find(
     (progress) => progress?.topicId === activeCourseData?.topicId,
   );
-  const videoStartTime =
-    (selectedTopicContent?.duration * currentTopicProgress?.videoProgress) / 100;
 
-  return { containerRef, selectedTopicContent, currentTopicProgress, videoStartTime };
+  // display button when video current time is between startTime and skip intro duration time
+  const displaySkipIntroBtn =
+    videoState?.currentTime >= selectedTopicContent?.startTime &&
+    videoState?.currentTime <
+      selectedTopicContent?.startTime + selectedTopicContent?.skipIntroDuration;
+  if (
+    displaySkipIntroBtn !== showSkipIntroButton &&
+    showSkipIntroButton != null &&
+    videoState?.isVideoLoaded
+  )
+    setShowSkipIntroButton(displaySkipIntroBtn);
+
+  function handleSkipIntroClick() {
+    setVideoStartTime(selectedTopicContent?.startTime + selectedTopicContent?.skipIntroDuration);
+    setShowSkipIntroButton(null);
+  }
+
+  function handleWatchCreditClick() {
+    clearTimeout(showBingeButton);
+    setShowBingeButton(null);
+  }
+
+  async function syncTopicProgress() {
+    if (isSyncing) return;
+    if (!videoState) return;
+    if (!topicProgressData?.length) return;
+
+    setIsSyncing(true);
+
+    const { timestamp, progressPercent } = videoState;
+    const _topicProgressData = structuredClone(topicProgressData);
+    const topicProgressIndex = _topicProgressData?.findIndex((tp) => tp?.topicId === topicData?.id);
+    const currentTopicProgress = _topicProgressData?.[topicProgressIndex];
+
+    // this error should not occur as topic progress should always be created at the time of course assign
+    if (!currentTopicProgress?.userCpId) {
+      setIsSyncing(false);
+      setToastMessage('Topic Progress Not Found');
+      return;
+    }
+
+    const { status, videoProgress } = currentTopicProgress;
+    const { started, completed } = COURSE_PROGRESS_STATUS;
+    const progress = limitValueInRange(Math.ceil(progressPercent), 0, 100);
+
+    const sendData = {
+      userCpId: currentTopicProgress?.userCpId,
+      userId: userData.id,
+      userCourseId: userCourseMapData?.userCourseId,
+      topicId: topicData?.id,
+      topicType: topicData?.type,
+      status: started,
+      videoProgress: progress || '0',
+      timestamp: timestamp || '00:00:00',
+    };
+
+    // skip update if the topic progress is not completed and progress is less then updated progress
+    if (status !== completed && +videoProgress < progress) return setIsSyncing(false);
+
+    if (progress === 100) sendData.status = completed;
+
+    const res = await mutateData(UPDATE_USER_COURSE_PROGRESS, sendData, {}, userClient).catch(() =>
+      setToastMessage('Add Course Progress Error'),
+    );
+
+    const progressRes = res?.addUserCourseProgress?.[0];
+
+    if (!progressRes) return setIsSyncing(false);
+
+    _topicProgressData[topicProgressIndex] = {
+      ..._topicProgressData[topicProgressIndex],
+      ...(progressRes || {}),
+    };
+
+    setTopicProgressData(_topicProgressData);
+    setIsSyncing(false);
+  }
+
+  const handleNextClick = !nextTopicId
+    ? null
+    : function () {
+        setActiveCourseData((prev) => ({ ...prev, topicId: nextTopicId, moduleId: nextModuleId }));
+      };
+
+  return {
+    containerRef,
+    selectedTopicContent,
+    currentTopicProgress,
+    videoStartTime,
+    handleNextClick,
+
+    showSkipIntroButton,
+    handleSkipIntroClick,
+
+    showBingeButton,
+    handleWatchCreditClick,
+  };
 }

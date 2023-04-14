@@ -78,6 +78,7 @@ export default function AssessmentPreview() {
     const examId = topicExamData?.examId || null;
     if (!examId) return setLearnerExamData(getLearnerExamObj());
 
+    setIsLoading(true);
     // load master data
     let isError = false;
     const masterRes = await loadMaster({ variables: { exam_ids: [examId] } }).catch((err) => {
@@ -85,9 +86,9 @@ export default function AssessmentPreview() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Exam Master load error' });
     });
-    if (isError) return;
+    if (isError) return setIsLoading(false);
     const masterData = masterRes?.data?.getExamsMeta[0];
-    if (!masterData) return;
+    if (!masterData) return setIsLoading(false);
     const masterObj = {
       id: masterData.id,
       qpId: masterData.QpId,
@@ -114,7 +115,7 @@ export default function AssessmentPreview() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Paper Master load error' });
     });
-    if (isError) return;
+    if (isError) return setIsLoading(false);
     const paperMasterData = metaRes.data.getQPMeta[0];
 
     const paperMaster = {
@@ -139,7 +140,7 @@ export default function AssessmentPreview() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Instructions load error' });
     });
-    if (isError) return;
+    if (isError) return setIsLoading(false);
     const insData = insRes?.data?.getExamInstruction[0];
     const insObj = {
       instructionId: insData?.id || null,
@@ -158,7 +159,7 @@ export default function AssessmentPreview() {
         isError = !!err;
         return setToastMsg({ type: 'danger', message: 'Schedule load error' });
       });
-      if (isError) return;
+      if (isError) return setIsLoading(false);
       const schData = schRes?.data?.getExamSchedule[0];
 
       schObj = {
@@ -176,7 +177,7 @@ export default function AssessmentPreview() {
       isError = !!err;
       return setToastMsg({ type: 'danger', message: 'Config load error' });
     });
-    if (isError) return;
+    if (isError) return setIsLoading(false);
     const confData = confRes?.data?.getExamConfiguration[0];
     const confObj = {
       configId: confData?.id || null,
@@ -231,6 +232,7 @@ export default function AssessmentPreview() {
       });
     }
 
+    setIsLoading(false);
     setLearnerExamData(_examData);
   }, [topicExamData?.examId, topicExamData?.topicId, isPreview]);
 

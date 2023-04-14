@@ -33,7 +33,7 @@ export function getPlayerState(data) {
     speed: data?.speed || 1,
 
     progressPercent: data?.progressPercent || 0,
-    timestamp: data?.timestamp || '00:00',
+    timestamp: data?.timestamp || '00:00:00',
     duration: data?.duration || 0,
   };
 }
