@@ -474,6 +474,34 @@ $heroSectionPadding: 2em;
   }
 }
 
+// time line pills
+.timelinePill {
+  position: absolute;
+  top: 0;
+  transform: translateY(-40%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0 0.2em;
+  border-radius: 50%;
+
+  font-size: 0.7rem;
+
+  background-color: $darkThree;
+  color: $white;
+
+  &.red {
+    color: $white;
+    background-color: red;
+  }
+  &.yellow {
+    color: $black;
+    background-color: yellow;
+  }
+}
+
 // binge skip and next btns
 .bingeClasses {
   position: absolute;

@@ -55,6 +55,7 @@ export default function useHandleTopicProgress(videoState = {}) {
   const selectedTopicContent =
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
   const isTypeVideo = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.mp4;
+  const currentTopicQuiz = quizData?.filter((quiz) => quiz?.topicId === topicData?.id);
 
   // set time from which the video should start initially
   useEffect(() => {
@@ -345,6 +346,7 @@ export default function useHandleTopicProgress(videoState = {}) {
     containerRef,
     selectedTopicContent,
     currentTopicProgress,
+    currentTopicQuiz,
     videoStartTime,
     moveTimeBy,
     setMoveTimeBy,

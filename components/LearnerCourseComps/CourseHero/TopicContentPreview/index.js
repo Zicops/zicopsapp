@@ -48,6 +48,7 @@ export default function TopicContentPreview() {
   const {
     containerRef,
     selectedTopicContent,
+    currentTopicQuiz,
     videoStartTime,
     moveTimeBy,
     setMoveTimeBy,
@@ -150,7 +151,7 @@ export default function TopicContentPreview() {
   const isTypeScrom = !isTypeVideo && !isTypeDocument;
 
   if (isLoading) return <Spinner />;
-
+  console.info(currentTopicQuiz, 'q');
   return (
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
@@ -246,8 +247,24 @@ export default function TopicContentPreview() {
                 isHidden: isTopBottomBarHidden,
                 handleMouseEnter: () => toggleTopBottomBarDisplay(null),
                 handleMouseLeave: () => toggleTopBottomBarDisplay(false),
+                timelineOverlay: (
+                  <div className={`${styles.quizBookmarkOverlay}`}>
+                    {currentTopicQuiz?.map((quiz) => {
+                      const time = +quiz?.startTime || 0;
+                      const videoDuration = +selectedTopicContent?.duration || 0;
+                      const percent = Math.ceil((time / videoDuration) * 100);
+
+                      return (
+                        <span
+                          className={`${styles.timelinePill} ${styles.red}`}
+                          style={{ left: `${percent}%` }}>
+                          Q
+                        </span>
+                      );
+                    })}
+                  </div>
+                ),
               }}
-              timelineOverlay={<div className={`${styles.quizBookmarkOverlay}`}></div>}
               getVideoData={getVideoData}
               handleContainerClick={syncTopicProgress}
             />

@@ -23,11 +23,11 @@ export default function VideoPlayer({
   containerRef,
   handleContainerClick = () => {},
   getVideoData = () => {},
-  timelineOverlay = null,
   controlBarData = {
     isHidden: null,
     handleMouseEnter: () => {},
     handleMouseLeave: () => {},
+    timelineOverlay: null,
   },
 }) {
   const {
@@ -115,7 +115,7 @@ export default function VideoPlayer({
           handlePreviousClick={videoData?.handlePreviousClick}
           handleMute={toggleMute}
           handleVolumeChange={handleVolume}
-          timelineOverlay={timelineOverlay}
+          timelineOverlay={controlBarData?.timelineOverlay}
         />
       </div>
     </div>
