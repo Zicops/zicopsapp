@@ -16,6 +16,7 @@ import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
 import {
   AllCourseModulesDataAtom,
   CourseMetaDataAtom,
+  TopicQuizAtom,
   getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -28,7 +29,6 @@ import {
   ActiveCourseHeroAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
-  TopicQuizAtom,
   TopicResourcesAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,

@@ -1,7 +1,13 @@
-import { UPDATE_USER_COURSE_PROGRESS, userClient } from '@/api/UserMutations';
+import { GET_QUESTION_OPTIONS_WITH_ANSWER } from '@/api/Queries';
+import {
+  ADD_USER_QUIZ_ATTEMPT,
+  UPDATE_USER_COURSE_PROGRESS,
+  userClient,
+} from '@/api/UserMutations';
 import { COURSE_PROGRESS_STATUS, TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
-import { mutateData } from '@/helper/api.helper';
+import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
+import { TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useRef, useState } from 'react';
@@ -11,6 +17,7 @@ import {
   ActiveCourseHeroAtom,
   CourseTopicContentAtomFamily,
   CourseTopicsAtomFamily,
+  TopicQuizAttemptsAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
   courseHeroObj,
@@ -26,16 +33,20 @@ export default function useHandleTopicProgress(videoState = {}) {
   const [activeHero, setActiveHero] = useRecoilState(ActiveCourseHeroAtom);
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const [topicProgressData, setTopicProgressData] = useRecoilState(UserTopicProgressDataAtom);
+  const [quizAttempts, setQuizAttempts] = useRecoilState(TopicQuizAttemptsAtom);
+  const quizData = useRecoilValue(TopicQuizAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
   const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
   const userData = useRecoilValue(UserStateAtom);
 
   const [videoStartTime, setVideoStartTime] = useState(null);
+  const [moveTimeBy, setMoveTimeBy] = useState(null);
   const [isSyncing, setIsSyncing] = useState(null);
   const [syncCount, setSyncCount] = useState(null);
   const [showSkipIntroButton, setShowSkipIntroButton] = useState(false);
   const [showBingeButton, setShowBingeButton] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
 
   const { getNextTopicId, getPreviousTopicId } = useHandleTopicSwitch();
   const { topicId: nextTopicId, moduleId: nextModuleId } = getNextTopicId();
@@ -200,19 +211,26 @@ export default function useHandleTopicProgress(videoState = {}) {
       status: status || started,
     };
 
-    if (topicProgress) {
+    // override the state value (stale) with arguments (latest)
+    if (topicProgress?.time || topicProgress?.videoProgress) {
       const { videoProgress, time } = topicProgress;
-      sendData.videoProgress = videoProgress || 0;
-      sendData.timestamp = `${time || 0}-${selectedTopicContent?.duration || 0}`;
+      if (videoProgress) sendData.videoProgress = videoProgress;
+      if (time) sendData.timestamp = `${time || 0}-${selectedTopicContent?.duration || 0}`;
     }
 
     // skip update if the topic progress is not completed and progress is less then updated progress
     if (sendData?.status !== completed && +videoProgress < progress) return setIsSyncing(false);
-
     if (progress >= 99) {
       sendData.status = completed;
       sendData.videoProgress = '100';
     }
+
+    const isQuizCompleted = isTopicQuizCompleted(
+      topicData?.id,
+      topicProgress?.quizAttempts || quizAttempts,
+    );
+
+    if (!isQuizCompleted) sendData.status = started;
 
     const res = await mutateData(UPDATE_USER_COURSE_PROGRESS, sendData, {}, userClient).catch(() =>
       setToastMessage('Add Course Progress Error'),
@@ -229,6 +247,71 @@ export default function useHandleTopicProgress(videoState = {}) {
 
     setTopicProgressData(_topicProgressData);
     setIsSyncing(false);
+  }
+
+  function handleSelectQuiz(quizData) {
+    setSelectedQuiz(quizData);
+  }
+
+  function isTopicQuizCompleted(topicId = topicData?.id, quizProgress = quizAttempts) {
+    const isCompleted = !quizData
+      ?.filter((quiz) => quiz?.topicId === topicId)
+      ?.some((quiz) => {
+        const isAttempted = quizProgress?.find((qp) => qp?.quiz_id === quiz?.id);
+        return !isAttempted;
+      });
+
+    return isCompleted;
+  }
+
+  async function handleQuizSubmit(e, selectedOption) {
+    if (!selectedOption) return setToastMessage('Select option first');
+    if (!selectedQuiz?.id) return setToastMessage('No Quiz Id present');
+    e.target.disabled = true;
+
+    const optionRes = await loadQueryDataAsync(GET_QUESTION_OPTIONS_WITH_ANSWER, {
+      question_id: selectedQuiz?.questionId,
+    });
+    if (!optionRes?.getOptionsForQuestions) return setToastMessage('Option Load Error');
+
+    const _option = optionRes?.getOptionsForQuestions[0]?.options;
+
+    const topicId = topicData?.id;
+
+    const sendData = {
+      user_id: userData?.id,
+      user_cp_id: currentTopicProgress?.userCpId,
+      user_course_id: userCourseMapData?.userCourseId,
+      quiz_id: selectedQuiz?.id,
+      quiz_attempt: quizAttempts?.filter((quiz) => quiz?.quiz_id === selectedQuiz?.id)?.length || 1,
+      topic_id: topicId,
+      result: _option?.find((op) => op?.id === selectedQuiz?.id)?.IsCorrect ? 'passed' : 'failed',
+      is_active: true,
+    };
+
+    if (!sendData?.user_cp_id) return setToastMessage('No Course Progress Id Present');
+
+    let isError = false;
+    const quizAttemptRes = await mutateData(ADD_USER_QUIZ_ATTEMPT, sendData, {}, userClient).catch(
+      (err) => {
+        console.log(err);
+        isError = !!err;
+        if (err) setToastMessage('Quiz Attempt Add Error');
+      },
+    );
+
+    if (isError) return;
+
+    const _quizProgress = [...quizAttempts, quizAttemptRes?.addUserQuizAttempt[0]];
+    setQuizAttempts(_quizProgress);
+
+    if (+currentTopicProgress?.videoProgress > 98 && isTopicQuizCompleted(topicId, _quizProgress)) {
+      syncTopicProgress({ quizAttempts: _quizProgress });
+    }
+
+    const isCorrect = sendData?.result === 'passed';
+
+    return isCorrect;
   }
 
   const handleNextClick = !nextTopicId
@@ -263,6 +346,8 @@ export default function useHandleTopicProgress(videoState = {}) {
     selectedTopicContent,
     currentTopicProgress,
     videoStartTime,
+    moveTimeBy,
+    setMoveTimeBy,
     handleNextClick,
     handlePreviousClick,
 
@@ -274,5 +359,10 @@ export default function useHandleTopicProgress(videoState = {}) {
 
     syncTopicProgress,
     closePlayer,
+
+    selectedQuiz,
+    setSelectedQuiz,
+    handleSelectQuiz,
+    handleQuizSubmit,
   };
 }

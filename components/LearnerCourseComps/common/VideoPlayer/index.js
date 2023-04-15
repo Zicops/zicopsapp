@@ -15,6 +15,7 @@ export default function VideoPlayer({
     isSubtitleShown: false,
     subtitleUrl: null,
     startFrom: 0,
+    moveTimeBy: null,
     handleNextClick: null,
     handlePreviousClick: null,
     videoDuration: null,

@@ -84,9 +84,9 @@ export default function useHandleVideo(
     if (!videoData?.src) return;
 
     dispatch({ type: 'updateVideoData', payload: { videoSrc: videoData?.src } });
-  }, [videoRef?.current, videoData?.src, videoData?.startFrom]);
+  }, [videoRef?.current, videoData?.src]);
 
-  // move video time based on props
+  // set video time based on props
   useEffect(() => {
     if (!videoRef?.current) return;
 
@@ -100,6 +100,14 @@ export default function useHandleVideo(
 
     updateVideoProgress(startVideoTime, false);
   }, [videoData?.startFrom]);
+
+  // move video time based on props
+  useEffect(() => {
+    if (!videoRef?.current) return;
+    if (!videoData?.moveTimeBy) return;
+
+    moveVideoProgressBy(+videoData?.moveTimeBy || 0);
+  }, [videoData?.moveTimeBy]);
 
   // auto play video
   useEffect(() => {

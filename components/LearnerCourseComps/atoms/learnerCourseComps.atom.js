@@ -141,11 +141,6 @@ export function getSelectedResourcesDataObj(data = {}) {
   };
 }
 
-export const TopicQuizAtom = atom({
-  key: 'TopicQuiz',
-  default: [],
-});
-
 export const TopicQuizAttemptsAtom = atom({
   key: 'TopicQuizAttempts',
   default: [],

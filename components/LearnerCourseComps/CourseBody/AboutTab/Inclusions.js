@@ -1,7 +1,6 @@
 import { COURSE_TOPIC_TYPES } from '@/helper/constants.helper';
-import { AllCourseModulesDataAtom } from '@/state/atoms/courses.atom';
+import { AllCourseModulesDataAtom, TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { useRecoilValue } from 'recoil';
-import { TopicQuizAtom } from '../../atoms/learnerCourseComps.atom';
 import KeyValueWithColon from '../../common/KeyValueWithColon';
 import styles from '../../learnerCourseComps.module.scss';
 import SectionTitle from './SectionTitle';

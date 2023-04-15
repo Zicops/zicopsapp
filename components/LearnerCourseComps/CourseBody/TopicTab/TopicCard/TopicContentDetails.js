@@ -1,14 +1,14 @@
 import { GET_USER_QUIZ_ATTEMPTS, userQueryClient } from '@/api/UserQueries';
 import {
-  getTopicQuizAttemptsDataObj,
-  TopicQuizAtom,
   TopicQuizAttemptsAtom,
   UserTopicProgressDataAtom,
+  getTopicQuizAttemptsDataObj,
 } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 import ZicopsSkeleton from '@/components/LearnerCourseComps/common/ZicopsSkeleton';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
+import { TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { getCourseDisplayTime } from '@/utils/date.utils';
 import { useEffect } from 'react';
@@ -28,7 +28,7 @@ export default function TopicContentDetails({
   const currentTopicQuiz = topicQuiz?.filter((quiz) => quiz?.topicId === topicId);
   let currentTopicQuizAttempts = 0;
   currentTopicQuiz?.forEach((quiz) => {
-    const isQuizAttempted = topicQuizAttempt?.find((qa) => qa?.quizId === quiz?.id);
+    const isQuizAttempted = topicQuizAttempt?.find((qa) => qa?.quiz_id === quiz?.id);
     if (isQuizAttempted) ++currentTopicQuizAttempts;
   });
 

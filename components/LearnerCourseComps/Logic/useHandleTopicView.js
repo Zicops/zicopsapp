@@ -61,11 +61,11 @@ export default function useHandleTopicView() {
 
   function toggleActiveBox(id) {
     if (activeBox !== id) setIsTopBottomBarHidden(null);
-
     setActiveBox((prev) => (prev === id ? null : id));
   }
 
   function toggleTopBottomBarDisplay(val = false) {
+    if (activeBox) return;
     const _val = val === null ? null : !!val;
 
     setIsTopBottomBarHidden(_val);
@@ -74,6 +74,7 @@ export default function useHandleTopicView() {
   return {
     activeBox,
     videoState,
+    setVideoState,
     getVideoData,
     toggleActiveBox,
     isTopBottomBarHidden,

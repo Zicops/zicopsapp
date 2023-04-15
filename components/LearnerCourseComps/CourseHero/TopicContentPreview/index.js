@@ -1,7 +1,8 @@
 import Spinner from '@/components/common/Spinner';
+import { CrossIcon, TickIcon } from '@/components/common/ZicopsIcons';
 import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { truncateToN } from '@/helper/common.helper';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import { CourseMetaDataAtom, TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import useHandleTopicProgress from '../../Logic/useHandleTopicProgress';
@@ -12,7 +13,7 @@ import {
   CourseActiveTabAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
-  TopicQuizAtom,
+  TopicQuizAttemptsAtom,
   activeCourseTabNames,
 } from '../../atoms/learnerCourseComps.atom';
 import VideoPlayer from '../../common/VideoPlayer';
@@ -21,6 +22,7 @@ import styles from '../../learnerCourseComps.module.scss';
 import CourseHeroTopBar from '../CourseHeroTopBar';
 import TopBarCenterTitle from '../CourseHeroTopBar/TopBarCenterTitle';
 import IconButtonWithBox from './IconButtonWithBox';
+import Quiz from './Quiz';
 import ResourcesList from './ResourcesList';
 import SkipButtons from './SkipButtons';
 import SubtitleBox from './SubtitleBox';
@@ -31,11 +33,13 @@ export default function TopicContentPreview() {
   const courseMeta = useRecoilValue(CourseMetaDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
   const quizData = useRecoilValue(TopicQuizAtom);
+  const quizAttempts = useRecoilValue(TopicQuizAttemptsAtom);
   const moduleData = useRecoilValue(CourseModulesAtomFamily(topicData?.moduleId));
 
   const {
     activeBox,
     videoState,
+    setVideoState,
     getVideoData,
     toggleActiveBox,
     isTopBottomBarHidden,
@@ -45,6 +49,8 @@ export default function TopicContentPreview() {
     containerRef,
     selectedTopicContent,
     videoStartTime,
+    moveTimeBy,
+    setMoveTimeBy,
     handleNextClick,
     handlePreviousClick,
 
@@ -55,6 +61,11 @@ export default function TopicContentPreview() {
     handleWatchCreditClick,
     syncTopicProgress,
     closePlayer,
+
+    selectedQuiz,
+    setSelectedQuiz,
+    handleSelectQuiz,
+    handleQuizSubmit,
   } = useHandleTopicProgress(videoState);
   const { isLoading } = useLoadTopicData(activeCourseData?.topicId, topicData?.type);
 
@@ -65,29 +76,34 @@ export default function TopicContentPreview() {
         btnImg: '/images/svg/spatial_audio_off.svg',
         handleClick: () => toggleActiveBox(0),
         boxComponent: <SubtitleBox closeBox={() => toggleActiveBox(null)} />,
+        isHidden: selectedQuiz?.id,
       },
       {
         id: 1,
         btnImg: '/images/svg/hub.svg',
         handleClick: () => toggleActiveBox(1),
         boxComponent: <ResourcesList />,
+        isHidden: selectedQuiz?.id,
       },
       {
         id: 2,
         btnImg: '/images/svg/forum.svg',
         handleClick: () => setCourseActiveTab(activeCourseTabNames.discussion),
+        isHidden: selectedQuiz?.id,
       },
       {
         id: 3,
         btnImg: '/images/svg/bookmark-line.svg',
         handleClick: () => toggleActiveBox(3),
         boxComponent: <>Subtitle</>,
+        isHidden: selectedQuiz?.id,
       },
       {
         id: 4,
         btnImg: '/images/svg/app_registration.svg',
         handleClick: () => toggleActiveBox(4),
         boxComponent: <>Resoucrs</>,
+        isHidden: selectedQuiz?.id,
       },
       {
         id: 5,
@@ -99,20 +115,34 @@ export default function TopicContentPreview() {
               {quizData
                 ?.filter((quiz) => quiz?.topicId === activeCourseData?.topicId)
                 ?.map((quiz) => {
-                  // const isAttempted = quizAttempts?.filter((qa) => qa?.quizId === quiz?.id);
-                  // console.info(isAttempted, quizAttempts, quiz);
+                  const attemptedData = quizAttempts?.filter((qa) => qa?.quiz_id === quiz?.id);
+                  const isCorrect = attemptedData?.find((qa) => qa?.result === 'passed');
+
                   return (
                     <>
-                      <ZicopsButton paddingY="0.5em" display={truncateToN(quiz?.name, 16)} />
+                      <ZicopsButton
+                        paddingY="0.5em"
+                        display={
+                          <>
+                            {attemptedData?.length > 0 &&
+                              (isCorrect ? <TickIcon /> : <CrossIcon />)}{' '}
+                            {truncateToN(quiz?.name, 16)}
+                          </>
+                        }
+                        handleClick={() => {
+                          handleSelectQuiz(quiz);
+                        }}
+                      />
                     </>
                   );
                 })}
             </div>
           </>
         ),
+        isHidden: selectedQuiz?.id,
       },
     ],
-    [activeCourseData?.topicId],
+    [activeCourseData?.topicId, selectedQuiz?.id],
   );
 
   const isTypeVideo = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.mp4;
@@ -125,7 +155,14 @@ export default function TopicContentPreview() {
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>
         <CourseHeroTopBar
-          handleBackBtnClick={closePlayer}
+          handleBackBtnClick={() => {
+            if (!!selectedQuiz?.id) {
+              toggleActiveBox(null);
+              return setSelectedQuiz(null);
+            }
+
+            closePlayer();
+          }}
           isHidden={isTopBottomBarHidden}
           handleMouseEnter={() => toggleTopBottomBarDisplay(null)}
           handleMouseLeave={() => toggleTopBottomBarDisplay(false)}
@@ -175,7 +212,21 @@ export default function TopicContentPreview() {
           }
         />
 
-        {isTypeVideo && (
+        {/* single quiz screen */}
+        {!!selectedQuiz?.id && (
+          <Quiz
+            questionId={selectedQuiz?.questionId}
+            handleSkip={() => setSelectedQuiz(null)}
+            handleSubmit={handleQuizSubmit}
+            onAttemptSuccess={() => {
+              setSelectedQuiz(null);
+              setMoveTimeBy(1);
+              setVideoState((prev) => ({ ...prev, shouldPlay: true }));
+            }}
+          />
+        )}
+
+        {!selectedQuiz?.id && isTypeVideo && (
           <>
             <VideoPlayer
               containerRef={containerRef}
@@ -184,6 +235,7 @@ export default function TopicContentPreview() {
                 isAutoPlay: true,
                 pauseVideo: videoState?.shouldPlay,
                 startFrom: videoStartTime,
+                moveTimeBy: moveTimeBy,
                 isSubtitleShown: activeCourseData?.subTitle != null,
                 subtitleUrl: activeCourseData?.subTitle,
                 videoDuration: selectedTopicContent?.duration || null,
