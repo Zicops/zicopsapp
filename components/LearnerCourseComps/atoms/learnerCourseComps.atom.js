@@ -17,7 +17,7 @@ export const ActiveCourseHeroAtom = atom({
 });
 
 export const UserCourseMapDataAtom = atom({
-  key: 'UserCourseData',
+  key: 'UserCourseMapData',
   default: getUserCourseMapDataObj(),
 });
 
@@ -123,11 +123,6 @@ export function getTopicAssessmentObj(data = {}) {
     language: data.language || '',
   };
 }
-
-export const TopicResourcesAtom = atom({
-  key: 'TopicResources',
-  default: null,
-});
 
 export const SelectedResourceDataAtom = atom({
   key: 'SelectedResourceData',

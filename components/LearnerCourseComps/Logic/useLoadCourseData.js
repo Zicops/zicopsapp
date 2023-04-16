@@ -17,6 +17,7 @@ import {
   AllCourseModulesDataAtom,
   CourseMetaDataAtom,
   TopicQuizAtom,
+  TopicResourcesAtom,
   getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -29,7 +30,6 @@ import {
   ActiveCourseHeroAtom,
   CourseModulesAtomFamily,
   CourseTopicsAtomFamily,
-  TopicResourcesAtom,
   UserCourseMapDataAtom,
   UserTopicProgressDataAtom,
   courseHeroObj,

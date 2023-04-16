@@ -5,10 +5,10 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ActiveCourseDataAtom,
   SelectedResourceDataAtom,
-  TopicResourcesAtom,
 } from '../../atoms/learnerCourseComps.atom';
 import ButtonWithNoStyles from '../../common/ButtonWithNoStyles';
 import styles from '../../learnerCourseComps.module.scss';
+import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 
 export default function ResourcesList() {
   const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);

@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  ActiveCourseDataAtom,
-  CourseModulesAtomFamily,
-  TopicResourcesAtom,
-} from '../atoms/learnerCourseComps.atom';
+import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../atoms/learnerCourseComps.atom';
+import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 
 export default function useHandleResourceSelection() {
   const activeCourseData = useRecoilValue(ActiveCourseDataAtom);

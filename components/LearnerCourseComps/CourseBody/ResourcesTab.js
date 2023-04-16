@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { TopicResourcesAtom } from '../atoms/learnerCourseComps.atom';
 import LineTextWithDescription from '../common/LineTextWithDescription';
 import ResourceFile from '../common/ResourceFile';
 import TopicDataCard from '../common/TopicDataCard';
@@ -9,6 +8,7 @@ import { getTwoRowCarousel } from '../common/ZicopsCarousel/Logic/zicopsCarousel
 import styles from '../learnerCourseComps.module.scss';
 import useHandleResourceSelection from '../Logic/useHandleResourceSelection';
 import ModuleSelection from './ModuleSelection';
+import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 
 export default function ResourcesTab() {
   const resources = useRecoilValue(TopicResourcesAtom);
