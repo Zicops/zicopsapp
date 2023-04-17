@@ -253,3 +253,10 @@ export const AllServicesAtom = atom({
   key: 'allservicesState',
   default: []
 });
+export const CommercialsAtom = atom({
+  key: 'commercialsState',
+  default: getCourseCommercialsObject
+});
+export function getCourseCommercialsObject(data) {
+  return {};
+}
