@@ -1,11 +1,23 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { myTrainers } from './trainingManagement.helper.js';
+import { useState, useEffect } from 'react';
+import useHandleTrainerData from './Logic/useHandleTrainerData.js';
 
 const MyTrainers = () => {
+  const [trainerTableData, setTrainerTableData] = useState([]);
+
+  const { getPaginatedTrainers } = useHandleTrainerData();
+
+  useEffect(() => {
+    getPaginatedTrainers()?.then((data) => {
+      setTrainerTableData(data || []);
+    });
+  }, []);
+
   const columns = [
     {
-      field: 'name',
+      field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'Trainer Name',
       flex: 2
@@ -55,7 +67,7 @@ const MyTrainers = () => {
 
   return (
     <>
-      <ZicopsTable data={myTrainers} columns={columns} />
+      <ZicopsTable data={trainerTableData} columns={columns} />
     </>
   );
 };

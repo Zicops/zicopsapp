@@ -45,8 +45,8 @@ export default function AddTrainerPopup({ popUpState = [] }) {
           <Button
             text={'Save'}
             clickHandler={() => {
-              addUpdateTrainer(tab === tabData[0].name);
-              handleMail(tab === tabData[1].name);
+              addUpdateTrainer();
+              handleMail();
             }}
           />
           <Button text={'Save & Add More'} />
