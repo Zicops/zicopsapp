@@ -19,10 +19,14 @@ import {
 import styles from '../../../learnerCourseComps.module.scss';
 import TopicAssessment from './TopicAssessment';
 import TopicContentDetails from './TopicContentDetails';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 
 export default function TopicCard({ topicId }) {
   const [isAssignPopUpOpen, setIsAssignPopUpOpen] = useRecoilState(
     PopUpStatesAtomFamily('CourseAssignPopUp'),
+  );
+  const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
+    ActiveClassroomTopicIdAtom,
   );
   const [activeCourseData, setActiveCourseData] = useRecoilState(ActiveCourseDataAtom);
   const topicData = useRecoilValue(CourseTopicsAtomFamily(topicId));
@@ -56,6 +60,8 @@ export default function TopicCard({ topicId }) {
           if (isTopicDisabled) return;
           if (!isCourseAssigned) return setNotAssignedAlert(true);
 
+          // TODO: temporary (remove this once we move to new course page)
+          if (topicData?.type === TOPIC_TYPES.classroom) setActiveClassroomTopicId(topicData?.id);
           setActiveCourseData({
             ...activeCourseData,
             moduleId: topicData?.moduleId,

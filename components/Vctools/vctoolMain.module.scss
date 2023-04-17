@@ -2272,8 +2272,38 @@
 
 .moderatorQuize,
 .resourceModeratorContainer {
+  text-align: left;
   width: 296px;
   height: 90%;
+
+  .resources {
+    div {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      gap: 0.5em;
+      cursor: pointer;
+
+      span {
+        display: flex;
+        color: $black;
+        border: 1px solid $darkThree;
+
+        span {
+          height: fit-content;
+          margin: 0.5em;
+          font-weight: 600;
+          border-radius: 2px;
+          background-color: $white;
+        }
+      }
+    }
+  }
+
+  .addResourceBtn {
+    position: absolute;
+    bottom: 1em;
+  }
 }
 
 .quizModeratorScreen,
@@ -2879,13 +2909,13 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; 
+  border-bottom: 1px dotted black;
 }
 
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
-  width:fit-content;
+  width: fit-content;
   background-color: black;
   color: #fff;
   text-align: center;
@@ -2906,11 +2936,11 @@
   height: 30px;
   top: 100%;
   left: 50%;
-  margin-left: -85px; 
+  margin-left: -85px;
 }
 // leaveTooltip
 .tooltip .tooltipLefttNav {
-  width:160px;
+  width: 160px;
   bottom: 100%;
   margin-bottom: 6px;
   left: 50%;
@@ -2918,7 +2948,6 @@
 }
 // tooltipRightNav
 .tooltip .tooltipRightNav {
-  
   width: 120px;
   bottom: 100%;
   margin-bottom: 6px;
@@ -2927,7 +2956,6 @@
 }
 // tooltipRightNavFullscreen
 .tooltip .tooltipRightNavFullscreen {
-  
   width: 130px;
   bottom: 100%;
   margin-bottom: 6px;
