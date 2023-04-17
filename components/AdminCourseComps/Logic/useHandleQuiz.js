@@ -4,7 +4,7 @@ import {
   GET_QUESTIONS_NAMES,
   GET_QUESTION_BY_ID,
   GET_QUESTION_OPTIONS,
-  GET_TOPIC_QUIZ
+  GET_TOPIC_QUIZ,
 } from '@/api/Queries';
 import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
@@ -17,7 +17,7 @@ import {
   getTopicQuizObject,
   QuestionBankDataAtom,
   TopicContentListAtom,
-  TopicQuizAtom
+  TopicQuizAtom,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
@@ -38,7 +38,7 @@ export default function useHandleQuiz(topData = null) {
   const [isFormVisible, setIsFormVisible] = useState(null);
   const [questionData, setQuestionData] = useState([]);
   const [quizFormData, setQuizFormData] = useState(
-    getTopicQuizObject({ courseId: courseMetaData?.id, topicId: topData?.id })
+    getTopicQuizObject({ courseId: courseMetaData?.id, topicId: topData?.id }),
   );
 
   const shouldDisplayTime = topicContentList?.[0]?.type === TOPIC_CONTENT_TYPES.mp4;
@@ -50,7 +50,7 @@ export default function useHandleQuiz(topData = null) {
 
   useEffect(() => {
     if (!topData?.id) return;
-    if (topicQuiz != null) return;
+    if (topicQuiz?.length) return;
 
     // load quiz data
     loadQueryDataAsync(GET_TOPIC_QUIZ, { topic_id: topData?.id })
@@ -64,9 +64,9 @@ export default function useHandleQuiz(topData = null) {
             return getTopicQuizObject({
               ...quiz,
               startTimeMin: +timeObj?.minute || 0,
-              startTimeSec: +timeObj?.second || 0
+              startTimeSec: +timeObj?.second || 0,
             });
-          }) || []
+          }) || [],
         );
       })
       .catch(() => {
@@ -83,7 +83,7 @@ export default function useHandleQuiz(topData = null) {
       publish_time: getUnixFromDate(),
       pageSize: 1,
       pageCursor: '',
-      searchText: courseMetaData?.subCategory
+      searchText: courseMetaData?.subCategory,
     }).then(async (qbRes) => {
       if (qbRes?.error) return setToastMessage('question bank load error');
       const allQuestionsArr = [];
@@ -101,20 +101,20 @@ export default function useHandleQuiz(topData = null) {
           updated_by: 'Zicops',
           is_active: true,
           is_default: true,
-          owner: 'Zicops'
+          owner: 'Zicops',
         };
 
         const createdQbRes = await mutateData(CREATE_QUESTION_BANK, sendData).catch(() =>
-          setToastMessage('Question Bank Create Error')
+          setToastMessage('Question Bank Create Error'),
         );
 
         subCatQb = createdQbRes?.data?.createQuestionBank;
       } else {
         const questionRes = await loadQueryDataAsync(GET_QUESTIONS_NAMES, {
-          question_bank_id: subCatQb?.id
+          question_bank_id: subCatQb?.id,
         });
         allQuestionsArr.push(
-          ...questionRes?.getQuestionBankQuestions?.filter((q) => q?.Status === QUESTION_STATUS[1])
+          ...questionRes?.getQuestionBankQuestions?.filter((q) => q?.Status === QUESTION_STATUS[1]),
         );
       }
 
@@ -192,7 +192,7 @@ export default function useHandleQuiz(topData = null) {
         (!shouldDisplayTime
           ? true
           : !!+quizFormData?.startTimeMin || !!+quizFormData?.startTimeSec) &&
-        (questionRequired || (quizFormData?.formType === 'select' && quizFormData?.questionId))
+        (questionRequired || (quizFormData?.formType === 'select' && quizFormData?.questionId)),
     );
   }, [quizFormData]);
 
@@ -241,8 +241,8 @@ export default function useHandleQuiz(topData = null) {
           name: quizFormData?.name,
           startTimeMin: quizFormData?.startTimeMin,
           startTimeSec: quizFormData?.startTimeSec,
-          editIndex: quizFormData?.editIndex
-        })
+          editIndex: quizFormData?.editIndex,
+        }),
       );
 
     if (index != null) {
@@ -260,7 +260,7 @@ export default function useHandleQuiz(topData = null) {
         if (file?.size > LIMITS.questionOptionSize) {
           e.target.value = '';
           return setToastMessage(
-            `File Size limit is ${Math.ceil(LIMITS.questionOptionSize / ONE_MB_IN_BYTES)} mb`
+            `File Size limit is ${Math.ceil(LIMITS.questionOptionSize / ONE_MB_IN_BYTES)} mb`,
           );
         }
 
@@ -275,7 +275,7 @@ export default function useHandleQuiz(topData = null) {
       return setQuizFormData((prev) => {
         return {
           ...prev,
-          options: prev?.options?.map((o, i) => (i === index ? updatedOption : o))
+          options: prev?.options?.map((o, i) => (i === index ? updatedOption : o)),
         };
       });
     }
@@ -291,14 +291,14 @@ export default function useHandleQuiz(topData = null) {
       if (file?.size > LIMITS.questionOptionSize) {
         e.target.value = '';
         return setToastMessage(
-          `File Size limit is ${Math.ceil(LIMITS.questionOptionSize / ONE_MB_IN_BYTES)} mb`
+          `File Size limit is ${Math.ceil(LIMITS.questionOptionSize / ONE_MB_IN_BYTES)} mb`,
         );
       }
 
       return setQuizFormData({
         ...quizFormData,
         questionFile: e.target.files[0],
-        attachmentType: e.target.files[0]?.type
+        attachmentType: e.target.files[0]?.type,
       });
     }
 
@@ -320,12 +320,12 @@ export default function useHandleQuiz(topData = null) {
     // load question and option data and save it in questionData
     if (!isQuestionDataPresent) {
       const quesRes = await loadQueryDataAsync(GET_QUESTION_BY_ID, {
-        question_ids: [selectedQuiz?.questionId]
+        question_ids: [selectedQuiz?.questionId],
       });
       const question = quesRes?.getQuestionsById?.[0];
 
       const opRes = await loadQueryDataAsync(GET_QUESTION_OPTIONS, {
-        question_id: selectedQuiz?.questionId
+        question_id: selectedQuiz?.questionId,
       });
       const options = opRes?.getOptionsForQuestions?.[0]?.options;
 
@@ -345,8 +345,8 @@ export default function useHandleQuiz(topData = null) {
           option: op?.Description || '',
           attachment: op?.Attachment || null,
           attachmentType: op?.AttachmentType || '',
-          isCorrect: op?.IsCorrect || false
-        }))
+          isCorrect: op?.IsCorrect || false,
+        })),
       };
 
       _questionData.push(quesData);
@@ -380,7 +380,7 @@ export default function useHandleQuiz(topData = null) {
         return _fullQuestionData?.options?.[i];
       }),
       editIndex: index,
-      formType: 'create'
+      formType: 'create',
     });
     setQuestionData(_questionData);
 
@@ -395,7 +395,7 @@ export default function useHandleQuiz(topData = null) {
 
     const isDuplicate = questionBankData?.questions?.some(
       (q) =>
-        isWordSame(q?.Description, quizFormData?.question) && q?.id !== quizFormData?.questionId
+        isWordSame(q?.Description, quizFormData?.question) && q?.id !== quizFormData?.questionId,
     );
     if (isDuplicate) return setToastMessage('Question with same name cannot be added!');
 
@@ -420,6 +420,6 @@ export default function useHandleQuiz(topData = null) {
     toggleForm,
     isQuizReady,
     handleEditQuiz,
-    handleSubmit
+    handleSubmit,
   };
 }

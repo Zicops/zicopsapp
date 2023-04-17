@@ -277,7 +277,7 @@ export async function addUpdateTopicQuiz(
 
     const isQuizEdit = !!sendQuizData?.id;
 
-    mutateData(isQuizEdit ? UPDATE_TOPIC_QUIZ : ADD_TOPIC_QUIZ, sendQuizData).catch(() => {
+    await mutateData(isQuizEdit ? UPDATE_TOPIC_QUIZ : ADD_TOPIC_QUIZ, sendQuizData).catch(() => {
       isError = true;
       setToastMessage(`${isQuizEdit ? 'Update' : 'Add'} Quiz Error`);
     });

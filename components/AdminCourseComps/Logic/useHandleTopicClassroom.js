@@ -130,7 +130,6 @@ export default function useHandleTopicClassroom(topData = null) {
 
   async function addUpdateTopicClassroom() {
     if (!topData?.id) return;
-    setIsSubmitDisabled(true);
 
     const _topicClassroomData = sanitizeFormData({
       topic_id: topData?.id || null,
@@ -181,6 +180,8 @@ export default function useHandleTopicClassroom(topData = null) {
 
   async function handleSubmit() {
     const { id, category } = courseMetaData;
+
+    setIsSubmitDisabled(true);
 
     // topic resources
     const res = topicResources?.map((res) => ({ ...res, courseId: id }));
