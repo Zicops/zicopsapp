@@ -1,8 +1,10 @@
 import { CurrentParticipantDataAtom } from '@/state/atoms/vctool.atoms';
 import styles from '../vctoolMain.module.scss';
 import { useRecoilValue } from 'recoil';
+import { TopicQuizAtom } from '@/state/atoms/courses.atom';
 const CreateQuiz = ({ addQuiz }) => {
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
+  const topicQuiz = useRecoilValue(TopicQuizAtom);
 
   return (
     <div className={`${styles.moderatorQuize}`}>

@@ -59,7 +59,7 @@ export default function CourseBody() {
           size="large"
           positionLeft="50%"
           isFooterVisible={false}>
-          <ViewDoc url={selectedResourceData?.url} />
+          <ViewDoc type={selectedResourceData?.type} url={selectedResourceData?.url} />
         </PopUp>
       )}
     </>
