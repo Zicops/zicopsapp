@@ -712,7 +712,19 @@
   font-size: 1.5rem;
   margin-right: 14px;
 }
-
+//  styling delete pollPopup
+.canceldeletPoll {
+  background-color: #26292c;
+  color: #acacac;
+  border: none;
+  outline: none;
+}
+.deletePoll {
+  background-color: #f53d41;
+  border: none;
+  outline: none;
+  color: white;
+}
 // PollQA component
 
 .pollQA {
@@ -924,6 +936,8 @@
 .pollQuestionScreen {
   width: 296px;
   height: 100%;
+  padding-bottom: 6px;
+  padding-top: 6px;
   margin-top: 7px;
   background-color: #121212;
   padding-left: 10px;
@@ -939,6 +953,15 @@
   display: flex;
   width: 30%;
   justify-content: space-between;
+  align-items: center;
+  div {
+    color: $white;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+#endedPoll {
+  color: #f53d41;
 }
 
 .publishPollHead {
@@ -960,20 +983,35 @@
   font-size: 14px;
   line-height: 24px;
   color: white;
+  display: flex;
   background-color: #121212;
 }
 
-.pollSavedLabel {
+.pollSavedLabel,
+.pollActiveLabel,
+.pollEndedLabel {
   //
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
-  color: #f6ac3c;
   margin-bottom: 12px;
   margin-top: 6px;
+  display: flex;
 }
-
+.pollSavedLabel {
+  color: #f6ac3c;
+}
+.pollActiveLabel {
+  color: #26ba4d;
+}
+.pollEndedLabel {
+  color: #acacac;
+}
+.pollScreenLable {
+  display: flex;
+  margin-top: 12px;
+}
 .pollBoxOptions {
   width: 100%;
   margin: auto;
@@ -1019,7 +1057,16 @@
   line-height: 24px;
   color: #ffffff;
 }
-
+.publishPoll {
+  width: 276px;
+  margin-right: 6px;
+  height: 40px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  color: black;
+  background-color: #6bcfcf;
+}
 .pollBoxBtns > button,
 .quizBoxBtns > button {
   border: 1px solid #292f2f;
@@ -1063,19 +1110,45 @@
   width: 296px;
   height: 99%;
 }
-
+.endPollBtn {
+  width: 276px;
+  margin-right: 6px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #26292c;
+  border: none;
+  outline: none;
+  font-weight: 400;
+  font-size: 16px;
+  color: #f53d41;
+  margin-top: 8px;
+}
 // styling pollscreenParticipant
 
-// .publishPoll
-// {
-//     width: 100%;
-//     color: red;
+.participantPollBoxOptions > div {
+  width: 100%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border: 1px solid #292f2f;
+  margin-top: 10px;
+  margin-left: -4px;
+}
+.participantPollBoxBtns {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 4px;
 
-//     font-style: normal;
-//     font-weight: 400;
-//     font-size: 16px;
-//     line-height: 24px;
-// }
+  button {
+    width: 90px;
+    height: 40px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #6bcfcf;
+  }
+}
 // styling Participants bar
 .participantsBar {
   z-index: 1020;
@@ -1346,6 +1419,7 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
+  display: flex;
   line-height: 24px;
   color: #ffffff;
   margin-top: 8px;
@@ -1354,6 +1428,8 @@
 .breakoutLable {
   //
   font-style: normal;
+  display: flex;
+  margin-bottom: 6px;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
@@ -1362,6 +1438,12 @@
 
 .breakoutRoominputbox {
   margin-top: 10px;
+}
+.roomNoticeText {
+  text-align: justify;
+  font-weight: 400;
+  font-size: 14px;
+  margin-top: 8px;
 }
 
 .breakoutRoominputbox > input {
@@ -1476,6 +1558,7 @@
 .manageRoomshead > div {
   width: 90%;
   //
+  display: flex;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -1501,20 +1584,31 @@
   color: #6bcfcf;
 }
 
-.manageRoombtn2 {
+.manageRoombtn2,
+.manageUnpublishBtn {
   width: 140px;
   height: 40px;
-  background: #6bcfcf;
+
   border-radius: 4px;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
+}
+.manageRoombtn2 {
   color: #0b0c0d;
+  background: #6bcfcf;
+}
+.manageUnpublishBtn {
+  background-color: #26292c;
+  color: #acacac;
+  border: none;
+  outline: none;
 }
 
 .availableRoomcontainerhead {
   margin-top: 12px;
   margin-bottom: 12px;
+  display: flex;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -1572,7 +1666,12 @@
   justify-content: space-around;
   align-items: center;
 }
-
+.joinRoomBtn {
+  font-weight: 500;
+  font-size: 14px;
+  color: #6bcfcf;
+  width: 50px;
+}
 .breakoutRoomCardRight > button {
   outline: none;
   background-color: transparent;
@@ -1583,7 +1682,7 @@
   position: absolute;
   width: 147px;
   height: 130px;
-  left: 130px;
+  left: 140px;
   // top: 208px;
   background: #0b0c0d;
   display: flex;
@@ -1625,6 +1724,7 @@
 
 .breakoutRoomParticipantHeading {
   font-weight: 400;
+  display: flex;
   font-size: 14px;
   line-height: 24px;
   color: #acacac;
@@ -1835,7 +1935,7 @@
   margin-top: 15px;
   padding-top: 10px;
   width: 276px;
-  height: 56px;
+  height: auto;
   font-size: 18xp;
   line-height: 28px;
   color: white;
@@ -2129,20 +2229,35 @@
 
 .quizLable {
   display: flex;
-  width: 30%;
-  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  div {
+    margin-left: 12px;
+  }
 }
 
 .quizeExpand {
   width: 70%;
   display: flex;
   justify-content: right;
+  align-items: center;
 
   img {
     width: 12px;
   }
+  p {
+    margin-right: 12px;
+  }
 }
-
+#quizPublishBtn {
+  color: #6bcfcf;
+}
+#endPoll {
+  color: #f53d41;
+}
+#endedPoll {
+  color: #747474;
+}
 .questionScreen {
   height: 60vh;
   margin-top: 7px;
@@ -2245,6 +2360,7 @@
 .quizeQALabel {
   width: 100%;
   // margin-left: 10px;
+  display: flex;
   margin-top: 12px;
   margin-bottom: 12px;
   font-weight: 400;
@@ -2263,6 +2379,7 @@
 }
 
 .quizName > div {
+  display: flex;
   font-weight: 400;
   font-size: 16px;
   color: #acacac;
@@ -2270,6 +2387,7 @@
 }
 
 .quizName > input {
+  display: flex;
   width: 276px;
   margin: 8px 0 0 8px;
   height: 40px;
@@ -2287,6 +2405,7 @@
 }
 
 .quizQA {
+  display: flex;
   margin-bottom: 4px;
   color: white;
   padding-left: 6px;
@@ -2323,6 +2442,7 @@
 
 .quizDifficultyLevel {
   width: 296px;
+  display: flex;
   font-size: 16px;
   font-weight: 400px;
   margin-top: 12px;
@@ -2351,11 +2471,13 @@
   width: 296px;
   color: white;
   font-weight: 400;
+  display: flex;
   font-size: 16px;
   margin-top: 12px;
 }
 
 .quizOptionNotice {
+  display: flex;
   width: 296px;
   color: #acacac;
   font-size: 14px;
@@ -2370,6 +2492,7 @@
   margin-top: 8px;
 
   p {
+    display: flex;
     font-weight: 400;
     font-size: 16px;
     color: #acacac;
@@ -2464,10 +2587,17 @@
   background-color: #6bcfcf;
   color: #0b0c0d;
 }
-
+.quizTypeHeading {
+  display: flex;
+  margin-top: 6px;
+}
 .availableQuizSCreen {
-  width: 296px;
-  height: 60vh;
+  width: 100%;
+  height: 61vh;
+  overflow: scroll;
+}
+.availableQuizSCreen::-webkit-scrollbar {
+  display: none;
 }
 
 // styling create BreakoutRoom
@@ -2478,7 +2608,9 @@
   justify-content: space-between;
   align-items: center;
 }
-
+.publishRoomBnt {
+  background-color: #6bcfcf;
+}
 .createRoomhead {
   font-size: 14px;
   color: white;
@@ -2741,4 +2873,64 @@
 }
 .slideDown {
   margin-bottom: -100px;
+}
+
+// styling tool Tips
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; 
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width:fit-content;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip .topToolTips {
+  width: 120px;
+  margin-top: 6px;
+  height: 30px;
+  top: 100%;
+  left: 50%;
+  margin-left: -85px; 
+}
+// leaveTooltip
+.tooltip .tooltipLefttNav {
+  width:160px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -25px;
+}
+// tooltipRightNav
+.tooltip .tooltipRightNav {
+  
+  width: 120px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -88px;
+}
+// tooltipRightNavFullscreen
+.tooltip .tooltipRightNavFullscreen {
+  
+  width: 130px;
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  margin-left: -98px;
 }

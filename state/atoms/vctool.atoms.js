@@ -1,7 +1,35 @@
 import { atom } from 'recoil';
+export const publishBreakoutRoom = atom({
+  key: 'publishBreakoutRoom',
+  default: {
+    isRoomPublished: false,
+    publishedRoomArr: []
+  }
+});
+export const participantJoinData = atom({
+  key: 'participantJoinData',
+  default: {
+    modList: [],
+    LearnerList: []
+  }
+});
 export const joinMeeting = atom({
   key: 'joinMeeting',
   default: false //check whether meeting is started or not
+});
+
+export const ClassRoomFlagsInput = atom({
+  key: 'ClassRoomFlagsInput',
+  default: {
+    id: '',
+    is_classroom_started: false,
+    is_participants_present: false,
+    is__ad_displayed: false,
+    is_break: false,
+    is_moderator_joined: false,
+    is_trainer_joined: false,
+    ad_video_url: ''
+  }
 });
 export const vcModeratorControlls = atom({
   key: 'vcModeratorControlls',
@@ -10,7 +38,6 @@ export const vcModeratorControlls = atom({
     onVideo: false
   }
 });
-
 export const vcResource = atom({
   key: 'vcResource',
   default: [
@@ -81,6 +108,21 @@ export const pollArray = atom({
     }
   ]
 });
+export const vcActivePoll = atom({
+  key: 'vcActivePoll',
+  default: []
+});
+export const vcEndedPoll = atom({
+  key: 'vcEndedPoll',
+  default: []
+});
+export const participantPoll = atom({
+  key: 'participantPoll',
+  default: {
+    savedPoll: [],
+    endedPoll: []
+  }
+});
 
 export const quizArray = atom({
   key: 'quizArray',
@@ -100,6 +142,17 @@ export const quizArray = atom({
     }
   ]
 });
+export const particiapntQuiz = atom({
+  key: 'particiapntQuiz',
+  default: {
+    attemtedQuiz: [],
+    unAttemptedQuiz: []
+  }
+});
+export const activequizArr = atom({
+  key: 'activequizArr',
+  default: []
+});
 export const VcChatMessageAtom = atom({
   key: 'VcChatMessageAtom',
   default: getMesaageObj()
@@ -112,6 +165,16 @@ export const VcChatReplyAtom = atom({
 export const vcChatBarAtom = atom({
   key: 'DiscussionAtom',
   default: []
+});
+
+export const vcChatObj = atom({
+  key: 'vcChatObj',
+  default: {
+    body: '',
+    meeting_id: '',
+    user_id: '',
+    time: null
+  }
 });
 
 export function getMesaageObj(data = {}) {

@@ -4,13 +4,16 @@ import CreateQuiz from "./CreateQuiz";
 import QuizQA from "./QuizQA";
 import { useState } from "react";
 import ShowQuiz from "./ShowQuiz";
-import { useRecoilValue } from "recoil";
-import { quizArray } from "@/state/atoms/vctool.atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { CurrentParticipantDataAtom, activequizArr, particiapntQuiz, quizArray } from "@/state/atoms/vctool.atoms";
 const QuizPage = ({ hide = false }) => {
     const quizArr = useRecoilValue(quizArray)
+    const [activeQuiz, setActiveQuiz] = useRecoilState(activequizArr);
+    const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
+    const [participantQuizAtom, setParticiapntQuizAtom] = useRecoilState(particiapntQuiz);
     const [objTitle, setObjTitle] = useState('')
     function showQuiz(title) {
-        if (title === '') return <>{(quizArr.length > 1) ? quizComponent[2].component : quizComponent[0].component}</>
+        if (title === '') return <>{(quizArr.length > 1 || activeQuiz.length >=1 ) ? quizComponent[2].component : quizComponent[0].component}</>
         const obj = quizComponent.find(obTitle => obTitle.title === title);
         return obj?.component;
     }
@@ -49,7 +52,10 @@ const QuizPage = ({ hide = false }) => {
 
             <div className={`${styles.quizScreen}`}>
                 {
-                    showQuiz(objTitle)
+                    !!currentParticipantData.isModerator ? (
+                        <>{showQuiz(objTitle)}</>
+                    ): participantQuizAtom.unAttemptedQuiz.length <1 && participantQuizAtom.attemtedQuiz.length<1 ?
+                    <CreateQuiz/> : <ShowQuiz/>
                 }
             </div>
         </div>

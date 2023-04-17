@@ -1,29 +1,33 @@
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom, VcApi } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
-import { useRecoilValue } from 'recoil';
+import { participantJoinData, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import StudentFrame from '../StudentFrame';
 import styles from '../vctoolMain.module.scss';
+import { useEffect } from 'react';
 
-const Participants = ({ hide = false, Info, Iframe }) => {
-  const userData = useRecoilValue(UserStateAtom);
+const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
+  // participantJoinData
+  // const userData = useRecoilValue(UserStateAtom);
+  const vcToolUserList=useRecoilValue(participantJoinData)
   const userList = useRecoilValue(vctoolAlluserinfo);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
-
   const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
-
   const modList = [];
   const learnerList = [];
+  
   userList?.forEach((user) => {
     // user id is present in the user profule picture storage path
     const pattern = /profiles\/([A-za-z0-9]+)\//;
     const userId = user?.avatarURL?.match(pattern)?.[1];
 
     if (modIdList?.includes(userId)) return modList.push(user);
-
-    learnerList.push(user);
+ 
+    let data={...user,isHandRise:true,isAudioEnable:false,isVideoEnable:false};
+    learnerList.push(data)
+    
   });
 
   return (
@@ -48,7 +52,12 @@ const Participants = ({ hide = false, Info, Iframe }) => {
             <StudentFrame
               name={data?.displayName || data?.formattedDisplayName}
               avatarUrl={data?.avatarURL}
-            />
+              frameIcons={{
+                isRiseHand:true,
+                isAudio:true,
+                isvideo:true
+              }}
+           api={api} />
           ))}
 
           {!modList?.length && <small>No Moderators Joined</small>}
@@ -56,11 +65,16 @@ const Participants = ({ hide = false, Info, Iframe }) => {
 
         <div className={`${styles.participantsScreenhead}`}>Learners</div>
         <div className={`${styles.allInstructors}`}>
-          {learnerList.map((data) => (
+          {learnerList.map((data,index) => (
             <StudentFrame
               name={data?.displayName || data?.formattedDisplayName}
               avatarUrl={data?.avatarURL}
-            />
+              frameIcons={{
+                isRiseHand:data?.isHandRise,
+                isAudio:data?.isAudioEnable,
+                isvideo:data?.isVideoEnable
+              }}
+            api={api}/>
           ))}
 
           {!learnerList?.length && <small>No Learners Joined</small>}

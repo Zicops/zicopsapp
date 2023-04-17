@@ -1,9 +1,11 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './vcChat.module.scss';
+import { vcChatBarAtom } from '@/state/atoms/vctool.atoms';
 const ChatMessageBlock = ({ isReply, message }) => {
   const userDetails = useRecoilValue(UserStateAtom);
-
+  const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
+  // console.log(message)
   return (
     <>
       <div className={`${style.chatBox}`}>
@@ -26,7 +28,7 @@ const ChatMessageBlock = ({ isReply, message }) => {
         </div>
         <div className={`${style.mainMessage}`}>
           <div>
-            {message?.content}
+            {message?.body}
           </div>
         </div>
       </div>

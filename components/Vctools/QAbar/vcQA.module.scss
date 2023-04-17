@@ -49,9 +49,15 @@
   width: 100%;
   min-height: 30px;
   max-height: 100%;
+  display: flex;
+  
   div 
   {
     width: 255px;
+    margin: auto;
+    padding-left: 12px;
+    text-align: justify;
+    display: flex;
     height: 100%;
     color: white;
     // height: max-content;
