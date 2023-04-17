@@ -17,8 +17,6 @@ export default function useHandleTrainerData() {
 
   const [addNewTrainer] = useMutation(CREATE_TRAINER, { client: viltMutationClient });
 
-  const lspId = sessionStorage.getItem('lsp_id');
-
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
     client: userClient
   });
@@ -64,6 +62,9 @@ export default function useHandleTrainerData() {
     let sendEmails = trainerData?.inviteEmails?.toLowerCase();
     let isError = false;
     // let errorMsg;
+
+    const lspId = sessionStorage.getItem('lsp_id');
+    if (!lspId) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
 
     const resEmail = await inviteUsers({
       variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer }
