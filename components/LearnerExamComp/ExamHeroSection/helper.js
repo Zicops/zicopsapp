@@ -39,7 +39,7 @@ export const useExamData = () => {
     if (!courseIds) return [];
     const topicRes = await loadQueryDataAsync(
       GET_TOPICS_BY_COURSEIDS,
-      { course_ids: courseIds },
+      { courseIds: courseIds },
       {},
       queryClient
     );
@@ -49,8 +49,6 @@ export const useExamData = () => {
   }
 
   async function loadUserAttemptsAndResults(examId = null) {
-    // if (!userGlobalData?.userDetails?.user_lsp_id?.length) return;
-    // setIsAttemptsLoaded(false);
     if (!examId) return [];
     if (!userData?.id) return [];
     const id = userData?.id;

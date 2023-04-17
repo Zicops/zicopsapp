@@ -1155,8 +1155,8 @@ export const GET_BASIC_COURSES_STATS = gql`
 `;
 
 export const GET_TOPICS_BY_COURSEIDS = gql`
-  query getTopicsByCourseIds($course_ids: [String], $type: String) {
-    getTopicsByCourseIds(course_ids: $course_ids, type: $type) {
+  query getTopicsByCourseIds($courseIds: [String], $type: String) {
+    getTopicsByCourseIds(courseIds: $courseIds, type: $type) {
       id
       name
       description
