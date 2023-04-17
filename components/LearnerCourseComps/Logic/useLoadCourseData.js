@@ -6,13 +6,17 @@ import {
   GET_TOPIC_QUIZ,
   GET_TOPIC_RESOURCES_BY_COURSE_ID,
 } from '@/api/Queries';
+import { userClient } from '@/api/UserMutations';
 import {
   GET_USER_COURSE_MAPS_BY_COURSE_ID,
   GET_USER_COURSE_PROGRESS,
+  GET_USER_NOTES,
   userQueryClient,
 } from '@/api/UserQueries';
+import { getNoteCardObj } from '@/components/CustomVideoPlayer/Logic/customVideoPlayer.helper';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS } from '@/helper/constants.helper';
+import { getUnixFromDate } from '@/helper/utils.helper';
 import {
   AllCourseModulesDataAtom,
   CourseMetaDataAtom,
@@ -20,6 +24,7 @@ import {
   TopicResourcesAtom,
   getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
+import { FloatingNotesAtom } from '@/state/atoms/notes.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { sortArrByKeyInOrder } from '@/utils/array.utils';
 import { useRouter } from 'next/router';
@@ -46,6 +51,7 @@ export default function useLoadCourseData() {
   const [resources, setResources] = useRecoilState(TopicResourcesAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [topicQuiz, setTopicQuiz] = useRecoilState(TopicQuizAtom);
+  const [floatingNotes, setFloatingNotes] = useRecoilState(FloatingNotesAtom);
   const { id: userId } = useRecoilValue(UserStateAtom);
 
   const topicData = useRecoilValue(CourseTopicsAtomFamily(activeCourseData?.topicId));
@@ -64,13 +70,15 @@ export default function useLoadCourseData() {
 
   useEffect(() => {
     if (!router?.isReady) return;
+    if (!courseId) return;
 
     loadCourseMetaData();
     loadModuleAndChapterData();
     loadUserTopicProgress();
 
     loadAllTopicResources();
-  }, [router.isReady]);
+    loadUserNotes();
+  }, [router.isReady, courseId]);
 
   // load user course map and topic progress
   useEffect(() => {
@@ -297,5 +305,28 @@ export default function useLoadCourseData() {
       res?.map((obj) => allQuiz.push(...obj.value));
       setTopicQuiz(allQuiz);
     });
+  }
+
+  async function loadUserNotes() {
+    loadQueryDataAsync(
+      GET_USER_NOTES,
+      {
+        user_id: userId,
+        publish_time: getUnixFromDate(),
+        pageCursor: '',
+        pageSize: 10000,
+        course_id: courseId,
+      },
+      {},
+      userClient,
+    )
+      .then((notesDataRes) => {
+        setFloatingNotes(
+          notesDataRes?.getUserNotes?.notes
+            ?.filter((notes) => notes?.is_active && notes?.status === 'Saved')
+            ?.map((noteObj) => getNoteCardObj(noteObj)) || [],
+        );
+      })
+      .catch((err) => console.log(err));
   }
 }

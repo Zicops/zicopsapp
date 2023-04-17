@@ -2962,3 +2962,9 @@
   left: 50%;
   margin-left: -98px;
 }
+
+.notesContainer {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-gap: 0.2em;
+}
