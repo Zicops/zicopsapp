@@ -5,7 +5,7 @@ import {
   GET_EXAM_META,
   GET_EXAM_SCHEDULE,
   GET_TOPIC_EXAMS,
-  queryClient
+  queryClient,
 } from '@/api/Queries';
 import {
   ADD_USER_ORGANIZATION_MAP,
@@ -16,7 +16,7 @@ import {
   UPDATE_USER_ORGANIZATION_MAP,
   UPDATE_USER_ROLE,
   USER_LOGIN,
-  userClient
+  userClient,
 } from '@/api/UserMutations';
 import {
   GET_COHORT_USERS,
@@ -29,7 +29,7 @@ import {
   GET_USER_LSP_ROLES,
   GET_USER_PREFERENCES,
   GET_USER_PREFERENCES_DETAILS,
-  userQueryClient
+  userQueryClient,
 } from '@/api/UserQueries';
 import { API_LINKS } from '@/api/api.helper';
 import { SCHEDULE_TYPE } from '@/components/AdminExamComps/Exams/ExamMasterTab/Logic/examMasterTab.helper';
@@ -41,13 +41,13 @@ import {
   IsUpdatedAtom,
   UserStateAtom,
   UsersOrganizationAtom,
-  getUserObject
+  getUserObject,
 } from '@/state/atoms/users.atom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   isPossiblePhoneNumber,
   isValidPhoneNumber,
-  validatePhoneNumberLength
+  validatePhoneNumberLength,
 } from 'libphonenumber-js';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -60,7 +60,7 @@ import {
   COURSE_STATUS,
   COURSE_TOPIC_STATUS,
   USER_LSP_ROLE,
-  USER_MAP_STATUS
+  USER_MAP_STATUS,
 } from './constants.helper';
 import { getUserData } from './loggeduser.helper';
 import { getLspDetails } from './orgdata.helper';
@@ -75,7 +75,7 @@ export function useHandleCatSubCat(selectedCategory) {
     allSubCat: [],
     subCatGrp: {},
     isFiltered: null,
-    isDataLoaded: null
+    isDataLoaded: null,
   });
   // this will have the whole cat object not just id
   const [activeCatId, setActiveCatId] = useState(null);
@@ -91,13 +91,13 @@ export function useHandleCatSubCat(selectedCategory) {
     const zicopsLsp = COMMON_LSPS.zicops;
     const loadDataFunction = loadQueryDataAsync;
     const zicopsLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [zicopsLsp]
+      lsp_ids: [zicopsLsp],
     });
 
     let currentLspData = null;
     if (_lspId !== zicopsLsp) {
       currentLspData = loadDataFunction(GET_CATS_AND_SUB_CAT_MAIN, {
-        lsp_ids: [_lspId]
+        lsp_ids: [_lspId],
       });
     }
     // zicops lsp cat subcat
@@ -141,7 +141,7 @@ export function useHandleCatSubCat(selectedCategory) {
       allSubCat: allSubCat,
       subCatGrp: _subCatGrp,
       isFiltered: allSubCat?.length !== _subCat?.length,
-      isDataLoaded: true
+      isDataLoaded: true,
     });
     setRefetch(null);
   }, [refetch]);
@@ -158,7 +158,7 @@ export function useHandleCatSubCat(selectedCategory) {
     setCatSubCat({
       ...catSubCat,
       subCat: _subCat,
-      isFiltered: allSubCat?.length !== _subCat?.length
+      isFiltered: allSubCat?.length !== _subCat?.length,
     });
   }, [selectedCategory, catSubCat?.isFiltered]);
 
@@ -242,7 +242,7 @@ export default function useUserCourseData() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [userLogin, { loading: loginLoading, error: loginError }] = useMutation(USER_LOGIN, {
-    client: userClient
+    client: userClient,
   });
 
   async function getUserCourseData(pageSize = 999999999, userId = null) {
@@ -261,24 +261,24 @@ export default function useUserCourseData() {
         user_id: currentUserId,
         publish_time: getCurrentEpochTime(),
         pageCursor: '',
-        pageSize: pageSize
+        pageSize: pageSize,
       },
       {},
-      userClient
+      userClient,
     );
 
     if (assignedCoursesRes?.error)
       return setToastMsg({ type: 'danger', message: 'Course Maps Load Error' });
 
     const _assignedCourses = assignedCoursesRes?.getUserCourseMaps?.user_courses?.filter(
-      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable
+      (course) => course?.course_status?.toLowerCase() !== COURSE_MAP_STATUS?.disable,
     );
 
     const currentLspId = sessionStorage.getItem('lsp_id');
     const zicopsLspId = COMMON_LSPS.zicops;
 
     const currentLspCourses = _assignedCourses?.filter((courseMap) =>
-      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id)
+      [currentLspId, zicopsLspId]?.includes(courseMap?.lsp_id),
     );
 
     const assignedCoursesToUser = currentLspCourses;
@@ -302,12 +302,12 @@ export default function useUserCourseData() {
       GET_USER_COURSE_PROGRESS,
       { userId: currentUserId, userCourseId: userCourseId },
       {},
-      userClient
+      userClient,
     );
 
     // load all courses details
     const courseRes = await loadAndCacheDataAsync(GET_COURSE, {
-      course_id: courseIdArr
+      course_id: courseIdArr,
     });
     if (courseRes?.error) {
       setToastMsg({ type: 'danger', message: 'Course Load Error' });
@@ -325,7 +325,7 @@ export default function useUserCourseData() {
     const coursesMeta = [];
     assignedCoursesToUser?.forEach((courseMap, i) => {
       const data = courseProgressRes?.getUserCourseProgressByMapId?.filter(
-        (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id
+        (cpByMapId) => cpByMapId?.user_course_id === courseMap?.user_course_id,
       );
       const courseDetails = allCourseDetails?.find((c) => c?.id === courseMap?.course_id) || {};
       coursesMeta.push({ ...courseMap, ...courseDetails, courseProgres: [...data] });
@@ -384,7 +384,9 @@ export default function useUserCourseData() {
         topicsStartedPercentage: progressPercent,
         scheduleDate: _courseData?.end_date,
         dataType: 'course',
-        completedOn: !!completedDate ? moment.unix(completedDate).format('D MMM YYYY') : 'Not Valid'
+        completedOn: !!completedDate
+          ? moment.unix(completedDate).format('D MMM YYYY')
+          : 'Not Valid',
         // remove this value or below value
         // completedPercentage: progressPercent,
         // course completed percentage replace this with above value
@@ -439,7 +441,7 @@ export default function useUserCourseData() {
 
     // to filter duplicate  assigned courses if any
     const userCourses = _userCourses.filter(
-      (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i
+      (v, i, a) => a.findIndex((v2) => v2?.id === v?.id) === i,
     );
 
     setUserOrgData((prevValue) => ({ ...prevValue, self_course_count: totalSelfCourseCount }));
@@ -457,7 +459,7 @@ export default function useUserCourseData() {
       GET_COURSE_TOPICS,
       { course_id: courseId },
       {},
-      queryClient
+      queryClient,
     );
     if (topicRes?.error) return [];
     if (!topicRes?.getTopics?.length) return [];
@@ -470,7 +472,7 @@ export default function useUserCourseData() {
       GET_TOPIC_EXAMS,
       { topic_id: topicId },
       {},
-      queryClient
+      queryClient,
     );
     if (examRes?.error) return [];
     if (!examRes?.getTopicExams?.length) return [];
@@ -483,7 +485,7 @@ export default function useUserCourseData() {
       GET_EXAM_META,
       { exam_ids: examIds },
       {},
-      queryClient
+      queryClient,
     );
     if (examMetaRes?.error) return [];
     if (!examMetaRes?.getExamsMeta?.length) return [];
@@ -496,7 +498,7 @@ export default function useUserCourseData() {
       GET_EXAM_SCHEDULE,
       { exam_id: examId },
       {},
-      queryClient
+      queryClient,
     );
     if (examSchedule?.error) return [];
     if (!examSchedule?.getExamSchedule?.length) return [];
@@ -521,7 +523,7 @@ export default function useUserCourseData() {
       const courseTopics = await getTopics(_assignedCourses[i]?.id);
       if (!courseTopics?.length) continue;
       const filteredTopics = courseTopics?.filter(
-        (topic) => topic?.type?.toLowerCase() === 'assessment'
+        (topic) => topic?.type?.toLowerCase() === 'assessment',
       );
       if (!filteredTopics?.length) continue;
       assessmentTopics = assessmentTopics.concat(filteredTopics);
@@ -535,8 +537,8 @@ export default function useUserCourseData() {
             topicId: filteredTopics[j]?.id,
             courseId: _assignedCourses[i]?.id,
             image: _assignedCourses[i]?.image,
-            topicDescription: filteredTopics[j]?.description
-          }
+            topicDescription: filteredTopics[j]?.description,
+          },
         });
       }
     }
@@ -558,8 +560,8 @@ export default function useUserCourseData() {
           topicId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicId,
           courseId: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.courseId,
           image: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.image,
-          topicDescription: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicDescription
-        }
+          topicDescription: topicCourseMap[i][`${assessmentTopics[i]?.id}`]?.topicDescription,
+        },
       });
       exams = exams.concat(topicExams);
     }
@@ -598,7 +600,7 @@ export default function useUserCourseData() {
           name: exam?.Name,
           endTime: end,
           scheduleDate: exam?.Start,
-          dataType: 'exam'
+          dataType: 'exam',
         };
       });
       return _scheduleExams;
@@ -621,7 +623,7 @@ export default function useUserCourseData() {
         GET_USER_LEARNINGSPACES_DETAILS,
         { user_id: id, lsp_id: lspId },
         {},
-        userQueryClient
+        userQueryClient,
       );
       if (userLearningSpaceData?.error)
         return setToastMsg({ type: 'danger', message: 'Error while loading user preferences^!' });
@@ -647,7 +649,7 @@ export default function useUserCourseData() {
       GET_USER_PREFERENCES,
       { user_id: id },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     const zicopsLsp = COMMON_LSPS.zicops;
@@ -656,18 +658,18 @@ export default function useUserCourseData() {
         ? await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, { lsp_ids: [zicopsLsp] })
         : { allCatMain: [], allSubCatMain: [] };
     const currentCatSubCatData = await loadQueryDataAsync(GET_CATS_AND_SUB_CAT_MAIN, {
-      lsp_ids: [lspId]
+      lsp_ids: [lspId],
     });
 
     const catAndSubCatRes = {
       allCatMain: [
         ...(zicopsCatSubCatData?.allCatMain || []),
-        ...(currentCatSubCatData?.allCatMain || [])
+        ...(currentCatSubCatData?.allCatMain || []),
       ],
       allSubCatMain: [
         ...(zicopsCatSubCatData?.allSubCatMain || []),
-        ...(currentCatSubCatData?.allSubCatMain || [])
-      ]
+        ...(currentCatSubCatData?.allSubCatMain || []),
+      ],
     };
 
     if (!resPref?.getUserPreferences?.length) return [];
@@ -706,7 +708,7 @@ export default function useUserCourseData() {
       prefArr.push({
         ...pref,
         subCatData,
-        catData: _subCatGrp?.[subCatData?.CatId]?.cat
+        catData: _subCatGrp?.[subCatData?.CatId]?.cat,
       });
 
       //   for (let j = 0; j < subCategories?.length; j++) {
@@ -731,7 +733,7 @@ export default function useUserCourseData() {
     setUserOrgData((prevValue) => ({
       ...prevValue,
       sub_category: basePreference?.[0]?.sub_category,
-      sub_categories: preferences
+      sub_categories: preferences,
     }));
     setUserDataGlobal({ ...userDataGlobal, preferences: prefArr, isPrefAdded: true });
     return prefArr;
@@ -743,13 +745,13 @@ export default function useUserCourseData() {
       cohort_id: cohortId,
       publish_time: getCurrentEpochTime(),
       pageCursor: '',
-      pageSize: 99999
+      pageSize: 99999,
     };
     const resUsers = await loadQueryDataAsync(
       GET_COHORT_USERS,
       { ...sendData },
       {},
-      userQueryClient
+      userQueryClient,
     );
     if (!resUsers?.getCohortUsers?.cohorts?.length) return;
     const cohortUsers = resUsers?.getCohortUsers?.cohorts;
@@ -761,7 +763,7 @@ export default function useUserCourseData() {
       GET_USER_DETAIL,
       { user_id: cohortUserIds },
       {},
-      userQueryClient
+      userQueryClient,
     );
     // console.log(userListData?.getUserDetails);
     const userList = userListData?.getUserDetails;
@@ -781,7 +783,7 @@ export default function useUserCourseData() {
             membership_status: cohortUsers[j]?.membership_status,
             photo_url: userList[i]?.photo_url || '',
             joined_on: moment.unix(cohortUsers[j]?.created_at).format('DD/MM/YYYY'),
-            ...cohortUsers[j]
+            ...cohortUsers[j],
           });
           break;
         }
@@ -796,17 +798,17 @@ export default function useUserCourseData() {
       GET_USER_LSP_MAP_BY_LSPID,
       { lsp_id: userOrgData?.lsp_id, pageCursor: '', Direction: '', pageSize: 1000 },
       {},
-      userQueryClient
+      userQueryClient,
     );
     if (resLspUser?.error) return { error: 'Error while while loading lsp maps!' };
 
     const userLspMaps = resLspUser?.getUserLspMapsByLspId?.user_lsp_maps?.filter(
-      (user) => !!user?.user_id
+      (user) => !!user?.user_id,
     );
 
     //removing duplicate values
     const users = userLspMaps?.filter(
-      (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i
+      (v, i, a) => a?.findIndex((v2) => v2?.user_id === v?.user_id) === i,
     );
 
     const userIds = users?.map((user) => user?.user_id);
@@ -815,7 +817,7 @@ export default function useUserCourseData() {
       GET_USER_DETAIL,
       { user_id: userIds },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     if (resUserDetails?.error) return { error: 'Error while while loading user detail!' };
@@ -827,7 +829,7 @@ export default function useUserCourseData() {
       last_name: item?.last_name,
       status: item?.status,
       role: item?.role,
-      full_name: `${item?.first_name} ${item?.last_name}`
+      full_name: `${item?.first_name} ${item?.last_name}`,
     }));
 
     if (!userData?.length) return { error: 'No users found!' };
@@ -835,7 +837,7 @@ export default function useUserCourseData() {
   }
 
   const [getOrgDetails] = useLazyQuery(GET_ORGANIZATIONS_DETAILS, {
-    client: userClient
+    client: userClient,
   });
 
   const OrgDetails = async (loadLsp = false) => {
@@ -843,20 +845,20 @@ export default function useUserCourseData() {
     const lspId = sessionStorage.getItem('lsp_id');
     if (!orgId) return;
     const res = await getOrgDetails({
-      variables: { org_ids: orgId }
+      variables: { org_ids: orgId },
     }).catch((err) => {
       console.error(err);
     });
     setUserOrgData((prevValue) => ({
       ...prevValue,
-      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || ''
+      logo_url: res?.data?.getOrganizations?.[0]?.logo_url || '',
     }));
     if (loadLsp) {
       const lspData = await getLspDetails([lspId]);
 
       setUserOrgData((prev) => ({
         ...prev,
-        lsp_logo_url: lspData?.getLearningSpaceDetails?.[0]?.logo_url || ''
+        lsp_logo_url: lspData?.getLearningSpaceDetails?.[0]?.logo_url || '',
       }));
     }
   };
@@ -868,7 +870,7 @@ export default function useUserCourseData() {
       GET_USER_LSP_ROLES,
       { user_id: userId, user_lsp_ids: [userLspId] },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const lspRoles = structuredClone(lspRoleArr?.getUserLspRoles);
     const _isVendor = lspRoles?.filter((lsp) => lsp?.role === USER_LSP_ROLE.vendor)?.length > 0;
@@ -924,7 +926,7 @@ export default function useUserCourseData() {
     OrgDetails,
     getUserLspRoleLatest,
     getOrgByDomain,
-    getLoggedUserInfo
+    getLoggedUserInfo,
   };
 }
 
@@ -952,14 +954,14 @@ export function getUserAboutObject(data = {}) {
     created_by: data?.created_by || '',
     updated_by: data?.updated_by || '',
     created_at: data?.created_at || null,
-    updated_at: data?.updated_at || null
+    updated_at: data?.updated_at || null,
   };
 }
 
 export function useUpdateUserAboutData() {
   //have to delete updateAbout later
   const [updateAbout, { error: updateAboutErr }] = useMutation(UPDATE_USER, {
-    client: userClient
+    client: userClient,
   });
 
   // recoil
@@ -967,10 +969,10 @@ export function useUpdateUserAboutData() {
   const [userDataAbout, setUserDataAbout] = useRecoilState(UserStateAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [updateLsp, { error: createLspError }] = useMutation(UPDATE_USER_LEARNINGSPACE_MAP, {
-    client: userClient
+    client: userClient,
   });
   const [updateRole, { error: createRoleError }] = useMutation(UPDATE_USER_ROLE, {
-    client: userClient
+    client: userClient,
   });
 
   // local state
@@ -981,7 +983,7 @@ export function useUpdateUserAboutData() {
   const [invitedUsers, setInvitedUsers] = useRecoilState(InviteUserAtom);
   const [isConfirmPopUpDisable, setIsConfirmPopUpDisable] = useState(false);
   const [getPrefData, { loading, error, data }] = useLazyQuery(GET_USER_PREFERENCES_DETAILS, {
-    client: userQueryClient
+    client: userQueryClient,
   });
 
   useEffect(() => {
@@ -991,12 +993,12 @@ export function useUpdateUserAboutData() {
       isPhValid =
         isPossiblePhoneNumber(
           `${newUserAboutData?.phone || 123456}`,
-          newUserAboutData?.phoneCode
+          newUserAboutData?.phoneCode,
         ) &&
         isValidPhoneNumber(`${newUserAboutData?.phone || 123456}`, newUserAboutData?.phoneCode) &&
         !validatePhoneNumberLength(
           `${newUserAboutData?.phone || 123456}`,
-          newUserAboutData?.phoneCode
+          newUserAboutData?.phoneCode,
         );
     }
 
@@ -1006,7 +1008,7 @@ export function useUpdateUserAboutData() {
         newUserAboutData?.role &&
         newUserAboutData?.email &&
         isPhValid &&
-        newUserAboutData?.gender
+        newUserAboutData?.gender,
     );
   }, [newUserAboutData]);
 
@@ -1015,7 +1017,7 @@ export function useUpdateUserAboutData() {
 
     if (userData?.status?.toLowerCase() === USER_MAP_STATUS?.activate?.toLowerCase()) {
       const res = await getPrefData({
-        variables: { user_id: userData?.id, user_lsp_id: userData?.user_lsp_id }
+        variables: { user_id: userData?.id, user_lsp_id: userData?.user_lsp_id },
       })?.catch((err) => console.log(err));
       if (!res?.data?.getUserPreferenceForLsp) userData.status = ' ';
     }
@@ -1024,7 +1026,7 @@ export function useUpdateUserAboutData() {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
       lsp_id: userOrgData?.lsp_id || sessionStorage.getItem('lsp_id'),
-      status: userData?.status
+      status: userData?.status,
     };
 
     let isError = false;
@@ -1054,7 +1056,7 @@ export function useUpdateUserAboutData() {
       user_id: userData?.id,
       user_lsp_id: userData?.user_lsp_id,
       role: userData?.updateTo,
-      is_active: true
+      is_active: true,
     };
 
     let isError = false;
@@ -1086,7 +1088,7 @@ export function useUpdateUserAboutData() {
       is_active: userData?.is_active || true,
 
       created_by: userData?.created_by || 'Zicops',
-      updated_by: userData?.updated_by || 'Zicops'
+      updated_by: userData?.updated_by || 'Zicops',
     };
 
     if (userData?.Photo) sendUserData.Photo = userData?.Photo;
@@ -1121,7 +1123,7 @@ export function useUpdateUserAboutData() {
         const userSendLspData = {
           id: user?.id,
           user_lsp_id: user?.user_lsp_id,
-          status: USER_MAP_STATUS?.disable
+          status: USER_MAP_STATUS?.disable,
         };
         const isDisable = await updateUserLsp(userSendLspData);
         if (!isDisable) {
@@ -1144,15 +1146,15 @@ export function useUpdateUserAboutData() {
   async function resetPassword(email = '') {
     if (email === '' || !email) return false;
     const sendData = {
-      email: email
+      email: email,
     };
 
     const data = await fetch(API_LINKS?.resetPassword, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(sendData)
+      body: JSON.stringify(sendData),
     });
 
     // console.log(data?.status, 'status');
@@ -1184,7 +1186,7 @@ export function useUpdateUserAboutData() {
     disableMultiUser,
     resetPassword,
     isConfirmPopUpDisable,
-    resetMultiPassword
+    resetMultiPassword,
   };
 }
 
@@ -1202,18 +1204,18 @@ export function getUserOrgMapObject(data = {}) {
     created_by: data?.created_by || '',
     updated_by: data?.updated_by || '',
     created_at: data?.created_at || '',
-    updated_at: data?.updated_at || ''
+    updated_at: data?.updated_at || '',
   };
 }
 
 export function useUpdateUserOrgData() {
   //have to delete updateAbout later
   const [updateOrg, { error: updateOrgErr }] = useMutation(UPDATE_USER_ORGANIZATION_MAP, {
-    client: userClient
+    client: userClient,
   });
 
   const [addOrg, { error: createOrgError }] = useMutation(ADD_USER_ORGANIZATION_MAP, {
-    client: userClient
+    client: userClient,
   });
 
   // recoil
@@ -1238,7 +1240,7 @@ export function useUpdateUserOrgData() {
       organization_role: newUserOrgData?.organization_role || '',
       employee_id: newUserOrgData?.employee_id || '',
 
-      is_active: newUserOrgData?.is_active || true
+      is_active: newUserOrgData?.is_active || true,
     };
 
     console.log(sendUserData, 'updateAboutUser');
@@ -1280,7 +1282,7 @@ export function useUpdateUserOrgData() {
     setNewUserOrgData,
     updateUserOrg,
     isFormCompleted,
-    addUserOrg
+    addUserOrg,
   };
 }
 
@@ -1289,11 +1291,11 @@ export function useHandleCohortUsers() {
   const [isUpdated, setIsUpdated] = useRecoilState(IsUpdatedAtom);
 
   const [updateCohortMain, { error: updateCohortError }] = useMutation(UPDATE_COHORT_MAIN, {
-    client: userClient
+    client: userClient,
   });
 
   const [updateUserCohort, { error: updateError }] = useMutation(UPDATE_USER_COHORT, {
-    client: userClient
+    client: userClient,
   });
 
   async function removeCohortUser(userData = null, cohortData = null, cohortSize = null) {
@@ -1307,7 +1309,7 @@ export function useHandleCohortUsers() {
       cohort_id: userData?.cohort_id,
       added_by: JSON.stringify({ user_id: id, role: 'Admin' }),
       membership_status: 'Disable',
-      role: userData?.role
+      role: userData?.role,
     };
     // console.log(sendData)
     let isError = false;
@@ -1326,7 +1328,7 @@ export function useHandleCohortUsers() {
       status: 'SAVED',
       type: cohortData?.type,
       is_active: true,
-      size: cohortSize - 1
+      size: cohortSize - 1,
     };
 
     const resCohort = await updateCohortMain({ variables: sendCohortData }).catch((err) => {
@@ -1372,7 +1374,7 @@ export function useDebounce(value, delay) {
         clearTimeout(handler);
       };
     },
-    [value, delay] // Only re-call effect if value or delay changes
+    [value, delay], // Only re-call effect if value or delay changes
   );
 
   return debouncedValue;
@@ -1414,6 +1416,7 @@ export function useTimeInterval(callback, delay = fifteenSeconds, dependencies =
 
   useEffect(() => {
     if (typeof delay !== 'number') return;
+    if (timeoutId.current != null) return;
 
     const handleTick = () => {
       timeoutId.current = window.setTimeout(() => {
@@ -1425,12 +1428,41 @@ export function useTimeInterval(callback, delay = fifteenSeconds, dependencies =
 
     handleTick();
 
-    return () => window.clearTimeout(timeoutId.current);
+    return () => {
+      window.clearTimeout(timeoutId.current);
+      timeoutId.current = null;
+    };
   }, [delay, ...(dependencies || [])]);
 
   const cancel = useCallback(function () {
     window.clearTimeout(timeoutId.current);
+    timeoutId.current = null;
   }, []);
 
   return cancel;
+}
+
+export function useIsMouseIdleForSeconds(seconds = 5) {
+  const [isIdle, setIsIdle] = useState(null);
+
+  let timer = null;
+  function handleMouseMove() {
+    clearTimeout(timer);
+
+    setIsIdle(false);
+    timer = setTimeout(() => {
+      setIsIdle(true);
+    }, +seconds * 1000);
+  }
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return { isIdle };
 }

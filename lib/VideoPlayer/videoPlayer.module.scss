@@ -1,0 +1,145 @@
+@import '../../styles/base.scss';
+
+$video-player-background: $black;
+$text-color: $white;
+
+.videoPlayer {
+  background-color: $video-player-background;
+  color: $text-color;
+
+  margin-top: 70px;
+  height: 80vh;
+
+  display: flex;
+
+  video {
+    width: auto;
+    height: 100%;
+
+    margin: auto;
+  }
+}
+// $control-bar-height: 80px;
+// $progress-bar-height: 5px;
+
+// $video-player-background: $black;
+// $progress-bar-background: $white;
+// $progress-fill-background: $primary;
+
+// $z-index-video-element: 0;
+// $z-index-control-bar: 1;
+
+// $iconHeight: 35px;
+
+// .videoPlayer {
+//   position: relative;
+//   background-color: $video-player-background;
+
+//   // aspect-ratio: 16/9;
+//   height: 100%;
+//   width: 100%;
+
+//   overflow: hidden;
+
+//   .controlBar {
+//     position: absolute;
+//     bottom: 0;
+
+//     display: grid;
+//     grid-template-columns: repeat(12, 1fr);
+//     // align-items: center;
+//     // gap: 60px;
+
+//     width: 100%;
+//     height: $control-bar-height;
+//     background-color: rgba($primary, 0.5);
+
+//     z-index: $z-index-control-bar;
+
+//     .progressBar {
+//       grid-column: 1/14;
+
+//       background-color: $progress-bar-background;
+//       width: 100%;
+//       height: $progress-bar-height;
+
+//       opacity: 0.6;
+
+//       cursor: pointer;
+
+//       &:hover {
+//         opacity: 1;
+//         height: calc($progress-bar-height + 1px);
+
+//         .progressFill {
+//           &::after {
+//             height: calc($progress-bar-height + 10px);
+//             width: calc($progress-bar-height + 10px);
+//           }
+//         }
+//       }
+
+//       .progressFill {
+//         position: relative;
+//         background-color: $progress-fill-background;
+//         height: 100%;
+
+//         &::after {
+//           content: '';
+//           position: absolute;
+//           top: 50%;
+//           left: 100%;
+//           transform: translate(-50%, -50%);
+
+//           height: calc($progress-bar-height + 5px);
+//           width: calc($progress-bar-height + 5px);
+
+//           background-color: $progress-fill-background;
+//           border-radius: 50%;
+//         }
+//       }
+//     }
+
+//     .centerIcons {
+//       grid-column: 2/12;
+//       display: flex;
+//       justify-content: center;
+//       align-items: flex-start;
+//       gap: 50px;
+
+//       span {
+//         height: $iconHeight;
+//         cursor: pointer;
+
+//         &.rotate {
+//           transform: rotate(180deg);
+//         }
+//       }
+//     }
+
+//     .fullScreen {
+//       display: flex;
+//       justify-self: center;
+//       cursor: pointer;
+
+//       height: $iconHeight;
+//     }
+//   }
+
+//   .player {
+//     position: relative;
+//     height: 100%;
+//     width: 100%;
+
+//     video {
+//       position: absolute;
+//       top: 0;
+//       left: 0;
+
+//       height: 100%;
+//       width: 100%;
+
+//       z-index: $z-index-video-element;
+//     }
+//   }
+// }

@@ -2,13 +2,13 @@ export const COURSE_TYPES = {
   selfPaced: 'self-paced',
   classroom: 'classroom',
   labs: 'labs',
-  testSeries: 'test-series'
+  testSeries: 'test-series',
 };
 
 export const COURSE_EXPERTISE_LEVEL = {
   beginner: 'Beginner',
   competent: 'Competent',
-  proficient: 'Proficient'
+  proficient: 'Proficient',
 };
 
 export const COURSE_STATUS = {
@@ -18,24 +18,24 @@ export const COURSE_STATUS = {
   publish: 'PUBLISHED',
   reject: 'REJECTED',
   approvalPending: 'APPROVAL_PENDING',
-  hold: 'ON_HOLD'
+  hold: 'ON_HOLD',
 };
 
 export const TOPIC_TYPES = {
   content: 'Content',
   lab: 'Lab',
   assessment: 'Assessment',
-  classroom: 'Classroom'
+  classroom: 'Classroom',
 };
 
 export const CLASSROOM_MASTER_STATUS = {
   save: 'SAVED',
-  draft: 'DRAFT'
+  draft: 'DRAFT',
 };
 
 export const TOPIC_CLASS_ROOM_STATUS = {
   active: 'active',
-  disable: 'disable'
+  disable: 'disable',
 };
 
 export const TOPIC_CONTENT_TYPES = {
@@ -44,12 +44,18 @@ export const TOPIC_CONTENT_TYPES = {
   html5: 'Web HTML5',
   mp4: 'mp4',
   cmi5: 'CMi5',
-  document: 'document'
+  document: 'document',
 };
 
 export const TOPIC_RESOURCE_TYPES = {
   pdf: 'PDF',
   excel: 'EXCEL',
   doc: 'DOC',
-  link: 'LINK'
+  link: 'LINK',
+};
+
+export const COURSE_PROGRESS_STATUS = {
+  notStarted: 'not-started',
+  started: 'in-progress',
+  completed: 'completed',
 };
