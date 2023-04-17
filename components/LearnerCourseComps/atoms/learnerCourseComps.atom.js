@@ -133,6 +133,7 @@ export function getSelectedResourcesDataObj(data = {}) {
   return {
     title: data?.title || null,
     url: data?.url || null,
+    type: data?.type || null,
   };
 }
 

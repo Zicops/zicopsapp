@@ -77,7 +77,6 @@ export default function useLoadCourseData() {
     loadUserTopicProgress();
 
     loadAllTopicResources();
-    loadUserNotes();
   }, [router.isReady, courseId]);
 
   // load user course map and topic progress
@@ -85,6 +84,7 @@ export default function useLoadCourseData() {
     if (!userId) return;
 
     loadUserCourseMap();
+    loadUserNotes();
   }, [userId]);
 
   // set topic id in active state if present if url
