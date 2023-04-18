@@ -213,7 +213,7 @@ const VcMaintool = ({ vcData = {} }) => {
               // Route.push('/admin/vctool')
 
               StartMeeting(
-                currentTopicData?.name,
+                currentTopicData?.id,
                 containerRef,
                 toggleAudio,
                 settoobar,

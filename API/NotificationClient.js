@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.notification
+  uri: API_LINKS.notification,
 });
 
 // Set query Client
 export const notificationClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export const GET_FCM_TOKEN = gql`
@@ -160,16 +160,22 @@ export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
   }
 `;
 // addMessagesMeet(message: Messages): Boolean
-export const ADD_TO_FIRESTORE = gql`
+export const ADD_TO_FIRESTORE_CHAT = gql`
   mutation addMessagesMeet(
-    $id: String
+    $meetingId: String
+    $userId: String
     $body: String
-    $meeting_id: String
-    $user_id: String
     $time: Int
+    $chatType: String
   ) {
     addMessagesMeet(
-      message: { id: $id, body: $body, meeting_id: $meeting_id, user_id: $user_id, time: $time }
-    ) 
+      message: {
+        meeting_id: $meetingId
+        user_id: $userId
+        body: $body
+        time: $time
+        chat_type: $chatType
+      }
+    )
   }
 `;

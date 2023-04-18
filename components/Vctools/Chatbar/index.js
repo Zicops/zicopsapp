@@ -5,37 +5,52 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 import ChatMessageBlock from './VcChatMessageBlock';
 import useLoadClassroomData from '../Logic/useLoadClassroomData';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { db } from '@/helper/firebaseUtil/firestore.helper';
+
 const ChatBar = ({ hide = false }) => {
-  const { addUpdateMessage,setMessageData } = useLoadClassroomData();
+  const { sendChatMessage } = useLoadClassroomData();
   const [message, setMessage] = useState('');
-  const [messageObj, setMessageObj] = useRecoilState(vcChatObj);
-  const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
-  const [sendMessage, setSendMessage] = useState(false);
+  // const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const userDetails = useRecoilValue(UserStateAtom);
-  // id: String
-  // console.log(messageArr)
+  const [classroomChats, setClassroomChats] = useState([]);
+
+  const meetMessagesRef = collection(db, 'MeetMessages');
+  const q = query(
+    meetMessagesRef,
+    where('meeting_id', '==', activeClassroomTopicId),
+    // where('chat_type', '==', 'classroom'),
+    // orderBy('time', 'asc'),
+  );
+
+  useEffect(async () => {
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const newMessages = [];
+      querySnapshot.forEach((doc) => {
+        newMessages.push({ id: doc.id, ...doc.data() });
+      });
+      setClassroomChats(newMessages);
+    });
+
+    return () => unsub();
+  }, []);
+
   const sendMessageHandler = async () => {
-    setSendMessage(true);
-    // const _messageObj = structuredClone(messageObj);
-    // _messageObj.body =message,
-    // _messageObj.meeting_id='',
-    // _messageObj.user_id=userDetails?.id,
-    // _messageObj.time= Math.floor(Date.now() / 1000)
-  
-    // setMessageObj(_messageObj);
-    
     const obj = {
-        body: message,
-        meeting_id: '',
-        user_id: userDetails?.id,
-        time: Math.floor(Date.now() / 1000)
-      };
-      setMessageData(obj)
-    setMessageArr([...messageArr, obj]);
-    // console.log(messageObj,_messageObj)
-    await addUpdateMessage();
+      meetingId: activeClassroomTopicId,
+      userId: userDetails?.id,
+      body: message,
+      time: Math.floor(Date.now() / 1000),
+      chatType: 'classroom' // move to constants
+    };
+
+    setClassroomChats([...classroomChats, obj]);
+    await sendChatMessage(obj);
     setMessage('');
   };
+
   const onMessageHandler = (e) => {
     setMessage(e.target.value);
   };
@@ -47,40 +62,42 @@ const ChatBar = ({ hide = false }) => {
     }
   };
 
-  function getReplies(data) {
-    const replies = {};
-    for (let i = 0; i < data?.length; i++) {
-      const message = data[i];
-      if (message?.reply_id) {
-        const parent = data?.find((m) => m.id === message?.reply_id);
-        if (parent) {
-          if (!replies[parent?.id]) {
-            replies[parent?.id] = {
-              parent: parent,
-              replies: []
-            };
-          }
-          replies[parent?.id]?.replies?.push(message);
-        }
-      } else {
-        if (!replies[message?.id]) {
-          replies[message?.id] = {
-            parent: message,
-            replies: []
-          };
-        }
-      }
-    }
-    return Object.values(replies).map((r) => ({
-      parent: r?.parent,
-      replies: r?.replies?.sort((a, b) => a.time - b.time)
-    }));
-  }
+  // function getReplies(data) {
+  //   const replies = {};
+  //   for (let i = 0; i < data?.length; i++) {
+  //     const message = data[i];
+  //     if (message?.reply_id) {
+  //       const parent = data?.find((m) => m.id === message?.reply_id);
+  //       if (parent) {
+  //         if (!replies[parent?.id]) {
+  //           replies[parent?.id] = {
+  //             parent: parent,
+  //             replies: [],
+  //           };
+  //         }
+  //         replies[parent?.id]?.replies?.push(message);
+  //       }
+  //     } else {
+  //       if (!replies[message?.id]) {
+  //         replies[message?.id] = {
+  //           parent: message,
+  //           replies: [],
+  //         };
+  //       }
+  //     }
+  //   }
+  //   return Object.values(replies).map((r) => ({
+  //     parent: r?.parent,
+  //     replies: r?.replies?.sort((a, b) => a.time - b.time),
+  //   }));
+  // }
 
-  const replies = getReplies(messageArr);
-  //   useEffect(() => {
-  //     console.log(messageArr);
-  //   }, [messageArr]);
+  // const replies = getReplies(messageArr);
+
+  useEffect(() => {
+    console.info(classroomChats);
+  }, [classroomChats]);
+
   return (
     <div className={`${styles.chatbar}`}>
       <div className={`${styles.chatbarHead}`}>
@@ -94,11 +111,11 @@ const ChatBar = ({ hide = false }) => {
       </div>
 
       <div className={`${styles.chatbarScreen}`}>
-        {messageArr?.map((data) => {
+        {classroomChats?.map((chat) => {
           return (
-            <>
-              <ChatMessageBlock message={data} />
-            </>
+            <span key={chat.id}>
+              <ChatMessageBlock message={chat} />
+            </span>
           );
         })}
       </div>

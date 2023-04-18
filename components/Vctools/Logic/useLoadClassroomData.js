@@ -1,15 +1,24 @@
-import { ADD_TO_FIRESTORE, ADD_UPDATE_CLASSROOM_FLAGS, notificationClient } from '@/api/NotificationClient';
+import {
+  ADD_TO_FIRESTORE_CHAT,
+  ADD_UPDATE_CLASSROOM_FLAGS,
+  notificationClient,
+} from '@/api/NotificationClient';
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import {
   TopicClassroomAtomFamily,
   getClassroomMasterDataObj,
-  getTopicClassroomObject
+  getTopicClassroomObject,
 } from '@/state/atoms/courses.atom';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { ClassRoomFlagsInput, vcChatBarAtom, vcChatObj, vcModeratorControlls } from '@/state/atoms/vctool.atoms';
+import {
+  ClassRoomFlagsInput,
+  vcChatBarAtom,
+  vcChatObj,
+  vcModeratorControlls,
+} from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
@@ -20,13 +29,10 @@ export default function useLoadClassroomData(topicId = null) {
   const setTopicClassroom = useRecoilCallback(
     ({ set }) =>
       (topicClassroomData = {}, topicId = null) =>
-        set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData))
+        set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData)),
   );
   const [controlls, setControlls] = useRecoilState(ClassRoomFlagsInput);
-  const [messageObj, setMessageObj] = useRecoilState(vcChatObj);
-  const fcmToken = useRecoilValue(FcmTokenAtom);
   const [isLoading, setIsLoading] = useState(null);
-  const [messageData,setMessageData]=useState({})
 
   useEffect(() => {
     if (!topicId) return;
@@ -47,7 +53,7 @@ export default function useLoadClassroomData(topicId = null) {
       GET_TOPIC_CLASSROOM,
       { topicId: topicId },
       {},
-      viltQueryClient
+      viltQueryClient,
     );
     const _topicClassroom = res?.getTopicClassroom;
 
@@ -66,7 +72,7 @@ export default function useLoadClassroomData(topicId = null) {
       createdAt: _topicClassroom?.created_at,
       createdBy: _topicClassroom?.created_by,
       updatedAt: _topicClassroom?.updated_at,
-      updatedBy: _topicClassroom?.updated_by
+      updatedBy: _topicClassroom?.updated_by,
     };
   }
 
@@ -93,18 +99,20 @@ export default function useLoadClassroomData(topicId = null) {
     //     .catch(() => setToastMessage('Update ClassRoom'));
     // }
   }
-  async function addUpdateMessage()
-  {
+  async function sendChatMessage(messageData) {
     const sendData = sanitizeFormData(messageData);
-    // console.log(messageObj)
-        mutateData(ADD_TO_FIRESTORE, sendData, { context: { headers: { 'fcm-token': fcmToken } } }, notificationClient)
-        .then((res) => {
-          if (!res?.addMessagesMeet) return setToastMessage('add chat Message error');
-          return
-        })
-        .catch(() => setToastMessage('add chat Message error'));
-    // ADD_TO_FIRESTORE
+    mutateData(
+      ADD_TO_FIRESTORE_CHAT,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!res?.addMessagesMeet) return setToastMessage('Chat send failed');
+        return;
+      })
+      .catch(() => setToastMessage('Chat send failed'));
   }
 
-  return { isLoading, addUpdateClassRoom ,addUpdateMessage,setMessageData};
+  return { isLoading, addUpdateClassRoom, sendChatMessage };
 }
