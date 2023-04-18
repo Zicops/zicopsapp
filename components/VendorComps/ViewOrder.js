@@ -92,6 +92,9 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
     if (orderData?.status === VENDOR_ORDER_STATUS?.completed) {
       setCurrentComponent(2);
     }
+    if (orderData?.status === VENDOR_ORDER_STATUS?.rejected) {
+      setCurrentComponent(2);
+    }
   }, [orderData]);
 
   const confirmOrderHandler = async () => {
@@ -121,7 +124,11 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
         VENDOR_ORDER_STATUS?.completed
       );
     }
-    if (currentComponent === 2) {
+
+    if (
+      currentComponent === 2 ||
+      (currentComponent === 2 && orderData?.status === VENDOR_ORDER_STATUS?.rejected)
+    ) {
       setViewOrder(false);
       setCurrentComponent('');
       setOrderDetails([]);
@@ -188,25 +195,13 @@ const ViewOrder = ({ orderId = null, viewOrder, setViewOrder, onSuccess = () => 
           ) : (
             <>
               {currentComponent === 0 && (
-                <ReviewAndTaxConfirm
-                  isViewOrder={true}
-                  orderStatus="Added"
-                  currency={allServicesData[0]?.currency}
-                />
+                <ReviewAndTaxConfirm isViewOrder={true} currency={allServicesData[0]?.currency} />
               )}
               {currentComponent === 1 && (
-                <ReviewAndTaxConfirm
-                  isViewOrder={true}
-                  orderStatus="Confirmed"
-                  currency={allServicesData[0]?.currency}
-                />
+                <ReviewAndTaxConfirm isViewOrder={true} currency={allServicesData[0]?.currency} />
               )}
               {currentComponent === 2 && (
-                <ReviewAndTaxConfirm
-                  isViewOrder={true}
-                  orderStatus="Completed"
-                  currency={allServicesData[0]?.currency}
-                />
+                <ReviewAndTaxConfirm isViewOrder={true} currency={allServicesData[0]?.currency} />
               )}
             </>
           )}

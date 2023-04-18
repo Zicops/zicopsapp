@@ -3,7 +3,7 @@ import ReviewOrderTop from './ReviewOrderTop';
 import ReviewOrderBottom from './ReviewOrderBottom';
 import { useRecoilState } from 'recoil';
 import { OrderAtom } from '@/state/atoms/vendor.atoms';
-const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus, currency }) => {
+const ReviewAndTaxConfirm = ({ isViewOrder = false, currency }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const taxAmount = (orderData?.total * orderData?.tax) / 100;
@@ -12,7 +12,7 @@ const ReviewAndTaxConfirm = ({ isViewOrder = false, orderStatus, currency }) => 
     <div>
       {isViewOrder ? (
         <p className={`${styles.addLineText}`}>
-          Order "{orderData?.id}" has been {orderStatus}
+          Order "{orderData?.id}" has been {orderData?.status}
         </p>
       ) : (
         <p className={`${styles.addLineText}`}>Confirm</p>
