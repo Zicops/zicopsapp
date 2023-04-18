@@ -19,14 +19,20 @@ const MyTrainers = () => {
     {
       field: 'first_name',
       headerClassName: 'course-list-header',
-      headerName: 'Trainer Name',
-      flex: 2
+      headerName: 'First Name',
+      flex: 1
+    },
+    {
+      field: 'last_name',
+      headerClassName: 'course-list-header',
+      headerName: 'Last Name',
+      flex: 1
     },
     {
       field: 'email',
       headerClassName: 'course-list-header',
       headerName: 'Email',
-      flex: 1
+      flex: 2
     },
     {
       field: 'type',
