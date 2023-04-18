@@ -4,8 +4,13 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import styles from '../adminCourse.module.scss';
 import InputDatePicker from '@/common/InputDatePicker';
 import RadioBox from '@/components/Tabs/common/RadioBox';
+import { CommercialsAtom } from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { changeHandler } from '@/helper/common.helper';
+import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
 
 const Commercials = () => {
+  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   return (
     <div className={`${styles.commerciasContainer}`}>
       <p>Pricing</p>
@@ -15,8 +20,13 @@ const Commercials = () => {
           type="checkbox"
           label="To be Decided"
           name="isMandatory"
-          isChecked={''}
-          changeHandler={''}
+          isChecked={commercialsData?.is_decided}
+          changeHandler={(e) => {
+            const isChecked = e.target.checked;
+            const _commercialData = structuredClone(commercialsData);
+            _commercialData.is_decided = isChecked;
+            setCommercialsData(_commercialData);
+          }}
         />
       </div>
 
@@ -26,9 +36,9 @@ const Commercials = () => {
             label: 'Priced Training',
             name: 'display',
             //   isDisabled: isDisabled,
-            description: 'Learners to pay and book the seat to attend the training'
-            // isChecked: fullCourse?.is_display,
-            // changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: true })
+            description: 'Learners to pay and book the seat to attend the training',
+            isChecked: commercialsData?.is_paid_traning,
+            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true })
           }}
         />
         <RadioBox
@@ -36,9 +46,9 @@ const Commercials = () => {
             label: 'Free of Cost Training',
             name: 'display',
             //   isDisabled: isDisabled,
-            description: 'Training is Free of Cost for Learners'
-            // isChecked: !fullCourse?.is_display,
-            // changeHandler: (e) => updateCourseMaster({ ...fullCourse, is_display: false })
+            description: 'Training is Free of Cost for Learners',
+            isChecked: commercialsData?.is_paid_traning,
+            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: false })
           }}
         />
       </div>
@@ -48,22 +58,29 @@ const Commercials = () => {
           <p className={`${styles.heading}`}>Price per seat:</p>
           <LabeledInput
             inputOptions={{
-              inputName: 'name',
+              inputName: 'price_per_seat',
               //   label: 'Name :',
               placeholder: 'Enter price per seat',
-              value: ''
+              value: commercialsData?.price_per_seat,
+              isNumericOnly: true
             }}
             styleClass={`${styles.labelMergin}`}
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
         <div>
           <p className={`${styles.heading}`}>Currency:</p>
           <LabeledDropdown
             dropdownOptions={{
-              inputName: 'percentage',
-              placeholder: 'INR'
+              inputName: 'currency',
+              placeholder: 'INR',
+              value: {
+                label: commercialsData?.currency,
+                value: commercialsData?.currency
+              },
+              options: currency
             }}
+            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData, 'currency')}
             styleClass={`${styles.labelMergin}`}
           />
         </div>
@@ -71,26 +88,28 @@ const Commercials = () => {
           <p className={`${styles.heading}`}>Tax:</p>
           <LabeledInput
             inputOptions={{
-              inputName: 'name',
+              inputName: 'tax_percentage',
               //   label: 'Name :',
               placeholder: 'Tax',
-              value: ''
+              value: commercialsData?.tax_percentage,
+              isNumericOnly: true
             }}
             styleClass={`${styles.labelMergin}`}
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
         <div>
           <p className={`${styles.heading}`}>Total:</p>
           <LabeledInput
             inputOptions={{
-              inputName: 'name',
+              inputName: 'total',
               //   label: 'Name :',
               placeholder: 'Auto-populated',
-              value: ''
+              value: commercialsData?.total,
+              isNumericOnly: true
             }}
             styleClass={`${styles.labelMergin}`}
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            // changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
       </div>
@@ -109,32 +128,28 @@ const Commercials = () => {
           <p className={`${styles.heading}`}>Maximum number of registrations:</p>
           <LabeledInput
             inputOptions={{
-              inputName: 'name',
+              inputName: 'max_registrations',
               //   label: 'Name :',
               placeholder: 'Enter max number of registrations',
-              value: ''
+              value: commercialsData?.max_registrations,
+              isNumericOnly: true
             }}
             styleClass={`${styles.labelMergin}`}
-
-            // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
         <div className={`${styles.registrationMax}`}>
           <p className={`${styles.heading}`}>Registrations end date:</p>
           <InputDatePicker
             styleClass={`${styles.labelMergin}`}
-            // selectedDate={examTabData?.exam_end}
+            selectedDate={commercialsData?.registration_end_date}
             // minDate={examTabData?.exam_start}
-            // changeHandler={(date) => {
-            //   const endDate = updateDate(date, examTabData?.exam_end);
-
-            //   const isBehind = isEndTimeBehind(endDate);
-
-            //   setExamTabData({
-            //     ...examTabData,
-            //     exam_end: isBehind ? getTimeWithDuration() : endDate
-            //   });
-            // }}
+            changeHandler={(date) => {
+              setCommercialsData({
+                ...commercialsData,
+                registration_end_date: date
+              });
+            }}
             // isDisabled={isPreview}
           />
         </div>
@@ -148,30 +163,60 @@ const Commercials = () => {
         <div className={`${styles.registrationMax}`}>
           <div className={`${styles.bookdate}`}>
             <p className={`${styles.heading}`}>Booking start date:</p>
-            <InputDatePicker styleClass={`${styles.labelMergin}`} />
+            <InputDatePicker
+              styleClass={`${styles.labelMergin}`}
+              selectedDate={commercialsData?.booking_start_date}
+              // minDate={examTabData?.exam_start}
+              changeHandler={(date) => {
+                setCommercialsData({
+                  ...commercialsData,
+                  booking_start_date: date
+                });
+              }}
+            />
           </div>
           <div className={`${styles.checkbox}`}>
             <LabeledRadioCheckbox
               type="checkbox"
               label="Same as Course Publish Date"
-              name="isMandatory"
-              isChecked={''}
-              changeHandler={''}
+              name="isCoursePublishDate"
+              isChecked={commercialsData?.is_publish_date}
+              changeHandler={(e) => {
+                const isChecked = e.target.checked;
+                const _commercialData = structuredClone(commercialsData);
+                _commercialData.is_publish_date = isChecked;
+                setCommercialsData(_commercialData);
+              }}
             />
           </div>
         </div>
         <div className={`${styles.registrationMax}`}>
           <div className={`${styles.bookdate}`}>
             <p className={`${styles.heading}`}>Booking end date:</p>
-            <InputDatePicker styleClass={`${styles.labelMergin}`} />
+            <InputDatePicker
+              styleClass={`${styles.labelMergin}`}
+              selectedDate={commercialsData?.booking_end_date}
+              // minDate={examTabData?.exam_start}
+              changeHandler={(date) => {
+                setCommercialsData({
+                  ...commercialsData,
+                  booking_end_date: date
+                });
+              }}
+            />
           </div>
           <div className={`${styles.checkbox}`}>
             <LabeledRadioCheckbox
               type="checkbox"
               label="Same as Course Start Date"
-              name="isMandatory"
-              isChecked={''}
-              changeHandler={''}
+              name="isCourseStartDate"
+              isChecked={commercialsData?.is_start_date}
+              changeHandler={(e) => {
+                const isChecked = e.target.checked;
+                const _commercialData = structuredClone(commercialsData);
+                _commercialData.is_start_date = isChecked;
+                setCommercialsData(_commercialData);
+              }}
             />
           </div>
         </div>
