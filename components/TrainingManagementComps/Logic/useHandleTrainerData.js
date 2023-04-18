@@ -35,6 +35,7 @@ export default function useHandleTrainerData() {
     addUpdateTrainer();
   }, [localUserId]);
 
+
   async function addUpdateTrainer(isToasterDisplay = true) {
     const sendData = {
       ...trainerData,
@@ -43,7 +44,9 @@ export default function useHandleTrainerData() {
       expertise: trainerData?.expertise || []
     };
 
+
     if (!isToasterDisplay) return;
+
     if (!sendData?.userId)
       return setToastMsg({ type: 'danger', message: 'Please Select your Trainer' });
     if (!sendData?.expertise.length) {
@@ -69,7 +72,7 @@ export default function useHandleTrainerData() {
     const lspId = sessionStorage.getItem('lsp_id');
 
     if (!isToasterDisplay) return;
-
+    
     if (!trainerData?.inviteEmails)
       return setToastMsg({ type: 'danger', message: 'Please Enter an email to invite' });
 

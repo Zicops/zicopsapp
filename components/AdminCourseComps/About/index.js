@@ -167,6 +167,7 @@ export default function About() {
                   })
                 }
                 isLoading={trainersList == null}
+
                 customDropdownStyles={customDropdownStyleObj}
               />
               <div className={`${styles.aboutCheckbox}`}>
