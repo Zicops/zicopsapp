@@ -7,13 +7,16 @@ import styles from './../trainingComps.module.scss';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import Button from '@/components/common/Button';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
+import { useRecoilState } from 'recoil';
+import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms';
 
 export default function AddTrainerPopup({ popUpState = [] }) {
   const { addUpdateTrainer, handleMail } = useHandleTrainerData();
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
   const tabData = [
     {
-      name: 'Selecting Exisitng User ',
+      name: 'Select Existing User ',
       component: <SelectExistingUser />
     },
     {
@@ -26,7 +29,14 @@ export default function AddTrainerPopup({ popUpState = [] }) {
 
   return (
     <>
-      <VendorPopUp title="Add Trainer" popUpState={popUpState} size="large" isFooterVisible={false}>
+      <VendorPopUp
+        title="Add Trainer"
+        popUpState={popUpState}
+        size="large"
+        isFooterVisible={false}
+        headerComps={
+          'Selected user can be added as Trainer and will be mapped to Classroom Trainings'
+        }>
         <TabContainer
           tabData={tabData}
           tab={tab}
@@ -43,13 +53,21 @@ export default function AddTrainerPopup({ popUpState = [] }) {
         <div className={`${styles.footerButton}`}>
           <Button text={'Cancel'} />
           <Button
-            text={'Save'}
-            clickHandler={() => {
-              addUpdateTrainer();
-              handleMail();
+            text={tab === tabData[0]?.name ? 'Save' : 'Send Invite'}
+            clickHandler={(e) => {
+              addUpdateTrainer(tab === tabData[0]?.name);
+              handleMail(tab === tabData[1]?.name);
             }}
           />
-          <Button text={'Save & Add More'} />
+          {tab === tabData[0]?.name && (
+            <Button
+              text={'Save & Add More'}
+              clickHandler={async () => {
+                await addUpdateTrainer();
+                setTrainerData(getTrainerDataObj());
+              }}
+            />
+          )}
         </div>
       </VendorPopUp>
     </>
