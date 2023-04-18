@@ -1,66 +1,66 @@
+$textColor: #ACACAC;
 
-.chatBox
-{
+.chatBox {
   width: 296px;
-  height:auto;
-  margin-top: 10px;
+  padding: 10px 0;
 }
-.profileImg
-{
+
+.profileImg {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  img 
-  {
+
+  img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    margin-right: 8px;
   }
 }
-.personName
-{
+
+.personName {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   color: #acacac;
+  margin-left: 10px;
 }
-.iconName
-{
-  width: 36%;
-  display: flex;
-  justify-content: space-between;
-}
-.messageTime
-{
+
+.iconName {
   width: 75%;
   display: flex;
-  justify-content: flex-end;
-  color: #ACACAC;
 }
-.messageHead
-{
+
+.messageTime {
+  width: 25%;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 15px;
+  color: $textColor;
+}
+
+.messageHead {
   width: 100%;
   display: flex;
-  // justify-content: space-between;
+  justify-content: space-between;
   align-items: center;
 }
-.mainMessage
-{
+
+.mainMessage {
   width: 100%;
-  min-height: 30px;
-  max-height: 100%;
+  // min-height: 30px;
+  // max-height: 100%;
   display: flex;
-  
-  div 
-  {
+  margin: 5px 0;
+
+  div {
     width: 255px;
-    margin: auto;
-    padding-left: 12px;
-    text-align: justify;
     display: flex;
+    // text-align: justify;
+    margin: auto;
+    padding-left: 15px;
     height: 100%;
-    color: white;
+    color: $white;
     // height: max-content;
-    float: right;
+    // float: right;
+    font-size: 14px;
   }
 }

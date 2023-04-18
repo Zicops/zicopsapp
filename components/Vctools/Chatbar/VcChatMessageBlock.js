@@ -25,7 +25,6 @@ const ChatMessageBlock = ({ isReply, message }) => {
 
           <div className={`${style.messageTime}`}>
             {moment(message.time * 1000).format('LT')}
-            {}
           </div>
         </div>
         <div className={`${style.mainMessage}`}>

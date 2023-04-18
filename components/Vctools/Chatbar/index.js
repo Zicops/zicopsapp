@@ -94,9 +94,9 @@ const ChatBar = ({ hide = false }) => {
 
   // const replies = getReplies(messageArr);
 
-  useEffect(() => {
-    console.info(classroomChats);
-  }, [classroomChats]);
+  // useEffect(() => {
+  //   console.info(classroomChats);
+  // }, [classroomChats]);
 
   return (
     <div className={`${styles.chatbar}`}>

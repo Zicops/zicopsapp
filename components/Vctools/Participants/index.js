@@ -9,26 +9,29 @@ import { useEffect } from 'react';
 
 const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
   // participantJoinData
-  // const userData = useRecoilValue(UserStateAtom);
-  const vcToolUserList=useRecoilValue(participantJoinData)
+  const userData = useRecoilValue(UserStateAtom);
+  const vcToolUserList = useRecoilValue(participantJoinData);
   const userList = useRecoilValue(vctoolAlluserinfo);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
   const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
   const modList = [];
   const learnerList = [];
-  
+
   userList?.forEach((user) => {
     // user id is present in the user profule picture storage path
-    const pattern = /profiles\/([A-za-z0-9]+)\//;
-    const userId = user?.avatarURL?.match(pattern)?.[1];
+    const pattern = /profiles\/([A-za-z0-9=]+)\//;
+    const userId = decodeURIComponent(user?.avatarURL)?.match(pattern)?.[1];
 
-    if (modIdList?.includes(userId)) return modList.push(user);
- 
-    let data={...user,isHandRise:true,isAudioEnable:false,isVideoEnable:false};
-    learnerList.push(data)
-    
+    if (modIdList?.includes(userId)) return modList.push({ ...user, isHandRise: true, isAudioEnable: true, isVideoEnable: true });
+
+    let data = { ...user, isHandRise: true, isAudioEnable: false, isVideoEnable: false };
+    learnerList.push(data);
   });
+
+  useEffect(() => {
+    console.info(modIdList, userData.id, userList);
+  }, [classroomData]);
 
   return (
     <div className={`${styles.participantsBar}`}>
@@ -53,11 +56,12 @@ const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
               name={data?.displayName || data?.formattedDisplayName}
               avatarUrl={data?.avatarURL}
               frameIcons={{
-                isRiseHand:true,
-                isAudio:true,
-                isvideo:true
+                isRiseHand: data?.isHandRise,
+                isAudio: data?.isAudioEnable,
+                isvideo: data?.isVideoEnable,
               }}
-           api={api} />
+              api={api}
+            />
           ))}
 
           {!modList?.length && <small>No Moderators Joined</small>}
@@ -65,16 +69,17 @@ const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
 
         <div className={`${styles.participantsScreenhead}`}>Learners</div>
         <div className={`${styles.allInstructors}`}>
-          {learnerList.map((data,index) => (
+          {learnerList.map((data, index) => (
             <StudentFrame
               name={data?.displayName || data?.formattedDisplayName}
               avatarUrl={data?.avatarURL}
               frameIcons={{
-                isRiseHand:data?.isHandRise,
-                isAudio:data?.isAudioEnable,
-                isvideo:data?.isVideoEnable
+                isRiseHand: data?.isHandRise,
+                isAudio: data?.isAudioEnable,
+                isvideo: data?.isVideoEnable,
               }}
-            api={api}/>
+              api={api}
+            />
           ))}
 
           {!learnerList?.length && <small>No Learners Joined</small>}
