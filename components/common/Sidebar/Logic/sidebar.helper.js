@@ -192,6 +192,29 @@ export const vendorSideBarData = {
   ]
 };
 
+export const trainerSideBarData = {
+  image: '/images/UserManagement.png',
+  heading: 'Training Management',
+  data: [
+    {
+      id: 1,
+      title: 'Classroom Training',
+      link: ''
+    },
+    {
+      id: 2,
+      title: 'Trainers',
+      link: '/admin/training/trainers',
+      isCustomRoute: true
+    },
+    {
+      id: 3,
+      title: 'Dashboard',
+      link: '/admin'
+    }
+  ]
+};
+
 export const analyticsSideBarData = {
   image: '/images/Analytics.png',
   heading: 'Analytics',

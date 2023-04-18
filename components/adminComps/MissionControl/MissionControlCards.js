@@ -146,7 +146,7 @@ const MissionControlCards = () => {
                 />
               </a>
             </Link>
-            <Link href={isDev ? '/admin/vctool' : ''}>
+            <Link href={isDev ? '/admin/training/trainers' : ''}>
               <a>
                 <Card
                   image="/images/TrainingManagement.png"

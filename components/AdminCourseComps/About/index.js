@@ -68,7 +68,8 @@ export default function About() {
       name: user?.full_name,
       isSelected: false,
       email: user?.email,
-      user_id: user?.id
+      user_id: user?.id,
+      photo: user?.photo_url
     };
   }
   // const Moderators = [
@@ -111,13 +112,30 @@ export default function About() {
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
 
+  const customDropdownStyleObj = {
+    placeholderStyles: { color: '#747474' },
+    optionStyles: {
+      background: 'var(--black)',
+      color: 'var(--white)',
+      '&:hover': {
+        background: styles.darkTwo
+      }
+    }
+    // menuStyles: { background: 'var(--red)' },
+    // dropdownIndicatorStyles: {
+    //   color: 'var(--white)',
+    //   '&:hover': {
+    //     svg: { fill: 'var(--background_body)' }
+    //   }
+    // }
+  };
+
   return (
     <>
       <div className={`${styles.aboutHead}`}>Course overview</div>
       {!!isClassroomCourse && (
         <>
-          <div
-            className={`${styles.aboutInputTrainerModerator} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+          <div className={` ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
             <div className={`${styles.aboutTrainer}`}>
               <lable>Trainer :</lable>
               <LabeledDropdown
@@ -128,7 +146,20 @@ export default function About() {
                   menuPlacement: 'bottom',
                   isMulti: true,
                   options: trainers?.map((trainee, index) => ({
-                    label: trainee.name,
+                    label: (
+                      <div className={`${styles.trainerOptions}`}>
+                        {/*<div>
+                          <LabeledRadioCheckbox type="checkbox" />
+                        </div>*/}
+                        <div className={`${styles.trainerImage}`}>
+                          <img src={trainee.photo} />
+                        </div>
+                        <div className={`${styles.nameEmailTrainer}`}>
+                          <p>{trainee.name}</p>
+                          <p className={`${styles.email}`}>{trainee.email}</p>
+                        </div>
+                      </div>
+                    ),
                     value: trainee.name,
                     ...trainee
                   })),
@@ -153,6 +184,7 @@ export default function About() {
                   })
                 }
                 isLoading={trainerCandidates == null}
+                customDropdownStyles={customDropdownStyleObj}
               />
               <div className={`${styles.aboutCheckbox}`}>
                 <LabeledRadioCheckbox
@@ -191,7 +223,20 @@ export default function About() {
                   menuPlacement: 'bottom',
                   isMulti: true,
                   options: moderators?.map((mod, index) => ({
-                    label: mod?.name,
+                    label: (
+                      <div className={`${styles.trainerOptions}`}>
+                        {/*<div>
+                        <LabeledRadioCheckbox type="checkbox" />
+                      </div>*/}
+                        <div className={`${styles.trainerImage}`}>
+                          <img src={mod.photo} />
+                        </div>
+                        <div>
+                          <p>{mod.name}</p>
+                          <p>{mod.email}</p>
+                        </div>
+                      </div>
+                    ),
                     value: mod?.name,
                     ...mod
                   })),
@@ -216,6 +261,8 @@ export default function About() {
                     }))
                   })
                 }
+                customDropdownStyles={customDropdownStyleObj}
+                isDisplayButton={true}
               />
               <div className={`${styles.aboutCheckbox}`}>
                 <LabeledRadioCheckbox

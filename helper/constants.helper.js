@@ -11,7 +11,12 @@ export const COURSE_MAP_STATUS = {
   disable: 'disable',
   invitedDisable: 'invited_disable'
 };
-export const USER_LSP_ROLE = { admin: 'admin', learner: 'learner', vendor: 'vendor' };
+export const USER_LSP_ROLE = {
+  admin: 'admin',
+  learner: 'learner',
+  vendor: 'vendor',
+  trainer: 'trainer'
+};
 export const USER_TYPE = { internal: 'internal', external: 'external' };
 export const SYNC_DATA_IN_SECONDS = 15;
 export const MAX_ATTEMPT_COUNT = 5;
