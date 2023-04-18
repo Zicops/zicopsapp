@@ -17,6 +17,7 @@ import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
 import styles from '../adminCourseComps.module.scss';
 import BulletPointInput from './BulletPointInput';
+import useHandleTrainerData from '@/components/TrainingManagementComps/Logic/useHandleTrainerData';
 
 export default function About() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
@@ -26,17 +27,27 @@ export default function About() {
     handleCourseMetaChange,
     getTrainersAndModerators,
     handleClassroomMasterChange,
-    trainerCandidates,
     moderatorCandidates
   } = useHandleCourseData();
+  
+  const { getPaginatedTrainers } = useHandleTrainerData();
 
   const [title, settitle] = useState('');
   const [typeMOderator, settypeModerator] = useState('internal');
 
   useEffect(() => {
-    if (trainerCandidates?.length && moderatorCandidates?.length) return;
+    if (moderatorCandidates?.length) return;
 
     getTrainersAndModerators().catch((err) => console.log(err));
+  }, []);
+
+  const [trainersList, setTrainersList] = useState([]);
+
+
+  useEffect(() => {
+    getPaginatedTrainers()?.then((data) => {
+      setTrainersList(data || []);
+    });
   }, []);
 
   function showDropdown(title) {
@@ -44,48 +55,20 @@ export default function About() {
     const obj = dropDown?.find((data) => data.title === title);
     return obj.component;
   }
-  // const listModerator = ["internal", "Externar"]
-  // let Trainers = [
-  //   {
-  //     name: 'sandeep',
-  //     isSelected: false
-  //   },
-  //   {
-  //     name: 'XYZ',
-  //     isSelected: false
-  //   },
-  //   {
-  //     name: 'ABC',
-  //     isSelected: false
-  //   }
-  // ];
 
-  let trainers = trainerCandidates?.map(getUserListObject);
+  let trainers = trainersList?.map(getUserListObject);
   let moderators = moderatorCandidates?.map(getUserListObject);
 
   function getUserListObject(user) {
     return {
-      name: user?.full_name,
+      name: user?.first_name + ' ' + user?.last_name,
       isSelected: false,
       email: user?.email,
       user_id: user?.id,
       photo: user?.photo_url
     };
   }
-  // const Moderators = [
-  //   {
-  //     name: 'sandeep1',
-  //     isSelected: false
-  //   },
-  //   {
-  //     name: 'XYZ1',
-  //     isSelected: false
-  //   },
-  //   {
-  //     name: 'ABC1',
-  //     isSelected: false
-  //   }
-  // ];
+
   const dropDown = [
     {
       title: 'dropdown',
@@ -183,7 +166,7 @@ export default function About() {
                     }))
                   })
                 }
-                isLoading={trainerCandidates == null}
+                isLoading={trainersList == null}
                 customDropdownStyles={customDropdownStyleObj}
               />
               <div className={`${styles.aboutCheckbox}`}>
