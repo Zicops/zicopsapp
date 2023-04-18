@@ -49,7 +49,7 @@ const AddTrainingExpertise = () => {
         inputDataObj={{
           inputOptions: {
             inputName: 'filter',
-            placeholder: 'Search...',
+            placeholder: 'Search Training Expertise...',
             value: expertiseSearchValue
           }
         }}
