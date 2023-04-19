@@ -4,10 +4,10 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import styles from '../adminCourse.module.scss';
 import InputDatePicker from '@/common/InputDatePicker';
 import RadioBox from '@/components/Tabs/common/RadioBox';
-import { CommercialsAtom } from '@/state/atoms/vendor.atoms';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
+import { CommercialsAtom } from '@/state/atoms/courses.atom';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
@@ -23,7 +23,7 @@ const Commercials = () => {
           isChecked={commercialsData?.is_decided}
           changeHandler={(e) => {
             const isChecked = e.target.checked;
-            const _commercialData = structuredClone(commercialsData);
+            const _commercialData = { ...commercialsData };
             _commercialData.is_decided = isChecked;
             setCommercialsData(_commercialData);
           }}
@@ -35,7 +35,7 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Priced Training',
             name: 'display',
-            //   isDisabled: isDisabled,
+            isDisabled: commercialsData?.is_decided,
             description: 'Learners to pay and book the seat to attend the training',
             isChecked: commercialsData?.is_paid_traning,
             changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true })
@@ -45,10 +45,10 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Free of Cost Training',
             name: 'display',
-            //   isDisabled: isDisabled,
+            isDisabled: commercialsData?.is_decided,
             description: 'Training is Free of Cost for Learners',
-            isChecked: commercialsData?.is_paid_traning,
-            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: false })
+            isChecked: commercialsData?.is_free_traning,
+            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_free_traning: true })
           }}
         />
       </div>
@@ -105,7 +105,7 @@ const Commercials = () => {
               inputName: 'total',
               //   label: 'Name :',
               placeholder: 'Auto-populated',
-              value: commercialsData?.total,
+              value: +commercialsData?.price_per_seat + +commercialsData?.tax_percentage,
               isNumericOnly: true
             }}
             styleClass={`${styles.labelMergin}`}

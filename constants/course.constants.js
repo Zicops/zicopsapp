@@ -53,3 +53,8 @@ export const TOPIC_RESOURCE_TYPES = {
   doc: 'DOC',
   link: 'LINK'
 };
+export const COMMERCIAL_PRICEING_TYPE = {
+  tbd: 'TBD',
+  paid: 'PAID',
+  free: 'FREE'
+};
