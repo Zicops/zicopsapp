@@ -136,3 +136,60 @@ export const UPDATE_TOPIC_CLASSROOM = gql`
     }
   }
 `;
+
+export const CREATE_COMMERCIALS_DATA = gql`
+  mutation createViltData($input: ViltInput) {
+    createViltData(input: $input) {
+      id
+      lsp_id
+      course_id
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_publish_by
+      registration_publish_on
+      booking_publish_on
+      booking_publish_by
+      registration_start_date
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
+export const UPDATE_COMMERCIALS_DATA = gql`
+  mutation updateViltData($input: ViltInput) {
+    updateViltData(input: $input) {
+      id
+      lsp_id
+      course_id
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_publish_by
+      registration_publish_on
+      booking_publish_on
+      booking_publish_by
+      registration_start_date
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
