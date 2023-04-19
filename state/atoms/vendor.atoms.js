@@ -253,32 +253,3 @@ export const AllServicesAtom = atom({
   key: 'allservicesState',
   default: []
 });
-export const CommercialsAtom = atom({
-  key: 'commercialsState',
-  default: getCourseCommercialsObject
-});
-export function getCourseCommercialsObject(data) {
-  return {
-    id: data?.id || null,
-    courseId: data?.courseId || null,
-    is_decided: data?.is_decided,
-    is_paid_traning: data?.is_paid_traning,
-    price_per_seat: data?.price_per_seat || '',
-    currency: data?.currency,
-    tax_percentage: data?.tax_percentage || null,
-    total: data?.total || null,
-    is_registration_open: data?.is_registration_open,
-    is_booking_open: data?.is_booking_open,
-    max_registrations: data?.max_registrations || null,
-    registration_end_date: data?.registration_end_date,
-    booking_start_date: data?.booking_start_date,
-    booking_end_date: data?.booking_end_date,
-    registration_publish_by: data?.registration_publish_by,
-    registration_publish_on: data?.registration_publish_on,
-    booking_publish_on: data?.booking_publish_on,
-    booking_publish_by: data?.booking_publish_by,
-    registration_start_date: data?.registration_start_date,
-    is_publish_date: data?.is_publish_date,
-    is_start_date: data?.is_start_date
-  };
-}
