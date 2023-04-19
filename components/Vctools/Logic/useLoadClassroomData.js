@@ -144,9 +144,8 @@ export default function useLoadClassroomData(topicId = null) {
       notificationClient,
     )
       .then((res) => {
-        console.info(res);
-        // if (!res?.addMessagesMeet) return setToastMessage('Poll response could not be submitted.');
-        return;
+        if (!res?.updatePollOptions) return setToastMessage('Poll response could not be submitted.');
+        return setToastMessage('Poll response submitted successfully.', 'success');;
       })
       .catch(() => setToastMessage('Poll response could not be submitted.'));
   }
