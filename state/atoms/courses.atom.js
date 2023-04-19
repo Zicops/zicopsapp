@@ -1,4 +1,4 @@
-import { ALL_COURSE_TYPES, COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
