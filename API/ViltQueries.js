@@ -62,3 +62,37 @@ export const GET_TOPIC_CLASSROOM = gql`
     }
   }
 `;
+
+export const GET_PAGINATED_TRAINERS = gql`
+  query getTrainerData(
+    $lsp_id: String
+    $vendor_id: String
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+  ) {
+    getTrainerData(
+      lsp_id: $lsp_id
+      vendor_id: $vendor_id
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      trainers {
+        id
+        lsp_id
+        user_id
+        vendor_id
+        expertise
+        status
+        created_at
+        created_by
+        updated_at
+        updated_by
+      }
+      pageCursor
+      Direction
+      pageSize
+    }
+  }
+`;

@@ -5,15 +5,18 @@ import styles from './../trainingComps.module.scss';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { useRecoilState } from 'recoil';
 import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
+import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
 export default function SelectExistingUser() {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
-  const { getTrainersAndModerators, trainerCandidates } = useHandleCourseData();
+  const [trainersList, setTrainersList] = useState([]);
+
+  const { getPaginatedTrainers } = useHandleTrainerData();
 
   useEffect(() => {
-    if (trainerCandidates?.length) return;
-
-    getTrainersAndModerators().catch((err) => console.log(err));
+    getPaginatedTrainers()?.then((data) => {
+      setTrainersList(data || []);
+    });
   }, []);
 
   const customDropdownStyleObj = {
@@ -22,22 +25,22 @@ export default function SelectExistingUser() {
       background: 'var(--black)',
       color: 'var(--white)',
       '&:hover': {
-        background: styles.darkTwo
-      }
-    }
+        background: styles.darkTwo,
+      },
+    },
   };
 
   function getUserListObject(user) {
     return {
-      name: user?.full_name,
+      name: user?.first_name + ' ' + user?.last_name,
       isSelected: false,
       email: user?.email,
       userId: user?.id,
-      photo: user?.photo_url
+      photo: user?.photo_url,
     };
   }
 
-  let trainers = trainerCandidates?.map(getUserListObject);
+  let trainers = trainersList?.map(getUserListObject);
   return (
     <div>
       <div>
@@ -68,14 +71,14 @@ export default function SelectExistingUser() {
                 </div>
               ),
               value: trainee.userId,
-              ...trainee
+              ...trainee,
             })),
             value: {
               label: `${trainerData?.name || ''} (${trainerData?.email || ''}) - ${
                 trainerData?.tags || 'Internal'
               }`,
-              value: trainerData?.name
-            }
+              value: trainerData?.name,
+            },
           }}
           isFullWidth={true}
           changeHandler={(e) =>
@@ -84,10 +87,10 @@ export default function SelectExistingUser() {
               userId: e.userId,
               name: e.name,
               email: e.email,
-              photo: e.photo
+              photo: e.photo,
             }))
           }
-          isLoading={trainerCandidates == null}
+          isLoading={trainersList == null}
           isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />
