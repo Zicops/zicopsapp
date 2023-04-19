@@ -20,19 +20,19 @@ const MyTrainers = () => {
       field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'Trainer Name',
-      flex: 2
+      flex: 2,
     },
     {
       field: 'email',
       headerClassName: 'course-list-header',
       headerName: 'Email',
-      flex: 1
+      flex: 1,
     },
     {
       field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Type',
-      flex: 1
+      flex: 1,
     },
     {
       field: 'action',
@@ -43,24 +43,24 @@ const MyTrainers = () => {
         const buttonArr = [
           {
             text: 'View',
-            handleClick: ''
+            handleClick: '',
           },
           {
             text: 'Edit',
-            handleClick: ''
+            handleClick: '',
           },
           {
             text: 'disable',
-            handleClick: ''
-          }
+            handleClick: '',
+          },
         ];
         return (
           <>
             <EllipsisMenu buttonArr={buttonArr} />
           </>
         );
-      }
-    }
+      },
+    },
   ];
 
   const options = [{ label: 'Name', value: 'name' }];

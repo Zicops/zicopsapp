@@ -14,12 +14,12 @@ export default function AddTrainerPopup({ popUpState = [] }) {
   const tabData = [
     {
       name: 'Selecting Exisitng User ',
-      component: <SelectExistingUser />
+      component: <SelectExistingUser />,
     },
     {
       name: 'Invite New Trainer',
-      component: <InviteNewTrainer />
-    }
+      component: <InviteNewTrainer />,
+    },
   ];
 
   const [tab, setTab] = useState(tabData[0].name);
@@ -32,7 +32,7 @@ export default function AddTrainerPopup({ popUpState = [] }) {
           tab={tab}
           setTab={setTab}
           footerObj={{
-            showFooter: false
+            showFooter: false,
           }}
           customStyles={{ backgroundColor: 'transparent', height: 'auto', overflow: 'unset' }}
         />

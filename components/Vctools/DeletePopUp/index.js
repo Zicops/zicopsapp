@@ -1,8 +1,8 @@
 import styles from './deletePopUp.module.scss'
-const DeletePoUp=({poUpOptions})=>
+const DeletePopUp=({poUpOptions,cancelFunc,deletePollFunc,styleBtns})=>
 {
     const {popUpName,popUpNotice,poupBtnInfo1,poupBtnInfo2}=poUpOptions;
-    // const {btn1,btn2}=styleBtns
+    const {cancelPopupClass,deletePopupclass}=styleBtns
     return(
         <div className={`${styles.deletePopUpContainer}`}>
           <div className={`${styles.deletePoupInnerContainer}`}>
@@ -11,11 +11,11 @@ const DeletePoUp=({poUpOptions})=>
                 {popUpNotice}
             </div>
             <div className={`${styles.deletePoupBtn}`}>
-                <button >{poupBtnInfo1}</button>
-                <button >{poupBtnInfo2}</button>
+                <button onClick={()=> cancelFunc()} className={cancelPopupClass}>{poupBtnInfo1}</button>
+                <button onClick={()=>deletePollFunc()} className={deletePopupclass} >{poupBtnInfo2}</button>
             </div>
           </div>
         </div>
     )
 };
-export default DeletePoUp;
+export default DeletePopUp;

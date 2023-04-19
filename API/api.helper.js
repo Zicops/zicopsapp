@@ -13,7 +13,7 @@ export const API_LINKS = {
   userClient: `${API_BASE}/um/api/v1/query`,
   viltClient: `${API_BASE}/vm/api/v1/query`,
   resetPassword: `${API_BASE}/um/reset-password`,
-  getOrg: `${API_BASE}/um/org`
+  getOrg: `${API_BASE}/um/org`,
 };
 
 export async function getLatestToken(token) {
@@ -32,10 +32,12 @@ export async function getLatestToken(token) {
     onAuthStateChanged(auth, () => {
       if (!auth?.currentUser) return;
 
-      getIdToken(auth?.currentUser, true).then((newToken) => {
-        sessionStorage.setItem('tokenF', newToken);
-        return resolve(newToken);
-      });
+      getIdToken(auth?.currentUser, true)
+        .then((newToken) => {
+          sessionStorage.setItem('tokenF', newToken);
+          return resolve(newToken);
+        })
+        .catch((err) => console.log(err));
     });
   }).catch((err) => console.log(err));
 }
@@ -53,7 +55,7 @@ export const authLink = setContext(async (_, { headers }) => {
       Authorization: fireBaseToken ? `Bearer ${fireBaseToken}` : '',
       tenant: lspId,
       role: isUserLspRoleAdmin ? 'admin' : 'learner',
-      ...headers
-    }
+      ...headers,
+    },
   };
 });

@@ -12,12 +12,12 @@ import { LIMITS, ONE_MB_IN_BYTES } from '@/helper/constants.helper';
 import {
   CourseMetaDataAtom,
   TopicContentListAtom,
-  TopicUploadProgressAtom
+  TopicUploadProgressAtom,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
-import ContentBar from './ContentBar';
+import DataRowWithThreeSection from '@/components/AdminCourseComps/common/DataRowWithThreeSection';
 
 export default function TopicContentForm({
   isFormVisible = false,
@@ -26,7 +26,7 @@ export default function TopicContentForm({
   handleChange = () => {},
   toggleForm = () => {},
   handleSubmit = () => {},
-  handleMp4FileInput = () => {}
+  handleMp4FileInput = () => {},
 }) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -42,7 +42,7 @@ export default function TopicContentForm({
 
   const typeOptions = Object.values(TOPIC_CONTENT_TYPES)?.map((lang) => ({
     value: lang,
-    label: lang
+    label: lang,
   }));
 
   let acceptedFilesTypes = ['.zip', '.rar', '.tar.gz'].join(', ');
@@ -72,7 +72,7 @@ export default function TopicContentForm({
               elem?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
-                inline: 'center'
+                inline: 'center',
               })
             }>
             <LabeledRadioCheckbox
@@ -91,7 +91,7 @@ export default function TopicContentForm({
               label: 'Select Language:',
               placeholder: 'Language of the content',
               options: languageOptions,
-              value: { value: topicContentState.language, label: topicContentState.language }
+              value: { value: topicContentState.language, label: topicContentState.language },
             }}
             changeHandler={(e) => handleChange({ language: e.value })}
           />
@@ -104,7 +104,7 @@ export default function TopicContentForm({
               placeholder: 'Type of the content',
               options: typeOptions,
               isDisabled: !!topicContentList?.length,
-              value: { value: topicContentState.type, label: topicContentState.type }
+              value: { value: topicContentState.type, label: topicContentState.type },
             }}
             changeHandler={(e) => handleChange({ type: e.value })}
             customDropdownStyles={{ menuList: { maxHeight: '150px' } }}
@@ -120,7 +120,7 @@ export default function TopicContentForm({
                     style={{
                       color: styles.bgBody,
                       display: 'flex',
-                      justifyContent: 'flex-end'
+                      justifyContent: 'flex-end',
                     }}>
                     Max: {Math.ceil(LIMITS.topicVideoSize / ONE_MB_IN_BYTES)} Mb
                   </small>
@@ -131,8 +131,8 @@ export default function TopicContentForm({
                       if (file?.size > LIMITS.topicVideoSize)
                         return setToastMessage(
                           `File Size limit is ${Math.ceil(
-                            LIMITS.topicVideoSize / ONE_MB_IN_BYTES
-                          )} mb`
+                            LIMITS.topicVideoSize / ONE_MB_IN_BYTES,
+                          )} mb`,
                         );
 
                       if (topicContentState?.type === TOPIC_CONTENT_TYPES.mp4)
@@ -162,7 +162,7 @@ export default function TopicContentForm({
                         label: 'URL:',
                         // maxLength: 16,
                         value: topicContentState?.contentUrl || '',
-                        isDisabled: !!topicContentState?.file
+                        isDisabled: !!topicContentState?.file,
                       }}
                       changeHandler={(e) => handleChange({ contentUrl: e.target.value })}
                     />
@@ -186,7 +186,7 @@ export default function TopicContentForm({
                         !!topicContentState?.length ||
                         topicContentState?.type === TOPIC_CONTENT_TYPES.mp4,
                       value: topicContentState?.duration || 0,
-                      isNumericOnly: true
+                      isNumericOnly: true,
                     }}
                     changeHandler={(e) => handleChange({ duration: e.target.value })}
                   />
@@ -226,7 +226,7 @@ export default function TopicContentForm({
                 </p>
               </div>
 
-              <ContentBar
+              <DataRowWithThreeSection
                 key={content?.language}
                 description={
                   !isContentUrlPresent
@@ -241,7 +241,7 @@ export default function TopicContentForm({
                     ? styles.error
                     : `linear-gradient(90deg, #86D386 ${
                         topicUploadProgress ? topicUploadProgress[content.language] * 100 : 0
-                      }%, #868686 0%, #868686 100%)`
+                      }%, #868686 0%, #868686 100%)`,
                 }}
                 deleteProps={{
                   id: content?.id,
@@ -252,7 +252,7 @@ export default function TopicContentForm({
                     _list?.splice(index, 1);
 
                     setTopicContentList(_list);
-                  }
+                  },
                 }}
               />
             </div>

@@ -295,8 +295,7 @@ body::-webkit-scrollbar-thumb {
   @include inputStylesFor('error');
 }
 .disabled {
-  opacity: 0.7;
-  cursor: not-allowed !important;
+  @include buttonStyles('disable');
 }
 
 .center-element-with-flex {
@@ -317,4 +316,46 @@ body::-webkit-scrollbar-thumb {
 .h2 {
   font-size: 25px;
   font-weight: bolder;
+}
+.text-primary {
+  color: $primary;
+}
+
+// element slide up
+.slideUp {
+  @include animateWithKeyFrame(slideUp) {
+    0%,
+    50% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    60%,
+    100% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.slideDown {
+  @include animateWithKeyFrame(slideDown) {
+    0%,
+    50% {
+      transform: translateY(0%);
+      opacity: 1;
+    }
+
+    60%,
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  transform: translateY(100%);
+  opacity: 0;
 }
