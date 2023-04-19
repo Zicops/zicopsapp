@@ -179,3 +179,76 @@ export const ADD_TO_FIRESTORE_CHAT = gql`
     )
   }
 `;
+export const ADD_VCTOOL_POLL = gql`
+  mutation addPoll(
+    $pollName: String
+    $meetingId: String
+    $courseId: String
+    $topicId: String
+    $question: String
+    $options: [String]
+    $status: String
+  ) {
+    addPoll(
+      input: {
+        poll_name: $pollName
+        meeting_id: $meetingId
+        course_id: $courseId
+        topic_id: $topicId
+        question: $question
+        options: $options
+        status: $status
+      }
+    ) {
+      id
+      poll_name
+      meeting_id
+      course_id
+      question
+      options
+      status
+    }
+  }
+`;
+export const UPDATE_VCTOOL_POLL = gql`
+  mutation updatePoll(
+    $pollId: String
+    $pollName: String
+    $meetingId: String
+    $courseId: String
+    $topicId: String
+    $question: String
+    $options: [String]
+    $status: String
+  ) {
+    updatePoll(
+      input: {
+        id: $pollId
+        poll_name: $pollName
+        meeting_id: $meetingId
+        course_id: $courseId
+        topic_id: $topicId
+        question: $question
+        options: $options
+        status: $status
+      }
+    ) {
+      id
+      poll_name
+      meeting_id
+      course_id
+      question
+      options
+      status
+    }
+  }
+`;
+
+export const UPDATE_VCTOOL_POLL_RESPONSE = gql`
+  mutation updatePollOptions($pollId: String, $option: String, $userId: String) {
+    updatePollOptions(input: { poll_id: $pollId, option: $option, user_id: $userId }) {
+      id
+      poll_id
+    }
+  }
+`;

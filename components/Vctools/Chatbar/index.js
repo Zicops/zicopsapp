@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcChatBarAtom, vcChatObj } from '@/state/atoms/vctool.atoms';
+import { vcChatBarAtom, vcChatObj, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
@@ -12,7 +12,7 @@ import { db } from '@/helper/firebaseUtil/firestore.helper';
 const ChatBar = ({ hide = false }) => {
   const { sendChatMessage } = useLoadClassroomData();
   const [message, setMessage] = useState('');
-  // const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const userDetails = useRecoilValue(UserStateAtom);
   const [classroomChats, setClassroomChats] = useState([]);
@@ -21,8 +21,8 @@ const ChatBar = ({ hide = false }) => {
   const q = query(
     meetMessagesRef,
     where('meeting_id', '==', activeClassroomTopicId),
-    // where('chat_type', '==', 'classroom'),
-    // orderBy('time', 'asc'),
+    where('chat_type', '==', 'classroom'),
+    orderBy('time', 'asc'),
   );
 
   useEffect(async () => {
@@ -99,7 +99,10 @@ const ChatBar = ({ hide = false }) => {
   // }, [classroomChats]);
 
   return (
-    <div className={`${styles.chatbar}`}>
+    <div
+      className={`${styles.chatbar}`}
+      onMouseEnter={() => setHideToolbar(false)}
+      onMouseLeave={() => setHideToolbar(null)}>
       <div className={`${styles.chatbarHead}`}>
         <div>Chat</div>
         <button

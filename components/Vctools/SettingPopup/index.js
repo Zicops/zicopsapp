@@ -5,9 +5,15 @@ import styles from '../vctoolMain.module.scss';
 import style from './vctoolSetting.module.scss';
 import VcRangeSlider from './VcRangeSlider';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
+import { vcToolNavbarState } from '@/state/atoms/vctool.atoms';
+import { useRecoilState } from 'recoil';
 const SettingPopup = ({ hide }) => {
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   return (
-    <div className={`${styles.vcToolSettingContainer}`}>
+    <div
+      className={`${styles.vcToolSettingContainer}`}
+      onMouseEnter={() => setHideToolbar(false)}
+      onMouseLeave={() => setHideToolbar(null)}>
       <div className={`${styles.vctToolSettingHead}`}>
         <div>Settings</div>
         <button
@@ -27,7 +33,7 @@ const SettingPopup = ({ hide }) => {
               styleClass={style.settingInputLable}
               // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Built-in Audio'
+                placeholder: 'Built-in Audio',
               }}
               // changeHandler={(e) =>
               //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -40,7 +46,7 @@ const SettingPopup = ({ hide }) => {
               styleClass={style.settingInputLable}
               // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Realtek Audio'
+                placeholder: 'Realtek Audio',
               }}
               // changeHandler={(e) =>
               //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -53,7 +59,7 @@ const SettingPopup = ({ hide }) => {
               styleClass={style.settingInputLable}
               // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Integrated Camera'
+                placeholder: 'Integrated Camera',
               }}
               // changeHandler={(e) =>
               //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
@@ -67,8 +73,8 @@ const SettingPopup = ({ hide }) => {
           <div className={`${style.rsliderContainer}`}>
             <VcRangeSlider />
             <div>
-                <small>Best performance</small>
-                <small>Highest quality</small>
+              <small>Best performance</small>
+              <small>Highest quality</small>
             </div>
           </div>
         </div>
@@ -79,7 +85,7 @@ const SettingPopup = ({ hide }) => {
             <LabeledRadioCheckbox
               type="radio"
               label="ClassRoom"
-            //   name="lspId"
+              //   name="lspId"
               //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
               //   isDisabled={true}
               //   changeHandler={(e) => {
@@ -93,7 +99,7 @@ const SettingPopup = ({ hide }) => {
             <LabeledRadioCheckbox
               type="radio"
               label="Front of the class"
-            //   name="lspId"
+              //   name="lspId"
               //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
               //   isDisabled={true}
               //   changeHandler={(e) => {

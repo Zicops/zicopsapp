@@ -1,6 +1,6 @@
 import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { AQChatAtom } from '@/state/atoms/vctool.atoms';
+import { AQChatAtom, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { formLabelClasses } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -16,7 +16,7 @@ const QAbar = ({ hide = false }) => {
   const [showQAbtn, setshowQAbtn] = useState(false);
   const [message, setMessage] = useState('');
   const [messageArr, setMessageArr] = useState([]);
-  const [sendMessage, setSendMessage] = useState(false);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const userDetails = useRecoilValue(UserStateAtom);
   const { sendChatMessage } = useLoadClassroomData();
@@ -24,9 +24,9 @@ const QAbar = ({ hide = false }) => {
   const meetMessagesRef = collection(db, 'MeetMessages');
   const q = query(
     meetMessagesRef,
-    // where('meeting_id', '==', activeClassroomTopicId),
+    where('meeting_id', '==', activeClassroomTopicId),
     where('chat_type', '==', 'qna'),
-    // orderBy('time', 'asc'),
+    orderBy('time', 'asc'),
   );
 
   useEffect(async () => {
@@ -67,7 +67,10 @@ const QAbar = ({ hide = false }) => {
   };
 
   return (
-    <div className={`${styles.qaBar}`}>
+    <div
+      className={`${styles.qaBar}`}
+      onMouseEnter={() => setHideToolbar(false)}
+      onMouseLeave={() => setHideToolbar(null)}>
       <div className={`${styles.qaBarHead}`}>
         <div>Q & A</div>
         <button

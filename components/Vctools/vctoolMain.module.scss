@@ -1024,14 +1024,16 @@
 
 .pollBoxOptions > div {
   width: 100%;
-  height: 50px;
+  // height: 50px;
   border: solid #acacac 1px;
   border-radius: 4px;
   margin-top: 12px;
   display: flex;
   align-items: center;
-  padding-left: 8px;
+  text-align: left;
+  padding: 8px;
   color: white;
+  font-size: 14px;
 }
 
 .pollBoxOptions > div > img {
@@ -1137,12 +1139,12 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  padding-right: 4px;
+  padding: 5px;
 
   button {
     width: 90px;
-    height: 40px;
-    border-radius: 4px;
+    height: 35px;
+    border-radius: 5px;
     margin-top: 6px;
     font-weight: 500;
     font-size: 16px;

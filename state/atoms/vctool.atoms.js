@@ -102,9 +102,14 @@ export const pollArray = atom({
   key: 'pollArray',
   default: [
     {
+      id: '',
+      meetingId: '',
+      courseId: '',
+      topicId: '',
       pollName: '',
       pollQuestion: '',
-      pollOptions: []
+      pollOptions: [],
+      status: ''
     }
   ]
 });
@@ -253,4 +258,9 @@ export function getVctoolMetaData(data) {
 export const meetingPageAtom = atom({
   key: 'meetingPageAtom',
   default: false
+});
+
+export const vcToolNavbarState = atom({
+  key: 'vcToolNavbarState',
+  default: null,
 });

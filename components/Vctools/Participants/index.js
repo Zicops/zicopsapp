@@ -1,7 +1,7 @@
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom, VcApi } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { participantJoinData, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import { participantJoinData, vcToolNavbarState, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import StudentFrame from '../StudentFrame';
 import styles from '../vctoolMain.module.scss';
@@ -12,6 +12,7 @@ const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
   const userData = useRecoilValue(UserStateAtom);
   const vcToolUserList = useRecoilValue(participantJoinData);
   const userList = useRecoilValue(vctoolAlluserinfo);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
   const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
@@ -34,7 +35,10 @@ const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
   }, [classroomData]);
 
   return (
-    <div className={`${styles.participantsBar}`}>
+    <div
+      className={`${styles.participantsBar}`}
+      onMouseEnter={() => setHideToolbar(false)}
+      onMouseLeave={() => setHideToolbar(null)}>
       <div className={`${styles.participantsHead}`}>
         <div>Participants</div>
         <button

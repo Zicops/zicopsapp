@@ -4,6 +4,7 @@ import {
   breakoutList,
   participantRole,
   publishBreakoutRoom,
+  vcToolNavbarState,
   vctoolAlluserinfo
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
@@ -13,11 +14,13 @@ import BreakoutRoomSetting from './BreakoutRoomSetting';
 import CreateBreakoutRoom from './CreateBreakoutRoom';
 import ManageRoom from './ManageRoom';
 import BreakoutRoomCard from './BreakoutRoomCard';
+
 const BreakoutRoom = ({ hide = false, createRooms, publishRoom }) => {
   const allUserdata = useRecoilValue(vctoolAlluserinfo);
   const userdata = useRecoilValue(UserStateAtom);
   const breakoutRoomlist = useRecoilValue(breakoutList);
   const [title1, settitle] = useState('');
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   useEffect(() => {
@@ -98,7 +101,10 @@ const BreakoutRoom = ({ hide = false, createRooms, publishRoom }) => {
   const userData = useRecoilValue(UserStateAtom);
   return (
     <>
-      <div className={`${styles.breakoutRoombar}`}>
+      <div
+        className={`${styles.breakoutRoombar}`}
+        onMouseEnter={() => setHideToolbar(false)}
+        onMouseLeave={() => setHideToolbar(null)}>
         <div className={`${styles.breakoutHead}`}>
           <div>Breakout Rooms</div>
           <button

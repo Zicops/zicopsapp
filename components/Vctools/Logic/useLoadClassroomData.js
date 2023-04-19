@@ -1,6 +1,9 @@
 import {
   ADD_TO_FIRESTORE_CHAT,
   ADD_UPDATE_CLASSROOM_FLAGS,
+  ADD_VCTOOL_POLL,
+  UPDATE_VCTOOL_POLL,
+  UPDATE_VCTOOL_POLL_RESPONSE,
   notificationClient,
 } from '@/api/NotificationClient';
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
@@ -114,5 +117,39 @@ export default function useLoadClassroomData(topicId = null) {
       .catch(() => setToastMessage('Chat send failed'));
   }
 
-  return { isLoading, addUpdateClassRoom, sendChatMessage };
+  async function addUpdatePolls(pollData) {
+    const sendData = sanitizeFormData(pollData);
+    const GQL = sendData.pollId ? UPDATE_VCTOOL_POLL : ADD_VCTOOL_POLL;
+
+    mutateData(
+      GQL,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!sendData.pollId && !res?.addPoll) return setToastMessage('Poll could not be created, please try again.');
+        if (sendData.pollId && !res?.updatePoll) return setToastMessage('Poll could not be updated, please try again.');
+        return;
+      })
+      .catch(() => setToastMessage('Some error occured, please try again.'));
+  }
+
+  async function updatePollsResponse(responseData) {
+    const sendData = sanitizeFormData(responseData);
+    mutateData(
+      UPDATE_VCTOOL_POLL_RESPONSE,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        console.info(res);
+        // if (!res?.addMessagesMeet) return setToastMessage('Poll response could not be submitted.');
+        return;
+      })
+      .catch(() => setToastMessage('Poll response could not be submitted.'));
+  }
+
+  return { isLoading, addUpdateClassRoom, sendChatMessage, addUpdatePolls, updatePollsResponse };
 }

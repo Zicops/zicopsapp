@@ -23,7 +23,8 @@ import {
   vctoolAlluserinfo,
   CurrentParticipantDataAtom,
   publishBreakoutRoom,
-  breakoutList
+  breakoutList,
+  vcToolNavbarState
 } from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
@@ -69,7 +70,7 @@ const MainToolbar = ({
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
   const [showSetting, setShowSetting] = useState(false);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
-  const [hideToolBar, setHideToolbar] = useState(null);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
   const [publishRoomAtom,setPublishRoomAtom]=useRecoilState(publishBreakoutRoom)
   const [breakoutLists,setBreakoutLists] = useRecoilState(breakoutList);
