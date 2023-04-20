@@ -9,7 +9,7 @@ import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CurrentParticipantDataAtom } from '@/state/atoms/vctool.atoms';
 import { isWordMatched } from '@/utils/string.utils';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 
@@ -50,55 +50,59 @@ const CreateResource = ({ addResource }) => {
 
     return '/images/default-document.png';
   }
+
   return (
-    <div className={`${styles.resourceModeratorContainer}`}>
-      {!topicResources?.length ? (
-        <div className={`${styles.resourceModeratorScreen}`}>
-          <div className={`${styles.moderatorAddResource}`}>
-            <div className={styles.recourceIcon}>
-              <img src="/images/svg/vctool/library-books.svg" />
-            </div>
-            <div className={`${styles.resourceAvailableHead}`}>No resources available!</div>
-            <p className={`${styles.resourceAvailablesubHead}`}>
-              {!!currentParticipantData?.isModerator
-                ? 'Click below to add resources'
-                : 'Moderator has not added resources'}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <section>
-          <p>All Files</p>
-
-          <div className={`${styles.resources}`}>
-            {topicResources?.map((res) => (
-              <div
-                onClick={() =>
-                  setSelectedResourceData({ name: res?.name, url: res?.url, type: res?.type })
-                }
-                key={res?.id}>
-                <span>
-                  {/* <img src={
-                  } alt="" /> */}
-                  {getFileType(res?.type)}
-                </span>
-                <p>{res?.name}</p>
+    <>
+      <div className={`${styles.resourceModeratorContainer}`}>
+        {!topicResources?.length ? (
+          <div className={`${styles.resourceModeratorScreen}`}>
+            <div className={`${styles.moderatorAddResource}`}>
+              <div className={styles.recourceIcon}>
+                <img src="/images/svg/vctool/library-books.svg" />
               </div>
-            ))}
+              <div className={`${styles.resourceAvailableHead}`}>No resources available!</div>
+              <p className={`${styles.resourceAvailablesubHead}`}>
+                {!!currentParticipantData?.isModerator
+                  ? 'Click below to add resources'
+                  : 'Moderator has not added resources'}
+              </p>
+            </div>
           </div>
-        </section>
-      )}
+        ) : (
+          <section>
+            <p>All Files</p>
 
-      {!!currentParticipantData?.isModerator && (
-        <button
-          className={`${styles.addResourceBtn}`}
-          onClick={() => {
-            addResource();
-          }}>
-          <div>+</div>Add Resource
-        </button>
-      )}
-    </div>
+            <div className={`${styles.resources}`}>
+              {topicResources?.map((res) => (
+                <div
+                  onClick={() => {
+                    console.info(res?.url);
+                    setSelectedResourceData({ name: res?.name, url: res?.url, type: res?.type });
+                  }}
+                  key={res?.id}>
+                  <span>
+                    {/* <img src={
+                  } alt="" /> */}
+                    {getFileType(res?.type)}
+                  </span>
+                  <p>{res?.name}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!!currentParticipantData?.isModerator && (
+          <button
+            className={`${styles.addResourceBtn}`}
+            onClick={() => {
+              addResource();
+            }}>
+            <div>+</div>Add Resource
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 export default CreateResource;
