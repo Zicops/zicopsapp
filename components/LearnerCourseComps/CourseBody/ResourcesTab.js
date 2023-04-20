@@ -9,6 +9,7 @@ import styles from '../learnerCourseComps.module.scss';
 import useHandleResourceSelection from '../Logic/useHandleResourceSelection';
 import ModuleSelection from './ModuleSelection';
 import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
+import { sortArrByKeyInOrder } from '@/utils/array.utils';
 
 export default function ResourcesTab() {
   const resources = useRecoilValue(TopicResourcesAtom);
@@ -45,7 +46,10 @@ export default function ResourcesTab() {
               clickable: true,
             }}>
             {getTwoRowCarousel(currentModuleTopicIds, (topicId) => {
-              const res = resources?.filter((resource) => resource?.topicId === topicId);
+              const res = sortArrByKeyInOrder(
+                resources?.filter((resource) => resource?.topicId === topicId),
+                'type',
+              );
 
               return (
                 <TopicDataCard

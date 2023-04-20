@@ -9,6 +9,8 @@ import {
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
+import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
+import { sanitizeFormData } from '@/helper/common.helper';
 import {
   TopicClassroomAtomFamily,
   getClassroomMasterDataObj,
@@ -24,8 +26,12 @@ import {
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
 export default function useLoadClassroomData(topicId = null) {
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
@@ -36,6 +42,7 @@ export default function useLoadClassroomData(topicId = null) {
   );
   const [controlls, setControlls] = useRecoilState(ClassRoomFlagsInput);
   const [isLoading, setIsLoading] = useState(null);
+  const [messageData,setMessageData]=useState({})
 
   useEffect(() => {
     if (!topicId) return;

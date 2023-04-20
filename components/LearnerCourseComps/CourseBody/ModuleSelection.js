@@ -30,6 +30,7 @@ export default function ModuleSelection() {
           isSearchEnable: true,
           isDisabled: !allModules?.length,
         }}
+        hideSelectedOptions={false}
         styleClass={`${styles.moduleDropdown}`}
         changeHandler={(e) =>
           setActiveCourseData({ ...activeCourseData, moduleId: e?.value || null })

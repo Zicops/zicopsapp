@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { DocumentViewer } from 'react-documents';
+import * as RDocs from 'react-documents';
 import styles from './viewDoc.module.scss';
 
 export default function ViewDoc({ url, customStyles = {} }) {
   const [isLoaded, setIsLoaded] = useState(null);
+
+  const { DocumentViewer } = RDocs;
 
   return (
     <div className={`${styles.container}`}>

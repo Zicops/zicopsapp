@@ -1,4 +1,4 @@
-import { ALL_COURSE_TYPES, COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
@@ -193,15 +193,24 @@ export const TopicResourcesAtom = atom({
   default: null,
 });
 
+export const TopicResourcesAtomFamily = atomFamily({
+  key: 'TopicResourcesFamily',
+  default: () => getTopicResourcesObject(),
+});
+
 export function getTopicResourcesObject(data) {
   return {
-    id: data.id || null,
-    topicId: data.topicId || null,
-    name: data.name || '',
-    type: data.type || '',
-    url: data.url || null,
-    file: data.file || null,
+    id: data?.id || null,
+    topicId: data?.topicId || null,
+    courseId: data?.courseId || null,
+    name: data?.name || '',
+    type: data?.type || '',
+    url: data?.url || null,
+    file: data?.file || null,
+
+    // remove isNew when all topic atom is replaced with atom family
     isNew: data?.isNew || null,
+    isUpload: data?.isUpload || false,
   };
 }
 

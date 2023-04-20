@@ -152,6 +152,10 @@
   bottom: 0;
   overflow: hidden;
   background-color: $black;
+
+  button {
+    cursor: pointer;
+  }
 }
 .toolBar {
   // opacity: 0;
@@ -2157,7 +2161,11 @@
   color: $white;
 }
 .resourceAddBtn {
-  background-color: #6bcfcf;
+  background-color: $primary;
+
+  &:disabled {
+    @include buttonStyles('disable');
+  }
 }
 
 // styling quiz bar
@@ -2278,25 +2286,30 @@
   width: 296px;
   height: 90%;
 
-  .resources {
-    div {
-      display: flex;
-      align-items: center;
-      font-size: 0.8rem;
-      gap: 0.5em;
-      cursor: pointer;
+  section {
+    height: 100%;
 
-      span {
+    .resources {
+      height: 90%;
+      overflow: auto;
+      margin: 0.2em auto;
+
+      div {
         display: flex;
-        color: $black;
-        border: 1px solid $darkThree;
+        align-items: center;
+        font-size: 0.8rem;
+        gap: 0.5em;
+        cursor: pointer;
 
         span {
-          height: fit-content;
-          margin: 0.5em;
-          font-weight: 600;
-          border-radius: 2px;
-          background-color: $white;
+          height: 40px;
+          width: 40px;
+          object-fit: contain;
+
+          img {
+            height: 100%;
+            width: 100%;
+          }
         }
       }
     }

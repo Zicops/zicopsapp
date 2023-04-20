@@ -1,7 +1,7 @@
+import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { ActiveCourseDataAtom, CourseModulesAtomFamily } from '../atoms/learnerCourseComps.atom';
-import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 
 export default function useHandleResourceSelection() {
   const activeCourseData = useRecoilValue(ActiveCourseDataAtom);
@@ -12,13 +12,7 @@ export default function useHandleResourceSelection() {
 
   const resourceViewRef = useRef();
 
-  const currentModuleTopicIds = [];
-  moduleData?.chapters?.forEach((chap) => {
-    const topicIds = chap?.topicIds?.map((topicId) => topicId);
-
-    return currentModuleTopicIds.push(...topicIds);
-  });
-
+  const currentModuleTopicIds = moduleData?.topics?.map((topic) => topic?.id);
   const isResourcesPresent = resources?.some((resource) =>
     currentModuleTopicIds?.includes(resource?.topicId),
   );

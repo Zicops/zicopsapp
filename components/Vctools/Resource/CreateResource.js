@@ -1,12 +1,15 @@
 import { GET_TOPIC_RESOURCES } from '@/api/Queries';
 import { SelectedResourceDataAtom } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 import Spinner from '@/components/common/Spinner';
+import { DocIcon, ExcelIcon, PdfIcon, UrlIcon } from '@/components/common/ZicopsIcons';
+import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { getTopicResourcesObject } from '@/state/atoms/courses.atom';
+import { TopicResourcesAtomFamily, getTopicResourcesObject } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CurrentParticipantDataAtom } from '@/state/atoms/vctool.atoms';
-import { useEffect, useState } from 'react';
+import { isWordMatched } from '@/utils/string.utils';
+import { useEffect } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 
@@ -14,32 +17,42 @@ const CreateResource = ({ addResource }) => {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
-  const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
-  const [resources, setResources] = useState(null);
+  const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);
+  const [topicResources, setTopicResources] = useRecoilState(
+    TopicResourcesAtomFamily(activeClassroomTopicId),
+  );
 
   useEffect(() => {
-    if (!activeClassroomTopicId) return setResources([]);
+    if (!activeClassroomTopicId) return setTopicResources([]);
 
     // load resources
     loadQueryDataAsync(GET_TOPIC_RESOURCES, { topic_id: activeClassroomTopicId })
       .then((res) =>
-        setResources(
+        setTopicResources(
           res?.getTopicResources?.map((resource) => getTopicResourcesObject(resource)) || [],
         ),
       )
       .catch(() => {
         setToastMessage('Topic Resources Load Error');
-        setResources([]);
+        setTopicResources([]);
       });
   }, [activeClassroomTopicId]);
 
-  if (resources == null) return <Spinner />;
+  if (topicResources == null) return <Spinner />;
 
+  function getFileType(type = null) {
+    if (isWordMatched(type, TOPIC_RESOURCE_TYPES?.pdf)) return <PdfIcon />;
+    if (isWordMatched(type, TOPIC_RESOURCE_TYPES?.doc)) return <DocIcon />;
+    if (isWordMatched(type, TOPIC_RESOURCE_TYPES?.link)) return <UrlIcon />;
+    if (isWordMatched(type, TOPIC_RESOURCE_TYPES?.excel)) return <ExcelIcon />;
+
+    return '/images/default-document.png';
+  }
   return (
     <div className={`${styles.resourceModeratorContainer}`}>
-      {!resources?.length ? (
+      {!topicResources?.length ? (
         <div className={`${styles.resourceModeratorScreen}`}>
           <div className={`${styles.moderatorAddResource}`}>
             <div className={styles.recourceIcon}>
@@ -58,13 +71,16 @@ const CreateResource = ({ addResource }) => {
           <p>All Files</p>
 
           <div className={`${styles.resources}`}>
-            {resources?.map((res) => (
+            {topicResources?.map((res) => (
               <div
                 onClick={() =>
                   setSelectedResourceData({ name: res?.name, url: res?.url, type: res?.type })
-                }>
+                }
+                key={res?.id}>
                 <span>
-                  <span>{res?.type?.toUpperCase()}</span>
+                  {/* <img src={
+                  } alt="" /> */}
+                  {getFileType(res?.type)}
                 </span>
                 <p>{res?.name}</p>
               </div>

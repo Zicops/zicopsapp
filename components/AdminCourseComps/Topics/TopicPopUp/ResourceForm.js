@@ -6,7 +6,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import IconButton from '@/components/common/IconButton';
 import Spinner from '@/components/common/Spinner';
-import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
+import { COURSE_MAX_LENGTH_VALUES, TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
 import { useRecoilState } from 'recoil';
@@ -16,14 +16,17 @@ import DataRowWithThreeSection from '../../common/DataRowWithThreeSection';
 export default function ResourceForm({ topData = null }) {
   const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
 
-  const { resourceFormData, isFormVisible, handleResourceInput, handleSubmit, toggleForm } =
-    useHandleTopicResources(topData);
+  const {
+    resourceFormData,
+    acceptedFilesTypes,
+    resourceTypeOptions,
+    isFormVisible,
+    handleResourceInput,
+    handleSubmit,
+    toggleForm,
+  } = useHandleTopicResources(topData?.id);
 
-  let acceptedFilesTypes = '.csv, .xls, .xlsx';
-  if (resourceFormData.type === TOPIC_RESOURCE_TYPES.doc) acceptedFilesTypes = '.doc, .docx';
-  if (resourceFormData.type === TOPIC_RESOURCE_TYPES.pdf) acceptedFilesTypes = '.pdf';
-
-  const { type, file, name } = resourceFormData;
+  const { type, file, name, url } = resourceFormData;
 
   const resourcesList = topicResources?.map((res, i) => ({ ...res, key: i }));
 
@@ -60,10 +63,7 @@ export default function ResourceForm({ topData = null }) {
                 dropdownOptions={{
                   inputName: 'type',
                   placeholder: 'Select Resources Type',
-                  options: Object.values(TOPIC_RESOURCE_TYPES)?.map((type) => ({
-                    value: type,
-                    label: type,
-                  })),
+                  options: resourceTypeOptions,
                   isSearchEnable: true,
                   value: type ? { value: type, label: type } : null,
                 }}
@@ -78,7 +78,7 @@ export default function ResourceForm({ topData = null }) {
                   inputOptions={{
                     inputName: 'name',
                     placeholder: 'Enter document name',
-                    maxLength: 20,
+                    maxLength: COURSE_MAX_LENGTH_VALUES?.resourcesName,
                     value: name,
                   }}
                   changeHandler={handleResourceInput}
@@ -87,11 +87,11 @@ export default function ResourceForm({ topData = null }) {
 
               {/* resource file */}
               <div className="w-35">
-                {resourceFormData.type !== TOPIC_RESOURCE_TYPES.link ? (
+                {type !== TOPIC_RESOURCE_TYPES.link ? (
                   <BrowseAndUpload
                     handleFileUpload={handleResourceInput}
                     inputName="file"
-                    isActive={resourceFormData?.file?.name}
+                    isActive={file?.name}
                     hidePreviewBtns={true}
                     acceptedTypes={acceptedFilesTypes}
                   />
@@ -100,7 +100,7 @@ export default function ResourceForm({ topData = null }) {
                     inputOptions={{
                       inputName: 'url',
                       placeholder: 'Enter document url',
-                      value: resourceFormData.url,
+                      value: url,
                     }}
                     changeHandler={handleResourceInput}
                   />
@@ -121,7 +121,7 @@ export default function ResourceForm({ topData = null }) {
               <Button
                 text="Add"
                 styleClass={`${styles.topicContentSmallBtn} ${styles.addBtn}`}
-                isDisabled={!type || !name || !(resourceFormData?.file || resourceFormData?.url)}
+                isDisabled={!type || !name || !(file || url)}
                 clickHandler={handleSubmit}
               />
             </div>

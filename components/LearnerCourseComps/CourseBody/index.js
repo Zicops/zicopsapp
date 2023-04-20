@@ -1,5 +1,5 @@
 import PopUp from '@/components/common/PopUp';
-import ViewDoc from '@/components/common/ViewDoc';
+import ZicopsFileViewer from '@/components/common/ZicopsFileViewer';
 import ZicopsTabs from '@/components/common/ZicopsTabs';
 import { useMemo } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -58,8 +58,9 @@ export default function CourseBody() {
           popUpState={[selectedResourceData?.url, setSelectedResourceData]}
           size="large"
           positionLeft="50%"
+          customBodyStyles={{ overflow: 'auto' }}
           isFooterVisible={false}>
-          <ViewDoc url={selectedResourceData?.url} />
+          <ZicopsFileViewer filePath={selectedResourceData?.url} />
         </PopUp>
       )}
     </>

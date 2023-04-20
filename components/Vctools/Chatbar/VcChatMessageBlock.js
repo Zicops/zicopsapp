@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './vcChat.module.scss';
 import moment from 'moment';
 

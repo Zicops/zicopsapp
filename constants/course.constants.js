@@ -59,3 +59,7 @@ export const COURSE_PROGRESS_STATUS = {
   started: 'in-progress',
   completed: 'completed',
 };
+
+export const COURSE_MAX_LENGTH_VALUES = {
+  resourcesName: 20,
+};

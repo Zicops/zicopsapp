@@ -1,32 +1,46 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   TrainerDataAtom,
   TrainerExpertiseListAtom,
-  getTrainerDataObj
+  getTrainerDataObj,
 } from '@/state/atoms/trainingManagement.atoms';
 import { CREATE_TRAINER, viltMutationClient } from '@/api/ViltMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
-import { useEffect } from 'react';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { useEffect, useState } from 'react';
+import { USER_LSP_ROLE, CUSTOM_ERROR_MESSAGE, USER_TYPE } from '@/helper/constants.helper';
 import { INVITE_USERS_WITH_ROLE, userClient } from '@/api/UserMutations';
+import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
+import { FcmTokenAtom } from '@/state/atoms/notification.atom';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { GET_PAGINATED_TRAINERS, viltQueryClient } from '@/api/ViltQueries';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 
 export default function useHandleTrainerData() {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
+  const fcmToken = useRecoilValue(FcmTokenAtom);
 
   const [addNewTrainer] = useMutation(CREATE_TRAINER, { client: viltMutationClient });
+  const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
+
+  const [localUserId, setLocalUserId] = useState(null);
 
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
-    client: userClient
+    client: userClient,
   });
 
-  async function addUpdateTrainer(isQueryCall = true) {
+  useEffect(() => {
+    if (!localUserId) return;
+    addUpdateTrainer();
+  }, [localUserId]);
+
+  async function addUpdateTrainer() {
     const sendData = {
+      ...trainerData,
       name: trainerData?.name || '',
-      userId: trainerData?.userId || null,
+      userId: localUserId || trainerData?.userId || null,
       expertise: trainerData?.expertise || [],
-      ...trainerData
     };
 
     if (!sendData?.userId)
@@ -47,10 +61,11 @@ export default function useHandleTrainerData() {
     if (isError) return null;
 
     setToastMsg({ type: 'success', message: 'Added Trainer Successfully' });
+    setLocalUserId(null);
   }
 
-  async function handleMail(isQueryCall = false) {
-    if (isQueryCall) return;
+  async function handleMail() {
+    const lspId = sessionStorage.getItem('lsp_id');
 
     if (!trainerData?.inviteEmails)
       return setToastMsg({ type: 'danger', message: 'Please Enter an email to invite' });
@@ -61,45 +76,21 @@ export default function useHandleTrainerData() {
     // send lowercase email only.
     let sendEmails = trainerData?.inviteEmails?.toLowerCase();
     let isError = false;
-    // let errorMsg;
-
-    const lspId = sessionStorage.getItem('lsp_id');
-    if (!lspId) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
+    let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer }
-    })
-      .then(async (res) => {
-        if (!res?.data?.inviteUsersWithRole) return;
+      variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer },
+    }).catch((err) => {
+      console.log('error', err);
 
-        // const invitedUsers = res?.data?.inviteUsersWithRole;
-        // for (let i = 0; i < invitedUsers.length; i++) {
-        //   const userData = invitedUsers[i];
-        //   if (!userData?.user_id) continue;
+      errorMsg = err.message;
 
-        //   await addVendorUserMap({
-        //     variables: {
-        //       vendorId: vendorId || id,
-        //       userId: userData?.user_id,
-        //       status: USER_MAP_STATUS.activate
-        //     }
-        //   }).catch((err) => console.log(err));
-        // }
-
-        addUpdateTrainer();
-
-        return res;
-      })
-      .catch((err) => {
-        console.log('error', err);
-        errorMsg = err.message;
-
-        isError = !!err;
-      });
+      isError = !!err;
+    });
 
     if (isError) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
     if (isError) {
-      // const message = JSON.parse(errorMsg?.split('body:')[1]);
+      const message = JSON.parse(errorMsg?.split('body:')[1]);
       if (message?.error?.message === CUSTOM_ERROR_MESSAGE?.emailError)
         return setToastMsg({ type: 'danger', message: `Email already exists!` });
       return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
@@ -108,45 +99,76 @@ export default function useHandleTrainerData() {
     if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     console.log(resEmail);
 
-    setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
+    const resEmails = resEmail?.data?.inviteUsersWithRole;
+    setLocalUserId(resEmails?.[0]?.user_id);
 
-    // const resEmails = resEmail?.data?.inviteUsersWithRole;
-    // let userLspMaps = [];
+    let userLspMaps = [];
 
-    // let existingEmails = [];
+    let existingEmails = [];
 
-    // resEmails?.forEach((user) => {
-    //   let message = user?.message;
-    //   if (
-    //     message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
-    //     message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist ||
-    //     !user?.user_id
-    //   )
-    //     existingEmails.push(user?.email);
-    //   else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
-    // });
+    resEmails?.forEach((user) => {
+      let message = user?.message;
+      if (
+        message === CUSTOM_ERROR_MESSAGE?.selfInvite ||
+        message === CUSTOM_ERROR_MESSAGE?.emailAlreadyExist ||
+        !user?.user_id
+      )
+        existingEmails.push(user?.email);
+      else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
+    });
 
-    // if (!!existingEmails?.length) {
-    //   setToastMsg({
-    //     type: 'info',
-    //     message:
-    //       'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
-    //   });
-    // }
-    // if (userLspMaps?.length) {
-    //   const resTags = await addUserTags({
-    //     variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
-    //     context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
-    //   }).catch((err) => {
-    //     isError = true;
-    //   });
-    // }
+    if (!!existingEmails?.length) {
+      setToastMsg({
+        type: 'info',
+        message:
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.',
+      });
+    }
+    if (userLspMaps?.length) {
+      const resTags = await addUserTags({
+        variables: { ids: userLspMaps, tags: [trainerData?.tag] },
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } },
+      }).catch((err) => {
+        isError = true;
+      });
+    }
 
-    // if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
+    if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
 
-    // if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
-    // getVendorAdmins(id);
+    if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
   }
 
-  return { addUpdateTrainer, handleMail };
+  async function getPaginatedTrainers(pageCursor = '') {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    if (!lspId) return [];
+
+    const trainerList = await loadQueryDataAsync(
+      GET_PAGINATED_TRAINERS,
+      { lsp_id: lspId, pageCursor, Direction: '', pageSize: 100, vendor_id: '' },
+      {},
+      viltQueryClient,
+    ).catch((err) => setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' }));
+
+    // if (!vendorList?.getPaginatedVendors?.vendors) return [];
+
+    if (trainerList.error) {
+      setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' });
+      return [];
+    }
+
+    let trainerUserIdArr = trainerList?.getTrainerData?.trainers.map((trainer) => trainer.user_id);
+
+    const userDetails = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: trainerUserIdArr },
+      {},
+      userQueryClient,
+    ).catch((err) => err);
+
+    const userDeets = userDetails?.getUserDetails;
+
+    return userDeets;
+  }
+
+  return { addUpdateTrainer, handleMail, getPaginatedTrainers };
 }

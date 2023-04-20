@@ -295,8 +295,7 @@ body::-webkit-scrollbar-thumb {
   @include inputStylesFor('error');
 }
 .disabled {
-  opacity: 0.7;
-  cursor: not-allowed !important;
+  @include buttonStyles('disable');
 }
 
 .center-element-with-flex {

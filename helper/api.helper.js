@@ -3,7 +3,7 @@ import {
   notificationClient,
   SEND_EMAIL,
   SEND_NOTIFICATIONS,
-  SEND_NOTIFICATIONS_WITH_LINK
+  SEND_NOTIFICATIONS_WITH_LINK,
 } from '@/api/NotificationClient';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ export function getQueryData(QUERY, variablesObj = {}, options = {}) {
   const data = useQuery(QUERY, {
     variables: variablesObj,
     client: queryClient,
-    ...options
+    ...options,
   });
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export async function loadQueryDataAsync(
   QUERY,
   variableObj = {},
   options = {},
-  client = queryClient
+  client = queryClient,
 ) {
   const response = await client
     .query({ query: QUERY, variables: variableObj, fetchPolicy: 'no-cache', ...options })
@@ -71,7 +71,7 @@ export async function loadMultipleLspDataWithMultipleQueries(
   variableObj = {},
   options = {},
   client = queryClient,
-  lspIds = []
+  lspIds = [],
 ) {
   const response = [];
 
@@ -96,7 +96,7 @@ export async function loadAndCacheDataAsync(
   QUERY,
   variableObj = {},
   options = {},
-  client = queryClient
+  client = queryClient,
 ) {
   const response = await client
     .query({ query: QUERY, variables: variableObj, ...options })
@@ -113,7 +113,7 @@ export async function deleteData(
   MUTATION,
   variableObj = {},
   options = {},
-  client = mutationClient
+  client = mutationClient,
 ) {
   const response = await client
     .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
@@ -130,7 +130,7 @@ export async function mutateData(
   MUTATION,
   variableObj = {},
   options = {},
-  client = mutationClient
+  client = mutationClient,
 ) {
   const response = await client
     .mutate({ mutation: structuredClone(MUTATION), variables: variableObj, ...options })
@@ -192,7 +192,7 @@ export async function sendEmail(variableObj = {}, options = {}) {
 export async function sendNotificationAndEmail(
   notificationVariableObj = {},
   emailVariableObj = {},
-  options = {}
+  options = {},
 ) {
   const resNotification = await notificationClient
     .mutate({ mutation: SEND_NOTIFICATIONS, variables: notificationVariableObj, ...options })
