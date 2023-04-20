@@ -1241,3 +1241,71 @@ export const GET_BASIC_COURSES_STATS = gql`
     }
   }
 `;
+
+export const GET_TOPICS_BY_COURSEIDS = gql`
+  query getTopicsByCourseIds($courseIds: [String], $type: String) {
+    getTopicsByCourseIds(courseIds: $courseIds, type: $type) {
+      id
+      name
+      description
+      type
+      moduleId
+      chapterId
+      courseId
+      created_at
+      updated_at
+      sequence
+      created_by
+      updated_by
+      image
+    }
+  }
+`;
+
+export const GET_TOPIC_EXAMS_BY_COURSEID = gql`
+  query getTopicExamsByCourseIds($course_ids: [String]) {
+    getTopicExamsByCourseIds(course_ids: $course_ids) {
+      id
+      topicId
+      examId
+      courseId
+      created_at
+      updated_at
+      language
+    }
+  }
+`;
+export const GET_EXAM_SCHEDULE_BY_EXAMID = gql`
+  query getExamScheduleByExamId($exam_ids: [String]) {
+    getExamScheduleByExamId(exam_ids: $exam_ids) {
+      id
+      ExamId
+      Start
+      End
+      BufferTime
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
+
+export const GET_EXAM_INSTRUCTION_BY_EXAMID = gql`
+  query getExamInstructionByExamId($exam_ids: [String]) {
+    getExamInstructionByExamId(exam_ids: $exam_ids) {
+      id
+      ExamId
+      Instructions
+      PassingCriteria
+      NoAttempts
+      AccessType
+      CreatedAt
+      UpdatedAt
+      CreatedBy
+      UpdatedBy
+      IsActive
+    }
+  }
+`;
