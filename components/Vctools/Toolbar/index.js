@@ -1,51 +1,34 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
-  CurrentParticipantDataAtom,
   allPartcipantinfo,
-  breakoutList,
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
-  publishBreakoutRoom,
   vcMeetingIconAtom,
   vctoolAlluserinfo,
+  CurrentParticipantDataAtom,
+  publishBreakoutRoom,
+  breakoutList,
+  vcToolNavbarState,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
-import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import ChatBar from '../Chatbar';
 import DeletePopUp from '../DeletePopUp';
-import ManageAccount from '../ManageAccount';
 import NotesContainer from '../NotesContainer';
 import Participants from '../Participants';
 import Poll from '../Polls';
 import QAbar from '../QAbar';
 import QuizPage from '../Quiz';
 import ResourcePage from '../Resource';
-import SettingPopup from '../SettingPopup';
-import StartSessionPopUp from '../StartSessionPopUP';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
-import NotesContainer from '../NotesContainer';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import {
-  allPartcipantinfo,
-  breakoutRoomselectedparticipant,
-  particiantPopup,
-  pollArray,
-  vcMeetingIconAtom,
-  vctoolAlluserinfo,
-  CurrentParticipantDataAtom,
-  publishBreakoutRoom,
-  breakoutList,
-  vcToolNavbarState
-} from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
-import DeletePopUp from '../DeletePopUp';
 import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
@@ -67,7 +50,7 @@ const MainToolbar = ({
   stopAdvertisement,
   autoAssignRoom,
   showSettingFunc,
-  frameIcons
+  frameIcons,
 }) => {
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
@@ -82,7 +65,6 @@ const MainToolbar = ({
   const [selectedButton, setSelectedButton] = useState('');
   const [deletedPoupTitel, setDeletedPouptitle] = useState('');
   const [publishRoom, setPublishRoom] = useState('');
-  const [publishRoom, setPublishRoom] = useState('');
   const participantPopuppanel = useRecoilValue(particiantPopup);
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo);
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
@@ -90,8 +72,8 @@ const MainToolbar = ({
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
-  const [publishRoomAtom,setPublishRoomAtom]=useRecoilState(publishBreakoutRoom)
-  const [breakoutLists,setBreakoutLists] = useRecoilState(breakoutList);
+  const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
+  const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
 
   useEffect(() => {
@@ -127,10 +109,10 @@ const MainToolbar = ({
             setPublishRoom('publishRoom');
           }}
         />
-      )
+      ),
     },
     {
-      title: 'publishRoom',                // publish Breakout Room Popup
+      title: 'publishRoom', // publish Breakout Room Popup
       component: (
         <DeletePopUp
           poUpOptions={{
@@ -138,21 +120,20 @@ const MainToolbar = ({
             popUpNotice:
               'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
             poupBtnInfo1: 'Cancel',
-            poupBtnInfo2: 'Publish'
+            poupBtnInfo2: 'Publish',
           }}
           styleBtns={{
             cancelPopupClass: `${styles.canceldeletPoll}`,
-            deletePopupclass: `${styles.publishRoomBnt}`
+            deletePopupclass: `${styles.publishRoomBnt}`,
           }}
           cancelFunc={() => setPublishRoom('')}
-          deletePollFunc={()=>
-          {
+          deletePollFunc={() => {
             setPublishRoomAtom({
               ...publishRoomAtom,
-              isRoomPublished:true,
-              publishedRoomArr:[...breakoutLists]
-            })
-            setPublishRoom('')
+              isRoomPublished: true,
+              publishedRoomArr: [...breakoutLists],
+            });
+            setPublishRoom('');
           }}
         />
       ),
@@ -201,7 +182,6 @@ const MainToolbar = ({
           hide={() => {
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
-          deletePollPopUp={(index) => {
           deletePollPopUp={(index) => {
             setDeletedPouptitle('deletePopUp');
             setPollDeleteIndex(index);
@@ -365,7 +345,7 @@ const MainToolbar = ({
             setPollInfo(
               pollInfo.filter((data, dataIndex) => {
                 return dataIndex !== pollDeleteIndex;
-              })
+              }),
             );
             setDeletedPouptitle('');
           }}

@@ -1,15 +1,17 @@
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom, VcApi } from '@/state/atoms/module.atoms';
-import { ActiveClassroomTopicIdAtom, VcApi } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { participantJoinData, vcToolNavbarState, vctoolAlluserinfo } from '@/state/atoms/vctool.atoms';
+import {
+  participantJoinData,
+  vcToolNavbarState,
+  vctoolAlluserinfo,
+} from '@/state/atoms/vctool.atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import StudentFrame from '../StudentFrame';
 import styles from '../vctoolMain.module.scss';
 import { useEffect } from 'react';
-import { useEffect } from 'react';
 
-const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
+const Participants = ({ hide = false, Info, Iframe, api = {} }) => {
   // participantJoinData
   const userData = useRecoilValue(UserStateAtom);
   const vcToolUserList = useRecoilValue(participantJoinData);
@@ -26,7 +28,8 @@ const Participants = ({ hide = false, Info, Iframe ,api={} }) => {
     const pattern = /profiles\/([A-za-z0-9=]+)\//;
     const userId = decodeURIComponent(user?.avatarURL)?.match(pattern)?.[1];
 
-    if (modIdList?.includes(userId)) return modList.push({ ...user, isHandRise: true, isAudioEnable: true, isVideoEnable: true });
+    if (modIdList?.includes(userId))
+      return modList.push({ ...user, isHandRise: true, isAudioEnable: true, isVideoEnable: true });
 
     let data = { ...user, isHandRise: true, isAudioEnable: false, isVideoEnable: false };
     learnerList.push(data);
