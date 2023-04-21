@@ -1,6 +1,6 @@
 import { DiscussionAtom } from '@/state/atoms/discussion.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { AQChatAtom, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
+import { AQChatAtom, ClassRoomFlagsInput, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { formLabelClasses } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -20,6 +20,7 @@ const QAbar = ({ hide = false }) => {
   const [sortedMessageArr, setSortedMessageArr] = useState([]);
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
+  const controls = useRecoilValue(ClassRoomFlagsInput);
   const userDetails = useRecoilValue(UserStateAtom);
   const { sendChatMessage } = useLoadClassroomData();
 
@@ -28,7 +29,6 @@ const QAbar = ({ hide = false }) => {
     meetMessagesRef,
     where('meeting_id', '==', activeClassroomTopicId),
     where('chat_type', '==', 'qna'),
-    // where('parent_id', '==', null),
     orderBy('time', 'asc'),
   );
 
@@ -45,18 +45,16 @@ const QAbar = ({ hide = false }) => {
   }, []);
 
   useEffect(() => {
-    const messagesWithReplies = [];
     let parents = [];
     messageArr.forEach((message) => {
-      if (message.parent_id === null || message.parent_id === undefined) {
+      if (message.parent_id === null) {
         parents.push(message);
-        messagesWithReplies.push(message);
       } else {
         const parentIndex = parents.findIndex((parent) => parent.id === message.parent_id);
-        messagesWithReplies.splice(parentIndex + 1, 0, message);
+        parents.splice(parentIndex + 1, 0, message);
       }
     });
-    setSortedMessageArr(messagesWithReplies);
+    setSortedMessageArr(parents);
   }, [messageArr]);
 
   const sendMessageHandler = async () => {
@@ -84,7 +82,6 @@ const QAbar = ({ hide = false }) => {
       }
     }
   };
-
 
   return (
     <div
@@ -135,21 +132,26 @@ const QAbar = ({ hide = false }) => {
           )}
           <input
             type="text"
-            placeholder="Type message here"
+            placeholder={controls.is_qa_enabled ? 'Type message here' : 'Q & A is disabled'}
             maxLength={160}
             value={message}
             onChange={onMessageHandler}
             onKeyDown={handleKeyPress}
+            disabled={!controls.is_qa_enabled}
           />
           <div className={`${styles.qaSendFile}`}>
             {/* <img src="/images/svg/vctool/image.svg" /> */}
             <span></span>
-            <img src="/images/svg/vctool/send.svg" onClick={sendMessageHandler} />
+            <img
+              src="/images/svg/vctool/send.svg"
+              onClick={controls.is_qa_enabled ? sendMessageHandler : () => {}}
+            />
           </div>
         </div>
       ) : (
         <div className={`${styles.qabarBtnContainer}`}>
           <button
+            disabled={!controls.is_qa_enabled}
             onClick={() => {
               setshowQAbtn(!showQAbtn);
             }}

@@ -63,7 +63,9 @@ const VcQaMessageBlock = ({ isReply, isLeft, message, setshowQAbtn, setParentId 
           <div className={`${style.mainMessage}`}>
             <div>{message?.body}</div>
           </div>
-          <div className={`${style.replyBar}`}>{!message?.parent_id && <div>0 Response</div>}</div>
+          <div className={`${style.replyBar}`}>
+            {!message?.parent_id && <div>{message.responses || 0} Response</div>}
+          </div>
         </>
       </div>
     </>

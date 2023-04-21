@@ -34,9 +34,9 @@ export default function useLoadClassroomData(topicId = null) {
       (topicClassroomData = {}, topicId = null) =>
         set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData)),
   );
-  const [controlls, setControlls] = useRecoilState(ClassRoomFlagsInput);
+
   const [isLoading, setIsLoading] = useState(null);
-  const [messageData,setMessageData]=useState({})
+  const [messageData, setMessageData] = useState({});
 
   useEffect(() => {
     if (!topicId) return;
@@ -80,29 +80,21 @@ export default function useLoadClassroomData(topicId = null) {
     };
   }
 
-  async function addUpdateClassRoom(e) {
-    // add new topic
-    const sendData = sanitizeFormData(controlls);
-    // console.log(sendData)
-    // if (!controlls?.id) {
-    //   mutateData(ADD_UPDATE_CLASSROOM_FLAGS, sendData, {}, notificationClient)
-    //     .then((res) => {
-    //       if (!res?.addUpdateClassroomFlags) return setToastMessage('Update ClassRoom Error');
-    //       setControlls(res?.addUpdateClassroomFlags)
-    //       return res?.addUpdateClassroomFlags;
-    //     })
-    //     .catch(() => setToastMessage('Update ClassRoom Error'));
-    //   return;
-    // } else {
-    //   mutateData(ADD_UPDATE_CLASSROOM_FLAGS, sendData, {}, notificationClient)
-    //     .then((res) => {
-    //       if (!res?.addUpdateClassroomFlags) return setToastMessage('Update ClassRoom');
-    //       setControlls(res?.addUpdateClassroomFlags)
-    //       return res?.addUpdateClassroomFlags;
-    //     })
-    //     .catch(() => setToastMessage('Update ClassRoom'));
-    // }
+  async function addUpdateClassRoomFlags(data) {
+    const sendData = sanitizeFormData(data);
+    mutateData(
+      ADD_UPDATE_CLASSROOM_FLAGS,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!res?.addClassroomFlags) return setToastMessage('Error changing host controls');
+        return;
+      })
+      .catch(() => setToastMessage('Error changing host controls'));
   }
+
   async function sendChatMessage(messageData) {
     const sendData = sanitizeFormData(messageData);
     mutateData(
@@ -129,8 +121,10 @@ export default function useLoadClassroomData(topicId = null) {
       notificationClient,
     )
       .then((res) => {
-        if (!sendData.pollId && !res?.addPoll) return setToastMessage('Poll could not be created, please try again.');
-        if (sendData.pollId && !res?.updatePoll) return setToastMessage('Poll could not be updated, please try again.');
+        if (!sendData.pollId && !res?.addPoll)
+          return setToastMessage('Poll could not be created, please try again.');
+        if (sendData.pollId && !res?.updatePoll)
+          return setToastMessage('Poll could not be updated, please try again.');
         return;
       })
       .catch(() => setToastMessage('Some error occured, please try again.'));
@@ -145,11 +139,18 @@ export default function useLoadClassroomData(topicId = null) {
       notificationClient,
     )
       .then((res) => {
-        if (!res?.updatePollOptions) return setToastMessage('Poll response could not be submitted.');
-        return setToastMessage('Poll response submitted successfully.', 'success');;
+        if (!res?.updatePollOptions)
+          return setToastMessage('Poll response could not be submitted.');
+        return setToastMessage('Poll response submitted successfully.', 'success');
       })
       .catch(() => setToastMessage('Poll response could not be submitted.'));
   }
 
-  return { isLoading, addUpdateClassRoom, sendChatMessage, addUpdatePolls, updatePollsResponse };
+  return {
+    isLoading,
+    addUpdateClassRoomFlags,
+    sendChatMessage,
+    addUpdatePolls,
+    updatePollsResponse,
+  };
 }
