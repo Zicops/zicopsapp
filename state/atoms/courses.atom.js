@@ -254,6 +254,7 @@ export function getCourseCommercialsObject(data) {
     is_decided: data?.is_decided,
     is_paid_traning: data?.is_paid_traning,
     is_free_traning: data?.is_free_traning,
+    pricing_type: data?.pricing_type || '',
     price_per_seat: data?.price_per_seat || '',
     currency: data?.currency,
     tax_percentage: data?.tax_percentage || null,
@@ -263,7 +264,6 @@ export function getCourseCommercialsObject(data) {
     booking_start_date: data?.booking_start_date,
     booking_end_date: data?.booking_end_date,
     registration_start_date: data?.registration_start_date,
-    is_publish_date: data?.is_publish_date,
     is_start_date: data?.is_start_date
   };
 }

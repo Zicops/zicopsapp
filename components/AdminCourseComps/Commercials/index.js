@@ -7,10 +7,18 @@ import RadioBox from '@/components/Tabs/common/RadioBox';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
-import { CommercialsAtom } from '@/state/atoms/courses.atom';
+import {
+  ClassroomMasterAtom,
+  CommercialsAtom,
+  CourseMetaDataAtom
+} from '@/state/atoms/courses.atom';
+import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
+  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+
   return (
     <div className={`${styles.commerciasContainer}`}>
       <p>Pricing</p>
@@ -20,7 +28,7 @@ const Commercials = () => {
           type="checkbox"
           label="To be Decided"
           name="isMandatory"
-          isChecked={commercialsData?.is_decided}
+          isChecked={commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd}
           changeHandler={(e) => {
             const isChecked = e.target.checked;
             const _commercialData = { ...commercialsData };
@@ -37,7 +45,7 @@ const Commercials = () => {
             name: 'display',
             isDisabled: commercialsData?.is_decided,
             description: 'Learners to pay and book the seat to attend the training',
-            isChecked: commercialsData?.is_paid_traning,
+            isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.paid,
             changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true })
           }}
         />
@@ -47,7 +55,7 @@ const Commercials = () => {
             name: 'display',
             isDisabled: commercialsData?.is_decided,
             description: 'Training is Free of Cost for Learners',
-            isChecked: commercialsData?.is_free_traning,
+            isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             changeHandler: (e) => setCommercialsData({ ...commercialsData, is_free_traning: true })
           }}
         />
@@ -165,7 +173,11 @@ const Commercials = () => {
             <p className={`${styles.heading}`}>Booking start date:</p>
             <InputDatePicker
               styleClass={`${styles.labelMergin}`}
-              selectedDate={commercialsData?.booking_start_date}
+              selectedDate={
+                commercialsData?.is_publish_date
+                  ? courseMetaData?.publishDate
+                  : commercialsData?.booking_start_date
+              }
               // minDate={examTabData?.exam_start}
               changeHandler={(date) => {
                 setCommercialsData({
@@ -183,7 +195,7 @@ const Commercials = () => {
               isChecked={commercialsData?.is_publish_date}
               changeHandler={(e) => {
                 const isChecked = e.target.checked;
-                const _commercialData = structuredClone(commercialsData);
+                const _commercialData = { ...commercialsData };
                 _commercialData.is_publish_date = isChecked;
                 setCommercialsData(_commercialData);
               }}
@@ -195,7 +207,11 @@ const Commercials = () => {
             <p className={`${styles.heading}`}>Booking end date:</p>
             <InputDatePicker
               styleClass={`${styles.labelMergin}`}
-              selectedDate={commercialsData?.booking_end_date}
+              selectedDate={
+                commercialsData?.is_start_date
+                  ? classroomMaster?.courseStartDate
+                  : commercialsData?.booking_end_date
+              }
               // minDate={examTabData?.exam_start}
               changeHandler={(date) => {
                 setCommercialsData({
@@ -213,7 +229,7 @@ const Commercials = () => {
               isChecked={commercialsData?.is_start_date}
               changeHandler={(e) => {
                 const isChecked = e.target.checked;
-                const _commercialData = structuredClone(commercialsData);
+                const _commercialData = { ...commercialsData };
                 _commercialData.is_start_date = isChecked;
                 setCommercialsData(_commercialData);
               }}
@@ -227,7 +243,7 @@ const Commercials = () => {
           inputName: 'name',
           //   label: 'Name :',
           placeholder: 'Auto-populated',
-          value: ''
+          value: classroomMaster?.noOfLearners
         }}
         styleClass={`${styles.labelMergin2}`}
         // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}

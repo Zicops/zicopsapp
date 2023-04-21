@@ -25,6 +25,7 @@ import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
 import useHandleCourseData from './useHandleCourseData';
+import useHandleCommercial from './useHandleCommercial';
 
 export default function useSaveCourseData() {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
@@ -40,6 +41,7 @@ export default function useSaveCourseData() {
   const router = useRouter();
 
   const { isDataPresent } = useHandleCourseData();
+  const { addUpdateCommercial } = useHandleCommercial();
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -252,13 +254,17 @@ export default function useSaveCourseData() {
     // add course if no id is present
     if (!courseMetaData.id)
       return addNewCourse(_courseMetaData)
-        .then((courseDataRes) => addUpdateClassroomMaster(courseDataRes))
+        .then((courseDataRes) => {
+          addUpdateClassroomMaster(courseDataRes);
+          addUpdateCommercial();
+        })
         .then(() => {
           if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
         })
         .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);
+    await addUpdateCommercial();
 
     // update course
     updateCourse(_courseMetaData).then(async (res) => {
@@ -266,6 +272,7 @@ export default function useSaveCourseData() {
       if (!res?.id) return;
 
       await addUpdateClassroomMaster(res);
+      await addUpdateCommercial();
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);

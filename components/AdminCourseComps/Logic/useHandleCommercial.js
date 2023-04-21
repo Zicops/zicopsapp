@@ -3,7 +3,7 @@ import {
   UPDATE_COMMERCIALS_DATA,
   viltMutationClient
 } from '@/api/ViltMutations';
-import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
+import { CLASSROOM_MASTER_STATUS, COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 import { mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -26,7 +26,7 @@ export default function useHandleCommercial() {
   if (commercialsData?.is_free_traning) {
     priceType = COMMERCIAL_PRICEING_TYPE?.free;
   }
-  console.info(commercialsData);
+
   async function addUpdateCommercial() {
     const _commercilaData = sanitizeFormData({
       course_id: courseMetaData?.id,
@@ -37,7 +37,8 @@ export default function useHandleCommercial() {
       max_registrations: +commercialsData?.max_registrations,
       registration_end_date: getUnixFromDate(commercialsData?.registration_end_date) || '',
       booking_start_date: getUnixFromDate(commercialsData?.booking_start_date) || '',
-      booking_end_date: getUnixFromDate(commercialsData?.booking_end_date) || ''
+      booking_end_date: getUnixFromDate(commercialsData?.booking_end_date) || '',
+      status: CLASSROOM_MASTER_STATUS?.save
     });
 
     if (!!commercialsData?.id) {
