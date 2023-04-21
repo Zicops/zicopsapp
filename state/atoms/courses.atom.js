@@ -1,21 +1,21 @@
-import { COURSE_STATUS, COURSE_TYPES } from '@/helper/constants.helper';
+import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
   key: 'ActiveCourseTabName',
-  default: null
+  default: null,
 });
 
 export const CourseMetaDataAtom = atom({
   key: 'CourseMetaData',
-  default: getCourseMetaDataObj()
+  default: getCourseMetaDataObj(),
 });
 
 export function getCourseMetaDataObj(data = {}) {
   return {
     // meta data
     id: data?.id || null,
-    type: data?.type || COURSE_TYPES[0],
+    type: data?.type || ALL_COURSE_TYPES.selfPaced,
     status: data?.status || COURSE_STATUS.draft,
     isActive: data?.isActive || true,
 
@@ -44,9 +44,6 @@ export function getCourseMetaDataObj(data = {}) {
     summary: data?.summary || '',
 
     // course about
-    // Trainers:data?.Trainers || [],
-    // Moderators:data?.Moderators || [],
-    // Curriculum:data?.Curriculum || '',
     description: data?.description || '',
     outcomes: data?.outcomes || [],
     benefits: data?.benefits || [], // highlights
@@ -56,22 +53,22 @@ export function getCourseMetaDataObj(data = {}) {
     mustFor: data?.mustFor || [],
 
     // course topics
-    duration: data?.duration || 0,
+    duration: data?.duration || 0, // should always be in seconds
 
     // course configuration
-    publishDate: data?.publish_date || null, // some issue in backend
-    expiryDate: data?.expiry_date || null, // some issue in backend
+    publishDate: data?.publish_date || null,
+    expiryDate: data?.expiry_date || null,
     qaRequired: data?.qaRequired || false,
     approvers: data?.approvers || [],
 
     // extra field
-    instructor: data?.instructor || ''
+    instructor: data?.instructor || '',
   };
 }
 
 export const CourseCurrentStateAtom = atom({
   key: 'CourseCurrentState',
-  default: getCourseCurrentStateObj()
+  default: getCourseCurrentStateObj(),
 });
 
 export function getCourseCurrentStateObj(data = {}) {
@@ -79,13 +76,13 @@ export function getCourseCurrentStateObj(data = {}) {
     error: data?.error || [],
     isUpdating: data?.isUpdating || false,
     isSaved: data?.isSaved || false,
-    isDisabled: data?.isDisabled || false
+    isDisabled: data?.isDisabled || false,
   };
 }
 
 export const ClassroomMasterAtom = atom({
   key: 'ClassroomMaster',
-  default: getClassroomMasterDataObj()
+  default: getClassroomMasterDataObj(),
 });
 
 export function getClassroomMasterDataObj(data = {}) {
@@ -107,28 +104,28 @@ export function getClassroomMasterDataObj(data = {}) {
     isEndDatedecided: data?.isEndDatedecided || false,
     isStartDatedecided: data?.isStartDatedecided || false,
     isTrainerdecided: data?.isTrainerdecided || false,
-    isModeratordecided: data?.isModeratordecided || false
+    isModeratordecided: data?.isModeratordecided || false,
   };
 }
 
 export const AllCourseModulesDataAtom = atom({
   key: 'AllCourseModulesData',
-  default: null
+  default: null,
 });
 
 export const TopicUploadProgressAtom = atom({
   key: 'TopicUploadProgress',
-  default: null
+  default: null,
 });
 
 export const TopicContentListAtom = atom({
   key: 'TopicContentList',
-  default: null
+  default: null,
 });
 
 export const TopicSubtitlesAtom = atom({
   key: 'TopicSubtitles',
-  default: null
+  default: null,
 });
 
 export function getTopicSubtitlesObject(data) {
@@ -136,12 +133,12 @@ export function getTopicSubtitlesObject(data) {
     topicId: data.topicId || null,
     file: data?.file || null,
     subtitleUrl: data.subtitleUrl || null,
-    language: data.language || null
+    language: data.language || null,
   };
 }
 export const BingeDataAtom = atom({
   key: 'BingeData',
-  default: getBingeDataObj()
+  default: getBingeDataObj(),
 });
 
 export function getBingeDataObj(data) {
@@ -149,18 +146,18 @@ export function getBingeDataObj(data) {
     skipIntroDuration: data?.skipIntroDuration || 0,
     startTime: data?.startTime || 0,
     nextShowTime: data?.nextShowTime || 0,
-    fromEndTime: data?.fromEndTime || 0
+    fromEndTime: data?.fromEndTime || 0,
   };
 }
 
 export const QuestionBankDataAtom = atom({
   key: 'QuestionBankData',
-  default: { questionBank: {}, questions: [] }
+  default: { questionBank: {}, questions: [] },
 });
 
 export const TopicQuizAtom = atom({
   key: 'TopicQuiz',
-  default: null
+  default: null,
 });
 
 export function getTopicQuizObject(data) {
@@ -185,37 +182,46 @@ export function getTopicQuizObject(data) {
       option: data.option || '',
       file: data.file || null,
       attachmentType: data?.attachmentType || '',
-      isCorrect: data.isCorrect || false
+      isCorrect: data.isCorrect || false,
     }),
-    editIndex: data?.editIndex
+    editIndex: data?.editIndex,
   };
 }
 
 export const TopicResourcesAtom = atom({
   key: 'TopicResources',
-  default: null
+  default: null,
+});
+
+export const TopicResourcesAtomFamily = atomFamily({
+  key: 'TopicResourcesFamily',
+  default: () => getTopicResourcesObject(),
 });
 
 export function getTopicResourcesObject(data) {
   return {
-    id: data.id || null,
-    topicId: data.topicId || null,
-    name: data.name || '',
-    type: data.type || '',
-    url: data.url || null,
-    file: data.file || null,
-    isNew: data?.isNew || null
+    id: data?.id || null,
+    topicId: data?.topicId || null,
+    courseId: data?.courseId || null,
+    name: data?.name || '',
+    type: data?.type || '',
+    url: data?.url || null,
+    file: data?.file || null,
+
+    // remove isNew when all topic atom is replaced with atom family
+    isNew: data?.isNew || null,
+    isUpload: data?.isUpload || false,
   };
 }
 
 export const TopicClassroomAtomFamily = atomFamily({
   key: 'TopicClassroomGrp',
-  default: () => getTopicClassroomObject()
+  default: () => getTopicClassroomObject(),
 });
 
 export const TopicClassroomAtom = atom({
   key: 'TopicClassroom',
-  default: getTopicClassroomObject()
+  default: getTopicClassroomObject(),
 });
 
 export function getTopicClassroomObject(data = {}) {
@@ -239,7 +245,7 @@ export function getTopicClassroomObject(data = {}) {
     createdBy: data?.createdBy || '',
     updatedAt: data?.updatedAt || '',
     updatedBy: data?.updatedBy || '',
-    status: data?.status || ''
+    status: data?.status || '',
   };
 }
 

@@ -8,6 +8,7 @@ $error: #cf3e3e;
 $white: #ffffff;
 $secondaryWhite: #484848;
 $tertiaryWhite: #30323f;
+$neutralWhite: #c4c4c4;
 
 $black: #040404;
 $secondaryBlack: #737373;
@@ -54,6 +55,7 @@ $eventBorder: $zicopsSky;
   bgContent: $bgContent;
   error: $error;
   white: $white;
+  neutralWhite: $neutralWhite;
   secondaryWhite: $secondaryWhite;
   tertiaryWhite: $tertiaryWhite;
 
@@ -149,6 +151,12 @@ $eventBorder: $zicopsSky;
     color: $white;
   }
 }
+@mixin buttonStyles($state: 'disable') {
+  @if $state == 'disable' {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+  }
+}
 
 @keyframes headShake {
   0% {
@@ -234,6 +242,15 @@ $eventBorder: $zicopsSky;
     100% {
       transform: rotate(360deg);
     }
+  }
+}
+
+// general mixin to create keyframe animations
+@mixin animateWithKeyFrame($name, $duration: 1s, $method: ease-in-out, $times: 1) {
+  animation: $name $duration $method $times;
+
+  @keyframes #{$name} {
+    @content;
   }
 }
 

@@ -114,3 +114,62 @@ export const GET_USER_LSP_TAGS = gql`
     }
   }
 `;
+
+// input ClassRoomFlagsInput {
+//   id: String
+//   is_classroom_started: Boolean
+//   is_participants_present: Boolean
+//   is__ad_displayed: Boolean
+//   is_break: Boolean
+//   is_moderator_joined: Boolean
+//   is_trainer_joined: Boolean
+//   ad_video_url: String
+// }
+export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
+  mutation addUpdateClassroomFlags(
+    $id: String
+    $is_classroom_started: Boolean
+    $is_participants_present: Boolean
+    $is__ad_displayed: Boolean
+    $is_break: Boolean
+    $is_moderator_joined: Boolean
+    $is_trainer_joined: Boolean
+    $ad_video_url: String
+  ) {
+    addUpdateClassroomFlags(
+      input: {
+        id: $id
+        is_classroom_started: $is_classroom_started
+        is_participants_present: $is_participants_present
+        is__ad_displayed: $is__ad_displayed
+        is_break: $is_break
+        is_moderator_joined: $is_moderator_joined
+        is_trainer_joined: $is_trainer_joined
+        ad_video_url: $ad_video_url
+      }
+    ) {
+      id
+      is_classroom_started
+      is_participants_present
+      is__ad_displayed
+      is_break
+      is_moderator_joined
+      is_trainer_joined
+      ad_video_url
+    }
+  }
+`;
+// addMessagesMeet(message: Messages): Boolean
+export const ADD_TO_FIRESTORE = gql`
+  mutation addMessagesMeet(
+    $id: String
+    $body: String
+    $meeting_id: String
+    $user_id: String
+    $time: Int
+  ) {
+    addMessagesMeet(
+      message: { id: $id, body: $body, meeting_id: $meeting_id, user_id: $user_id, time: $time }
+    ) 
+  }
+`;

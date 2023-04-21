@@ -5,12 +5,12 @@ import customFetch from './customFetch';
 
 const httpLink = createUploadLink({
   uri: API_LINKS.userClient,
-  fetch: customFetch
+  fetch: customFetch,
 });
 
 export const userClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export const USER_LOGIN = gql`
@@ -237,6 +237,37 @@ export const UPDATE_USER_COURSE = gql`
       is_mandatory
       end_date
       course_status
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+// input UserCourseProgressInput {
+//   user_cp_id: ID
+//   user_id: String!
+//   user_course_id: String!
+//   topic_id: String!
+//   topic_type: String!
+//   status: String!
+//   video_progress: String!
+//   time_stamp: String!
+//   created_by: String
+//   updated_by: String
+// }
+export const ADD_TOPIC_PROGRESS = gql`
+  mutation addUserCourseProgress($input: [UserCourseProgressInput]!) {
+    addUserCourseProgress(input: $input) {
+      user_cp_id
+      user_id
+      user_course_id
+      topic_id
+      topic_type
+      status
+      video_progress
+      time_stamp
       created_by
       updated_by
       created_at

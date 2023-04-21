@@ -1,0 +1,98 @@
+@import '@/styles/base.scss';
+
+.expertiseSearchBar {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  img {
+    position: absolute;
+    left: 97%;
+  }
+  input {
+    padding-left: 10px;
+  }
+}
+
+.expertiseCheckbox {
+  display: inline-block;
+  margin: 10px 0;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  margin-right: 10px;
+  padding: 12px 16px;
+
+  label {
+    margin-right: 10px;
+  }
+}
+
+.headingContainer {
+  margin-top: 20px;
+
+  .heading {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .subheading {
+    font-size: 15px;
+    color: $bgBody;
+  }
+}
+
+.userInput {
+  margin-top: 10px;
+
+  .input {
+    background-color: transparent;
+    border: 2px solid $darkThree;
+    border-radius: 5px;
+  }
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropDownMain {
+  margin-top: 8px;
+}
+
+.userTypeAndEmail {
+  display: flex;
+  gap: 20px;
+
+  .userType,
+  .email {
+    width: 50%;
+  }
+}
+
+.trainerOptions {
+  display: flex;
+  align-items: center;
+
+  .trainerImage {
+    width: 40px;
+    margin-right: 15px;
+
+    img {
+      width: 100%;
+      border-radius: 100% 100%;
+    }
+  }
+
+  .nameEmailTrainer .email {
+    opacity: 0.7;
+  }
+}
+
+.addTrainingExpertiseContainer {
+  padding: 0px 50px;
+}
+
+.footerButton {
+  display: flex;
+  justify-content: flex-end;
+}

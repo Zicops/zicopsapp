@@ -72,6 +72,11 @@
   align-items: baseline;
   flex: 1;
 
+  &.columnWise {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   label {
     width: 25%;
     color: $white;
@@ -200,6 +205,16 @@
   .disabled {
     border-color: $darkThree;
     cursor: not-allowed;
+  }
+}
+
+.columnWise {
+  flex-direction: column;
+  gap: 0.5em;
+
+  label {
+    width: 100%;
+    align-items: baseline;
   }
 }
 

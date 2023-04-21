@@ -8,11 +8,12 @@ import { COURSE_TYPES } from '@/constants/course.constants';
 import {
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
-  CourseMetaDataAtom
+  CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { courseTabs } from '../Logic/adminCourseComps.helper';
 import useHandleCourseData from '../Logic/useHandleCourseData';
 import NextBtn from '../NextBtn';
 import styles from '../adminCourseComps.module.scss';
@@ -27,7 +28,7 @@ export default function About() {
     getTrainersAndModerators,
     handleClassroomMasterChange,
     trainerCandidates,
-    moderatorCandidates
+    moderatorCandidates,
   } = useHandleCourseData();
 
   const [title, settitle] = useState('');
@@ -68,7 +69,8 @@ export default function About() {
       name: user?.full_name,
       isSelected: false,
       email: user?.email,
-      user_id: user?.id
+      user_id: user?.id,
+      photo: user?.photo_url,
     };
   }
   // const Moderators = [
@@ -105,19 +107,36 @@ export default function About() {
             External
           </button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
+
+  const customDropdownStyleObj = {
+    placeholderStyles: { color: '#747474' },
+    optionStyles: {
+      background: 'var(--black)',
+      color: 'var(--white)',
+      '&:hover': {
+        background: styles.darkTwo,
+      },
+    },
+    // menuStyles: { background: 'var(--red)' },
+    // dropdownIndicatorStyles: {
+    //   color: 'var(--white)',
+    //   '&:hover': {
+    //     svg: { fill: 'var(--background_body)' }
+    //   }
+    // }
+  };
 
   return (
     <>
       <div className={`${styles.aboutHead}`}>Course overview</div>
       {!!isClassroomCourse && (
         <>
-          <div
-            className={`${styles.aboutInputTrainerModerator} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+          <div className={` ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
             <div className={`${styles.aboutTrainer}`}>
               <lable>Trainer :</lable>
               <LabeledDropdown
@@ -128,19 +147,32 @@ export default function About() {
                   menuPlacement: 'bottom',
                   isMulti: true,
                   options: trainers?.map((trainee, index) => ({
-                    label: trainee.name,
+                    label: (
+                      <div className={`${styles.trainerOptions}`}>
+                        {/*<div>
+                          <LabeledRadioCheckbox type="checkbox" />
+                        </div>*/}
+                        <div className={`${styles.trainerImage}`}>
+                          <img src={trainee.photo} />
+                        </div>
+                        <div className={`${styles.nameEmailTrainer}`}>
+                          <p>{trainee.name}</p>
+                          <p className={`${styles.email}`}>{trainee.email}</p>
+                        </div>
+                      </div>
+                    ),
                     value: trainee.name,
-                    ...trainee
+                    ...trainee,
                   })),
                   // options: Trainers?.map((trainee) => ({ label: trainee, value: trainee })),
                   value: !!classroomMaster?.trainers?.length
                     ? classroomMaster?.trainers?.map((trainee) => ({
                         label: trainee?.value,
                         value: trainee?.value,
-                        ...trainee
+                        ...trainee,
                       }))
                     : null,
-                  isDisabled: isDisabled
+                  isDisabled: isDisabled || classroomMaster?.isTrainerdecided,
                 }}
                 isFullWidth={true}
                 changeHandler={(e) =>
@@ -148,25 +180,22 @@ export default function About() {
                     trainers: e?.map((item, index) => ({
                       value: item?.value,
                       email: item?.email,
-                      user_id: item?.user_id
-                    }))
+                      user_id: item?.user_id,
+                    })),
                   })
                 }
                 isLoading={trainerCandidates == null}
+                customDropdownStyles={customDropdownStyleObj}
               />
-              <div className={`${styles.aboutCheckbox}`}>
-                <LabeledRadioCheckbox
-                  type="checkbox"
-                  label={''}
-                  // value={''}
-                  isChecked={classroomMaster?.isTrainerdecided}
-                  // isDisabled={''}
-                  changeHandler={(e) => {
-                    handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
-                  }}
-                />
-                <label>To be Decided</label>
-              </div>
+
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={'To be Decided'}
+                isChecked={classroomMaster?.isTrainerdecided}
+                changeHandler={(e) => {
+                  handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
+                }}
+              />
             </div>
             <div className={`${styles.aboutModerator}`}>
               <div className={`${styles.aboutTrainerType}`}>
@@ -191,19 +220,31 @@ export default function About() {
                   menuPlacement: 'bottom',
                   isMulti: true,
                   options: moderators?.map((mod, index) => ({
-                    label: mod?.name,
+                    label: (
+                      <div className={`${styles.trainerOptions}`}>
+                        {/*<div>
+                        <LabeledRadioCheckbox type="checkbox" />
+                      </div>*/}
+                        <div className={`${styles.trainerImage}`}>
+                          <img src={mod.photo} />
+                        </div>
+                        <div>
+                          <p>{mod.name}</p>
+                          <p>{mod.email}</p>
+                        </div>
+                      </div>
+                    ),
                     value: mod?.name,
-                    ...mod
+                    ...mod,
                   })),
-                  // options: Moderators?.map((trainee) => ({ label: trainee, value: trainee })),
                   value: !!classroomMaster?.moderators?.length
                     ? classroomMaster?.moderators?.map((mod) => ({
                         label: mod?.value,
                         value: mod?.value,
-                        ...mod
+                        ...mod,
                       }))
                     : null,
-                  isDisabled: isDisabled
+                  isDisabled: isDisabled || classroomMaster?.isModeratordecided,
                 }}
                 isLoading={moderatorCandidates == null}
                 isFullWidth={true}
@@ -212,24 +253,25 @@ export default function About() {
                     moderators: e?.map((item, index) => ({
                       value: item?.value,
                       email: item?.email,
-                      user_id: item?.user_id
-                    }))
+                      user_id: item?.user_id,
+                    })),
                   })
                 }
+                customDropdownStyles={customDropdownStyleObj}
+                isDisplayButton={true}
               />
-              <div className={`${styles.aboutCheckbox}`}>
-                <LabeledRadioCheckbox
-                  type="checkbox"
-                  label={''}
-                  // value={''}
-                  isChecked={classroomMaster?.isModeratordecided}
-                  // isDisabled={''}
-                  changeHandler={(e) => {
-                    handleClassroomMasterChange({ isModeratordecided: e?.target?.checked });
-                  }}
-                />
-                <label>To be Decided</label>
-              </div>
+
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label={'To be Decided'}
+                isChecked={classroomMaster?.isModeratordecided}
+                changeHandler={(e) => {
+                  handleClassroomMasterChange({
+                    isModeratordecided: e?.target?.checked,
+                    moderators: [],
+                  });
+                }}
+              />
             </div>
           </div>
 
@@ -243,25 +285,23 @@ export default function About() {
                 changeHandler={(date) => {
                   handleClassroomMasterChange({ courseStartDate: date });
                 }}
-                //   isDisabled={isPreview}
-                isDisabled={isDisabled}
-                styleClass={`${styles.datePicker}`}
+                isDisabled={isDisabled || classroomMaster?.isStartDatedecided}
               />
-              <div className={`${styles.aboutCheckbox}`}>
-                <LabeledRadioCheckbox
-                  type="checkbox"
-                  // value={isTrue}
-                  isChecked={classroomMaster?.isStartDatedecided}
-                  // isDisabled={''}
-                  changeHandler={(e) => {
-                    handleClassroomMasterChange({ isStartDatedecided: e?.target?.checked });
-                  }}
-                />
-                <label>To be Decided</label>
-              </div>
+
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label="To be Decided"
+                isChecked={classroomMaster?.isStartDatedecided}
+                changeHandler={(e) => {
+                  handleClassroomMasterChange({
+                    isStartDatedecided: e?.target?.checked,
+                    courseStartDate: null,
+                  });
+                }}
+              />
             </div>
             <div>
-              <label>Course end date :</label>
+              <label>Course End date :</label>
               <InputDatePicker
                 selectedDate={classroomMaster?.courseEndDate}
                 minDate={
@@ -270,66 +310,60 @@ export default function About() {
                 changeHandler={(date) => {
                   handleClassroomMasterChange({ courseEndDate: date });
                 }}
-                //   isDisabled={isPreview}
-                isDisabled={isDisabled}
-                styleClass={`${styles.datePicker}`}
+                isDisabled={isDisabled || classroomMaster?.isEndDatedecided}
               />
-              <div className={`${styles.aboutCheckbox}`}>
-                <LabeledRadioCheckbox
-                  type="checkbox"
-                  label={''}
-                  // value={isTrue}
-                  isChecked={classroomMaster?.isEndDatedecided}
-                  // isDisabled={''}
-                  changeHandler={(e) => {
-                    console.log(e.target.checked, 'sd');
-                    handleClassroomMasterChange({ isEndDatedecided: e?.target?.checked });
-                  }}
-                />
-                <label>To be Decided</label>
-              </div>
+
+              <LabeledRadioCheckbox
+                type="checkbox"
+                label="To be Decided"
+                isChecked={classroomMaster?.isEndDatedecided}
+                changeHandler={(e) => {
+                  handleClassroomMasterChange({
+                    isEndDatedecided: e?.target?.checked,
+                    courseEndDate: null,
+                  });
+                }}
+              />
             </div>
           </div>
 
-          <div
-            className={`${styles.totalDurationLable} ${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+          {/*  course and learning duration */}
+          <div className={`${styles.twoColumnDisplay} ${styles.marginBetweenInputs}`}>
+            <LabeledInput
+              inputOptions={{
+                inputName: 'name',
+                label: (
+                  <>
+                    Total Duration : <small>(In Days)</small>
+                  </>
+                ),
+                placeholder: 'Auto pupulated',
+                value:
+                  moment(classroomMaster?.courseEndDate).diff(
+                    classroomMaster?.courseStartDate,
+                    'day',
+                  ) || 0,
+                isDisabled: true,
+              }}
+              isColumnWise={true}
+            />
+
             <div>
-              <label className={`${styles.durationLabel}`}>
-                Total Duration : <small>(In Days)</small>
-              </label>
               <LabeledInput
                 inputOptions={{
                   inputName: 'name',
-                  // label: 'Total Duration:',
-                  placeholder: 'Auto pupulated',
-                  value:
-                    moment(classroomMaster?.courseEndDate).diff(
-                      classroomMaster?.courseStartDate,
-                      'day'
-                    ) || 0,
-                  isDisabled: true
-                }}
-                styleClass={`${styles.inputName1}`}
-                // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
-              />
-            </div>
-            <div>
-              <label className={`${styles.durationLabel}`}>
-                Learning Duration : <small>(In Minutes)</small>
-              </label>
-              <LabeledInput
-                inputOptions={{
-                  inputName: 'name',
-                  // label:'Learning Duration:',
+                  label: (
+                    <>
+                      Learning Duration : <small> (In Minutes)</small>
+                    </>
+                  ),
                   placeholder: 'Auto populated',
-                  value: (courseMetaData?.duration || 0) / 60,
-                  isDisabled: true
+                  value: Math.floor((courseMetaData?.duration || 0) / 60),
+                  isDisabled: true,
                 }}
-                styleClass={`${styles.inputName1}`}
-                // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
+                isColumnWise={true}
               />
               <div className={`${styles.durationDiscription}`}>
-                {' '}
                 *Completed by the system ones the topic is added
               </div>
             </div>
@@ -346,7 +380,7 @@ export default function About() {
           rows: 5,
           maxLength: 160,
           value: courseMetaData?.description,
-          isDisabled: isDisabled
+          isDisabled: isDisabled,
         }}
         styleClass={`${styles.makeLabelInputColumnWise}`}
         changeHandler={(e) => handleCourseMetaChange({ description: e?.target?.value })}
@@ -441,7 +475,7 @@ export default function About() {
         </div>
       )}
 
-      <NextBtn />
+      <NextBtn switchTabName={courseTabs?.topics?.name} />
     </>
   );
 }

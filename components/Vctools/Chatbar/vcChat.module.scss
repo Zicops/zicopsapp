@@ -48,9 +48,14 @@ $textColor:#ACACAC;
   width: 100%;
   min-height: 30px;
   max-height: 100%;
+  display: flex;
   div 
   {
     width: 255px;
+    display: flex;
+    text-align: justify;
+    margin: auto;
+    padding-left: 10px;
     height: 100%;
     color:$white;
     // height: max-content;
