@@ -10,18 +10,18 @@ import useHandleTrainerData from '../Logic/useHandleTrainerData';
 import { useRecoilState } from 'recoil';
 import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms';
 
-export default function AddTrainerPopup({ popUpState = [] }) {
+export default function AddTrainerPopup({ popUpState = [], isEdit = false, isView = false }) {
   const { addUpdateTrainer, handleMail } = useHandleTrainerData();
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
   const tabData = [
     {
       name: 'Select Existing User ',
-      component: <SelectExistingUser />
+      component: <SelectExistingUser isEdit={isEdit} isView={isView} />
     },
     {
       name: 'Invite New Trainer',
-      component: <InviteNewTrainer />
+      component: <InviteNewTrainer isEdit={isEdit} isView={isView}/>
     }
   ];
 
@@ -51,7 +51,13 @@ export default function AddTrainerPopup({ popUpState = [] }) {
         </div>
 
         <div className={`${styles.footerButton}`}>
-          <Button text={'Cancel'} />
+          <Button
+            text={'Cancel'}
+            clickHandler={(e) => {
+              popUpState[1](false);
+              setTrainerData(getTrainerDataObj());
+            }}
+          />
           <Button
             text={tab === tabData[0]?.name ? 'Save' : 'Send Invite'}
             clickHandler={(e) => {
