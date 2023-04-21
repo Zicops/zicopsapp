@@ -18,9 +18,11 @@ import ParticipantPollScreen from './ParticipantPollScreen';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/helper/firebaseUtil/firestore.helper';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import EditPoll from './EditPoll';
 
 const Poll = ({ hide = false, deletePollPopUp }) => {
   const [polltitle, setPollTitle] = useState('');
+  const [editPollData, setEditPollData] = useState({});
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
   const [activePoll, setActivePoll] = useRecoilState(vcActivePoll);
   const [endedPoll, setEndedPoll] = useRecoilState(vcEndedPoll);
@@ -109,13 +111,33 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       component: (
         <ShowPoll
           setPollTitle={() => {
-            setPollTitle('pollQA');
+            editPollFunc('pollQA');
           }}
           deletePoll={(index) => {
             deletePollPopUp(index);
           }}
-          editPollFunc={() => {
-            setPollTitle('pollQA');
+          editPollFunc={(pollData) => {
+            setPollTitle('editPoll');
+            console.info('polldata in edit func', pollData);
+            setEditPollData(pollData);
+          }}
+        />
+      ),
+    },
+    {
+      title: 'editPoll',
+      component: (
+        <EditPoll
+          pollData={editPollData}
+          goToCreatePoll={() => {
+            if (pollInfo.length > 1) {
+              setPollTitle('showPoll');
+            } else {
+              setPollTitle('emptyPoll');
+            }
+          }}
+          ShowPoll={() => {
+            setPollTitle('showPoll');
           }}
         />
       ),

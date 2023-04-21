@@ -44,6 +44,7 @@ const ShowPoll = ({ setPollTitle, deletePoll, editPollFunc }) => {
                           publish: 'publish',
                           pollType: 'Saved',
                           pollId: data.id,
+                          pollName: data.poll_name,
                           pollNumber: `Poll ${index + 1}`,
                           pollQuestion: data.question,
                           options: data.options,
@@ -87,8 +88,8 @@ const ShowPoll = ({ setPollTitle, deletePoll, editPollFunc }) => {
                           //   );
                           //   console.info(participantPollArr);
                           // },
-                          editPollFunc: () => {
-                            editPollFunc();
+                          editPollFunc: (p) => {
+                            editPollFunc(p);
                           },
                         }}
                       />

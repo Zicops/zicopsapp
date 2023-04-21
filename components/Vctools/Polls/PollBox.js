@@ -14,6 +14,7 @@ const PollBox = ({ pollData }) => {
     pollId,
     pollNumber,
     publish,
+    pollName,
     pollQuestion,
     options,
     deletePoll,
@@ -189,7 +190,7 @@ const PollBox = ({ pollData }) => {
                         {!!currentParticipantData?.isModerator ? (
                           <>
                             <span>{data}</span>
-                            {pollType !== 'Saved' && (
+                            {pollType === 'Ended' && (
                               <span style={{ fontSize: '13px', color: 'var(--primary)' }}>
                                 {result[data] || 0} Vote{result[data] > 1 ? 's' : ''}
                               </span>
@@ -237,7 +238,10 @@ const PollBox = ({ pollData }) => {
                           </button>
                           <button
                             className={`${styles.pollBoxEditBnt}`}
-                            onClick={() => editPollFunc()}>
+                              onClick={() => {
+                                console.info('in PollBox : ',pollData)
+                                editPollFunc(pollData)
+                            }}>
                             Edit
                           </button>
                         </div>
