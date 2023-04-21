@@ -3,6 +3,28 @@ $textColor: #ACACAC;
 .chatBox {
   width: 296px;
   padding: 10px 0;
+  position: relative;
+
+  &:hover{
+    background-color: #26292C;
+    .replyBox {display: block;}
+  }
+
+  .replyBox{
+    display: none;
+    height: 26px;
+    width: 30px;
+    position: absolute;
+    bottom: -10%;
+    right: 5px;
+    background-color: #1A1D21;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        border: 1px solid $primary;
+      }
+  }
 }
 
 .profileImg {
@@ -61,6 +83,13 @@ $textColor: #ACACAC;
     color: $white;
     // height: max-content;
     // float: right;
+    text-align: left;
     font-size: 14px;
   }
+}
+
+.replyBar{
+  font-size: 14px;
+  text-align: left;
+  margin-left: 35px;
 }

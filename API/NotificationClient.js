@@ -162,6 +162,7 @@ export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
 // addMessagesMeet(message: Messages): Boolean
 export const ADD_TO_FIRESTORE_CHAT = gql`
   mutation addMessagesMeet(
+    $parentId: String
     $meetingId: String
     $userId: String
     $body: String
@@ -170,6 +171,7 @@ export const ADD_TO_FIRESTORE_CHAT = gql`
   ) {
     addMessagesMeet(
       message: {
+        parent_id: $parentId
         meeting_id: $meetingId
         user_id: $userId
         body: $body
