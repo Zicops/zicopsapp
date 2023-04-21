@@ -35,6 +35,30 @@ export const GET_VILT_DATA = gql`
     }
   }
 `;
+export const GET_COMMERCIAL_DATA = gql`
+  query getViltData($courseId: String) {
+    getViltData(courseId: $courseId) {
+      id
+      lsp_id
+      course_id
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
 
 export const GET_TOPIC_CLASSROOM = gql`
   query getTopicClassroom($topicId: String) {

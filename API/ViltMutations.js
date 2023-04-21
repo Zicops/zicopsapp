@@ -143,6 +143,7 @@ export const CREATE_COMMERCIALS_DATA = gql`
       id
       lsp_id
       course_id
+      pricing_type
       price_per_seat
       currency
       tax_percentage
@@ -152,10 +153,6 @@ export const CREATE_COMMERCIALS_DATA = gql`
       registration_end_date
       booking_start_date
       booking_end_date
-      registration_publish_by
-      registration_publish_on
-      booking_publish_on
-      booking_publish_by
       registration_start_date
       created_at
       created_by
@@ -171,6 +168,7 @@ export const UPDATE_COMMERCIALS_DATA = gql`
       id
       lsp_id
       course_id
+      pricing_type
       price_per_seat
       currency
       tax_percentage
@@ -180,10 +178,6 @@ export const UPDATE_COMMERCIALS_DATA = gql`
       registration_end_date
       booking_start_date
       booking_end_date
-      registration_publish_by
-      registration_publish_on
-      booking_publish_on
-      booking_publish_by
       registration_start_date
       created_at
       created_by
