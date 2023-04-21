@@ -239,7 +239,6 @@ const PollBox = ({ pollData }) => {
                           <button
                             className={`${styles.pollBoxEditBnt}`}
                               onClick={() => {
-                                console.info('in PollBox : ',pollData)
                                 editPollFunc(pollData)
                             }}>
                             Edit

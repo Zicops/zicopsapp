@@ -118,7 +118,6 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
           }}
           editPollFunc={(pollData) => {
             setPollTitle('editPoll');
-            console.info('polldata in edit func', pollData);
             setEditPollData(pollData);
           }}
         />
