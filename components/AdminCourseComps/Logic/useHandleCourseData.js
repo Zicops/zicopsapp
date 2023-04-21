@@ -187,7 +187,7 @@ export default function useHandleCourseData() {
     const filteredUsers =
       users?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate) || [];
 
-    console.info(filteredUsers);
+    // console.info(filteredUsers);
     setTrainerCandidates([...(filteredUsers || [])]);
     setModeratorCandidates([...(filteredUsers || [])]);
     return filteredUsers;
