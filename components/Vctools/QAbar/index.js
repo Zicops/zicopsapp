@@ -77,7 +77,7 @@ const QAbar = ({ hide = false }) => {
   };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      if (message !== '') {
+      if (message !== '' && controls?.is_qa_enabled) {
         sendMessageHandler();
       }
     }
@@ -123,7 +123,6 @@ const QAbar = ({ hide = false }) => {
               Replying to : {}
               {
                 messageArr.filter((m) => {
-                  console.info(m, parentId);
                   return m.id === parentId;
                 })?.[0]?.body
               }
@@ -132,19 +131,19 @@ const QAbar = ({ hide = false }) => {
           )}
           <input
             type="text"
-            placeholder={controls.is_qa_enabled ? 'Type message here' : 'Q & A is disabled'}
+            placeholder={controls?.is_qa_enabled ? 'Type message here' : 'Q & A is disabled'}
             maxLength={160}
             value={message}
             onChange={onMessageHandler}
             onKeyDown={handleKeyPress}
-            disabled={!controls.is_qa_enabled}
+            disabled={!controls?.is_qa_enabled}
           />
           <div className={`${styles.qaSendFile}`}>
             {/* <img src="/images/svg/vctool/image.svg" /> */}
             <span></span>
             <img
               src="/images/svg/vctool/send.svg"
-              onClick={controls.is_qa_enabled ? sendMessageHandler : () => {}}
+              onClick={controls?.is_qa_enabled ? sendMessageHandler : () => {}}
             />
           </div>
         </div>

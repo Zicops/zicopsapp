@@ -126,36 +126,54 @@ export const GET_USER_LSP_TAGS = gql`
 //   ad_video_url: String
 // }
 export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
-  mutation addUpdateClassroomFlags(
+  mutation addClassroomFlags(
     $id: String
     $is_classroom_started: Boolean
     $is_participants_present: Boolean
-    $is__ad_displayed: Boolean
+    $is_ad_displayed: Boolean
     $is_break: Boolean
     $is_moderator_joined: Boolean
     $is_trainer_joined: Boolean
     $ad_video_url: String
+    $is_microphone_enabled: Boolean
+    $is_video_sharing_enabled: Boolean
+    $is_screen_sharing_enabled: Boolean
+    $is_chat_enabled: Boolean
+    $is_qa_enabled: Boolean
+    $quiz: [String]
   ) {
-    addUpdateClassroomFlags(
+    addClassroomFlags(
       input: {
         id: $id
         is_classroom_started: $is_classroom_started
         is_participants_present: $is_participants_present
-        is__ad_displayed: $is__ad_displayed
+        is_ad_displayed: $is_ad_displayed
         is_break: $is_break
         is_moderator_joined: $is_moderator_joined
         is_trainer_joined: $is_trainer_joined
         ad_video_url: $ad_video_url
+        is_microphone_enabled: $is_microphone_enabled
+        is_video_sharing_enabled: $is_video_sharing_enabled
+        is_screen_sharing_enabled: $is_screen_sharing_enabled
+        is_chat_enabled: $is_chat_enabled
+        is_qa_enabled: $is_qa_enabled
+        quiz: $quiz
       }
     ) {
       id
       is_classroom_started
       is_participants_present
-      is__ad_displayed
+      is_ad_displayed
       is_break
       is_moderator_joined
       is_trainer_joined
       ad_video_url
+      is_microphone_enabled
+      is_video_sharing_enabled
+      is_screen_sharing_enabled
+      is_chat_enabled
+      is_qa_enabled
+      quiz
     }
   }
 `;

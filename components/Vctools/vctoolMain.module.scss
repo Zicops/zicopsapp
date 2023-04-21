@@ -493,27 +493,27 @@
   border-radius: 6px;
   flex-direction: column;
 
-  .replyBlock{
-    width: 92%;
-    font-size: 12px;
-    text-align: left;
-    background-color: #262626;
-    padding: 0 5px;
-    position: relative;
-    div{
-      color: $white;
-      background-color: red;
-      height: 14px;
-      width: 14px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: -7px;
-      right: -7px;
-      cursor: pointer;
-    }
+}
+.replyBlock{
+  width: 92%;
+  font-size: 12px;
+  text-align: left;
+  background-color: #262626;
+  padding: 0 5px;
+  position: relative;
+  div{
+    color: $white;
+    background-color: red;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    cursor: pointer;
   }
 }
 

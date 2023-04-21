@@ -1,5 +1,5 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcChatBarAtom, vcChatObj, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
+import { ClassRoomFlagsInput, vcChatBarAtom, vcChatObj, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
@@ -12,10 +12,13 @@ import { db } from '@/helper/firebaseUtil/firestore.helper';
 const ChatBar = ({ hide = false }) => {
   const { sendChatMessage } = useLoadClassroomData();
   const [message, setMessage] = useState('');
+  const [parentId, setParentId] = useState(null);
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const userDetails = useRecoilValue(UserStateAtom);
+  const controls = useRecoilValue(ClassRoomFlagsInput);
   const [classroomChats, setClassroomChats] = useState([]);
+  const [sortedMessageArr, setSortedMessageArr] = useState([]);
 
   const meetMessagesRef = collection(db, 'MeetMessages');
   const q = query(
@@ -37,13 +40,27 @@ const ChatBar = ({ hide = false }) => {
     return () => unsub();
   }, []);
 
+  useEffect(() => {
+    let parents = [];
+    classroomChats.forEach((message) => {
+      if (message.parent_id === null) {
+        parents.push(message);
+      } else {
+        const parentIndex = parents.findIndex((parent) => parent.id === message.parent_id);
+        parents.splice(parentIndex + 1, 0, message);
+      }
+    });
+    setSortedMessageArr(parents);
+  }, [classroomChats]);
+
   const sendMessageHandler = async () => {
     const obj = {
       meetingId: activeClassroomTopicId,
       userId: userDetails?.id,
+      parentId: parentId,
       body: message,
       time: Math.floor(Date.now() / 1000),
-      chatType: 'classroom' // move to constants
+      chatType: 'classroom', // move to constants
     };
 
     setClassroomChats([...classroomChats, obj]);
@@ -56,47 +73,11 @@ const ChatBar = ({ hide = false }) => {
   };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      if (message !== '') {
+      if (message !== '' && controls?.is_chat_enabled) {
         sendMessageHandler();
       }
     }
   };
-
-  // function getReplies(data) {
-  //   const replies = {};
-  //   for (let i = 0; i < data?.length; i++) {
-  //     const message = data[i];
-  //     if (message?.reply_id) {
-  //       const parent = data?.find((m) => m.id === message?.reply_id);
-  //       if (parent) {
-  //         if (!replies[parent?.id]) {
-  //           replies[parent?.id] = {
-  //             parent: parent,
-  //             replies: [],
-  //           };
-  //         }
-  //         replies[parent?.id]?.replies?.push(message);
-  //       }
-  //     } else {
-  //       if (!replies[message?.id]) {
-  //         replies[message?.id] = {
-  //           parent: message,
-  //           replies: [],
-  //         };
-  //       }
-  //     }
-  //   }
-  //   return Object.values(replies).map((r) => ({
-  //     parent: r?.parent,
-  //     replies: r?.replies?.sort((a, b) => a.time - b.time),
-  //   }));
-  // }
-
-  // const replies = getReplies(messageArr);
-
-  // useEffect(() => {
-  //   console.info(classroomChats);
-  // }, [classroomChats]);
 
   return (
     <div
@@ -114,26 +95,42 @@ const ChatBar = ({ hide = false }) => {
       </div>
 
       <div className={`${styles.chatbarScreen}`}>
-        {classroomChats?.map((chat) => {
+        {sortedMessageArr?.map((chat) => {
           return (
             <span key={chat.id}>
-              <ChatMessageBlock message={chat} />
+              <ChatMessageBlock message={chat} setParentId={setParentId} />
             </span>
           );
         })}
       </div>
 
       <div className={`${styles.chatbarInput}`}>
+        {!!parentId && (
+          <div className={`${styles.replyBlock}`}>
+            Replying to : {}
+            {
+              sortedMessageArr.filter((m) => {
+                return m.id === parentId;
+              })?.[0]?.body
+            }
+            <div onClick={() => setParentId(null)}>x</div>
+          </div>
+        )}
         <input
           type="text"
-          placeholder="Type message here"
+          placeholder={controls?.is_chat_enabled ? 'Type message here' : 'Chat is disabled'}
           value={message}
           onChange={onMessageHandler}
           onKeyDown={handleKeyPress}
+          disabled={!controls?.is_chat_enabled}
         />
         <div className={`${styles.chatSendFile}`}>
-          <img src="/images/svg/vctool/image.svg" />
-          <img src="/images/svg/vctool/send.svg" onClick={sendMessageHandler} />
+          {/* <img src="/images/svg/vctool/image.svg" /> */}
+          <span></span>
+          <img
+            src="/images/svg/vctool/send.svg"
+            onClick={controls?.is_chat_enabled ? sendMessageHandler : () => {}}
+          />
         </div>
       </div>
     </div>
