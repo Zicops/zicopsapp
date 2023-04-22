@@ -14,9 +14,21 @@ const StudentFrame = ({ name, avatarUrl = '' ,frameIcons ,api}) => {
       )}
       <div className={styles.studentFramename}>{name}</div>
       <div className={`${styles.studentFrameicons}`}>
-        {isRiseHand && <img src="/images/svg/vctool/back-hand.svg" />}
-        {isAudio ? <img src="/images/svg/vctool/mic-off.svg" /> : ''}
-        {isvideo ? <img src="/images/svg/vctool/videocam-off.svg" /> : ''}
+        {!isRiseHand ? (
+          <img src="/images/svg/vctool/back-hand.svg" />
+        ) : (
+          <img src="/images/svg/vctool/back-hand.svg" />
+        )}
+        {!isAudio ? (
+          <img src="/images/svg/vctool/mic-off.svg" />
+        ) : (
+          <img src="/images/svg/vctool/mic-on.svg" />
+        )}
+        {!isvideo ? (
+          <img src="/images/svg/vctool/videocam-off.svg" />
+        ) : (
+          <img src="/images/svg/vctool/videocam-on.svg" />
+        )}
       </div>
     </div>
   );
