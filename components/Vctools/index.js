@@ -1,6 +1,6 @@
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { ActiveClassroomTopicIdAtom, TopicAtom, VcApi } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -11,7 +11,7 @@ import {
   totalRoomno,
   vcMeetingIconAtom,
   vcModeratorControlls,
-  vctoolMetaData
+  vctoolMetaData,
 } from '@/state/atoms/vctool.atoms';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -21,11 +21,10 @@ import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import { StartMeeting } from './help/vctool.helper';
 import styles from './vctoolMain.module.scss';
+
 const VcMaintool = ({ vcData = {} }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
-  const topicData = useRecoilValue(TopicAtom);
-  const currentTopicData = topicData?.find((topic) => topic?.id === activeClassroomTopicId);
 
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -35,7 +34,7 @@ const VcMaintool = ({ vcData = {} }) => {
   const [api, setapi] = useState(null);
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData);
   const [currentParticipantData, setCurrentParticipantData] = useRecoilState(
-    CurrentParticipantDataAtom
+    CurrentParticipantDataAtom,
   );
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [isMeetingStarted, setIsMeetingStarted] = useRecoilState(joinMeeting);
@@ -68,7 +67,7 @@ const VcMaintool = ({ vcData = {} }) => {
     fullScreenRef?.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
-      inline: 'center'
+      inline: 'center',
     });
   }, [fullScreenRef]);
 
@@ -106,7 +105,7 @@ const VcMaintool = ({ vcData = {} }) => {
 
     const allPartcipants = structuredClone(api?.getParticipantsInfo());
     const _currentUser = allPartcipants?.find(
-      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id
+      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id,
     );
     const isModerator = modIdList?.includes(userData?.id);
     if (isModerator) api.executeCommand('grantModerator', userData?.id);
@@ -177,7 +176,7 @@ const VcMaintool = ({ vcData = {} }) => {
                 setbreakoutListarr(rooms.rooms);
                 setVctoolInfo({
                   ...vctoolInfo,
-                  allRoomInfo: rooms.rooms[0].participants
+                  allRoomInfo: rooms.rooms[0].participants,
                 });
               });
             }}
@@ -213,12 +212,12 @@ const VcMaintool = ({ vcData = {} }) => {
               // Route.push('/admin/vctool')
 
               StartMeeting(
-                currentTopicData?.name,
+                classroomData?.topicId,
                 containerRef,
                 toggleAudio,
                 settoobar,
                 setapi,
-                toggleVideo
+                toggleVideo,
               );
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true);
