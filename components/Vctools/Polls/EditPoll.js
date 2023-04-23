@@ -1,13 +1,11 @@
-import { pollArray } from '@/state/atoms/vctool.atoms';
-import { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import PollOption from './PollOption';
-import styles from '../vctoolMain.module.scss';
-import { ActiveClassroomTopicIdAtom, TopicClassroomAtom } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import useLoadClassroomData from '../Logic/useLoadClassroomData';
+import styles from '../vctoolMain.module.scss';
+import PollOption from './PollOption';
 
-const PollQA = ({ ShowPoll, goToCreatePoll }) => {
-  const [pollInfo, setPollInfo] = useRecoilState(pollArray);
+const EditPoll = ({ pollData, goToCreatePoll, ShowPoll }) => {
   const [pollQuestion, setPollQuestion] = useState('');
   const [pollName, setPollName] = useState('');
   const [options, setOptions] = useState([]);
@@ -17,39 +15,45 @@ const PollQA = ({ ShowPoll, goToCreatePoll }) => {
   function optionInputHandler(e, index) {
     e.preventDefault();
     let tempArr = structuredClone(options);
-    tempArr[index].value = e.target.value;
+    if (e.target.value === '') {
+      if (index > -1) {
+        tempArr.splice(index, 1);
+      }
+    } else {
+      tempArr[index] = e.target.value;
+    }
     setOptions(tempArr);
   }
 
-  const addPollAndClearInputs = async () => {
-    if (pollName !== '' && pollQuestion !== '' && options.length > 1) {
+  useEffect(() => {
+    setPollQuestion(pollData?.pollQuestion);
+    setPollName(pollData?.pollName);
+    setOptions(pollData?.options.length ? pollData?.options : []);
+  }, [pollData]);
 
+  async function updatePoll() {
+    if (pollName !== '' && pollQuestion !== '' && options.length > 1) {
       const activeClassroomCourseId = window?.location.href.split('/').pop();
 
-      const simplePollOptions = options.map((o)=>o.value);
-
       const obj = {
+        pollId: pollData?.pollId,
         pollName: pollName,
         meetingId: activeClassroomTopicId,
         courseId: activeClassroomCourseId,
         topicId: activeClassroomTopicId,
         question: pollQuestion,
-        options: simplePollOptions,
+        options: options,
         status: 'saved',
       };
 
       await addUpdatePolls(obj);
 
-      setPollName('');
-      setPollQuestion('');
-      setOptions([]);
       ShowPoll();
     }
-  };
-
+  }
   return (
     <div className={`${styles.pollQA}`}>
-      <p>Create Poll</p>
+      <p>Edit Poll</p>
       <div className={`${styles.pollQaScreen}`}>
         <div className={`${styles.pollQuestion}`}>
           <div className={`${styles.pollName}`}>
@@ -77,7 +81,7 @@ const PollQA = ({ ShowPoll, goToCreatePoll }) => {
           {options.map((option, index) => {
             return (
               <PollOption
-                optionValue={option?.value}
+                optionValue={option}
                 option={`Option ${index + 1}`}
                 placeholder={`Enter option ${index + 1}`}
                 onChangeHandler={(e) => optionInputHandler(e, index)}
@@ -90,11 +94,12 @@ const PollQA = ({ ShowPoll, goToCreatePoll }) => {
           onClick={() => {
             setOptions([
               ...options,
-              {
-                seq: options.length + 1,
-                value: '',
-                imgUrl: '',
-              },
+              // {
+              //   seq: options.length + 1,
+              //   value: '',
+              //   imgUrl: '',
+              // },
+              '',
             ]);
           }}>
           <div>+</div> Add Option
@@ -105,38 +110,16 @@ const PollQA = ({ ShowPoll, goToCreatePoll }) => {
             className={`${styles.pollCancelBtn}`}
             onClick={() => {
               goToCreatePoll();
-              // setOptions([])
-              // if(options.length===0)
-              // {
-              //  goToCreatePoll()
-              // }
             }}>
             Cancel
           </button>
-          <button
-            className={`${styles.pollSaveBtn}`}
-            // onClick={() => {
-            //   if (pollName !== '' && pollQuestion !== '' && options.length > 1) {
-            //     setPollInfo([
-            //       ...pollInfo,
-            //       {
-            //         pollName: pollName,
-            //         pollQuestion: pollQuestion,
-            //         pollOptions: options,
-            //       },
-            //     ]);
-            //   }
-            //   setPollName('');
-            //   setPollQuestion('');
-            //   setOptions([]);
-            //   ShowPoll();
-            // }}
-            onClick={addPollAndClearInputs}>
-            Save
+          <button className={`${styles.pollSaveBtn}`} onClick={updatePoll}>
+            Update
           </button>
         </div>
       </div>
     </div>
   );
 };
-export default PollQA;
+
+export default EditPoll;

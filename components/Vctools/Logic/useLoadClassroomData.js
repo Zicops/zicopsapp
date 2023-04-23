@@ -1,15 +1,27 @@
-import { ADD_TO_FIRESTORE, ADD_UPDATE_CLASSROOM_FLAGS, notificationClient } from '@/api/NotificationClient';
+import {
+  ADD_TO_FIRESTORE_CHAT,
+  ADD_UPDATE_CLASSROOM_FLAGS,
+  ADD_VCTOOL_POLL,
+  UPDATE_VCTOOL_POLL,
+  UPDATE_VCTOOL_POLL_RESPONSE,
+  notificationClient,
+} from '@/api/NotificationClient';
 import { GET_TOPIC_CLASSROOM, viltQueryClient } from '@/api/ViltQueries';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { sanitizeFormData } from '@/helper/common.helper';
 import {
   TopicClassroomAtomFamily,
   getClassroomMasterDataObj,
-  getTopicClassroomObject
+  getTopicClassroomObject,
 } from '@/state/atoms/courses.atom';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { ClassRoomFlagsInput, vcChatBarAtom, vcChatObj, vcModeratorControlls } from '@/state/atoms/vctool.atoms';
+import {
+  ClassRoomFlagsInput,
+  vcChatBarAtom,
+  vcChatObj,
+  vcModeratorControlls,
+} from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
@@ -20,13 +32,11 @@ export default function useLoadClassroomData(topicId = null) {
   const setTopicClassroom = useRecoilCallback(
     ({ set }) =>
       (topicClassroomData = {}, topicId = null) =>
-        set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData))
+        set(TopicClassroomAtomFamily(topicId), getTopicClassroomObject(topicClassroomData)),
   );
-  const [controlls, setControlls] = useRecoilState(ClassRoomFlagsInput);
-  const [messageObj, setMessageObj] = useRecoilState(vcChatObj);
-  const fcmToken = useRecoilValue(FcmTokenAtom);
+
   const [isLoading, setIsLoading] = useState(null);
-  const [messageData,setMessageData]=useState({})
+  const [messageData, setMessageData] = useState({});
 
   useEffect(() => {
     if (!topicId) return;
@@ -47,7 +57,7 @@ export default function useLoadClassroomData(topicId = null) {
       GET_TOPIC_CLASSROOM,
       { topicId: topicId },
       {},
-      viltQueryClient
+      viltQueryClient,
     );
     const _topicClassroom = res?.getTopicClassroom;
 
@@ -66,45 +76,81 @@ export default function useLoadClassroomData(topicId = null) {
       createdAt: _topicClassroom?.created_at,
       createdBy: _topicClassroom?.created_by,
       updatedAt: _topicClassroom?.updated_at,
-      updatedBy: _topicClassroom?.updated_by
+      updatedBy: _topicClassroom?.updated_by,
     };
   }
 
-  async function addUpdateClassRoom(e) {
-    // add new topic
-    const sendData = sanitizeFormData(controlls);
-    // console.log(sendData)
-    // if (!controlls?.id) {
-    //   mutateData(ADD_UPDATE_CLASSROOM_FLAGS, sendData, {}, notificationClient)
-    //     .then((res) => {
-    //       if (!res?.addUpdateClassroomFlags) return setToastMessage('Update ClassRoom Error');
-    //       setControlls(res?.addUpdateClassroomFlags)
-    //       return res?.addUpdateClassroomFlags;
-    //     })
-    //     .catch(() => setToastMessage('Update ClassRoom Error'));
-    //   return;
-    // } else {
-    //   mutateData(ADD_UPDATE_CLASSROOM_FLAGS, sendData, {}, notificationClient)
-    //     .then((res) => {
-    //       if (!res?.addUpdateClassroomFlags) return setToastMessage('Update ClassRoom');
-    //       setControlls(res?.addUpdateClassroomFlags)
-    //       return res?.addUpdateClassroomFlags;
-    //     })
-    //     .catch(() => setToastMessage('Update ClassRoom'));
-    // }
-  }
-  async function addUpdateMessage()
-  {
-    const sendData = sanitizeFormData(messageData);
-    // console.log(messageObj)
-        mutateData(ADD_TO_FIRESTORE, sendData, { context: { headers: { 'fcm-token': fcmToken } } }, notificationClient)
-        .then((res) => {
-          if (!res?.addMessagesMeet) return setToastMessage('add chat Message error');
-          return
-        })
-        .catch(() => setToastMessage('add chat Message error'));
-    // ADD_TO_FIRESTORE
+  async function addUpdateClassRoomFlags(data) {
+    const sendData = sanitizeFormData(data);
+    mutateData(
+      ADD_UPDATE_CLASSROOM_FLAGS,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!res?.addClassroomFlags) return setToastMessage('Error changing host controls');
+        return;
+      })
+      .catch(() => setToastMessage('Error changing host controls'));
   }
 
-  return { isLoading, addUpdateClassRoom ,addUpdateMessage,setMessageData};
+  async function sendChatMessage(messageData) {
+    const sendData = sanitizeFormData(messageData);
+    mutateData(
+      ADD_TO_FIRESTORE_CHAT,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!res?.addMessagesMeet) return setToastMessage('Chat send failed');
+        return;
+      })
+      .catch(() => setToastMessage('Chat send failed'));
+  }
+
+  async function addUpdatePolls(pollData) {
+    const sendData = sanitizeFormData(pollData);
+    const GQL = sendData.pollId ? UPDATE_VCTOOL_POLL : ADD_VCTOOL_POLL;
+
+    mutateData(
+      GQL,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!sendData.pollId && !res?.addPoll)
+          return setToastMessage('Poll could not be created, please try again.');
+        if (sendData.pollId && !res?.updatePoll)
+          return setToastMessage('Poll could not be updated, please try again.');
+        return;
+      })
+      .catch(() => setToastMessage('Some error occured, please try again.'));
+  }
+
+  async function updatePollsResponse(responseData) {
+    const sendData = sanitizeFormData(responseData);
+    mutateData(
+      UPDATE_VCTOOL_POLL_RESPONSE,
+      sendData,
+      { context: { headers: { 'fcm-token': 'notactualtoken' } } },
+      notificationClient,
+    )
+      .then((res) => {
+        if (!res?.updatePollOptions)
+          return setToastMessage('Poll response could not be submitted.');
+        return setToastMessage('Poll response submitted successfully.', 'success');
+      })
+      .catch(() => setToastMessage('Poll response could not be submitted.'));
+  }
+
+  return {
+    isLoading,
+    addUpdateClassRoomFlags,
+    sendChatMessage,
+    addUpdatePolls,
+    updatePollsResponse,
+  };
 }

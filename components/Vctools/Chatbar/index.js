@@ -1,88 +1,89 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcChatBarAtom, vcChatObj } from '@/state/atoms/vctool.atoms';
+import { ClassRoomFlagsInput, vcChatBarAtom, vcChatObj, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 import ChatMessageBlock from './VcChatMessageBlock';
 import useLoadClassroomData from '../Logic/useLoadClassroomData';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { db } from '@/helper/firebaseUtil/firestore.helper';
+
 const ChatBar = ({ hide = false }) => {
-  const { addUpdateMessage,setMessageData } = useLoadClassroomData();
+  const { sendChatMessage } = useLoadClassroomData();
   const [message, setMessage] = useState('');
-  const [messageObj, setMessageObj] = useRecoilState(vcChatObj);
-  const [messageArr, setMessageArr] = useRecoilState(vcChatBarAtom);
-  const [sendMessage, setSendMessage] = useState(false);
+  const [parentId, setParentId] = useState(null);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const userDetails = useRecoilValue(UserStateAtom);
-  // id: String
-  // console.log(messageArr)
+  const controls = useRecoilValue(ClassRoomFlagsInput);
+  const [classroomChats, setClassroomChats] = useState([]);
+  const [sortedMessageArr, setSortedMessageArr] = useState([]);
+
+  const meetMessagesRef = collection(db, 'MeetMessages');
+  const q = query(
+    meetMessagesRef,
+    where('meeting_id', '==', activeClassroomTopicId),
+    where('chat_type', '==', 'classroom'),
+    orderBy('time', 'asc'),
+  );
+
+  useEffect(async () => {
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const newMessages = [];
+      querySnapshot.forEach((doc) => {
+        newMessages.push({ id: doc.id, ...doc.data() });
+      });
+      setClassroomChats(newMessages);
+    });
+
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    let parents = [];
+    classroomChats.forEach((message) => {
+      if (message.parent_id === null) {
+        parents.push(message);
+      } else {
+        const parentIndex = parents.findIndex((parent) => parent.id === message.parent_id);
+        parents.splice(parentIndex + 1, 0, message);
+      }
+    });
+    setSortedMessageArr(parents);
+  }, [classroomChats]);
+
   const sendMessageHandler = async () => {
-    setSendMessage(true);
-    // const _messageObj = structuredClone(messageObj);
-    // _messageObj.body =message,
-    // _messageObj.meeting_id='',
-    // _messageObj.user_id=userDetails?.id,
-    // _messageObj.time= Math.floor(Date.now() / 1000)
-  
-    // setMessageObj(_messageObj);
-    
     const obj = {
-        body: message,
-        meeting_id: '',
-        user_id: userDetails?.id,
-        time: Math.floor(Date.now() / 1000)
-      };
-      setMessageData(obj)
-    setMessageArr([...messageArr, obj]);
-    // console.log(messageObj,_messageObj)
-    await addUpdateMessage();
+      meetingId: activeClassroomTopicId,
+      userId: userDetails?.id,
+      parentId: parentId,
+      body: message,
+      time: Math.floor(Date.now() / 1000),
+      chatType: 'classroom', // move to constants
+    };
+
+    setClassroomChats([...classroomChats, obj]);
+    await sendChatMessage(obj);
     setMessage('');
   };
+
   const onMessageHandler = (e) => {
     setMessage(e.target.value);
   };
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      if (message !== '') {
+      if (message !== '' && controls?.is_chat_enabled) {
         sendMessageHandler();
       }
     }
   };
 
-  function getReplies(data) {
-    const replies = {};
-    for (let i = 0; i < data?.length; i++) {
-      const message = data[i];
-      if (message?.reply_id) {
-        const parent = data?.find((m) => m.id === message?.reply_id);
-        if (parent) {
-          if (!replies[parent?.id]) {
-            replies[parent?.id] = {
-              parent: parent,
-              replies: []
-            };
-          }
-          replies[parent?.id]?.replies?.push(message);
-        }
-      } else {
-        if (!replies[message?.id]) {
-          replies[message?.id] = {
-            parent: message,
-            replies: []
-          };
-        }
-      }
-    }
-    return Object.values(replies).map((r) => ({
-      parent: r?.parent,
-      replies: r?.replies?.sort((a, b) => a.time - b.time)
-    }));
-  }
-
-  const replies = getReplies(messageArr);
-  //   useEffect(() => {
-  //     console.log(messageArr);
-  //   }, [messageArr]);
   return (
-    <div className={`${styles.chatbar}`}>
+    <div
+      className={`${styles.chatbar}`}
+      onMouseEnter={() => setHideToolbar(false)}
+      onMouseLeave={() => setHideToolbar(null)}>
       <div className={`${styles.chatbarHead}`}>
         <div>Chat</div>
         <button
@@ -94,26 +95,42 @@ const ChatBar = ({ hide = false }) => {
       </div>
 
       <div className={`${styles.chatbarScreen}`}>
-        {messageArr?.map((data) => {
+        {sortedMessageArr?.map((chat) => {
           return (
-            <>
-              <ChatMessageBlock message={data} />
-            </>
+            <span key={chat.id}>
+              <ChatMessageBlock message={chat} setParentId={setParentId} />
+            </span>
           );
         })}
       </div>
 
       <div className={`${styles.chatbarInput}`}>
+        {!!parentId && (
+          <div className={`${styles.replyBlock}`}>
+            Replying to : {}
+            {
+              sortedMessageArr.filter((m) => {
+                return m.id === parentId;
+              })?.[0]?.body
+            }
+            <div onClick={() => setParentId(null)}>x</div>
+          </div>
+        )}
         <input
           type="text"
-          placeholder="Type message here"
+          placeholder={controls?.is_chat_enabled ? 'Type message here' : 'Chat is disabled'}
           value={message}
           onChange={onMessageHandler}
           onKeyDown={handleKeyPress}
+          disabled={!controls?.is_chat_enabled}
         />
         <div className={`${styles.chatSendFile}`}>
-          <img src="/images/svg/vctool/image.svg" />
-          <img src="/images/svg/vctool/send.svg" onClick={sendMessageHandler} />
+          {/* <img src="/images/svg/vctool/image.svg" /> */}
+          <span></span>
+          <img
+            src="/images/svg/vctool/send.svg"
+            onClick={controls?.is_chat_enabled ? sendMessageHandler : () => {}}
+          />
         </div>
       </div>
     </div>
