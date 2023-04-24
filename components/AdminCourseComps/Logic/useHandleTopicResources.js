@@ -9,6 +9,7 @@ import {
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { isWordMatched } from '@/utils/string.utils';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 
@@ -16,12 +17,15 @@ export default function useHandleTopicResources(topicId = null) {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
-  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  // const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const courseId = Router.query.courseId;
+
+  console.info('asdf', courseId);
   const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtomFamily(topicId));
 
   const [isFormVisible, setIsFormVisible] = useState(null);
   const [resourceFormData, setResourceFormData] = useState(
-    getTopicResourcesObject({ courseId: courseMetaData?.id, topicId: topicId, isUpload: true }),
+    getTopicResourcesObject({ courseId: courseId, topicId: topicId, isUpload: true }),
   );
 
   // reset state
@@ -38,7 +42,7 @@ export default function useHandleTopicResources(topicId = null) {
       .then((res) =>
         setTopicResources(
           res?.getTopicResources?.map((resource) =>
-            getTopicResourcesObject({ ...resource, courseId: courseMetaData?.id }),
+            getTopicResourcesObject({ ...resource, courseId: courseId }),
           ) || [],
         ),
       )
@@ -61,7 +65,7 @@ export default function useHandleTopicResources(topicId = null) {
     // reset form data
     if (!isFormVisible) {
       setResourceFormData(
-        getTopicResourcesObject({ courseId: courseMetaData?.id, topicId: topicId, isUpload: true }),
+        getTopicResourcesObject({ courseId: courseId, topicId: topicId, isUpload: true }),
       );
     }
 
@@ -125,7 +129,7 @@ export default function useHandleTopicResources(topicId = null) {
 
     setIsFormVisible(false);
     setResourceFormData(
-      getTopicResourcesObject({ courseId: courseMetaData?.id, topicId: topicId, isUpload: true }),
+      getTopicResourcesObject({ courseId: courseId, topicId: topicId, isUpload: true }),
     );
   }
 

@@ -10,16 +10,20 @@ import BottomTabsMenu from '../small/BottomTabsMenu';
 import {
   coursebody,
   navbarOverrideElement,
-  navbarOverrideElementClose
+  navbarOverrideElementClose,
 } from './courseBody.module.scss';
 import CoursePageTabs from './CoursePageTabs';
 import { tabs } from './Logic/courseBody.helper';
 import { ShowNotAssignedErrorAtom } from './Logic/topicBox.helper';
 import useLoadUserData from './Logic/useLoadUserData';
 import useShowData from './Logic/useShowData';
+import { SelectedResourceDataAtom } from '../LearnerCourseComps/atoms/learnerCourseComps.atom';
+import PopUp from '../common/PopUp';
+import ZicopsFileViewer from '../common/ZicopsFileViewer';
 
 export default function CourseBody({ isPreview = false }) {
   const courseContextData = useContext(courseContext);
+  const [selectedResourceData, setSelectedResourceData] = useRecoilState(SelectedResourceDataAtom);
 
   const {
     myRef,
@@ -29,7 +33,7 @@ export default function CourseBody({ isPreview = false }) {
     getModuleOptions,
     moduleData,
     setSelectedModule,
-    setIsResourceShown
+    setIsResourceShown,
   } = useShowData(courseContextData);
 
   const router = useRouter();
@@ -51,7 +55,7 @@ export default function CourseBody({ isPreview = false }) {
   const props = {
     activeCourseTab: activeCourseTab,
     setActiveCourseTab: setActiveCourseTab,
-    refProp: myRef
+    refProp: myRef,
   };
 
   return (
@@ -103,11 +107,11 @@ export default function CourseBody({ isPreview = false }) {
                     { pathname: router.asPath, query: { isAssign: true } },
                     router.asPath,
                     {
-                      shallow: true
-                    }
+                      shallow: true,
+                    },
                   );
                 },
-                handleClickRight: () => setShowAlert(false)
+                handleClickRight: () => setShowAlert(false),
               }}
             />
           ) : (
@@ -118,6 +122,17 @@ export default function CourseBody({ isPreview = false }) {
             />
           )}
         </>
+      )}
+      {!!selectedResourceData?.url && (
+        <PopUp
+          title={selectedResourceData?.name}
+          popUpState={[selectedResourceData?.url, setSelectedResourceData]}
+          size="large"
+          positionLeft="50%"
+          customBodyStyles={{ overflow: 'auto' }}
+          isFooterVisible={false}>
+          <ZicopsFileViewer filePath={selectedResourceData?.url} />
+        </PopUp>
       )}
     </>
   );

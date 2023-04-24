@@ -1,33 +1,35 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
-  CurrentParticipantDataAtom,
   allPartcipantinfo,
-  breakoutList,
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
-  publishBreakoutRoom,
   vcMeetingIconAtom,
   vctoolAlluserinfo,
+  CurrentParticipantDataAtom,
+  publishBreakoutRoom,
+  breakoutList,
+  vcToolNavbarState,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
-import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import ChatBar from '../Chatbar';
 import DeletePopUp from '../DeletePopUp';
-import ManageAccount from '../ManageAccount';
 import NotesContainer from '../NotesContainer';
 import Participants from '../Participants';
 import Poll from '../Polls';
 import QAbar from '../QAbar';
 import QuizPage from '../Quiz';
 import ResourcePage from '../Resource';
-import SettingPopup from '../SettingPopup';
-import StartSessionPopUp from '../StartSessionPopUP';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
+import WhiteBoard from '../WhiteBoard';
+import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
+import ManageAccount from '../ManageAccount';
+import StartSessionPopUp from '../StartSessionPopUP';
+import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
   api = null,
@@ -68,7 +70,7 @@ const MainToolbar = ({
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
   const [showSetting, setShowSetting] = useState(false);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
-  const [hideToolBar, setHideToolbar] = useState(null);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
@@ -147,6 +149,7 @@ const MainToolbar = ({
           }}
           Info={getUesrId}
           api={api}
+          api={api}
         />
       ),
     },
@@ -181,6 +184,7 @@ const MainToolbar = ({
           }}
           deletePollPopUp={(index) => {
             setDeletedPouptitle('deletePopUp');
+            setPollDeleteIndex(index);
             setPollDeleteIndex(index);
           }}
         />

@@ -195,7 +195,7 @@ export const TopicResourcesAtom = atom({
 
 export const TopicResourcesAtomFamily = atomFamily({
   key: 'TopicResourcesFamily',
-  default: () => getTopicResourcesObject(),
+  default: () => null,
 });
 
 export function getTopicResourcesObject(data) {
