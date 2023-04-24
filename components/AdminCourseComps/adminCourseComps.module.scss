@@ -79,7 +79,7 @@ $marginBetweenInputs: 1em;
 
 .cofigurationSettingLabel {
   margin-top: $gapBetweenInputAndLabel;
-  color: #acacac;
+  color: $bgBody;
 }
 
 .configurationCourseContainer > div {
@@ -163,7 +163,7 @@ $marginBetweenInputs: 1em;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-  color: #acacac;
+  color: $bgBody;
 }
 
 // About
@@ -925,3 +925,65 @@ button.addTopicFormBtn {
     }
   }
 }
+
+    .trainerDetailsContainer {
+      .trainerImage {
+        width: 100%;
+        height: 360px;
+  
+        img {
+          height: 100%;
+          width: 100%;
+        }
+      }
+      .trainerInfoContainer{
+        margin-top: 20px;
+      display: grid;
+        grid-template-columns: auto auto ;
+        justify-content: space-between;
+        gap: 40px;
+      .trainerInfo{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        .trainerImg2{
+          padding: 15px 20px;
+          border: 1px solid $darkOne;
+          border-radius: 2px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img{
+            width: 22px;
+            height: 22px;
+          }
+        }
+        .trainerLabel{
+          color:$bgBody;
+        }
+        .trainerValue{
+          font-size: 18px;
+        }
+      }
+
+    }
+    .trainerExpertise{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      .expertiseName{
+        border: 1px solid $darkOne;
+        padding: 10px 16px;
+        border-radius: 24px;
+      }
+    }
+    .expertText{
+      padding-top: 20px;
+    }
+    }
+            .hr {
+              background-color: $secondary;
+              height: 1px;
+            }

@@ -19,6 +19,7 @@ export default function VendorPopUp({
   onClose = () => {},
   isAttempted = false,
   isMarketYard = false,
+  isVilt = false,
   headerComps = null
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
@@ -49,26 +50,30 @@ export default function VendorPopUp({
         closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
           <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage}`}>
-            <div className={`${styles.header}`}>
-              <div className={`${styles.title}`}>{title} </div>
-              {headerComps}
-              <div
-                className={`${styles.cross_img} ${closeBtn.disabled ? styles.disabled : ''}`}
-                onClick={() => {
-                  if (closeBtn.disabled) return;
-                  closePopUp();
-                  onCloseWithCross();
-                }}>
-                <ToolTip title={tooltipCloseBtnTitle}>
-                  {!isMarketYard ? (
-                    <img src="/images/svg/cross.svg" alt="" />
-                  ) : (
-                    <img src="/images/svg/close-icon.svg" alt="" />
-                  )}
-                </ToolTip>
-              </div>
-            </div>
-            {!isMarketYard && <div className={`${styles.hr}`}></div>}
+            {!isVilt && (
+              <>
+                <div className={`${styles.header}`}>
+                  <div className={`${styles.title}`}>{title} </div>
+                  {headerComps}
+                  <div
+                    className={`${styles.cross_img} ${closeBtn.disabled ? styles.disabled : ''}`}
+                    onClick={() => {
+                      if (closeBtn.disabled) return;
+                      closePopUp();
+                      onCloseWithCross();
+                    }}>
+                    <ToolTip title={tooltipCloseBtnTitle}>
+                      {!isMarketYard ? (
+                        <img src="/images/svg/cross.svg" alt="" />
+                      ) : (
+                        <img src="/images/svg/close-icon.svg" alt="" />
+                      )}
+                    </ToolTip>
+                  </div>
+                </div>
+                {!isMarketYard && <div className={`${styles.hr}`}></div>}
+              </>
+            )}
 
             <div className={`${styles.body} ${isAttempted ? styles.attempted : ''}`}>
               {children}
