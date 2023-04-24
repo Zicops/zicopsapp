@@ -4,6 +4,7 @@ import Configuration from '../Configuration';
 import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
 import Topics from '../Topics';
+import Analytics from '../Analytics';
 
 export const courseTabs = {
   courseMaster: { name: 'Course Master', component: <CourseMaster /> },
@@ -11,7 +12,8 @@ export const courseTabs = {
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
   commercials: { name: 'Commercials', component: <Commercials /> },
-  configuration: { name: 'Configuration', component: <Configuration /> }
+  configuration: { name: 'Configuration', component: <Configuration /> },
+  analytics: { name: 'Analytics', component: <Analytics /> }
 };
 
 export function getModuleDataObject(data = {}) {
