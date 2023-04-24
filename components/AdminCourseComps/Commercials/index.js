@@ -28,11 +28,17 @@ const Commercials = () => {
           type="checkbox"
           label="To be Decided"
           name="isMandatory"
-          isChecked={commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd}
+          isChecked={
+            commercialsData?.is_decided ||
+            commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd
+          }
           changeHandler={(e) => {
             const isChecked = e.target.checked;
             const _commercialData = { ...commercialsData };
             _commercialData.is_decided = isChecked;
+           _commercialData?.pricing_type = isChecked;
+           _commercialData?.is_paid_traning = false;
+           _commercialData?.is_free_traning = false;
             setCommercialsData(_commercialData);
           }}
         />
@@ -43,9 +49,11 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Priced Training',
             name: 'display',
-            isDisabled: commercialsData?.is_decided,
+            isDisabled: commercialsData?.is_decided || commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
             description: 'Learners to pay and book the seat to attend the training',
-            isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.paid,
+            isChecked:
+              commercialsData?.is_paid_traning ||
+              commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.paid,
             changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true }),
           }}
         />
@@ -53,9 +61,11 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Free of Cost Training',
             name: 'display',
-            isDisabled: commercialsData?.is_decided,
+            isDisabled: commercialsData?.is_decided || commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
             description: 'Training is Free of Cost for Learners',
-            isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
+            isChecked:
+              commercialsData?.is_free_traning ||
+              commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             changeHandler: (e) => setCommercialsData({ ...commercialsData, is_free_traning: true }),
           }}
         />
