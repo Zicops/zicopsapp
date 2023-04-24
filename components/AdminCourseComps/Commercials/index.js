@@ -10,7 +10,7 @@ import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
 import {
   ClassroomMasterAtom,
   CommercialsAtom,
-  CourseMetaDataAtom
+  CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 
@@ -46,7 +46,7 @@ const Commercials = () => {
             isDisabled: commercialsData?.is_decided,
             description: 'Learners to pay and book the seat to attend the training',
             isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.paid,
-            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true })
+            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_paid_traning: true }),
           }}
         />
         <RadioBox
@@ -56,7 +56,7 @@ const Commercials = () => {
             isDisabled: commercialsData?.is_decided,
             description: 'Training is Free of Cost for Learners',
             isChecked: commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
-            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_free_traning: true })
+            changeHandler: (e) => setCommercialsData({ ...commercialsData, is_free_traning: true }),
           }}
         />
       </div>
@@ -70,7 +70,7 @@ const Commercials = () => {
               //   label: 'Name :',
               placeholder: 'Enter price per seat',
               value: commercialsData?.price_per_seat,
-              isNumericOnly: true
+              isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -84,9 +84,9 @@ const Commercials = () => {
               placeholder: 'INR',
               value: {
                 label: commercialsData?.currency,
-                value: commercialsData?.currency
+                value: commercialsData?.currency,
               },
-              options: currency
+              options: currency,
             }}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData, 'currency')}
             styleClass={`${styles.labelMergin}`}
@@ -100,7 +100,7 @@ const Commercials = () => {
               //   label: 'Name :',
               placeholder: 'Tax',
               value: commercialsData?.tax_percentage,
-              isNumericOnly: true
+              isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -113,8 +113,10 @@ const Commercials = () => {
               inputName: 'total',
               //   label: 'Name :',
               placeholder: 'Auto-populated',
-              value: +commercialsData?.price_per_seat + +commercialsData?.tax_percentage,
-              isNumericOnly: true
+              value:
+                +commercialsData?.price_per_seat +
+                (+commercialsData?.price_per_seat * +commercialsData?.tax_percentage) / 100,
+              isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
             // changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -140,7 +142,7 @@ const Commercials = () => {
               //   label: 'Name :',
               placeholder: 'Enter max number of registrations',
               value: commercialsData?.max_registrations,
-              isNumericOnly: true
+              isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -155,7 +157,7 @@ const Commercials = () => {
             changeHandler={(date) => {
               setCommercialsData({
                 ...commercialsData,
-                registration_end_date: date
+                registration_end_date: date,
               });
             }}
             // isDisabled={isPreview}
@@ -182,7 +184,7 @@ const Commercials = () => {
               changeHandler={(date) => {
                 setCommercialsData({
                   ...commercialsData,
-                  booking_start_date: date
+                  booking_start_date: date,
                 });
               }}
             />
@@ -216,7 +218,7 @@ const Commercials = () => {
               changeHandler={(date) => {
                 setCommercialsData({
                   ...commercialsData,
-                  booking_end_date: date
+                  booking_end_date: date,
                 });
               }}
             />
@@ -243,7 +245,7 @@ const Commercials = () => {
           inputName: 'name',
           //   label: 'Name :',
           placeholder: 'Auto-populated',
-          value: classroomMaster?.noOfLearners
+          value: classroomMaster?.noOfLearners,
         }}
         styleClass={`${styles.labelMergin2}`}
         // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
