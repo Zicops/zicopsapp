@@ -14,9 +14,9 @@ const TrainerDetails = () => {
       value: 'Internal'
     },
     {
-      image: '/images/svg/group.svg',
-      label: 'Type',
-      value: 'Internal'
+      image: '/images/svg/store.svg',
+      label: 'Vendor',
+      value: 'ABC vendor'
     }
   ];
   const expertiseArray = [
