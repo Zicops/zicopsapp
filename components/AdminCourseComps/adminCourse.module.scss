@@ -668,7 +668,10 @@
     }
   }
 
-  .commerciasContainer{
+  .commercialContainer{
+    .commercialTiltle{
+        font-size: 20px;
+    }
     .checkboxLebel{
         color: $bgBody;
         padding-bottom: 10px;

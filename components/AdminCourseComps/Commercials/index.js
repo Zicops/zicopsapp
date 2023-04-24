@@ -20,8 +20,8 @@ const Commercials = () => {
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
 
   return (
-    <div className={`${styles.commerciasContainer}`}>
-      <p>Pricing</p>
+    <div className={`${styles.commercialContainer}`}>
+      <p className={`${styles.commercialTiltle}`}>Pricing</p>
       <p className={`${styles.checkboxLebel}`}>Configure the pricing parameter for this course</p>
       <div className={`${styles.checkbox}`}>
         <LabeledRadioCheckbox
