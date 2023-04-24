@@ -4,7 +4,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import styles from '../adminCourse.module.scss';
 import InputDatePicker from '@/common/InputDatePicker';
 import RadioBox from '@/components/Tabs/common/RadioBox';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
 import {
@@ -13,11 +13,13 @@ import {
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
+import NextBtn from '../NextBtn';
+import { courseTabs } from '../Logic/adminCourseComps.helper';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
-  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
-  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
 
   return (
     <div className={`${styles.commercialContainer}`}>
@@ -84,6 +86,9 @@ const Commercials = () => {
               //   label: 'Name :',
               placeholder: 'Enter price per seat',
               value: commercialsData?.price_per_seat,
+              isDisabled:
+                commercialsData?.is_free_traning ||
+                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
               isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
@@ -101,6 +106,9 @@ const Commercials = () => {
                 value: commercialsData?.currency,
               },
               options: currency,
+              isDisabled:
+                commercialsData?.is_free_traning ||
+                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             }}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData, 'currency')}
             styleClass={`${styles.labelMergin}`}
@@ -115,6 +123,9 @@ const Commercials = () => {
               placeholder: 'Tax',
               value: commercialsData?.tax_percentage,
               isNumericOnly: true,
+              isDisabled:
+                commercialsData?.is_free_traning ||
+                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             }}
             styleClass={`${styles.labelMergin}`}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -130,6 +141,9 @@ const Commercials = () => {
               value:
                 +commercialsData?.price_per_seat +
                 (+commercialsData?.price_per_seat * +commercialsData?.tax_percentage) / 100,
+              isDisabled:
+                commercialsData?.is_free_traning ||
+                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
               isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
@@ -142,117 +156,122 @@ const Commercials = () => {
         *Will be visible to Learners only if the Training is marked as Priced
       </p>
       <div className={`${styles.hr}`}></div>
-      <p className={`${styles.rtext}`}>Registration</p>
-      <p className={`${styles.rlabel}`}>
-        Course registration will start only once the course is published and open for registrations.
-      </p>
+      {courseMetaData?.isDisplay && (
+        <>
+          <p className={`${styles.rtext}`}>Registration</p>
+          <p className={`${styles.rlabel}`}>
+            Course registration will start only once the course is published and open for
+            registrations.
+          </p>
 
-      <div className={`${styles.registrationContainer}`}>
-        <div className={`${styles.registrationMax}`}>
-          <p className={`${styles.heading}`}>Maximum number of registrations:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'max_registrations',
-              //   label: 'Name :',
-              placeholder: 'Enter max number of registrations',
-              value: commercialsData?.max_registrations,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
-          />
-        </div>
-        <div className={`${styles.registrationMax}`}>
-          <p className={`${styles.heading}`}>Registrations end date:</p>
-          <InputDatePicker
-            styleClass={`${styles.labelMergin}`}
-            selectedDate={commercialsData?.registration_end_date}
-            // minDate={examTabData?.exam_start}
-            changeHandler={(date) => {
-              setCommercialsData({
-                ...commercialsData,
-                registration_end_date: date,
-              });
-            }}
-            // isDisabled={isPreview}
-          />
-        </div>
-      </div>
-      <div className={`${styles.hr}`}></div>
-      <p className={`${styles.rtext}`}>Booking</p>
-      <p className={`${styles.rlabel}`}>
-        Course Bookings will start only once the course is published and open for booking.
-      </p>
-      <div className={`${styles.bookingContainer}`}>
-        <div className={`${styles.registrationMax}`}>
-          <div className={`${styles.bookdate}`}>
-            <p className={`${styles.heading}`}>Booking start date:</p>
-            <InputDatePicker
-              styleClass={`${styles.labelMergin}`}
-              selectedDate={
-                commercialsData?.is_publish_date
-                  ? courseMetaData?.publishDate
-                  : commercialsData?.booking_start_date
-              }
-              // minDate={examTabData?.exam_start}
-              changeHandler={(date) => {
-                setCommercialsData({
-                  ...commercialsData,
-                  booking_start_date: date,
-                });
-              }}
-            />
+          <div className={`${styles.registrationContainer}`}>
+            <div className={`${styles.registrationMax}`}>
+              <p className={`${styles.heading}`}>Maximum number of registrations:</p>
+              <LabeledInput
+                inputOptions={{
+                  inputName: 'max_registrations',
+                  //   label: 'Name :',
+                  placeholder: 'Enter max number of registrations',
+                  value: commercialsData?.max_registrations,
+                  isNumericOnly: true,
+                }}
+                styleClass={`${styles.labelMergin}`}
+                changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
+              />
+            </div>
+            <div className={`${styles.registrationMax}`}>
+              <p className={`${styles.heading}`}>Registrations end date:</p>
+              <InputDatePicker
+                styleClass={`${styles.labelMergin}`}
+                selectedDate={commercialsData?.registration_end_date}
+                // minDate={examTabData?.exam_start}
+                changeHandler={(date) => {
+                  setCommercialsData({
+                    ...commercialsData,
+                    registration_end_date: date,
+                  });
+                }}
+                // isDisabled={isPreview}
+              />
+            </div>
           </div>
-          <div className={`${styles.checkbox}`}>
-            <LabeledRadioCheckbox
-              type="checkbox"
-              label="Same as Course Publish Date"
-              name="isCoursePublishDate"
-              isChecked={commercialsData?.is_publish_date}
-              changeHandler={(e) => {
-                const isChecked = e.target.checked;
-                const _commercialData = { ...commercialsData };
-                _commercialData.is_publish_date = isChecked;
-                setCommercialsData(_commercialData);
-              }}
-            />
+          <div className={`${styles.hr}`}></div>
+          <p className={`${styles.rtext}`}>Booking</p>
+          <p className={`${styles.rlabel}`}>
+            Course Bookings will start only once the course is published and open for booking.
+          </p>
+          <div className={`${styles.bookingContainer}`}>
+            <div className={`${styles.registrationMax}`}>
+              <div className={`${styles.bookdate}`}>
+                <p className={`${styles.heading}`}>Booking start date:</p>
+                <InputDatePicker
+                  styleClass={`${styles.labelMergin}`}
+                  selectedDate={
+                    commercialsData?.is_publish_date
+                      ? courseMetaData?.publishDate
+                      : commercialsData?.booking_start_date
+                  }
+                  // minDate={examTabData?.exam_start}
+                  changeHandler={(date) => {
+                    setCommercialsData({
+                      ...commercialsData,
+                      booking_start_date: date,
+                    });
+                  }}
+                />
+              </div>
+              <div className={`${styles.checkbox}`}>
+                <LabeledRadioCheckbox
+                  type="checkbox"
+                  label="Same as Course Publish Date"
+                  name="isCoursePublishDate"
+                  isChecked={commercialsData?.is_publish_date}
+                  changeHandler={(e) => {
+                    const isChecked = e.target.checked;
+                    const _commercialData = { ...commercialsData };
+                    _commercialData.is_publish_date = isChecked;
+                    setCommercialsData(_commercialData);
+                  }}
+                />
+              </div>
+            </div>
+            <div className={`${styles.registrationMax}`}>
+              <div className={`${styles.bookdate}`}>
+                <p className={`${styles.heading}`}>Booking end date:</p>
+                <InputDatePicker
+                  styleClass={`${styles.labelMergin}`}
+                  selectedDate={
+                    commercialsData?.is_start_date
+                      ? classroomMaster?.courseStartDate
+                      : commercialsData?.booking_end_date
+                  }
+                  // minDate={examTabData?.exam_start}
+                  changeHandler={(date) => {
+                    setCommercialsData({
+                      ...commercialsData,
+                      booking_end_date: date,
+                    });
+                  }}
+                />
+              </div>
+              <div className={`${styles.checkbox}`}>
+                <LabeledRadioCheckbox
+                  type="checkbox"
+                  label="Same as Course Start Date"
+                  name="isCourseStartDate"
+                  isChecked={commercialsData?.is_start_date}
+                  changeHandler={(e) => {
+                    const isChecked = e.target.checked;
+                    const _commercialData = { ...commercialsData };
+                    _commercialData.is_start_date = isChecked;
+                    setCommercialsData(_commercialData);
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className={`${styles.registrationMax}`}>
-          <div className={`${styles.bookdate}`}>
-            <p className={`${styles.heading}`}>Booking end date:</p>
-            <InputDatePicker
-              styleClass={`${styles.labelMergin}`}
-              selectedDate={
-                commercialsData?.is_start_date
-                  ? classroomMaster?.courseStartDate
-                  : commercialsData?.booking_end_date
-              }
-              // minDate={examTabData?.exam_start}
-              changeHandler={(date) => {
-                setCommercialsData({
-                  ...commercialsData,
-                  booking_end_date: date,
-                });
-              }}
-            />
-          </div>
-          <div className={`${styles.checkbox}`}>
-            <LabeledRadioCheckbox
-              type="checkbox"
-              label="Same as Course Start Date"
-              name="isCourseStartDate"
-              isChecked={commercialsData?.is_start_date}
-              changeHandler={(e) => {
-                const isChecked = e.target.checked;
-                const _commercialData = { ...commercialsData };
-                _commercialData.is_start_date = isChecked;
-                setCommercialsData(_commercialData);
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        </>
+      )}
       <p className={`${styles.maxBook}`}>Maximum number of Bookings:</p>
       <LabeledInput
         inputOptions={{
@@ -264,6 +283,9 @@ const Commercials = () => {
         styleClass={`${styles.labelMergin2}`}
         // changeHandler={(e) => changeHandler(e, vendorData, setVendorData)}
       />
+      <div className={`${styles.nextBtn}`}>
+        <NextBtn switchTabName={courseTabs?.configuration?.name} />
+      </div>
     </div>
   );
 };
