@@ -36,9 +36,9 @@ const Commercials = () => {
             const isChecked = e.target.checked;
             const _commercialData = { ...commercialsData };
             _commercialData.is_decided = isChecked;
-           _commercialData?.pricing_type = isChecked;
-           _commercialData?.is_paid_traning = false;
-           _commercialData?.is_free_traning = false;
+            _commercialData.pricing_type = isChecked;
+            _commercialData.is_paid_traning = false;
+            _commercialData.is_free_traning = false;
             setCommercialsData(_commercialData);
           }}
         />
@@ -49,7 +49,9 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Priced Training',
             name: 'display',
-            isDisabled: commercialsData?.is_decided || commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
+            isDisabled:
+              commercialsData?.is_decided ||
+              commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
             description: 'Learners to pay and book the seat to attend the training',
             isChecked:
               commercialsData?.is_paid_traning ||
@@ -61,7 +63,9 @@ const Commercials = () => {
           labeledInputProps={{
             label: 'Free of Cost Training',
             name: 'display',
-            isDisabled: commercialsData?.is_decided || commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
+            isDisabled:
+              commercialsData?.is_decided ||
+              commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
             description: 'Training is Free of Cost for Learners',
             isChecked:
               commercialsData?.is_free_traning ||
