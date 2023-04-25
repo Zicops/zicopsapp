@@ -5,9 +5,10 @@ import styles from './inputDatePicker.module.scss';
 export default function InputDatePicker({
   selectedDate = new Date(),
   minDate = null,
+  maxDate = null,
   changeHandler = function () {},
   isDisabled = false,
-  styleClass
+  styleClass,
 }) {
   return (
     <div className={`${styles.inputDatePickerContainer} ${styleClass}`}>
@@ -18,6 +19,7 @@ export default function InputDatePicker({
         onChange={changeHandler}
         disabled={isDisabled}
         minDate={minDate ? new Date(minDate) : null}
+        maxDate={maxDate ? new Date(maxDate) : null}
         calendarClassName={styles.inlineCalender}
         dayClassName={() => styles.calanderDates}
       />

@@ -3,7 +3,7 @@ import {
   disabled,
   labeledRadioCheckboxWrapper,
   loading,
-  radiomark
+  radiomark,
 } from '../formComponents.module.scss';
 
 const LabeledRadioCheckbox = ({
@@ -15,10 +15,10 @@ const LabeledRadioCheckbox = ({
   isDisabled,
   isError,
   isLoading = false,
-  changeHandler = function () {}
+  changeHandler = function () {},
 }) => {
   return (
-    <span className={labeledRadioCheckboxWrapper}>
+    <span className={`${labeledRadioCheckboxWrapper} ${isDisabled ? 'disabled' : ''}`}>
       <label>
         <input
           type={type}

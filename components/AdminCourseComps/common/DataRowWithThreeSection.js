@@ -1,8 +1,8 @@
 import DeleteBtn from '@/components/common/DeleteBtn';
 import { EditBoxIcon } from '@/components/common/ZicopsIcons';
-import styles from '../../../adminCourseComps.module.scss';
+import styles from '../adminCourseComps.module.scss';
 
-export default function ContentBar({
+export default function DataRowWithThreeSection({
   type = '',
   description = '',
   details = '',
@@ -10,7 +10,7 @@ export default function ContentBar({
   editHandler = null,
   deleteProps = {},
   customStyle = {},
-  customClass = ''
+  customClass = '',
 }) {
   return (
     <>

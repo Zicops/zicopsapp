@@ -1,12 +1,13 @@
 import { bool, func, number, oneOfType, shape, string } from 'prop-types';
-import { halfInputWrapper, labeledInputWrapper } from '../formComponents.module.scss';
+import { halfInputWrapper, labeledInputWrapper, columnWise } from '../formComponents.module.scss';
 
 export default function LabeledInput({
   inputOptions,
   styleClass,
   inputClass,
   changeHandler,
-  isFiftyFifty = false
+  isFiftyFifty = false,
+  isColumnWise = false,
 }) {
   const {
     inputName,
@@ -18,10 +19,13 @@ export default function LabeledInput({
     isRequired,
     isDisabled,
     isAutoComplete,
-    isNumericOnly = false
+    isNumericOnly = false,
   } = inputOptions;
   return (
-    <div className={`${labeledInputWrapper} ${isFiftyFifty ? halfInputWrapper : ''} ${styleClass}`}>
+    <div
+      className={`${labeledInputWrapper} ${isFiftyFifty ? halfInputWrapper : ''} ${
+        isColumnWise ? columnWise : ''
+      } ${styleClass}`}>
       {label && (
         <label
           htmlFor={inputName}
@@ -71,11 +75,11 @@ const LabeledInputObj = shape({
   isRequired: bool,
   isDisabled: bool,
   isAutoComplete: bool,
-  isNumericOnly: bool
+  isNumericOnly: bool,
 });
 
 LabeledInput.propTypes = {
   inputOptions: LabeledInputObj,
   styleClass: string,
-  changeHandler: func
+  changeHandler: func,
 };

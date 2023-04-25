@@ -1,10 +1,10 @@
 import TabContainer from '@/common/TabContainer';
-import { COURSE_STATUS } from '@/constants/course.constants';
+import { COURSE_STATUS, COURSE_TYPES } from '@/constants/course.constants';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   ActiveCourseTabNameAtom,
   CourseCurrentStateAtom,
-  CourseMetaDataAtom
+  CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -31,15 +31,21 @@ export default function AdminCourseTabs() {
   const { isDataPresent } = useHandleCourseData();
 
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
+  const isClassroomCourse = courseMetaData?.type === COURSE_TYPES.classroom;
 
   // set course master as default if state is empty
   if (!activeCourseTab) setActiveCourseTab(courseTabs.courseMaster.name);
 
-  const tabData = Object.keys(courseTabs).map((key) => ({
-    name: courseTabs[key].name,
-    component:
-      !!courseId && courseMetaData.id !== courseId ? <Spinner /> : courseTabs[key].component
-  }));
+  const tabData = Object.keys(courseTabs).map((key) => {
+    const _tab = {
+      ...courseTabs[key],
+      component: courseTabs[key].component,
+    };
+    if (!!courseId && courseMetaData?.id !== courseId) _tab.component = <Spinner />;
+    if (isClassroomCourse && key === 'commercials') _tab.isHidden = !courseMetaData?.isDisplay;
+
+    return _tab;
+  });
 
   function getTabFooterObj() {
     const isCourseMasterDataFilled = isDataPresent([courseTabs.courseMaster.name], false);
@@ -61,7 +67,7 @@ export default function AdminCourseTabs() {
           <span style={{ fontSize: '12px', fontWeight: '400' }}>
             {(courseMetaData.updatedAt || courseMetaData.createdAt) &&
               `(at ${moment((courseMetaData.updatedAt || courseMetaData.createdAt) * 1000)?.format(
-                'LLL'
+                'LLL',
               )})`}
           </span>
         </>
@@ -103,7 +109,7 @@ export default function AdminCourseTabs() {
       submitDisplay: getSubmitBtnText(),
       disableSubmit: getIsSubmitBtnDisabled(),
       handleSubmit: () => saveCourseMeta(),
-      handleCancel: () => router.push('/admin/course/my-courses')
+      handleCancel: () => router.push('/admin/course/my-courses'),
     };
   }
 

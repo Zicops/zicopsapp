@@ -1,6 +1,6 @@
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { ActiveClassroomTopicIdAtom, TopicAtom } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom, TopicAtom, VcApi } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
@@ -172,24 +172,14 @@ const VcMaintool = ({ vcData = {} }) => {
             }}
             mouseMoveFun={() => {
               // console.log(userData)
-              // api.getRoomsInfo().then((rooms) => {
-              //   setuserinfo(rooms.rooms[0].participants);
-              //   setbreakoutListarr(rooms.rooms);
-              //   setallInfo(rooms.rooms[0].participants);
-              //   setVctoolInfo({
-              //     ...vctoolInfo,
-              //     allRoomInfo: rooms.rooms[0].participants
-              //   });
-              // });
-              //  allUserinfo
-              // userinfo
-              // userinfo.forEach((data) => {
-              //   console.info(data, meetingIconsAtom);
-              // if (meetingIconsAtom?.isModerator) api.executeCommand('grantModerator', data?.id);
-              // if ([api.getEmail(data?.id)].toString().includes('@ziocps')) {
-              //   api.executeCommand('grantModerator', data?.id);
-              // }
-              // });
+              api?.getRoomsInfo().then((rooms) => {
+                setuserinfo(rooms.rooms[0].participants);
+                setbreakoutListarr(rooms.rooms);
+                setVctoolInfo({
+                  ...vctoolInfo,
+                  allRoomInfo: rooms.rooms[0].participants
+                });
+              });
             }}
             fullscreen={Fullscreen}
             // getUesrId={userinfo}
@@ -223,7 +213,7 @@ const VcMaintool = ({ vcData = {} }) => {
               // Route.push('/admin/vctool')
 
               StartMeeting(
-                currentTopicData?.name,
+                currentTopicData?.id,
                 containerRef,
                 toggleAudio,
                 settoobar,
@@ -234,8 +224,6 @@ const VcMaintool = ({ vcData = {} }) => {
               setisStarted(true);
               setIsMeetingStarted(true);
               sethidecard(!hidecard);
-
-              // Route.push(`${Route.asPath}/classroom`);
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

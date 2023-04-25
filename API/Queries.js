@@ -11,6 +11,94 @@ export const queryClient = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+// COURSE QUERIES START
+
+export const GET_COMBINE_COURSE_DATA = gql`
+  query getCombineCourseData($courseId: String) {
+    getCourse(course_id: [$courseId]) {
+      id
+      name
+      lspId
+      description
+      summary
+      instructor
+      image
+      previewVideo
+      tileImage
+      owner
+      publisher
+      duration
+      expertise_level
+      language
+      benefits
+      outcomes
+      created_at
+      updated_at
+      type
+      prequisites
+      goodFor
+      mustFor
+      related_skills
+      publish_date
+      expiry_date
+      expected_completion
+      qa_required
+      approvers
+      created_by
+      updated_by
+      status
+      is_active
+      is_display
+      category
+      sub_category
+      sub_categories {
+        name
+        rank
+      }
+    }
+    getCourseModules(course_id: $courseId) {
+      id
+      name
+      isChapter
+      description
+      courseId
+      owner
+      duration
+      created_at
+      updated_at
+      level
+      sequence
+      setGlobal
+    }
+    getCourseChapters(course_id: $courseId) {
+      id
+      name
+      description
+      moduleId
+      courseId
+      created_at
+      updated_at
+      sequence
+    }
+    getTopics(course_id: $courseId) {
+      id
+      name
+      description
+      type
+      moduleId
+      chapterId
+      courseId
+      created_at
+      updated_at
+      sequence
+      created_by
+      updated_by
+      image
+    }
+  }
+`;
+// COURSE QUERIES END
+
 export const GET_CATS_N_SUB_CATS = gql`
   query CatsQuery {
     allCategories
