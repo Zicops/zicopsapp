@@ -20,6 +20,7 @@
     rgba(0, 0, 0, 0) 100%
   );
 }
+
 .courseType {
   position: absolute;
   background-color: $selfPacedBorder;
@@ -41,6 +42,22 @@
     background-color: $eventBorder;
   }
 }
+
+.courseType2 {
+ position: absolute;
+  background-color: #2B60EA;;
+  color:$white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  top: 4em;
+  right: 6em;
+  border-radius: 4px;
+  padding: 0.3em 0.8em;
+  text-transform: capitalize;
+}
+
 .back_btn {
   position: absolute;
   left: 50px;
@@ -53,54 +70,67 @@
   width: 50%;
   padding-left: calc(2% + 80px);
 }
-
-.course_header_text .heading h1 {
-  font-size: 2vw;
-  line-height: 2.3vw;
+.course_header_text2 {
+  color: $white;
+  font-size: 1vw;
+  width: 60%;
+  padding-left: calc(2% + 80px);
 }
-.course_header_text .heading p {
+
+ .heading h1 {
+   font-size: 2vw;
+   line-height: 2.3vw;
+ }
+
+.heading p {
   color: #858f8f;
   font-size: 1vw;
   line-height: 2vw;
   padding-bottom: 1vh;
 }
-.course_header_text .heading p span {
+
+.heading p span {
   color: #e2e2e2;
   font-size: 1vw;
   font-weight: 600;
 }
-.course_header_text .heading ul {
+
+.heading ul {
   color: #e2e2e2;
   font-size: 1vw;
   display: flex;
 }
-.course_header_text .heading ul li {
+
+
+.heading ul li {
   color: #adadad;
   font-size: 1vw;
   font-weight: 600;
   margin: 0 1.2vw;
 }
-.course_header_text .summary {
+
+.summary {
   color: #858f8f;
   font-size: 0.9vw;
   margin: 2vh 0px;
   padding-bottom: 1vh;
   // min-height: 100px;
 }
-.course_header_text .more_info {
-  color: #858f8f;
+.more_info {
+  // color: #858f8f;
   font-size: 0.9vw;
 }
-.course_header_text .more_info span {
+
+.more_info span {
   color: $primary;
   font-size: 0.9vw;
   // font-weight: 600;
 }
-.course_header_text .float {
+.float {
   padding-bottom: 1vh;
 }
 
-.course_header_text .float p {
+.float p {
   float: right;
   padding-right: 1vw;
 }
@@ -228,5 +258,49 @@
     justify-content: flex-end;
     padding-right: 15px;
     gap: 10px;
+  }
+}
+// .registerBtn {
+//   background-color: $primary;
+//   color: #040404;
+// }
+.registerBtn button {
+  margin-top: 2vh;
+  margin-bottom: 1vh;
+  padding: 2.3vh 7.8vw;
+  font-size: 0.9vw;
+  font-weight: bold;
+  color: #040404;
+  background-color: $primary;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.5s;
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    opacity: 0.5;
+    cursor: no-drop;
+  }
+}
+.courseButton{
+  display: flex;
+  gap: 10px
+}
+.textFlex{
+  display: flex;
+ justify-content: space-between;
+}
+.price{
+  display: flex;
+  gap: 10px;
+  .image{
+    width: 22px;
+    height: 22px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
   }
 }
