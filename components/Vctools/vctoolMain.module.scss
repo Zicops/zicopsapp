@@ -492,16 +492,15 @@
   align-items: center;
   border-radius: 6px;
   flex-direction: column;
-
 }
-.replyBlock{
+.replyBlock {
   width: 92%;
   font-size: 12px;
   text-align: left;
   background-color: #262626;
   padding: 0 5px;
   position: relative;
-  div{
+  div {
     color: $white;
     background-color: red;
     height: 14px;
@@ -1012,6 +1011,9 @@
   color: white;
   display: flex;
   background-color: #121212;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .pollSavedLabel,
@@ -1047,6 +1049,10 @@
   flex-direction: column;
   padding-right: 8px;
   // height: 50%;
+
+  section {
+    display: flex;
+  }
 }
 
 .pollBoxOptions > div {
@@ -1061,6 +1067,22 @@
   padding: 8px;
   color: white;
   font-size: 14px;
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  section {
+    border: 1px solid $secondary;
+    padding: 0.5em;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+
+  .optionVal {
+    width: 100%;
+  }
 }
 
 .pollBoxOptions > div > img {
@@ -2253,11 +2275,20 @@
 .quizQuestion {
   width: 100%;
   margin-top: 12px;
+
+  .attachment {
+    img,
+    video,
+    audio {
+      width: 100%;
+    }
+  }
 }
 
 .quizQuestionhead {
   display: flex;
   width: 296px;
+  cursor: pointer;
 }
 
 .quizLable {
@@ -2348,6 +2379,15 @@
 .resourceModeratorScreen {
   width: 296px;
   height: 99%;
+}
+.quizModeratorScreen {
+  > section {
+    overflow: hidden auto;
+
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+  }
 }
 
 .moderatorAddQuiz,
@@ -2456,7 +2496,7 @@
 
 .quizName > input {
   display: flex;
-  width: 276px;
+  // width: 276px;
   margin: 8px 0 0 8px;
   height: 40px;
   outline: none;
@@ -2469,7 +2509,7 @@
 
 .quizQuestion {
   width: 296px;
-  // padding-left: 8px;
+  padding: 8px;
 }
 
 .quizQA {
@@ -2505,6 +2545,46 @@
     width: 19px;
     height: 19px;
     margin-left: 6px;
+  }
+}
+
+.inputWithFile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.5em;
+
+  width: 100%;
+  background: $black;
+  position: relative;
+
+  input {
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    background: transparent;
+    color: $white;
+  }
+
+  .attachmentImg {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+
+    cursor: pointer;
+
+    input[type='file'] {
+      width: 100%;
+      padding: 0;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
   }
 }
 
@@ -2588,13 +2668,13 @@
   height: 130px;
   // margin-top: 12px;
   background-color: #26292c;
-  padding-top: 10px;
-  padding-bottom: 12px;
+  padding: 10px;
 }
 
 .quizSelectedOption {
   display: flex;
   width: 260px;
+  margin-bottom: 5px;
 
   p {
     color: #acacac;

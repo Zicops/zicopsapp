@@ -149,7 +149,6 @@ const MainToolbar = ({
           }}
           Info={getUesrId}
           api={api}
-          api={api}
         />
       ),
     },
