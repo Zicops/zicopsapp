@@ -11,12 +11,12 @@ export async function getAllCourseCountInLsp(lspId = null, queryVariables = {}, 
     course_type: COURSE_TYPES[0],
     languages: LANGUAGES,
     course_status: COURSE_STATUS.publish,
-    ...queryVariables
+    ...queryVariables,
   };
   const courseStats = loadQueryDataAsync(
     GET_BASIC_COURSES_STATS,
     { input: _queryVariables },
-    queryOptions
+    queryOptions,
   );
 
   let totalCount = 0;
@@ -29,7 +29,7 @@ export async function getAllCourseCountInLsp(lspId = null, queryVariables = {}, 
 export async function getAllCourseCountBasedOnExpertises(
   lspId = null,
   type = COURSE_TYPES[0],
-  expertises = []
+  expertises = [],
 ) {
   if (!lspId) return null;
 
@@ -37,10 +37,10 @@ export async function getAllCourseCountBasedOnExpertises(
     lsp_id: lspId,
     course_type: type,
     expertise_level: expertises,
-    course_status: COURSE_STATUS.publish
+    course_status: COURSE_STATUS.publish,
   };
   const courseStats = loadQueryDataAsync(GET_BASIC_COURSES_STATS, {
-    input: queryVariables
+    input: queryVariables,
   });
 
   let totalCount = 0;
@@ -55,9 +55,11 @@ export async function getAllCourseCount(lspId, status, type) {
 
   const courseStats = loadQueryDataAsync(
     GET_COURSES_COUNT_STATS,
-    { lsp_id: lspId, status: status, type: type }
+    { lsp_id: lspId, status: status, type: type },
     // {},
     // queryClient
   );
+  console.info(lspId, status, type, '1536uyb');
+
   return courseStats;
 }
