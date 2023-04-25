@@ -86,9 +86,6 @@ const Commercials = () => {
               //   label: 'Name :',
               placeholder: 'Enter price per seat',
               value: commercialsData?.price_per_seat,
-              isDisabled:
-                commercialsData?.is_free_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
               isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
@@ -106,9 +103,6 @@ const Commercials = () => {
                 value: commercialsData?.currency,
               },
               options: currency,
-              isDisabled:
-                commercialsData?.is_free_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             }}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData, 'currency')}
             styleClass={`${styles.labelMergin}`}
@@ -123,9 +117,6 @@ const Commercials = () => {
               placeholder: 'Tax',
               value: commercialsData?.tax_percentage,
               isNumericOnly: true,
-              isDisabled:
-                commercialsData?.is_free_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
             }}
             styleClass={`${styles.labelMergin}`}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
@@ -141,9 +132,6 @@ const Commercials = () => {
               value:
                 +commercialsData?.price_per_seat +
                 (+commercialsData?.price_per_seat * +commercialsData?.tax_percentage) / 100,
-              isDisabled:
-                commercialsData?.is_free_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
               isNumericOnly: true,
             }}
             styleClass={`${styles.labelMergin}`}
