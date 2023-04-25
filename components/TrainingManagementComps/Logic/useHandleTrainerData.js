@@ -184,7 +184,7 @@ export default function useHandleTrainerData() {
       GET_TRAINER_BY_ID,
       { trainerId: trainerId },
       {},
-      viltQueryClient
+      viltQueryClient,
     ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
 
     if (trainerList.error) {
@@ -199,10 +199,6 @@ export default function useHandleTrainerData() {
     addUpdateTrainer,
     handleMail,
     getPaginatedTrainers,
-    setIsAddTrainerPopupOpen,
-    isAddTrainerPopupOpen,
-    setIsEditTrainerPopupOpen,
-    isEditTrainerPopupOpen,
-    getTrainerById
+    getTrainerById,
   };
 }
