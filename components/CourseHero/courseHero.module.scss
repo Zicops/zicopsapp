@@ -304,3 +304,39 @@
     }
   }
 }
+.registrationStatus{
+  position: absolute;
+    bottom: 6em;
+    right: 5em;
+    color:#F6AC3C;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+        font-size: 20px;
+}
+.registerder{
+  position: absolute;
+    bottom: 6em;
+    right: 5em;
+    color:#26BA4D;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      font-weight: 500;
+        font-size: 20px;
+}
+.rText{
+  font-weight: 500;
+    font-size: 20px;
+}
+.hr{
+  background-color: $secondary;
+  margin: 20px 0px;
+    height: 2px;
+}
+.text{
+  color: $bgBody;
+}

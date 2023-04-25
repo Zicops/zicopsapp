@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../../API/Mutations';
+import ClassRoomCourseHero from '@/components/CourseHero/ClassRoomCourseHero';
 
 export default function Course() {
   const { fullCourse } = useContext(courseContext);
@@ -114,7 +115,8 @@ export default function Course() {
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
           {!startPlayer && !topicExamData?.id && !activeClassroomTopicId && (
-            <CourseHero set={setStartPlayer} />
+            // <CourseHero set={setStartPlayer} />
+            <ClassRoomCourseHero set={setStartPlayer} />
           )}
 
           <CourseBody />

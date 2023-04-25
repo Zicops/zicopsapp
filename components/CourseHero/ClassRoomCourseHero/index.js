@@ -16,6 +16,7 @@ import { courseContext } from '@/state/contexts/CourseContext';
 import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import AssignCourse from '@/components/CourseComps/AssignCourse';
 import CourseHeader from '../CourseHeader';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 
 export default function ClassRoomCourseHero({ isPreview = false }) {
   const {
@@ -31,6 +32,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const userCourseData = useRecoilValue(UserCourseDataAtom);
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
+  const [isOpenRegister, setIsOpenRegsiter] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -169,12 +171,31 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
               <button onClick={showPreviewVideo}>Preview the course</button>
             </div>
             <div className={`${style.registerBtn}`}>
-              <button>Register</button>
+              <button onClick={(e) => setIsOpenRegsiter(true)}>Register</button>
             </div>
           </div>
         </div>
+        <div className={`${style.registrationStatus}`}>
+          <img src="/images/svg/release_alert.svg" alt="" />
+          Limited Registrations!
+        </div>
+        {/* <div className={`${style.registrationStatus}`}>
+          <img src="/images/svg/warning.svg" alt="" />
+          Only Few Registrations Left
+        </div> */}
+        {/* <div className={`${style.registerder}`}>
+          <img src="/images/svg/new_releases.svg" alt="" />
+          Registered
+        </div> */}
+        {/* <div className={`${style.registrationStatus}`}>
+          <img src="/images/svg/warning.svg" alt="" />
+          Only Few Seats Left
+        </div> */}
+        {/* <div className={`${style.registrationStatus}`}>
+          <img src="/images/svg/sensors.svg" alt="" />
+          Live session yet to start
+        </div> */}
       </div>
-
       <AssignCourse
         isAssignPopUpOpen={isAssignPopUpOpen}
         setIsAssignPopUpOpen={setIsAssignPopUpOpen}
@@ -200,6 +221,21 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
           }}
         />
       )}
+      <VendorPopUp
+        open={isOpenRegister}
+        popUpState={[isOpenRegister, setIsOpenRegsiter]}
+        customStyles={{ width: '500px', height: '250px' }}
+        closeBtn={{ name: 'No' }}
+        submitBtn={{ name: 'Yes' }}
+        isMarketYard
+        isVilt
+        isFooterVisible={true}>
+        <p className={`${style.rText}`}>Registration</p>
+        <div className={`${style.hr}`}></div>
+        <p className={`${style.text}`}>
+          Are you sure you want to register for Advanced jva training program by Level UP?
+        </p>
+      </VendorPopUp>
     </div>
   );
 }
