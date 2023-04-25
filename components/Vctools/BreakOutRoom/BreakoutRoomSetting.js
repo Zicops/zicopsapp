@@ -31,6 +31,8 @@ const BreakoutRoomSetting = ({cancelRoom,listTheroom}) => {
                 <div className={`${styles.breakoutRoominputbox}`}>
                     <label className={`${styles.breakoutLable}`}>Time limit:</label>
                     <input type="text" placeholder="Select time limit" />
+
+                    <p className={`${styles.roomNoticeText}`}>*this room will close once the training session ends</p>
                 </div>
 
                 <div className={`${styles.breakoutRoominputbox}`}>

@@ -10,6 +10,7 @@ import useHandleTrainerData from '../Logic/useHandleTrainerData';
 export default function SelectExistingUser() {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [trainersList, setTrainersList] = useState([]);
+
   const [searchText, setSearchText] = useState('');
 
   // useEffect(() => {
@@ -17,6 +18,7 @@ export default function SelectExistingUser() {
   // }, [searchText]);
 
   const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
+
 
   useEffect(() => {
     getPaginatedTrainers()?.then((data) => {
@@ -33,9 +35,9 @@ export default function SelectExistingUser() {
       background: 'var(--black)',
       color: 'var(--white)',
       '&:hover': {
-        background: styles.darkTwo
-      }
-    }
+        background: styles.darkTwo,
+      },
+    },
   };
 
   function getUserListObject(user) {
@@ -44,7 +46,7 @@ export default function SelectExistingUser() {
       isSelected: false,
       email: user?.email,
       userId: user?.id,
-      photo: user?.photo_url
+      photo: user?.photo_url,
     };
   }
 
@@ -80,14 +82,14 @@ export default function SelectExistingUser() {
                 </div>
               ),
               value: trainee.userId,
-              ...trainee
+              ...trainee,
             })),
             value: {
               label: `${trainerData?.name || ''} (${trainerData?.email || ''}) - ${
                 trainerData?.tags || 'Internal'
               }`,
-              value: trainerData?.name
-            }
+              value: trainerData?.name,
+            },
           }}
           isFullWidth={true}
           changeHandler={(e) => {

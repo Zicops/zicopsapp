@@ -1,12 +1,12 @@
 import { DELETE_TOPIC_QUIZ } from '@/api/Mutations';
 import useHandleQuiz from '@/components/AdminCourseComps/Logic/useHandleQuiz';
+import DataRowWithThreeSection from '@/components/AdminCourseComps/common/DataRowWithThreeSection';
 import IconButton from '@/components/common/IconButton';
 import Spinner from '@/components/common/Spinner';
 import { TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
-import ContentBar from './ContentBar';
 import QuizForm from './QuizForm';
 
 export default function TopicQuiz({ topData = null, setIsAccordionDisabled = () => {} }) {
@@ -20,7 +20,7 @@ export default function TopicQuiz({ topData = null, setIsAccordionDisabled = () 
     toggleForm,
     handleQuizInput,
     isQuizReady,
-    handleEditQuiz
+    handleEditQuiz,
   } = useHandleQuiz(topData);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function TopicQuiz({ topData = null, setIsAccordionDisabled = () 
         if (quiz?.editIndex === index) return null;
 
         return (
-          <ContentBar
+          <DataRowWithThreeSection
             key={quiz?.name}
             type={index + 1}
             description={quiz?.name}
@@ -50,7 +50,7 @@ export default function TopicQuiz({ topData = null, setIsAccordionDisabled = () 
                 _quiz.splice(index, 1);
 
                 setTopicQuiz(_quiz);
-              }
+              },
             }}
           />
         );

@@ -41,7 +41,7 @@ const MyTrainers = () => {
       field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Type',
-      flex: 1
+      flex: 1,
     },
     {
       field: 'action',
@@ -60,16 +60,16 @@ const MyTrainers = () => {
           },
           {
             text: 'disable',
-            handleClick: ''
-          }
+            handleClick: '',
+          },
         ];
         return (
           <>
             <EllipsisMenu buttonArr={buttonArr} />
           </>
         );
-      }
-    }
+      },
+    },
   ];
 
   const options = [{ label: 'Name', value: 'name' }];

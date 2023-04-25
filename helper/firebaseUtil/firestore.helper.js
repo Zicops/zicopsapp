@@ -1,7 +1,7 @@
 import { addDoc, collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 import { app } from './firebaseConfig';
 
-const db = getFirestore(app);
+export const db = getFirestore(app);
 const notificationCollectionRef = collection(db, 'notification');
 const tokenCollectionRef = collection(db, 'tokens');
 
