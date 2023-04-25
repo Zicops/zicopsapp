@@ -1,9 +1,9 @@
-import { COMMON_LSPS } from '@/helper/constants.helper';
+import { COMMON_LSPS, COURSE_STATUS } from '@/helper/constants.helper';
 import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { getAllCourseCountInLsp } from './adminAnalyticsDashboardComp.helper';
+import { getAllCourseCountInLsp, getAllCourseCount } from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
@@ -78,6 +78,7 @@ export default function useHandleFirstFourCard() {
     // My Courses Count
 
     loadCourseCardData();
+    loadNumberOfCoursesStat();
 
     async function loadCourseCardData() {
       const myCourseDataRes = loadCourseStats(_lspId);
@@ -85,8 +86,8 @@ export default function useHandleFirstFourCard() {
 
       const myCourseData = await myCourseDataRes;
       const zicopsCourseData = await zicopsCourseDataRes;
-      setMyCourseCard({ ...myCourseCard, count: myCourseData?.totalMyCourses || 0 });
-      setZicopsCard({ ...zicopsCard, count: zicopsCourseData?.totalMyCourses || 0 });
+      // setMyCourseCard({ ...myCourseCard, count: myCourseData?.totalMyCourses || 0 });
+      // setZicopsCard({ ...zicopsCard, count: zicopsCourseData?.totalMyCourses || 0 });
     }
 
     async function loadCourseStats(lspId) {
@@ -106,6 +107,18 @@ export default function useHandleFirstFourCard() {
       return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
     }
   }, [courseType]);
+
+  async function loadNumberOfCoursesStat(lspId) {
+    const _lspId = sessionStorage.getItem('lsp_id');
+
+    getAllCourseCount(_lspId, COURSE_STATUS.publish, 'self-paced').then((resp) => {
+      setMyCourseCard({ ...myCourseCard, count: resp?.getCourseCountStats?.count || 0 });
+    });
+
+    getAllCourseCount(COMMON_LSPS.zicops, COURSE_STATUS.publish, 'self-paced').then((resp) => {
+      setZicopsCard({ ...zicopsCard, count: resp?.getCourseCountStats?.count || 0 });
+    });
+  }
 
   return [categoryCard, subCategoryCard, myCourseCard, zicopsCard];
 }

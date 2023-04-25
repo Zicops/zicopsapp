@@ -1,6 +1,7 @@
-import { GET_BASIC_COURSES_STATS } from '@/api/Queries';
+import { GET_BASIC_COURSES_STATS, GET_COURSES_COUNT_STATS, queryClient } from '@/api/Queries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
+import { useEffect } from 'react';
 
 export async function getAllCourseCountInLsp(lspId = null, queryVariables = {}, queryOptions = {}) {
   if (!lspId) return null;
@@ -47,4 +48,16 @@ export async function getAllCourseCountBasedOnExpertises(
     if (expertise?.count) totalCount += expertise?.count;
   });
   return totalCount;
+}
+
+export async function getAllCourseCount(lspId, status, type) {
+  if (!lspId) return;
+
+  const courseStats = loadQueryDataAsync(
+    GET_COURSES_COUNT_STATS,
+    { lsp_id: lspId, status: status, type: type }
+    // {},
+    // queryClient
+  );
+  return courseStats;
 }
