@@ -11,7 +11,7 @@ export default function useHandleBinge() {
     skipIntroDuration: 0,
     showTimeMin: 0,
     showTimeSec: 5,
-    isFromEnd: true
+    isFromEnd: true,
   });
 
   const defaultTopicContent =
@@ -35,7 +35,7 @@ export default function useHandleBinge() {
       skipIntroDuration: binge.skipIntroDuration,
       showTimeMin: showTimeMin,
       showTimeSec: showTimeSec,
-      isFromEnd: binge.fromEndTime > 0
+      isFromEnd: binge.fromEndTime > 0,
     };
     setBingeData(_bingeData);
   }, []);
@@ -109,8 +109,8 @@ export default function useHandleBinge() {
         skipIntroDuration: validatedBingeData.skipIntroDuration,
         startTime: validBingeTimeObj?.startTime,
         nextShowTime: !isFromEnd ? validBingeTimeObj?.showTime : 0,
-        fromEndTime: isFromEnd ? validBingeTimeObj?.showTime : 0
-      })
+        fromEndTime: isFromEnd ? validBingeTimeObj?.showTime : 0,
+      }),
     );
   }, [bingeData]);
 

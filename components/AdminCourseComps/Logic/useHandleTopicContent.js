@@ -6,7 +6,7 @@ import {
   getBingeDataObj,
   getTopicSubtitlesObject,
   TopicContentListAtom,
-  TopicSubtitlesAtom
+  TopicSubtitlesAtom,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ export default function useHandleTopicContent(topData = null) {
 
   const [isFormVisible, setIsFormVisible] = useState(null);
   const [topicContentFormData, setTopicContentFormData] = useState(
-    getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
+    getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id }),
   );
 
   // reset state
@@ -39,6 +39,10 @@ export default function useHandleTopicContent(topData = null) {
     // load topic content, subtitle and binge data
     loadQueryDataAsync(GET_COURSE_TOPICS_CONTENT, { topic_id: topData?.id })
       .then((res) => {
+        // set default binge value if no data found
+        if (!res?.getTopicContent?.length) {
+          setBinge(getBingeDataObj({ fromEndTime: 5 }));
+        }
         const _topicContent = res?.getTopicContent?.map((content, i) => {
           if (i === 0) {
             const _subtitleArr = [];
@@ -47,8 +51,8 @@ export default function useHandleTopicContent(topData = null) {
                 getTopicSubtitlesObject({
                   topicId: content.topicId,
                   subtitleUrl: subtitle.url,
-                  language: subtitle.language
-                })
+                  language: subtitle.language,
+                }),
               );
             });
 
@@ -76,8 +80,8 @@ export default function useHandleTopicContent(topData = null) {
       getTopicContentDataObj({
         courseId: courseMetaData?.id,
         topicId: topData?.id,
-        isDefault: true
-      })
+        isDefault: true,
+      }),
     );
   }, [topicContentList?.length]);
 
@@ -89,8 +93,8 @@ export default function useHandleTopicContent(topData = null) {
           courseId: courseMetaData?.id,
           topicId: topData?.id,
           type: topicContentList?.[0]?.type,
-          isDefault: !topicContentList?.filter((tc) => tc?.isDefault)?.length
-        })
+          isDefault: !topicContentList?.filter((tc) => tc?.isDefault)?.length,
+        }),
       );
     }
 
@@ -116,7 +120,7 @@ export default function useHandleTopicContent(topData = null) {
 
       const variableBufferTime = 2;
       const prevUploadDuration = topicContentList?.filter(
-        (tc) => tc?.topicId === topicContentFormData?.topicId
+        (tc) => tc?.topicId === topicContentFormData?.topicId,
       );
       if (
         prevUploadDuration > 0 &&
@@ -131,7 +135,7 @@ export default function useHandleTopicContent(topData = null) {
       setTopicContentFormData((prev) => ({
         ...prev,
         file: e.target.files[0],
-        duration: parseInt(duration)
+        duration: parseInt(duration),
       }));
     };
   }
@@ -147,7 +151,7 @@ export default function useHandleTopicContent(topData = null) {
 
     setIsFormVisible(false);
     setTopicContentFormData(
-      getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id })
+      getTopicContentDataObj({ courseId: courseMetaData?.id, topicId: topData?.id }),
     );
   }
 
@@ -158,6 +162,6 @@ export default function useHandleTopicContent(topData = null) {
     toggleForm,
     handleChange,
     handleMp4FileInput,
-    handleSubmit
+    handleSubmit,
   };
 }

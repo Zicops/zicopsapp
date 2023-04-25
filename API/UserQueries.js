@@ -1312,4 +1312,29 @@ export const GET_COURSE_VIEWS = gql`
   }
 `;
 
+export const GET_USER_EXAM_ATTEMPTS_BY_EXAMID = gql`
+  query getUserExamAttemptsByExamIds(
+    $userId: String!
+    $examIds: [String]!
+    $filters: ExamAttemptsFilters
+  ) {
+    getUserExamAttemptsByExamIds(user_id: $userId, exam_ids: $examIds, filters: $filters) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
 // DASHBOARD QUERIES END

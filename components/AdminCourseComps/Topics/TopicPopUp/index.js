@@ -5,8 +5,8 @@ import { TOPIC_TYPES } from '@/constants/course.constants';
 import { TopicContentListAtom } from '@/state/atoms/courses.atom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import styles from '../../adminCourseComps.module.scss';
 import useHandleTopic from '../../Logic/useHandleTopic';
+import styles from '../../adminCourseComps.module.scss';
 import TopicRow from '../BoxContainer/TopicRow';
 import AddTopicForm from './AddTopicForm';
 import TopicAssessmentForm from './TopicAssessmentForm';
@@ -18,7 +18,7 @@ export default function TopicPopUp({
   chapData = null,
   topData = null,
   popUpState = [],
-  closePopUp = () => {}
+  closePopUp = () => {},
 }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
   const [confimClose, setConfirmClose] = useState(null);
@@ -30,7 +30,7 @@ export default function TopicPopUp({
     toggleEditTopicForm,
     addUpdateTopic,
     handleSubmit,
-    handleClose
+    handleClose,
   } = useHandleTopic(modData, chapData, topData);
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
@@ -125,7 +125,7 @@ export default function TopicPopUp({
               handleClose();
               closePopUp();
             },
-            handleClickRight: () => setConfirmClose(false)
+            handleClickRight: () => setConfirmClose(false),
           }}
         />
       )}

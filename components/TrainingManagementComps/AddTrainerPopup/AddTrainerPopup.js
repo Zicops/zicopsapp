@@ -42,7 +42,7 @@ export default function AddTrainerPopup({ popUpState = [], isEdit = false, isVie
           tab={tab}
           setTab={setTab}
           footerObj={{
-            showFooter: false
+            showFooter: false,
           }}
           customStyles={{ backgroundColor: 'transparent', height: 'auto', overflow: 'unset' }}
         />

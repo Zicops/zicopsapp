@@ -1,9 +1,23 @@
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import {
+  allPartcipantinfo,
+  breakoutRoomselectedparticipant,
+  particiantPopup,
+  pollArray,
+  vcMeetingIconAtom,
+  vctoolAlluserinfo,
+  CurrentParticipantDataAtom,
+  publishBreakoutRoom,
+  breakoutList,
+  vcToolNavbarState,
+} from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
 import ChatBar from '../Chatbar';
+import DeletePopUp from '../DeletePopUp';
+import NotesContainer from '../NotesContainer';
 import Participants from '../Participants';
 import Poll from '../Polls';
 import QAbar from '../QAbar';
@@ -12,20 +26,9 @@ import ResourcePage from '../Resource';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
 import WhiteBoard from '../WhiteBoard';
-import NotesContainer from '../NotesContainer';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import {
-  allPartcipantinfo,
-  breakoutRoomselectedparticipant,
-  particiantPopup,
-  pollArray,
-  vcMeetingIconAtom,
-  vctoolAlluserinfo,
-  CurrentParticipantDataAtom
-} from '@/state/atoms/vctool.atoms';
 import ManageAccount from '../ManageAccount';
 import StartSessionPopUp from '../StartSessionPopUP';
-import DeletePoUp from '../DeletePopUp';
 import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
@@ -46,12 +49,13 @@ const MainToolbar = ({
   startAdvertisement,
   stopAdvertisement,
   autoAssignRoom,
-  showSettingFunc
+  showSettingFunc,
+  frameIcons,
 }) => {
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(
-    breakoutRoomselectedparticipant
+    breakoutRoomselectedparticipant,
   );
   const [breakoutRoompopup, setbreakoutRoompopup] = useRecoilState(particiantPopup);
   const [fade1, setfade1] = useState(true);
@@ -60,17 +64,22 @@ const MainToolbar = ({
   const [userEmail, setuserEmail] = useState(userData.email);
   const [selectedButton, setSelectedButton] = useState('');
   const [deletedPoupTitel, setDeletedPouptitle] = useState('');
+  const [publishRoom, setPublishRoom] = useState('');
   const participantPopuppanel = useRecoilValue(particiantPopup);
   const breakoutRoomtotalno = useRecoilValue(allPartcipantinfo);
   const [pollInfo, setPollInfo] = useRecoilState(pollArray);
   const [showSetting, setShowSetting] = useState(false);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
-  const [hideToolBar, setHideToolbar] = useState(null);
+  const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
+  const [pollDeleteIndex, setPollDeleteIndex] = useState();
+  const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
+  const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
 
   useEffect(() => {
     clearTimeout(timer);
     if (hideToolBar === false) return;
+    if (selectedButton) return setHideToolbar(false);
 
     timer = setTimeout(() => setHideToolbar(true), 3000);
 
@@ -96,8 +105,38 @@ const MainToolbar = ({
           createRooms={() => {
             CreateBreakoutroomlist();
           }}
+          publishRoom={() => {
+            setPublishRoom('publishRoom');
+          }}
         />
-      )
+      ),
+    },
+    {
+      title: 'publishRoom', // publish Breakout Room Popup
+      component: (
+        <DeletePopUp
+          poUpOptions={{
+            popUpName: 'rooms',
+            popUpNotice:
+              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
+            poupBtnInfo1: 'Cancel',
+            poupBtnInfo2: 'Publish',
+          }}
+          styleBtns={{
+            cancelPopupClass: `${styles.canceldeletPoll}`,
+            deletePopupclass: `${styles.publishRoomBnt}`,
+          }}
+          cancelFunc={() => setPublishRoom('')}
+          deletePollFunc={() => {
+            setPublishRoomAtom({
+              ...publishRoomAtom,
+              isRoomPublished: true,
+              publishedRoomArr: [...breakoutLists],
+            });
+            setPublishRoom('');
+          }}
+        />
+      ),
     },
     {
       title: 'participants',
@@ -109,8 +148,10 @@ const MainToolbar = ({
               : setSelectedButton('participants');
           }}
           Info={getUesrId}
+          api={api}
+          api={api}
         />
-      )
+      ),
     },
     {
       title: 'quiz',
@@ -120,7 +161,7 @@ const MainToolbar = ({
             selectedButton === 'quiz' ? setSelectedButton('') : setSelectedButton('quiz');
           }}
         />
-      )
+      ),
     },
     {
       title: 'whiteBoard',
@@ -132,7 +173,7 @@ const MainToolbar = ({
               : setSelectedButton('whiteBoard');
           }}
         />
-      )
+      ),
     },
     {
       title: 'poll',
@@ -141,11 +182,13 @@ const MainToolbar = ({
           hide={() => {
             selectedButton === 'poll' ? setSelectedButton('') : setSelectedButton('poll');
           }}
-          deletePollPopUp={() => {
+          deletePollPopUp={(index) => {
             setDeletedPouptitle('deletePopUp');
+            setPollDeleteIndex(index);
+            setPollDeleteIndex(index);
           }}
         />
-      )
+      ),
     },
     {
       title: 'qaBar',
@@ -155,7 +198,7 @@ const MainToolbar = ({
             selectedButton === 'qaBar' ? setSelectedButton('') : setSelectedButton('qaBar');
           }}
         />
-      )
+      ),
     },
     {
       title: 'chatBar',
@@ -165,7 +208,7 @@ const MainToolbar = ({
             selectedButton === 'chatBar' ? setSelectedButton('') : setSelectedButton('chatBar');
           }}
         />
-      )
+      ),
     },
     {
       title: 'resourceBar',
@@ -177,7 +220,7 @@ const MainToolbar = ({
               : setSelectedButton('resourceBar');
           }}
         />
-      )
+      ),
     },
     {
       title: 'about',
@@ -187,7 +230,7 @@ const MainToolbar = ({
             selectedButton === 'about' ? setSelectedButton('') : setSelectedButton('about');
           }}
         />
-      )
+      ),
     },
     {
       title: 'quizPage',
@@ -197,7 +240,7 @@ const MainToolbar = ({
             selectedButton === 'quizPage' ? setSelectedButton('') : setSelectedButton('quizPage');
           }}
         />
-      )
+      ),
     },
     {
       title: 'AddParticipantpopup',
@@ -207,7 +250,7 @@ const MainToolbar = ({
           totalRooms={breakoutRoomtotalno.totalRoomno}
           autoAssignRoom={autoAssignRoom}
         />
-      )
+      ),
     },
     {
       title: 'manageAccount',
@@ -219,7 +262,7 @@ const MainToolbar = ({
               : setSelectedButton('manageAccount');
           }}
         />
-      )
+      ),
     },
     {
       title: 'startSessionPopup',
@@ -232,27 +275,14 @@ const MainToolbar = ({
             setMeetingIconAtom({
               ...meetingIconsAtom,
               isStartAdd: false,
-              isJoinedAsModerator: false
+              isJoinedAsModerator: false,
             });
             setSelectedButton('');
           }}
         />
-      )
+      ),
     },
-    {
-      title: 'deletePopUp',
-      component: (
-        <DeletePoUp
-          poUpOptions={{
-            popUpName: 'Poll',
-            popUpNotice:
-              'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
-            poupBtnInfo1: 'Cancel',
-            poupBtnInfo2: 'Delete'
-          }}
-        />
-      )
-    },
+
     {
       title: 'SettingPopup',
       component: (
@@ -263,7 +293,7 @@ const MainToolbar = ({
               : setSelectedButton('SettingPopup');
           }}
         />
-      )
+      ),
     },
     {
       title: 'manageAccount',
@@ -275,7 +305,7 @@ const MainToolbar = ({
               : setSelectedButton('manageAccount');
           }}
         />
-      )
+      ),
     },
     {
       title: 'startSessionPopup',
@@ -288,26 +318,39 @@ const MainToolbar = ({
             setMeetingIconAtom({
               ...meetingIconsAtom,
               isStartAdd: false,
-              isJoinedAsModerator: false
+              isJoinedAsModerator: false,
             });
             setSelectedButton('');
           }}
         />
-      )
+      ),
     },
     {
       title: 'deletePopUp',
       component: (
-        <DeletePoUp
+        <DeletePopUp
           poUpOptions={{
             popUpName: 'Poll',
             popUpNotice:
               'Once published all the the rooms will be open and participants will be prompted to join. Any open rooms cannot be deleted. Are you sure you want to publish now?',
             poupBtnInfo1: 'Cancel',
-            poupBtnInfo2: 'Delete'
+            poupBtnInfo2: 'Delete',
+          }}
+          styleBtns={{
+            cancelPopupClass: `${styles.canceldeletPoll}`,
+            deletePopupclass: `${styles.deletePoll}`,
+          }}
+          cancelFunc={() => setDeletedPouptitle('')}
+          deletePollFunc={() => {
+            setPollInfo(
+              pollInfo.filter((data, dataIndex) => {
+                return dataIndex !== pollDeleteIndex;
+              }),
+            );
+            setDeletedPouptitle('');
           }}
         />
-      )
+      ),
     },
     {
       title: 'SettingPopup',
@@ -319,8 +362,8 @@ const MainToolbar = ({
               : setSelectedButton('SettingPopup');
           }}
         />
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -357,6 +400,8 @@ const MainToolbar = ({
               falseSrc={'/images/svg/vctool/library-books.svg'}
               toggle={selectedButton === 'resourceBar'}
               customId={selectedButton === 'resourceBar' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Resources'}
             />
 
             <VctoolButton
@@ -368,6 +413,8 @@ const MainToolbar = ({
               trueSrc={'/images/svg/vctool/sticky-note-2.svg'}
               falseSrc={'/images/svg/vctool/sticky-note-2.svg'}
               customId={selectedButton === 'whiteBoard' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Notes'}
             />
             <VctoolButton
               onClickfun={() => {
@@ -377,6 +424,8 @@ const MainToolbar = ({
               falseSrc={'/images/svg/vctool/quiz.svg'}
               toggle={selectedButton === 'quiz'}
               customId={selectedButton === 'quiz' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Quizzes'}
             />
             <VctoolButton
               onClickfun={() => {
@@ -388,6 +437,8 @@ const MainToolbar = ({
               trueSrc={'/images/svg/vctool/info-active.svg'}
               falseSrc={'/images/svg/vctool/info.svg'}
               customId={selectedButton === 'about' ? `${styles.changeBackground}` : ''}
+              toolTipClass={`${styles.topToolTips}`}
+              toolTipName={'Session Info'}
             />
 
             {!!currentParticipantData?.isModerator && (
@@ -401,6 +452,8 @@ const MainToolbar = ({
                 trueSrc={'/images/svg/vctool/manage-accounts-active.svg'}
                 falseSrc={'/images/svg/vctool/manage-accounts.svg'}
                 customId={selectedButton === 'manageAccount' ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.topToolTips}`}
+                toolTipName={'Host controls'}
               />
             )}
           </>
@@ -418,6 +471,7 @@ const MainToolbar = ({
           {getClickedComponent(selectedButton)}
           {getClickedComponent(participantPopuppanel.roomId)}
           {getClickedComponent(deletedPoupTitel)}
+          {getClickedComponent(publishRoom)}
         </>
       </div>
 
@@ -438,6 +492,7 @@ const MainToolbar = ({
                   falseSrc={'/images/svg/vctool/Union.svg'}
                   customStyle={`${styles.startMeeting}`}
                   btnValue={'Start'}
+                  toolTipClass={`${styles.tooltipLefttNav}`}
                 />
               </div>
               <div>
@@ -447,13 +502,15 @@ const MainToolbar = ({
                     setbreakoutRoomparticipant(null);
                     setbreakoutRoompopup({
                       roomId: '',
-                      isRoom: false
+                      isRoom: false,
                     });
                   }}
                   trueSrc={'/images/svg/vctool/logout.svg'}
                   falseSrc={'/images/svg/vctool/logout.svg'}
                   customStyle={`${styles.canselBtn}`}
                   btnValue={'Leave'}
+                  toolTipClass={`${styles.tooltipLefttNav}`}
+                  toolTipName={'Leave the session'}
                 />
               </div>
             </>
@@ -465,13 +522,15 @@ const MainToolbar = ({
                   setbreakoutRoomparticipant(null);
                   setbreakoutRoompopup({
                     roomId: '',
-                    isRoom: false
+                    isRoom: false,
                   });
                 }}
                 trueSrc={'/images/svg/vctool/logout.svg'}
                 falseSrc={'/images/svg/vctool/logout.svg'}
                 customStyle={`${styles.canselBtn}`}
                 btnValue={'Leave'}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Leave the session'}
               />
             </div>
           )}
@@ -489,6 +548,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/mic-off.svg'}
                 toggle={audiotoggle}
                 customId={!audiotoggle ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={!audiotoggle ? 'Turn on microphone' : 'Turn off microphone'}
               />
 
               <VctoolButton
@@ -499,6 +560,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/videocam-off.svg'}
                 toggle={videotoggle}
                 customId={!videotoggle ? `${styles.changeBackground}` : ''}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={!videotoggle ? 'Turn on camera' : 'Turn off camera'}
               />
 
               <VctoolButton
@@ -507,6 +570,8 @@ const MainToolbar = ({
                 }}
                 trueSrc={'/images/svg/vctool/present-to-all.svg'}
                 falseSrc={'/images/svg/vctool/present-to-all.svg'}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Share screen'}
               />
 
               <VctoolButton
@@ -518,6 +583,8 @@ const MainToolbar = ({
                 trueSrc={'/images/svg/vctool/back-hand.svg'}
                 falseSrc={'/images/svg/vctool/back-hand-on.svg'}
                 customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Raise hand'}
               />
             </>
           )}
@@ -535,6 +602,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/help.svg'}
                 customId={selectedButton === 'qaBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'qaBar'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Q & A'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -546,6 +615,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/chat-bubble.svg'}
                 customId={selectedButton === 'chatBar' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'chatBar'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Chat'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -555,6 +626,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/insert-chart.svg'}
                 customId={selectedButton === 'poll' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'poll'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Polls'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -568,6 +641,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/group.svg'}
                 customId={selectedButton === 'participants' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'participants'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Participants'}
               />
               <VctoolButton
                 onClickfun={() => {
@@ -579,6 +654,8 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/account-tree.svg'}
                 customId={selectedButton === 'breakOutRoom' ? `${styles.changeBackground}` : ''}
                 toggle={selectedButton === 'breakOutRoom'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Breakout rooms'}
               />
 
               <VctoolButton
@@ -591,8 +668,10 @@ const MainToolbar = ({
                 }}
                 trueSrc={'/images/svg/vctool/settings.svg'}
                 falseSrc={'/images/svg/vctool/settings.svg'}
-                customId={showSetting ? `${styles.changeBackground}` : ''}
-                toggle={showSetting}
+                customId={selectedButton === 'SettingPopup' ? `${styles.changeBackground}` : ''}
+                toggle={selectedButton === 'SettingPopup'}
+                toolTipClass={`${styles.tooltipRightNav}`}
+                toolTipName={'Settings'}
               />
 
               <VctoolButton
@@ -602,6 +681,8 @@ const MainToolbar = ({
                 toggle={fullscreen}
                 trueSrc={'/images/svg/vctool/fullscreen-exit.svg'}
                 falseSrc={'/images/svg/vctool/fullscreen.svg'}
+                toolTipClass={`${styles.tooltipRightNavFullscreen}`}
+                toolTipName={!fullscreen ? 'Enter full screen' : 'Exit full screen'}
               />
             </>
           )}

@@ -9,7 +9,8 @@
       "@/constants/*": ["constants/*"],
       "@/state/*": ["state/*"],
       "@/styles/*": ["styles/*"],
-      "@/api/*": ["API/*"]
+      "@/api/*": ["API/*"],
+      "@/utils/*": ["utils/*"]
     }
   }
 }

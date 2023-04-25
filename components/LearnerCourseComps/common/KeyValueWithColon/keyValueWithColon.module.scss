@@ -1,0 +1,22 @@
+.keyValue {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.8rem;
+
+  > span {
+    display: flex;
+    justify-content: space-between;
+
+    .colon {
+      padding-right: 2em;
+    }
+
+    &.value {
+      display: block;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+    }
+  }
+}

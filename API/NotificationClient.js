@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.notification
+  uri: API_LINKS.notification,
 });
 
 // Set query Client
 export const notificationClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export const GET_FCM_TOKEN = gql`
@@ -111,6 +111,164 @@ export const GET_USER_LSP_TAGS = gql`
       user_id
       tags
       lsp_id
+    }
+  }
+`;
+
+// input ClassRoomFlagsInput {
+//   id: String
+//   is_classroom_started: Boolean
+//   is_participants_present: Boolean
+//   is__ad_displayed: Boolean
+//   is_break: Boolean
+//   is_moderator_joined: Boolean
+//   is_trainer_joined: Boolean
+//   ad_video_url: String
+// }
+export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
+  mutation addClassroomFlags(
+    $id: String
+    $is_classroom_started: Boolean
+    $is_participants_present: Boolean
+    $is_ad_displayed: Boolean
+    $is_break: Boolean
+    $is_moderator_joined: Boolean
+    $is_trainer_joined: Boolean
+    $ad_video_url: String
+    $is_microphone_enabled: Boolean
+    $is_video_sharing_enabled: Boolean
+    $is_screen_sharing_enabled: Boolean
+    $is_chat_enabled: Boolean
+    $is_qa_enabled: Boolean
+    $quiz: [String]
+  ) {
+    addClassroomFlags(
+      input: {
+        id: $id
+        is_classroom_started: $is_classroom_started
+        is_participants_present: $is_participants_present
+        is_ad_displayed: $is_ad_displayed
+        is_break: $is_break
+        is_moderator_joined: $is_moderator_joined
+        is_trainer_joined: $is_trainer_joined
+        ad_video_url: $ad_video_url
+        is_microphone_enabled: $is_microphone_enabled
+        is_video_sharing_enabled: $is_video_sharing_enabled
+        is_screen_sharing_enabled: $is_screen_sharing_enabled
+        is_chat_enabled: $is_chat_enabled
+        is_qa_enabled: $is_qa_enabled
+        quiz: $quiz
+      }
+    ) {
+      id
+      is_classroom_started
+      is_participants_present
+      is_ad_displayed
+      is_break
+      is_moderator_joined
+      is_trainer_joined
+      ad_video_url
+      is_microphone_enabled
+      is_video_sharing_enabled
+      is_screen_sharing_enabled
+      is_chat_enabled
+      is_qa_enabled
+      quiz
+    }
+  }
+`;
+// addMessagesMeet(message: Messages): Boolean
+export const ADD_TO_FIRESTORE_CHAT = gql`
+  mutation addMessagesMeet(
+    $parentId: String
+    $meetingId: String
+    $userId: String
+    $body: String
+    $time: Int
+    $chatType: String
+  ) {
+    addMessagesMeet(
+      message: {
+        parent_id: $parentId
+        meeting_id: $meetingId
+        user_id: $userId
+        body: $body
+        time: $time
+        chat_type: $chatType
+      }
+    )
+  }
+`;
+export const ADD_VCTOOL_POLL = gql`
+  mutation addPoll(
+    $pollName: String
+    $meetingId: String
+    $courseId: String
+    $topicId: String
+    $question: String
+    $options: [String]
+    $status: String
+  ) {
+    addPoll(
+      input: {
+        poll_name: $pollName
+        meeting_id: $meetingId
+        course_id: $courseId
+        topic_id: $topicId
+        question: $question
+        options: $options
+        status: $status
+      }
+    ) {
+      id
+      poll_name
+      meeting_id
+      course_id
+      question
+      options
+      status
+    }
+  }
+`;
+export const UPDATE_VCTOOL_POLL = gql`
+  mutation updatePoll(
+    $pollId: String
+    $pollName: String
+    $meetingId: String
+    $courseId: String
+    $topicId: String
+    $question: String
+    $options: [String]
+    $status: String
+  ) {
+    updatePoll(
+      input: {
+        id: $pollId
+        poll_name: $pollName
+        meeting_id: $meetingId
+        course_id: $courseId
+        topic_id: $topicId
+        question: $question
+        options: $options
+        status: $status
+      }
+    ) {
+      id
+      poll_name
+      meeting_id
+      course_id
+      question
+      options
+      status
+    }
+  }
+`;
+
+export const UPDATE_VCTOOL_POLL_RESPONSE = gql`
+  mutation updatePollOptions($pollId: String, $option: String, $userId: String) {
+    updatePollOptions(input: { poll_id: $pollId, option: $option, user_id: $userId }) {
+      id
+      poll_id
     }
   }
 `;

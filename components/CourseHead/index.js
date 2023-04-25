@@ -1,6 +1,5 @@
 import { snakeCaseToTitleCase } from '@/helper/common.helper';
 import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
-import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -17,7 +16,7 @@ export default function CourseHead({
   hideCourseTypeDropdown = false,
   hidePlus = false,
   handlePlusClick = null,
-  tooltipTitle = ''
+  tooltipTitle = '',
 }) {
   const [showSitemap, setShowSitemap] = useState(false);
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
@@ -34,7 +33,7 @@ export default function CourseHead({
       return {
         value: COURSE_TYPES[i],
         label: snakeCaseToTitleCase(COURSE_TYPES[i]),
-        isDisabled: disabledList.includes(i)
+        isDisabled: disabledList.includes(i),
       };
     });
   // const options = [

@@ -1,0 +1,53 @@
+.topicDataCard {
+  background-color: $popupBgColor;
+
+  font-size: 1em;
+  color: $darkThree;
+  padding: 1em;
+
+  height: 8em;
+
+  border-radius: 5px;
+  border: 2px solid transparent;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &.active {
+    border: 2px solid $primary;
+    cursor: pointer;
+  }
+
+  .titleName,
+  .titleNameSmall {
+    color: $primary;
+    padding: 0 0.5em 0.5em;
+    border-bottom: 1px solid $darkThree;
+    font-size: 1rem;
+    font-weight: bold;
+    min-height: 30%;
+  }
+
+  .titleNameSmall {
+    font-size: 0.9rem;
+  }
+
+  .body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0.5em;
+    min-height: 80%;
+
+    .icon {
+      height: 2em;
+      width: 2em;
+
+      svg {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
