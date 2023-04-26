@@ -691,7 +691,10 @@
     }
     .priceSetContainer{
         display: flex;
-        justify-content: space-between;
+        gap:10px;
+        .priceSeat{
+            width: 100%;
+        }
     }
     .registrationContainer{
         display: flex;

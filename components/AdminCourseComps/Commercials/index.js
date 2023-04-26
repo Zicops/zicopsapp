@@ -78,7 +78,7 @@ const Commercials = () => {
       </div>
       <div className={`${styles.hr}`}></div>
       <div className={`${styles.priceSetContainer}`}>
-        <div>
+        <div className={`${styles.priceSeat}`}>
           <p className={`${styles.heading}`}>Price per seat:</p>
           <LabeledInput
             inputOptions={{
@@ -92,7 +92,7 @@ const Commercials = () => {
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
-        <div>
+        <div className={`${styles.priceSeat}`}>
           <p className={`${styles.heading}`}>Currency:</p>
           <LabeledDropdown
             dropdownOptions={{
@@ -106,36 +106,6 @@ const Commercials = () => {
             }}
             changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData, 'currency')}
             styleClass={`${styles.labelMergin}`}
-          />
-        </div>
-        <div>
-          <p className={`${styles.heading}`}>Tax:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'tax_percentage',
-              //   label: 'Name :',
-              placeholder: 'Tax',
-              value: commercialsData?.tax_percentage,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
-          />
-        </div>
-        <div>
-          <p className={`${styles.heading}`}>Total:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'total',
-              //   label: 'Name :',
-              placeholder: 'Auto-populated',
-              value:
-                +commercialsData?.price_per_seat +
-                (+commercialsData?.price_per_seat * +commercialsData?.tax_percentage) / 100,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            // changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
           />
         </div>
       </div>
