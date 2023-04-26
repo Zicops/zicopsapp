@@ -26,10 +26,6 @@ export const tabData = [
     component: <CourseTopic />,
   },
   {
-    name: 'Commercials',
-    component: <Commercials />,
-  },
-  {
     name: 'Configuration',
     component: <CourseConfiguration />,
   },
