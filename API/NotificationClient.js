@@ -177,6 +177,7 @@ export const ADD_UPDATE_CLASSROOM_FLAGS = gql`
     }
   }
 `;
+
 // addMessagesMeet(message: Messages): Boolean
 export const ADD_TO_FIRESTORE_CHAT = gql`
   mutation addMessagesMeet(
@@ -270,5 +271,11 @@ export const UPDATE_VCTOOL_POLL_RESPONSE = gql`
       id
       poll_id
     }
+  }
+`;
+
+export const ADD_QUIZ_TO_CLASSROOM_FLAGS = gql`
+  mutation addQuizToClassroomFlags($id: String, $quizId: String) {
+    addQuizToClassroomFlags(input: { id: $id, quizId: $quizId })
   }
 `;

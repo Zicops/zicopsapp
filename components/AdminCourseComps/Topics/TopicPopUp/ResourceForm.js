@@ -8,13 +8,13 @@ import IconButton from '@/components/common/IconButton';
 import Spinner from '@/components/common/Spinner';
 import { COURSE_MAX_LENGTH_VALUES, TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
-import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
+import { TopicResourcesAtomFamily } from '@/state/atoms/courses.atom';
 import { useRecoilState } from 'recoil';
 import styles from '../../adminCourseComps.module.scss';
 import DataRowWithThreeSection from '../../common/DataRowWithThreeSection';
 
 export default function ResourceForm({ topData = null }) {
-  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
+  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtomFamily(topData?.id));
 
   const {
     resourceFormData,
