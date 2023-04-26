@@ -6,7 +6,6 @@ import CourseMaster from '../CourseMaster';
 import CourseTopic from '../CourseTopic';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { GET_LEARNINGSPACES_BY_ORGID, userQueryClient } from '@/api/UserQueries';
-import Commercials from '@/components/AdminCourseComps/Commercials';
 
 export const tabData = [
   {
