@@ -1,5 +1,5 @@
-import { COURSE_MAP_STATUS, COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
-import { displayUnixDate, parseJson } from '@/helper/utils.helper';
+import { COURSE_SELF_ASSIGN_LIMIT } from '@/helper/constants.helper';
+import { parseJson } from '@/helper/utils.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { UserCourseDataAtom } from '@/state/atoms/video.atom';
@@ -33,6 +33,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const isLoading = useRecoilValue(isLoadingAtom);
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
   const [isOpenRegister, setIsOpenRegsiter] = useState(false);
+  const [isRegister, setIsRegsiter] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -49,9 +50,8 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     summary,
     image,
     expertise_level: expertiseLevel,
-    prequisites,
-    goodFor,
-    mustFor,
+    language,
+    instructor,
     category,
     sub_category: subCategory,
     duration,
@@ -97,6 +97,11 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   }, [userCourseData, courseAssignData?.isCourseAssigned]);
 
   const suggestedDuration = fullCourse?.expected_completion || 1;
+
+  const onRegisterHandler = () => {
+    setIsRegsiter(true);
+    setIsOpenRegsiter(false);
+  };
   return (
     <div
       className={`${style.course_header}`}
@@ -150,10 +155,10 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
           </div>
           <div className={`${style.more_info}`}>
             <Info name="Course Benefits" data={benefits?.join(', ')} />
-            <Info name="Instructors" data={benefits?.join(', ')} />
+            <Info name="Instructors" data={instructor} />
             <div className={`${style.textFlex}`}>
               <Info name="Expertise Level" data={expertiseLevel?.split(',').join(' | ')} />
-              <Info name="Language" data="English" />
+              <Info name="Language" data={language.join(', ')} />
             </div>
             <div className={`${style.textFlex}`}>
               <Info name="Course starts on" data="25/04/2023" />
@@ -171,22 +176,29 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
               <button onClick={showPreviewVideo}>Preview the course</button>
             </div>
             <div className={`${style.registerBtn}`}>
-              <button onClick={(e) => setIsOpenRegsiter(true)}>Register</button>
+              <button onClick={(e) => setIsOpenRegsiter(true)}>
+                {' '}
+                {isRegister ? 'Book' : 'Register'}
+              </button>
             </div>
           </div>
         </div>
-        <div className={`${style.registrationStatus}`}>
-          <img src="/images/svg/release_alert.svg" alt="" />
-          Limited Registrations!
-        </div>
+        {!isRegister && (
+          <div className={`${style.registrationStatus}`}>
+            <img src="/images/svg/release_alert.svg" alt="" />
+            Limited Registrations!
+          </div>
+        )}
         {/* <div className={`${style.registrationStatus}`}>
           <img src="/images/svg/warning.svg" alt="" />
           Only Few Registrations Left
         </div> */}
-        {/* <div className={`${style.registerder}`}>
-          <img src="/images/svg/new_releases.svg" alt="" />
-          Registered
-        </div> */}
+        {isRegister && (
+          <div className={`${style.registerder}`}>
+            <img src="/images/svg/new_releases.svg" alt="" />
+            Registered
+          </div>
+        )}
         {/* <div className={`${style.registrationStatus}`}>
           <img src="/images/svg/warning.svg" alt="" />
           Only Few Seats Left
@@ -226,7 +238,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
         popUpState={[isOpenRegister, setIsOpenRegsiter]}
         customStyles={{ width: '500px', height: '250px' }}
         closeBtn={{ name: 'No' }}
-        submitBtn={{ name: 'Yes' }}
+        submitBtn={{ name: 'Yes', handleClick: onRegisterHandler }}
         isMarketYard
         isVilt
         isFooterVisible={true}>

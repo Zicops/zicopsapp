@@ -34,8 +34,6 @@ export default function Course() {
   const [catCourses, setCatCourses] = useState([]);
   const [subCatCourses, setSubCatCourses] = useState([]);
 
-  const router = useRouter();
-  const { getUserCourseData } = useUserCourseData();
   const pageSize = 28;
 
   function setStartPlayer(val) {
@@ -114,10 +112,14 @@ export default function Course() {
 
           {startPlayer && <CustomVideo set={setStartPlayer} />}
 
-          {!startPlayer && !topicExamData?.id && !activeClassroomTopicId && (
-            // <CourseHero set={setStartPlayer} />
-            <ClassRoomCourseHero set={setStartPlayer} />
-          )}
+          {!startPlayer &&
+            !topicExamData?.id &&
+            !activeClassroomTopicId &&
+            (fullCourse.type === 'classroom' ? (
+              <ClassRoomCourseHero set={setStartPlayer} />
+            ) : (
+              <CourseHero set={setStartPlayer} />
+            ))}
 
           <CourseBody />
           {/* <CardSlider title="Your Other Subscribed Courses" data={sliderImages} />
