@@ -6,43 +6,48 @@ import CourseMaster from '../CourseMaster';
 import CourseTopic from '../CourseTopic';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { GET_LEARNINGSPACES_BY_ORGID, userQueryClient } from '@/api/UserQueries';
+import Commercials from '@/components/AdminCourseComps/Commercials';
 
 export const tabData = [
   {
     name: 'Course Master',
-    component: <CourseMaster />
+    component: <CourseMaster />,
   },
   {
     name: 'Details',
-    component: <CourseDetails />
+    component: <CourseDetails />,
   },
   {
     name: 'About',
-    component: <CourseAbout />
+    component: <CourseAbout />,
   },
   {
     name: 'Topics',
-    component: <CourseTopic />
+    component: <CourseTopic />,
+  },
+  {
+    name: 'Commercials',
+    component: <Commercials />,
   },
   {
     name: 'Configuration',
-    component: <CourseConfiguration />
-  }
+    component: <CourseConfiguration />,
+  },
 ];
 
 export const IsCourseSavedAtom = atom({
   key: 'isCourseSaved',
-  default: true
+  default: true,
 });
 
 export const isCourseUploadingAtom = atom({
   key: 'isCourseUploading',
-  default: null
+  default: null,
 });
 
 export const CourseTabAtom = atom({
   key: 'CourseTab',
-  default: tabData[0]?.name
+  default: tabData[0]?.name,
 });
 
 export function getDateTimeFromUnix(unixTimestamp) {
@@ -59,7 +64,7 @@ export async function getDefaultLsp(orgId = '') {
     GET_LEARNINGSPACES_BY_ORGID,
     { org_id: orgId },
     {},
-    userQueryClient
+    userQueryClient,
   );
   if (res?.error) return false;
   // console.log(res);
