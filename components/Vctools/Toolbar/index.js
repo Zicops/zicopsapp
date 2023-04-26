@@ -1,35 +1,36 @@
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
+  ClassRoomFlagsInput,
+  CurrentParticipantDataAtom,
   allPartcipantinfo,
+  breakoutList,
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
-  vcMeetingIconAtom,
-  vctoolAlluserinfo,
-  CurrentParticipantDataAtom,
   publishBreakoutRoom,
-  breakoutList,
+  vcMeetingIconAtom,
   vcToolNavbarState,
+  vctoolAlluserinfo,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
+import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import ChatBar from '../Chatbar';
 import DeletePopUp from '../DeletePopUp';
+import ManageAccount from '../ManageAccount';
 import NotesContainer from '../NotesContainer';
 import Participants from '../Participants';
 import Poll from '../Polls';
 import QAbar from '../QAbar';
 import QuizPage from '../Quiz';
 import ResourcePage from '../Resource';
+import SettingPopup from '../SettingPopup';
+import StartSessionPopUp from '../StartSessionPopUP';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
-import WhiteBoard from '../WhiteBoard';
-import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import ManageAccount from '../ManageAccount';
-import StartSessionPopUp from '../StartSessionPopUP';
-import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
   api = null,
@@ -50,8 +51,10 @@ const MainToolbar = ({
   stopAdvertisement,
   autoAssignRoom,
   showSettingFunc,
+  startMeetingByMod,
   frameIcons,
 }) => {
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(
@@ -75,6 +78,8 @@ const MainToolbar = ({
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
+
+  const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -277,6 +282,7 @@ const MainToolbar = ({
               isJoinedAsModerator: false,
             });
             setSelectedButton('');
+            startMeetingByMod();
           }}
         />
       ),
