@@ -69,6 +69,10 @@ export default function useHandleCourseConsumption() {
       const newArr = _uniqueData.map((obj, index) => ({ id: index + 1, ...obj }));
 
       setTableData(newArr || []);
+<<<<<<< HEAD
+=======
+
+>>>>>>> bcae7331d5df19e86ccd4003c80e87cdd620f740
       setIsLoading(false);
     }
   }, []);
