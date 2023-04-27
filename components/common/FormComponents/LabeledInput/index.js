@@ -38,7 +38,7 @@ export default function LabeledInput({
 
       <input
         type={type}
-        className={`${label ? 'w-75' : 'w-100'} ${inputClass}`}
+        className={`${!isColumnWise && label ? 'w-75' : 'w-100'} ${inputClass}`}
         name={inputName}
         placeholder={placeholder}
         value={

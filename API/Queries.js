@@ -1255,7 +1255,7 @@ export const GET_COURSES_COUNT_STATS = gql`
 
 export const GET_TOPICS_BY_COURSEIDS = gql`
   query getTopicsByCourseIds($courseIds: [String], $type: String) {
-    getTopicsByCourseIds(courseIds: $courseIds, type: $type) {
+    getTopicsByCourseIds(course_ids: $courseIds, type: $type) {
       id
       name
       description
