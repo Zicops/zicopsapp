@@ -5,31 +5,46 @@ import SectionTitle from '@/components/AdminAnalyticsDashboardComp/common/Sectio
 import Button from '@/components/common/Button';
 import Dropdown from '@/components/common/Dropdown';
 import SearchBar from '@/components/common/FormComponents/SearchBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import useHandleIndividualCourseAnalytics from '../Logic/useHandleIndividualCourseAnalytics';
+import { useRecoilValue } from 'recoil';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import moment from 'moment';
 
 export default function CourseUserTable() {
   const [searchText, setSearchText] = useState('');
   const [statusOption, setStatusOption] = useState(null);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+
+  const [learnerTableData, setLearnerTableData] = useState([]);
+
+  const { getPaginatedLearner } = useHandleIndividualCourseAnalytics();
+
+  useEffect(() => {
+    getPaginatedLearner(courseMetaData?.id).then((resp) => {
+      setLearnerTableData(resp);
+    });
+  }, []);
 
   const columns = [
     {
       field: 'index',
       headerClassName: 'course-list-header',
       headerName: 'Index',
-      width: 80
+      width: 80,
     },
     {
       field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Name',
-      width: 150
+      width: 150,
     },
     {
       field: 'email',
       headerClassName: 'course-list-header',
       headerName: 'Email Id',
-      width: 250
+      width: 250,
     },
     {
       field: 'status',
@@ -37,52 +52,58 @@ export default function CourseUserTable() {
       headerName: 'Status',
       width: 150,
       renderCell: (params) => (
-        <span style={{ color: params?.row?.status === 'Completed' ? '#26BA4D' : '#F6AC3C' }}>
-          {params?.row?.status}
+        <span style={{ color: params?.row?.status === 'completed' ? '#26BA4D' : '#F6AC3C' }}>
+          {params?.row?.status === 'open' || params?.row?.status === 'started'
+            ? 'In progress'
+            : 'Completed'}
         </span>
-      )
+      ),
     },
     {
       field: 'completion',
       headerClassName: 'course-list-header',
       headerName: 'Completion %',
-      width: 150
+      width: 150,
     },
     {
-      field: 'assignedBy',
+      field: 'assigned_by',
       headerClassName: 'course-list-header',
       headerName: 'Assigned By',
-      width: 150
+      width: 150,
     },
     {
-      field: 'assignedOn',
+      field: 'assigned_on',
       headerClassName: 'course-list-header',
       headerName: 'Assigned On',
-      width: 150
-    },
-    {
-      field: 'timeTaken',
-      headerClassName: 'course-list-header',
-      headerName: 'Time Taken',
-      width: 150
-    },
-    {
-      field: 'timelineCompliant',
-      headerClassName: 'course-list-header',
-      headerName: 'Timeline complaint',
       width: 150,
       renderCell: (params) => (
-        <span style={{ color: params?.row?.timelineCompliant === 'Yes' ? '#26BA4D' : '#F6AC3C' }}>
-          {params?.row?.timelineCompliant}
+        <span>{moment.unix(params?.row?.assigned_on).format('DD/MM/YYYY')}</span>
+      ),
+    },
+    {
+      field: 'time_taken',
+      headerClassName: 'course-list-header',
+      headerName: 'Time Taken',
+      width: 150,
+      renderCell: (params) => <span>{moment.unix(params?.row?.time_taken).format('D')}</span>,
+    },
+    {
+      field: 'timeline_complaint',
+      headerClassName: 'course-list-header',
+      headerName: 'Timeline Compliant',
+      width: 150,
+      renderCell: (params) => (
+        <span style={{ color: params?.row?.timeline_complaint === 'Yes' ? '#26BA4D' : '#F6AC3C' }}>
+          {params?.row?.timeline_complaint}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   const options = [
     { label: 'All', value: 'All' },
     { label: 'In progress', value: 'In progress' },
-    { label: 'Completed', value: 'Completed' }
+    { label: 'Completed', value: 'Completed' },
   ];
 
   return (
@@ -102,7 +123,7 @@ export default function CourseUserTable() {
               inputName: 'category',
               placeholder: 'All',
               options: options,
-              value: statusOption
+              value: statusOption,
             }}
             hideSelectedOptions={false}
             isFullWidth={true}
@@ -117,8 +138,8 @@ export default function CourseUserTable() {
 
       <ZicopsTable
         columns={columns}
-        data={CourseUsers}
-        customId={'index'}
+        data={learnerTableData?.getLearnerDetails?.data}
+        customId={'name'}
         pageSize={5}
         rowsPerPageOptions={[3]}
         tableHeight="55vh"

@@ -1,4 +1,5 @@
-import { GET_BASIC_COURSES_STATS, GET_COURSES_COUNT_STATS, queryClient } from '@/api/Queries';
+import { GET_BASIC_COURSES_STATS, GET_COURSES_COUNT_STATS } from '@/api/Queries';
+import { GET_ASSIGNED_COURSES, userQueryClient } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, COURSE_TYPES, LANGUAGES } from '@/helper/constants.helper';
 import { useEffect } from 'react';
@@ -59,7 +60,19 @@ export async function getAllCourseCount(lspId, status, type) {
     // {},
     // queryClient
   );
-  console.info(lspId, status, type, '1536uyb');
 
   return courseStats;
+}
+
+export async function getAssignedCourseCount(lspId, type) {
+  if (!lspId) return;
+
+  const assignedCourseStats = loadQueryDataAsync(
+    GET_ASSIGNED_COURSES,
+    { lsp_id: lspId, type: type },
+    {},
+    userQueryClient,
+  );
+
+  return assignedCourseStats;
 }

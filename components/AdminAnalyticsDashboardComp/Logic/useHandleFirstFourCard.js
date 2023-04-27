@@ -3,7 +3,11 @@ import { useHandleCatSubCat } from '@/helper/hooks.helper';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { getAllCourseCountInLsp, getAllCourseCount } from './adminAnalyticsDashboardComp.helper';
+import {
+  getAllCourseCountInLsp,
+  getAllCourseCount,
+  getAssignedCourseCount,
+} from './adminAnalyticsDashboardComp.helper';
 
 export default function useHandleFirstFourCard() {
   const { catSubCat } = useHandleCatSubCat();
@@ -14,28 +18,28 @@ export default function useHandleFirstFourCard() {
     title: 'Categories',
     image: '/images/svg/categories.svg',
     count: null,
-    caption: null
+    caption: null,
   });
   const [subCategoryCard, setSubCategoryCard] = useState({
     id: 2,
     title: 'Sub-categories',
     image: '/images/svg/workspaces.svg',
     count: null,
-    caption: null
+    caption: null,
   });
   const [myCourseCard, setMyCourseCard] = useState({
     id: 3,
     title: 'My Courses',
     image: '/images/svg/local_library.svg',
     count: null,
-    caption: 'X assigned courses'
+    caption: null,
   });
   const [zicopsCard, setZicopsCard] = useState({
     id: 4,
     title: 'Zicops Courses',
     image: '/images/svg/Logo.svg',
     count: null,
-    caption: 'X assigned courses'
+    caption: null,
   });
 
   // cat sub cat count
@@ -56,7 +60,7 @@ export default function useHandleFirstFourCard() {
           <p>Zicops Categories:{allCatCount - myLspCatCount}</p>
           <p>My Categories: {myLspCatCount}</p>
         </>
-      )
+      ),
     }));
     setSubCategoryCard((previousData) => ({
       ...previousData,
@@ -66,7 +70,7 @@ export default function useHandleFirstFourCard() {
           <p>Zicops Sub-Categories: {allSubCatCount - myLspSubCatCount}</p>
           <p>My Sub-Categories: {myLspSubCatCount}</p>
         </>
-      )
+      ),
     }));
   }, [catSubCat?.cat?.length, catSubCat?.subCat?.length]);
 
@@ -77,8 +81,9 @@ export default function useHandleFirstFourCard() {
     const _lspId = sessionStorage.getItem('lsp_id');
     // My Courses Count
 
-    loadCourseCardData();
+    // loadCourseCardData();
     loadNumberOfCoursesStat();
+    loadNumberOfAssignedCourses();
 
     async function loadCourseCardData() {
       const myCourseDataRes = loadCourseStats(_lspId);
@@ -96,27 +101,38 @@ export default function useHandleFirstFourCard() {
       if (!lspId) return { totalAssignedCourses, totalMyCourses };
 
       const totalCourseCountRes = getAllCourseCountInLsp(lspId, { course_type: courseType });
-      // Add API call for getting total assign courses in a particular lsp
-      // const myCourseConsumptionStats = loadQueryDataAsync(
-      //   GET_COURSE_CONSUMPTION_STATS,
-      //   { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
-      //   {},
-      //   userClient
-      // );
 
       return { totalAssignedCourses, totalMyCourses: await totalCourseCountRes };
     }
   }, [courseType]);
 
-  async function loadNumberOfCoursesStat(lspId) {
+  async function loadNumberOfCoursesStat() {
     const _lspId = sessionStorage.getItem('lsp_id');
 
     getAllCourseCount(_lspId, COURSE_STATUS.publish, 'self-paced').then((resp) => {
-      setMyCourseCard({ ...myCourseCard, count: resp?.getCourseCountStats?.count || 0 });
+      setMyCourseCard((prev) => ({ ...prev, count: resp?.getCourseCountStats?.count || 0 }));
     });
 
     getAllCourseCount(COMMON_LSPS.zicops, COURSE_STATUS.publish, 'self-paced').then((resp) => {
-      setZicopsCard({ ...zicopsCard, count: resp?.getCourseCountStats?.count || 0 });
+      setZicopsCard((prev) => ({ ...prev, count: resp?.getCourseCountStats?.count || 0 }));
+    });
+  }
+
+  async function loadNumberOfAssignedCourses() {
+    const _lspId = sessionStorage.getItem('lsp_id');
+
+    getAssignedCourseCount(_lspId, 'self-paced').then((resp) => {
+      setMyCourseCard((prev) => ({
+        ...prev,
+        caption: `${resp?.getAssignedCourses?.count || 'X'} Assigned Courses`,
+      }));
+    });
+
+    getAssignedCourseCount(COMMON_LSPS.zicops, 'self-paced').then((resp) => {
+      setZicopsCard((prev) => ({
+        ...prev,
+        caption: `${resp?.getAssignedCourses?.count || 'X'} Assigned Courses`,
+      }));
     });
   }
 
