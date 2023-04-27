@@ -23,7 +23,7 @@ export default function useHandleCourseConsumption() {
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
         {},
-        userClient
+        userClient,
       );
 
       const data = (await myCourseConsumptionStats)?.getCourseConsumptionStats?.stats || [];
@@ -58,13 +58,17 @@ export default function useHandleCourseConsumption() {
           updatedBy: d?.UpdatedBy,
 
           courseName: courseData?.name,
-          publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString()
+          publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString(),
         };
       });
 
       const _sortedData = sortArrByKeyInOrder(_tableData, 'totalLearners', false);
 
-      setTableData(_sortedData || []);
+      const _uniqueData = [...new Set(_sortedData)];
+
+      const newArr = _uniqueData.map((obj, index) => ({ id: index + 1, ...obj }));
+
+      setTableData(newArr || []);
       setIsLoading(false);
     }
   }, []);
