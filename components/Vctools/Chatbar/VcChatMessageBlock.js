@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './vcChat.module.scss';
 import moment from 'moment';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -12,7 +12,7 @@ const ChatMessageBlock = ({ isReply, message, setParentId }) => {
   const [userDetails, setUserDetails] = useState('');
 
   useEffect(async () => {
-    const resUserDetails = await loadQueryDataAsync(
+    const resUserDetails = await loadAndCacheDataAsync(
       GET_USER_DETAIL,
       { user_id: message.user_id },
       {},
