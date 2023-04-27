@@ -189,10 +189,6 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
                 end: moment(_updatedDate).endOf('month'),
-<<<<<<< HEAD
-=======
-
->>>>>>> bcae7331d5df19e86ccd4003c80e87cdd620f740
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -227,10 +223,6 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
                 end: moment(_updatedDate).endOf('month'),
-<<<<<<< HEAD
-=======
-
->>>>>>> bcae7331d5df19e86ccd4003c80e87cdd620f740
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -239,10 +231,6 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('week'),
                 end: moment(_updatedDate).endOf('week'),
-<<<<<<< HEAD
-=======
-
->>>>>>> bcae7331d5df19e86ccd4003c80e87cdd620f740
               });
             }
           }}>
