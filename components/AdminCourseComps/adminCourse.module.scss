@@ -694,6 +694,25 @@
         gap:10px;
         .priceSeat{
             width: 100%;
+                .inputBox{
+                position: relative;
+                .gst{
+                    position: absolute;
+                    right: 1vw;
+                    top: 1.5vh;
+                    color: $bgBody;
+                }
+                }
+        }
+        .info{
+            margin-top: 32px;
+            border: 1px solid $bgBody;
+            padding: 0px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
         }
     }
     .registrationContainer{
@@ -760,4 +779,11 @@
             color: $secondaryWhite;
             border: 1px solid $secondaryWhite;
             }
+  }
+  .transText{
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .priceText{
+    color: $bgBody;
   }
