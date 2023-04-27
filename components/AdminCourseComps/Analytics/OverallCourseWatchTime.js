@@ -96,7 +96,7 @@ export default function OverallCourseWatchTime() {
 
   if (!courseViews?.length) return <></>;
 
-  console.info(courseViews);
+  // console.info(courseViews);
 
   const data = {
     labels,
