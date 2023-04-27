@@ -1242,6 +1242,17 @@ export const GET_BASIC_COURSES_STATS = gql`
   }
 `;
 
+export const GET_COURSES_COUNT_STATS = gql`
+  query getCourseCountStats($lsp_id: String, $status: String!, $type: String!) {
+    getCourseCountStats(lsp_id: $lsp_id, status: $status, type: $type) {
+      lsp_id
+      course_status
+      course_type
+      count
+    }
+  }
+`;
+
 export const GET_TOPICS_BY_COURSEIDS = gql`
   query getTopicsByCourseIds($courseIds: [String], $type: String) {
     getTopicsByCourseIds(course_ids: $courseIds, type: $type) {

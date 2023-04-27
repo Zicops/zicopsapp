@@ -4,6 +4,7 @@ import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { displayMinToHMS } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 export default function useHandleCourseConsumption() {
   const [tableData, setTableData] = useState(null);
@@ -60,7 +61,10 @@ export default function useHandleCourseConsumption() {
           publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString()
         };
       });
-      setTableData(_tableData || []);
+
+      const _sortedData = sortArrByKeyInOrder(_tableData, 'totalLearners', false);
+
+      setTableData(_sortedData || []);
       setIsLoading(false);
     }
   }, []);

@@ -146,7 +146,7 @@ export default function MultiEmailInput({
           value={val}
           inputValue={value}
           name="email"
-          placeholder="Enter email and enter"
+          placeholder="Type email ID and press enter"
           className="w-100"
           styles={customStyles}
           isMulti={true}

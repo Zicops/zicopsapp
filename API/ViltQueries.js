@@ -96,3 +96,20 @@ export const GET_PAGINATED_TRAINERS = gql`
     }
   }
 `;
+
+export const GET_TRAINER_BY_ID = gql`
+  query getTrainerById($trainerId: String) {
+    getTrainerById(id: $trainerId) {
+      id
+      lsp_id
+      user_id
+      vendor_id
+      expertise
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
