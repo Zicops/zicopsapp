@@ -144,7 +144,7 @@ export default function CourseUserTable() {
       <ZicopsTable
         columns={columns}
         data={learnerTableData}
-        customId={'name'}
+        customId={'index'}
         pageSize={5}
         rowsPerPageOptions={[3]}
         tableHeight="55vh"

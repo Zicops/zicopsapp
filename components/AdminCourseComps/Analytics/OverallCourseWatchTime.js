@@ -94,6 +94,10 @@ export default function OverallCourseWatchTime() {
     labels.push(...[...Array(selectedDate?.end?.get('D'))].map((v, i) => i + 1));
   }
 
+  if (!courseViews?.length) return <></>;
+
+  console.info(courseViews);
+
   const data = {
     labels,
     datasets: [
@@ -174,9 +178,7 @@ export default function OverallCourseWatchTime() {
           />
         }
       />
-
       <div className={`${styles.wrapperSubHeading}`}>Overall course views last week</div>
-
       <div className={`${styles.displayMonth}`}>
         <span
           onClick={() => {
@@ -236,7 +238,7 @@ export default function OverallCourseWatchTime() {
         </span>
       </div>
 
-      <LineChart chartData={data} options={options} tooltipBody={tooltipUI} />
+      {/*<LineChart chartData={data} options={options} tooltipBody={tooltipUI} />*/}
     </div>
   );
 }
