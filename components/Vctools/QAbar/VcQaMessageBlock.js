@@ -2,10 +2,25 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useRecoilValue } from 'recoil';
 import style from './vcQA.module.scss';
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 const VcQaMessageBlock = ({ isReply, isLeft, message, setshowQAbtn, setParentId }) => {
-  const userDetails = useRecoilValue(UserStateAtom);
-  const [showReplies, setShowReplies] = useState(false);
+  // const userDetails = useRecoilValue(UserStateAtom);
+
+  const [userDetails, setUserDetails] = useState('');
+
+  useEffect(async () => {
+    const resUserDetails = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: message.user_id },
+      {},
+      userQueryClient,
+    );
+    setUserDetails(resUserDetails?.getUserDetails[0]);
+  }, [message]);
+
+  // const [showReplies, setShowReplies] = useState(false);
   return (
     <>
       {/* <div className={`${isLeft ? style.chat_Main_left : style.chat_Main}`}>
