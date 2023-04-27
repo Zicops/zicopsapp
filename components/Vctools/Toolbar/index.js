@@ -10,10 +10,8 @@ import {
   vcMeetingIconAtom,
   vcToolNavbarState,
   vctoolAlluserinfo,
-  CurrentParticipantDataAtom,
   publishBreakoutRoom,
   breakoutList,
-  vcToolNavbarState,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';

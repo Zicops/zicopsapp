@@ -278,6 +278,7 @@ const VcMaintool = ({ vcData = {} }) => {
               // Route.push('/admin/vctool')
 
               if (controls?.is_classroom_started === true) {
+                setLobby(false);
                 StartMeeting(
                   classroomData?.topicId,
                   containerRef,
