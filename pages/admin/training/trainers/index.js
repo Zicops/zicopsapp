@@ -23,7 +23,7 @@ export default function Trainers() {
   const router = useRouter();
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
-  const { addUpdateTrainer } = useHandleTrainerData();
+  const { isEditTrainerPopupOpen, setIsEditTrainerPopupOpen } = useHandleTrainerData();
   const [isOpen, setIsOpen] = useState(false);
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 

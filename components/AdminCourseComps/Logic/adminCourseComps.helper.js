@@ -15,6 +15,7 @@ import Configuration from '../Configuration';
 import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
 import Topics from '../Topics';
+import Analytics from '../Analytics';
 
 // admin course tabs
 export const courseTabs = {
@@ -22,8 +23,10 @@ export const courseTabs = {
   details: { name: 'Details', component: <CourseDetails /> },
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
-  commercials: { name: 'Commercials', component: <Commercials />, isHidden: true },
+  commercials: { name: 'Commercials', component: <Commercials /> },
   configuration: { name: 'Configuration', component: <Configuration /> },
+  analytics: { name: 'Analytics', component: <Analytics /> }
+
 };
 
 // default state objects
