@@ -23,7 +23,12 @@ export default function CourseUserTable() {
 
   useEffect(() => {
     getPaginatedLearner(courseMetaData?.id).then((resp) => {
-      setLearnerTableData(resp);
+      const newArr = resp?.getLearnerDetails?.data.map((obj, index) => ({
+        index: index + 1,
+        ...obj,
+      }));
+
+      setLearnerTableData(newArr);
     });
   }, []);
 
@@ -38,7 +43,7 @@ export default function CourseUserTable() {
       field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Name',
-      width: 150,
+      width: 200,
     },
     {
       field: 'email',
@@ -138,8 +143,8 @@ export default function CourseUserTable() {
 
       <ZicopsTable
         columns={columns}
-        data={learnerTableData?.getLearnerDetails?.data}
-        customId={'name'}
+        data={learnerTableData}
+        customId={'index'}
         pageSize={5}
         rowsPerPageOptions={[3]}
         tableHeight="55vh"
