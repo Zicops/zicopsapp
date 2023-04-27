@@ -12,76 +12,81 @@ export const UserData = [
     skill: 'UI/UX Design',
     complete: 5,
     days: '01',
-    time1: 30
+    time1: 30,
   },
   {
     id: 2,
     skill: 'Project Management',
     complete: 8,
     days: '03',
-    time1: 60
+    time1: 60,
   },
   {
     id: 3,
     skill: 'JAVA fundamentls',
     complete: 6,
     days: '06',
-    time1: 50
+    time1: 50,
   },
   {
     id: 4,
     skill: 'Product Design',
     complete: 2,
     days: '09',
-    time1: 75
+    time1: 75,
   },
   {
     id: 5,
     skill: 'Bussiness Management',
     complete: 5,
     days: '12',
-    time1: 20
+    time1: 20,
   },
   {
     id: 6,
     skill: 'Finance',
     complete: 7,
     days: '15',
-    time1: 45
+    time1: 45,
   },
   {
     id: 7,
     skill: 'UI Developer',
     complete: 8,
     days: '18',
-    time1: 50
+    time1: 50,
   },
   {
     id: 8,
     skill: 'Animation',
     complete: 3.5,
     days: '21',
-    time1: 60
+    time1: 60,
   },
   {
     id: 9,
     skill: 'Motion Graphics',
     complete: 4.5,
     days: '27',
-    time1: 45
+    time1: 45,
   },
   {
     id: 10,
     skill: 'Illustrator',
     complete: 6.5,
     days: '30',
-    time1: 80
-  }
+    time1: 80,
+  },
 ];
 
 export default function CourseViewAnalytics() {
-  const { courseViews, selectedDate, setSelectedDate, filterBy, setFilterBy } =
-    useHandleCourseViews();
+  const {
+    courseViews,
+    selectedDate,
+    setSelectedDate,
+    filterBy,
+    setFilterBy,
+  } = useHandleCourseViews();
   const labels = moment.weekdays()?.map((day) => day?.slice(0, 3));
   if (filterBy === 'Month') {
     labels.length = 0;
@@ -103,14 +108,14 @@ export default function CourseViewAnalytics() {
           gradient.addColorStop(1, 'rgba(4, 4, 4, 1) ');
           return gradient;
         },
-        borderColor: '#20A1A1'
-      }
-    ]
+        borderColor: '#20A1A1',
+      },
+    ],
   };
   const options = {
     parsing: {
       xAxisKey: 'index',
-      yAxisKey: 'minutes'
+      yAxisKey: 'minutes',
     },
     scales: {
       x: {
@@ -118,13 +123,13 @@ export default function CourseViewAnalytics() {
           autoSkip: true,
           maxTicksLimit: 7,
           maxRotation: 0,
-          minRotation: 0
-        }
+          minRotation: 0,
+        },
       },
       y: {
-        beginAtZero: true
-      }
-    }
+        beginAtZero: true,
+      },
+    },
   };
 
   function tooltipUI(tooltipData) {
@@ -136,7 +141,7 @@ export default function CourseViewAnalytics() {
 
     const dateNode = document.createElement('span');
     const dateText = document.createTextNode(
-      moment(tooltipData?.date_string).format('MMM DD, YYYY')
+      moment(tooltipData?.date_string).format('MMM DD, YYYY'),
     );
     dateNode.appendChild(dateText);
     dateNode.style.fontSize = '13px';
@@ -179,7 +184,7 @@ export default function CourseViewAnalytics() {
 
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
-                end: moment(_updatedDate).endOf('month')
+                end: moment(_updatedDate).endOf('month'),
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -187,7 +192,7 @@ export default function CourseViewAnalytics() {
 
               setSelectedDate({
                 start: moment(_updatedDate).startOf('week'),
-                end: moment(_updatedDate).endOf('week')
+                end: moment(_updatedDate).endOf('week'),
               });
             }
           }}>
@@ -213,7 +218,7 @@ export default function CourseViewAnalytics() {
 
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
-                end: moment(_updatedDate).endOf('month')
+                end: moment(_updatedDate).endOf('month'),
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -221,7 +226,7 @@ export default function CourseViewAnalytics() {
 
               setSelectedDate({
                 start: moment(_updatedDate).startOf('week'),
-                end: moment(_updatedDate).endOf('week')
+                end: moment(_updatedDate).endOf('week'),
               });
             }
           }}>
