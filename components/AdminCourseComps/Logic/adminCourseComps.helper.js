@@ -15,6 +15,8 @@ import Configuration from '../Configuration';
 import CourseDetails from '../CourseDetails';
 import CourseMaster from '../CourseMaster';
 import Topics from '../Topics';
+import BookingTable from '../RegisterUserTabs/BookingTable';
+import RegisterTable from '../RegisterUserTabs/RegisterTable';
 
 // admin course tabs
 export const courseTabs = {
@@ -25,6 +27,10 @@ export const courseTabs = {
   commercials: { name: 'Commercials', component: <Commercials /> },
   configuration: { name: 'Configuration', component: <Configuration /> },
 };
+export const usersTabs = [
+  { name: 'Registrations', component: <RegisterTable /> },
+  { name: 'Bookings', component: <BookingTable /> },
+];
 
 // default state objects
 export function getModuleDataObject(data = {}) {

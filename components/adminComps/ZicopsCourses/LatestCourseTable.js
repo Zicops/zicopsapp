@@ -17,7 +17,7 @@ import { useRecoilValue } from 'recoil';
 
 export default function LatestCourseTable({ isEditable = false, zicopsLspId = null }) {
   const [loadMyCourses, { loading }] = useLazyQuery(GET_MY_COURSES, {
-    client: queryClient
+    client: queryClient,
   });
 
   const courseType = useRecoilValue(CourseTypeAtom);
@@ -39,7 +39,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
     const courseFiltes = {
       Type: courseType,
       SearchText: searchParam?.trim(),
-      LspId: zicopsLspId || userOrgData?.lsp_id
+      LspId: zicopsLspId || userOrgData?.lsp_id,
     };
 
     if (isVendor) {
@@ -47,7 +47,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         GET_USER_VENDORS,
         { user_id: userData?.id },
         {},
-        userQueryClient
+        userQueryClient,
       );
       courseFiltes.Owner = vendorDetail?.getUserVendor?.[0]?.name;
       // courseFiltes.Publisher = vendorDetail?.getUserVendor?.[0]?.name;
@@ -59,13 +59,13 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
         pageSize: 1000,
         pageCursor: '',
         status: zicopsLspId ? COURSE_STATUS.publish : courseStatus,
-        filters: courseFiltes
-      }
+        filters: courseFiltes,
+      },
     }).then((res) => {
       const _latestCourses = sortArrByKeyInOrder(
         res?.data?.latestCourses?.courses?.filter((c) => c?.is_active),
         'created_at',
-        false
+        false,
       );
       setLatestCourse(_latestCourses);
     });
@@ -76,25 +76,25 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       field: 'name',
       headerName: 'Name',
       headerClassName: 'course-list-header',
-      flex: 1.5
+      flex: 1.1,
     },
     {
       field: 'owner',
       headerClassName: 'course-list-header',
       headerName: 'Owner',
-      flex: 1
+      flex: 0.6,
     },
     {
       field: 'category',
       headerClassName: 'course-list-header',
       headerName: 'Category',
-      flex: 1
+      flex: 0.9,
     },
     {
       field: 'expertise_level',
       headerClassName: 'course-list-header',
       headerName: 'Level',
-      flex: 1
+      flex: 0.9,
     },
     {
       field: 'action',
@@ -109,7 +109,17 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                 cursor: 'pointer',
                 backgroundColor: 'transparent',
                 outline: '0',
-                border: '0'
+                border: '0',
+              }}
+              onClick={() => Router.push()}>
+              <img src="/images/svg/group2.svg" width={20}></img>
+            </button>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0',
               }}
               onClick={() => Router.push(`/preview?courseId=${params.row.id}`)}>
               <img src="/images/svg/eye-line.svg" width={20}></img>
@@ -120,13 +130,13 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                   cursor: 'pointer',
                   backgroundColor: 'transparent',
                   outline: '0',
-                  border: '0'
+                  border: '0',
                 }}
                 onClick={() =>
                   Router.push(
                     isDev
                       ? `/admin/course/my-courses/edit/${params.row.id}`
-                      : `/admin/courses/${params.row.id}`
+                      : `/admin/courses/${params.row.id}`,
                   )
                 }>
                 <img src="/images/svg/edit-box-line.svg" width={20}></img>
@@ -150,14 +160,14 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
           </>
         );
       },
-      flex: 0.5
-    }
+      flex: 0.5,
+    },
   ];
 
   const filterOptions = [
     { label: 'Saved', value: COURSE_STATUS.save },
     { label: 'For Approval', value: COURSE_STATUS.approvalPending },
-    { label: 'Published', value: COURSE_STATUS.publish }
+    { label: 'Published', value: COURSE_STATUS.publish },
   ];
 
   if (zicopsLspId == null) {
@@ -178,13 +188,13 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
           options: [
             { label: 'Name', value: 'Name' },
             { label: 'Owner', value: 'Owner', isDisabled: true },
-            { label: 'Category', value: 'Category', isDisabled: true }
+            { label: 'Category', value: 'Category', isDisabled: true },
           ],
           handleSearch: (val) => setSearchParam(val),
           filterOptions: !zicopsLspId ? filterOptions : [],
           handleFilterOptionChange: setCourseStatus,
           selectedFilter: courseStatus,
-          filterDisplayText: 'Filter By Status'
+          filterDisplayText: 'Filter By Status',
         }}
       />
     </>
