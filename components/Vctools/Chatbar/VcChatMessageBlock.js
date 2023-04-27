@@ -2,9 +2,24 @@ import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import style from './vcChat.module.scss';
 import moment from 'moment';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+import { loadQueryDataAsync } from '@/helper/api.helper';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const ChatMessageBlock = ({ isReply, message, setParentId }) => {
-  const userDetails = useRecoilValue(UserStateAtom);
+  // const userDetails = useRecoilValue(UserStateAtom);
+  const [userDetails, setUserDetails] = useState('');
+
+  useEffect(async () => {
+    const resUserDetails = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: message.user_id },
+      {},
+      userQueryClient,
+    );
+    setUserDetails(resUserDetails?.getUserDetails[0]);
+  }, [message]);
 
   return (
     <>
@@ -40,7 +55,11 @@ const ChatMessageBlock = ({ isReply, message, setParentId }) => {
           <div>{message?.body}</div>
         </div>
         <div className={`${style.replyBar}`}>
-          {!message?.parent_id && <div>{message.responses || 0} {message.responses < 2 ? "Reply" : "Replies"}</div>}
+          {!message?.parent_id && (
+            <div>
+              {message.responses || 0} {message.responses < 2 ? 'Reply' : 'Replies'}
+            </div>
+          )}
         </div>
       </div>
     </>

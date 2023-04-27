@@ -238,11 +238,11 @@ const VcMaintool = ({ vcData = {} }) => {
 
               // console.log(userData)
               api?.getRoomsInfo().then((rooms) => {
-                setuserinfo(rooms.rooms[0].participants);
-                setbreakoutListarr(rooms.rooms);
+                // setuserinfo(rooms.rooms[0].participants);
+                // setbreakoutListarr(rooms?.rooms);
                 setVctoolInfo({
                   ...vctoolInfo,
-                  allRoomInfo: rooms.rooms[0].participants,
+                  allRoomInfo: rooms?.rooms[0].participants,
                 });
               });
             }}
