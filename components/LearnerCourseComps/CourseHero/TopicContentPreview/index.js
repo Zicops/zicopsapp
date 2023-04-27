@@ -151,7 +151,7 @@ export default function TopicContentPreview() {
   const isTypeScrom = !isTypeVideo && !isTypeDocument;
 
   if (isLoading) return <Spinner />;
-  console.info(currentTopicQuiz, 'q');
+
   return (
     <>
       <div ref={containerRef} className={styles.courseHeroContainer}>

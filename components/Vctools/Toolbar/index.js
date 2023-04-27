@@ -1,15 +1,17 @@
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
+  ClassRoomFlagsInput,
+  CurrentParticipantDataAtom,
   allPartcipantinfo,
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
   vcMeetingIconAtom,
+  vcToolNavbarState,
   vctoolAlluserinfo,
-  CurrentParticipantDataAtom,
   publishBreakoutRoom,
   breakoutList,
-  vcToolNavbarState,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -50,8 +52,10 @@ const MainToolbar = ({
   stopAdvertisement,
   autoAssignRoom,
   showSettingFunc,
+  startMeetingByMod,
   frameIcons,
 }) => {
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const currentParticipantData = useRecoilValue(CurrentParticipantDataAtom);
   const [allInfo, setallInfo] = useRecoilState(vctoolAlluserinfo);
   const [breakoutRoomparticipant, setbreakoutRoomparticipant] = useRecoilState(
@@ -75,6 +79,8 @@ const MainToolbar = ({
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
+
+  const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -148,7 +154,6 @@ const MainToolbar = ({
               : setSelectedButton('participants');
           }}
           Info={getUesrId}
-          api={api}
           api={api}
         />
       ),
@@ -278,6 +283,7 @@ const MainToolbar = ({
               isJoinedAsModerator: false,
             });
             setSelectedButton('');
+            startMeetingByMod();
           }}
         />
       ),

@@ -1,9 +1,11 @@
+import { db } from '@/helper/firebaseUtil/firestore.helper';
 import { getFileNameFromUrl } from '@/helper/utils.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
-import { ActiveClassroomTopicIdAtom, TopicAtom, VcApi } from '@/state/atoms/module.atoms';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import {
+  ClassRoomFlagsInput,
   CurrentParticipantDataAtom,
   breakoutList,
   getCurrentParticipantDataObj,
@@ -11,21 +13,22 @@ import {
   totalRoomno,
   vcMeetingIconAtom,
   vcModeratorControlls,
-  vctoolMetaData
+  vctoolMetaData,
 } from '@/state/atoms/vctool.atoms';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import useLoadClassroomData from './Logic/useLoadClassroomData';
 import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
 import { StartMeeting } from './help/vctool.helper';
 import styles from './vctoolMain.module.scss';
+
 const VcMaintool = ({ vcData = {} }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
-  const topicData = useRecoilValue(TopicAtom);
-  const currentTopicData = topicData?.find((topic) => topic?.id === activeClassroomTopicId);
 
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -35,11 +38,12 @@ const VcMaintool = ({ vcData = {} }) => {
   const [api, setapi] = useState(null);
   const [vctoolInfo, setVctoolInfo] = useRecoilState(vctoolMetaData);
   const [currentParticipantData, setCurrentParticipantData] = useRecoilState(
-    CurrentParticipantDataAtom
+    CurrentParticipantDataAtom,
   );
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [isMeetingStarted, setIsMeetingStarted] = useRecoilState(joinMeeting);
   const [controlls, setControlls] = useRecoilState(vcModeratorControlls);
+  const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
   const totalBreakoutrooms = useRecoilValue(totalRoomno);
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList);
   const userData = useRecoilValue(UserStateAtom);
@@ -54,6 +58,8 @@ const VcMaintool = ({ vcData = {} }) => {
   const [Fullscreen, setFullscreen] = useState(false);
   const fullScreenRef = useRef(null);
   const [userinfo, setuserinfo] = useState([]);
+  const [lobby, setLobby] = useState(null);
+
   const GetFullScreenElement = () => {
     return (
       document.fullscreenElement ||
@@ -68,7 +74,7 @@ const VcMaintool = ({ vcData = {} }) => {
     fullScreenRef?.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
-      inline: 'center'
+      inline: 'center',
     });
   }, [fullScreenRef]);
 
@@ -103,22 +109,77 @@ const VcMaintool = ({ vcData = {} }) => {
     api.executeCommand('email', userData?.email);
     api.executeCommand('avatarUrl', userData?.photo_url);
     api.executeCommand('toggleFilmStrip');
+    setLobby(false);
 
     const allPartcipants = structuredClone(api?.getParticipantsInfo());
     const _currentUser = allPartcipants?.find(
-      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id
+      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id,
     );
     const isModerator = modIdList?.includes(userData?.id);
     if (isModerator) api.executeCommand('grantModerator', userData?.id);
 
+    api.executeCommand('join');
+
     setCurrentParticipantData(getCurrentParticipantDataObj({ ..._currentUser, isModerator }));
   }, [isMeetingStarted]);
+
+  useEffect(() => {
+    if (!controls?.is_break) return;
+    if (!lobby) return;
+
+    StartMeeting(classroomData?.topicId, containerRef, toggleAudio, settoobar, setapi, toggleVideo);
+    setIsMeetingStarted(true);
+  }, [controls?.is_break]);
+
+  const { addUpdateClassRoomFlags } = useLoadClassroomData();
+
+  // firebase listener
+  useEffect(async () => {
+    const classroomFlagsRef = collection(db, 'ClassroomFlags');
+    const docRef = doc(classroomFlagsRef, activeClassroomTopicId);
+
+    const unsub = onSnapshot(docRef, (querySnapshot) => {
+      if (!querySnapshot.exists()) return;
+
+      setControls({ id: querySnapshot.id, ...querySnapshot.data() });
+    });
+
+    return () => unsub();
+  }, []);
+
+  async function updateClassroomFlags(_obj = {}) {
+    if (controls?.is_break === false) return;
+
+    const obj = { ...controls, id: activeClassroomTopicId, ..._obj };
+    await addUpdateClassRoomFlags(obj);
+  }
 
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
       <div id="meet" className={toolbar ? `${styles.meet}` : ''} ref={containerRef}>
+        {!!lobby && (
+          <video
+            src={controls?.ad_video_url}
+            controls={false}
+            autoPlay={true}
+            ref={(elem) => elem?.play()}></video>
+        )}
+
         {toolbar && (
           <MainToolbar
+            startMeetingByMod={() => {
+              setLobby(false);
+              StartMeeting(
+                classroomData?.topicId,
+                containerRef,
+                toggleAudio,
+                settoobar,
+                setapi,
+                toggleVideo,
+              );
+              updateClassroomFlags({ is_classroom_started: true, ad_video_url: '' });
+              setIsMeetingStarted(true);
+            }}
             api={api}
             setAudio={() => {
               api.isAudioAvailable().then((available) => {
@@ -139,9 +200,9 @@ const VcMaintool = ({ vcData = {} }) => {
             audiotoggle={toggleAudio}
             videotoggle={toggleVideo}
             endMeetng={() => {
-              api.dispose();
-              settoobar(!toolbar);
-              sethidecard(!hidecard);
+              api?.dispose();
+              settoobar(false);
+              sethidecard(false);
               localStorage.removeItem('canvasimg');
 
               document
@@ -151,6 +212,8 @@ const VcMaintool = ({ vcData = {} }) => {
               setFullscreen(false);
               // setisStarted(false)
               setIsMeetingStarted(false);
+
+              setLobby(false);
             }}
             shareScreen={() => {
               api.executeCommand('toggleShareScreen');
@@ -171,13 +234,15 @@ const VcMaintool = ({ vcData = {} }) => {
               setFullscreen(!Fullscreen);
             }}
             mouseMoveFun={() => {
+              if (!api) return;
+
               // console.log(userData)
               api?.getRoomsInfo().then((rooms) => {
-                setuserinfo(rooms.rooms[0].participants);
-                setbreakoutListarr(rooms.rooms);
+                // setuserinfo(rooms.rooms[0].participants);
+                // setbreakoutListarr(rooms?.rooms);
                 setVctoolInfo({
                   ...vctoolInfo,
-                  allRoomInfo: rooms.rooms[0].participants
+                  allRoomInfo: rooms?.rooms[0].participants,
                 });
               });
             }}
@@ -212,18 +277,39 @@ const VcMaintool = ({ vcData = {} }) => {
                 return setToastMessage('Cannot Join Classroom in preview mode');
               // Route.push('/admin/vctool')
 
-              StartMeeting(
-                currentTopicData?.id,
-                containerRef,
-                toggleAudio,
-                settoobar,
-                setapi,
-                toggleVideo
-              );
+              if (controls?.is_classroom_started === true) {
+                setLobby(false);
+                StartMeeting(
+                  classroomData?.topicId,
+                  containerRef,
+                  toggleAudio,
+                  settoobar,
+                  setapi,
+                  toggleVideo,
+                );
+                setIsMeetingStarted(true);
+              } else {
+                const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
+                const isModerator = modIdList?.includes(userData?.id);
+
+                setLobby(true);
+                updateClassroomFlags({
+                  is_moderator_joined: classroomData?.moderators?.includes(userData?.id),
+                  is_trainer_joined: classroomData?.trainers?.includes(userData?.id),
+                  ad_video_url:
+                    'https://demo.zicops.com/videos/zicops-product-demo-learner-panel.mp4',
+                });
+                setMeetingIconAtom({
+                  ...meetingIconsAtom,
+                  isJoinedAsModerator: isModerator,
+                  isStartAdd: true,
+                });
+              }
+
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true);
-              setIsMeetingStarted(true);
               sethidecard(!hidecard);
+              settoobar(true);
             }}
             startAudioenableFun={() => {
               settoggleAudio(!toggleAudio);

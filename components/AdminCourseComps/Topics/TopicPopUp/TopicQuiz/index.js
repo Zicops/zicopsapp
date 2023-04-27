@@ -21,7 +21,7 @@ export default function TopicQuiz({ topData = null, setIsAccordionDisabled = () 
     handleQuizInput,
     isQuizReady,
     handleEditQuiz,
-  } = useHandleQuiz(topData);
+  } = useHandleQuiz(topData?.id);
 
   useEffect(() => {
     setIsAccordionDisabled(isFormVisible);

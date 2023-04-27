@@ -14,6 +14,7 @@ export const UserData = [
     complete: 5,
     days: '01',
     time1: 30,
+
   },
   {
     id: 2,
@@ -78,6 +79,8 @@ export const UserData = [
     days: '30',
     time1: 80,
   },
+
+  }
 ];
 
 export default function OverallCourseWatchTime() {
@@ -187,6 +190,7 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
                 end: moment(_updatedDate).endOf('month'),
+
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -221,6 +225,7 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('month'),
                 end: moment(_updatedDate).endOf('month'),
+
               });
             } else {
               const _selected = new Date(selectedDate?.start?.valueOf());
@@ -229,6 +234,7 @@ export default function OverallCourseWatchTime() {
               setSelectedDate({
                 start: moment(_updatedDate).startOf('week'),
                 end: moment(_updatedDate).endOf('week'),
+
               });
             }
           }}>
