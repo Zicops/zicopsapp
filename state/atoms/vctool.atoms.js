@@ -25,7 +25,7 @@ export const ClassRoomFlagsInput = atom({
     is_classroom_started: false,
     is_participants_present: false,
     is_ad_displayed: false,
-    is_break: false,
+    is_break: null,
     is_moderator_joined: false,
     is_trainer_joined: false,
     ad_video_url: '',
