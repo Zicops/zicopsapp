@@ -44,10 +44,6 @@ export default function CourseUserTable() {
       headerClassName: 'course-list-header',
       headerName: 'Name',
       width: 200,
-<<<<<<< HEAD
-=======
-
->>>>>>> bcae7331d5df19e86ccd4003c80e87cdd620f740
     },
     {
       field: 'email',
