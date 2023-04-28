@@ -1,12 +1,13 @@
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { CommercialsAtom } from '@/state/atoms/courses.atom';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 const RegisterTable = () => {
   const commercialsData = useRecoilValue(CommercialsAtom);
-  console.info(commercialsData);
+  const [showPopup, setShowPopup] = useState(false);
   const columns = [
     {
       field: 's_no',
@@ -42,7 +43,26 @@ const RegisterTable = () => {
       field: 'action',
       headerClassName: 'course-list-header',
       headerName: 'Action',
-      flex: 0.4,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <button
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                outline: '0',
+                border: '0',
+              }}
+              onClick={() => {
+                setShowPopup(true);
+              }}>
+              <img src="/images/svg/do_not_disturb_on.svg" width={20}></img>
+            </button>
+          </>
+        );
+      },
+      flex: 0.5,
     },
   ];
   const ChargesData = [
@@ -83,6 +103,23 @@ const RegisterTable = () => {
         data={ChargesData}
         // loading={!vendorOrderDetails?.length}
       />
+      <VendorPopUp
+        open={showPopup}
+        popUpState={[showPopup, setShowPopup]}
+        // size="large"
+        customStyles={{ width: '460px', height: '210px' }}
+        closeBtn={{ name: 'No' }}
+        submitBtn={{ name: 'Yes' }}
+        isVilt={true}
+        isMarketYard={true}
+        isFooterVisible={true}>
+        <div>
+          <p style={{ paddingTop: '20px', fontSize: '20px' }}>Remove registrant</p>
+          <p style={{ paddingTop: '20px', color: '#ACACAC' }}>
+            Are you sure you want to remove this registrant?
+          </p>
+        </div>
+      </VendorPopUp>
     </div>
   );
 };
