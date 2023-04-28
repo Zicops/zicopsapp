@@ -15,7 +15,9 @@ export default function WatchTimeDataAndGraph() {
           </div>
         </div>
       </div>
-      <div className={`${styles.watchTimeGraphContainer}`}>{/*<OverallCourseWatchTime />*/}</div>
+      <div className={`${styles.watchTimeGraphContainer}`}>
+        <OverallCourseWatchTime />
+      </div>
     </div>
   );
 }

@@ -33,6 +33,7 @@
     "chart.js": "3.8.2",
     "country-state-city": "3.1.2",
     "firebase": "9.8.4",
+    "fs": "^0.0.1-security",
     "googleapis": "108.0.0",
     "graphql": "16.3.0",
     "graphql-upload": "15.0.1",
