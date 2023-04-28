@@ -8,6 +8,7 @@ $error: #cf3e3e;
 $white: #ffffff;
 $secondaryWhite: #484848;
 $tertiaryWhite: #30323f;
+$neutralWhite: #c4c4c4;
 
 $black: #040404;
 $secondaryBlack: #737373;
@@ -40,6 +41,12 @@ $cardTileRatio: 1.75;
 $courseTitle: 22px;
 $courseTitleSmall: 18px;
 
+// course card colors based on types
+$selfPacedBorder: $primary;
+$testSeriesBorder: $zicopsPink;
+$classroomBorder: $warning;
+$eventBorder: $zicopsSky;
+
 :export {
   primary: $primary;
   secondary: $secondary;
@@ -48,6 +55,7 @@ $courseTitleSmall: 18px;
   bgContent: $bgContent;
   error: $error;
   white: $white;
+  neutralWhite: $neutralWhite;
   secondaryWhite: $secondaryWhite;
   tertiaryWhite: $tertiaryWhite;
 
@@ -73,6 +81,11 @@ $courseTitleSmall: 18px;
   cardTileRatio: $cardTileRatio;
   courseTitle: $courseTitle;
   courseTitleSmall: $courseTitleSmall;
+
+  selfPacedBorder: $selfPacedBorder;
+  testSeriesBorder: $testSeriesBorder;
+  classroomBorder: $classroomBorder;
+  eventBorder: $eventBorder;
 }
 // function for generating transparent color from base colors
 @function getLowOpacityColor($colorInHex, $opacityInHex) {
@@ -136,6 +149,12 @@ $courseTitleSmall: 18px;
     box-shadow: 0px 0px 10px 0px $primary;
     outline: 0;
     color: $white;
+  }
+}
+@mixin buttonStyles($state: 'disable') {
+  @if $state == 'disable' {
+    opacity: 0.7;
+    cursor: not-allowed !important;
   }
 }
 
@@ -223,6 +242,15 @@ $courseTitleSmall: 18px;
     100% {
       transform: rotate(360deg);
     }
+  }
+}
+
+// general mixin to create keyframe animations
+@mixin animateWithKeyFrame($name, $duration: 1s, $method: ease-in-out, $times: 1) {
+  animation: $name $duration $method $times;
+
+  @keyframes #{$name} {
+    @content;
   }
 }
 

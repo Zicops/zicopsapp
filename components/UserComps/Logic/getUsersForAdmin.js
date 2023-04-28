@@ -45,6 +45,7 @@ export async function getUsersForAdmin(isAdmin = false) {
   // console.log(resUserDetails?.getUserDetails,'sds');
 
   const userData = resUserDetails?.getUserDetails?.map((item) => ({
+    ...item,
     id: item?.id,
     email: item?.email,
     first_name: item?.first_name,
@@ -79,14 +80,15 @@ export default function useAdminQuery() {
   const [userOrgData, setUserOrgData] = useRecoilState(UsersOrganizationAtom);
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
-  async function getTag(tagArr = []){
-    if(!tagArr?.length) return USER_TYPE?.external;
-    let tag = USER_TYPE?.external ;
-    for(let i = 0 ; i < tagArr?.length ; i++){
+  async function getTag(tagArr = []) {
+    if (!tagArr?.length) return USER_TYPE?.external;
+    let tag = USER_TYPE?.external;
+    for (let i = 0; i < tagArr?.length; i++) {
       const currentIndexTag = tagArr[i]?.toLowerCase();
-      if(currentIndexTag === USER_TYPE?.external || currentIndexTag === USER_TYPE?.internal ) tag = currentIndexTag ;
+      if (currentIndexTag === USER_TYPE?.external || currentIndexTag === USER_TYPE?.internal)
+        tag = currentIndexTag;
     }
-    return tag
+    return tag;
   }
   async function sortArray(arr, param) {
     const sortedArr = await arr?.sort((a, b) => a?.[`${param}`] - b?.[`${param}`]);
@@ -115,10 +117,10 @@ export default function useAdminQuery() {
       notificationClient
     );
 
-    const userTags = tags?.getUserLspIdTags ;
+    const userTags = tags?.getUserLspIdTags;
 
     const formatedUsers =
-      userDatas?.map(async (singleUser,index) => {
+      userDatas?.map(async (singleUser, index) => {
         let roles = singleUser?.roles;
         let roleData = {};
 
@@ -128,9 +130,12 @@ export default function useAdminQuery() {
         } else {
           roleData = roles?.[0];
         }
-        const vendorTag = roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor ? USER_TYPE?.external : USER_TYPE?.internal
-        const type = !!userTags?.[index] ? await getTag(userTags?.[index]?.tags) : vendorTag ;
-        
+        const vendorTag =
+          roleData?.role?.toLowerCase() === USER_LSP_ROLE?.vendor
+            ? USER_TYPE?.external
+            : USER_TYPE?.internal;
+        const type = !!userTags?.[index] ? await getTag(userTags?.[index]?.tags) : vendorTag;
+
         return {
           ...singleUser?.user,
           role: roleData?.role,

@@ -5,8 +5,8 @@ import { TOPIC_TYPES } from '@/constants/course.constants';
 import { TopicContentListAtom } from '@/state/atoms/courses.atom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import styles from '../../adminCourseComps.module.scss';
 import useHandleTopic from '../../Logic/useHandleTopic';
+import styles from '../../adminCourseComps.module.scss';
 import TopicRow from '../BoxContainer/TopicRow';
 import AddTopicForm from './AddTopicForm';
 import TopicAssessmentForm from './TopicAssessmentForm';
@@ -18,7 +18,7 @@ export default function TopicPopUp({
   chapData = null,
   topData = null,
   popUpState = [],
-  closePopUp = () => {}
+  closePopUp = () => {},
 }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
   const [confimClose, setConfirmClose] = useState(null);
@@ -30,7 +30,7 @@ export default function TopicPopUp({
     toggleEditTopicForm,
     addUpdateTopic,
     handleSubmit,
-    handleClose
+    handleClose,
   } = useHandleTopic(modData, chapData, topData);
 
   const isAssessment = topicData?.type === TOPIC_TYPES.assessment;
@@ -71,15 +71,25 @@ export default function TopicPopUp({
                 />
               )}
 
-              {isContent && (
-                <TopicContent topData={topicData} closePopUp={() => setConfirmClose(true)} />
-              )}
+              {isContent && <TopicContent topData={topicData} />}
 
               {isAssessment && (
-                <TopicAssessmentForm topData={topicData} closePopUp={() => setConfirmClose(true)} />
+                <TopicAssessmentForm
+                  topData={topicData}
+                  closePopUp={(isDirectClose = false) => {
+                    if (isDirectClose === true) return closePopUp();
+                    setConfirmClose(true);
+                  }}
+                />
               )}
               {isClassroom && (
-                <TopicClassroom topData={topicData} closePopUp={() => setConfirmClose(true)} />
+                <TopicClassroom
+                  topData={topicData}
+                  closePopUp={(isDirectClose = false) => {
+                    if (isDirectClose === true) return closePopUp();
+                    setConfirmClose(true);
+                  }}
+                />
               )}
             </>
           )}
@@ -96,7 +106,11 @@ export default function TopicPopUp({
             <ZicopsButton
               customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
               isDisabled={!topicContentList?.length || isSubmitDisabled}
-              handleClick={handleSubmit}
+              handleClick={() => {
+                handleSubmit()
+                  .finally((err) => console.log(err))
+                  .finally(() => closePopUp());
+              }}
               display={'Design'}
             />
           </div>
@@ -111,7 +125,7 @@ export default function TopicPopUp({
               handleClose();
               closePopUp();
             },
-            handleClickRight: () => setConfirmClose(false)
+            handleClickRight: () => setConfirmClose(false),
           }}
         />
       )}

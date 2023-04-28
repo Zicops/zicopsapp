@@ -1,0 +1,95 @@
+$textColor: #ACACAC;
+
+.chatBox {
+  width: 296px;
+  padding: 10px 0;
+  position: relative;
+
+  &:hover{
+    background-color: #26292C;
+    .replyBox {display: block;}
+  }
+
+  .replyBox{
+    display: none;
+    height: 26px;
+    width: 30px;
+    position: absolute;
+    bottom: -10%;
+    right: 5px;
+    background-color: #1A1D21;
+    border: 1px solid #292F2F;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+        border: 1px solid $primary;
+      }
+  }
+}
+
+.profileImg {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
+
+.personName {
+  font-weight: 400;
+  font-size: 15px;
+  color: #acacac;
+  margin-left: 10px;
+}
+
+.iconName {
+  width: 75%;
+  display: flex;
+}
+
+.messageTime {
+  width: 25%;
+  display: flex;
+  justify-content: flex-end;
+  font-size: 15px;
+  color: $textColor;
+}
+
+.messageHead {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mainMessage {
+  width: 100%;
+  // min-height: 30px;
+  // max-height: 100%;
+  display: flex;
+  margin: 5px 0;
+
+  div {
+    width: 255px;
+    display: flex;
+    // text-align: justify;
+    margin: auto;
+    padding-left: 15px;
+    height: 100%;
+    color: $white;
+    // height: max-content;
+    // float: right;
+    text-align: left;
+    font-size: 14px;
+  }
+}
+
+.replyBar{
+  font-size: 14px;
+  text-align: left;
+  margin-left: 35px;
+}

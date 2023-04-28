@@ -15,10 +15,11 @@ export default function PopUp({
   positionLeft = '',
   size = 'medium',
   customStyles = {},
+  customBodyStyles = {},
   children,
   tooltipCloseBtnTitle,
   onClose = () => {},
-  isAttempted = false
+  isAttempted = false,
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -63,7 +64,11 @@ export default function PopUp({
               </div>
             </div>
 
-            <div className={`${styles.body} ${isAttempted ? styles.attempted : ""}`}>{children}</div>
+            <div
+              className={`${styles.body} ${isAttempted ? styles.attempted : ''}`}
+              style={customBodyStyles}>
+              {children}
+            </div>
 
             {isFooterVisible && (
               <div className={`${styles.footer}`}>
@@ -104,7 +109,7 @@ export default function PopUp({
             title={confirmMsg}
             btnObj={{
               handleClickLeft: () => setConfirmMsg(true),
-              handleClickRight: () => setConfirmMsg(false)
+              handleClickRight: () => setConfirmMsg(false),
             }}
           />
         )}
@@ -116,7 +121,7 @@ export default function PopUp({
 const btnObj = shape({
   name: string,
   handleClick: func,
-  disabled: bool
+  disabled: bool,
 });
 
 PopUp.propTypes = {
@@ -126,5 +131,5 @@ PopUp.propTypes = {
   submitBtn: btnObj,
   isFooterVisible: bool,
   positionLeft: string,
-  size: oneOf(['large', 'medium', 'small', 'smaller'])
+  size: oneOf(['large', 'medium', 'small', 'smaller']),
 };

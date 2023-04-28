@@ -1,0 +1,45 @@
+$poUpDivColor: #acacac;
+
+.deletePopUpContainer {
+  width: 482px;
+  height: 284px;
+  background-color: #1a1d21;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+.deletePoupInnerContainer {
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  padding-top: 14px;
+}
+
+.deletePoupInnerContainer > p {
+  font-size: 20px;
+  font-weight: 500;
+  color: $white;
+  border-bottom: solid #292f2f 1px;
+  padding-bottom: 14px;
+}
+
+.deletePopUpNotice {
+  color: $poUpDivColor;
+  padding-top: 14px;
+  padding-bottom: 30px;
+}
+.deletePoupBtn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.deletePoupBtn > button {
+  width: 209px;
+  height: 48px;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+}

@@ -3,14 +3,14 @@ import { TopicContentListAtom } from '@/state/atoms/courses.atom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
+import ResourceForm from '../ResourceForm';
 import TopicAccordian from '../TopicAccordian';
+import TopicQuiz from '../TopicQuiz';
 import BingeForm from './BingeForm';
-import ResourceForm from './ResourceForm';
 import SubtitleForm from './SubtitleForm';
 import TopicContentForm from './TopicContentForm';
-import TopicQuiz from './TopicQuiz';
 
-export default function TopicContent({ topData = null, closePopUp = () => {} }) {
+export default function TopicContent({ topData = null }) {
   const topicContentList = useRecoilValue(TopicContentListAtom);
 
   const {
@@ -19,8 +19,8 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     topicContentFormData,
     handleChange,
     handleMp4FileInput,
-    handleSubmit
-  } = useHandleTopicContent(topData, closePopUp);
+    handleSubmit,
+  } = useHandleTopicContent(topData);
 
   const [isAccordionDisabled, setIsAccordionDisabled] = useState(null);
 
@@ -28,12 +28,12 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
     {
       id: 'sub',
       title: 'Subtitles',
-      body: <SubtitleForm topData={topData} />
+      body: <SubtitleForm topData={topData} />,
     },
     {
       id: 'binge',
       title: 'Binge It',
-      body: <BingeForm />
+      body: <BingeForm />,
     },
     {
       id: 'quiz',
@@ -43,13 +43,13 @@ export default function TopicContent({ topData = null, closePopUp = () => {} }) 
           topData={topData}
           setIsAccordionDisabled={(val) => setIsAccordionDisabled(!!val ? 'quiz' : '')}
         />
-      )
+      ),
     },
     {
       id: 'res',
       title: 'Resources',
-      body: <ResourceForm topData={topData} />
-    }
+      body: <ResourceForm topData={topData} />,
+    },
   ];
 
   const isDisabled = false;

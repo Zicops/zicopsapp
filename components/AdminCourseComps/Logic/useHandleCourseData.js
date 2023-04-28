@@ -35,8 +35,8 @@ export default function useHandleCourseData() {
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const userData = useRecoilValue(UserStateAtom);
 
-  const [trainerCandidates, setTrainerCandidates] = useState([]);
-  const [moderatorCandidates, setModeratorCandidates] = useState([]);
+  const [trainerCandidates, setTrainerCandidates] = useState(null);
+  const [moderatorCandidates, setModeratorCandidates] = useState(null);
   const [ownerList, setOwnerList] = useState(null);
 
   const isVendor = userOrgData?.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
@@ -126,8 +126,7 @@ export default function useHandleCourseData() {
       if (!tabDataList?.length) return;
 
       tabDataList.forEach(
-        (key) =>
-          !(courseMetaData?.[key]?.length || classroomMaster?.[key]?.length) && errorList.push(key)
+        (key) => !(!!courseMetaData?.[key] || !!classroomMaster?.[key]) && errorList.push(key)
       );
     });
 
@@ -145,6 +144,7 @@ export default function useHandleCourseData() {
     setClassroomMaster((prev) => ({ ...prev, ...(toBeUpdatedKeyValue || {}) }));
   }
 
+  // expertise change for course master
   function handleExpertise(e) {
     const trimmedInput = e?.target?.value?.trim();
     const isChecked = e.target.checked;
@@ -162,6 +162,7 @@ export default function useHandleCourseData() {
     setCourseMetaData(_courseMetaData);
   }
 
+  // file input for course master
   function handleFileInput(e) {
     if (!courseMetaData.id) {
       setActiveCourseTab(courseTabs?.courseMaster?.name);
@@ -184,12 +185,10 @@ export default function useHandleCourseData() {
     const users = await getUsersForAdmin();
     // filtering users based on lsp status
     const filteredUsers =
-      users
-        ?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate)
-        ?.slice(0, 10) || [];
+      users?.filter((users) => users?.status?.toLowerCase() === USER_MAP_STATUS?.activate) || [];
 
-    setTrainerCandidates([...filteredUsers]);
-    setModeratorCandidates([...filteredUsers]);
+    setTrainerCandidates([...(filteredUsers || [])]);
+    setModeratorCandidates([...(filteredUsers || [])]);
     return filteredUsers;
   }
 
@@ -266,10 +265,10 @@ export default function useHandleCourseData() {
         updatedBy: viltData?.updated_by,
         status: viltData?.status,
         isUpdate: true,
-        isEndDatedecided:!viltData?.is_end_date_decided,
-        isStartDatedecided:!viltData?.is_start_date_decided,
-        isTrainerdecided:!viltData?.is_trainer_decided,
-        isModeratordecided:!viltData?.is_moderator_decided
+        isEndDatedecided: !viltData?.is_end_date_decided,
+        isStartDatedecided: !viltData?.is_start_date_decided,
+        isTrainerdecided: !viltData?.is_trainer_decided,
+        isModeratordecided: !viltData?.is_moderator_decided
       })
     );
   }

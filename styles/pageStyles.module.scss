@@ -1,0 +1,7 @@
+.pageContainer {
+  margin-top: $headerHeight;
+  // contain: paint;
+  overflow-x: clip;
+  color: $white;
+  background-color: $bgTile;
+}

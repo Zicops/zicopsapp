@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.userClient
+  uri: API_LINKS.userClient,
 });
 
 // Set query Client
 export const userQueryClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 export const GET_USER_DETAIL = gql`
@@ -1091,6 +1091,8 @@ export const GET_SME_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1111,6 +1113,8 @@ export const GET_CRT_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1131,6 +1135,8 @@ export const GET_CD_DETAILS = gql`
       updated_at
       updated_by
       status
+      is_expertise_online
+      is_expertise_offline
     }
   }
 `;
@@ -1306,4 +1312,101 @@ export const GET_COURSE_VIEWS = gql`
   }
 `;
 
+export const GET_USER_EXAM_ATTEMPTS_BY_EXAMID = gql`
+  query getUserExamAttemptsByExamIds(
+    $userId: String!
+    $examIds: [String]!
+    $filters: ExamAttemptsFilters
+  ) {
+    getUserExamAttemptsByExamIds(user_id: $userId, exam_ids: $examIds, filters: $filters) {
+      user_ea_id
+      user_id
+      user_lsp_id
+      user_cp_id
+      user_course_id
+      exam_id
+      attempt_no
+      attempt_status
+      attempt_start_time
+      attempt_duration
+      created_by
+      updated_by
+      created_at
+      updated_at
+    }
+  }
+`;
+
+export const GET_ASSIGNED_COURSES = gql`
+  query getAssignedCourses($lsp_id: String, $type: String!) {
+    getAssignedCourses(lsp_id: $lsp_id, type: $type) {
+      lsp_id
+      course_type
+      count
+    }
+  }
+`;
+
+export const GET_MOST_LEAST_ASSGINED_COURSES = gql`
+  query getMostLeastAssignedCourse($lsp_id: String, $input: String) {
+    getMostLeastAssignedCourse(lsp_id: $lsp_id, input: $input) {
+      ID
+      LspId
+      CourseId
+      Category
+      SubCategory
+      Owner
+      Duration
+      TotalLearners
+      ActiveLearners
+      CompletedLearners
+      ExpectedCompletionTime
+      AverageCompletionTime
+      AverageComplianceScore
+    }
+  }
+`;
+
 // DASHBOARD QUERIES END
+
+// Individual Course Dashboard queries start
+
+export const GET_COURSE_ANALYTICS_BY_ID = gql`
+  query getCourseAnalyticsDataById($course_id: String, $status: String) {
+    getCourseAnalyticsDataById(course_id: $course_id, status: $status) {
+      course_id
+      status
+      count
+    }
+  }
+`;
+
+export const GET_PAGINATED_LEARNER_DETAILS = gql`
+  query getLearnerDetails(
+    $course_id: String
+    $pageCursor: String
+    $direction: String
+    $pageSize: Int
+  ) {
+    getLearnerDetails(
+      course_id: $course_id
+      pageCursor: $pageCursor
+      direction: $direction
+      pageSize: $pageSize
+    ) {
+      data {
+        name
+        email
+        status
+        completion
+        assigned_by
+        assigned_on
+        time_taken
+        timeline_complaint
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;

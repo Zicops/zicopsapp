@@ -179,6 +179,25 @@ $marginBetweenInputs: 1em;
   }
 }
 
+.trainerOptions {
+  display: flex;
+  align-items: center;
+
+  .trainerImage {
+    width: 7%;
+    margin-right: 15px;
+
+    img {
+      width: 100%;
+      border-radius: 100% 100%;
+    }
+  }
+
+  .nameEmailTrainer .email {
+    opacity: 0.7;
+  }
+}
+
 .moderatorDropdown > button {
   background-color: transparent;
   outline: none;
@@ -226,20 +245,14 @@ $marginBetweenInputs: 1em;
   color: white;
 }
 
-.aboutDatePicker > div {
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
+.aboutDatePicker {
+  position: relative;
 
-  div {
-    // display: flex;
-    gap: $marginBetweenInputs;
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
   }
-}
-
-.datePicker {
-  display: flex;
-  flex-direction: column;
 }
 
 .totalDurationLable > div {
@@ -476,16 +489,10 @@ $marginBetweenInputs: 1em;
   }
 }
 
-.editTopicAccordianContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
 // module pop up
 .popUpFormContainer {
   padding: 1.5em;
-  max-height: 60vh;
+  max-height: 75vh;
   overflow: hidden auto;
   overflow-y: overlay;
 
@@ -528,205 +535,236 @@ $marginBetweenInputs: 1em;
     padding: 1em 3em;
   }
 
-  .topicContentContainer {
-    margin-bottom: 1em;
+  .editTopicAccordianContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 
-    .titleWithLineAtSide {
-      color: $white;
-      font-size: 16px;
-      text-transform: uppercase;
-      text-align: center;
+    padding: 0.5em;
 
-      &::before,
-      &::after {
-        display: inline-block;
-        content: '';
-        border-top: 2px solid $secondaryBlack;
-        min-width: 200px;
-        margin: 0 1rem;
+    height: 40vh;
+    overflow: auto;
+    overflow-y: overlay;
 
-        transform: translateY(-5px);
-      }
+    &::-webkit-scrollbar {
+      width: 2px;
     }
 
-    .topicContentForm {
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-      padding: 1em 2em;
+    // topic content
+    .topicContentContainer {
+      margin: 0em 1em 1em;
 
-      .fileName {
-        text-align: right;
-        margin-left: 0.5em;
-      }
-    }
+      .titleWithLineAtSide {
+        color: $white;
+        font-size: 16px;
+        text-transform: uppercase;
+        text-align: center;
 
-    .addMoreContentBtn {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 0.5em;
-      font-size: 0.9rem;
-      cursor: pointer;
-      color: $primary;
+        &::before,
+        &::after {
+          display: inline-block;
+          content: '';
+          border-top: 2px solid $secondaryBlack;
+          min-width: 200px;
+          margin: 0 1rem;
 
-      div {
-        height: 1em;
-      }
-    }
-
-    .topicContentBarContainer {
-      margin: 0.5em auto;
-
-      .topSection {
-        display: flex;
-        justify-content: space-between;
-        margin: 0.2em auto;
-
-        p {
-          color: $darkThree;
-          font-size: 0.8rem;
+          transform: translateY(-5px);
         }
       }
 
-      .topicContentBar {
-        text-align: center;
+      .topicContentForm {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        padding: 1em 2em;
 
-        span {
-          .center {
-            flex: 1;
+        .fileName {
+          text-align: right;
+          margin-left: 0.5em;
+        }
+      }
+
+      .addMoreContentBtn {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 0.5em;
+        font-size: 0.9rem;
+        cursor: pointer;
+        color: $primary;
+
+        div {
+          height: 1em;
+        }
+      }
+
+      .topicContentBarContainer {
+        margin: 0.5em auto;
+
+        .topSection {
+          display: flex;
+          justify-content: space-between;
+          margin: 0.2em auto;
+
+          p {
+            color: $darkThree;
+            font-size: 0.8rem;
+          }
+        }
+
+        .topicContentBar {
+          text-align: center;
+
+          span {
+            .center {
+              flex: 1;
+            }
           }
         }
       }
-    }
 
-    .flexContainerWithSpace {
-      display: flex;
-      align-items: center;
-      gap: 1em;
-    }
-  }
-
-  .bingeContainer {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-
-    .bingeform {
-      width: 60%;
-
-      .bingeSetting {
+      .flexContainerWithSpace {
         display: flex;
         align-items: center;
-        justify-content: center;
-
-        .bingeSettingTitle {
-          font-size: 16px;
-          color: $primary;
-          width: 25%;
-        }
-        .bingeSettingBody {
-          width: 75%;
-          padding: 10px;
-        }
+        gap: 1em;
       }
     }
 
-    .video_preview {
+    .bingeContainer {
       display: flex;
-      height: 150px;
-      max-width: 45%;
+      align-items: center;
+      font-size: 12px;
 
-      video {
-        object-fit: cover;
-        height: 100%;
-        width: 100%;
+      .bingeform {
+        width: 60%;
+
+        .bingeSetting {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .bingeSettingTitle {
+            font-size: 16px;
+            color: $primary;
+            width: 25%;
+          }
+          .bingeSettingBody {
+            width: 75%;
+            padding: 10px;
+          }
+        }
+      }
+
+      .video_preview {
+        display: flex;
+        height: 150px;
+        max-width: 45%;
+
+        video {
+          object-fit: cover;
+          height: 100%;
+          width: 100%;
+        }
+      }
+
+      .fromEnd {
+        display: flex;
+        justify-content: center;
+        margin-left: 25%;
       }
     }
 
-    .fromEnd {
+    .newline {
       display: flex;
       justify-content: center;
-      margin-left: 25%;
-    }
-  }
+      align-items: center;
 
-  .newline {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      input {
+        padding: 0 3px;
+        margin: 0;
+        border: 0;
+        border-bottom: 1px solid $white;
+        width: 22px;
+        margin: 5px 0px;
 
-    input {
-      padding: 0 3px;
-      margin: 0;
-      border: 0;
-      border-bottom: 1px solid $white;
-      width: 22px;
-      margin: 5px 0px;
+        background-color: transparent;
+        color: $white;
+      }
 
-      background-color: transparent;
-      color: $white;
-    }
+      input:focus {
+        outline: 0;
+        background-color: $darkTwo;
+        box-shadow: none;
+      }
+      .durationvalue {
+        width: 40px;
+      }
 
-    input:focus {
-      outline: 0;
-      background-color: $darkTwo;
-      box-shadow: none;
-    }
-    .durationvalue {
-      width: 40px;
-    }
-
-    .label {
-      min-width: 80px;
-    }
-    .after {
-      min-width: 80px;
-      color: $darkThree;
-      margin-left: 20px;
-    }
-  }
-
-  .quizFormContainer {
-    margin: 2em auto;
-
-    .quizInput {
-      display: grid;
-      grid-template-columns: 50% 50%;
-      font-size: 14px;
-
-      &.quizType {
-        display: flex;
-        width: 50%;
-        margin: 20px auto;
+      .label {
+        min-width: 80px;
+      }
+      .after {
+        min-width: 80px;
+        color: $darkThree;
+        margin-left: 20px;
       }
     }
 
-    .quizFormSelect {
-      gap: 1em;
-      margin: 1em auto;
+    .quizFormContainer {
+      margin: 2em auto;
+
+      .quizInput {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        font-size: 14px;
+
+        &.quizType {
+          display: flex;
+          width: 50%;
+          margin: 20px auto;
+        }
+      }
+
+      .quizFormSelect {
+        gap: 1em;
+        margin: 1em auto;
+      }
+
+      .hint {
+        color: $darkThree;
+      }
     }
 
-    .hint {
-      color: $darkThree;
+    .resourceAddBtn {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 10px;
     }
-  }
+    .resourceTypeContainer {
+      max-width: 250px;
+      margin: auto auto 20px;
+    }
+    .flexCenterWithGap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
 
-  .resourceAddBtn {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 10px;
-  }
-  .resourceTypeContainer {
-    max-width: 250px;
-    margin: auto auto 20px;
-  }
-  .flexCenterWithGap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    // classroom
+    .vcSettingContainer {
+      .darkThreeText {
+        color: $darkThree;
+      }
+
+      .toggleBtnContainer {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-gap: 0.5em;
+        margin: 1em auto;
+      }
+    }
   }
 }
 

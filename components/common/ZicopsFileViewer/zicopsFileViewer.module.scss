@@ -1,0 +1,42 @@
+.fileViewerContainer {
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  .fileViewer {
+    background-color: $darkTwo;
+
+    :global(#no-renderer) {
+      width: 100%;
+
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 1em;
+    }
+
+    &.hideDownload {
+      :global(#pdf-download) {
+        display: none;
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+.noFilePath {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $primary;
+
+  border: 2px solid $darkTwo;
+}

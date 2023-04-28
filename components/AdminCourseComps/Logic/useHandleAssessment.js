@@ -82,14 +82,14 @@ export default function useHandleAssessment(topData = null, closePopUp = () => {
     if (!topicAssessment?.id) {
       mutateData(ADD_TOPIC_EXAM, sendData)
         .catch(() => setToastMessage('Topic Assessment Create Error'))
-        .finally(() => closePopUp());
+        .finally(() => closePopUp(true));
       return;
     }
 
     // update module
     mutateData(UPDATE_TOPIC_EXAM, sendData)
       .catch(() => setToastMessage('Topic Assessment Update Error'))
-      .finally(() => closePopUp());
+      .finally(() => closePopUp(true));
   }
 
   return { examsList, topicAssessment, setTopicAssessment, addUpdateAssessment };

@@ -12,11 +12,11 @@ export const months = [
   'September',
   'October',
   'November',
-  'December'
+  'December',
 ];
 
 export const years = Array.from(Array(new Date().getFullYear() - 1969), (_, i) =>
-  (i + 1970).toString()
+  (i + 1970).toString(),
 );
 
 export function displayUnixDate(unixTime) {
@@ -88,16 +88,16 @@ export function displayMinToHMS(mins) {
 export const TableResponsiveRows = [
   {
     breakpoint: 1200,
-    pageSize: 7
+    pageSize: 7,
   },
   {
     breakpoint: 1500,
-    pageSize: 7
+    pageSize: 7,
   },
   {
     breakpoint: 1900,
-    pageSize: 7
-  }
+    pageSize: 7,
+  },
 ];
 
 export function getPageSizeBasedOnScreen() {
@@ -118,7 +118,7 @@ export function getPageSizeBasedOnScreen() {
 export const DIFFICULTY = {
   Beginner: [1, 2, 3],
   Competent: [4, 5, 6, 7],
-  Proficient: [8, 9, 10]
+  Proficient: [8, 9, 10],
 };
 
 // ----- FULLSCREEN
@@ -237,7 +237,7 @@ async function getVideoThumbnail(videoData, videoTimeInSeconds) {
 export function getFileNameFromUrl(fileUrl) {
   if (!fileUrl) return '';
 
-  return decodeURI(fileUrl?.split('?')?.[0]?.split('/')?.pop());
+  return decodeURIComponent(fileUrl?.split('?')?.[0]?.split('/')?.pop());
 }
 
 export function getEncodedFileNameFromUrl(fileUrl) {
@@ -293,6 +293,12 @@ export function getDateTimeFromUnix(unixTimestamp) {
   const d = new Date(unixTimestamp * 1000);
 
   return `${d.toLocaleString()}`;
+}
+
+export function getDateObjFromUnix(unixTimestamp) {
+  if (!+unixTimestamp) return null;
+
+  return new Date(unixTimestamp * 1000);
 }
 
 export function isWordIncluded(sentence = '', word = '') {

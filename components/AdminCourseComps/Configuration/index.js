@@ -43,14 +43,14 @@ export default function Configuration() {
       src: '/images/svg/adminCourse/edit-calendar.svg',
       head: 'Created on',
       detail: moment(+courseMetaData?.createdAt * 1000).format('lll'),
-      displayForCourseTypes: Object.values(COURSE_TYPES)
+      displayForCourseTypes: Object.values(COURSE_TYPES),
     },
     {
       id: 2,
       src: '/images/svg/adminCourse/account-box.svg',
       head: 'Created By',
       detail: courseMetaData?.createdBy || 'NA',
-      displayForCourseTypes: Object.values(COURSE_TYPES)
+      displayForCourseTypes: Object.values(COURSE_TYPES),
     },
     {
       id: 3,
@@ -60,8 +60,8 @@ export default function Configuration() {
         ? moment(+courseMetaData?.publishDate * 1000).format('lll')
         : 'NA',
       displayForCourseTypes: Object.values(COURSE_TYPES).filter(
-        (type) => type !== COURSE_TYPES.classroom
-      )
+        (type) => type !== COURSE_TYPES.classroom,
+      ),
     },
     {
       id: 4,
@@ -71,8 +71,8 @@ export default function Configuration() {
         ? moment(+courseMetaData?.publishDate * 1000).format('lll')
         : 'NA',
       displayForCourseTypes: Object.values(COURSE_TYPES).filter(
-        (type) => type !== COURSE_TYPES.classroom
-      )
+        (type) => type !== COURSE_TYPES.classroom,
+      ),
     },
     {
       id: 5,
@@ -81,50 +81,50 @@ export default function Configuration() {
       detail: '24.04.2023',
       detail: !!courseMetaData?.approvers?.[0]?.length ? courseMetaData?.approvers?.[0] : 'NA',
       displayForCourseTypes: Object.values(COURSE_TYPES).filter(
-        (type) => type !== COURSE_TYPES.classroom
-      )
+        (type) => type !== COURSE_TYPES.classroom,
+      ),
     },
     {
       id: 6,
       src: '/images/svg/adminCourse/event-available.svg',
       head: 'Published for registration on',
       detail: '24.04.2023',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 7,
       src: '/images/svg/adminCourse/how-to-reg.svg',
       head: 'Published for registration by',
       detail: 'Harshad Gholap',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 8,
       src: '/images/svg/adminCourse/confirmation-number.svg',
       head: 'Published for booking on',
       detail: '26.04.2023',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 9,
       src: '/images/svg/adminCourse/publish.svg',
       head: 'Published for booking by',
       detail: 'ABC vendor',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 10,
       src: '/images/svg/adminCourse/event.svg',
       head: 'Registration start date',
       detail: '30.04.2023',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 11,
       src: '/images/svg/adminCourse/sensors.svg',
       head: 'Booking start date',
       detail: '28.04.2023',
-      displayForCourseTypes: [COURSE_TYPES.classroom]
+      displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
       id: 12,
@@ -133,8 +133,8 @@ export default function Configuration() {
       detail: !!+courseMetaData?.expiryDate
         ? moment(+courseMetaData?.expiryDate * 1000).format('lll')
         : 'NA',
-      displayForCourseTypes: Object.values(COURSE_TYPES)
-    }
+      displayForCourseTypes: Object.values(COURSE_TYPES),
+    },
   ];
 
   function getIsFreezeDisabled() {
@@ -150,71 +150,45 @@ export default function Configuration() {
       {/* Freeze and expire*/}
       {!isClassroomCourse && (
         <>
-          {/* Expire */}
-          {COURSE_STATUS.publish === courseMetaData?.status && (
-            <div>
-              <h4>Expire Course</h4>
-
-              <div className={`w-100 ${styles.boxContainer}`}>
-                <SwitchBox
-                  labeledInputProps={{
-                    label: 'Expire',
-                    description: 'No one will be able to access the course after expiration',
-                    name: 'expire',
-                    isDisabled: courseMetaData?.status === COURSE_STATUS.reject,
-                    isChecked: courseMetaData?.status === COURSE_STATUS.reject,
-                    handleChange: () => setShowConfirmBox(true)
-                  }}
-                />
-                <div className="w-50" style={{ margin: '15px' }}></div>
-              </div>
-
-              {/* <div className="w-75">
-          <SwitchButton
-            // label="Freeze"
-            inputName="qa_required"
-            isDisabled={isDisabled}
-            isChecked={fullCourse?.qa_required || false}
-            handleChange={handleChange}
-          />
-        </div> */}
-            </div>
-          )}
-
           {/* freeze */}
           <div>
             <h4>Course Freeze</h4>
 
-            <div className={`w-100`}>
+            <SwitchBox
+              labeledInputProps={{
+                label: 'Freeze',
+                description:
+                  'Once a course is frozen it is no longer editable and ready for approval/publishing',
+                name: 'qaRequired',
+                isDisabled: getIsFreezeDisabled(),
+                isChecked: courseMetaData?.qaRequired || false,
+                handleChange: (e) => {
+                  const isFreeze = e.target.checked;
+                  if (isFreeze) return setFreezeConfirmBox(true);
+
+                  setUnFreeze(true);
+                },
+              }}
+            />
+          </div>
+
+          {/* Expire */}
+          {[COURSE_STATUS.publish, COURSE_STATUS.reject]?.includes(courseMetaData?.status) && (
+            <div>
+              <h4>Expire Course</h4>
+
               <SwitchBox
                 labeledInputProps={{
-                  label: 'Freeze',
-                  description:
-                    'Once a course is frozen it is no longer editable and ready for approval/publishing',
-                  name: 'qaRequired',
-                  isDisabled: getIsFreezeDisabled(),
-                  isChecked: courseMetaData?.qaRequired || false,
-                  handleChange: (e) => {
-                    const isFreeze = e.target.checked;
-                    if (isFreeze) return setFreezeConfirmBox(true);
-
-                    setUnFreeze(true);
-                  }
+                  label: 'Expire',
+                  description: 'No one will be able to access the course after expiration',
+                  name: 'expire',
+                  isDisabled: courseMetaData?.status === COURSE_STATUS.reject,
+                  isChecked: courseMetaData?.status === COURSE_STATUS.reject,
+                  handleChange: () => setShowConfirmBox(true),
                 }}
               />
-              <div className="w-50" style={{ margin: '15px' }}></div>
             </div>
-
-            {/* <div className="w-75">
-          <SwitchButton
-            // label="Freeze"
-            inputName="qa_required"
-            isDisabled={isDisabled}
-            isChecked={fullCourse?.qa_required || false}
-            handleChange={handleChange}
-          />
-        </div> */}
-          </div>
+          )}
         </>
       )}
 
@@ -231,7 +205,7 @@ export default function Configuration() {
               <LabeledDropdown
                 dropdownOptions={{
                   inputName: 'percentage',
-                  placeholder: 'Select no. of days'
+                  placeholder: 'Select no. of days',
                 }}
               />
             </div>
@@ -240,7 +214,7 @@ export default function Configuration() {
               <LabeledDropdown
                 dropdownOptions={{
                   inputName: 'percentage',
-                  placeholder: 'Select no. of days'
+                  placeholder: 'Select no. of days',
                 }}
               />
             </div>
@@ -254,7 +228,7 @@ export default function Configuration() {
                 labeledInputProps={{
                   label: 'Open for registrations',
                   description: 'Once enabled, the course will be open for registrations',
-                  name: 'qa_required'
+                  name: 'qa_required',
                   // isDisabled: getIsFreezeDisabled(),
                   // isChecked: fullCourse?.qa_required || false,
                   // handleChange: (e) => {
@@ -273,7 +247,7 @@ export default function Configuration() {
                 labeledInputProps={{
                   label: 'Open for Bookings',
                   description: 'Once enabled, the course will be open for booking',
-                  name: 'qa_required'
+                  name: 'qa_required',
                   // isDisabled: getIsFreezeDisabled(),
                   // isChecked: fullCourse?.qa_required || false,
                   // handleChange: (e) => {
@@ -313,7 +287,7 @@ export default function Configuration() {
               const sendData = sanitizeFormData({
                 ..._courseData,
                 qaRequired: false,
-                status: COURSE_STATUS.save
+                status: COURSE_STATUS.save,
               });
 
               e.currentTarget.disabled = true;
@@ -325,7 +299,7 @@ export default function Configuration() {
                 .catch((err) => setToastMessage('Course Unfreeze Error!'))
                 .finally(() => setUnFreeze(false));
             },
-            handleClickRight: () => setUnFreeze(false)
+            handleClickRight: () => setUnFreeze(false),
           }}
         />
       )}
@@ -339,7 +313,7 @@ export default function Configuration() {
               const sendData = sanitizeFormData({
                 ..._courseData,
                 status: COURSE_STATUS.reject,
-                expiryDate: getUnixFromDate()
+                expiryDate: getUnixFromDate(),
               });
 
               e.currentTarget.disabled = true;
@@ -348,7 +322,7 @@ export default function Configuration() {
                 .catch(() => setToastMessage('Course Expire Error!'))
                 .finally(() => setShowConfirmBox(false));
             },
-            handleClickRight: () => setShowConfirmBox(false)
+            handleClickRight: () => setShowConfirmBox(false),
           }}
         />
       )}

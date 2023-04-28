@@ -1,12 +1,14 @@
 import { IMAGE_FILE_TYPES } from '@/helper/constants.helper';
 import { isWordIncluded } from '@/helper/utils.helper';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ToastMsgAtom } from '../../../../state/atoms/toast.atom';
 import { IsDataPresentAtom } from '../../PopUp/Logic/popUp.helper';
 import ToolTip from '../../ToolTip';
 import styles from '../formComponents.module.scss';
 import DisplayImage from './DisplayImage';
+import FilePreview from './FilePreview';
+import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import PreviewImageVideo from './PreviewImageVideo';
 
 export default function BrowseAndUpload({
@@ -34,6 +36,8 @@ export default function BrowseAndUpload({
   const [popUpData, setPopUpData] = useState(false);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [isPopUpDataPresent, setIsPopUpDataPresent] = useRecoilState(IsDataPresentAtom);
+
+  const { isDev } = useRecoilValue(FeatureFlagsAtom);
 
   useEffect(() => {
     if (!showPreview && popUpData) setIsPopUpDataPresent(popUpData);
@@ -122,15 +126,23 @@ export default function BrowseAndUpload({
         )}
       </div>
 
-      {showPreview && (
-        <PreviewImageVideo
-          fileName={previewData.fileName}
-          filePath={previewData.filePath}
-          isVideo={previewData.isVideo}
-          setShowPreview={setShowPreview}
-          showPreview={showPreview}
-        />
-      )}
+      {showPreview &&
+        (!isDev ? (
+          <PreviewImageVideo
+            fileName={previewData.fileName}
+            filePath={previewData.filePath}
+            isVideo={previewData.isVideo}
+            setShowPreview={setShowPreview}
+            showPreview={showPreview}
+          />
+        ) : (
+          <FilePreview
+            fileName={previewData.fileName}
+            filePath={previewData.filePath}
+            setShowPreview={setShowPreview}
+            showPreview={showPreview}
+          />
+        ))}
     </>
   );
 }
