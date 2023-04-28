@@ -62,7 +62,7 @@ const Participants = ({ hide = false, Info, Iframe, api = {} }) => {
         <div className={`${styles.allInstructors}`}>
           {modList.map((data) => (
             <StudentFrame
-              name={data?.displayName || data?.formattedDisplayName}
+              name={data?.formattedDisplayName || data?.displayName}
               avatarUrl={data?.avatarURL}
               frameIcons={{
                 isRiseHand: data?.isHandRise,
