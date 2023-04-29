@@ -3,9 +3,10 @@ import { DownSortTriangleIcon } from '@/components/common/ZicopsIcons';
 import Dropdown from '@/components/DashboardComponents/Dropdown';
 import { displayMinToHMS } from '@/helper/utils.helper';
 import moment from 'moment';
-import styles from '../adminAnalyticsDashboard.module.scss';
-import SectionTitle from '../common/SectionTitle';
-import useHandleCourseViews from '../Logic/useHandleCourseViews';
+import styles from '../adminCourse.module.scss';
+import SectionTitle from '@/components/AdminAnalyticsDashboardComp/common/SectionTitle';
+import { useState } from 'react';
+import useHandleCourseAnalyticsDashboard from '../Logic/useHandleCourseAnalyticsDashboard';
 export const UserData = [
   {
     id: 1,
@@ -79,25 +80,29 @@ export const UserData = [
   },
 ];
 
-export default function CourseViewAnalytics() {
+export default function OverallCourseWatchTime() {
   const {
     courseViews,
     selectedDate,
     setSelectedDate,
     filterBy,
     setFilterBy,
-  } = useHandleCourseViews();
+  } = useHandleCourseAnalyticsDashboard();
   const labels = moment.weekdays()?.map((day) => day?.slice(0, 3));
   if (filterBy === 'Month') {
     labels.length = 0;
     labels.push(...[...Array(selectedDate?.end?.get('D'))].map((v, i) => i + 1));
   }
 
+  if (!courseViews?.length) return <></>;
+
+  // console.info(courseViews);
+
   const data = {
     labels,
     datasets: [
       {
-        label: 'User Course Views',
+        label: 'Overall Course Watch time',
         data: courseViews?.map((obj) => ({ ...obj, minutes: obj?.seconds / 60 })),
         fill: true,
         tension: 0,
@@ -112,6 +117,7 @@ export default function CourseViewAnalytics() {
       },
     ],
   };
+
   const options = {
     parsing: {
       xAxisKey: 'index',
@@ -162,7 +168,7 @@ export default function CourseViewAnalytics() {
   return (
     <div className={`${styles.wrapper}`}>
       <SectionTitle
-        title="Course view analytics"
+        title="Overall Course Watch time"
         extraCompAtEnd={
           <Dropdown
             placeholder={'Sub-category'}
@@ -172,9 +178,7 @@ export default function CourseViewAnalytics() {
           />
         }
       />
-
       <div className={`${styles.wrapperSubHeading}`}>Overall course views last week</div>
-
       <div className={`${styles.displayMonth}`}>
         <span
           onClick={() => {
@@ -234,7 +238,7 @@ export default function CourseViewAnalytics() {
         </span>
       </div>
 
-      <LineChart chartData={data} options={options} tooltipBody={tooltipUI} />
+      {/*<LineChart chartData={data} options={options} tooltipBody={tooltipUI} />*/}
     </div>
   );
 }

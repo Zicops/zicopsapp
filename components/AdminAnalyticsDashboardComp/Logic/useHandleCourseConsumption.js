@@ -4,6 +4,7 @@ import { GET_COURSE_CONSUMPTION_STATS } from '@/api/UserQueries';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { displayMinToHMS } from '@/helper/utils.helper';
 import { useEffect, useState } from 'react';
+import { sortArrByKeyInOrder } from '@/helper/data.helper';
 
 export default function useHandleCourseConsumption() {
   const [tableData, setTableData] = useState(null);
@@ -22,7 +23,7 @@ export default function useHandleCourseConsumption() {
         GET_COURSE_CONSUMPTION_STATS,
         { lsp_id: _lspId, pageCursor: '', direction: '', pageSize: 100 },
         {},
-        userClient
+        userClient,
       );
 
       const data = (await myCourseConsumptionStats)?.getCourseConsumptionStats?.stats || [];
@@ -57,10 +58,17 @@ export default function useHandleCourseConsumption() {
           updatedBy: d?.UpdatedBy,
 
           courseName: courseData?.name,
-          publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString()
+          publishedOn: new Date(+courseData?.publish_date * 1000).toLocaleDateString(),
         };
       });
-      setTableData(_tableData || []);
+
+      const _sortedData = sortArrByKeyInOrder(_tableData, 'totalLearners', false);
+
+      const _uniqueData = [...new Set(_sortedData)];
+
+      const newArr = _uniqueData.map((obj, index) => ({ id: index + 1, ...obj }));
+
+      setTableData(newArr || []);
       setIsLoading(false);
     }
   }, []);

@@ -11,7 +11,7 @@ const MeetingCard = ({
   startmeetingAudioenable,
   startmeetingVideoenable,
   startAudioenableFun,
-  startVideoenableFun
+  startVideoenableFun,
 }) => {
   const videoref = useRef(null);
   const [video1, setvideo1] = useState(startmeetingVideoenable);
@@ -50,7 +50,7 @@ const MeetingCard = ({
             className={`${styles.videoplay}`}
             id="video"
             ref={videoref}
-            autoPlay="true"></video>
+            autoPlay={true}></video>
           <div ref={nameRef} className={`${styles.subVideo1}`}>
             <img src={userData.photo_url} />
           </div>

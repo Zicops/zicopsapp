@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.courseQuery
+  uri: API_LINKS.courseQuery,
 });
 
 // Set query Client
 export const queryClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 // COURSE QUERIES START
@@ -1242,9 +1242,20 @@ export const GET_BASIC_COURSES_STATS = gql`
   }
 `;
 
+export const GET_COURSES_COUNT_STATS = gql`
+  query getCourseCountStats($lsp_id: String, $status: String!, $type: String!) {
+    getCourseCountStats(lsp_id: $lsp_id, status: $status, type: $type) {
+      lsp_id
+      course_status
+      course_type
+      count
+    }
+  }
+`;
+
 export const GET_TOPICS_BY_COURSEIDS = gql`
   query getTopicsByCourseIds($courseIds: [String], $type: String) {
-    getTopicsByCourseIds(courseIds: $courseIds, type: $type) {
+    getTopicsByCourseIds(course_ids: $courseIds, type: $type) {
       id
       name
       description

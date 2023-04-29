@@ -11,7 +11,7 @@ export const AdminMenu = [
     link: '/admin/course/my-courses',
     roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
   },
-  { title: 'Training', link: '/admin', isDisabled: true },
+  { title: 'Training', link: '/admin/training/trainers', isDemo: true },
   { title: 'Exams', link: '/admin/exams/my-question-bank' },
   {
     title: 'Vendor',

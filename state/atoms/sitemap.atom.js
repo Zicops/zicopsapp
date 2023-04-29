@@ -61,6 +61,21 @@ export const SiteMapAtom = atom({
       head: 'Vendor Management',
       displayName: 'Orders',
       route: '/admin/vendor/orders'
+    },
+    {
+      head: 'Training Management',
+      displayName: 'Classroom Training',
+      route: '/admin'
+    },
+    {
+      head: 'Training Management',
+      displayName: 'Trainers',
+      route: '/admin/training/trainers'
+    },
+    {
+      head: 'Training Management',
+      displayName: 'Dashboard',
+      route: '/admin'
     }
   ]
 });

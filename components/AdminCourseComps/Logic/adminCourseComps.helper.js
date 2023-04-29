@@ -17,6 +17,7 @@ import CourseMaster from '../CourseMaster';
 import Topics from '../Topics';
 import BookingTable from '../RegisterUserTabs/BookingTable';
 import RegisterTable from '../RegisterUserTabs/RegisterTable';
+import Analytics from '../Analytics';
 
 // admin course tabs
 export const courseTabs = {
@@ -26,6 +27,7 @@ export const courseTabs = {
   topics: { name: 'Topics', component: <Topics /> },
   commercials: { name: 'Commercials', component: <Commercials /> },
   configuration: { name: 'Configuration', component: <Configuration /> },
+  analytics: { name: 'Analytics', component: <Analytics /> },
 };
 export const usersTabs = [
   { name: 'Registrations', component: <RegisterTable /> },
