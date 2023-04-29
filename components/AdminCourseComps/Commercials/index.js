@@ -15,11 +15,28 @@ import {
 import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 import NextBtn from '../NextBtn';
 import { courseTabs } from '../Logic/adminCourseComps.helper';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import { useState } from 'react';
+import ChargeTable from './ChargeTable';
+import Tooltip from '@mui/material/Tooltip';
+import { makeStyles } from '@material-ui/core';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const classroomMaster = useRecoilValue(ClassroomMasterAtom);
+  const [isOpenTable, setOpenTable] = useState(false);
+  const [isShowText, setShowText] = useState(false);
+
+  const useTooltipStyles = makeStyles((theme) => ({
+    tooltip: {
+      backgroundColor: '#040404',
+      fontSize: '16px',
+      padding: '12px',
+    },
+  }));
+
+  const tooltipClass = useTooltipStyles();
 
   return (
     <div className={`${styles.commercialContainer}`}>
@@ -78,21 +95,24 @@ const Commercials = () => {
       </div>
       <div className={`${styles.hr}`}></div>
       <div className={`${styles.priceSetContainer}`}>
-        <div>
+        <div className={`${styles.priceSeat}`}>
           <p className={`${styles.heading}`}>Price per seat:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'price_per_seat',
-              //   label: 'Name :',
-              placeholder: 'Enter price per seat',
-              value: commercialsData?.price_per_seat,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
-          />
+          <div className={`${styles.inputBox}`}>
+            <LabeledInput
+              inputOptions={{
+                inputName: 'price_per_seat',
+                //   label: 'Name :',
+                placeholder: 'Enter price per seat',
+                value: commercialsData?.price_per_seat,
+                isNumericOnly: true,
+              }}
+              styleClass={`${styles.labelMergin}`}
+              changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
+            />
+            <p className={`${styles.gst}`}>Exclusive of GST</p>
+          </div>
         </div>
-        <div>
+        <div className={`${styles.priceSeat}`}>
           <p className={`${styles.heading}`}>Currency:</p>
           <LabeledDropdown
             dropdownOptions={{
@@ -108,38 +128,19 @@ const Commercials = () => {
             styleClass={`${styles.labelMergin}`}
           />
         </div>
-        <div>
-          <p className={`${styles.heading}`}>Tax:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'tax_percentage',
-              //   label: 'Name :',
-              placeholder: 'Tax',
-              value: commercialsData?.tax_percentage,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
-          />
-        </div>
-        <div>
-          <p className={`${styles.heading}`}>Total:</p>
-          <LabeledInput
-            inputOptions={{
-              inputName: 'total',
-              //   label: 'Name :',
-              placeholder: 'Auto-populated',
-              value:
-                +commercialsData?.price_per_seat +
-                (+commercialsData?.price_per_seat * +commercialsData?.tax_percentage) / 100,
-              isNumericOnly: true,
-            }}
-            styleClass={`${styles.labelMergin}`}
-            // changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
-          />
-        </div>
+        <Tooltip
+          title="Understand the transaction charges"
+          placement="bottom-start"
+          classes={tooltipClass}>
+          <div
+            className={`${styles.info}`}
+            onClick={(e) => {
+              setOpenTable(true);
+            }}>
+            <img src="/images/svg/info.svg" alt="" />
+          </div>
+        </Tooltip>
       </div>
-
       <p className={`${styles.label}`}>
         *Will be visible to Learners only if the Training is marked as Priced
       </p>
@@ -274,6 +275,20 @@ const Commercials = () => {
       <div className={`${styles.nextBtn}`}>
         <NextBtn switchTabName={courseTabs?.configuration?.name} />
       </div>
+      <VendorPopUp
+        open={isOpenTable}
+        popUpState={[isOpenTable, setOpenTable]}
+        size="large"
+        closeBtn={{ name: 'Close' }}
+        isSubmitButton={false}
+        isVilt={true}
+        isFooterVisible={true}>
+        <div>
+          <p className={`${styles.transText}`}>Transaction Charges</p>
+          <p className={`${styles.priceText}`}>Price Per Seat: {commercialsData?.price_per_seat}</p>
+          <ChargeTable />
+        </div>
+      </VendorPopUp>
     </div>
   );
 };
