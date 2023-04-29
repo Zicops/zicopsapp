@@ -37,6 +37,7 @@ const MainToolbar = ({
   api = null,
   audiotoggle,
   videotoggle,
+  shareToggle,
   setAudio,
   setVideo,
   endMeetng,
@@ -76,11 +77,18 @@ const MainToolbar = ({
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
+  const [screenShareParticipants, setScreenShareParticipants] = useState([]);
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
 
   const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
+
+  useEffect(() => {
+    api.addListener('contentSharingParticipantsChanged', (share) => {
+      setScreenShareParticipants(share.data);
+    });
+  }, [api]);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -573,12 +581,23 @@ const MainToolbar = ({
 
               <VctoolButton
                 onClickfun={() => {
+                  console.info(screenShareParticipants);
+                  if (screenShareParticipants.length > 0) return;
                   shareScreen();
                 }}
-                trueSrc={'/images/svg/vctool/present-to-all.svg'}
-                falseSrc={'/images/svg/vctool/present-to-all.svg'}
+                toggle={!shareToggle}
+                trueSrc={'/images/svg/vctool/screen_share.svg'}
+                falseSrc={'/images/svg/vctool/stop_screen_share.svg'}
+                customId={shareToggle ? `${styles.changeBackground}` : ''}
                 toolTipClass={`${styles.tooltipLefttNav}`}
-                toolTipName={'Share screen'}
+                toolTipName={
+                  !shareToggle
+                    ? screenShareParticipants.length > 0
+                      ? 'Someone is sharing screen'
+                      : 'Share screen'
+                    : 'Stop Sharing'
+                }
+                disabled={true}
               />
 
               <VctoolButton
@@ -593,6 +612,18 @@ const MainToolbar = ({
                 toolTipClass={`${styles.tooltipLefttNav}`}
                 toolTipName={'Raise hand'}
               />
+              {/* <VctoolButton
+                onClickfun={() => {
+                  console.info(api.getMyUserId());
+                  
+                }}
+                // toggle={hand}
+                trueSrc={'/images/svg/vctool/sensors-on.svg'}
+                falseSrc={'/images/svg/vctool/sensors-off.svg'}
+                // customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Pin Test'}
+              /> */}
             </>
           )}
         </div>

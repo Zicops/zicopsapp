@@ -35,9 +35,9 @@ const Participants = ({ hide = false, Info, Iframe, api = {} }) => {
     learnerList.push(data);
   });
 
-  useEffect(() => {
-    console.info(modIdList, userData.id, userList);
-  }, [classroomData]);
+  // useEffect(() => {
+  //   console.info(modIdList, userData.id, userList);
+  // }, [classroomData]);
 
   return (
     <div

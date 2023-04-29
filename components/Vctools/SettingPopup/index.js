@@ -13,6 +13,7 @@ const SettingPopup = ({ hide, api }) => {
   const [availableDevices, setAvailableDevices] = useState([]);
   const [currentDevices, setCurrentDevices] = useState([]);
   const [videoQuality, setVideoQuality] = useState(0);
+  const [layout, setLayout] = useState('classroom');
 
   useEffect(async () => {
     const availableDevices = await api.getAvailableDevices();
@@ -160,11 +161,14 @@ const SettingPopup = ({ hide, api }) => {
               type="radio"
               label="ClassRoom"
               name="vcToolLayout"
-              //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
+              value="classroom"
+              isChecked={layout === 'classroom'}
               //   isDisabled={true}
-              //   changeHandler={(e) => {
-              //     updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
-              //   }}
+              changeHandler={(e) => {
+                // api.executeCommand('toggleTileView');
+                api.executeCommand('setTileView', true);
+                setLayout('classroom');
+              }}
             />
             <img src="/images/svg/vctool/classRoomview.svg" />
           </div>
@@ -174,11 +178,14 @@ const SettingPopup = ({ hide, api }) => {
               type="radio"
               label="Front of the class"
               name="vcToolLayout"
-              //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
+              value="pinned"
+              isChecked={layout === 'pinned'}
               //   isDisabled={true}
-              //   changeHandler={(e) => {
-              //     updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
-              //   }}
+              changeHandler={(e) => {
+                // api.executeCommand('toggleTileView');
+                api.executeCommand('setTileView', false);
+                setLayout('pinned');
+              }}
             />
             <img src="/images/svg/vctool/branding-watermark.svg" />
           </div>
