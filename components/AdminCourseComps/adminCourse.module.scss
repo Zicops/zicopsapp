@@ -689,113 +689,130 @@
       }
     }
   }
-        .iconContainer {
-          width: 40%;
-          display: flex;
-          justify-content: center;
-          align-items: left;
-    
-          img {
-            border: 1px solid $secondary;
-            padding: 20px;
-            background-color: $darkTwo;
-            border-radius: 5px;
-          }
-        }
-        }
 
-  .commercialContainer{
-    .commercialTiltle{
-        font-size: 20px;
-    }
-    .checkboxLebel{
-        color: $bgBody;
-        padding-bottom: 10px;
-    }
-    .checkbox{
-        color: #747474;
-    }
-    .label{
-        color:#747474;
-        font-size: 16px;
-        padding-top: 10px;
-    }
-    .redioBoxContainer{
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
-    }
-    .priceSetContainer{
-        display: flex;
-        justify-content: space-between;
-    }
-    .registrationContainer{
-        display: flex;
-        gap:10px;
-    }
-    .bookingContainer{
-        display: flex;
-        gap: 10px;
-    }
-    .maxBook{
-        color: $secondaryWhite;
-        padding-top: 10px;
-    }
-    .rtext{
-        padding: 10px 0px;
-    }
-    .rlabel{
-        color: #747474;
-        padding-bottom: 10px;
-    }
-    .bookdate{
-        padding-bottom: 10px;
-    }
-    
-    
-    .title {
-        margin-bottom: 10px;
-    }
-     input {
-        width: 100%;
-        // height: 48px;
-        // margin-top: 8px;
-        border: 1px solid #747474;
+  
+    .iconContainer {
+      width: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: left;
+
+      img {
+        border: 1px solid $secondary;
+        padding: 20px;
+        background-color: $darkTwo;
         border-radius: 5px;
-        background: transparent;
-        outline: none;
-        padding-left: 16px;
-        color: $white;
-        // font-size: 18px;
+      }
     }
-    .registrationMax{
-        width: 100%;
-    }
+  }
+
+.commercialContainer {
+  .commercialTiltle {
+    font-size: 20px;
+  }
+
+  .checkboxLebel {
+    color: $bgBody;
+    padding-bottom: 10px;
+  }
+
+  .checkbox {
+    color: #747474;
+  }
+
+  .label {
+    color: #747474;
+    font-size: 16px;
+    padding-top: 10px;
+  }
+
+  .redioBoxContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .priceSetContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .registrationContainer {
+    display: flex;
+    gap: 10px;
+  }
+
+  .bookingContainer {
+    display: flex;
+    gap: 10px;
+  }
+
+  .maxBook {
+    color: $secondaryWhite;
+    padding-top: 10px;
+  }
+
+  .rtext {
+    padding: 10px 0px;
+  }
+
+  .rlabel {
+    color: #747474;
+    padding-bottom: 10px;
+  }
+
+  .bookdate {
+    padding-bottom: 10px;
+  }
+
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  input {
+    width: 100%;
+    // height: 48px;
+    // margin-top: 8px;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+    // font-size: 18px;
+  }
+
+  .registrationMax {
+    width: 100%;
+  }
 }
-.nextBtn{
-   margin-top: 20px;
-   margin-bottom: 10px;
+
+.nextBtn {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .hr {
-      background-color: $secondary;
-      height: 1px;
-      margin: 10px 0px;
-  }
-  .labelMergin{
-            margin-top: 8px;
-            width: 100%;
-  }
-  .labelMergin2{
-            margin-top: 8px;
-            width: 100%;
-            input {
-            color: $secondaryWhite;
-            border: 1px solid $secondaryWhite;
-            }
-  }
+  background-color: $secondary;
+  height: 1px;
+  margin: 10px 0px;
+}
 
-  
+.labelMergin {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.labelMergin2 {
+  margin-top: 8px;
+  width: 100%;
+
+  input {
+    color: $secondaryWhite;
+    border: 1px solid $secondaryWhite;
+  }
+}
 
 .watchTimeDataAndGraphContainer {
   display: flex;
