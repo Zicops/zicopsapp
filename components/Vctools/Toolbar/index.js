@@ -298,6 +298,7 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('SettingPopup');
           }}
+          api={api}
         />
       ),
     },
