@@ -108,12 +108,12 @@ const VcMaintool = ({ vcData = {} }) => {
     api.executeCommand('displayName', `${userData?.first_name} ${userData.last_name}`);
     api.executeCommand('email', userData?.email);
     api.executeCommand('avatarUrl', userData?.photo_url);
-    api.executeCommand('toggleFilmStrip');
+    // api.executeCommand('toggleFilmStrip');
     setLobby(false);
 
     const allPartcipants = structuredClone(api?.getParticipantsInfo());
     const _currentUser = allPartcipants?.find(
-      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id,
+      (user) => decodeURIComponent(user?.avatarURL)?.split('/')?.[5] === userData?.id,
     );
     const isModerator = modIdList?.includes(userData?.id);
     if (isModerator) api.executeCommand('grantModerator', userData?.id);

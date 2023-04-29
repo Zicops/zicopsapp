@@ -58,9 +58,9 @@ const SettingPopup = ({ hide, api }) => {
     setVideoQuality(_videoQuality);
   }, []);
 
-  useEffect(() => {
-    console.info(availableDevices, currentDevices, videoQuality);
-  }, [availableDevices, currentDevices, videoQuality]);
+  // useEffect(() => {
+  //   console.info(availableDevices, currentDevices, videoQuality);
+  // }, [availableDevices, currentDevices, videoQuality]);
 
   function setAudioInput(device) {
     api.setAudioInputDevice(device.label, device.deviceId);
@@ -85,10 +85,10 @@ const SettingPopup = ({ hide, api }) => {
   }
   return (
     <div
-      className={`${styles.vcToolSettingContainer}`}
+      className={`${styles.vcToolSidebar}`}
       onMouseEnter={() => setHideToolbar(false)}
       onMouseLeave={() => setHideToolbar(null)}>
-      <div className={`${styles.vctToolSettingHead}`}>
+      <div className={`${styles.sidebarHeading}`}>
         <div>Settings</div>
         <button
           onClick={() => {
@@ -98,7 +98,7 @@ const SettingPopup = ({ hide, api }) => {
         </button>
       </div>
 
-      <div className={`${styles.vcToolSettingScreen}`}>
+      <div className={`${styles.sidebarContent}`}>
         <div className={`${style.audioAndVideoSettingContainer}`}>
           <p>Audio & Video</p>
           <div>
@@ -166,7 +166,7 @@ const SettingPopup = ({ hide, api }) => {
               //     updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
               //   }}
             />
-            <img src="/images/svg/vctool/classRoomView.svg" />
+            <img src="/images/svg/vctool/classRoomview.svg" />
           </div>
 
           <div className={`${style.layout}`}>
