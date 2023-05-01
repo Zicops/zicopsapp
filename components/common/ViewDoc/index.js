@@ -1,11 +1,11 @@
 import { useState } from 'react';
-// import * as RDocs from 'react-documents';
+import * as RDocs from 'react-documents';
 import styles from './viewDoc.module.scss';
 
 export default function ViewDoc({ url, customStyles = {} }) {
   const [isLoaded, setIsLoaded] = useState(null);
 
-  // const { DocumentViewer } = RDocs;
+  const { DocumentViewer } = RDocs;
 
   return (
     <div className={`${styles.container}`}>
@@ -15,7 +15,7 @@ export default function ViewDoc({ url, customStyles = {} }) {
         </div>
       )}
 
-      {/* <DocumentViewer
+      <DocumentViewer
         style={
           isLoaded
             ? { minHeight: '60vh', width: '100%', ...customStyles }
@@ -30,7 +30,7 @@ export default function ViewDoc({ url, customStyles = {} }) {
         // viewer="office"
         // viewer={selectedViewer.name}
         // viewerUrl={selectedViewer.viewerUrl}
-      /> */}
+      />
     </div>
   );
 }
