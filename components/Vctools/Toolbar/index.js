@@ -85,6 +85,7 @@ const MainToolbar = ({
   const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
 
   useEffect(() => {
+    if (!api) return;
     api.addListener('contentSharingParticipantsChanged', (share) => {
       setScreenShareParticipants(share.data);
     });
