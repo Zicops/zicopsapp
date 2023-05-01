@@ -1,4 +1,5 @@
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import Button from '@/components/common/Button';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import { CommercialsAtom } from '@/state/atoms/courses.atom';
@@ -112,12 +113,40 @@ const RegisterTable = () => {
         submitBtn={{ name: 'Yes' }}
         isVilt={true}
         isMarketYard={true}
+        isCloseButton={false}
+        isSubmitButton={false}
         isFooterVisible={true}>
         <div>
           <p style={{ paddingTop: '20px', fontSize: '20px' }}>Remove registrant</p>
           <p style={{ paddingTop: '20px', color: '#ACACAC' }}>
             Are you sure you want to remove this registrant?
           </p>
+          <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'center' }}>
+            <Button
+              text="NO"
+              customStyles={{
+                borderRadius: '4px',
+                border: 'none',
+                backgroundColor: '#26292C',
+                color: '#FFFF',
+              }}
+              clickHandler={() => {
+                setShowPopup(false);
+              }}
+            />
+            <Button
+              text="YES"
+              customStyles={{
+                borderRadius: '4px',
+                backgroundColor: '#F53D41',
+                color: '#FFFF',
+                border: 'none',
+              }}
+              clickHandler={() => {
+                setShowPopup(false);
+              }}
+            />
+          </div>
         </div>
       </VendorPopUp>
     </div>
