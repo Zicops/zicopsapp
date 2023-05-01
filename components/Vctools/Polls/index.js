@@ -111,7 +111,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       component: (
         <ShowPoll
           setPollTitle={() => {
-            editPollFunc('pollQA');
+            setPollTitle('pollQA');
           }}
           deletePoll={(index) => {
             deletePollPopUp(index);

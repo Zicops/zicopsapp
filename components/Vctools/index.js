@@ -54,6 +54,7 @@ const VcMaintool = ({ vcData = {} }) => {
   const [hidecard, sethidecard] = useState(false);
   const [toggleAudio, settoggleAudio] = useState(false);
   const [toggleVideo, settoggleVideo] = useState(false);
+  const [shareToggle, setShareToggle] = useState(false);
   // const [link, setlink] = useState(GenerateString(9).trim().toLocaleLowerCase());
   const [Fullscreen, setFullscreen] = useState(false);
   const fullScreenRef = useRef(null);
@@ -109,11 +110,12 @@ const VcMaintool = ({ vcData = {} }) => {
     api.executeCommand('email', userData?.email);
     api.executeCommand('avatarUrl', userData?.photo_url);
     api.executeCommand('toggleFilmStrip');
+    api.executeCommand('toggleTileView');
     setLobby(false);
 
     const allPartcipants = structuredClone(api?.getParticipantsInfo());
     const _currentUser = allPartcipants?.find(
-      (user) => getFileNameFromUrl(user?.avatarUrl) === userData?.id,
+      (user) => decodeURIComponent(user?.avatarURL)?.split('/')?.[5] === userData?.id,
     );
     const isModerator = modIdList?.includes(userData?.id);
     if (isModerator) api.executeCommand('grantModerator', userData?.id);
@@ -121,7 +123,12 @@ const VcMaintool = ({ vcData = {} }) => {
     api.executeCommand('join');
 
     setCurrentParticipantData(getCurrentParticipantDataObj({ ..._currentUser, isModerator }));
-  }, [isMeetingStarted]);
+
+    api.addListener('screenSharingStatusChanged', (share) => {
+      setShareToggle(share.on);
+    });
+
+  }, [isMeetingStarted, api]);
 
   useEffect(() => {
     if (!controls?.is_break) return;
@@ -199,6 +206,7 @@ const VcMaintool = ({ vcData = {} }) => {
             }}
             audiotoggle={toggleAudio}
             videotoggle={toggleVideo}
+            shareToggle={shareToggle}
             endMeetng={() => {
               api?.dispose();
               settoobar(false);
@@ -216,6 +224,7 @@ const VcMaintool = ({ vcData = {} }) => {
               setLobby(false);
             }}
             shareScreen={() => {
+              setShareToggle(!shareToggle);
               api.executeCommand('toggleShareScreen');
               setFullscreen(false);
             }}

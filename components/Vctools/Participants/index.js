@@ -35,9 +35,9 @@ const Participants = ({ hide = false, Info, Iframe, api = {} }) => {
     learnerList.push(data);
   });
 
-  useEffect(() => {
-    console.info(modIdList, userData.id, userList);
-  }, [classroomData]);
+  // useEffect(() => {
+  //   console.info(modIdList, userData.id, userList);
+  // }, [classroomData]);
 
   return (
     <div
@@ -80,7 +80,7 @@ const Participants = ({ hide = false, Info, Iframe, api = {} }) => {
         <div className={`${styles.allInstructors}`}>
           {learnerList.map((data, index) => (
             <StudentFrame
-              name={data?.displayName || data?.formattedDisplayName}
+              name={data?.formattedDisplayName || data?.displayName}
               avatarUrl={data?.avatarURL}
               frameIcons={{
                 isRiseHand: data?.isHandRise,
