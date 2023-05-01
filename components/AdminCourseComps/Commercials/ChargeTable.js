@@ -6,7 +6,6 @@ import { useRecoilValue } from 'recoil';
 
 const ChargeTable = () => {
   const commercialsData = useRecoilValue(CommercialsAtom);
-  console.info(commercialsData);
   const columns = [
     {
       field: 'method',
