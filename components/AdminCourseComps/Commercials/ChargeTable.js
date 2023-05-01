@@ -27,30 +27,41 @@ const ChargeTable = () => {
       flex: 0.7,
     },
   ];
+
+  const DomCreditTax =
+    (commercialsData?.price_per_seat * 18) / 100 + (commercialsData?.price_per_seat * 2) / 100;
+  const InterantionalCreditTax =
+    (commercialsData?.price_per_seat * 18) / 100 + (commercialsData?.price_per_seat * 3) / 100;
   const ChargesData = [
     {
       id: 1,
       method: 'UPI',
       fees: '0% i.e Rs 0',
-      amounts: commercialsData?.price_per_seat,
+      amounts: `Rs ${commercialsData?.price_per_seat}`,
     },
     {
       id: 2,
       method: 'Domestic Debit & Credit card',
-      fees: '2% + 18% GST = Rs 2 + 0.36 = Rs 2.36',
-      amounts: 'Rs 97.64',
+      fees: `2% + 18% GST = Rs ${(commercialsData?.price_per_seat * 2) / 100} + ${
+        (commercialsData?.price_per_seat * 18) / 100
+      } = Rs ${DomCreditTax}`,
+      amounts: `Rs ${commercialsData?.price_per_seat - DomCreditTax}`,
     },
     {
       id: 3,
       method: 'International Credit card',
-      fees: '3% + 18% GST = Rs 3 + 0.54 = Rs 3.54',
-      amounts: 'Rs 100',
+      fees: `3% + 18% GST = Rs ${(commercialsData?.price_per_seat * 3) / 100} + ${
+        (commercialsData?.price_per_seat * 18) / 100
+      }  = Rs ${InterantionalCreditTax}`,
+      amounts: `Rs ${commercialsData?.price_per_seat - InterantionalCreditTax}`,
     },
     {
       id: 4,
       method: 'Net banking',
-      fees: '2% + 18% GST = Rs 2 = 0.36 = Rs 2.36',
-      amounts: 'Rs 100',
+      fees: `2% + 18% GST = Rs ${(commercialsData?.price_per_seat * 2) / 100} + ${
+        (commercialsData?.price_per_seat * 18) / 100
+      } = Rs ${DomCreditTax}`,
+      amounts: `Rs ${commercialsData?.price_per_seat - DomCreditTax}`,
     },
   ];
   return (
