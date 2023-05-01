@@ -137,7 +137,7 @@ const Commercials = () => {
             onClick={(e) => {
               setOpenTable(true);
             }}>
-            <img src="/images/svg/info.svg" alt="" />
+            <img src="/images/svg/info2.svg" alt="" />
           </div>
         </Tooltip>
       </div>

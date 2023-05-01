@@ -6,7 +6,7 @@ export default function RegisterUserTabs() {
   const [activeUserTab, setActiveUserTab] = useRecoilState(ActiveCourseTabNameAtom);
 
   // set course master as default if state is empty
-  if (!activeUserTab) setActiveUserTab(usersTabs.registrations.name);
+  if (!activeUserTab) setActiveUserTab(usersTabs.name);
   return (
     <>
       <TabContainer

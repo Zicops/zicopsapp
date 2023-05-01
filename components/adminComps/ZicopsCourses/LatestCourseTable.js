@@ -2,6 +2,8 @@
 
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
+import RegisterUserTabs from '@/components/AdminCourseComps/RegisterUserTabs';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
@@ -28,6 +30,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   const [latestCourses, setLatestCourse] = useState([]);
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
   const [searchParam, setSearchParam] = useState('');
+  const [showUsers, setShowUsers] = useState(false);
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -111,7 +114,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                 outline: '0',
                 border: '0',
               }}
-              onClick={() => Router.push()}>
+              onClick={() => setShowUsers(params.row.id)}>
               <img src="/images/svg/group2.svg" width={20}></img>
             </button>
             <button
@@ -197,6 +200,17 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
           filterDisplayText: 'Filter By Status',
         }}
       />
+      <VendorPopUp
+        open={showUsers}
+        popUpState={[showUsers, setShowUsers]}
+        // size="large"
+        customStyles={{ width: '90vw', height: '90vh' }}
+        closeBtn={{ name: 'Cancel' }}
+        isSubmitButton={false}
+        isVilt={true}
+        isFooterVisible={true}>
+        <RegisterUserTabs />
+      </VendorPopUp>
     </>
   );
 }
