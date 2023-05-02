@@ -1410,3 +1410,23 @@ export const GET_PAGINATED_LEARNER_DETAILS = gql`
     }
   }
 `;
+
+export const GET_COURSE_TOTAL_WATCH_TIME = gql`
+  query getCourseTotalWatchTime($course_id: String) {
+    getCourseTotalWatchTime(course_id: $course_id)
+  }
+`;
+
+export const GET_COURSE_WATCH_TIME_GRAPH_DATA = gql`
+  query getCourseWatchTime($course_id: String, $start_date: String, $end_date: String) {
+    getCourseWatchTime(course_id: $course_id, start_date: $start_date, end_date: $end_date) {
+      CourseWatchTime {
+        course_id
+        date
+        time
+        created_at
+        user
+      }
+    }
+  }
+`;

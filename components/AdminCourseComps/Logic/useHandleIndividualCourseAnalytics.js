@@ -3,6 +3,8 @@ import {
   GET_COURSE_ANALYTICS_BY_ID,
   userQueryClient,
   GET_PAGINATED_LEARNER_DETAILS,
+  GET_COURSE_TOTAL_WATCH_TIME,
+  GET_COURSE_WATCH_TIME_GRAPH_DATA,
 } from '@/api/UserQueries';
 
 export default function useHandleIndividualCourseAnalytics() {
@@ -28,5 +30,32 @@ export default function useHandleIndividualCourseAnalytics() {
     return paginatedLearners;
   }
 
-  return { getCourseAnalyticsById, getPaginatedLearner };
+  async function getCourseTotalWatchTime(course_id) {
+    const getCourseTotalWatchTime = loadQueryDataAsync(
+      GET_COURSE_TOTAL_WATCH_TIME,
+      { course_id: course_id },
+      {},
+      userQueryClient,
+    );
+
+    console.info(getCourseTotalWatchTime);
+
+    return getCourseTotalWatchTime;
+  }
+
+  async function getCourseWatchTimeGraphData(course_id, start_date, end_date) {
+    const getCourseWatchTime = loadQueryDataAsync(
+      GET_COURSE_WATCH_TIME_GRAPH_DATA,
+      { course_id: course_id, start_data: start_date, end_date: end_date },
+      {},
+      userQueryClient,
+    );
+  }
+
+  return {
+    getCourseAnalyticsById,
+    getPaginatedLearner,
+    getCourseTotalWatchTime,
+    getCourseWatchTimeGraphData,
+  };
 }

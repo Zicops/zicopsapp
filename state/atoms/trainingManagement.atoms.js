@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 export const TrainerDataAtom = atom({
   key: 'trainerData',
-  default: getTrainerDataObj()
+  default: getTrainerDataObj(),
 });
 
 export function getTrainerDataObj(data = {}) {
@@ -16,6 +16,11 @@ export function getTrainerDataObj(data = {}) {
     status: data?.status || '',
     tag: data?.tag || null,
     vendorId: data?.vendorId || null,
-    inviteEmails: data?.inviteEmails || ''
+    inviteEmails: data?.inviteEmails || '',
   };
 }
+
+export const AddTrainerAtom = atom({
+  key: 'addTrainerPopup',
+  default: false,
+});
