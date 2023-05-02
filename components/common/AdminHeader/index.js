@@ -102,7 +102,9 @@ export default function AdminHeader({
             <img
               src="/images/svg/group.svg"
               className="rightside_icon"
-              onClick={() => setShowUsers(true)}
+              onClick={() => {
+                setShowUsers(true);
+              }}
               alt=""
             />
           </ToolTip>

@@ -2,13 +2,23 @@ import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import Button from '@/components/common/Button';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import { CommercialsAtom } from '@/state/atoms/courses.atom';
-import React, { useState } from 'react';
+import { CommercialsAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import useHandleRegisterData from './Logic/useHandleRegisterData';
 
 const RegisterTable = () => {
   const commercialsData = useRecoilValue(CommercialsAtom);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+
   const [showPopup, setShowPopup] = useState(false);
+  const { getPaginatedRegisterUsers, registerTableData } = useHandleRegisterData();
+
+  useEffect(() => {
+    if (!courseMetaData?.id) return;
+    getPaginatedRegisterUsers(courseMetaData?.id);
+  }, []);
+
   const columns = [
     {
       field: 's_no',

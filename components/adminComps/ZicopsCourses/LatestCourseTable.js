@@ -114,7 +114,9 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                 outline: '0',
                 border: '0',
               }}
-              onClick={() => setShowUsers(params.row.id)}>
+              onClick={() => {
+                setShowUsers(true);
+              }}>
               <img src="/images/svg/group2.svg" width={20}></img>
             </button>
             <button
