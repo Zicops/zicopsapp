@@ -825,8 +825,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
 
-.addNewTrainerButton {
-  background-color: red;
+  .buttonDiv {
+    display: flex;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    color: $white;
+    margin: 10px 0px;
+    font-size: 15px;
+    cursor: pointer;
+  }
 }

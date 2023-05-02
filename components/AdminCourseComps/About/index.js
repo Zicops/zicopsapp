@@ -19,6 +19,8 @@ import NextBtn from '../NextBtn';
 import styles from '../adminCourseComps.module.scss';
 import BulletPointInput from './BulletPointInput';
 import useHandleTrainerData from '@/components/TrainingManagementComps/Logic/useHandleTrainerData';
+import AddTrainerPopup from '@/components/TrainingManagementComps/AddTrainerPopup/AddTrainerPopup';
+import { AddTrainerAtom } from '@/state/atoms/trainingManagement.atoms';
 
 export default function About() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
@@ -30,6 +32,8 @@ export default function About() {
     handleClassroomMasterChange,
     moderatorCandidates,
   } = useHandleCourseData();
+
+  const [isAddTrainerOpen, setIsAddTrainerOpen] = useRecoilState(AddTrainerAtom);
 
   const { getPaginatedTrainers } = useHandleTrainerData();
 
@@ -459,6 +463,8 @@ export default function About() {
       )}
 
       <NextBtn switchTabName={courseTabs?.topics?.name} />
+
+      <AddTrainerPopup popUpState={[isAddTrainerOpen, setIsAddTrainerOpen]} />
     </>
   );
 }
