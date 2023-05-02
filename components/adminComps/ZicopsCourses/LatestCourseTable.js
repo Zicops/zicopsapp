@@ -3,10 +3,11 @@
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
 import RegisterUserTabs from '@/components/AdminCourseComps/RegisterUserTabs';
+import useHandleRegisterData from '@/components/AdminCourseComps/RegisterUserTabs/Logic/useHandleRegisterData';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { COURSE_STATUS, USER_LSP_ROLE } from '@/helper/constants.helper';
+import { COURSE_STATUS, COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getPageSizeBasedOnScreen, getUnixFromDate } from '@/helper/utils.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -31,6 +32,7 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
   const [courseStatus, setCourseStatus] = useState(COURSE_STATUS.save);
   const [searchParam, setSearchParam] = useState('');
   const [showUsers, setShowUsers] = useState(false);
+  const { getPaginatedRegisterUsers } = useHandleRegisterData();
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -107,18 +109,21 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
       renderCell: (params) => {
         return (
           <>
-            <button
-              style={{
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                outline: '0',
-                border: '0',
-              }}
-              onClick={() => {
-                setShowUsers(true);
-              }}>
-              <img src="/images/svg/group2.svg" width={20}></img>
-            </button>
+            {courseType === COURSE_TYPES[1] && (
+              <button
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: 'transparent',
+                  outline: '0',
+                  border: '0',
+                }}
+                onClick={() => {
+                  setShowUsers(true);
+                  getPaginatedRegisterUsers(params.row.id);
+                }}>
+                <img src="/images/svg/group2.svg" width={20}></img>
+              </button>
+            )}
             <button
               style={{
                 cursor: 'pointer',

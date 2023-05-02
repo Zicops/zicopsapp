@@ -15,6 +15,8 @@ import AdminSubHeader from './AdminSubHeader';
 import Sitemap from './Sitemap';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import RegisterUserTabs from '@/components/AdminCourseComps/RegisterUserTabs';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import useHandleRegisterData from '@/components/AdminCourseComps/RegisterUserTabs/Logic/useHandleRegisterData';
 
 export default function AdminHeader({
   title,
@@ -29,10 +31,12 @@ export default function AdminHeader({
   tourId,
 }) {
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
+  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const activeTour = useRecoilValue(ActiveTourAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [showSitemap, setShowSitemap] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const { getPaginatedRegisterUsers } = useHandleRegisterData();
   const router = useRouter();
   const route = router.route;
 
@@ -98,16 +102,19 @@ export default function AdminHeader({
               {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
-          <ToolTip title="Users table" placement="bottom">
-            <img
-              src="/images/svg/group.svg"
-              className="rightside_icon"
-              onClick={() => {
-                setShowUsers(true);
-              }}
-              alt=""
-            />
-          </ToolTip>
+          {courseMetaData?.type === COURSE_TYPES[1] && (
+            <ToolTip title="Users table" placement="bottom">
+              <img
+                src="/images/svg/group.svg"
+                className="rightside_icon"
+                onClick={() => {
+                  setShowUsers(true);
+                  getPaginatedRegisterUsers(courseMetaData?.id);
+                }}
+                alt=""
+              />
+            </ToolTip>
+          )}
           <ToolTip title="Manage Configurations" placement="bottom">
             <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           </ToolTip>

@@ -51,7 +51,7 @@ const ChargeTable = () => {
       method: 'International Credit card',
       fees: `3% + 18% GST = Rs ${(commercialsData?.price_per_seat * 3) / 100} + ${
         (commercialsData?.price_per_seat * 18) / 100
-      }  = Rs ${InterantionalCreditTax}`,
+      } = Rs ${InterantionalCreditTax}`,
       amounts: `Rs ${commercialsData?.price_per_seat - InterantionalCreditTax}`,
     },
     {
@@ -70,6 +70,7 @@ const ChargeTable = () => {
         tableHeight="60vh"
         // pageSize={getPageSizeBasedOnScreen()}
         data={ChargesData}
+        hideFooterPagination={true}
         // loading={!vendorOrderDetails?.length}
       />
     </div>

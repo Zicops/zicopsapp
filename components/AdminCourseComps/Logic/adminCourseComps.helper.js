@@ -25,7 +25,7 @@ export const courseTabs = {
   details: { name: 'Details', component: <CourseDetails /> },
   about: { name: 'About', component: <About /> },
   topics: { name: 'Topics', component: <Topics /> },
-  commercials: { name: 'Commercials', component: <Commercials /> },
+  commercials: { name: 'Commercials', component: <Commercials />, isHidden: true },
   configuration: { name: 'Configuration', component: <Configuration /> },
   analytics: { name: 'Analytics', component: <Analytics /> },
 };

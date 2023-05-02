@@ -180,6 +180,7 @@ const Commercials = () => {
                     registration_end_date: date,
                   });
                 }}
+                placeholderText="Select Date"
                 // isDisabled={isPreview}
               />
             </div>
@@ -207,6 +208,7 @@ const Commercials = () => {
                       booking_start_date: date,
                     });
                   }}
+                  placeholderText="Select Date"
                 />
               </div>
               <div className={`${styles.checkbox}`}>
@@ -241,6 +243,7 @@ const Commercials = () => {
                       booking_end_date: date,
                     });
                   }}
+                  placeholderText="Select Date"
                 />
               </div>
               <div className={`${styles.checkbox}`}>

@@ -12,12 +12,7 @@ const RegisterTable = () => {
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
 
   const [showPopup, setShowPopup] = useState(false);
-  const { getPaginatedRegisterUsers, registerTableData } = useHandleRegisterData();
-
-  useEffect(() => {
-    if (!courseMetaData?.id) return;
-    getPaginatedRegisterUsers(courseMetaData?.id);
-  }, []);
+  const { registerTableData } = useHandleRegisterData();
 
   const columns = [
     {

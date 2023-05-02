@@ -750,7 +750,8 @@
         }
   
         .info {
-          margin-top: 34px;
+          margin-top: min(5vh , 33px);
+          margin-bottom: 3px;
           border: 1px solid $bgBody;
           padding: 0px 10px;
           display: flex;
