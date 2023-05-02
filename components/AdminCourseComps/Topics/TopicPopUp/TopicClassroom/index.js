@@ -1,21 +1,26 @@
 import useHandleTopicClassroom from '@/components/AdminCourseComps/Logic/useHandleTopicClassroom';
 import ZicopsButton from '@/components/common/ZicopsButton';
 import { TopicClassroomAtom } from '@/state/atoms/courses.atom';
+import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import styles from '../../../adminCourseComps.module.scss';
+import ResourceForm from '../ResourceForm';
 import TopicAccordian from '../TopicAccordian';
+import TopicQuiz from '../TopicQuiz';
 import ClassroomForm from './ClassroomForm';
 import VcSetting from './VcSetting';
 
 export default function TopicClassroom({ topData = null, closePopUp = () => {} }) {
   const topicClassroom = useRecoilValue(TopicClassroomAtom);
 
+  const [isAccordionDisabled, setIsAccordionDisabled] = useState(null);
+
   const {
     isSubmitDisabled,
     accordionOpenState,
     setAccordionOpenState,
     handleTopicClassroomChange,
-    addUpdateTopicClassroom
+    handleSubmit,
   } = useHandleTopicClassroom(topData);
 
   const topicAccordians = [
@@ -28,24 +33,33 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
           closeAccordion={() => setAccordionOpenState(1)}
           topData={topData}
         />
-      )
+      ),
     },
     {
+      id: 2,
       title: 'Quizzes',
-      body: 'Quiz'
+      body: (
+        <TopicQuiz
+          topData={topData}
+          setIsAccordionDisabled={(val) => setIsAccordionDisabled(!!val ? 2 : null)}
+        />
+      ),
     },
     {
+      id: 3,
       title: 'Resources',
-      body: 'Quiz'
+      body: <ResourceForm topData={topData} />,
     },
+    // {
+    //   id: 4,
+    //   title: 'Assignments',
+    //   body: '<Classroom />',
+    // },
     {
-      title: 'Assignments',
-      body: '<Classroom />'
-    },
-    {
+      id: 5,
       title: 'VC Setting',
-      body: <VcSetting handleChange={handleTopicClassroomChange} />
-    }
+      body: <VcSetting handleChange={handleTopicClassroomChange} />,
+    },
   ];
 
   return (
@@ -53,9 +67,10 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
       <div className={styles.editTopicAccordianContainer}>
         {topicAccordians.map((item) => (
           <TopicAccordian
-            key={item?.title}
+            key={item?.id}
             title={item.title}
-            isOpen={accordionOpenState === item?.id ? false : null}>
+            isOpen={accordionOpenState === item?.id ? false : null}
+            isDisabled={isAccordionDisabled === item?.id}>
             {item.body}
           </TopicAccordian>
         ))}
@@ -72,7 +87,7 @@ export default function TopicClassroom({ topData = null, closePopUp = () => {} }
           customClass={`${styles.addTopicFormBtn} ${styles.addBtn}`}
           isDisabled={isSubmitDisabled}
           handleClick={() => {
-            addUpdateTopicClassroom()
+            handleSubmit()
               .catch((err) => console.log(err))
               .finally(() => closePopUp(true));
           }}

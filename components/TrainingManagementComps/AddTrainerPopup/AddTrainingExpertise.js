@@ -51,9 +51,9 @@ const AddTrainingExpertise = () => {
             inputName: 'filter',
             placeholder: 'Search Training Expertise...',
             value: expertiseSearchValue
-          }
+          },
+          changeHandler: (e) => setExpertiseSearchValue(e.target.value)
         }}
-        changeHandler={(e) => setExpertiseSearchValue(e.target.value)}
         styleClass={`${styles.expertiseSearchBar}`}
       />
       {Object.values(catSubCat?.subCatGrp)?.map((obj) => {

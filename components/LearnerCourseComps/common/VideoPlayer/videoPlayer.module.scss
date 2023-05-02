@@ -1,0 +1,309 @@
+$control-bar-height: 80px;
+$progress-bar-height: 5px;
+
+$video-player-background: $black;
+$progress-bar-background: $white;
+$progress-fill-background: $primary;
+
+$z-index-video-element: 0;
+$z-index-control-bar: 1;
+
+$iconHeight: 35px;
+$thumbnailWidth: 200px;
+
+:export {
+  thumbnailWidth: $thumbnailWidth;
+}
+
+.videoPlayer {
+  position: relative;
+  background-color: $video-player-background;
+
+  // aspect-ratio: 16/9;
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  .centerFlashIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 100px;
+    width: 100px;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+
+    background-color: rgba($black, 0.5);
+    padding: 15px;
+    border-radius: 50%;
+    animation: myflash 1s;
+    pointer-events: none;
+
+    .centerFlashIconImg {
+      opacity: 0.8;
+    }
+
+    @keyframes myflash {
+      0% {
+        opacity: 0;
+      }
+      30% {
+        opacity: 1;
+      }
+      70% {
+        opacity: 1;
+      }
+    }
+  }
+
+  .previewImage {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+    height: 100%;
+    width: 100%;
+
+    img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .controlBar {
+    position: absolute;
+    bottom: 0%;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    // align-items: center;
+    // gap: 60px;
+
+    width: 100%;
+    height: $control-bar-height;
+    background: linear-gradient(
+      0deg,
+      rgba($black, 1) 0%,
+      rgba($black, 0) 100%,
+      rgba($black, 0) 100%
+    );
+
+    z-index: $z-index-control-bar;
+
+    .thumbnailPreview {
+      width: $thumbnailWidth;
+
+      position: absolute;
+      bottom: calc(100% + 1.5em);
+      left: 0px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5em;
+
+      transform: translateX(-50%);
+
+      z-index: 1;
+
+      .preview {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        flex: 1;
+
+        border: 2px solid $white;
+        min-height: 110px;
+        background-color: $darkTwo;
+      }
+
+      .pill {
+        background-color: $darkThree;
+        border-radius: 20px;
+        padding: 0px 10px;
+        width: fit-content;
+        margin: auto;
+
+        &.extraDataSlot {
+          background-color: $darkTwo;
+        }
+      }
+    }
+
+    .progressContainer {
+      grid-column: 1/14;
+      width: 100%;
+      height: calc($progress-bar-height + 2px);
+
+      position: relative;
+
+      .progressBar {
+        position: relative;
+        background-color: rgba($progress-bar-background, 0.4);
+        height: $progress-bar-height;
+
+        cursor: pointer;
+        transition: all 0.5 ease-in-out;
+
+        // added this for continuous drag of progress bar outside the bar area
+        &:before {
+          content: '';
+          position: fixed;
+          top: $headerHeight;
+
+          width: 100%;
+          z-index: 1;
+        }
+
+        &.activeDrag {
+          &::before {
+            height: 80vh;
+          }
+        }
+
+        &:hover {
+          opacity: 1;
+          height: calc($progress-bar-height + 2px);
+
+          .progressFill {
+            &::after {
+              height: calc($progress-bar-height + 10px);
+              width: calc($progress-bar-height + 10px);
+              opacity: 1;
+            }
+          }
+        }
+
+        canvas {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+        }
+
+        .progressFill {
+          position: relative;
+          background-color: $progress-fill-background;
+          height: 100%;
+
+          pointer-events: none;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translate(-50%, -50%);
+
+            height: calc($progress-bar-height + 5px);
+            width: calc($progress-bar-height + 5px);
+
+            background-color: $progress-fill-background;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+
+    .centerIcons {
+      grid-column: 2/12;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 50px;
+
+      span {
+        position: relative;
+        height: $iconHeight;
+        cursor: pointer;
+
+        &.rotate {
+          transform: rotate(180deg);
+        }
+        &.disabled {
+          cursor: not-allowed;
+        }
+
+        .extraComp {
+          position: absolute;
+          bottom: 240%;
+          left: 50%;
+
+          transform: translateX(-50%) rotate(-90deg);
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .volumeSlider {
+            padding-left: 10px;
+
+            input {
+              accent-color: $primary;
+            }
+          }
+        }
+      }
+
+      .playBtn {
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .fullScreen {
+      display: flex;
+      justify-self: center;
+      cursor: pointer;
+
+      height: $iconHeight;
+    }
+  }
+
+  .subtitles {
+    position: absolute;
+    bottom: 4em;
+    left: 50%;
+    transform: translateX(-50%);
+    color: $white;
+    background-color: rgba($black, 0.8);
+    transition: all 0.3s;
+    // transition-delay: 0.2s;
+    font-size: 24px;
+
+    &.increaseDistanceFromBottom {
+      bottom: 120px;
+    }
+  }
+
+  .player {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      height: 100%;
+      width: 100%;
+
+      object-fit: cover;
+
+      z-index: $z-index-video-element;
+    }
+  }
+}
+
+.noVideoPresent {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

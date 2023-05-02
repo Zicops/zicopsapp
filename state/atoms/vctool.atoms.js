@@ -1,57 +1,91 @@
 import { atom } from 'recoil';
+export const publishBreakoutRoom = atom({
+  key: 'publishBreakoutRoom',
+  default: {
+    isRoomPublished: false,
+    publishedRoomArr: [],
+  },
+});
+export const participantJoinData = atom({
+  key: 'participantJoinData',
+  default: {
+    modList: [],
+    LearnerList: [],
+  },
+});
 export const joinMeeting = atom({
   key: 'joinMeeting',
-  default: false //check whether meeting is started or not
+  default: false, //check whether meeting is started or not
 });
+
+export const ClassRoomFlagsInput = atom({
+  key: 'ClassRoomFlagsInput',
+  default: {
+    id: '',
+    is_classroom_started: false,
+    is_participants_present: false,
+    is_ad_displayed: false,
+    is_break: null,
+    is_moderator_joined: false,
+    is_trainer_joined: false,
+    ad_video_url: '',
+    is_microphone_enabled: false,
+    is_video_sharing_enabled: false,
+    is_screen_sharing_enabled: false,
+    is_chat_enabled: false,
+    is_qa_enabled: false,
+    quiz: [],
+  },
+});
+
 export const vcModeratorControlls = atom({
   key: 'vcModeratorControlls',
   default: {
     onMic: false, //set mic and video on and off
-    onVideo: false
-  }
+    onVideo: false,
+  },
 });
-
 export const vcResource = atom({
   key: 'vcResource',
   default: [
     {
       type: '',
       name: '',
-      uploadedFile: ''
-    }
-  ]
+      uploadedFile: '',
+    },
+  ],
 });
 export const vcMeetingIconAtom = atom({
   key: 'vcMeetingIconAtom',
   default: {
     isModerator: false, // default it is false
     isJoinedAsModerator: false, // default it is false
-    isStartAdd: false // default it is false
-  }
+    isStartAdd: false, // default it is false
+  },
 });
 export const vctoolAlluserinfo = atom({
   //for storing all the room data
   key: 'vctollInfo',
-  default: []
+  default: [],
 });
 export const breakoutList = atom({
   //stores the list of breakoutRooms
   key: 'breakoutlist',
-  default: []
+  default: [],
 });
 
 export const totalRoomno = atom({
   //use to create any number of breakout rooms if default is one then total breakout rooms are 1
   key: 'totalRooms',
-  default: 1
+  default: 1,
 });
 
 export const particiantPopup = atom({
   key: 'participantpopup', //use to show and hide participant list popup
   default: {
     roomId: '',
-    isRoom: false
-  }
+    isRoom: false,
+  },
 });
 
 export const allPartcipantinfo = atom({
@@ -59,27 +93,47 @@ export const allPartcipantinfo = atom({
   key: 'allPartcipantinfo',
   default: {
     totalRoomno: 0,
-    presentRoom: 0
-  }
+    presentRoom: 0,
+  },
 });
 export const breakoutRoomselectedparticipant = atom({
   key: 'breakoutRoomselectedparticipant',
-  default: []
+  default: [],
 });
 export const breakoutRoomId = atom({
   key: 'breakoutRoomId',
-  default: ''
+  default: '',
 });
 
 export const pollArray = atom({
   key: 'pollArray',
   default: [
     {
+      id: '',
+      meetingId: '',
+      courseId: '',
+      topicId: '',
       pollName: '',
       pollQuestion: '',
-      pollOptions: []
-    }
-  ]
+      pollOptions: [],
+      status: '',
+    },
+  ],
+});
+export const vcActivePoll = atom({
+  key: 'vcActivePoll',
+  default: [],
+});
+export const vcEndedPoll = atom({
+  key: 'vcEndedPoll',
+  default: [],
+});
+export const participantPoll = atom({
+  key: 'participantPoll',
+  default: {
+    savedPoll: [],
+    endedPoll: [],
+  },
 });
 
 export const quizArray = atom({
@@ -94,24 +148,45 @@ export const quizArray = atom({
         option1: '',
         option2: '',
         option3: '',
-        option4: ''
+        option4: '',
       },
-      answer: ''
-    }
-  ]
+      answer: '',
+    },
+  ],
+});
+export const particiapntQuiz = atom({
+  key: 'particiapntQuiz',
+  default: {
+    attemtedQuiz: [],
+    unAttemptedQuiz: [],
+  },
+});
+export const activequizArr = atom({
+  key: 'activequizArr',
+  default: [],
 });
 export const VcChatMessageAtom = atom({
   key: 'VcChatMessageAtom',
-  default: getMesaageObj()
+  default: getMesaageObj(),
 });
 export const VcChatReplyAtom = atom({
   key: 'VcChatReplyAtom',
-  default: getMesaageObj()
+  default: getMesaageObj(),
 });
 
 export const vcChatBarAtom = atom({
   key: 'DiscussionAtom',
-  default: []
+  default: [],
+});
+
+export const vcChatObj = atom({
+  key: 'vcChatObj',
+  default: {
+    body: '',
+    meeting_id: '',
+    user_id: '',
+    time: null,
+  },
 });
 
 export function getMesaageObj(data = {}) {
@@ -129,26 +204,26 @@ export function getMesaageObj(data = {}) {
     Dislike: data?.dislike || [],
     IsPinned: data?.isPinned || false,
     UserId: data?.userId || '',
-    ReplyCount: data?.replyCount || 0
+    ReplyCount: data?.replyCount || 0,
   };
 }
 
 export const VcQAMessageAtom = atom({
   key: 'VcQAMessageAtom',
-  default: getMesaageObj()
+  default: getMesaageObj(),
 });
 export const VcQAReplyAtom = atom({
   key: 'VcQAReplyAtom',
-  default: getMesaageObj()
+  default: getMesaageObj(),
 });
 export const AQChatAtom = atom({
   key: 'AQChatAtom',
-  default: []
+  default: [],
 });
 
 export const CurrentParticipantDataAtom = atom({
   key: 'CurrentParticipantData',
-  default: getCurrentParticipantDataObj()
+  default: getCurrentParticipantDataObj(),
 });
 
 export function getCurrentParticipantDataObj(data = {}) {
@@ -159,13 +234,13 @@ export function getCurrentParticipantDataObj(data = {}) {
     formattedDisplayName: data?.formattedDisplayName || '',
     participantId: data?.participantId || '',
     isModerator: data?.isModerator || false,
-    isTrainer: data?.isTrainer || false
+    isTrainer: data?.isTrainer || false,
   };
 }
 
 export const vctoolMetaData = atom({
   key: 'vctoolMetaData',
-  default: getVctoolMetaData()
+  default: getVctoolMetaData(),
 });
 
 export function getVctoolMetaData(data) {
@@ -182,12 +257,17 @@ export function getVctoolMetaData(data) {
     //  show and hide participant list popup to join breakout room
     particiantPopup: data?.particiantPopup || {
       roomId: '',
-      isRoom: false
-    }
+      isRoom: false,
+    },
   };
 }
 
 export const meetingPageAtom = atom({
   key: 'meetingPageAtom',
-  default: false
+  default: false,
+});
+
+export const vcToolNavbarState = atom({
+  key: 'vcToolNavbarState',
+  default: null,
 });

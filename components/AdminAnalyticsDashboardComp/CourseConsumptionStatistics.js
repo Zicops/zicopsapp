@@ -15,7 +15,7 @@ export default function CourseConsumptionStatistics() {
       field: 'courseName',
       headerName: 'Course name',
       headerClassName: 'course-list-header',
-      width: 300
+      width: 300,
     },
     {
       field: 'activeLearners',
@@ -24,7 +24,7 @@ export default function CourseConsumptionStatistics() {
       headerClassName: 'course-list-header',
       headerAlign: 'center',
       align: 'center',
-      width: 180
+      width: 180,
     },
     {
       field: 'completedBy',
@@ -33,7 +33,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 180
+      width: 180,
     },
     {
       field: 'averageCompletionTime',
@@ -42,7 +42,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 250
+      width: 250,
     },
     {
       field: 'averageCompliance',
@@ -51,7 +51,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 250
+      width: 250,
     },
     {
       field: 'publishedOn',
@@ -60,7 +60,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 180
+      width: 180,
     },
     {
       field: 'ownedBy',
@@ -68,7 +68,7 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 130
+      width: 130,
     },
     {
       field: 'duration',
@@ -77,8 +77,8 @@ export default function CourseConsumptionStatistics() {
       headerAlign: 'center',
       align: 'center',
       headerClassName: 'course-list-header',
-      width: 150
-    }
+      width: 150,
+    },
   ];
 
   function getDisplayHeading() {
@@ -135,7 +135,7 @@ export default function CourseConsumptionStatistics() {
       <ZicopsTable
         columns={columns}
         data={tableData}
-        customId={'courseId'}
+        customId={'id'}
         pageSize={5}
         rowsPerPageOptions={[3]}
         tableHeight="55vh"

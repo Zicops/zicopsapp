@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   TrainerDataAtom,
   TrainerExpertiseListAtom,
-  getTrainerDataObj
+  getTrainerDataObj,
 } from '@/state/atoms/trainingManagement.atoms';
 import { CREATE_TRAINER, viltMutationClient } from '@/api/ViltMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -13,7 +13,7 @@ import { INVITE_USERS_WITH_ROLE, userClient } from '@/api/UserMutations';
 import { ADD_USER_TAGS, notificationClient } from '@/api/NotificationClient';
 import { FcmTokenAtom } from '@/state/atoms/notification.atom';
 import { loadQueryDataAsync } from '@/helper/api.helper';
-import { GET_PAGINATED_TRAINERS, viltQueryClient } from '@/api/ViltQueries';
+import { GET_PAGINATED_TRAINERS, viltQueryClient, GET_TRAINER_BY_ID } from '@/api/ViltQueries';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 
 export default function useHandleTrainerData() {
@@ -21,13 +21,16 @@ export default function useHandleTrainerData() {
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const fcmToken = useRecoilValue(FcmTokenAtom);
 
+  // const [isAddTrainerPopupOpen, setIsAddTrainerPopupOpen] = useState(false);
+  // const [isEditTrainerPopupOpen, setIsEditTrainerPopupOpen] = useState(false);
+
   const [addNewTrainer] = useMutation(CREATE_TRAINER, { client: viltMutationClient });
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
 
   const [localUserId, setLocalUserId] = useState(null);
 
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
-    client: userClient
+    client: userClient,
   });
 
   useEffect(() => {
@@ -35,15 +38,13 @@ export default function useHandleTrainerData() {
     addUpdateTrainer();
   }, [localUserId]);
 
-
   async function addUpdateTrainer(isToasterDisplay = true) {
     const sendData = {
       ...trainerData,
       name: trainerData?.name || '',
       userId: localUserId || trainerData?.userId || null,
-      expertise: trainerData?.expertise || []
+      expertise: trainerData?.expertise || [],
     };
-
 
     if (!isToasterDisplay) return;
 
@@ -72,7 +73,9 @@ export default function useHandleTrainerData() {
     const lspId = sessionStorage.getItem('lsp_id');
 
     if (!isToasterDisplay) return;
-    
+
+    if (!isToasterDisplay) return;
+
     if (!trainerData?.inviteEmails)
       return setToastMsg({ type: 'danger', message: 'Please Enter an email to invite' });
 
@@ -85,7 +88,7 @@ export default function useHandleTrainerData() {
     let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer }
+      variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer },
     }).catch((err) => {
       console.log('error', err);
 
@@ -127,13 +130,13 @@ export default function useHandleTrainerData() {
       setToastMsg({
         type: 'info',
         message:
-          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.',
       });
     }
     if (userLspMaps?.length) {
       const resTags = await addUserTags({
         variables: { ids: userLspMaps, tags: [trainerData?.tag] },
-        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } },
       }).catch((err) => {
         isError = true;
       });
@@ -152,7 +155,7 @@ export default function useHandleTrainerData() {
       GET_PAGINATED_TRAINERS,
       { lsp_id: lspId, pageCursor, Direction: '', pageSize: 100, vendor_id: '' },
       {},
-      viltQueryClient
+      viltQueryClient,
     ).catch((err) => setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' }));
 
     // if (!vendorList?.getPaginatedVendors?.vendors) return [];
@@ -168,7 +171,7 @@ export default function useHandleTrainerData() {
       GET_USER_DETAIL,
       { user_id: trainerUserIdArr },
       {},
-      userQueryClient
+      userQueryClient,
     ).catch((err) => err);
 
     const userDeets = userDetails?.getUserDetails;
@@ -176,5 +179,28 @@ export default function useHandleTrainerData() {
     return userDeets;
   }
 
-  return { addUpdateTrainer, handleMail, getPaginatedTrainers };
+  async function getTrainerById(trainerId = '') {
+    // if (!!trainerId) return;
+
+    const trainer = await loadQueryDataAsync(
+      GET_TRAINER_BY_ID,
+      { trainerId: trainerId },
+      {},
+      viltQueryClient,
+    ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
+
+    if (trainerList.error) {
+      setToastMsg({ type: 'warning', message: 'Trainer Not Found' });
+      return [];
+    }
+
+    console.info(trainer);
+  }
+
+  return {
+    addUpdateTrainer,
+    handleMail,
+    getPaginatedTrainers,
+    getTrainerById,
+  };
 }

@@ -1,49 +1,67 @@
 .audioAndVideoSettingContainer,
 .vctoolPerformanceContainer,
 .vctoolLayout {
-    width: 100%;
-    background-color: #26292C;
-    padding-top: 8px;
-    padding-left: 8px;
-    padding-bottom: 12px;
+  width: 100%;
+  background-color: #26292c;
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.audioAndVideoSettingContainer>p .vctoolPerformanceContainer>p
-.vctoolLayout>p {
-    font-weight: 400;
-    font-size: 14px;
-    color: white;
+.audioAndVideoSettingContainer > p .vctoolPerformanceContainer > p .vctoolLayout > p {
+  font-weight: 400;
+  font-size: 14px;
+  color: white;
 }
 
-.audioAndVideoSettingContainer>p {
-    color: white;
+.audioAndVideoSettingContainer > p {
+  color: white;
 }
 
 .settingInputLable {
-    width: 276px;
-    outline: none;
+  width: 276px;
+  outline: none;
 }
 
-.audioAndVideoSettingContainer>div>p {
-    font-weight: 400;
-    font-size: 16px;
-    color: #ACACAC;
-    margin-top: 10px;
-    margin-bottom: 6px;
+.audioAndVideoSettingContainer > div > p {
+  font-weight: 400;
+  font-size: 16px;
+  color: #acacac;
+  margin-top: 10px;
+  margin-bottom: 6px;
 }
-
-.vctoolPerformanceContainer>p {
-    color: white;
+.rsliderContainer {
+  width: 92%;
+  margin: auto;
+  div {
+    display: flex;
+   justify-content: space-between;
+  }
 }
-.vctoolPerformanceContainer
-{
-    margin-top: 14px;
+.vctoolPerformanceContainer > p {
+  color: white;
 }
-.vctoolLayout >p 
-{
-    color: white;
+.vctoolPerformanceContainer {
+  margin-top: 14px;
 }
-.vctoolLayout
-{
-    margin-top: 14px;
+.vctoolLayout > p {
+  color: white;
+}
+.vctoolLayout {
+  margin-top: 14px;
+}
+.layout {
+  width: 97%;
+  padding-left: 8px;
+  height: 45px;
+  border: solid #292f2f 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img {
+    height: 20px;
+    margin-right: 8px;
+  }
 }

@@ -34,6 +34,8 @@ export default function LabeledDropdown({
     menuPlacement = 'bottom'
   } = dropdownOptions;
 
+  // console.info(options);
+
   if (isReadonly) isDisabled = true;
 
   let containerWidth = '75%';

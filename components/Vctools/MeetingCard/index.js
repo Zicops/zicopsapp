@@ -11,7 +11,7 @@ const MeetingCard = ({
   startmeetingAudioenable,
   startmeetingVideoenable,
   startAudioenableFun,
-  startVideoenableFun
+  startVideoenableFun,
 }) => {
   const videoref = useRef(null);
   const [video1, setvideo1] = useState(startmeetingVideoenable);
@@ -50,7 +50,7 @@ const MeetingCard = ({
             className={`${styles.videoplay}`}
             id="video"
             ref={videoref}
-            autoPlay="true"></video>
+            autoPlay={true}></video>
           <div ref={nameRef} className={`${styles.subVideo1}`}>
             <img src={userData.photo_url} />
           </div>
@@ -78,12 +78,12 @@ const MeetingCard = ({
           falseSrc={'/images/svg/vctool/videocam-off.svg'}
           toggle={video1}
         />
-        <button>
+        {/* <button>
           <img src="/images/svg/vctool/settings.svg" />{' '}
         </button>
         <button>
           <img src="/images/svg/vctool/temp-preferences-custom.svg" />{' '}
-        </button>
+        </button> */}
         {meetingIconsAtom.isModerator ? (
           <div className={`${styles.joinModeratorBtn}`}>
             <button

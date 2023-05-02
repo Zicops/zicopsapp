@@ -6,24 +6,27 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import IconButton from '@/components/common/IconButton';
 import Spinner from '@/components/common/Spinner';
-import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
+import { COURSE_MAX_LENGTH_VALUES, TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
 import { getEncodedFileNameFromUrl } from '@/helper/utils.helper';
-import { TopicResourcesAtom } from '@/state/atoms/courses.atom';
+import { TopicResourcesAtomFamily } from '@/state/atoms/courses.atom';
 import { useRecoilState } from 'recoil';
-import styles from '../../../adminCourseComps.module.scss';
-import ContentBar from './ContentBar';
+import styles from '../../adminCourseComps.module.scss';
+import DataRowWithThreeSection from '../../common/DataRowWithThreeSection';
 
 export default function ResourceForm({ topData = null }) {
-  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtom);
+  const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtomFamily(topData?.id));
 
-  const { resourceFormData, isFormVisible, handleResourceInput, handleSubmit, toggleForm } =
-    useHandleTopicResources(topData);
+  const {
+    resourceFormData,
+    acceptedFilesTypes,
+    resourceTypeOptions,
+    isFormVisible,
+    handleResourceInput,
+    handleSubmit,
+    toggleForm,
+  } = useHandleTopicResources(topData?.id);
 
-  let acceptedFilesTypes = '.csv, .xls, .xlsx';
-  if (resourceFormData.type === TOPIC_RESOURCE_TYPES.doc) acceptedFilesTypes = '.doc, .docx';
-  if (resourceFormData.type === TOPIC_RESOURCE_TYPES.pdf) acceptedFilesTypes = '.pdf';
-
-  const { type, file, name } = resourceFormData;
+  const { type, file, name, url } = resourceFormData;
 
   const resourcesList = topicResources?.map((res, i) => ({ ...res, key: i }));
 
@@ -32,7 +35,7 @@ export default function ResourceForm({ topData = null }) {
       {topicResources == null && <Spinner customStyles={{ margin: '2em auto' }} />}
 
       {resourcesList?.map((res, index) => (
-        <ContentBar
+        <DataRowWithThreeSection
           key={res?.key}
           type={index + 1}
           description={res?.file?.name || getEncodedFileNameFromUrl(res?.url)}
@@ -46,7 +49,7 @@ export default function ResourceForm({ topData = null }) {
               _resources.splice(index, 1);
 
               setTopicResources(_resources);
-            }
+            },
           }}
         />
       ))}
@@ -60,12 +63,9 @@ export default function ResourceForm({ topData = null }) {
                 dropdownOptions={{
                   inputName: 'type',
                   placeholder: 'Select Resources Type',
-                  options: Object.values(TOPIC_RESOURCE_TYPES)?.map((type) => ({
-                    value: type,
-                    label: type
-                  })),
+                  options: resourceTypeOptions,
                   isSearchEnable: true,
-                  value: type ? { value: type, label: type } : null
+                  value: type ? { value: type, label: type } : null,
                 }}
                 changeHandler={handleResourceInput}
               />
@@ -78,8 +78,8 @@ export default function ResourceForm({ topData = null }) {
                   inputOptions={{
                     inputName: 'name',
                     placeholder: 'Enter document name',
-                    maxLength: 20,
-                    value: name
+                    maxLength: COURSE_MAX_LENGTH_VALUES?.resourcesName,
+                    value: name,
                   }}
                   changeHandler={handleResourceInput}
                 />
@@ -87,11 +87,11 @@ export default function ResourceForm({ topData = null }) {
 
               {/* resource file */}
               <div className="w-35">
-                {resourceFormData.type !== TOPIC_RESOURCE_TYPES.link ? (
+                {type !== TOPIC_RESOURCE_TYPES.link ? (
                   <BrowseAndUpload
                     handleFileUpload={handleResourceInput}
                     inputName="file"
-                    isActive={resourceFormData?.file?.name}
+                    isActive={file?.name}
                     hidePreviewBtns={true}
                     acceptedTypes={acceptedFilesTypes}
                   />
@@ -100,7 +100,7 @@ export default function ResourceForm({ topData = null }) {
                     inputOptions={{
                       inputName: 'url',
                       placeholder: 'Enter document url',
-                      value: resourceFormData.url
+                      value: url,
                     }}
                     changeHandler={handleResourceInput}
                   />
@@ -121,7 +121,7 @@ export default function ResourceForm({ topData = null }) {
               <Button
                 text="Add"
                 styleClass={`${styles.topicContentSmallBtn} ${styles.addBtn}`}
-                isDisabled={!type || !name || !(resourceFormData?.file || resourceFormData?.url)}
+                isDisabled={!type || !name || !(file || url)}
                 clickHandler={handleSubmit}
               />
             </div>

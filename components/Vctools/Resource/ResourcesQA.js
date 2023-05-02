@@ -1,73 +1,112 @@
+import useHandleTopicResources from '@/components/AdminCourseComps/Logic/useHandleTopicResources';
 import BrowseAndUpload from '@/components/common/FormComponents/BrowseAndUpload';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import { vcResource } from '@/state/atoms/vctool.atoms';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
+import { ToastMsgAtom } from '@/state/atoms/toast.atom';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
+
 const ResourcesQA = ({ backToResource }) => {
-  const [resourceAtom, setResourceAtom] = useRecoilState(vcResource);
-  const [type, setType] = useState('');
-  const [resourceName, setResourceName] = useState('');
-  const resourceType = [
-    { label: 'pdf', value: 'pdf' },
-    { label: 'Doc', value: 'Doc' }
-  ];
+  const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
+  const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
+    set(ToastMsgAtom, { type, message });
+  });
+
+  const {
+    resourceFormData,
+    acceptedFilesTypes,
+    resourceTypeOptions,
+    handleResourceInput,
+    uploadTopicResources,
+  } = useHandleTopicResources(activeClassroomTopicId);
+
+  const { type, file, name, url } = resourceFormData;
+
   return (
     <div className={`${styles.resourcesQAContainer}`}>
-      <p>Add new resources</p>
+      <p>Add New Resources</p>
+
       <div className={`${styles.resourcesInputs}`}>
-        <p>Type:</p>
+        <p>Type :</p>
         <LabeledDropdown
           styleClass={styles.resourceInputLable}
-          // isError={!fullCourse?.language?.length && courseError?.master}
           dropdownOptions={{
-            placeholder: 'Link',
-            value: { value: type, label: type },
-            options: resourceType
+            inputName: 'type',
+            placeholder: 'Select Resources Type',
+            options: resourceTypeOptions,
+            isSearchEnable: true,
+            value: type ? { value: type, label: type } : null,
           }}
-          changeHandler={(e) => setType(e?.value)}
-        />
-      </div>
-      <div className={`${styles.resourcesInputs}`}>
-        <p>Type:</p>
-        <input
-          placeholder="Enter resource name"
-          value={resourceName}
-          className={`${styles.resourceName}`}
-          type="text"
-          onChange={(e) => {
-            setResourceName(e.target.value);
-          }}
+          changeHandler={handleResourceInput}
         />
       </div>
 
-      <div className={`${styles.resourcedragAndDropContainer}`}>
-        <p>Upload:</p>
-        <div className={`${styles.resourceUploadFile}`}>
-          <BrowseAndUpload
-            styleClassBtn={`${styles.button}`}
-            title={'Drag & Drop'}
-            // handleFileUpload={handlePhotoInput}
-            // handleRemove={() => setVendorData({ ...vendorData, vendorProfileImage: null })}
-            // previewData={{
-            //     fileName: getFileName(),
-            //     filePath: vendorData?.vendorProfileImage || vendorData?.photoUrl
-            // }}
-            // filePreview={vendorData?.vendorProfileImage || vendorData?.photoUrl}
-            // inputName="vendorProfileImage"
-            // isActive={vendorData?.vendorProfileImage || vendorData?.photoUrl}
-            // isDisabled={isViewPage}
+      <div className={`${styles.resourcesInputs}`}>
+        <p>Name :</p>
+        <LabeledInput
+          inputOptions={{
+            inputName: 'name',
+            placeholder: 'Enter document name',
+            maxLength: 20,
+            value: name,
+          }}
+          inputClass={`${styles.resourceName}`}
+          changeHandler={handleResourceInput}
+        />
+      </div>
+
+      {type === TOPIC_RESOURCE_TYPES.link && (
+        <div className={`${styles.resourcesInputs}`}>
+          <p>Link :</p>
+          <LabeledInput
+            inputOptions={{
+              inputName: 'url',
+              placeholder: 'Enter document url',
+              value: url,
+            }}
+            inputClass={`${styles.resourceName}`}
+            changeHandler={handleResourceInput}
           />
         </div>
+      )}
+
+      <div className={`${styles.resourcedragAndDropContainer}`}>
+        {type !== TOPIC_RESOURCE_TYPES.link && (
+          <>
+            <p>Upload :</p>
+            <div className={`${styles.resourceUploadFile}`}>
+              <BrowseAndUpload
+                styleClassBtn={`${styles.button}`}
+                title={file?.name || 'Drag & Drop'}
+                handleFileUpload={handleResourceInput}
+                inputName="file"
+                isActive={file?.name}
+                hidePreviewBtns={true}
+                acceptedTypes={acceptedFilesTypes}
+              />
+            </div>
+          </>
+        )}
+
         <div className={`${styles.resourcesBtns}`}>
+          <button className={`${styles.resourceCanselBtn}`} onClick={backToResource}>
+            Cancel
+          </button>
+
           <button
-            className={`${styles.resourceCanselBtn}`}
-            onClick={() => {
+            className={`${styles.resourceAddBtn}`}
+            disabled={!type || !name || !(file || url)}
+            onClick={async (e) => {
+              e.target.disabled = true;
+              const isError = await uploadTopicResources();
+
+              if (!isError) setToastMessage('Resource Uploaded Successfully', 'success');
               backToResource();
             }}>
-            cancel
+            Add
           </button>
-          <button className={`${styles.resourceAddBtn}`}>Add</button>
         </div>
       </div>
     </div>
