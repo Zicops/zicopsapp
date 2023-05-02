@@ -9,16 +9,12 @@ import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
 import { TrainerExpertiseListAtom, TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 
-const AddTrainingExpertise = () => {
-  //   useEffect(() => {
-  //     setExpertise('');
-  //   }, []);
+const AddTrainingExpertise = ({ individualTrainerData }) => {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [expertiseSearchValue, setExpertiseSearchValue] = useState('');
 
   const handleExpertiseSelection = (e) => {
     const { value, checked } = e.target;
-    // const _trainerData = structuredClone(trainerData);
     const expertiseArr = trainerData?.expertise?.filter((exp) => exp);
     if (checked) {
       expertiseArr?.push(value);
@@ -26,10 +22,15 @@ const AddTrainingExpertise = () => {
     } else {
       setTrainerData((prev) => ({
         ...prev,
-        expertise: prev?.expertise?.filter((expertise) => expertise !== value)
+        expertise: prev?.expertise?.filter((expertise) => expertise !== value),
       }));
     }
   };
+
+  useEffect(() => {
+    if (individualTrainerData != null)
+      setTrainerData((prev) => ({ ...prev, expertise: individualTrainerData?.expertise }));
+  }, [individualTrainerData]);
 
   const { catSubCat } = useHandleCatSubCat();
 
@@ -50,15 +51,15 @@ const AddTrainingExpertise = () => {
           inputOptions: {
             inputName: 'filter',
             placeholder: 'Search Training Expertise...',
-            value: expertiseSearchValue
+            value: expertiseSearchValue,
           },
-          changeHandler: (e) => setExpertiseSearchValue(e.target.value)
+          changeHandler: (e) => setExpertiseSearchValue(e.target.value),
         }}
         styleClass={`${styles.expertiseSearchBar}`}
       />
       {Object.values(catSubCat?.subCatGrp)?.map((obj) => {
         const filteredSubcat = obj?.subCat?.filter((sc) =>
-          isWordIncluded(sc?.Name, expertiseSearchValue)
+          isWordIncluded(sc?.Name, expertiseSearchValue),
         );
         if (!filteredSubcat.length) return;
         return (

@@ -28,9 +28,9 @@ export default function About() {
     handleCourseMetaChange,
     getTrainersAndModerators,
     handleClassroomMasterChange,
-    moderatorCandidates
+    moderatorCandidates,
   } = useHandleCourseData();
-  
+
   const { getPaginatedTrainers } = useHandleTrainerData();
 
   const [title, settitle] = useState('');
@@ -43,7 +43,6 @@ export default function About() {
   }, []);
 
   const [trainersList, setTrainersList] = useState([]);
-
 
   useEffect(() => {
     getPaginatedTrainers()?.then((data) => {
@@ -168,8 +167,8 @@ export default function About() {
                   })
                 }
                 isLoading={trainersList == null}
-
                 customDropdownStyles={customDropdownStyleObj}
+                isDisplayButton={true}
               />
 
               <LabeledRadioCheckbox

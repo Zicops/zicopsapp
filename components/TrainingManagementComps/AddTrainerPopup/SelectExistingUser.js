@@ -7,27 +7,26 @@ import { useRecoilState } from 'recoil';
 import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
-export default function SelectExistingUser() {
-  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
-  const [trainersList, setTrainersList] = useState([]);
-
-  const [searchText, setSearchText] = useState('');
-
-  // useEffect(() => {
-  //   console.info(searchText);
-  // }, [searchText]);
-
+export default function SelectExistingUser({ individualTrainerData }) {
+  const { getTrainersAndModerators } = useHandleCourseData();
   const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
+
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
+  const [userList, setUserList] = useState([]);
 
 
   useEffect(() => {
-    getPaginatedTrainers()?.then((data) => {
-      setTrainersList(data || []);
-    });
-    // getTrainerById(trainersList?.id);
+    getTrainersAndModerators().then((resp) => setUserList(resp));
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (individualTrainerData != null)
+      setTrainerData((prev) => ({
+        ...prev,
+        name: individualTrainerData?.first_name + '' + individualTrainerData?.last_name,
+        email: individualTrainerData?.email,
+      }));
+  }, [individualTrainerData]);
 
   const customDropdownStyleObj = {
     placeholderStyles: { color: '#747474' },
@@ -50,8 +49,8 @@ export default function SelectExistingUser() {
     };
   }
 
-  let trainers = trainersList?.map(getUserListObject);
-  console.info(trainersList);
+  let trainers = userList?.map(getUserListObject);
+
   return (
     <div>
       <div>
@@ -62,6 +61,7 @@ export default function SelectExistingUser() {
             label: 'Select User :',
             menuPlacement: 'bottom',
             isSearchEnable: true,
+            isDisabled: individualTrainerData !== null,
             options: trainers?.map((trainee, index) => ({
               label: (
                 <div className={`${styles.trainerOptions}`}>
@@ -98,10 +98,10 @@ export default function SelectExistingUser() {
               userId: e.userId,
               name: e.name,
               email: e.email,
-              photo: e.photo
+              photo: e.photo,
             }));
           }}
-          isLoading={trainersList == null}
+          isLoading={userList == null}
           isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />

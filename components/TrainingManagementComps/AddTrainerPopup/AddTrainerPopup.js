@@ -10,19 +10,30 @@ import useHandleTrainerData from '../Logic/useHandleTrainerData';
 import { useRecoilState } from 'recoil';
 import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms';
 
-export default function AddTrainerPopup({ popUpState = [], isEdit = false, isView = false }) {
+export default function AddTrainerPopup({
+  popUpState = [],
+  isEdit = false,
+  isView = false,
+  individualTrainerData = null,
+}) {
   const { addUpdateTrainer, handleMail } = useHandleTrainerData();
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
   const tabData = [
     {
       name: 'Select Existing User ',
-      component: <SelectExistingUser isEdit={isEdit} isView={isView} />
+      component: (
+        <SelectExistingUser
+          isEdit={isEdit}
+          isView={isView}
+          individualTrainerData={individualTrainerData}
+        />
+      ),
     },
     {
       name: 'Invite New Trainer',
-      component: <InviteNewTrainer isEdit={isEdit} isView={isView}/>
-    }
+      component: <InviteNewTrainer isEdit={isEdit} isView={isView} />,
+    },
   ];
 
   const [tab, setTab] = useState(tabData[0].name);
@@ -47,7 +58,7 @@ export default function AddTrainerPopup({ popUpState = [], isEdit = false, isVie
           customStyles={{ backgroundColor: 'transparent', height: 'auto', overflow: 'unset' }}
         />
         <div className={`${styles.addTrainingExpertiseContainer}`}>
-          <AddTrainingExpertise />
+          <AddTrainingExpertise individualTrainerData={individualTrainerData} />
         </div>
 
         <div className={`${styles.footerButton}`}>
@@ -59,21 +70,21 @@ export default function AddTrainerPopup({ popUpState = [], isEdit = false, isVie
             }}
           />
           <Button
-            text={tab === tabData[0]?.name ? 'Save' : 'Send Invite'}
+            text={tab === tabData[0]?.name ? individualTrainerData !== null ? 'Update' : 'Save' : 'Send Invite'}
             clickHandler={(e) => {
-              addUpdateTrainer(tab === tabData[0]?.name);
+              addUpdateTrainer(tab === tabData[0]?.name, individualTrainerData);
               handleMail(tab === tabData[1]?.name);
             }}
           />
-          {tab === tabData[0]?.name && (
-            <Button
-              text={'Save & Add More'}
-              clickHandler={async () => {
-                await addUpdateTrainer();
-                setTrainerData(getTrainerDataObj());
-              }}
-            />
-          )}
+          {(tab === tabData[0]?.name && individualTrainerData === null ) && (
+                <Button
+                  text={'Save & Add More'}
+                  clickHandler={async () => {
+                    await addUpdateTrainer();
+                    setTrainerData(getTrainerDataObj());
+                  }}
+                />,
+              )}
         </div>
       </VendorPopUp>
     </>

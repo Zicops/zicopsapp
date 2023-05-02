@@ -38,7 +38,7 @@ export default function useHandleTrainerData() {
     addUpdateTrainer();
   }, [localUserId]);
 
-  async function addUpdateTrainer(isToasterDisplay = true) {
+  async function addUpdateTrainer(isToasterDisplay = true, individualTrainerData) {
     const sendData = {
       ...trainerData,
       name: trainerData?.name || '',
@@ -54,15 +54,18 @@ export default function useHandleTrainerData() {
       return setToastMsg({ type: 'danger', message: 'Please Select atleast One Expertise' });
     }
 
-    // console.info(sendData, '1736');
     let isError = false;
+
+    if(individualTrainerData !== null){
+      
+    }
 
     const res = await addNewTrainer({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: err.message || 'Add Trainer Error' });
     });
-    // setLoading(false);
+
     if (isError) return null;
 
     setToastMsg({ type: 'success', message: 'Added Trainer Successfully' });
@@ -147,6 +150,8 @@ export default function useHandleTrainerData() {
 
   async function getPaginatedTrainers(pageCursor = '') {
     const lspId = sessionStorage?.getItem('lsp_id');
+    let finalTrainerList = [];
+
     if (!lspId) return [];
 
     const trainerList = await loadQueryDataAsync(
@@ -163,6 +168,17 @@ export default function useHandleTrainerData() {
       return [];
     }
 
+    // define trainer table data = []
+    // trainer list
+    // push trainer list to trainer table data
+    // trainers ke user id list
+    // get user detail userId array pass
+    // tabledata as array of objects
+    // id = user_id
+    // params.row.id
+
+    finalTrainerList = trainerList?.getTrainerData?.trainers;
+
     let trainerUserIdArr = trainerList?.getTrainerData?.trainers.map((trainer) => trainer.user_id);
 
     const userDetails = await loadQueryDataAsync(
@@ -174,31 +190,48 @@ export default function useHandleTrainerData() {
 
     const userDeets = userDetails?.getUserDetails;
 
-    return userDeets;
+    // userDeets?.map((user) => {
+    //   if (finalTrainerList?.user_id === user?.id) return;
+    // });
+
+    // const mergedArr = finalTrainerList.concat(userDeets).reduce((acc, obj) => {
+    //   const existingObj = acc.find((item) => item.user_id === obj.id);
+    //   if (existingObj) {
+    //     Object.assign(existingObj, obj);
+    //   }
+
+    //   console.info(acc)
+    //   return acc;
+    // }, []);
+
+    const result = finalTrainerList.map((obj1) => {
+      const obj2 = userDeets.find((obj2) => obj2.id === obj1.user_id);
+      return Object.assign({ ...obj1, trainerId: obj1.id }, obj2);
+    });
+
+    return result;
   }
 
-  async function getTrainerById(trainerId = '') {
-    // if (!!trainerId) return;
+  // async function getTrainerById(trainerId = '') {
+  //   if (!trainerId) return;
 
-    const trainer = await loadQueryDataAsync(
-      GET_TRAINER_BY_ID,
-      { trainerId: trainerId },
-      {},
-      viltQueryClient,
-    ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
+  //   const trainer = await loadQueryDataAsync(
+  //     GET_TRAINER_BY_ID,
+  //     { id: trainerId },
+  //     {},
+  //     viltQueryClient,
+  //   ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
 
-    if (trainerList.error) {
-      setToastMsg({ type: 'warning', message: 'Trainer Not Found' });
-      return [];
-    }
-
-    console.info(trainer);
-  }
+  //   if (trainer.error) {
+  //     setToastMsg({ type: 'warning', message: 'Trainer Not Found' });
+  //     return [];
+  //   }
+  // }
 
   return {
     addUpdateTrainer,
     handleMail,
     getPaginatedTrainers,
-    getTrainerById,
+    // getTrainerById,
   };
 }

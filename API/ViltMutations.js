@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.viltClient
+  uri: API_LINKS.viltClient,
 });
 
 // Set query Client
 export const viltMutationClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 // ViltInput = {
@@ -148,6 +148,37 @@ export const CREATE_TRAINER = gql`
     $status: String
   ) {
     createTrainerData(
+      input: {
+        lsp_id: $lspId
+        user_id: $userId
+        vendor_id: $vendorId
+        expertise: $expertise
+        status: $status
+      }
+    ) {
+      id
+      lsp_id
+      user_id
+      vendor_id
+      expertise
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const UPDATE_TRAINER = gql`
+  mutation updateTrainerData(
+    $lspId: String
+    $userId: String
+    $vendorId: String
+    $expertise: [String]
+    $status: String
+  ) {
+    updateTrainerData(
       input: {
         lsp_id: $lspId
         user_id: $userId

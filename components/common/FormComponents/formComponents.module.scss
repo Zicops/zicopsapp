@@ -818,3 +818,15 @@
     }
   }
 }
+
+.customReactSelectMenu {
+  background-color: $black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.addNewTrainerButton {
+  background-color: red;
+}
