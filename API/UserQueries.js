@@ -1141,20 +1141,31 @@ export const GET_CD_DETAILS = gql`
   }
 `;
 
-export const GET_ALL_ORDERS = gql`
-  query getAllOrders($lsp_id: String) {
-    getAllOrders(lsp_id: $lsp_id) {
-      order_id
-      vendor_id
-      lsp_id
-      total
-      tax
-      grand_total
-      created_at
-      created_by
-      updated_at
-      updated_by
-      status
+export const GET_PAGINATED_VENDOR_ORDERS = gql`
+  query getAllOrders($lspId: String, $pageCursor: String, $Direction: String, $pageSize: Int) {
+    getAllOrders(
+      lsp_id: $lspId
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      orders {
+        id
+        vendor_id
+        lsp_id
+        total
+        tax
+        grand_total
+        description
+        created_at
+        created_by
+        updated_at
+        updated_by
+        status
+      }
+      pageCursor
+      direction
+      pageSize
     }
   }
 `;
@@ -1162,8 +1173,8 @@ export const GET_ALL_ORDERS = gql`
 export const GET_ORDER_SERVICES = gql`
   query getOrderServices($order_id: [String]) {
     getOrderServices(order_id: $order_id) {
-      service_id
       order_id
+      service_id
       service_type
       description
       unit
@@ -1257,6 +1268,54 @@ export const GET_SPEAKERS = gql`
 export const GET_VENDOR_SERVICES = gql`
   query getVendorServices($vendorId: String) {
     getVendorServices(vendor_id: $vendorId)
+  }
+`;
+
+export const GET_VENDORS_DETAILS = gql`
+  query getAllVendors($vendorIds: [String]) {
+    getAllVendors(vendor_ids: $vendorIds) {
+      vendorId
+      type
+      level
+      name
+      phone
+      lsp_id
+      description
+      photo_url
+      address
+      users
+      website
+      facebook_url
+      instagram_url
+      twitter_url
+      linkedin_url
+      services
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+      vendor_lsp_status
+    }
+  }
+`;
+
+export const GET_ORDERS_ORDERID = gql`
+  query getOrders($orderId: [String]) {
+    getOrders(order_id: $orderId) {
+      id
+      vendor_id
+      lsp_id
+      total
+      tax
+      grand_total
+      description
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
   }
 `;
 
