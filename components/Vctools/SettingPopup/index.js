@@ -7,14 +7,89 @@ import VcRangeSlider from './VcRangeSlider';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import { vcToolNavbarState } from '@/state/atoms/vctool.atoms';
 import { useRecoilState } from 'recoil';
-const SettingPopup = ({ hide }) => {
+import { useState, useEffect } from 'react';
+const SettingPopup = ({ hide, api }) => {
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
+  const [availableDevices, setAvailableDevices] = useState([]);
+  const [currentDevices, setCurrentDevices] = useState([]);
+  const [videoQuality, setVideoQuality] = useState(0);
+  const [layout, setLayout] = useState('classroom');
+
+  useEffect(async () => {
+    const availableDevices = await api.getAvailableDevices();
+    let _availableAudioInputDevices = availableDevices?.audioInput
+      ? availableDevices?.audioInput?.map((device) => {
+          return { ...device, value: device.label };
+        })
+      : [];
+    let _availableAudioOutputDevices = availableDevices?.audioOutput
+      ? availableDevices?.audioOutput?.map((device) => {
+          return { ...device, value: device.label };
+        })
+      : [];
+    let _availableCameraDevices = availableDevices?.videoInput
+      ? availableDevices?.videoInput?.map((device) => {
+          return { ...device, value: device.label };
+        })
+      : [];
+
+    const currentDevices = await api.getCurrentDevices();
+    let _currentAudioInputDevices = currentDevices?.audioInput
+      ? { ...currentDevices?.audioInput, value: currentDevices?.audioInput.label }
+      : {};
+    let _currentAudioOutputDevices = currentDevices?.audioOutput
+      ? { ...currentDevices?.audioOutput, value: currentDevices?.audioOutput.label }
+      : {};
+    let _currentCameraDevices = currentDevices?.videoInput
+      ? { ...currentDevices?.videoInput, value: currentDevices?.videoInput.label }
+      : {};
+
+    setAvailableDevices({
+      audioInput: _availableAudioInputDevices,
+      audioOutput: _availableAudioOutputDevices,
+      videoInput: _availableCameraDevices,
+    });
+    setCurrentDevices({
+      audioInput: _currentAudioInputDevices,
+      audioOutput: _currentAudioOutputDevices,
+      videoInput: _currentCameraDevices,
+    });
+
+    const _videoQuality = api.getVideoQuality();
+    setVideoQuality(_videoQuality);
+  }, []);
+
+  // useEffect(() => {
+  //   console.info(availableDevices, currentDevices, videoQuality);
+  // }, [availableDevices, currentDevices, videoQuality]);
+
+  function setAudioInput(device) {
+    api.setAudioInputDevice(device.label, device.deviceId);
+    setCurrentDevices((currentDevices) => ({
+      ...currentDevices,
+      audioInput: device,
+    }));
+  }
+  function setAudioOutput(device) {
+    api.setAudioOutputDevice(device.label, device.deviceId);
+    setCurrentDevices((currentDevices) => ({
+      ...currentDevices,
+      audioOutput: device,
+    }));
+  }
+  function setVideoInput(device) {
+    api.setVideoInputDevice(device.label, device.deviceId);
+    setCurrentDevices({
+      ...currentDevices,
+      videoInput: device,
+    });
+  }
   return (
     <div
-      className={`${styles.vcToolSettingContainer}`}
+      className={`${styles.vcToolSidebar}`}
       onMouseEnter={() => setHideToolbar(false)}
       onMouseLeave={() => setHideToolbar(null)}>
-      <div className={`${styles.vctToolSettingHead}`}>
+      <div className={`${styles.sidebarHeading}`}>
         <div>Settings</div>
         <button
           onClick={() => {
@@ -24,46 +99,46 @@ const SettingPopup = ({ hide }) => {
         </button>
       </div>
 
-      <div className={`${styles.vcToolSettingScreen}`}>
+      <div className={`${styles.sidebarContent}`}>
         <div className={`${style.audioAndVideoSettingContainer}`}>
           <p>Audio & Video</p>
           <div>
             <p>Microphone :</p>
             <LabeledDropdown
               styleClass={style.settingInputLable}
-              // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Built-in Audio',
+                placeholder: 'Select Audio In',
+                inputName: 'microphone',
+                options: availableDevices?.audioInput,
+                value: currentDevices?.audioInput,
               }}
-              // changeHandler={(e) =>
-              //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
-              // }
+              changeHandler={(device) => setAudioInput(device)}
             />
           </div>
           <div>
             <p>Speaker :</p>
             <LabeledDropdown
               styleClass={style.settingInputLable}
-              // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Realtek Audio',
+                placeholder: 'Select Audio Out',
+                inputName: 'speaker',
+                options: availableDevices?.audioOutput,
+                value: currentDevices?.audioOutput,
               }}
-              // changeHandler={(e) =>
-              //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
-              // }
+              changeHandler={(device) => setAudioOutput(device)}
             />
           </div>
           <div>
             <p>Camera :</p>
             <LabeledDropdown
               styleClass={style.settingInputLable}
-              // isError={!fullCourse?.language?.length && courseError?.master}
               dropdownOptions={{
-                placeholder: 'Integrated Camera',
+                placeholder: 'Select Camera',
+                inputName: 'camera',
+                options: availableDevices?.videoInput,
+                value: currentDevices?.videoInput,
               }}
-              // changeHandler={(e) =>
-              //     changeHandler(e, fullCourse, updateCourseMaster, languageDropdownOptions.inputName)
-              // }
+              changeHandler={(device) => setVideoInput(device)}
             />
           </div>
         </div>
@@ -85,26 +160,32 @@ const SettingPopup = ({ hide }) => {
             <LabeledRadioCheckbox
               type="radio"
               label="ClassRoom"
-              //   name="lspId"
-              //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
+              name="vcToolLayout"
+              value="classroom"
+              isChecked={layout === 'classroom'}
               //   isDisabled={true}
-              //   changeHandler={(e) => {
-              //     updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
-              //   }}
+              changeHandler={(e) => {
+                // api.executeCommand('toggleTileView');
+                api.executeCommand('setTileView', true);
+                setLayout('classroom');
+              }}
             />
-            <img src="/images/svg/vctool/classRoomView.svg" />
+            <img src="/images/svg/vctool/classRoomview.svg" />
           </div>
 
           <div className={`${style.layout}`}>
             <LabeledRadioCheckbox
               type="radio"
               label="Front of the class"
-              //   name="lspId"
-              //   isChecked={fullCourse?.lspId === userOrgData?.lsp_id}
+              name="vcToolLayout"
+              value="pinned"
+              isChecked={layout === 'pinned'}
               //   isDisabled={true}
-              //   changeHandler={(e) => {
-              //     updateCourseMaster({ ...fullCourse, lspId: userOrgData?.lsp_id });
-              //   }}
+              changeHandler={(e) => {
+                // api.executeCommand('toggleTileView');
+                api.executeCommand('setTileView', false);
+                setLayout('pinned');
+              }}
             />
             <img src="/images/svg/vctool/branding-watermark.svg" />
           </div>
