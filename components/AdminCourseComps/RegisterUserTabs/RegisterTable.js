@@ -8,9 +8,6 @@ import { useRecoilValue } from 'recoil';
 import useHandleRegisterData from './Logic/useHandleRegisterData';
 
 const RegisterTable = () => {
-  const commercialsData = useRecoilValue(CommercialsAtom);
-  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
-
   const [showPopup, setShowPopup] = useState(false);
   const { registerTableData } = useHandleRegisterData();
 
@@ -71,30 +68,13 @@ const RegisterTable = () => {
       flex: 0.5,
     },
   ];
-  const ChargesData = [
+  const registerData = [
     {
-      id: 1,
-      method: 'UPI',
-      fees: '0% i.e Rs 0',
-      amounts: commercialsData?.price_per_seat,
-    },
-    {
-      id: 2,
-      method: 'Domestic Debit & Credit card',
-      fees: '2% + 18% GST = Rs 2 + 0.36 = Rs 2.36',
-      amounts: 'Rs 97.64',
-    },
-    {
-      id: 3,
-      method: 'International Credit card',
-      fees: '3% + 18% GST = Rs 3 + 0.54 = Rs 3.54',
-      amounts: 'Rs 100',
-    },
-    {
-      id: 4,
-      method: 'Net banking',
-      fees: '2% + 18% GST = Rs 2 = 0.36 = Rs 2.36',
-      amounts: 'Rs 100',
+      s_no: 1,
+      name: 'Zicops',
+      email: 'demo@gamil.com',
+      contact: 7582508963,
+      registration_date: '8/4/2023',
     },
   ];
   return (
@@ -105,8 +85,8 @@ const RegisterTable = () => {
       <ZicopsTable
         columns={columns}
         tableHeight="60vh"
-        // pageSize={getPageSizeBasedOnScreen()}
-        data={ChargesData}
+        pageSize={getPageSizeBasedOnScreen()}
+        data={registerData}
         // loading={!vendorOrderDetails?.length}
       />
       <VendorPopUp

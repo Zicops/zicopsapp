@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 const BookingTable = () => {
-  const commercialsData = useRecoilValue(CommercialsAtom);
   const [showPopup, setShowPopup] = useState(false);
   const [showRefundPopup, setShowRefundPopup] = useState(false);
 
@@ -80,30 +79,15 @@ const BookingTable = () => {
       flex: 0.4,
     },
   ];
-  const ChargesData = [
+  const bookingData = [
     {
-      id: 1,
-      method: 'UPI',
-      fees: '0% i.e Rs 0',
-      amounts: commercialsData?.price_per_seat,
-    },
-    {
-      id: 2,
-      method: 'Domestic Debit & Credit card',
-      fees: '2% + 18% GST = Rs 2 + 0.36 = Rs 2.36',
-      amounts: 'Rs 97.64',
-    },
-    {
-      id: 3,
-      method: 'International Credit card',
-      fees: '3% + 18% GST = Rs 3 + 0.54 = Rs 3.54',
-      amounts: 'Rs 100',
-    },
-    {
-      id: 4,
-      method: 'Net banking',
-      fees: '2% + 18% GST = Rs 2 = 0.36 = Rs 2.36',
-      amounts: 'Rs 100',
+      s_no: 1,
+      name: 'Zicops',
+      email: 'demo@gamil.com',
+      contact: 7582508963,
+      booking_date: '5/4/2023',
+      registration_date: '8/4/2023',
+      transaction_id: '',
     },
   ];
 
@@ -119,8 +103,8 @@ const BookingTable = () => {
       <ZicopsTable
         columns={columns}
         tableHeight="60vh"
-        // pageSize={getPageSizeBasedOnScreen()}
-        data={ChargesData}
+        pageSize={getPageSizeBasedOnScreen()}
+        data={bookingData}
         // loading={!vendorOrderDetails?.length}
       />
       <VendorPopUp
