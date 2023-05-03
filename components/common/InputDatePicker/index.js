@@ -8,6 +8,7 @@ export default function InputDatePicker({
   maxDate = null,
   changeHandler = function () {},
   isDisabled = false,
+  placeholderText,
   styleClass,
 }) {
   return (
@@ -18,6 +19,7 @@ export default function InputDatePicker({
         selected={selectedDate}
         onChange={changeHandler}
         disabled={isDisabled}
+        placeholderText={placeholderText}
         minDate={minDate ? new Date(minDate) : null}
         maxDate={maxDate ? new Date(maxDate) : null}
         calendarClassName={styles.inlineCalender}
