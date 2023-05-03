@@ -63,3 +63,8 @@ export const COURSE_PROGRESS_STATUS = {
 export const COURSE_MAX_LENGTH_VALUES = {
   resourcesName: 20,
 };
+export const COMMERCIAL_PRICEING_TYPE = {
+  tbd: 'TBD',
+  paid: 'PAID',
+  free: 'FREE',
+};

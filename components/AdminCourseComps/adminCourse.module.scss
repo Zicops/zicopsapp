@@ -1,17 +1,19 @@
 // styling couse master
 .inputName {
   flex-direction: column;
+
   &label {
     width: 50%;
   }
 }
-.inputName > input {
+
+.inputName>input {
   width: 100%;
   margin-top: 5px;
   border-radius: 5px;
 }
 
-.inputName > input::placeholder {
+.inputName>input::placeholder {
   font-size: 14px;
 }
 
@@ -46,7 +48,7 @@
   color: #747474;
 }
 
-.lableInputNum > input {
+.lableInputNum>input {
   height: 2.4rem;
 }
 
@@ -56,7 +58,7 @@
   justify-content: space-between;
 }
 
-.settingControls > div {
+.settingControls>div {
   width: 49%;
   // padding-left: 10px;
 }
@@ -69,13 +71,13 @@
   color: #747474;
 }
 
-.settingControlsInput > input {
+.settingControlsInput>input {
   width: 24px;
   height: 24px;
   margin-right: 6px;
 }
 
-.settingControlsInput > div {
+.settingControlsInput>div {
   font-size: 16px;
   color: #747474;
 }
@@ -92,7 +94,7 @@
   align-items: center;
 }
 
-.courseMasterBtn > button {
+.courseMasterBtn>button {
   width: 87px;
   height: 48px;
   background-color: #6bcfcf;
@@ -110,7 +112,7 @@
   margin-top: 12px;
 }
 
-.button1 > img {
+.button1>img {
   display: none;
 }
 
@@ -139,7 +141,7 @@
   align-items: center;
 }
 
-.detailDropDownfile > button {
+.detailDropDownfile>button {
   display: none;
   outline: none;
   border: none;
@@ -151,7 +153,7 @@
   // border: 2px red dashed;
 }
 
-.detailDropDownfile > div {
+.detailDropDownfile>div {
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -168,11 +170,11 @@
   margin-top: 100px;
 }
 
-.detailDropDown > div {
+.detailDropDown>div {
   text-align: center;
 }
 
-.detailDropDown > img {
+.detailDropDown>img {
   width: 40px;
   height: 44px;
 }
@@ -195,7 +197,7 @@
   margin-top: 20px;
 }
 
-.coursePageTitle > div {
+.coursePageTitle>div {
   width: 49%;
 }
 
@@ -206,7 +208,7 @@
   margin-top: 14px;
 }
 
-.courseDetailNextrBtn > button {
+.courseDetailNextrBtn>button {
   width: 87px;
   height: 48px;
   background: #6bcfcf;
@@ -236,7 +238,7 @@
   justify-content: space-between;
 }
 
-.aboutInputTrainerModerator > div {
+.aboutInputTrainerModerator>div {
   width: 49%;
 }
 
@@ -270,7 +272,7 @@
   background-color: transparent;
 }
 
-.droper > button {
+.droper>button {
   background-color: transparent;
   outline: none;
   border: none;
@@ -293,11 +295,11 @@
   width: 100%;
 }
 
-.datePicker > input {
+.datePicker>input {
   border: solid black 2px;
 }
 
-.aboutDatePicker > div {
+.aboutDatePicker>div {
   width: 49%;
 }
 
@@ -308,7 +310,7 @@
   line-height: 24px;
 }
 
-.aboutCheckbox > label {
+.aboutCheckbox>label {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -323,7 +325,7 @@
   margin-top: 14px;
 }
 
-.totalDurationLable > div {
+.totalDurationLable>div {
   width: 49%;
 }
 
@@ -368,7 +370,7 @@
   margin-top: 14px;
 }
 
-.aboutInputContainer > div {
+.aboutInputContainer>div {
   width: 49%;
 }
 
@@ -382,7 +384,7 @@
   border-radius: 4px;
 }
 
-.aboutNextBtn > button {
+.aboutNextBtn>button {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -424,7 +426,7 @@
   justify-content: space-between;
 }
 
-.configurationCourseContainer > div {
+.configurationCourseContainer>div {
   width: 49%;
 }
 
@@ -434,7 +436,7 @@
   margin-top: 16px;
 }
 
-.registrationBox > label {
+.registrationBox>label {
   width: 100%;
   margin: 0;
   height: 100px;
@@ -446,7 +448,7 @@
   width: 100%;
 }
 
-.bookingBox > label {
+.bookingBox>label {
   width: 100%;
   margin: 0;
   height: 100px;
@@ -463,7 +465,7 @@
   width: 100%;
 }
 
-.frizeCourse > label {
+.frizeCourse>label {
   margin: 0;
   width: 49%;
 }
@@ -501,7 +503,7 @@
   align-items: center;
 }
 
-.detailsInfo > label {
+.detailsInfo>label {
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -517,21 +519,25 @@
   justify-content: center;
   margin-top: 12px;
 }
+
 .resourceTypeContainer {
   max-width: 250px;
   margin: auto auto 20px;
 }
+
 .flexCenterWithGap {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 20px;
 }
+
 .topicContentSmallBtn {
   min-width: 100px;
   width: 100px;
   padding: 8px 10px;
 }
+
 .resourceBtns {
   display: flex;
   justify-content: center;
@@ -547,6 +553,7 @@
 
   .bingeform {
     width: 60%;
+
     .bingeSetting {
       display: flex;
       align-items: center;
@@ -557,6 +564,7 @@
         color: $primary;
         width: 25%;
       }
+
       .bingeSettingBody {
         width: 75%;
         padding: 10px;
@@ -587,34 +595,41 @@
     background-color: $darkTwo;
     box-shadow: none;
   }
+
   .durationvalue {
     width: 40px;
   }
 }
+
 .label {
   min-width: 80px;
   font-size: 12px;
 }
+
 .after {
   min-width: 80px;
   color: #868f8f;
   font-size: 12px;
   margin-left: 20px;
 }
+
 .video_preview {
   height: 150px;
   display: flex;
 }
+
 .fromEnd {
   display: flex;
   justify-content: center;
   margin-left: 25%;
 }
+
 .checkbox_label {
   font-size: 18px;
   color: #ffffff;
   margin: auto;
 }
+
 .center {
   display: flex;
   justify-content: center;
@@ -689,20 +704,163 @@
       }
     }
 
-    .iconContainer {
-      width: 40%;
-      display: flex;
-      justify-content: center;
-      align-items: left;
+  .iconContainer {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: left;
 
-      img {
-        border: 1px solid $secondary;
-        padding: 20px;
-        background-color: $darkTwo;
-        border-radius: 5px;
-      }
+    img {
+      border: 1px solid $secondary;
+      padding: 20px;
+      background-color: $darkTwo;
+      border-radius: 5px;
     }
   }
+}
+}
+.commercialContainer {
+  .commercialTiltle {
+    font-size: 20px;
+  }
+
+  .checkboxLebel {
+    color: $bgBody;
+    padding-bottom: 10px;
+  }
+
+  .checkbox {
+    color: #747474;
+  }
+
+  .label {
+    color: #747474;
+    font-size: 16px;
+    padding-top: 10px;
+  }
+
+  .redioBoxContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .priceSetContainer {
+    display: flex;
+    gap: 10px;
+
+    .priceSeat {
+      width: 100%;
+
+      .inputBox {
+        position: relative;
+
+        .gst {
+          position: absolute;
+          right: 1vw;
+          top: 1.5vh;
+          color: $bgBody;
+        }
+      }
+    }
+
+    .info {
+      margin-top: min(5vh, 33px);
+      margin-bottom: 3px;
+      border: 1px solid $bgBody;
+      padding: 0px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
+  .registrationContainer {
+    display: flex;
+    gap: 10px;
+  }
+
+  .bookingContainer {
+    display: flex;
+    gap: 10px;
+  }
+
+  .maxBook {
+    color: $secondaryWhite;
+    padding-top: 10px;
+  }
+
+  .rtext {
+    padding: 10px 0px;
+  }
+
+  .rlabel {
+    color: #747474;
+    padding-bottom: 10px;
+  }
+
+  .bookdate {
+    padding-bottom: 10px;
+  }
+
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  input {
+    width: 100%;
+    // height: 48px;
+    // margin-top: 8px;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+    // font-size: 18px;
+  }
+
+  .registrationMax {
+    width: 100%;
+  }
+}
+
+.nextBtn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.hr {
+  background-color: $secondary;
+  height: 1px;
+  margin: 10px 0px;
+}
+
+.labelMergin {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.labelMergin2 {
+  margin-top: 8px;
+  width: 100%;
+
+  input {
+    color: $secondaryWhite;
+    border: 1px solid $secondaryWhite;
+  }
+}
+
+.transText {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.priceText {
+  color: $bgBody;
 }
 
 .watchTimeDataAndGraphContainer {
@@ -754,6 +912,7 @@
       }
     }
   }
+
   .watchTimeGraphContainer {
     width: 70%;
     border: 1px solid $secondaryWhite;
@@ -774,9 +933,11 @@
     .courseUserSearchDownload {
       display: flex;
       gap: 10px;
+
       .statusFilterDropdown {
         // width: 20%;
       }
+
       .userSearch {
         width: 200px;
         height: 40px;
@@ -857,6 +1018,7 @@
   span {
     cursor: pointer;
   }
+
   div {
     text-align: center;
 

@@ -13,6 +13,10 @@ import ToolTip from '../ToolTip';
 import styles from './adminHeader.module.scss';
 import AdminSubHeader from './AdminSubHeader';
 import Sitemap from './Sitemap';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import RegisterUserTabs from '@/components/AdminCourseComps/RegisterUserTabs';
+import { CourseMetaDataAtom } from '@/state/atoms/courses.atom';
+import useHandleRegisterData from '@/components/AdminCourseComps/RegisterUserTabs/Logic/useHandleRegisterData';
 
 export default function AdminHeader({
   title,
@@ -24,12 +28,15 @@ export default function AdminHeader({
   tooltipTitle = '',
   isProductTooltip,
   productTooltipData,
-  tourId
+  tourId,
 }) {
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
+  const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const activeTour = useRecoilValue(ActiveTourAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [showSitemap, setShowSitemap] = useState(false);
+  const [showUsers, setShowUsers] = useState(false);
+  const { getPaginatedRegisterUsers } = useHandleRegisterData();
   const router = useRouter();
   const route = router.route;
 
@@ -95,6 +102,19 @@ export default function AdminHeader({
               {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
+          {courseMetaData?.type === COURSE_TYPES[1] && (
+            <ToolTip title="Users table" placement="bottom">
+              <img
+                src="/images/svg/group.svg"
+                className="rightside_icon"
+                onClick={() => {
+                  setShowUsers(true);
+                  getPaginatedRegisterUsers(courseMetaData?.id);
+                }}
+                alt=""
+              />
+            </ToolTip>
+          )}
           <ToolTip title="Manage Configurations" placement="bottom">
             <img src="/images/setting_icon.png" className="rightside_icon" alt="" />
           </ToolTip>
@@ -117,6 +137,17 @@ export default function AdminHeader({
           size="large">
           <Sitemap />
         </PopUp>
+        <VendorPopUp
+          open={showUsers}
+          popUpState={[showUsers, setShowUsers]}
+          // size="large"
+          customStyles={{ width: '90vw', height: '90vh' }}
+          closeBtn={{ name: 'Cancel' }}
+          isSubmitButton={false}
+          isVilt={true}
+          isFooterVisible={true}>
+          <RegisterUserTabs />
+        </VendorPopUp>
       </div>
 
       {subHeaderData && <AdminSubHeader {...subHeaderData} />}
