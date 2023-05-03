@@ -60,7 +60,7 @@ const RegisterTable = () => {
               onClick={() => {
                 setShowPopup(true);
               }}>
-              <img src="/images/svg/do_not_disturb_on.svg" width={20}></img>
+              <img src="/images/svg/do_not_disturb_on.svg" width={20} />
             </button>
           </>
         );
@@ -70,7 +70,8 @@ const RegisterTable = () => {
   ];
   const registerData = [
     {
-      s_no: 1,
+      id: 1,
+      s_no: 1001,
       name: 'Zicops',
       email: 'demo@gamil.com',
       contact: 7582508963,
