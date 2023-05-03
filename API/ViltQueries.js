@@ -35,6 +35,30 @@ export const GET_VILT_DATA = gql`
     }
   }
 `;
+export const GET_COMMERCIAL_DATA = gql`
+  query getViltData($courseId: String) {
+    getViltData(courseId: $courseId) {
+      id
+      lsp_id
+      course_id
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      created_at
+      created_by
+      updated_at
+      updated_by
+      status
+    }
+  }
+`;
 
 export const GET_TOPIC_CLASSROOM = gql`
   query getTopicClassroom($topicId: String) {
@@ -105,6 +129,55 @@ export const GET_TRAINER_BY_ID = gql`
       user_id
       vendor_id
       expertise
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
+
+export const GET_PAGINATED_REGISTER_USER = gql`
+  query getAllRegistrations(
+    $courseId: String
+    $pageCursor: String
+    $Direction: String
+    $pageSize: Int
+  ) {
+    getAllRegistrations(
+      course_id: $courseId
+      pageCursor: $pageCursor
+      Direction: $Direction
+      pageSize: $pageSize
+    ) {
+      data {
+        id
+        course_id
+        user_id
+        registration_date
+        invoice
+        status
+        created_at
+        created_by
+        updated_at
+        updated_by
+      }
+      pageCursor
+      direction
+      pageSize
+    }
+  }
+`;
+
+export const GET_REGISTRATION_DETAILS = gql`
+  query getRegistrationDetails($id: String) {
+    getRegistrationDetails(id: $id) {
+      id
+      course_id
+      user_id
+      registration_date
+      invoice
       status
       created_at
       created_by
