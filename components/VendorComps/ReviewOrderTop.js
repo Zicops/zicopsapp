@@ -4,9 +4,8 @@ import {
   OrderAtom,
   ServicesAtom,
   VendorServicesListAtom,
-  VendorStateAtom
+  VendorStateAtom,
 } from '@/state/atoms/vendor.atoms';
-import { useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './vendorComps.module.scss';
 const ReviewOrderTop = ({ isConfirm }) => {
@@ -16,20 +15,6 @@ const ReviewOrderTop = ({ isConfirm }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const selectedServicesForOrder = useRecoilValue(VendorServicesListAtom);
-
-  const orderArray = [];
-  if (servicesData?.sme?.length) {
-    orderArray.push(...servicesData?.sme);
-  }
-  if (servicesData?.crt?.length) {
-    orderArray.push(...servicesData?.crt);
-  }
-  if (servicesData?.cd?.length) {
-    orderArray.push(...servicesData?.cd);
-  }
-  if (servicesData?.speakers?.length) {
-    orderArray.push(...servicesData?.speakers);
-  }
 
   return (
     <div>
@@ -47,10 +32,15 @@ const ReviewOrderTop = ({ isConfirm }) => {
                 <div className={`${styles.OrderDetails}`} key={service}>
                   <div className={`${styles.checkBoxLabel}`}>
                     <LabeledRadioCheckbox
-                      label={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      label={
+                        VENDOR_SERVICES_TYPE?.[value?.serviceType || value?.service_type]?.label
+                      }
                       type="checkbox"
-                      value={VENDOR_SERVICES_TYPE?.[value?.serviceType]?.label}
+                      value={
+                        VENDOR_SERVICES_TYPE?.[value?.serviceType || value?.service_type]?.label
+                      }
                       isChecked={servicesData[service][i].isActive}
+                      isDisabled={isConfirm}
                       changeHandler={(e) => {
                         const { value, checked } = e.target;
                         const tempArray = structuredClone(servicesData);
@@ -62,12 +52,12 @@ const ReviewOrderTop = ({ isConfirm }) => {
                   <p className={`${styles.contentName}`}>{value?.description}</p>
                   <div className={`${styles.OrderValue}`}>
                     <p>
-                      {value?.rate} {orderData?.currency}
+                      {value?.rate} {orderData?.currency || value?.currency}
                       {value?.unit}
                     </p>
                     <span>{value?.quantity}</span>
                     <span>
-                      {value?.total} {orderData?.currency}
+                      {value?.total} {orderData?.currency || value?.currency}
                     </span>
                   </div>
                 </div>

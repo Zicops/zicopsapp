@@ -18,7 +18,7 @@ const ProfileMarketYardHero = ({ onHandlePopup }) => {
   const vendorData = useRecoilValue(VendorStateAtom);
 
   useEffect(() => {
-    getSingleVendorInfo();
+    getSingleVendorInfo(vendorId);
   }, []);
 
   const onHandleClick = () => {

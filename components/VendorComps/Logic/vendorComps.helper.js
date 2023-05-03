@@ -14,8 +14,8 @@ export const vendorTabData = {
   profiles: { name: 'Profiles', component: <ProfileManageVendor /> },
   experience: { name: 'Experience', component: <AddIndividualVendorExperience />, isHidden: true },
   courses: { name: 'Courses', component: <AddVendorCourses /> },
-  orders: { name: 'Orders', component: <VendorOrders /> },
-  users: { name: 'Users', component: <VendorUsers /> }
+  orders: { name: 'Orders', component: <VendorOrders isVendor={true} /> },
+  users: { name: 'Users', component: <VendorUsers /> },
 };
 
 export const manageVendorTabData = [
@@ -25,7 +25,7 @@ export const manageVendorTabData = [
   { name: 'Experience', component: <AddIndividualVendorExperience /> },
   { name: 'Courses', component: <AddVendorCourses /> },
   { name: 'Orders', component: <VendorOrders /> },
-  { name: 'Users', component: <VendorUsers /> }
+  { name: 'Users', component: <VendorUsers /> },
 ];
 
 //Delete later
@@ -35,57 +35,57 @@ export const myVendors = [
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '1',
     name: 'ABCD Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '2',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '3',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '4',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '5',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '6',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
   },
   {
     id: '7',
     name: 'ABC Pvt Ltd.',
     type: 'Organisation',
     image: '/images/discord_logo.png',
-    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.'
-  }
+    desc: 'ABC  has 20 years of experience into B2B Corporate trainings, content development via its fleet of trainers and SMEs. Connect us and let us empower you in your upskilling journey.',
+  },
 ];
 
 export const subjectMatterExpertise = [
@@ -95,7 +95,7 @@ export const subjectMatterExpertise = [
     expertise: ['Law', 'Education', 'Human Resources Management'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'sme1',
@@ -103,7 +103,7 @@ export const subjectMatterExpertise = [
     expertise: ['Law', 'Education', 'Human Resources Management'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'sme2',
@@ -111,7 +111,7 @@ export const subjectMatterExpertise = [
     expertise: ['Project Management', 'Education', 'Human Resources Management'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'sme3',
@@ -119,8 +119,8 @@ export const subjectMatterExpertise = [
     expertise: ['Law', 'CSE', 'Human Resources Management'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
-  }
+    sample: ['Ayush'],
+  },
 ];
 
 export const classroomTraining = [
@@ -130,7 +130,7 @@ export const classroomTraining = [
     expertise: ['Cognition', 'Assessments', 'Behavioral Expectations'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'ct1',
@@ -138,7 +138,7 @@ export const classroomTraining = [
     expertise: ['Cognition', 'Classroom Management', 'Behavioral Expectations'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'ct2',
@@ -146,7 +146,7 @@ export const classroomTraining = [
     expertise: ['Social Contexts', 'Assessments', 'Behavioral Expectations'],
     languages: ['English', 'Hindi', 'Odia'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'ct3',
@@ -154,8 +154,8 @@ export const classroomTraining = [
     expertise: ['Cognition', 'Assessments', 'Behavioral Expectations'],
     languages: ['English', 'Hindi'],
     contentFormat: ['PDF', 'PPT', 'DOCX'],
-    sample: ['Ayush']
-  }
+    sample: ['Ayush'],
+  },
 ];
 
 export const contentDevelopment = [
@@ -165,7 +165,7 @@ export const contentDevelopment = [
     expertise: ['Publishing', 'Promotions', 'Performance Tracking'],
     languages: ['English', 'Hindi', 'French'],
     contentFormat: ['PDF', 'PPT', 'MP4'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'cd1',
@@ -173,7 +173,7 @@ export const contentDevelopment = [
     expertise: ['Search engine optimization', 'Promotions', 'Performance Tracking'],
     languages: ['English', 'Hindi', 'French'],
     contentFormat: ['PDF', 'PPT', 'MP4'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'cd2',
@@ -181,7 +181,7 @@ export const contentDevelopment = [
     expertise: ['Publishing', 'Audience and topic research', 'Performance Tracking'],
     languages: ['English', 'Hindi', 'French'],
     contentFormat: ['PDF', 'PPT', 'MP4'],
-    sample: ['Ayush']
+    sample: ['Ayush'],
   },
   {
     id: 'cd3',
@@ -189,8 +189,8 @@ export const contentDevelopment = [
     expertise: ['Publishing', 'Search engine optimization', 'Performance Tracking'],
     languages: ['English', 'Hindi', 'French'],
     contentFormat: ['PDF', 'PPT', 'MP4'],
-    sample: ['Ayush']
-  }
+    sample: ['Ayush'],
+  },
 ];
 
 export const coursesVendor = [
@@ -204,8 +204,8 @@ export const coursesVendor = [
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
-      '/images/sample-vendor-course.png'
-    ]
+      '/images/sample-vendor-course.png',
+    ],
   },
   {
     id: '1',
@@ -217,8 +217,8 @@ export const coursesVendor = [
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
-      '/images/sample-vendor-course.png'
-    ]
+      '/images/sample-vendor-course.png',
+    ],
   },
   {
     id: '2',
@@ -230,8 +230,8 @@ export const coursesVendor = [
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
-      '/images/sample-vendor-course.png'
-    ]
+      '/images/sample-vendor-course.png',
+    ],
   },
   {
     id: '3',
@@ -243,8 +243,8 @@ export const coursesVendor = [
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
-      '/images/sample-vendor-course.png'
-    ]
+      '/images/sample-vendor-course.png',
+    ],
   },
   {
     id: '4',
@@ -256,9 +256,9 @@ export const coursesVendor = [
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
       '/images/sample-vendor-course.png',
-      '/images/sample-vendor-course.png'
-    ]
-  }
+      '/images/sample-vendor-course.png',
+    ],
+  },
 ];
 
 export const vendorProfiles = [
@@ -273,7 +273,7 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
+    type: 'Organisation',
   },
   {
     id: '1',
@@ -286,7 +286,7 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
+    type: 'Organisation',
   },
   {
     id: '2',
@@ -299,7 +299,7 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
+    type: 'Organisation',
   },
   {
     id: '3',
@@ -312,7 +312,7 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
+    type: 'Organisation',
   },
   {
     id: '4',
@@ -325,7 +325,7 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
+    type: 'Organisation',
   },
   {
     id: '5',
@@ -338,8 +338,8 @@ export const vendorProfiles = [
     email: 'abc_learning_technology@abc.com',
     website: 'http://abc_learning.com',
     address: 'ABC Learning Pvt. Ltd',
-    type: 'Organisation'
-  }
+    type: 'Organisation',
+  },
 ];
 
 export const manageVendorProfiles = [
@@ -352,7 +352,7 @@ export const manageVendorProfiles = [
     description: 'zicops vendor',
     expertise: ['SME', 'Trainer'],
     experience: '12+',
-    image: '/images/svg/Rectangle 113.svg'
+    image: '/images/svg/Rectangle 113.svg',
   },
   {
     id: '1',
@@ -363,7 +363,7 @@ export const manageVendorProfiles = [
     description: 'zicops vendor',
     expertise: ['SME', 'Speaker'],
     experience: '14+',
-    image: '/images/svg/Rectangle 113 (1).svg'
+    image: '/images/svg/Rectangle 113 (1).svg',
   },
   {
     id: '2',
@@ -374,8 +374,8 @@ export const manageVendorProfiles = [
     description: 'zicops vendor',
     expertise: ['Speaker'],
     experience: '11+',
-    image: '/images/svg/Rectangle 113 (2).svg'
-  }
+    image: '/images/svg/Rectangle 113 (2).svg',
+  },
 ];
 
 export const cat = [
@@ -391,7 +391,7 @@ export const cat = [
     CreatedBy: 'samarthghule27@gmail.com',
     UpdatedBy: 'samarthghule27@gmail.com',
     IsActive: true,
-    __typename: 'CatMain'
+    __typename: 'CatMain',
   },
   {
     id: 'ZmluYW5jZQ==',
@@ -405,8 +405,8 @@ export const cat = [
     CreatedBy: 'joy@zicops.com',
     UpdatedBy: 'joy@zicops.com',
     IsActive: true,
-    __typename: 'CatMain'
-  }
+    __typename: 'CatMain',
+  },
 ];
 
 export const subCat = [
@@ -423,7 +423,7 @@ export const subCat = [
     CreatedBy: 'rithesh@zicops.com',
     UpdatedBy: 'rithesh@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'ZGF0YSBzY2llbmNl',
@@ -439,7 +439,7 @@ export const subCat = [
     CreatedBy: 'afroz.mba21072@iimkashipur.ac.in',
     UpdatedBy: 'afroz.mba21072@iimkashipur.ac.in',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'aW90',
@@ -455,7 +455,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'YXJ0aWZpY2lhbCBpbnRlbGxpZ2VuY2U=',
@@ -471,7 +471,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'cHJvamVjdCBtYW5hZ2VtZW50IDE=',
@@ -486,7 +486,7 @@ export const subCat = [
     CreatedBy: 'vaishnavi@zicops.com',
     UpdatedBy: 'vaishnavi@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'Y2xvdWQgZnVuZGFtZW50YWwgMg==',
@@ -501,7 +501,7 @@ export const subCat = [
     CreatedBy: 'joy@zicops.com',
     UpdatedBy: 'joy@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'cmVhY3Qgemx0cGw=',
@@ -516,7 +516,7 @@ export const subCat = [
     CreatedBy: 'joy@zicops.com',
     UpdatedBy: 'joy@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'Y3Nz',
@@ -531,7 +531,7 @@ export const subCat = [
     CreatedBy: 'snehalk@zicops.com',
     UpdatedBy: 'snehalk@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'ZnJvbnQgZW5k',
@@ -546,7 +546,7 @@ export const subCat = [
     CreatedBy: 'samarthghule27@gmail.com',
     UpdatedBy: 'samarthghule27@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'Y29tbXVuaWNhdGlvbg==',
@@ -562,7 +562,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'c3RvY2sgbWFya2V0',
@@ -577,7 +577,7 @@ export const subCat = [
     CreatedBy: 'vaishnavi@zicops.com',
     UpdatedBy: 'vaishnavi@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'bWFjaGluZSBsZWFybmluZw==',
@@ -593,7 +593,7 @@ export const subCat = [
     CreatedBy: 'afroz.mba21072@iimkashipur.ac.in',
     UpdatedBy: 'afroz.mba21072@iimkashipur.ac.in',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'bmV0d29ya2luZyAx',
@@ -609,7 +609,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'amF2YQ==',
@@ -624,7 +624,7 @@ export const subCat = [
     CreatedBy: 'samarthghule27@gmail.com',
     UpdatedBy: 'samarthghule27@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'cHJlc2VudGF0aW9ucw==',
@@ -640,7 +640,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'ZW1haWw=',
@@ -656,7 +656,7 @@ export const subCat = [
     CreatedBy: 'anupamroy575@gmail.com',
     UpdatedBy: 'anupamroy575@gmail.com',
     IsActive: true,
-    __typename: 'SubCatMain'
+    __typename: 'SubCatMain',
   },
   {
     id: 'dmVyYmFsIGNvbW11bmljYXRpb24gMg==',
@@ -671,29 +671,29 @@ export const subCat = [
     CreatedBy: 'joy@zicops.com',
     UpdatedBy: 'joy@zicops.com',
     IsActive: true,
-    __typename: 'SubCatMain'
-  }
+    __typename: 'SubCatMain',
+  },
 ];
 
 export const addVendorCourse = [
   {
     img: '/images/sample-vendor-course.png',
-    name: 'a1'
+    name: 'a1',
   },
   {
     img: '/images/sample-vendor-course.png',
-    name: 'a1'
+    name: 'a1',
   },
   {
     img: '/images/sample-vendor-course.png',
-    name: 'a1'
-  }
+    name: 'a1',
+  },
 ];
 export const serviceType = [
   'Subject Matter Expertise',
   'Training',
   'Content Development',
-  'Speakers'
+  'Speakers',
 ];
 
 export const sampleFiles = [
@@ -704,7 +704,7 @@ export const sampleFiles = [
     description: 'Subject matter expertise in Python and content for the same',
     size: '12 MB',
     rate: '3000 INR per page',
-    previewImage: '/images/discord_logo.png'
+    previewImage: '/images/discord_logo.png',
   },
   {
     id: '1',
@@ -713,7 +713,7 @@ export const sampleFiles = [
     description: 'Subject matter expertise in Python and content for the same',
     size: '10 MB',
     rate: '3000 INR per page',
-    previewImage: '/images/discord_logo.png'
+    previewImage: '/images/discord_logo.png',
   },
   {
     id: '2',
@@ -722,7 +722,7 @@ export const sampleFiles = [
     description: 'Subject matter expertise in Python and content for the same',
     size: '30 MB',
     rate: '5000 INR per page',
-    previewImage: '/images/discord_logo.png'
+    previewImage: '/images/discord_logo.png',
   },
   {
     id: '3',
@@ -731,28 +731,28 @@ export const sampleFiles = [
     description: 'Subject matter expertise in Python and content for the same',
     size: '2 MB',
     rate: '1000 INR per page',
-    previewImage: '/images/discord_logo.png'
-  }
+    previewImage: '/images/discord_logo.png',
+  },
 ];
 
 export const MarketYardHeroData = {
   companyName: 'ABC Learning Technology Pvt. Ltd.',
-  expart: ['SME', 'Classroom Training', 'Content Development']
+  expart: ['SME', 'Classroom Training', 'Content Development'],
 };
 
 export const fileFormatArray = ['PDF', 'PPT', 'Consultancy'].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
 
 export const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
 
 export const unit = ['/ hour', '/ day', '/ month', '/ module'].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
 
 export const acceptedFiles = ['.zip', '.rar', '.pdf', '.ppt'].join(', ');
@@ -763,38 +763,26 @@ export const optionEmploymentTypeArray = [
   'Self employed',
   'Freelance',
   'Internship',
-  'Trainee'
+  'Trainee',
 ].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
 
 export const optionLocationTypeArray = ['Hybrid', 'Remote', 'On-site'].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
 
 export const optionYearArray = ['1', '1+', '2', '2+', '3', '3+', '4', '4+'].map((val) => ({
   label: val,
-  value: val
+  value: val,
 }));
-
-export const dateNameID = [
-  { label: 'Date', value: '23/02/2023' },
-  { label: 'Vendor Name', value: 'ABC Pvt. Ltd.' },
-  { label: 'Order ID', value: '#111' }
-];
-
-export const statusTypeServie = [
-  { label: 'Status', value: 'Added' },
-  { label: 'Vendor Type', value: 'Organisation' },
-  { label: 'Services', value: 'SME, Content Development' }
-];
 
 export const vendortypeOptions = { org: 'Organization', individual: 'Individual/Freelancer' };
 
 export const serviceOptions = [
   { label: 'Subject Matter', value: 'sme', isDev: true },
   { label: 'Classroom Training', value: 'crt' },
-  { label: 'Content Development', value: 'cd', isDev: true }
+  { label: 'Content Development', value: 'cd', isDev: true },
 ];

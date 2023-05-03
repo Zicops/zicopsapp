@@ -2,13 +2,13 @@ import { ApolloClient, createHttpLink, gql, InMemoryCache } from '@apollo/client
 import { API_LINKS, authLink } from './api.helper';
 
 const httpLink = createHttpLink({
-  uri: API_LINKS.viltClient
+  uri: API_LINKS.viltClient,
 });
 
 // Set query Client
 export const viltMutationClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 // ViltInput = {
@@ -132,6 +132,50 @@ export const UPDATE_TOPIC_CLASSROOM = gql`
       created_by
       updated_at
       updated_by
+      status
+    }
+  }
+`;
+
+export const CREATE_COMMERCIALS_DATA = gql`
+  mutation createViltData($input: ViltInput) {
+    createViltData(input: $input) {
+      id
+      lsp_id
+      course_id
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_start_date
+      status
+    }
+  }
+`;
+
+export const UPDATE_COMMERCIALS_DATA = gql`
+  mutation updateViltData($input: ViltInput) {
+    updateViltData(input: $input) {
+      id
+      lsp_id
+      course_id
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_start_date
       status
     }
   }

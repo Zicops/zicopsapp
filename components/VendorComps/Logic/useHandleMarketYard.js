@@ -1,13 +1,13 @@
 import {
-  GET_ALL_ORDERS,
   GET_ORDER_SERVICES,
   GET_SPEAKERS,
-  GET_VENDORS_BY_LSP,
   GET_VENDOR_SERVICES,
   userQueryClient,
-  GET_PAGINATED_VENDORS
+  GET_PAGINATED_VENDORS,
+  GET_PAGINATED_VENDOR_ORDERS,
+  GET_ORDERS_ORDERID,
 } from '@/api/UserQueries';
-import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { useState } from 'react';
 import { sortArrByKeyInOrder } from '@/helper/data.helper';
 import {
@@ -15,11 +15,11 @@ import {
   ADD_ORDER_SERVICES,
   UPDATE_ORDER,
   UPDATE_ORDER_SERVICES,
-  userClient
+  userClient,
 } from '@/api/UserMutations';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { VENDOR_ORDER_STATUS } from '@/helper/constants.helper';
 import { useRecoilState } from 'recoil';
-import { OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
+import { AllServicesAtom, OrderAtom, ServicesAtom } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -30,6 +30,7 @@ export default function useHandleMarketYard() {
   const [updateServices] = useMutation(UPDATE_ORDER_SERVICES, { client: userClient });
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
@@ -48,13 +49,13 @@ export default function useHandleMarketYard() {
       GET_PAGINATED_VENDORS,
       { lsp_id: lspId, filters: filters, pageSize: 28 },
       {},
-      userQueryClient
+      userQueryClient,
     );
     // filters: { status: 'Active', service: service }
     const _sortedData = sortArrByKeyInOrder(
       vendorList?.getPaginatedVendors?.vendors || [],
       'updated_at',
-      false
+      false,
     );
     if (isDataReturn) {
       setLoading(false);
@@ -70,7 +71,7 @@ export default function useHandleMarketYard() {
       GET_SPEAKERS,
       { lspId: lspId, service: service, name: name },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const _sortedData = sortArrByKeyInOrder(speakerList?.getSpeakers || [], 'updated_at', false);
     if (isDataReturn) {
@@ -83,7 +84,7 @@ export default function useHandleMarketYard() {
       newSpeakerArray.push({
         ..._sortedData[i],
         vendorId: _sortedData[i]?.vendor_id,
-        name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name
+        name: _sortedData[i]?.first_name + ' ' + _sortedData[i]?.last_name,
       });
     }
 
@@ -97,20 +98,25 @@ export default function useHandleMarketYard() {
       GET_VENDOR_SERVICES,
       { vendorId: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     setServices(services?.getVendorServices);
     setLoading(false);
   }
+
   async function getAllOrders(lspId, isDataReturn = false) {
     setLoading(true);
-    const orderList = await loadAndCacheDataAsync(
-      GET_ALL_ORDERS,
-      { lsp_id: lspId },
+    const orderList = await loadQueryDataAsync(
+      GET_PAGINATED_VENDOR_ORDERS,
+      { lspId: lspId, pageSize: 28 },
       {},
-      userQueryClient
+      userQueryClient,
     );
-    const _sortedData = sortArrByKeyInOrder(orderList?.getAllOrders || [], 'updated_at', false);
+    const _sortedData = sortArrByKeyInOrder(
+      orderList?.getAllOrders?.orders || [],
+      'updated_at',
+      false,
+    );
     if (isDataReturn) {
       setLoading(false);
       return _sortedData;
@@ -119,41 +125,55 @@ export default function useHandleMarketYard() {
     setLoading(false);
   }
 
-  async function getOrderServices(orderId, isDataReturn = false) {
+  async function getOrderServices(orderId) {
     setLoading(true);
-    const servicesData = await loadAndCacheDataAsync(
+    const servicesData = await loadQueryDataAsync(
       GET_ORDER_SERVICES,
       { order_id: orderId },
       {},
-      userQueryClient
+      userQueryClient,
     );
-    const _sortedData = sortArrByKeyInOrder(
-      servicesData?.getOrderServices || [],
-      'updated_at',
-      false
-    );
-    if (isDataReturn) {
-      setLoading(false);
-      return _sortedData;
+    const _serviceData = [];
+    for (let i = 0; i < servicesData?.getOrderServices?.length; i++) {
+      const services = servicesData?.getOrderServices[i];
+      const newServiceData = {
+        ...services,
+        serviceId: services?.service_id,
+        serviceType: services?.service_type,
+      };
+      _serviceData.push(newServiceData);
     }
-    setServicesDetails(_sortedData);
+
+    setAllServicesData(_serviceData);
     setLoading(false);
   }
 
-  async function addUpdateOrder() {
+  async function getOrders(orderId) {
+    setLoading(true);
+    const orders = await loadQueryDataAsync(
+      GET_ORDERS_ORDERID,
+      { orderId: orderId },
+      {},
+      userQueryClient,
+    );
+    setOrderData(orders?.getOrders[0]);
+    setLoading(false);
+  }
+
+  async function addUpdateOrder(vendorId, orderId, status = null) {
     const lspId = sessionStorage?.getItem('lsp_id');
     const sendData = {
-      orderId: orderData?.orderId,
       vendorId: vendorId,
       lspId: lspId,
       total: orderData?.total,
       tax: orderData?.tax,
       grandTotal: orderData?.grossTotal,
-      status: 'Added'
+      description: orderData?.description,
+      status: status || orderData?.status,
     };
     let isError = false;
-    if (orderData?.orderId) {
-      sendData.orderId = smeData?.orderId;
+    if (orderId) {
+      sendData.orderId = orderId;
       await updateOrder({ variables: sendData }).catch((err) => {
         console.log(err);
         isError = !!err;
@@ -175,46 +195,46 @@ export default function useHandleMarketYard() {
     // }
   }
 
-  async function addUpdateServices() {
+  async function addUpdateOrderServices(_orderId) {
     const orderArray = [];
     if (servicesData?.sme?.length) {
-      orderArray.push(...servicesData?.sme);
+      orderArray.push(...(servicesData?.sme || []));
     }
     if (servicesData?.crt?.length) {
-      orderArray.push(...servicesData?.crt);
+      orderArray.push(...(servicesData?.crt || []));
     }
     if (servicesData?.cd?.length) {
-      orderArray.push(...servicesData?.cd);
+      orderArray.push(...(servicesData?.cd || []));
     }
     if (servicesData?.speakers?.length) {
-      orderArray.push(...servicesData?.speakers);
+      orderArray.push(...(servicesData?.speakers || []));
     }
 
     const serviceData = [];
     for (let i = 0; i < orderArray?.length; i++) {
+      const _orderArray = orderArray[i];
       const sendData = {
-        serviceId: orderArray[i]?.serviceId || '',
-        orderId: orderArray[i]?.orderId || '',
-        serviceType: orderArray[i]?.serviceType || '',
-        description: orderArray[i]?.description || '',
-        unit: orderArray[i]?.unit || 0,
-        currency: orderData?.currency || '',
-        rate: +orderArray[i]?.rate || 0,
-        quantity: orderArray[i]?.quantity || 0,
-        total: orderArray[i]?.total || 0,
-        status: 'Added'
+        orderId: _orderId,
+        serviceType: _orderArray?.serviceType || '',
+        description: _orderArray?.description || '',
+        unit: _orderArray?.unit || 0,
+        currency: orderData?.currency || _orderArray?.currency || '',
+        rate: +_orderArray?.rate || 0,
+        quantity: _orderArray?.quantity || 0,
+        total: _orderArray?.total || 0,
+        status: VENDOR_ORDER_STATUS.added,
       };
       let isError = false;
 
-      if (orderArray[i]?.serviceId) {
-        sendData.serviceId = orderArray[i]?.serviceId;
+      if (_orderArray?.serviceId) {
+        sendData.serviceId = _orderArray?.serviceId;
         await updateServices({ variables: sendData }).catch((err) => {
           console.log(err);
           isError = !!err;
           return setToastMsg({ type: 'danger', message: 'Update Services Error' });
         });
         if (isError) return;
-        setToastMsg({ type: 'success', message: 'Services Updated' });
+        // setToastMsg({ type: 'success', message: 'Services Updated' });
         serviceData.push(res?.data?.addOrderServies);
         continue;
       }
@@ -225,7 +245,7 @@ export default function useHandleMarketYard() {
         return setToastMsg({ type: 'danger', message: 'Add Services Error' });
       });
       if (isError) return;
-      setToastMsg({ type: 'success', message: 'Services Created' });
+      // setToastMsg({ type: 'success', message: 'Services Created' });
       serviceData.push(res?.data?.addOrderServies);
     }
     return serviceData;
@@ -235,14 +255,16 @@ export default function useHandleMarketYard() {
     getLspVendors,
     vendorDetails,
     addUpdateOrder,
-    addUpdateServices,
+    addUpdateOrderServices,
     getAllOrders,
+    setOrderDetails,
     getOrderServices,
     orderDetails,
     servicesDetails,
     getLspSpeakers,
     speakerDetails,
     getVendorServices,
-    services
+    services,
+    getOrders,
   };
 }
