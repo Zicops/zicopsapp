@@ -24,7 +24,7 @@ import {
   getServicesObject,
   getVendorServicesList,
   OrderAtom,
-  getVendorOrderObject
+  getVendorOrderObject,
 } from '@/state/atoms/vendor.atoms';
 import useHandleMarketYard from '@/components/VendorComps/Logic/useHandleMarketYard';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
@@ -34,27 +34,32 @@ import { VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import ReviewAndTaxConfirm from '@/components/VendorComps/ReviewAndTaxConfirm';
 import ReviewAndTax from '@/components/VendorComps/ReviewAndTax';
 import AddLineComp from '@/components/VendorComps/AddLineComp';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
+import { changeHandler } from '@/helper/common.helper';
 
 export default function VendorInfo() {
   const vendorData = useRecoilValue(VendorStateAtom);
   const vendorProfiles = useRecoilValue(allProfileAtom);
   const vendorSingleProfiles = useRecoilValue(VendorProfileAtom);
   const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const { isDev } = useRecoilValue(FeatureFlagsAtom);
   const [isShowPopup, setShowPopup] = useState(false);
+  const [isShowDesc, setShowDesc] = useState(false);
   const [addOrder, setAddOrder] = useState(false);
   const [addRate, setAddRate] = useState(false);
   const [completeOrder, setCompleteOrder] = useState(false);
   const [isShowTax, setShowTax] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(0);
-  const [selectedServicesForOrder, setSelectedServicesForOrder] =
-    useRecoilState(VendorServicesListAtom);
-  const [orderData, setOrderData] = useRecoilState(OrderAtom);
 
   const router = useRouter();
   const vendorId = router.query.vendorId || null;
 
-  const { addUpdateServices, services, getVendorServices, addUpdateOrder } = useHandleMarketYard();
+  const { addUpdateOrderServices, services, getVendorServices, addUpdateOrder } =
+    useHandleMarketYard();
   const { getAllProfileInfo, getSingleVendorInfo, getSingleProfileInfo } = useHandleVendor();
 
   const vendorProfileData = vendorProfiles?.filter((data) => data?.vendor_id === vendorId);
@@ -123,9 +128,8 @@ export default function VendorInfo() {
   };
 
   const addOrderHandler = (e) => {
-    setAddRate(true);
+    setShowDesc(true);
     setAddOrder(false);
-    setCurrentComponent(0);
   };
 
   const backFirstPopUpHandler = () => {
@@ -133,48 +137,67 @@ export default function VendorInfo() {
     setShowPopup(true);
   };
 
+  const handleDescription = () => {
+    setShowDesc(false);
+    setAddRate(true);
+    setCurrentComponent(0);
+  };
+  const backDescHandler = () => {
+    setShowDesc(false);
+    setAddOrder(true);
+  };
   const addRateHandler = async () => {
     setCurrentComponent(currentComponent + 1);
 
     if (currentComponent === 2) {
       setAddRate(false);
       setCompleteOrder(true);
-      await addUpdateServices();
-      const orderDetails = await addUpdateOrder();
+      const orderDetails = await addUpdateOrder(vendorId);
       setOrderData(orderDetails);
+      await addUpdateOrderServices(orderDetails?.id);
     }
   };
 
   const backAddOrderHandler = () => {
     if (currentComponent === 0) {
       setAddRate(false);
-      setAddOrder(true);
+      setShowDesc(true);
     }
     setCurrentComponent(currentComponent - 1);
   };
 
-  const onOrderCompleteHandler = () => router.push('/admin/vendor/manage-vendor');
-  const backMarketYardHandler = () => router.push('/admin/vendor/market-yard');
+  const onOrderCompleteHandler = () => {
+    router.push('/admin/vendor/manage-vendor');
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+  };
+  const backMarketYardHandler = () => {
+    router.push('/admin/vendor/market-yard');
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+  };
 
   const tabData = [
     {
       name: 'About',
-      component: <AboutVendor data={vendorData} />
+      component: <AboutVendor data={vendorData} />,
     },
     {
       name: 'Courses',
-      component: <CoursesVendor />
+      component: <CoursesVendor />,
     },
     {
       name: 'Profile',
       component: <ProfileVendor profileData={vendorProfileData || []} />,
-      isHidden: isIndividual
+      isHidden: isIndividual,
     },
     {
       name: 'Experience',
       component: <ProfileExperience pfId={vendorSingleProfiles?.profileId} />,
-      isHidden: !isIndividual
-    }
+      isHidden: !isIndividual,
+    },
   ];
 
   const [tab, setTab] = useState(tabData[0].name);
@@ -189,7 +212,7 @@ export default function VendorInfo() {
           tab={tab}
           setTab={setTab}
           footerObj={{
-            showFooter: false
+            showFooter: false,
           }}
           customStyles={{ height: 'fit-content', overflow: 'unset' }}
         />
@@ -215,7 +238,7 @@ export default function VendorInfo() {
         submitBtn={{
           name: 'Next',
           handleClick: addOrderHandler,
-          disabled: Object.values(selectedServicesForOrder).some((v) => v) ? false : true
+          disabled: Object.values(selectedServicesForOrder).some((v) => v) ? false : true,
         }}>
         <p>Choose Service Type</p>
         {services?.map((data, index) => {
@@ -245,6 +268,28 @@ export default function VendorInfo() {
         })}
       </VendorPopUp>
       <VendorPopUp
+        open={isShowDesc}
+        popUpState={[isShowDesc, setShowDesc]}
+        title="Add Order"
+        size="small"
+        isMarketYard={true}
+        closeBtn={{ name: 'Back', handleClick: backDescHandler }}
+        submitBtn={{ name: 'Next', handleClick: handleDescription }}>
+        <p className={`${styles.addOrderText}`}>Order Description:</p>
+        <LabeledTextarea
+          inputOptions={{
+            placeholder: 'Enter order discription',
+            rows: 5,
+            maxLength: 160,
+            value: orderData?.description,
+            // isDisabled: isDisabled
+          }}
+          changeHandler={(e) => {
+            setOrderData({ ...orderData, description: e.target.value });
+          }}
+        />
+      </VendorPopUp>
+      <VendorPopUp
         open={addRate}
         popUpState={[addRate, setAddRate]}
         title="Add Order"
@@ -258,7 +303,7 @@ export default function VendorInfo() {
             (currentComponent === 0 && isTotalcheck) ||
             (currentComponent === 1 && !isShowTax) ||
             (currentComponent === 1 && isGrosstotal) ||
-            (currentComponent === 2 && isGrosstotal)
+            (currentComponent === 2 && isGrosstotal),
         }}>
         <div>
           {currentComponent === 0 && <AddLineComp setCurrentComponent={setCurrentComponent} />}
@@ -282,7 +327,7 @@ export default function VendorInfo() {
         isMarketYard={true}
         closeBtn={{ name: 'Back to Market Yard', handleClick: backMarketYardHandler }}
         submitBtn={{ name: 'Go to My Vendors', handleClick: onOrderCompleteHandler }}>
-        <CompleteOrder orderId={orderData?.order_id} />
+        <CompleteOrder orderId={orderData?.id} />
         <div className={`${styles.hr}`}></div>
       </VendorPopUp>
     </>
