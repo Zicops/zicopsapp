@@ -20,7 +20,6 @@ export default function useHandleTopicResources(topicId = null) {
   // const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const courseId = Router.query.courseId;
 
-  console.info('asdf', courseId);
   const [topicResources, setTopicResources] = useRecoilState(TopicResourcesAtomFamily(topicId));
 
   const [isFormVisible, setIsFormVisible] = useState(null);
@@ -99,7 +98,7 @@ export default function useHandleTopicResources(topicId = null) {
       }
 
       let acceptedTypeRegex = /sheet|csv/;
-      if (resourceFormData.type === TOPIC_RESOURCE_TYPES.doc) acceptedTypeRegex = /document/;
+      if (resourceFormData.type === TOPIC_RESOURCE_TYPES.doc) acceptedTypeRegex = /document|msword/;
       if (resourceFormData.type === TOPIC_RESOURCE_TYPES.pdf) acceptedTypeRegex = /pdf/;
 
       const fileName = e.target.files[0].name
@@ -108,7 +107,7 @@ export default function useHandleTopicResources(topicId = null) {
 
       if (!acceptedTypeRegex.test(e.target.files[0].type)) {
         e.target.value = '';
-        return setToastMsg({ type: 'danger', message: `Wrong Type of File Uploaded.` });
+        return setToastMessage('Wrong Type of File Uploaded.');
       }
 
       if (isNameDuplicate(fileName))
