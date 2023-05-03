@@ -3,6 +3,7 @@ import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import { viltQueryClient, GET_PAGINATED_REGISTER_USER } from '@/api/ViltQueries';
 import { useState } from 'react';
+import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 
 export default function useHandleRegisterData() {
   const [registerTableData, setRegisterTableData] = useState([]);
@@ -22,7 +23,18 @@ export default function useHandleRegisterData() {
       setToastMsg({ type: 'danger', message: 'Register Data Load Error' });
       return [];
     }
-    setRegisterTableData(registerUserList);
+    const userIds = registerUserList?.getAllRegistrations?.data?.map((data) => data?.user_id);
+    const userData = await loadQueryDataAsync(
+      GET_USER_DETAIL,
+      { user_id: userIds },
+      {},
+      userQueryClient,
+    ).catch((err) => setToastMsg({ type: 'danger', message: 'User Data Load Error' }));
+    const userDetails = userData?.getUserDetails;
+    const regiterUserDatails = registerUserList?.getAllRegistrations?.data?.map((item, index) =>
+      Object.assign({}, item, userDetails[index]),
+    );
+    setRegisterTableData(regiterUserDatails);
     return registerUserList;
   }
 
