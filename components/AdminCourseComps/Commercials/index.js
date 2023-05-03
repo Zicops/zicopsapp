@@ -17,7 +17,6 @@ import NextBtn from '../NextBtn';
 import { courseTabs } from '../Logic/adminCourseComps.helper';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import { useState } from 'react';
-import ChargeTable from './ChargeTable';
 import Tooltip from '@mui/material/Tooltip';
 import { makeStyles } from '@material-ui/core';
 
@@ -288,7 +287,7 @@ const Commercials = () => {
         <div>
           <p className={`${styles.transText}`}>Transaction Charges</p>
           <p className={`${styles.priceText}`}>Price Per Seat: {commercialsData?.price_per_seat}</p>
-          <ChargeTable />
+          {/* <ChargeTable /> */}
         </div>
       </VendorPopUp>
     </div>
