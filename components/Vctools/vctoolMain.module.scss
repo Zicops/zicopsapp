@@ -2354,7 +2354,8 @@
       overflow: auto;
       margin: 0.2em auto;
 
-      div {
+      div,
+      a {
         display: flex;
         align-items: center;
         font-size: 0.8rem;
@@ -3093,10 +3094,6 @@
   grid-gap: 0.2em;
 }
 
-
-
-
-
 // New Styles
 .vcToolSidebar {
   width: 336px;
@@ -3112,7 +3109,7 @@
   flex-direction: column;
   align-items: center;
 
-  .sidebarHeading{
+  .sidebarHeading {
     padding: 15px 0;
     width: 100%;
     height: 20px;
@@ -3128,19 +3125,19 @@
     color: white;
     border-bottom: 1px solid #292f2f;
     margin-bottom: 10px;
-    button{
+    button {
       background-color: transparent;
       outline: none;
       border: none;
     }
   }
-  .sidebarContent{
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: auto;
-      &::-webkit-scrollbar {
-          display: none;
-        }
+  .sidebarContent {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }

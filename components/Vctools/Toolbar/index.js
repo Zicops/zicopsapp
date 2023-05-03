@@ -8,11 +8,10 @@ import {
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
+  publishBreakoutRoom,
   vcMeetingIconAtom,
   vcToolNavbarState,
   vctoolAlluserinfo,
-  publishBreakoutRoom,
-  breakoutList,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -32,11 +31,6 @@ import SettingPopup from '../SettingPopup';
 import StartSessionPopUp from '../StartSessionPopUP';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
-import WhiteBoard from '../WhiteBoard';
-import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
-import ManageAccount from '../ManageAccount';
-import StartSessionPopUp from '../StartSessionPopUP';
-import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
   api = null,
