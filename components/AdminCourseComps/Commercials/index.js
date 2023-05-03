@@ -17,8 +17,6 @@ import NextBtn from '../NextBtn';
 import { courseTabs } from '../Logic/adminCourseComps.helper';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import { useState } from 'react';
-import Tooltip from '@mui/material/Tooltip';
-import { makeStyles } from '@material-ui/core';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
@@ -26,13 +24,13 @@ const Commercials = () => {
   const classroomMaster = useRecoilValue(ClassroomMasterAtom);
   const [isOpenTable, setOpenTable] = useState(false);
 
-  const useTooltipStyles = makeStyles((theme) => ({
-    tooltip: {
-      backgroundColor: '#040404',
-      fontSize: '16px',
-      padding: '12px',
-    },
-  }));
+  // const useTooltipStyles = makeStyles((theme) => ({
+  //   tooltip: {
+  //     backgroundColor: '#040404',
+  //     fontSize: '16px',
+  //     padding: '12px',
+  //   },
+  // }));
 
   const tooltipClass = useTooltipStyles();
 
@@ -126,7 +124,7 @@ const Commercials = () => {
             styleClass={`${styles.labelMergin}`}
           />
         </div>
-        <Tooltip
+        {/* <Tooltip
           title="Understand the transaction charges"
           placement="bottom-start"
           classes={tooltipClass}>
@@ -137,7 +135,7 @@ const Commercials = () => {
             }}>
             <img src="/images/svg/info2.svg" alt="" />
           </div>
-        </Tooltip>
+        </Tooltip> */}
       </div>
       <p className={`${styles.label}`}>
         *Will be visible to Learners only if the Training is marked as Priced
