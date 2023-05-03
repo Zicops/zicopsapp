@@ -9,14 +9,16 @@ import {
   CommercialsAtom,
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
-import { Tooltip, makeStyles } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import NextBtn from '../NextBtn';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ChargeTable from './ChargeTable';
 import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 import { courseTabs } from '../Logic/adminCourseComps.helper';
+import { makeStyles } from '@mui/styles';
+import { changeHandler } from '@/helper/common.helper';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
@@ -30,6 +32,10 @@ const Commercials = () => {
       fontSize: '16px',
       padding: '12px',
     },
+  }));
+  const currency = ['INR', 'USD', 'Euros', 'Pound'].map((val) => ({
+    label: val,
+    value: val,
   }));
 
   const tooltipClass = useTooltipStyles();
