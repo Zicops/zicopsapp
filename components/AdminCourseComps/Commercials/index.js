@@ -1,24 +1,22 @@
-import LabeledInput from '@/components/common/FormComponents/LabeledInput';
-import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
-import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
-import styles from '../adminCourse.module.scss';
-import InputDatePicker from '@/common/InputDatePicker';
 import RadioBox from '@/components/Tabs/common/RadioBox';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { changeHandler } from '@/helper/common.helper';
-import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
+import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
+import LabeledInput from '@/components/common/FormComponents/LabeledInput';
+import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
+import InputDatePicker from '@/components/common/InputDatePicker';
+import styles from '../adminCourse.module.scss';
 import {
   ClassroomMasterAtom,
   CommercialsAtom,
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
-import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
+import { Tooltip, makeStyles } from '@mui/material';
+import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import NextBtn from '../NextBtn';
-import { courseTabs } from '../Logic/adminCourseComps.helper';
-import { useState } from 'react';
-import { Tooltip } from '@mui/material';
-import { makeStyles } from '@material-ui/core';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import ChargeTable from './ChargeTable';
+import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
+import { courseTabs } from '../Logic/adminCourseComps.helper';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
@@ -35,10 +33,9 @@ const Commercials = () => {
   }));
 
   const tooltipClass = useTooltipStyles();
-
   return (
     <>
-      {/* <div className={`${styles.commercialContainer}`}>
+      <div className={`${styles.commercialContainer}`}>
         <p className={`${styles.commercialTiltle}`}>Pricing</p>
         <p className={`${styles.checkboxLebel}`}>Configure the pricing parameter for this course</p>
         <div className={`${styles.checkbox}`}>
@@ -61,7 +58,6 @@ const Commercials = () => {
             }}
           />
         </div>
-
         <div className={`${styles.redioBoxContainer}`}>
           <RadioBox
             labeledInputProps={{
@@ -155,7 +151,6 @@ const Commercials = () => {
               Course registration will start only once the course is published and open for
               registrations.
             </p>
-
             <div className={`${styles.registrationContainer}`}>
               <div className={`${styles.registrationMax}`}>
                 <p className={`${styles.heading}`}>Maximum number of registrations:</p>
@@ -281,7 +276,7 @@ const Commercials = () => {
         <div className={`${styles.nextBtn}`}>
           <NextBtn switchTabName={courseTabs?.configuration?.name} />
         </div>
-      </div> */}
+      </div>
       <VendorPopUp
         open={isOpenTable}
         popUpState={[isOpenTable, setOpenTable]}
@@ -293,10 +288,11 @@ const Commercials = () => {
         <div>
           <p className={`${styles.transText}`}>Transaction Charges</p>
           <p className={`${styles.priceText}`}>Price Per Seat: {commercialsData?.price_per_seat}</p>
-          {/* <ChargeTable /> */}
+          <ChargeTable />
         </div>
       </VendorPopUp>
     </>
   );
 };
+
 export default Commercials;
