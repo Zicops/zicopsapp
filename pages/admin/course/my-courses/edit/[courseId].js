@@ -14,7 +14,7 @@ import {
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
   getCourseCurrentStateObj,
-  getCourseMetaDataObj
+  getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -31,7 +31,7 @@ export default function EditCoursePage() {
   const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const { getViltData, getCommercialData } = useHandleCourseData();
+  const { getViltData } = useHandleCourseData();
 
   const router = useRouter();
   const courseId = router?.query?.courseId;
@@ -44,7 +44,6 @@ export default function EditCoursePage() {
 
     //load vilt data
     getViltData(courseId);
-    getCommercialData(courseId);
     if (courseMetaData?.id !== courseId) {
       loadAndCacheDataAsync(GET_COURSE, { course_id: [courseId] })
         .then((res) => {
@@ -66,12 +65,12 @@ export default function EditCoursePage() {
               createdAt: _courseDataRes?.created_at,
               updatedAt: _courseDataRes?.updated_at,
               createdBy: _courseDataRes?.created_by,
-              updatedBy: _courseDataRes?.updated_by
-            })
+              updatedBy: _courseDataRes?.updated_by,
+            }),
           );
           const isCourseDisabled = !!_courseDataRes?.qa_required;
           setCourseCurrentState(
-            getCourseCurrentStateObj({ isSaved: true, isDisabled: isCourseDisabled })
+            getCourseCurrentStateObj({ isSaved: true, isDisabled: isCourseDisabled }),
           );
         })
         .catch((err) => {

@@ -3,7 +3,7 @@ import {
   UPDATE_COURSE_DATA,
   UPLOAD_COURSE_IMAGE,
   UPLOAD_COURSE_PREVIEW,
-  UPLOAD_COURSE_TILE_IMAGE
+  UPLOAD_COURSE_TILE_IMAGE,
 } from '@/api/Mutations';
 import { GET_LATEST_COURSES } from '@/api/Queries';
 import { CREATE_VILT_DATA, UPDATE_VILT_DATA, viltMutationClient } from '@/api/ViltMutations';
@@ -17,7 +17,7 @@ import {
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
-  getCourseMetaDataObj
+  getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -25,7 +25,6 @@ import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
 import useHandleCourseData from './useHandleCourseData';
-import useHandleCommercial from './useHandleCommercial';
 
 export default function useSaveCourseData() {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
@@ -41,7 +40,6 @@ export default function useSaveCourseData() {
   const router = useRouter();
 
   const { isDataPresent } = useHandleCourseData();
-  const { addUpdateCommercial } = useHandleCommercial();
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 
@@ -57,7 +55,7 @@ export default function useSaveCourseData() {
       pageSize: 1,
       pageCursor: '',
       filters: { SearchText: courseMetaData?.name?.trim(), LspId: userOrgData?.lsp_id },
-      status: COURSE_STATUS.publish
+      status: COURSE_STATUS.publish,
     };
 
     // querying data from backend every time amd not using in memory cache as we want live data
@@ -67,7 +65,7 @@ export default function useSaveCourseData() {
 
     const allCourses = [
       ...((await savedCourseRes)?.latestCourses?.courses || []),
-      ...((await publishedCourseRes)?.latestCourses?.courses || [])
+      ...((await publishedCourseRes)?.latestCourses?.courses || []),
     ];
 
     if (
@@ -109,7 +107,7 @@ export default function useSaveCourseData() {
       is_end_date_decided: !classroomMaster?.isEndDatedecided,
       is_start_date_decided: !classroomMaster?.isStartDatedecided,
       is_trainer_decided: !classroomMaster?.isTrainerdecided,
-      is_moderator_decided: !classroomMaster?.isModeratordecided
+      is_moderator_decided: !classroomMaster?.isModeratordecided,
     });
 
     if (!!classroomMaster?.id) {
@@ -118,7 +116,7 @@ export default function useSaveCourseData() {
         UPDATE_VILT_DATA,
         { input: _classRoomData },
         {},
-        viltMutationClient
+        viltMutationClient,
       ).catch(() => setToastMessage('Classroom Update Error!'));
 
       return resUpdate?.updateViltData || null;
@@ -128,7 +126,7 @@ export default function useSaveCourseData() {
       CREATE_VILT_DATA,
       { input: _classRoomData },
       {},
-      viltMutationClient
+      viltMutationClient,
     ).catch(() => setToastMessage('Classroom Create Error!'));
 
     setClassroomMaster((prev) => ({ ...prev, isUpdate: true, id: res?.createViltData?.id }));
@@ -218,7 +216,7 @@ export default function useSaveCourseData() {
       status: _updatedCourseData?.status || sendData?.status,
 
       createdAt: _updatedCourseData?.created_at,
-      updatedAt: _updatedCourseData?.updated_at
+      updatedAt: _updatedCourseData?.updated_at,
     });
 
     setCourseMetaData(updatedCourseData);
@@ -230,14 +228,14 @@ export default function useSaveCourseData() {
     configObj = {
       validateCurrentForm: false,
       displayUpdateSuccessToaster: true,
-      switchTabName: null
-    }
+      switchTabName: null,
+    },
   ) {
     const _configObj = {
       validateCurrentForm: false,
       displayUpdateSuccessToaster: true,
       switchTabName: null,
-      ...configObj
+      ...configObj,
     };
 
     if (_configObj?.validateCurrentForm && !isDataPresent([activeCourseTab])) return;
@@ -254,17 +252,13 @@ export default function useSaveCourseData() {
     // add course if no id is present
     if (!courseMetaData.id)
       return addNewCourse(_courseMetaData)
-        .then((courseDataRes) => {
-          addUpdateClassroomMaster(courseDataRes);
-          addUpdateCommercial();
-        })
+        .then((courseDataRes) => addUpdateClassroomMaster(courseDataRes))
         .then(() => {
           if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
         })
         .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);
-    await addUpdateCommercial();
 
     // update course
     updateCourse(_courseMetaData).then(async (res) => {
@@ -272,7 +266,6 @@ export default function useSaveCourseData() {
       if (!res?.id) return;
 
       await addUpdateClassroomMaster(res);
-      await addUpdateCommercial();
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
@@ -286,7 +279,7 @@ export default function useSaveCourseData() {
     if (!!_courseMetaData?.previewVideo?.name) {
       const coursePreviewRes = await mutateData(UPLOAD_COURSE_PREVIEW, {
         file: _courseMetaData?.previewVideo,
-        courseId: _courseMetaData?.id
+        courseId: _courseMetaData?.id,
       });
 
       if (!!coursePreviewRes?.uploadCoursePreviewVideo?.url) {
@@ -300,7 +293,7 @@ export default function useSaveCourseData() {
     if (!!_courseMetaData?.image?.name) {
       const coursePreviewRes = await mutateData(UPLOAD_COURSE_IMAGE, {
         file: _courseMetaData?.image,
-        courseId: _courseMetaData?.id
+        courseId: _courseMetaData?.id,
       });
 
       if (!!coursePreviewRes?.uploadCourseImage?.url) {
@@ -314,7 +307,7 @@ export default function useSaveCourseData() {
     if (!!_courseMetaData?.tileImage?.name) {
       const coursePreviewRes = await mutateData(UPLOAD_COURSE_TILE_IMAGE, {
         file: _courseMetaData?.tileImage,
-        courseId: _courseMetaData?.id
+        courseId: _courseMetaData?.id,
       });
 
       if (!!coursePreviewRes?.uploadCourseTileImage?.url) {
