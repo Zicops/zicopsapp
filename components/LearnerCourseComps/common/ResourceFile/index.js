@@ -1,4 +1,5 @@
 import { TOPIC_RESOURCE_TYPES } from '@/constants/course.constants';
+import PropTypes from 'prop-types';
 import { useRecoilState } from 'recoil';
 import { SelectedResourceDataAtom } from '../../atoms/learnerCourseComps.atom';
 import { getImageBasedOnResourceType } from './Logic/resourceFile.helper';
