@@ -2,9 +2,9 @@ import {
   GET_USER_DETAIL,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
-  userQueryClient
+  userQueryClient,
 } from '@/api/UserQueries';
-import { GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
+import { GET_COMMERCIAL_DATA, GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { COURSE_TYPES } from '@/constants/course.constants';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
@@ -12,9 +12,11 @@ import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE, USER_MAP_STATUS } from '@/helpe
 import {
   ActiveCourseTabNameAtom,
   ClassroomMasterAtom,
+  CommercialsAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
-  getClassroomMasterDataObj
+  getClassroomMasterDataObj,
+  getCourseCommercialsObject,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
@@ -28,6 +30,8 @@ export default function useHandleCourseData() {
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
+  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
+
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
   });
@@ -65,12 +69,12 @@ export default function useHandleCourseData() {
         GET_VENDORS_BY_LSP_FOR_TABLE,
         { lsp_id: userOrgData?.lsp_id },
         {},
-        userQueryClient
+        userQueryClient,
       )
         .then((res) => {
           const _owners = ['Zicops', ...(res?.getVendors?.map((vendor) => vendor?.name) || [])];
           setOwnerList(
-            _owners?.filter((o) => !!o)?.map((owner) => ({ value: owner, label: owner }))
+            _owners?.filter((o) => !!o)?.map((owner) => ({ value: owner, label: owner })),
           );
         })
         .catch((err) => {
@@ -92,7 +96,7 @@ export default function useHandleCourseData() {
       'owner',
       'publisher',
       'language',
-      'lspId'
+      'lspId',
     ];
     if (courseMetaData?.type === COURSE_TYPES.classroom) courseMasterList.push('noOfLearners');
 
@@ -103,7 +107,7 @@ export default function useHandleCourseData() {
       'summary',
       'previewVideo',
       'image',
-      'tileImage'
+      'tileImage',
     ];
     const courseAboutList = [
       'description',
@@ -112,13 +116,13 @@ export default function useHandleCourseData() {
       'prequisites',
       'relatedSkills',
       'goodFor',
-      'mustFor'
+      'mustFor',
     ];
 
     const lists = {
       [courseTabs.courseMaster.name]: courseMasterList,
       [courseTabs.details.name]: courseDetailsList,
-      [courseTabs.about.name]: courseAboutList
+      [courseTabs.about.name]: courseAboutList,
     };
 
     tabsToValidate?.forEach((tab) => {
@@ -126,7 +130,7 @@ export default function useHandleCourseData() {
       if (!tabDataList?.length) return;
 
       tabDataList.forEach(
-        (key) => !(!!courseMetaData?.[key] || !!classroomMaster?.[key]) && errorList.push(key)
+        (key) => !(!!courseMetaData?.[key] || !!classroomMaster?.[key]) && errorList.push(key),
       );
     });
 
@@ -174,7 +178,7 @@ export default function useHandleCourseData() {
 
     if (+LIMITS?.[inputName] && file?.size > LIMITS?.[inputName]) {
       return setToastMessage(
-        `File Size limit is ${Math.ceil(LIMITS?.[inputName] / ONE_MB_IN_BYTES)} mb`
+        `File Size limit is ${Math.ceil(LIMITS?.[inputName] / ONE_MB_IN_BYTES)} mb`,
       );
     }
 
@@ -198,7 +202,7 @@ export default function useHandleCourseData() {
       GET_VILT_DATA,
       { courseId: courseId },
       {},
-      viltQueryClient
+      viltQueryClient,
     );
 
     const viltData = resVilt?.getViltData?.[0];
@@ -211,7 +215,7 @@ export default function useHandleCourseData() {
         GET_USER_DETAIL,
         { user_id: [...trainers, ...moderators] },
         {},
-        userQueryClient
+        userQueryClient,
       );
       const users = structuredClone(resUsers?.getUserDetails || []);
       const newTrainers = [];
@@ -223,7 +227,7 @@ export default function useHandleCourseData() {
           newTrainers.push({
             value: `${user.first_name} ${user.last_name}`,
             email: user.email,
-            user_id: user.id
+            user_id: user.id,
           });
         }
       });
@@ -234,7 +238,7 @@ export default function useHandleCourseData() {
           newModerators.push({
             value: `${user.first_name} ${user.last_name}`,
             email: user.email,
-            user_id: user.id
+            user_id: user.id,
           });
         }
       });
@@ -268,8 +272,40 @@ export default function useHandleCourseData() {
         isEndDatedecided: !viltData?.is_end_date_decided,
         isStartDatedecided: !viltData?.is_start_date_decided,
         isTrainerdecided: !viltData?.is_trainer_decided,
-        isModeratordecided: !viltData?.is_moderator_decided
-      })
+        isModeratordecided: !viltData?.is_moderator_decided,
+      }),
+    );
+  }
+  async function getCommercialData(courseId = null) {
+    if (!courseId) return;
+    const resVilt = await loadQueryDataAsync(
+      GET_COMMERCIAL_DATA,
+      { courseId: courseId },
+      {},
+      viltQueryClient,
+    );
+
+    const commercialData = resVilt?.getViltData?.[0];
+    if (!commercialData) return setCommercialsData(getCourseCommercialsObject());
+    setCommercialsData(
+      getCourseCommercialsObject({
+        id: commercialData?.id,
+        courseId: commercialData?.course_id,
+        pricing_type: commercialData?.pricing_type,
+        price_per_seat: commercialData?.price_per_seat,
+        currency: commercialData?.currency,
+        tax_percentage: commercialData?.tax_percentage,
+        max_registrations: commercialData?.max_registrations,
+        registration_end_date: parseInt(commercialData?.registration_end_date)
+          ? moment.unix(commercialData?.registration_end_date).toDate()
+          : null,
+        booking_start_date: parseInt(commercialData?.booking_start_date)
+          ? moment.unix(commercialData?.booking_start_date).toDate()
+          : null,
+        booking_end_date: parseInt(commercialData?.booking_end_date)
+          ? moment.unix(commercialData?.booking_end_date).toDate()
+          : null,
+      }),
     );
   }
 
@@ -283,6 +319,7 @@ export default function useHandleCourseData() {
     getTrainersAndModerators,
     trainerCandidates,
     moderatorCandidates,
-    getViltData
+    getViltData,
+    getCommercialData,
   };
 }
