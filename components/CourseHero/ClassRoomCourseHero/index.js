@@ -25,7 +25,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     setIsAssignPopUpOpen,
     activateVideoPlayer,
     showPreviewVideo,
-    unassignCourseFromUser
+    unassignCourseFromUser,
   } = useHandleCourseHero(isPreview);
 
   const [isCourseUnassign, setIsCourseUnassign] = useState(false);
@@ -34,6 +34,8 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const [isUnAssignPopUpOpen, setIsUnAssignPopUpOpen] = useState(false);
   const [isOpenRegister, setIsOpenRegsiter] = useState(false);
   const [isRegister, setIsRegsiter] = useState(false);
+  const [isOpenBooking, setIsOpenBooking] = useState(false);
+  const [isBooking, setIsBooking] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -56,7 +58,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     sub_category: subCategory,
     duration,
     owner: provisionedBy,
-    publisher: publishedBy
+    publisher: publishedBy,
   } = fullCourse;
 
   // useEffect(() => {
@@ -102,6 +104,9 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     setIsRegsiter(true);
     setIsOpenRegsiter(false);
   };
+  const onBookingHandler = () => {
+    setIsOpenBooking(false);
+  };
   return (
     <div
       className={`${style.course_header}`}
@@ -137,7 +142,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
               if (userOrgData?.self_course_count >= COURSE_SELF_ASSIGN_LIMIT) {
                 return setToastMsg({
                   type: 'info',
-                  message: 'You have reached your self course assign limit!'
+                  message: 'You have reached your self course assign limit!',
                 });
               }
               setIsAssignPopUpOpen(true);
@@ -173,14 +178,31 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
           </div>
           <div className={`${style.courseButton}`}>
             <div className={`${style.course_big_button}`}>
-              <button onClick={showPreviewVideo}>Preview the course</button>
+              <button onClick={showPreviewVideo}>Preview course</button>
             </div>
-            <div className={`${style.registerBtn}`}>
-              <button onClick={(e) => setIsOpenRegsiter(true)}>
-                {' '}
-                {isRegister ? 'Book' : 'Register'}
-              </button>
-            </div>
+            {!isBooking ? (
+              <div className={`${style.registerBtn}`}>
+                <button
+                  onClick={(e) => {
+                    if (!isRegister) setIsOpenRegsiter(true);
+                  }}>
+                  {isRegister ? 'Book' : 'Register'}
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className={`${style.bookingBtn}`}>
+                  <button
+                    style={{ backgroundColor: '#F6AC3C' }}
+                    onClick={(e) => setIsOpenRegsiter(true)}>
+                    Register
+                  </button>
+                </div>
+                <div className={`${style.bookingBtn}`}>
+                  <button onClick={(e) => setIsOpenBooking(true)}>Book</button>
+                </div>
+              </>
+            )}
           </div>
         </div>
         {!isRegister && (
@@ -229,14 +251,14 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
               setIsUnAssignPopUpOpen(false);
               setIsCourseUnassign(false);
             },
-            handleClickRight: () => setIsUnAssignPopUpOpen(false)
+            handleClickRight: () => setIsUnAssignPopUpOpen(false),
           }}
         />
       )}
       <VendorPopUp
         open={isOpenRegister}
         popUpState={[isOpenRegister, setIsOpenRegsiter]}
-        customStyles={{ width: '500px', height: '250px' }}
+        customStyles={{ width: '450px', height: '230px' }}
         closeBtn={{ name: 'No' }}
         submitBtn={{ name: 'Yes', handleClick: onRegisterHandler }}
         isMarketYard
@@ -245,8 +267,21 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
         <p className={`${style.rText}`}>Registration</p>
         <div className={`${style.hr}`}></div>
         <p className={`${style.text}`}>
-          Are you sure you want to register for Advanced jva training program by Level UP?
+          Are you sure you want to register for {courseTitle} by {provisionedBy}?
         </p>
+      </VendorPopUp>
+      <VendorPopUp
+        open={isOpenBooking}
+        popUpState={[isOpenBooking, setIsOpenBooking]}
+        customStyles={{ width: '450px', height: '200px' }}
+        closeBtn={{ name: 'Book Later' }}
+        submitBtn={{ name: 'Book Now', handleClick: onBookingHandler }}
+        isMarketYard
+        isVilt
+        isFooterVisible={true}>
+        <p className={`${style.rText}`}>Booking</p>
+        <div className={`${style.hr}`}></div>
+        <p className={`${style.text}`}>Are you sure you want to book your seat?</p>
       </VendorPopUp>
     </div>
   );

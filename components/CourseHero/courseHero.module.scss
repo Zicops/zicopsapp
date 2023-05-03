@@ -138,14 +138,14 @@
 .course_big_button button {
   margin-top: 2vh;
   margin-bottom: 1vh;
-  padding: 2vh 6vw;
+  padding: 2vh 5vw;
 
   background-color: transparent;
   background-image: url(/images/preview-btn.png);
   background-repeat: no-repeat;
   background-size: 2vw;
-  background-position: top 50% left 20%;
-
+  background-position: top 50% left 15%;
+  border-radius: 4px;
   font-size: 0.9vw;
   font-weight: bold;
   color: $primary;
@@ -267,7 +267,28 @@
 .registerBtn button {
   margin-top: 2vh;
   margin-bottom: 1vh;
-  padding: 2.3vh 7.8vw;
+  padding: 2.3vh 7.5vw;
+  font-size: 0.9vw;
+  font-weight: bold;
+  color: #040404;
+  background-color: $primary;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.5s;
+
+  &:disabled {
+    border-color: $darkThree;
+    color: $darkThree;
+    opacity: 0.5;
+    cursor: no-drop;
+  }
+}
+
+.bookingBtn button {
+  margin-top: 2vh;
+  margin-bottom: 1vh;
+  padding: 2.5vh 5.8vw;
   font-size: 0.9vw;
   font-weight: bold;
   color: #040404;
