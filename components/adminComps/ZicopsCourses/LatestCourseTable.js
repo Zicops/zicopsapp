@@ -2,8 +2,6 @@
 
 import { GET_MY_COURSES, queryClient } from '@/api/Queries';
 import { GET_USER_VENDORS, userQueryClient } from '@/api/UserQueries';
-import RegisterUserTabs from '@/components/AdminCourseComps/RegisterUserTabs';
-import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_STATUS, COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
