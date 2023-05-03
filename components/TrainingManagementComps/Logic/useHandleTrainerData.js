@@ -204,7 +204,7 @@ export default function useHandleTrainerData() {
     //   return acc;
     // }, []);
 
-    const result = finalTrainerList.map((obj1) => {
+    const result = finalTrainerList?.map((obj1) => {
       const obj2 = userDeets.find((obj2) => obj2.id === obj1.user_id);
       return Object.assign({ ...obj1, trainerId: obj1.id }, obj2);
     });

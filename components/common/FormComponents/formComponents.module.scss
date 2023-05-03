@@ -822,12 +822,17 @@
 .customReactSelectMenu {
   background-color: $black;
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  position: absolute;
+  z-index: 2;
   .buttonDiv {
     display: flex;
+    justify-content: center;
+    width: 100%;
+    border-top: 1px solid rgba($darkThree, 0.6) ;
   }
 
   button {
