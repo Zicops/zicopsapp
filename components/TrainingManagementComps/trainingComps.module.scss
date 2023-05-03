@@ -95,4 +95,12 @@
 .footerButton {
   display: flex;
   justify-content: flex-end;
+
+  button {
+    border-color: $primary;
+  }
+  
+  button:hover {
+    color: $primary;
+  }
 }

@@ -12,7 +12,7 @@ import {
   SmeServicesAtom,
   CtServicesAtom,
   CdServicesAtom,
-  VendorStateAtom
+  VendorStateAtom,
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -73,7 +73,7 @@ const AddVendorProfile = ({ data = {} }) => {
     closeExpertiseCdHandler,
     tempSmeExpertise,
     tempCrtExpertise,
-    tempCdExpertise
+    tempCdExpertise,
   } = useProfile();
 
   const router = useRouter();
@@ -94,7 +94,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   placeholder: 'Enter First Name',
                   maxLength: 60,
                   value: profileData.firstName,
-                  isDisabled: isViewPage
+                  isDisabled: isViewPage,
                 }}
                 changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
               />
@@ -107,7 +107,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   placeholder: 'Enter Last Name',
                   maxLength: 60,
                   value: profileData.lastName,
-                  isDisabled: isViewPage
+                  isDisabled: isViewPage,
                 }}
                 changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
               />
@@ -120,7 +120,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   placeholder: 'Enter email address',
                   type: 'email',
                   value: profileData.email,
-                  isDisabled: isViewPage || isIndividualVendor
+                  isDisabled: isViewPage || isIndividualVendor,
                 }}
                 changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
               />
@@ -134,7 +134,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   maxLength: 12,
                   isNumericOnly: true,
                   value: profileData.contactNumber,
-                  isDisabled: isViewPage
+                  isDisabled: isViewPage,
                 }}
                 changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
               />
@@ -149,7 +149,7 @@ const AddVendorProfile = ({ data = {} }) => {
                   rows: 5,
                   maxLength: 160,
                   value: profileData.description,
-                  isDisabled: isViewPage || isIndividualVendor
+                  isDisabled: isViewPage || isIndividualVendor,
                 }}
                 changeHandler={(e) => changeHandler(e, profileData, setProfileData)}
               />
@@ -164,7 +164,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 handleRemove={() => setProfileData({ ...profileData, profileImage: null })}
                 previewData={{
                   fileName: getFileName(),
-                  filePath: profileData?.profileImage || profileData?.photoUrl
+                  filePath: profileData?.profileImage || profileData?.photoUrl,
                 }}
                 inputName="profileImage"
                 filePreview={profileData?.profileImage || profileData?.photoUrl}
@@ -182,10 +182,10 @@ const AddVendorProfile = ({ data = {} }) => {
               placeholder: 'Select Years',
               value: {
                 label: profileData.experienceYear,
-                value: profileData.experienceYear
+                value: profileData.experienceYear,
               },
               options: optionYearArray,
-              isDisabled: isViewPage
+              isDisabled: isViewPage,
             }}
             changeHandler={(e) => changeHandler(e, profileData, setProfileData, 'experienceYear')}
             styleClass={styles.dropDownMain}
@@ -224,7 +224,7 @@ const AddVendorProfile = ({ data = {} }) => {
                 imgUrl="/images/svg/add_circle.svg"
                 handleClick={() => {
                   setExperiencesData(
-                    getExperiencesObject({ localIndex: profileData?.experienceData?.length || 0 })
+                    getExperiencesObject({ localIndex: profileData?.experienceData?.length || 0 }),
                   );
                   setIsOpenExpriences(true);
                 }}

@@ -36,11 +36,17 @@ export default function InviteNewTrainer() {
             }}
             changeHandler={(e) => setTrainerData((prev) => ({ ...prev, tag: e.value }))}
             styleClass={styles.dropDownMain}
+            hideSelectedOptions={false}
           />
         </div>
         <div className={`${styles.email}`}>
           <label>Email: </label>
-          <MultiEmailInput items={emails} setItems={setEmails} isDisabled={emails?.length === 1} />
+          <MultiEmailInput
+            items={emails}
+            setItems={setEmails}
+            isDisabled={emails?.length === 1}
+            type={trainerData?.tag}
+          />
         </div>
       </div>
     </div>

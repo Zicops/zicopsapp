@@ -8,10 +8,11 @@ import {
   breakoutRoomselectedparticipant,
   particiantPopup,
   pollArray,
-  publishBreakoutRoom,
   vcMeetingIconAtom,
   vcToolNavbarState,
   vctoolAlluserinfo,
+  publishBreakoutRoom,
+  breakoutList,
 } from '@/state/atoms/vctool.atoms';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -31,11 +32,17 @@ import SettingPopup from '../SettingPopup';
 import StartSessionPopUp from '../StartSessionPopUP';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
+import WhiteBoard from '../WhiteBoard';
+import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
+import ManageAccount from '../ManageAccount';
+import StartSessionPopUp from '../StartSessionPopUP';
+import SettingPopup from '../SettingPopup';
 
 const MainToolbar = ({
   api = null,
   audiotoggle,
   videotoggle,
+  shareToggle,
   setAudio,
   setVideo,
   endMeetng,
@@ -75,11 +82,19 @@ const MainToolbar = ({
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [hideToolBar, setHideToolbar] = useRecoilState(vcToolNavbarState);
   const [pollDeleteIndex, setPollDeleteIndex] = useState();
+  const [screenShareParticipants, setScreenShareParticipants] = useState([]);
   const [publishRoomAtom, setPublishRoomAtom] = useRecoilState(publishBreakoutRoom);
   const [breakoutLists, setBreakoutLists] = useRecoilState(breakoutList);
   const timer = null;
 
   const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
+
+  useEffect(() => {
+    if (!api) return;
+    api.addListener('contentSharingParticipantsChanged', (share) => {
+      setScreenShareParticipants(share.data);
+    });
+  }, [api]);
 
   useEffect(() => {
     clearTimeout(timer);
@@ -297,6 +312,7 @@ const MainToolbar = ({
               ? setSelectedButton('')
               : setSelectedButton('SettingPopup');
           }}
+          api={api}
         />
       ),
     },
@@ -571,12 +587,23 @@ const MainToolbar = ({
 
               <VctoolButton
                 onClickfun={() => {
+                  console.info(screenShareParticipants);
+                  if (screenShareParticipants.length > 0) return;
                   shareScreen();
                 }}
-                trueSrc={'/images/svg/vctool/present-to-all.svg'}
-                falseSrc={'/images/svg/vctool/present-to-all.svg'}
+                toggle={!shareToggle}
+                trueSrc={'/images/svg/vctool/screen_share.svg'}
+                falseSrc={'/images/svg/vctool/stop_screen_share.svg'}
+                customId={shareToggle ? `${styles.changeBackground}` : ''}
                 toolTipClass={`${styles.tooltipLefttNav}`}
-                toolTipName={'Share screen'}
+                toolTipName={
+                  !shareToggle
+                    ? screenShareParticipants.length > 0
+                      ? 'Someone is sharing screen'
+                      : 'Share screen'
+                    : 'Stop Sharing'
+                }
+                disabled={true}
               />
 
               <VctoolButton
@@ -591,6 +618,18 @@ const MainToolbar = ({
                 toolTipClass={`${styles.tooltipLefttNav}`}
                 toolTipName={'Raise hand'}
               />
+              {/* <VctoolButton
+                onClickfun={() => {
+                  console.info(api.getMyUserId());
+                  
+                }}
+                // toggle={hand}
+                trueSrc={'/images/svg/vctool/sensors-on.svg'}
+                falseSrc={'/images/svg/vctool/sensors-off.svg'}
+                // customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
+                toolTipClass={`${styles.tooltipLefttNav}`}
+                toolTipName={'Pin Test'}
+              /> */}
             </>
           )}
         </div>
