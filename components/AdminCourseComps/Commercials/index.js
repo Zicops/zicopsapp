@@ -3,7 +3,7 @@ import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown'
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import styles from '../adminCourse.module.scss';
 import InputDatePicker from '@/common/InputDatePicker';
-import RadioBox from '@/components/Tabs/common/RadioBox';
+// import RadioBox from '@/components/Tabs/common/RadioBox';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
 import { currency } from '@/components/VendorComps/Logic/vendorComps.helper';
@@ -61,7 +61,7 @@ const Commercials = () => {
             }}
           />
         </div>
-
+        {/* 
         <div className={`${styles.redioBoxContainer}`}>
           <RadioBox
             labeledInputProps={{
@@ -93,7 +93,7 @@ const Commercials = () => {
                 setCommercialsData({ ...commercialsData, is_free_traning: true }),
             }}
           />
-        </div>
+        </div> */}
         <div className={`${styles.hr}`}></div>
         <div className={`${styles.priceSetContainer}`}>
           <div className={`${styles.priceSeat}`}>
