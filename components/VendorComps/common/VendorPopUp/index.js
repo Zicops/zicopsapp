@@ -19,8 +19,10 @@ export default function VendorPopUp({
   onClose = () => {},
   isAttempted = false,
   isMarketYard = false,
+  isCloseButton = true,
+  isSubmitButton = true,
   isVilt = false,
-  headerComps = null
+  headerComps = null,
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -87,36 +89,40 @@ export default function VendorPopUp({
                   </div>
                 </div> */}
                 <div className={`${styles.button_container}`}>
-                  <button
-                    type="button"
-                    value="cancel"
-                    className={`${
-                      closeBtn.disabled
-                        ? styles.btn_cancel_add_disabled
-                        : !isMarketYard
-                        ? styles.btn_cancel_add
-                        : styles.btn_cancel_add2
-                    }`}
-                    disabled={closeBtn.disabled}
-                    onClick={closeBtn.handleClick || closePopUp}>
-                    {closeBtn.name || 'Cancel'}
-                  </button>
-                  <button
-                    type="button"
-                    value="add"
-                    className={`${
-                      submitBtn.disabled ? '' : !isMarketYard ? styles.add_btn : styles.add_btn2
-                    } ${
-                      submitBtn.disabled
-                        ? styles.btn_cancel_add_disabled
-                        : !isMarketYard
-                        ? styles.btn_cancel_add
-                        : styles.btn_cancel_add2
-                    }`}
-                    disabled={submitBtn.disabled}
-                    onClick={submitBtn.handleClick}>
-                    {submitBtn.name || 'Next'}
-                  </button>
+                  {isCloseButton && (
+                    <button
+                      type="button"
+                      value="cancel"
+                      className={`${
+                        closeBtn.disabled
+                          ? styles.btn_cancel_add_disabled
+                          : !isMarketYard
+                          ? styles.btn_cancel_add
+                          : styles.btn_cancel_add2
+                      }`}
+                      disabled={closeBtn.disabled}
+                      onClick={closeBtn.handleClick || closePopUp}>
+                      {closeBtn.name || 'Cancel'}
+                    </button>
+                  )}
+                  {isSubmitButton && (
+                    <button
+                      type="button"
+                      value="add"
+                      className={`${
+                        submitBtn.disabled ? '' : !isMarketYard ? styles.add_btn : styles.add_btn2
+                      } ${
+                        submitBtn.disabled
+                          ? styles.btn_cancel_add_disabled
+                          : !isMarketYard
+                          ? styles.btn_cancel_add
+                          : styles.btn_cancel_add2
+                      }`}
+                      disabled={submitBtn.disabled}
+                      onClick={submitBtn.handleClick}>
+                      {submitBtn.name || 'Next'}
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -128,7 +134,7 @@ export default function VendorPopUp({
             title={confirmMsg}
             btnObj={{
               handleClickLeft: () => setConfirmMsg(true),
-              handleClickRight: () => setConfirmMsg(false)
+              handleClickRight: () => setConfirmMsg(false),
             }}
           />
         )}

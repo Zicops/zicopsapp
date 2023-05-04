@@ -7,15 +7,17 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import { CLASSROOM_MASTER_STATUS } from '@/constants/course.constants';
+import { getCourseCommercialsObject } from '@/state/atoms/courses.atom';
 import {
   ActiveCourseTabNameAtom,
   AllCourseModulesDataAtom,
   ClassroomMasterAtom,
+  CommercialsAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
   getClassroomMasterDataObj,
   getCourseCurrentStateObj,
-  getCourseMetaDataObj
+  getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { CourseTypeAtom } from '@/state/atoms/module.atoms';
 import { UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -29,6 +31,7 @@ export default function AddCoursePage() {
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
+  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   const userOrg = useRecoilValue(UsersOrganizationAtom);
 
   // set default values
@@ -40,10 +43,11 @@ export default function AddCoursePage() {
 
     // reset all course state
     setCourseMetaData(
-      getCourseMetaDataObj({ type: courseType, isDisplay: true, lspId: userOrg?.lsp_id })
+      getCourseMetaDataObj({ type: courseType, isDisplay: true, lspId: userOrg?.lsp_id }),
     );
     setCourseCurrentState(getCourseCurrentStateObj({ isSaved: true }));
     setClassroomMaster(getClassroomMasterDataObj({ status: CLASSROOM_MASTER_STATUS.save }));
+    setCommercialsData(getCourseCommercialsObject({ status: CLASSROOM_MASTER_STATUS.save }));
     setAllModules([]);
   }, [userOrg?.lsp_id]);
 

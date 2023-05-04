@@ -13,7 +13,7 @@ import {
   UPDATE_USER_LEARNINGSPACE_MAP,
   UPDATE_VENDOR,
   UPDATE_VENDOR_USER_MAP,
-  userClient
+  userClient,
 } from '@/api/UserMutations';
 import {
   GET_ALL_PROFILE_DETAILS,
@@ -27,10 +27,11 @@ import {
   GET_USER_LSP_ROLES,
   GET_USER_VENDORS,
   GET_VENDORS_BY_LSP_FOR_TABLE,
+  GET_VENDORS_DETAILS,
   GET_VENDOR_ADMINS,
   GET_VENDOR_DETAILS,
   GET_VENDOR_EXPERIENCES,
-  userQueryClient
+  userQueryClient,
 } from '@/api/UserQueries';
 import { loadQueryDataAsync } from '@/helper/api.helper';
 import {
@@ -40,7 +41,7 @@ import {
   USER_MAP_STATUS,
   USER_TYPE,
   VENDOR_MASTER_STATUS,
-  VENDOR_MASTER_TYPE
+  VENDOR_MASTER_TYPE,
 } from '@/helper/constants.helper';
 import { handleCacheUpdate, sortArrByKeyInOrder } from '@/helper/data.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
@@ -66,7 +67,7 @@ import {
   VendorExperiencesAtom,
   VendorProfileAtom,
   VendorStateAtom,
-  vendorUserInviteAtom
+  vendorUserInviteAtom,
 } from '@/state/atoms/vendor.atoms';
 import { useMutation } from '@apollo/client';
 import moment from 'moment';
@@ -82,7 +83,7 @@ export default function useHandleVendor() {
   const [deleteFile] = useMutation(DELETE_SAMPLE_FILE, { client: userClient });
   const [disableVendorLspMap] = useMutation(DISABLE_VENDOR_LSP_MAP, { client: userClient });
   const [inviteUsers, { data }] = useMutation(INVITE_USERS_WITH_ROLE, {
-    client: userClient
+    client: userClient,
   });
   const [createProfileVendor] = useMutation(CREATE_PROFILE_VENDOR, { client: userClient });
   const [updateProfileVendor] = useMutation(UPDATE_PROFILE_VENDOR, { client: userClient });
@@ -112,6 +113,7 @@ export default function useHandleVendor() {
 
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
   const [vendorDetails, setVendorDetails] = useState([]);
+  const [vendorInfo, setVendorInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [vendorCourses, setVendorCourses] = useState([[...Array(skeletonCardCount)]]);
 
@@ -138,7 +140,7 @@ export default function useHandleVendor() {
     let errorMsg;
 
     const resEmail = await inviteUsers({
-      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor }
+      variables: { emails: sendEmails, lsp_id: userOrgData?.lsp_id, role: USER_LSP_ROLE?.vendor },
     })
       .then(async (res) => {
         if (!res?.data?.inviteUsersWithRole) return;
@@ -152,8 +154,8 @@ export default function useHandleVendor() {
             variables: {
               vendorId: vendorId || id,
               userId: userData?.user_id,
-              status: USER_MAP_STATUS.activate
-            }
+              status: USER_MAP_STATUS.activate,
+            },
           }).catch((err) => console.log(err));
         }
 
@@ -197,13 +199,13 @@ export default function useHandleVendor() {
       setToastMsg({
         type: 'info',
         message:
-          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.'
+          'User Already exists in the learning space and cannot be mapped as vendor in this learning space.',
       });
     }
     if (userLspMaps?.length) {
       const resTags = await addUserTags({
         variables: { ids: userLspMaps, tags: [USER_TYPE?.external] },
-        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } }
+        context: { headers: { 'fcm-token': fcmToken || sessionStorage?.getItem('fcm-token') } },
       }).catch((err) => {
         isError = true;
       });
@@ -220,7 +222,7 @@ export default function useHandleVendor() {
     if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
       setVendorData({
         ...vendorData,
-        vendorProfileImage: e.target.files[0]
+        vendorProfileImage: e.target.files[0],
       });
     }
     e.target.value = '';
@@ -231,7 +233,7 @@ export default function useHandleVendor() {
     if (e.target.files && acceptedType.includes(e.target.files[0]?.type)) {
       setProfileData({
         ...profileData,
-        profileImage: e.target.files[0]
+        profileImage: e.target.files[0],
       });
     }
     e.target.value = '';
@@ -244,12 +246,25 @@ export default function useHandleVendor() {
       GET_VENDORS_BY_LSP_FOR_TABLE,
       { lsp_id: lspId },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     const _sortedData = sortArrByKeyInOrder(vendorList?.getVendors || [], 'updated_at', false);
 
     setVendorDetails(_sortedData);
+    setLoading(false);
+  }
+
+  async function getVendors(vendorIds) {
+    setLoading(true);
+    const vendorDetails = await loadQueryDataAsync(
+      GET_VENDORS_DETAILS,
+      { vendorIds: vendorIds },
+      {},
+      userQueryClient,
+    );
+
+    setVendorInfo(vendorDetails?.getAllVendors);
     setLoading(false);
   }
 
@@ -261,7 +276,7 @@ export default function useHandleVendor() {
       GET_USER_VENDORS,
       { user_id: userData?.id },
       {},
-      userClient
+      userClient,
     );
     const _sortedData = sortArrByKeyInOrder(res?.getUserVendor || [], 'updated_at', false);
 
@@ -278,7 +293,7 @@ export default function useHandleVendor() {
       GET_VENDOR_ADMINS,
       { vendor_id: vendorId || id },
       {},
-      userClient
+      userClient,
     );
     const _sortedData = sortArrByKeyInOrder(res?.getVendorAdmins || [], 'updated_at', false);
 
@@ -286,14 +301,14 @@ export default function useHandleVendor() {
     setIsVendorAdminLoading(false);
   }
 
-  async function getSingleVendorInfo() {
+  async function getSingleVendorInfo(vendorId) {
     if (!vendorId) return;
 
     const vendorInfo = await loadQueryDataAsync(
       GET_VENDOR_DETAILS,
       { vendor_id: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const singleData = {
       ...vendorInfo?.getVendorDetails,
@@ -302,7 +317,7 @@ export default function useHandleVendor() {
       instagramURL: vendorInfo?.getVendorDetails?.instagram_url,
       twitterURL: vendorInfo?.getVendorDetails?.twitter_url,
       linkedinURL: vendorInfo?.getVendorDetails?.linkedin_url,
-      photoUrl: vendorInfo?.getVendorDetails?.photo_url
+      photoUrl: vendorInfo?.getVendorDetails?.photo_url,
     };
     setVendorData(getVendorObject(singleData));
 
@@ -318,7 +333,7 @@ export default function useHandleVendor() {
       GET_ALL_PROFILE_DETAILS,
       { vendor_id: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     let sanetizeProfiles = profileInfo?.viewAllProfiles?.map((data) => {
       let experience = data?.experience?.length ? data?.experience : [];
@@ -338,13 +353,13 @@ export default function useHandleVendor() {
       GET_SINGLE_PROFILE_DETAILS,
       { vendor_id: vendorId, email: email },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     let profileDetails = profileInfo?.viewProfileVendorDetails || {};
 
     const allServiceLanguages = [
-      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages]),
     ];
 
     const individualVendorProfile = getProfileObject({
@@ -363,7 +378,7 @@ export default function useHandleVendor() {
       experienceYear: profileDetails?.experience_years,
       languages: profileDetails?.language,
       isSpeaker: profileDetails?.is_speaker,
-      vendorId: profileDetails?.vendor_id
+      vendorId: profileDetails?.vendor_id,
     });
 
     const experienceRes = await getProfileExperience(profileDetails?.pf_id);
@@ -388,9 +403,9 @@ export default function useHandleVendor() {
           startMonth: startDate?.format('MMMM'),
           startYear: startDate?.format('YYYY'),
           endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
-          endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+          endYear: isCurrentlyWorking ? null : endDate?.format('YYYY'),
         });
-      })
+      }),
     };
 
     setProfileData(getProfileObject(profileDetails));
@@ -404,7 +419,7 @@ export default function useHandleVendor() {
       GET_VENDOR_EXPERIENCES,
       { vendor_id: vendorId, pf_id: pfId },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     // setProfileData((prev) => ({ ...prev, experience: experienceInfo }));
@@ -419,7 +434,7 @@ export default function useHandleVendor() {
       GET_SINGLE_EXPERIENCE_DETAILS,
       { vendor_id: vendorId, pf_id: pfId, exp_id: expId },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     setExperiencesData(experienceInfo);
@@ -430,7 +445,7 @@ export default function useHandleVendor() {
       GET_SAMPLE_FILES,
       { vendor_id: vendorId, p_type },
       {},
-      userQueryClient
+      userQueryClient,
     );
     return fileInfo?.getSampleFiles;
   }
@@ -441,7 +456,7 @@ export default function useHandleVendor() {
       GET_SAMPLE_FILES,
       { vendor_id: vendorId, p_type: 'sme' },
       {},
-      userQueryClient
+      userQueryClient,
     );
     setSMEData((prev) => ({ ...prev, sampleFiles: fileInfo?.getSampleFiles }));
   }
@@ -451,7 +466,7 @@ export default function useHandleVendor() {
       GET_SAMPLE_FILES,
       { vendor_id: vendorId, p_type: 'crt' },
       {},
-      userQueryClient
+      userQueryClient,
     );
     setCTData((prev) => ({ ...prev, sampleFiles: fileInfo?.getSampleFiles }));
   }
@@ -461,7 +476,7 @@ export default function useHandleVendor() {
       GET_SAMPLE_FILES,
       { vendor_id: vendorId, p_type: 'cd' },
       {},
-      userQueryClient
+      userQueryClient,
     );
     setCDData((prev) => ({ ...prev, sampleFiles: fileInfo?.getSampleFiles }));
   }
@@ -473,7 +488,7 @@ export default function useHandleVendor() {
       GET_SME_DETAILS,
       { vendor_id: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const smeData = fileInfo?.getSmeDetails;
     const smeDetails = {
@@ -485,7 +500,7 @@ export default function useHandleVendor() {
       sampleFiles: smeData?.sample_files,
       expertises: smeData?.expertise,
       isExpertiseOffline: smeData?.is_expertise_offline,
-      isExpertiseOnline: smeData?.is_expertise_online
+      isExpertiseOnline: smeData?.is_expertise_online,
     };
     setSMEData(getSMEServicesObject(smeDetails));
     return smeDetails;
@@ -498,7 +513,7 @@ export default function useHandleVendor() {
       GET_CRT_DETAILS,
       { vendor_id: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const crtData = fileInfo?.getClassRoomTraining;
     const crtDetails = {
@@ -510,7 +525,7 @@ export default function useHandleVendor() {
       sampleFiles: crtData?.sample_files,
       expertises: crtData?.expertise,
       isExpertiseOffline: crtData?.is_expertise_offline,
-      isExpertiseOnline: crtData?.is_expertise_online
+      isExpertiseOnline: crtData?.is_expertise_online,
     };
     setCTData(getCTServicesObject(crtDetails));
     return crtDetails;
@@ -523,7 +538,7 @@ export default function useHandleVendor() {
       GET_CD_DETAILS,
       { vendor_id: vendorId },
       {},
-      userQueryClient
+      userQueryClient,
     );
     const cdData = fileInfo?.getContentDevelopment;
     const cdDetails = {
@@ -535,7 +550,7 @@ export default function useHandleVendor() {
       sampleFiles: cdData?.sample_files,
       expertises: cdData?.expertise,
       isExpertiseOffline: cdData?.is_expertise_offline,
-      isExpertiseOnline: cdData?.is_expertise_online
+      isExpertiseOnline: cdData?.is_expertise_online,
     };
     setCDData(getCDServicesObject(cdDetails));
     return cdDetails;
@@ -554,11 +569,11 @@ export default function useHandleVendor() {
           Type: courseType,
           SearchText: '',
           LspId: lspId || userOrgData?.lsp_id,
-          Owner: vendorData?.name
-        }
+          Owner: vendorData?.name,
+        },
       },
       {},
-      queryClient
+      queryClient,
     );
     setVendorCourses(courseInfo?.latestCourses?.courses);
   }
@@ -588,7 +603,7 @@ export default function useHandleVendor() {
         startMonth: startDate?.format('MMMM'),
         startYear: startDate?.format('YYYY'),
         endMonth: isCurrentlyWorking ? null : endDate?.format('MMMM'),
-        endYear: isCurrentlyWorking ? null : endDate?.format('YYYY')
+        endYear: isCurrentlyWorking ? null : endDate?.format('YYYY'),
       });
     });
 
@@ -607,7 +622,7 @@ export default function useHandleVendor() {
       experience: [],
       experienceYear: profileData?.experienceYear || '',
       is_speaker: profileData?.isSpeaker || false,
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
     };
     if (
       !sendData?.SME_expertise?.length &&
@@ -641,7 +656,7 @@ export default function useHandleVendor() {
             isSpeaker: res?.is_speaker || '',
             sme: res?.sme || '',
             crt: res?.crt || '',
-            cd: res?.cd || ''
+            cd: res?.cd || '',
           };
 
           if (!!displaySuccessToaster)
@@ -675,7 +690,7 @@ export default function useHandleVendor() {
           isSpeaker: res?.is_speaker || '',
           sme: res?.sme || '',
           crt: res?.crt || '',
-          cd: res?.cd || ''
+          cd: res?.cd || '',
         };
 
         if (!!displaySuccessToaster)
@@ -695,7 +710,7 @@ export default function useHandleVendor() {
       GET_USER_LEARNINGSPACES,
       { user_id: vendorAdmin?.id },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     const userLspData = userLspDataRes?.getUserLsps || [];
@@ -710,7 +725,7 @@ export default function useHandleVendor() {
       GET_USER_LSP_ROLES,
       { user_id: vendorAdmin?.id, user_lsp_ids: userLspIds },
       {},
-      userQueryClient
+      userQueryClient,
     );
 
     // map user lsp data and role
@@ -719,7 +734,7 @@ export default function useHandleVendor() {
         const _data = structuredClone(lspData);
         // find active vendor role
         const activeVendorRole = userLspRolesRes?.getUserLspRoles?.find(
-          (roleData) => roleData?.is_active && roleData?.role === USER_LSP_ROLE.vendor
+          (roleData) => roleData?.is_active && roleData?.role === USER_LSP_ROLE.vendor,
         );
 
         if (!activeVendorRole?.user_role_id) return null;
@@ -743,8 +758,8 @@ export default function useHandleVendor() {
           user_lsp_id: userData?.user_lsp_id,
           user_id: vendorAdmin?.id,
           lsp_id: userData?.lsp_id,
-          status: USER_MAP_STATUS.disable
-        }
+          status: USER_MAP_STATUS.disable,
+        },
       })
         .then((res) => {
           if (!res?.data?.updateUserLspMap)
@@ -769,8 +784,8 @@ export default function useHandleVendor() {
           user_lsp_id: userData?.user_lsp_id,
           user_id: vendorAdmin?.id,
           lsp_id: userData?.lsp_id,
-          status: USER_MAP_STATUS.disable
-        }
+          status: USER_MAP_STATUS.disable,
+        },
       }).catch(() => {
         isError = true;
         setToastMsg({ type: 'danger', message: 'User Lsp Map Update Error' });
@@ -778,7 +793,7 @@ export default function useHandleVendor() {
     }
 
     await updateVendorUserMap({
-      variables: { vendorId, userId: vendorAdmin?.id, status: USER_MAP_STATUS.disable }
+      variables: { vendorId, userId: vendorAdmin?.id, status: USER_MAP_STATUS.disable },
     }).catch(() => {
       isError = true;
       setToastMsg({ type: 'danger', message: 'Vendor User Map Update Error' });
@@ -816,7 +831,7 @@ export default function useHandleVendor() {
         locationType: exp?.locationType?.trim() || '',
         startDate: start_timestamp || null,
         endDate: isWorking ? 0 : end_timestamp || null,
-        status: exp?.status
+        status: exp?.status,
       };
 
       if (exp?.expId) {
@@ -856,18 +871,18 @@ export default function useHandleVendor() {
     const allSampleFiles = {
       sme: smeData?.sampleFiles,
       crt: ctData?.sampleFiles,
-      cd: cdData?.sampleFiles
+      cd: cdData?.sampleFiles,
     };
     // duplicate name check
     if (
       allSampleFiles?.[ptype]?.find(
         (smFile) =>
-          smFile?.name?.toLowerCase()?.trim() === sampleData?.sampleName?.toLowerCase()?.trim()
+          smFile?.name?.toLowerCase()?.trim() === sampleData?.sampleName?.toLowerCase()?.trim(),
       )
     ) {
       setToastMsg({
         type: 'danger',
-        message: 'Sample File With same name already exist in this service'
+        message: 'Sample File With same name already exist in this service',
       });
       return null;
     }
@@ -896,7 +911,7 @@ export default function useHandleVendor() {
       unit: sampleData?.unit || '',
       file: sampleData?.sampleFile || null,
       fileType: sampleData?.fileType || '',
-      status: VENDOR_MASTER_STATUS.active
+      status: VENDOR_MASTER_STATUS.active,
     };
 
     let isError = false;
@@ -906,9 +921,9 @@ export default function useHandleVendor() {
         fetchOptions: {
           useUpload: true,
           onProgress: (ev) =>
-            setSampleData({ ...sampleData, fileUploadPercent: (ev.loaded / ev.total) * 100 })
-        }
-      }
+            setSampleData({ ...sampleData, fileUploadPercent: (ev.loaded / ev.total) * 100 }),
+        },
+      },
     }).catch((err) => {
       console.log(err);
       isError = !!err;
@@ -923,7 +938,7 @@ export default function useHandleVendor() {
     const sendData = {
       vendor_id: vendorId,
       sfId: sfid || '',
-      p_type: pType
+      p_type: pType,
     };
 
     let isError = false;
@@ -941,7 +956,7 @@ export default function useHandleVendor() {
   async function disableVendor(vendorTableData, isEnabled, onSuccess = () => {}) {
     const sendData = {
       ...vendorTableData,
-      status: isEnabled ? VENDOR_MASTER_STATUS.disable : VENDOR_MASTER_STATUS.active
+      status: isEnabled ? VENDOR_MASTER_STATUS.disable : VENDOR_MASTER_STATUS.active,
     };
 
     let isError = false;
@@ -950,7 +965,7 @@ export default function useHandleVendor() {
     const currentLsp = sessionStorage?.getItem('lsp_id');
     if (currentLsp !== vendorData?.lspId) {
       disableVendorLspMap({
-        variables: { vendorId: vendorTableData?.vendorId, lspId: currentLsp }
+        variables: { vendorId: vendorTableData?.vendorId, lspId: currentLsp },
       })
         .then((res) => {
           if (!res?.data?.disableVendorLspMap)
@@ -982,9 +997,9 @@ export default function useHandleVendor() {
 
             return { getVendorDetails: _updatedCache };
           },
-          userQueryClient
+          userQueryClient,
         );
-      }
+      },
     }).catch((err) => {
       console.log('Error', err);
       isError = true;
@@ -1034,6 +1049,8 @@ export default function useHandleVendor() {
     vendorAdminUsers,
     disableVendor,
     getVendorCourses,
-    vendorCourses
+    vendorCourses,
+    getVendors,
+    vendorInfo,
   };
 }

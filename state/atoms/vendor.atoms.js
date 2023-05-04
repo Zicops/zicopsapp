@@ -1,14 +1,14 @@
 import { atom } from 'recoil';
-import { VENDOR_MASTER_STATUS } from '@/helper/constants.helper';
+import { VENDOR_MASTER_STATUS, VENDOR_ORDER_STATUS } from '@/helper/constants.helper';
 
 export const IsVendorAdminLoadingAtom = atom({
   key: 'IsVendorAdminLoading',
-  default: null
+  default: null,
 });
 
 export const VendorCurrentStateAtom = atom({
   key: 'VendorCurrentState',
-  default: getVendorCurrentStateObj()
+  default: getVendorCurrentStateObj(),
 });
 
 export function getVendorCurrentStateObj(data = {}) {
@@ -16,13 +16,13 @@ export function getVendorCurrentStateObj(data = {}) {
     isUpdating: data?.isUpdating || false,
     isSaved: data?.isSaved || false,
     errors: data?.errors || [],
-    enabledServices: [...new Set(data?.enabledServices || [])]
+    enabledServices: [...new Set(data?.enabledServices || [])],
   };
 }
 
 export const VendorStateAtom = atom({
   key: 'vendorState',
-  default: getVendorObject()
+  default: getVendorObject(),
 });
 
 export function getVendorObject(data) {
@@ -43,13 +43,13 @@ export function getVendorObject(data) {
     description: data?.description || '',
     users: data?.users || [],
     status: data?.status || VENDOR_MASTER_STATUS.draft,
-    fileUploadPercent: data?.fileUploadPercent || 0
+    fileUploadPercent: data?.fileUploadPercent || 0,
   };
 }
 
 export const VendorProfileAtom = atom({
   key: 'vendorProfile',
-  default: getProfileObject()
+  default: getProfileObject(),
 });
 
 export function getProfileObject(data) {
@@ -73,18 +73,18 @@ export function getProfileObject(data) {
     isSpeaker: data?.isSpeaker || false,
     sme: data?.sme || false,
     crt: data?.crt || false,
-    cd: data?.cd || false
+    cd: data?.cd || false,
   };
 }
 
 export const allProfileAtom = atom({
   key: 'allprofileState',
-  default: []
+  default: [],
 });
 
 export const VendorExperiencesAtom = atom({
   key: 'vendorExperiences',
-  default: getExperiencesObject()
+  default: getExperiencesObject(),
 });
 
 export function getExperiencesObject(data) {
@@ -101,23 +101,23 @@ export function getExperiencesObject(data) {
     startMonth: data?.startMonth || '',
     startYear: data?.startYear || '',
     endMonth: data?.endMonth || '',
-    endYear: data?.endYear || ''
+    endYear: data?.endYear || '',
   };
 }
 
 export const VendorAllExperiencesAtom = atom({
   key: 'vendorAllExperiences',
-  default: []
+  default: [],
 });
 
 export const VendorAdminsAtom = atom({
   key: 'VendorAdmins',
-  default: []
+  default: [],
 });
 
 export const SmeServicesAtom = atom({
   key: 'smeServicesState',
-  default: getSMEServicesObject()
+  default: getSMEServicesObject(),
 });
 
 export function getSMEServicesObject(data) {
@@ -130,13 +130,13 @@ export function getSMEServicesObject(data) {
     formats: data?.formats || [],
     sampleFiles: data?.sampleFiles || [],
     isExpertiseOnline: data?.isExpertiseOnline || false,
-    isExpertiseOffline: data?.isExpertiseOffline || false
+    isExpertiseOffline: data?.isExpertiseOffline || false,
   };
 }
 
 export const CtServicesAtom = atom({
   key: 'ctServicesState',
-  default: getCTServicesObject()
+  default: getCTServicesObject(),
 });
 
 export function getCTServicesObject(data) {
@@ -149,13 +149,13 @@ export function getCTServicesObject(data) {
     formats: data?.formats || [],
     sampleFiles: data?.sampleFiles || [],
     isExpertiseOnline: data?.isExpertiseOnline || false,
-    isExpertiseOffline: data?.isExpertiseOffline || false
+    isExpertiseOffline: data?.isExpertiseOffline || false,
   };
 }
 
 export const CdServicesAtom = atom({
   key: 'cdServicesState',
-  default: getCDServicesObject()
+  default: getCDServicesObject(),
 });
 
 export function getCDServicesObject(data) {
@@ -168,13 +168,13 @@ export function getCDServicesObject(data) {
     formats: data?.formats || [],
     sampleFiles: data?.sampleFiles || [],
     isExpertiseOnline: data?.isExpertiseOnline || false,
-    isExpertiseOffline: data?.isExpertiseOffline || false
+    isExpertiseOffline: data?.isExpertiseOffline || false,
   };
 }
 
 export const SampleAtom = atom({
   key: 'SampleAtom',
-  default: getSampleObject()
+  default: getSampleObject(),
 });
 export function getSampleObject(data) {
   return {
@@ -186,22 +186,22 @@ export function getSampleObject(data) {
     rate: data?.rate || '',
     currency: data?.currency || '',
     unit: data?.unit || '',
-    fileUploadPercent: data?.fileUploadPercent || 0
+    fileUploadPercent: data?.fileUploadPercent || 0,
   };
 }
 export const allSampleFilesAtom = atom({
   key: 'allSampleFilesState',
-  default: []
+  default: [],
 });
 
 export const vendorUserInviteAtom = atom({
   key: 'vendorUserInviteState',
-  default: []
+  default: [],
 });
 
 export const OrderAtom = atom({
   key: 'orderState',
-  default: getVendorOrderObject()
+  default: getVendorOrderObject(),
 });
 export function getVendorOrderObject(data) {
   return {
@@ -211,13 +211,14 @@ export function getVendorOrderObject(data) {
     total: data?.total || 0,
     tax: data?.tax || 0,
     grossTotal: data?.grossTotal || 0,
-    status: data?.status || '',
-    currency: data?.currency || ''
+    description: data?.description || '',
+    status: data?.status || VENDOR_ORDER_STATUS?.added,
+    currency: data?.currency || '',
   };
 }
 export const ServicesAtom = atom({
   key: 'servicesState',
-  default: getVendorServicesObject()
+  default: getVendorServicesObject(),
 });
 
 export function getVendorServicesObject() {
@@ -235,15 +236,20 @@ export function getServicesObject(data) {
     quantity: data?.quantity || 0,
     total: data?.total || 0,
     status: data?.status || '',
-    isActive: data?.isActive || false
+    isActive: data?.isActive || false,
   };
 }
 
 export const VendorServicesListAtom = atom({
   key: 'vendorServicesList',
-  default: getVendorServicesList()
+  default: getVendorServicesList(),
 });
 
 export function getVendorServicesList() {
   return { sme: false, crt: false, cd: false, speakers: false };
 }
+
+export const AllServicesAtom = atom({
+  key: 'allservicesState',
+  default: [],
+});
