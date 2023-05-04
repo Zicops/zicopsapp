@@ -58,17 +58,20 @@ export default function useHandleTrainerData() {
 
     let isError = false;
 
-    if (individualTrainerData !== null) {
-      const res = await updateTrainer({ variables: sendData }).catch((err) => {
-        console.log(err);
-        isError = !!err;
-        return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
-      });
 
-      if (isError) return null;
+    // Query is not working from backend so commented.
+    // if (individualTrainerData !== null) {
+    //   const res = await updateTrainer({ variables: sendData }).catch((err) => {
+    //     console.log(err);
+    //     isError = !!err;
+    //     return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
+    //   });
 
-      setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
-    }
+    //   if (isError) return null;
+
+    //   setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
+    //   return;
+    // }
 
     const res = await addNewTrainer({ variables: sendData }).catch((err) => {
       console.log(err);

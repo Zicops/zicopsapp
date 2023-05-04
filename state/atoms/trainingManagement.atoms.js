@@ -16,6 +16,7 @@ export function getTrainerDataObj(data = {}) {
     status: data?.status || '',
     tag: data?.tag || null,
     vendorId: data?.vendorId || null,
+    vendorName: data?.vendorName || '',
     inviteEmails: data?.inviteEmails || '',
     id: data?.id || '',
   };
@@ -25,3 +26,18 @@ export const AddTrainerAtom = atom({
   key: 'addTrainerPopup',
   default: false,
 });
+
+export const TrainerProfileAtom = atom({
+  key: 'trainerData',
+  default: getTrainerProfileObj(),
+});
+
+export function getTrainerProfileObj(data = {}) {
+  return {
+    yearsOfExperience: data?.yearsOfExperience || '',
+    linkedinURL: data?.linkedinURL || '',
+    twitterURL: data?.twitterURL || '',
+    websiteURL: data?.websiteURL || '',
+    aboutTrainer: data?.aboutTrainer || '',
+  };
+}

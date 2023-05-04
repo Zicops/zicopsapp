@@ -75,6 +75,22 @@
   .email {
     width: 50%;
   }
+
+  .vendorDropdown {
+    width: 50%;
+
+    .dropdown {
+      margin-top: 9px;
+    }
+  }
+}
+
+.emailExternal {
+  margin-top: 10px;
+}
+
+.trainingProfile {
+  margin-top: 20px;
 }
 
 .trainerOptions {
@@ -110,5 +126,55 @@
 
   button:hover {
     color: $primary;
+  }
+}
+
+.websiteSocialDiv {
+  display: flex;
+  margin-top: 20px;
+  gap: 25px;
+
+  .input3 {
+    width: 50%;
+
+    label {
+      font-weight: 400;
+    }
+
+    input {
+      width: 100%;
+      margin-top: 8px;
+
+      border: 1px solid #747474;
+      border-radius: 5px;
+      background: transparent;
+      outline: none;
+      padding-left: 16px;
+      color: $white;
+    }
+
+    .icons {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+
+      img {
+        border: 1px solid #747474;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 10%;
+      }
+    }
+  }
+}
+
+.aboutTrainer {
+  flex-direction: column;
+  margin-top: 15px;
+
+  textArea {
+    border-radius: 5px;
+    border: 1px solid $secondaryWhite;
+    margin-top: 10px;
   }
 }
