@@ -23,6 +23,7 @@ export default function VendorPopUp({
   isSubmitButton = true,
   isVilt = false,
   headerComps = null,
+  popUpCustomStyles = {},
 }) {
   const { isOpen, closePopUp, confirmMsg, setConfirmMsg } = useHandlePopUp(popUpState, onClose);
 
@@ -51,7 +52,9 @@ export default function VendorPopUp({
         closeOnDocumentClick={false}
         closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
-          <div className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage}`}>
+          <div
+            className={`${styles.popUp}  ${isMarketYard ? styles.popMarket : styles.popManage}`}
+            style={popUpCustomStyles}>
             {!isVilt && (
               <>
                 <div className={`${styles.header}`}>

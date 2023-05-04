@@ -17,6 +17,7 @@ import ConfirmPopUp from '@/components/common/ConfirmPopUp';
 import AssignCourse from '@/components/CourseComps/AssignCourse';
 import CourseHeader from '../CourseHeader';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import FeeDetails from '@/components/AdminCourseComps/CoursePayment/FeeDetails';
 
 export default function ClassRoomCourseHero({ isPreview = false }) {
   const {
@@ -36,6 +37,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const [isRegister, setIsRegsiter] = useState(false);
   const [isOpenBooking, setIsOpenBooking] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
+  const [isOpenFees, setIsOpenFees] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -105,6 +107,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     setIsOpenRegsiter(false);
   };
   const onBookingHandler = () => {
+    setIsOpenFees(true);
     setIsOpenBooking(false);
   };
   return (
@@ -184,7 +187,11 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
               <div className={`${style.registerBtn}`}>
                 <button
                   onClick={(e) => {
-                    if (!isRegister) setIsOpenRegsiter(true);
+                    if (!isRegister) {
+                      setIsOpenRegsiter(true);
+                    } else {
+                      setIsOpenBooking(true);
+                    }
                   }}>
                   {isRegister ? 'Book' : 'Register'}
                 </button>
@@ -282,6 +289,18 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
         <p className={`${style.rText}`}>Booking</p>
         <div className={`${style.hr}`}></div>
         <p className={`${style.text}`}>Are you sure you want to book your seat?</p>
+      </VendorPopUp>
+      <VendorPopUp
+        open={isOpenFees}
+        popUpState={[isOpenFees, setIsOpenFees]}
+        customStyles={{ width: '800px', height: '80vh' }}
+        popUpCustomStyles={{ padding: '0px 0px 15px 0px' }}
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Proceed to Pay' }}
+        isMarketYard
+        isVilt
+        isFooterVisible={true}>
+        <FeeDetails />
       </VendorPopUp>
     </div>
   );

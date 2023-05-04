@@ -8,7 +8,7 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
@@ -88,7 +88,10 @@ export default function EditCoursePage() {
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <MainBody>
-        <AdminHeader title={<CoursePageTitle />} />
+        <AdminHeader
+          title={<CoursePageTitle />}
+          isShowUserIcon={courseType !== COURSE_TYPES.classroom}
+        />
 
         <MainBodyBox>
           <AdminCourseTabs />

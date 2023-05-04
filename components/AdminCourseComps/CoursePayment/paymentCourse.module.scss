@@ -1,0 +1,74 @@
+
+.feesContainer{
+    .feesTopContainer{
+            position: relative;
+            background-position: right center;
+            background-repeat: no-repeat;
+            background-size: cover;
+          
+            .gradient{
+                    // height: 38.8889vw;
+                    padding: 24px;
+                    background: rgba(0, 0, 0, 0);
+                    background: linear-gradient(90deg,
+                            rgba(0, 0, 0, 1) 0%,
+                            rgba(0, 0, 0, 0.9) 35%,
+                            rgba(0, 0, 0, 0.8) 50%,
+                            rgba(0, 0, 0, 0) 100%);
+                }
+        .courseSummary{
+            font-weight: 600;
+                font-size: 16px;
+                padding-bottom: 25px;
+        }
+        .courseTitleMain{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            .courseTitle{
+                font-weight: 600;
+                font-size: 20px;
+            }
+            .courseType2 {
+                background-color: #2B60EA;
+                color: $white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                border-radius: 4px;
+                 padding: 4px 8px;
+                text-transform: capitalize;
+            }
+        }
+        .courseInstrutor{
+            padding-bottom: 25px;
+        }
+        .feesFlexContainer{
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 8px;
+        }
+        .durationContainer{
+            display: flex;
+            justify-content: space-between;
+            .durationMain{
+                padding: 10px 16px 10px 13px;
+                background: #26292C;
+                border: 1px solid #30323F;
+                border-radius: 50px;
+                display: flex;
+                align-items: center;
+                gap:8px
+            }
+        }
+    }
+    .feesBottomMain{
+        padding: 24px;
+    }
+          .hr {
+              background-color: $secondary;
+              height: 1px;
+              margin: 10px 0px;
+          }
+}
