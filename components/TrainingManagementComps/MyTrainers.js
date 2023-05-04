@@ -6,11 +6,13 @@ import useHandleTrainerData from './Logic/useHandleTrainerData.js';
 import AddTrainerPopup from './AddTrainerPopup/AddTrainerPopup.js';
 import { useRecoilState } from 'recoil';
 import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms.js';
+import { isWordIncluded } from '@/helper/utils.helper';
 
 const MyTrainers = () => {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
   const [trainerTableData, setTrainerTableData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { getPaginatedTrainers, setIsEditTrainerPopupOpen } = useHandleTrainerData();
 
@@ -81,11 +83,22 @@ const MyTrainers = () => {
     },
   ];
 
-  const options = [{ label: 'Name', value: 'name' }];
+  const options = [{ label: 'First Name', value: 'First Name' }];
 
   return (
     <>
-      <ZicopsTable data={trainerTableData} columns={columns} />
+      <ZicopsTable
+        data={trainerTableData?.filter((trainer) =>
+          isWordIncluded(trainer?.first_name, searchQuery),
+        )}
+        columns={columns}
+        searchProps={{
+          handleSearch: (val) => setSearchQuery(val),
+          options,
+          delayMS: 0,
+        }}
+        showCustomSearch={true}
+      />
       <AddTrainerPopup
         popUpState={[isEditOpen, setIsEditOpen]}
         isEdit={true}
