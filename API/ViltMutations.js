@@ -11,7 +11,8 @@ export const viltMutationClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// ViltInput = {
+// input ViltInput {
+//   id: String
 //   lsp_id: String
 //   course_id: String
 //   no_of_learners: Int
@@ -20,6 +21,25 @@ export const viltMutationClient = new ApolloClient({
 //   course_start_date: String
 //   course_end_date: String
 //   curriculum: String
+//   is_trainer_decided: Boolean
+//   is_moderator_decided: Boolean
+//   is_start_date_decided: Boolean
+//   is_end_date_decided: Boolean
+//   pricing_type: String
+//   price_per_seat: Int
+//   currency: String
+//   tax_percentage: Float
+//   is_registration_open:Boolean
+//   is_booking_open: Boolean
+//   max_registrations: Int
+//   registration_end_date: Int
+//   booking_start_date: Int
+//   booking_end_date: Int
+//   registration_publish_by: String
+//   registration_publish_on: Int
+//   booking_publish_on: Int
+//   booking_publish_by: String
+//   registration_start_date: Int
 //   status: String
 // }
 export const CREATE_VILT_DATA = gql`
@@ -33,11 +53,26 @@ export const CREATE_VILT_DATA = gql`
       moderators
       course_start_date
       course_end_date
-      curriculum
-      is_end_date_decided
-      is_start_date_decided
       is_trainer_decided
       is_moderator_decided
+      is_start_date_decided
+      is_end_date_decided
+      curriculum
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_publish_by
+      registration_publish_on
+      booking_publish_on
+      booking_publish_by
+      registration_start_date
       created_at
       created_by
       updated_at
@@ -47,7 +82,8 @@ export const CREATE_VILT_DATA = gql`
   }
 `;
 
-// ViltInput = {
+// input ViltInput {
+//   id: String
 //   lsp_id: String
 //   course_id: String
 //   no_of_learners: Int
@@ -56,6 +92,25 @@ export const CREATE_VILT_DATA = gql`
 //   course_start_date: String
 //   course_end_date: String
 //   curriculum: String
+//   is_trainer_decided: Boolean
+//   is_moderator_decided: Boolean
+//   is_start_date_decided: Boolean
+//   is_end_date_decided: Boolean
+//   pricing_type: String
+//   price_per_seat: Int
+//   currency: String
+//   tax_percentage: Float
+//   is_registration_open:Boolean
+//   is_booking_open: Boolean
+//   max_registrations: Int
+//   registration_end_date: Int
+//   booking_start_date: Int
+//   booking_end_date: Int
+//   registration_publish_by: String
+//   registration_publish_on: Int
+//   booking_publish_on: Int
+//   booking_publish_by: String
+//   registration_start_date: Int
 //   status: String
 // }
 export const UPDATE_VILT_DATA = gql`
@@ -69,11 +124,26 @@ export const UPDATE_VILT_DATA = gql`
       moderators
       course_start_date
       course_end_date
-      curriculum
-      is_end_date_decided
-      is_start_date_decided
       is_trainer_decided
       is_moderator_decided
+      is_start_date_decided
+      is_end_date_decided
+      curriculum
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_publish_by
+      registration_publish_on
+      booking_publish_on
+      booking_publish_by
+      registration_start_date
       created_at
       created_by
       updated_at

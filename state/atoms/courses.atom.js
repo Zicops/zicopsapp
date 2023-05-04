@@ -105,6 +105,24 @@ export function getClassroomMasterDataObj(data = {}) {
     isStartDatedecided: data?.isStartDatedecided || false,
     isTrainerdecided: data?.isTrainerdecided || false,
     isModeratordecided: data?.isModeratordecided || false,
+
+    pricingType: data?.pricingType || null,
+    pricePerSeat: data?.pricePerSeat || null,
+    currency: data?.currency || null,
+    taxPercentage: data?.taxPercentage || null,
+
+    isRegistration: data?.isRegistration || false,
+    maxRegistrations: data?.maxRegistrations || null,
+    registrationStartDate: data?.registrationStartDate || null,
+    registrationEndDate: data?.registrationEndDate || null,
+    registrationPublishBy: data?.registrationPublishBy || null,
+    registrationPublishOn: data?.registrationPublishOn || null,
+
+    isBooking: data?.isBooking || false,
+    bookingStartDate: data?.bookingStartDate || null,
+    bookingEndDate: data?.bookingEndDate || null,
+    bookingPublishOn: data?.bookingPublishOn || null,
+    bookingPublishBy: data?.bookingPublishBy || null,
   };
 }
 
@@ -251,7 +269,7 @@ export function getTopicClassroomObject(data = {}) {
 
 export const CommercialsAtom = atom({
   key: 'commercialsState',
-  default: getCourseCommercialsObject,
+  default: getCourseCommercialsObject(),
 });
 export function getCourseCommercialsObject(data) {
   return {

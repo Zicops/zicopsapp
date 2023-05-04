@@ -1,29 +1,29 @@
 import RadioBox from '@/components/Tabs/common/RadioBox';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import LabeledDropdown from '@/components/common/FormComponents/LabeledDropdown';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import InputDatePicker from '@/components/common/InputDatePicker';
-import styles from '../adminCourse.module.scss';
+import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
+import { changeHandler } from '@/helper/common.helper';
 import {
   ClassroomMasterAtom,
   CommercialsAtom,
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
 import { Tooltip } from '@mui/material';
-import React, { useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import NextBtn from '../NextBtn';
-import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
-import ChargeTable from './ChargeTable';
-import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
-import { courseTabs } from '../Logic/adminCourseComps.helper';
 import { makeStyles } from '@mui/styles';
-import { changeHandler } from '@/helper/common.helper';
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { courseTabs } from '../Logic/adminCourseComps.helper';
+import NextBtn from '../NextBtn';
+import styles from '../adminCourse.module.scss';
+import ChargeTable from './ChargeTable';
 
 const Commercials = () => {
   const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
-  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
+  const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [isOpenTable, setOpenTable] = useState(false);
 
   const useTooltipStyles = makeStyles((theme) => ({
@@ -49,19 +49,14 @@ const Commercials = () => {
             type="checkbox"
             label="To be Decided"
             name="isMandatory"
-            isChecked={
-              commercialsData?.is_decided ||
-              commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd
+            isDisabled={classroomMaster?.isBooking}
+            isChecked={classroomMaster?.pricingType === COMMERCIAL_PRICEING_TYPE?.tbd}
+            changeHandler={(e) =>
+              setClassroomMaster((prev) => ({
+                ...prev,
+                pricingType: e.target.checked ? COMMERCIAL_PRICEING_TYPE?.tbd : '',
+              }))
             }
-            changeHandler={(e) => {
-              const isChecked = e.target.checked;
-              const _commercialData = { ...commercialsData };
-              _commercialData.is_decided = isChecked;
-              _commercialData.pricing_type = isChecked;
-              _commercialData.is_paid_traning = false;
-              _commercialData.is_free_traning = false;
-              setCommercialsData(_commercialData);
-            }}
           />
         </div>
         <div className={`${styles.redioBoxContainer}`}>
@@ -69,30 +64,26 @@ const Commercials = () => {
             labeledInputProps={{
               label: 'Priced Training',
               name: 'display',
-              isDisabled:
-                commercialsData?.is_decided ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
               description: 'Learners to pay and book the seat to attend the training',
-              isChecked:
-                commercialsData?.is_paid_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.paid,
+              isChecked: classroomMaster?.pricingType === COMMERCIAL_PRICEING_TYPE?.paid,
               changeHandler: (e) =>
-                setCommercialsData({ ...commercialsData, is_paid_traning: true }),
+                setClassroomMaster((prev) => ({
+                  ...prev,
+                  pricingType: COMMERCIAL_PRICEING_TYPE?.paid,
+                })),
             }}
           />
           <RadioBox
             labeledInputProps={{
               label: 'Free of Cost Training',
               name: 'display',
-              isDisabled:
-                commercialsData?.is_decided ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd,
               description: 'Training is Free of Cost for Learners',
-              isChecked:
-                commercialsData?.is_free_traning ||
-                commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.free,
+              isChecked: classroomMaster?.pricingType === COMMERCIAL_PRICEING_TYPE?.free,
               changeHandler: (e) =>
-                setCommercialsData({ ...commercialsData, is_free_traning: true }),
+                setClassroomMaster((prev) => ({
+                  ...prev,
+                  pricingType: COMMERCIAL_PRICEING_TYPE?.free,
+                })),
             }}
           />
         </div>
@@ -103,14 +94,14 @@ const Commercials = () => {
             <div className={`${styles.inputBox}`}>
               <LabeledInput
                 inputOptions={{
-                  inputName: 'price_per_seat',
+                  inputName: 'pricePerSeat',
                   //   label: 'Name :',
                   placeholder: 'Enter price per seat',
-                  value: commercialsData?.price_per_seat,
+                  value: classroomMaster?.pricePerSeat,
                   isNumericOnly: true,
                 }}
                 styleClass={`${styles.labelMergin}`}
-                changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
+                changeHandler={(e) => changeHandler(e, classroomMaster, setClassroomMaster)}
               />
               <p className={`${styles.gst}`}>Exclusive of GST</p>
             </div>
@@ -122,13 +113,13 @@ const Commercials = () => {
                 inputName: 'currency',
                 placeholder: 'INR',
                 value: {
-                  label: commercialsData?.currency,
-                  value: commercialsData?.currency,
+                  label: classroomMaster?.currency,
+                  value: classroomMaster?.currency,
                 },
                 options: currency,
               }}
               changeHandler={(e) =>
-                changeHandler(e, commercialsData, setCommercialsData, 'currency')
+                changeHandler(e, classroomMaster, setClassroomMaster, 'currency')
               }
               styleClass={`${styles.labelMergin}`}
             />
@@ -162,28 +153,25 @@ const Commercials = () => {
                 <p className={`${styles.heading}`}>Maximum number of registrations:</p>
                 <LabeledInput
                   inputOptions={{
-                    inputName: 'max_registrations',
+                    inputName: 'maxRegistrations',
                     //   label: 'Name :',
                     placeholder: 'Enter max number of registrations',
-                    value: commercialsData?.max_registrations,
+                    value: classroomMaster?.maxRegistrations,
                     isNumericOnly: true,
                   }}
                   styleClass={`${styles.labelMergin}`}
-                  changeHandler={(e) => changeHandler(e, commercialsData, setCommercialsData)}
+                  changeHandler={(e) => changeHandler(e, classroomMaster, setClassroomMaster)}
                 />
               </div>
               <div className={`${styles.registrationMax}`}>
                 <p className={`${styles.heading}`}>Registrations end date:</p>
                 <InputDatePicker
                   styleClass={`${styles.labelMergin}`}
-                  selectedDate={commercialsData?.registration_end_date}
+                  selectedDate={classroomMaster?.registrationEndDate}
                   // minDate={examTabData?.exam_start}
-                  changeHandler={(date) => {
-                    setCommercialsData({
-                      ...commercialsData,
-                      registration_end_date: date,
-                    });
-                  }}
+                  changeHandler={(date) =>
+                    setClassroomMaster((prev) => ({ ...prev, registrationEndDate: date }))
+                  }
                   placeholderText="Select Date"
                   // isDisabled={isPreview}
                 />
@@ -201,17 +189,14 @@ const Commercials = () => {
                   <InputDatePicker
                     styleClass={`${styles.labelMergin}`}
                     selectedDate={
-                      commercialsData?.is_publish_date
-                        ? courseMetaData?.publishDate
-                        : commercialsData?.booking_start_date
+                      +classroomMaster?.bookingStartDate === -1
+                        ? null
+                        : classroomMaster?.bookingStartDate
                     }
                     // minDate={examTabData?.exam_start}
-                    changeHandler={(date) => {
-                      setCommercialsData({
-                        ...commercialsData,
-                        booking_start_date: date,
-                      });
-                    }}
+                    changeHandler={(date) =>
+                      setClassroomMaster((prev) => ({ ...prev, bookingStartDate: date }))
+                    }
                     placeholderText="Select Date"
                   />
                 </div>
@@ -220,13 +205,13 @@ const Commercials = () => {
                     type="checkbox"
                     label="Same as Course Publish Date"
                     name="isCoursePublishDate"
-                    isChecked={commercialsData?.is_publish_date}
-                    changeHandler={(e) => {
-                      const isChecked = e.target.checked;
-                      const _commercialData = { ...commercialsData };
-                      _commercialData.is_publish_date = isChecked;
-                      setCommercialsData(_commercialData);
-                    }}
+                    isChecked={+classroomMaster?.bookingStartDate === -1}
+                    changeHandler={(e) =>
+                      setClassroomMaster((prev) => ({
+                        ...prev,
+                        bookingStartDate: e.target.checked ? -1 : 0,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -235,18 +220,11 @@ const Commercials = () => {
                   <p className={`${styles.heading}`}>Booking end date:</p>
                   <InputDatePicker
                     styleClass={`${styles.labelMergin}`}
-                    selectedDate={
-                      commercialsData?.is_start_date
-                        ? classroomMaster?.courseStartDate
-                        : commercialsData?.booking_end_date
-                    }
+                    selectedDate={classroomMaster?.bookingEndDate}
                     // minDate={examTabData?.exam_start}
-                    changeHandler={(date) => {
-                      setCommercialsData({
-                        ...commercialsData,
-                        booking_end_date: date,
-                      });
-                    }}
+                    changeHandler={(date) =>
+                      setClassroomMaster((prev) => ({ ...prev, bookingEndDate: date }))
+                    }
                     placeholderText="Select Date"
                   />
                 </div>
@@ -255,13 +233,13 @@ const Commercials = () => {
                     type="checkbox"
                     label="Same as Course Start Date"
                     name="isCourseStartDate"
-                    isChecked={commercialsData?.is_start_date}
-                    changeHandler={(e) => {
-                      const isChecked = e.target.checked;
-                      const _commercialData = { ...commercialsData };
-                      _commercialData.is_start_date = isChecked;
-                      setCommercialsData(_commercialData);
-                    }}
+                    isChecked={classroomMaster?.bookingEndDate === classroomMaster?.courseStartDate}
+                    changeHandler={(e) =>
+                      setClassroomMaster((prev) => ({
+                        ...prev,
+                        bookingEndDate: e.target.checked ? classroomMaster?.courseStartDate : 0,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -293,7 +271,7 @@ const Commercials = () => {
         isFooterVisible={true}>
         <div>
           <p className={`${styles.transText}`}>Transaction Charges</p>
-          <p className={`${styles.priceText}`}>Price Per Seat: {commercialsData?.price_per_seat}</p>
+          <p className={`${styles.priceText}`}>Price Per Seat: {classroomMaster?.pricePerSeat}</p>
           <ChargeTable />
         </div>
       </VendorPopUp>

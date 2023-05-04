@@ -19,7 +19,7 @@ import {
   getCourseCommercialsObject,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
@@ -273,6 +273,36 @@ export default function useHandleCourseData() {
         isStartDatedecided: !viltData?.is_start_date_decided,
         isTrainerdecided: !viltData?.is_trainer_decided,
         isModeratordecided: !viltData?.is_moderator_decided,
+
+        pricingType: viltData?.pricing_type || null,
+        pricePerSeat: viltData?.price_per_seat || null,
+        currency: viltData?.currency || null,
+        taxPercentage: viltData?.tax_percentage || null,
+
+        isRegistration: viltData?.is_registration_open || false,
+        maxRegistrations: viltData?.max_registrations || null,
+        registrationStartDate: parseInt(viltData?.registration_start_date)
+          ? moment.unix(viltData?.registration_start_date).toDate()
+          : null,
+        registrationEndDate: parseInt(viltData?.registration_end_date)
+          ? moment.unix(viltData?.registration_end_date).toDate()
+          : null,
+        registrationPublishBy: viltData?.registration_publish_by || null,
+        registrationPublishOn: parseInt(viltData?.registration_publish_on)
+          ? moment.unix(viltData?.registration_publish_on).toDate()
+          : null,
+
+        isBooking: viltData?.is_booking_open || false,
+        bookingStartDate: parseInt(viltData?.booking_start_date)
+          ? moment.unix(viltData?.booking_start_date).toDate()
+          : null,
+        bookingEndDate: parseInt(viltData?.booking_end_date)
+          ? moment.unix(viltData?.booking_end_date).toDate()
+          : null,
+        bookingPublishOn: parseInt(viltData?.booking_publish_on)
+          ? moment.unix(viltData?.booking_publish_on).toDate()
+          : null,
+        bookingPublishBy: viltData?.booking_publish_by || null,
       }),
     );
   }

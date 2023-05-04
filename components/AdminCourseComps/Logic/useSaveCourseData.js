@@ -20,12 +20,12 @@ import {
   getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
-import useHandleCourseData from './useHandleCourseData';
 import useHandleCommercial from './useHandleCommercial';
+import useHandleCourseData from './useHandleCourseData';
 
 export default function useSaveCourseData() {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
@@ -110,6 +110,15 @@ export default function useSaveCourseData() {
       is_start_date_decided: !classroomMaster?.isStartDatedecided,
       is_trainer_decided: !classroomMaster?.isTrainerdecided,
       is_moderator_decided: !classroomMaster?.isModeratordecided,
+
+      pricing_type: classroomMaster?.pricingType,
+      price_per_seat: +classroomMaster?.pricePerSeat,
+      currency: classroomMaster?.currency,
+      tax_percentage: +classroomMaster?.taxPercentage,
+      max_registrations: +classroomMaster?.maxRegistrations,
+      registration_end_date: getUnixFromDate(classroomMaster?.registrationEndDate) || 0,
+      booking_start_date: getUnixFromDate(classroomMaster?.bookingStartDate) || 0,
+      booking_end_date: getUnixFromDate(classroomMaster?.bookingEndDate) || 0,
     });
 
     if (!!classroomMaster?.id) {
@@ -184,6 +193,11 @@ export default function useSaveCourseData() {
       sendData.publish_date = getUnixFromDate();
       sendData.approvers = [userData?.email];
     }
+
+    // for classroom courses
+    if (_courseMetaData?.type === COURSE_TYPES.classroom)
+      _sendData.status = _courseMetaData?.status;
+
     let isError = false;
     const updatedCourseRes = await mutateData(UPDATE_COURSE_DATA, sendData, {}).catch((err) => {
       console.log('Update Course Error: ', err);
@@ -264,7 +278,6 @@ export default function useSaveCourseData() {
         .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);
-    await addUpdateCommercial();
 
     // update course
     updateCourse(_courseMetaData).then(async (res) => {
@@ -272,7 +285,6 @@ export default function useSaveCourseData() {
       if (!res?.id) return;
 
       await addUpdateClassroomMaster(res);
-      await addUpdateCommercial();
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);
