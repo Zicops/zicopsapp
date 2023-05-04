@@ -4,7 +4,7 @@ import {
   TrainerExpertiseListAtom,
   getTrainerDataObj,
 } from '@/state/atoms/trainingManagement.atoms';
-import { CREATE_TRAINER, viltMutationClient } from '@/api/ViltMutations';
+import { CREATE_TRAINER, viltMutationClient, UPDATE_TRAINER } from '@/api/ViltMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -25,6 +25,8 @@ export default function useHandleTrainerData() {
   // const [isEditTrainerPopupOpen, setIsEditTrainerPopupOpen] = useState(false);
 
   const [addNewTrainer] = useMutation(CREATE_TRAINER, { client: viltMutationClient });
+  const [updateTrainer] = useMutation(UPDATE_TRAINER, { client: viltMutationClient });
+
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
 
   const [localUserId, setLocalUserId] = useState(null);
@@ -56,8 +58,16 @@ export default function useHandleTrainerData() {
 
     let isError = false;
 
-    if(individualTrainerData !== null){
-      
+    if (individualTrainerData !== null) {
+      const res = await updateTrainer({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
+      });
+
+      if (isError) return null;
+
+      setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
     }
 
     const res = await addNewTrainer({ variables: sendData }).catch((err) => {
@@ -161,8 +171,6 @@ export default function useHandleTrainerData() {
       viltQueryClient,
     ).catch((err) => setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' }));
 
-    // if (!vendorList?.getPaginatedVendors?.vendors) return [];
-
     if (trainerList.error) {
       setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' });
       return [];
@@ -189,20 +197,6 @@ export default function useHandleTrainerData() {
     ).catch((err) => err);
 
     const userDeets = userDetails?.getUserDetails;
-
-    // userDeets?.map((user) => {
-    //   if (finalTrainerList?.user_id === user?.id) return;
-    // });
-
-    // const mergedArr = finalTrainerList.concat(userDeets).reduce((acc, obj) => {
-    //   const existingObj = acc.find((item) => item.user_id === obj.id);
-    //   if (existingObj) {
-    //     Object.assign(existingObj, obj);
-    //   }
-
-    //   console.info(acc)
-    //   return acc;
-    // }, []);
 
     const result = finalTrainerList?.map((obj1) => {
       const obj2 = userDeets.find((obj2) => obj2.id === obj1.user_id);

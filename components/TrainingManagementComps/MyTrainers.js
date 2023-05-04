@@ -17,6 +17,8 @@ const MyTrainers = () => {
   const { getPaginatedTrainers, setIsEditTrainerPopupOpen } = useHandleTrainerData();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+
   const [individualTrainerData, setIndividualTrainerData] = useState();
 
   useEffect(() => {
@@ -59,7 +61,11 @@ const MyTrainers = () => {
         const buttonArr = [
           {
             text: 'View',
-            handleClick: () => setIsEditOpen(true),
+            handleClick: () => {
+              setIsViewOpen(true);
+              setIndividualTrainerData(params.row);
+              setTrainerData(getTrainerDataObj());
+            },
           },
           {
             text: 'Edit',
@@ -103,6 +109,12 @@ const MyTrainers = () => {
         popUpState={[isEditOpen, setIsEditOpen]}
         isEdit={true}
         isView={false}
+        individualTrainerData={individualTrainerData}
+      />
+      <AddTrainerPopup
+        popUpState={[isViewOpen, setIsViewOpen]}
+        isEdit={false}
+        isView={true}
         individualTrainerData={individualTrainerData}
       />
     </>

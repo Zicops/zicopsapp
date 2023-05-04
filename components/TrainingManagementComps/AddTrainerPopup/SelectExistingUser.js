@@ -14,7 +14,6 @@ export default function SelectExistingUser({ individualTrainerData }) {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [userList, setUserList] = useState([]);
 
-
   useEffect(() => {
     getTrainersAndModerators().then((resp) => setUserList(resp));
   }, []);
@@ -25,6 +24,9 @@ export default function SelectExistingUser({ individualTrainerData }) {
         ...prev,
         name: individualTrainerData?.first_name + '' + individualTrainerData?.last_name,
         email: individualTrainerData?.email,
+        userId: individualTrainerData?.user_id,
+        lspId: individualTrainerData?.lsp_id,
+        id: individualTrainerData?.id,
       }));
   }, [individualTrainerData]);
 

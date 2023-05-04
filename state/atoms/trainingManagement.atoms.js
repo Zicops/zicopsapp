@@ -17,6 +17,7 @@ export function getTrainerDataObj(data = {}) {
     tag: data?.tag || null,
     vendorId: data?.vendorId || null,
     inviteEmails: data?.inviteEmails || '',
+    id: data?.id || '',
   };
 }
 

@@ -9,7 +9,7 @@ import { changeHandler } from '@/helper/common.helper';
 import { useRecoilState } from 'recoil';
 import { TrainerExpertiseListAtom, TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 
-const AddTrainingExpertise = ({ individualTrainerData }) => {
+const AddTrainingExpertise = ({ individualTrainerData, isView }) => {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [expertiseSearchValue, setExpertiseSearchValue] = useState('');
 
@@ -52,6 +52,7 @@ const AddTrainingExpertise = ({ individualTrainerData }) => {
             inputName: 'filter',
             placeholder: 'Search Training Expertise...',
             value: expertiseSearchValue,
+            isDisabled: isView,
           },
           changeHandler: (e) => setExpertiseSearchValue(e.target.value),
         }}
@@ -74,6 +75,7 @@ const AddTrainingExpertise = ({ individualTrainerData }) => {
                     value={subCat.Name}
                     isChecked={trainerData?.expertise?.includes(subCat.Name)}
                     changeHandler={handleExpertiseSelection}
+                    isDisabled={isView}
                   />
                 </div>
               );

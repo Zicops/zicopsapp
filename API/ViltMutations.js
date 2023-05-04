@@ -177,6 +177,7 @@ export const UPDATE_TRAINER = gql`
     $vendorId: String
     $expertise: [String]
     $status: String
+    $id: String
   ) {
     updateTrainerData(
       input: {
@@ -185,6 +186,7 @@ export const UPDATE_TRAINER = gql`
         vendor_id: $vendorId
         expertise: $expertise
         status: $status
+        id: $id
       }
     ) {
       id

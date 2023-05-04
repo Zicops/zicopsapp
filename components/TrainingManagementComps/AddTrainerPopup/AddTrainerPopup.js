@@ -58,7 +58,7 @@ export default function AddTrainerPopup({
           customStyles={{ backgroundColor: 'transparent', height: 'auto', overflow: 'unset' }}
         />
         <div className={`${styles.addTrainingExpertiseContainer}`}>
-          <AddTrainingExpertise individualTrainerData={individualTrainerData} />
+          <AddTrainingExpertise individualTrainerData={individualTrainerData} isView={isView} />
         </div>
 
         <div className={`${styles.footerButton}`}>
@@ -70,21 +70,28 @@ export default function AddTrainerPopup({
             }}
           />
           <Button
-            text={tab === tabData[0]?.name ? individualTrainerData !== null ? 'Update' : 'Save' : 'Send Invite'}
+            text={
+              tab === tabData[0]?.name
+                ? individualTrainerData !== null
+                  ? 'Update'
+                  : 'Save'
+                : 'Send Invite'
+            }
             clickHandler={(e) => {
               addUpdateTrainer(tab === tabData[0]?.name, individualTrainerData);
               handleMail(tab === tabData[1]?.name);
             }}
+            isDisabled={isView}
           />
-          {(tab === tabData[0]?.name && individualTrainerData === null ) && (
-                <Button
-                  text={'Save & Add More'}
-                  clickHandler={async () => {
-                    await addUpdateTrainer();
-                    setTrainerData(getTrainerDataObj());
-                  }}
-                />,
-              )}
+          {tab === tabData[0]?.name && individualTrainerData === null && (
+            <Button
+              text={'Save & Add More'}
+              clickHandler={async () => {
+                await addUpdateTrainer();
+                setTrainerData(getTrainerDataObj());
+              }}
+            />
+          )}
         </div>
       </VendorPopUp>
     </>

@@ -9,6 +9,10 @@
   }
   input {
     padding-left: 10px;
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -22,6 +26,10 @@
 
   label {
     margin-right: 10px;
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 }
 
@@ -99,7 +107,7 @@
   button {
     border-color: $primary;
   }
-  
+
   button:hover {
     color: $primary;
   }
