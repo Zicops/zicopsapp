@@ -1,5 +1,4 @@
-import { db } from '@/helper/firebaseUtil/firestore.helper';
-import { getFileNameFromUrl } from '@/helper/utils.helper';
+import { listenToCollectionWithId } from '@/helper/firebaseUtil/firestore.helper';
 import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
@@ -15,7 +14,6 @@ import {
   vcModeratorControlls,
   vctoolMetaData,
 } from '@/state/atoms/vctool.atoms';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
@@ -42,7 +40,6 @@ const VcMaintool = ({ vcData = {} }) => {
   );
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
   const [isMeetingStarted, setIsMeetingStarted] = useRecoilState(joinMeeting);
-  const [controlls, setControlls] = useRecoilState(vcModeratorControlls);
   const [controls, setControls] = useRecoilState(ClassRoomFlagsInput);
   const totalBreakoutrooms = useRecoilValue(totalRoomno);
   const [breakoutListarr, setbreakoutListarr] = useRecoilState(breakoutList);
@@ -79,16 +76,16 @@ const VcMaintool = ({ vcData = {} }) => {
     });
   }, [fullScreenRef]);
 
-  useEffect(() => {
-    if (isMeetingStarted) {
-      if (controlls.onVideo) {
-        api.executeCommand('muteEveryone', 'video');
-      }
-      if (controlls.onMic) {
-        api.executeCommand('muteEveryone', 'audio');
-      }
-    }
-  }, [controlls]);
+  // useEffect(() => {
+  //   if (isMeetingStarted) {
+  //     if (controlls.onVideo) {
+  //       api.executeCommand('muteEveryone', 'video');
+  //     }
+  //     if (controlls.onMic) {
+  //       api.executeCommand('muteEveryone', 'audio');
+  //     }
+  //   }
+  // }, [controlls]);
 
   // useEffect(() => {
   //   if (isMeetingStarted) {
@@ -127,7 +124,6 @@ const VcMaintool = ({ vcData = {} }) => {
     api.addListener('screenSharingStatusChanged', (share) => {
       setShareToggle(share.on);
     });
-
   }, [isMeetingStarted, api]);
 
   useEffect(() => {
@@ -140,19 +136,18 @@ const VcMaintool = ({ vcData = {} }) => {
 
   const { addUpdateClassRoomFlags } = useLoadClassroomData();
 
-  // firebase listener
-  useEffect(async () => {
-    const classroomFlagsRef = collection(db, 'ClassroomFlags');
-    const docRef = doc(classroomFlagsRef, activeClassroomTopicId);
-
-    const unsub = onSnapshot(docRef, (querySnapshot) => {
-      if (!querySnapshot.exists()) return;
-
-      setControls({ id: querySnapshot.id, ...querySnapshot.data() });
-    });
-
-    return () => unsub();
-  }, []);
+  // firebase listener for VILT flags
+  useEffect(() => {
+    const unsubscribe = listenToCollectionWithId(
+      'ClassroomFlags',
+      activeClassroomTopicId,
+      (documents) => {
+        if (!documents) return;
+        setControls(documents);
+      },
+    );
+    return () => unsubscribe();
+  }, [activeClassroomTopicId]);
 
   async function updateClassroomFlags(_obj = {}) {
     if (controls?.is_break === false) return;
@@ -160,6 +155,20 @@ const VcMaintool = ({ vcData = {} }) => {
     const obj = { ...controls, id: activeClassroomTopicId, ..._obj };
     await addUpdateClassRoomFlags(obj);
   }
+
+  useEffect(() => {
+    if (!controls.id) return;
+    if (!api) return;
+    // console.info(controls);
+    if (controls.is_classroom_started) {
+      if (!controls.is_video_sharing_enabled) {
+        api.executeCommand('muteEveryone', 'video');
+      }
+      if (!controls.is_microphone_enabled) {
+        api.executeCommand('muteEveryone', 'audio');
+      }
+    }
+  }, [controls]);
 
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
@@ -189,25 +198,51 @@ const VcMaintool = ({ vcData = {} }) => {
             }}
             api={api}
             setAudio={() => {
-              api.isAudioAvailable().then((available) => {
-                if (available) {
-                  settoggleAudio(!toggleAudio);
-                  api.executeCommand('toggleAudio');
+              if (meetingIconsAtom.isModerator) {
+                api.isAudioAvailable().then((available) => {
+                  if (available) {
+                    settoggleAudio(!toggleAudio);
+                    api.executeCommand('toggleAudio');
+                  }
+                });
+              } else {
+                if (controls.is_microphone_enabled) {
+                  api.isAudioAvailable().then((available) => {
+                    if (available) {
+                      settoggleAudio(!toggleAudio);
+                      api.executeCommand('toggleAudio');
+                    }
+                  });
                 }
-              });
+              }
             }}
             setVideo={() => {
-              api.isVideoAvailable().then((available) => {
-                if (available) {
-                  settoggleVideo(!toggleVideo);
-                  api.executeCommand('toggleVideo');
+              if (meetingIconsAtom.isModerator) {
+                api.isVideoAvailable().then((available) => {
+                  if (available) {
+                    settoggleVideo(!toggleVideo);
+                    api.executeCommand('toggleVideo');
+                  }
+                });
+              } else {
+                if (controls.is_video_sharing_enabled) {
+                  api.isVideoAvailable().then((available) => {
+                    if (available) {
+                      settoggleVideo(!toggleVideo);
+                      api.executeCommand('toggleVideo');
+                    }
+                  });
                 }
-              });
+              }
             }}
             audiotoggle={toggleAudio}
             videotoggle={toggleVideo}
             shareToggle={shareToggle}
-            endMeetng={() => {
+            endMeetng={(endConference = false) => {
+              if (endConference) {
+                updateClassroomFlags({ is_classroom_started: false });
+                api.executeCommand('endConference');
+              }
               api?.dispose();
               settoobar(false);
               sethidecard(false);
@@ -224,9 +259,17 @@ const VcMaintool = ({ vcData = {} }) => {
               setLobby(false);
             }}
             shareScreen={() => {
-              setShareToggle(!shareToggle);
-              api.executeCommand('toggleShareScreen');
-              setFullscreen(false);
+              if (meetingIconsAtom.isModerator) {
+                setShareToggle(!shareToggle);
+                api.executeCommand('toggleShareScreen');
+                setFullscreen(false);
+              } else {
+                if (controls.is_video_sharing_enabled) {
+                  setShareToggle(!shareToggle);
+                  api.executeCommand('toggleShareScreen');
+                  setFullscreen(false);
+                }
+              }
             }}
             handRiseFun={() => {
               api.executeCommand('toggleRaiseHand');
@@ -246,14 +289,14 @@ const VcMaintool = ({ vcData = {} }) => {
               if (!api) return;
 
               // console.log(userData)
-              api?.getRoomsInfo().then((rooms) => {
-                // setuserinfo(rooms.rooms[0].participants);
-                // setbreakoutListarr(rooms?.rooms);
-                setVctoolInfo({
-                  ...vctoolInfo,
-                  allRoomInfo: rooms?.rooms[0].participants,
-                });
-              });
+              // api?.getRoomsInfo().then((rooms) => {
+              //   // setuserinfo(rooms.rooms[0].participants);
+              //   // setbreakoutListarr(rooms?.rooms);
+              //   setVctoolInfo({
+              //     ...vctoolInfo,
+              //     allRoomInfo: rooms?.rooms[0].participants,
+              //   });
+              // });
             }}
             fullscreen={Fullscreen}
             // getUesrId={userinfo}
