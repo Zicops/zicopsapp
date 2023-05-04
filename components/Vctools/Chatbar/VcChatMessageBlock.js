@@ -45,7 +45,7 @@ const ChatMessageBlock = ({ isReply, message, setParentId }) => {
               )}
             </div>
             <div className={`${style.personName}`}>
-              {userDetails.first_name == '' ? 'john' : userDetails?.first_name}
+              {userDetails?.first_name == '' ? 'john' : userDetails?.first_name}
             </div>
           </div>
 
