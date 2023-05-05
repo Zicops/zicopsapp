@@ -183,7 +183,10 @@ export default function useSaveCourseData() {
       setCourseCurrentState({ ...courseCurrentState, isUpdating: true });
 
     const { duration, status, approvers, ..._sendData } = _courseMetaData;
-    const sendData = sanitizeFormData({ ..._sendData, status: COURSE_STATUS.save, approvers: [] });
+    const sendData = sanitizeFormData({ ..._sendData, approvers: [] });
+
+    // for classroom courses
+    if (_courseMetaData?.type !== COURSE_TYPES.classroom) _sendData.status = COURSE_STATUS.save;
 
     // if course freezed then update status to publish
     if (_sendData?.qaRequired) sendData.status = COURSE_STATUS.publish;
@@ -193,10 +196,6 @@ export default function useSaveCourseData() {
       sendData.publish_date = getUnixFromDate();
       sendData.approvers = [userData?.email];
     }
-
-    // for classroom courses
-    if (_courseMetaData?.type === COURSE_TYPES.classroom)
-      _sendData.status = _courseMetaData?.status;
 
     let isError = false;
     const updatedCourseRes = await mutateData(UPDATE_COURSE_DATA, sendData, {}).catch((err) => {
@@ -229,7 +228,7 @@ export default function useSaveCourseData() {
       publishDate: _updatedCourseData?.publish_date,
       expiryDate: _updatedCourseData?.expiry_date,
       qaRequired: _updatedCourseData?.qa_required,
-      status: _updatedCourseData?.status || sendData?.status,
+      status: _updatedCourseData?.status || sendData?.status || _courseMetaData?.status,
 
       createdAt: _updatedCourseData?.created_at,
       updatedAt: _updatedCourseData?.updated_at,

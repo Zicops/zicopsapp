@@ -124,7 +124,7 @@ export default function Configuration() {
       id: 7,
       src: '/images/svg/adminCourse/how-to-reg.svg',
       head: 'Published for registration by',
-      detail: classroomMaster?.registrationPublishBy || '',
+      detail: classroomMaster?.registrationPublishBy || 'NA',
       displayForCourseTypes: [COURSE_TYPES.classroom],
     },
     {
@@ -205,6 +205,7 @@ export default function Configuration() {
       sendClassroomData.is_registration_open = !!updateClassroomData?.isRegistration;
       sendClassroomData.registration_publish_on = updateClassroomData?.registrationPublishOn;
       sendClassroomData.registration_publish_by = updateClassroomData?.registrationPublishBy;
+      sendClassroomData.registration_start_date = updateClassroomData?.registrationStartDate;
     }
     if (Object.keys(updateClassroomData)?.includes('isBooking')) {
       sendClassroomData.is_booking_open = !!updateClassroomData?.isBooking;
@@ -441,6 +442,7 @@ export default function Configuration() {
                 isRegistration: !classroomMaster?.isRegistration,
                 registrationPublishBy: userData?.email || '',
                 registrationPublishOn: getUnixFromDate(),
+                registrationStartDate: getUnixFromDate(),
               });
             },
             handleClickRight: () => setRegisterConfirmation(null),

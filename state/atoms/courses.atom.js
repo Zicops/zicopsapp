@@ -1,4 +1,5 @@
-import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_TYPES } from '@/constants/course.constants';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
@@ -15,7 +16,7 @@ export function getCourseMetaDataObj(data = {}) {
   return {
     // meta data
     id: data?.id || null,
-    type: data?.type || ALL_COURSE_TYPES.selfPaced,
+    type: data?.type || COURSE_TYPES.selfPaced,
     status: data?.status || COURSE_STATUS.draft,
     isActive: data?.isActive || true,
 
