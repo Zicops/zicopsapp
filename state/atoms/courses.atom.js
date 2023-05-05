@@ -282,3 +282,8 @@ export function getRegisterUserObject(data) {
     status: data?.status || '',
   };
 }
+
+export const RegisterUserTableData = atom({
+  key: 'registerUserTableData',
+  default: [],
+});

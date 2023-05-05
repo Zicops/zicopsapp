@@ -8,12 +8,13 @@ import {
 } from '@/api/ViltQueries';
 import { useState } from 'react';
 import { CREATE_REGISTER_COUSER_USER, UPDATE_REGISTER_COUSER_USER } from '@/api/ViltMutations';
-import { RegisterUserAtom } from '@/state/atoms/courses.atom';
+import { RegisterUserAtom, RegisterUserTableData } from '@/state/atoms/courses.atom';
 import { sanitizeFormData } from '@/helper/common.helper';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
+import moment from 'moment';
 
 export default function useHandleRegisterData() {
-  const [registerTableData, setRegisterTableData] = useState([]);
+  const [registerUserTableData, setRegisterUserTableData] = useRecoilState(RegisterUserTableData);
   const [registerUserData, setRegisterUserData] = useRecoilState(RegisterUserAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
@@ -40,10 +41,19 @@ export default function useHandleRegisterData() {
       userQueryClient,
     ).catch((err) => setToastMsg({ type: 'danger', message: 'User Data Load Error' }));
     const userDetails = userData?.getUserDetails;
-    const regiterUserDatails = registerUserList?.getAllRegistrations?.data?.map((item, index) =>
-      Object.assign({}, item, userDetails[index]),
+    const regiterUserDatails = userDetails?.map((item, index) =>
+      Object.assign({}, item, registerUserList?.getAllRegistrations?.data[index]),
     );
-    setRegisterTableData(regiterUserDatails);
+    const _regiterUserDatails = [];
+    for (let i = 0; i < regiterUserDatails?.length; i++) {
+      _regiterUserDatails.push({
+        ...regiterUserDatails[i],
+        registrationDate: moment
+          .unix(regiterUserDatails[i]?.registration_date)
+          .format('MM/DD/YYYY'),
+      });
+    }
+    setRegisterUserTableData(_regiterUserDatails);
     return;
   }
 
@@ -65,25 +75,23 @@ export default function useHandleRegisterData() {
     return;
   }
 
-  async function addUpdateRegisterUser() {
-    const sendData = sanitizeFormData(registerUserData);
+  async function addUpdateRegisterUser(sendData) {
     // add new module
     if (!registerUserData?.id) {
-      mutateData(CREATE_REGISTER_COUSER_USER, sendData).catch(() =>
+      mutateData(CREATE_REGISTER_COUSER_USER, sendData, {}, viltQueryClient).catch(() =>
         setToastMsg({ type: 'warning', message: 'Register User Create Error' }),
       );
       return;
     }
 
     // update module
-    mutateData(UPDATE_REGISTER_COUSER_USER, sendData).catch(() =>
+    mutateData(UPDATE_REGISTER_COUSER_USER, sendData, {}, viltQueryClient).catch(() =>
       setToastMsg({ type: 'warning', message: 'Register User Update Error' }),
     );
   }
   return {
     getPaginatedRegisterUsers,
     getRegisterUserDetails,
-    registerTableData,
     addUpdateRegisterUser,
   };
 }

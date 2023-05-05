@@ -111,7 +111,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const onRegisterHandler = async () => {
     const userData = JSON.parse(sessionStorage?.getItem('loggedUser'));
     const currentDate = new Date();
-    const unixCurrentDate = currentDate.getTime() / 1000;
+    const unixCurrentDate = Math.floor(currentDate.getTime() / 1000);
 
     const registrationData = {
       courseId: fullCourse?.id,
@@ -121,7 +121,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
       status: 'active',
     };
     setRegisterUserData(registrationData);
-    await addUpdateRegisterUser();
+    await addUpdateRegisterUser(registrationData);
     setIsRegsiter(true);
     setIsOpenRegsiter(false);
   };

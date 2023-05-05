@@ -117,9 +117,9 @@ export default function LatestCourseTable({ isEditable = false, zicopsLspId = nu
                   outline: '0',
                   border: '0',
                 }}
-                onClick={() => {
+                onClick={async () => {
                   setShowUsers(true);
-                  getPaginatedRegisterUsers(params.row.id);
+                  await getPaginatedRegisterUsers(params.row.id);
                 }}>
                 <img src="/images/svg/group2.svg" width={20}></img>
               </button>

@@ -5,20 +5,21 @@ import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import useHandleRegisterData from './Logic/useHandleRegisterData';
+import { RegisterUserTableData } from '@/state/atoms/courses.atom';
 
 const RegisterTable = () => {
   const [showPopup, setShowPopup] = useState(false);
-  const { registerTableData } = useHandleRegisterData();
+  const registerUserTableData = useRecoilValue(RegisterUserTableData);
 
   const columns = [
     {
-      field: 's_no',
+      field: 'id',
       headerClassName: 'course-list-header',
       headerName: 'S.No',
       flex: 0.5,
     },
     {
-      field: 'name',
+      field: 'first_name',
       headerClassName: 'course-list-header',
       headerName: 'Name',
       flex: 0.6,
@@ -30,13 +31,13 @@ const RegisterTable = () => {
       flex: 1,
     },
     {
-      field: 'contact',
+      field: 'phone',
       headerClassName: 'course-list-header',
       headerName: 'Contact No',
       flex: 0.6,
     },
     {
-      field: 'registration_date',
+      field: 'registrationDate',
       headerClassName: 'course-list-header',
       headerName: 'Registration Date',
       flex: 0.8,
@@ -67,16 +68,7 @@ const RegisterTable = () => {
       flex: 0.5,
     },
   ];
-  const registerData = [
-    {
-      id: 1,
-      s_no: 1001,
-      name: 'Zicops',
-      email: 'demo@gamil.com',
-      contact: 7582508963,
-      registration_date: '8/4/2023',
-    },
-  ];
+
   return (
     <div>
       <p style={{ paddingLeft: '40px', paddingTop: '20px', fontSize: '20px', fontWeight: 'bold' }}>
@@ -86,8 +78,8 @@ const RegisterTable = () => {
         columns={columns}
         tableHeight="60vh"
         pageSize={getPageSizeBasedOnScreen()}
-        data={registerTableData}
-        // loading={!vendorOrderDetails?.length}
+        data={registerUserTableData}
+        loading={!registerUserTableData?.length}
       />
       <VendorPopUp
         open={showPopup}
