@@ -127,8 +127,6 @@ export default function PushNotificationLayout({ children }) {
           })
         ) || [];
 
-      console.log('All Notifications', allNotifications, allMsg);
-
       // Problem:  Keeps duplicating notifications on each render
       // setNotifications((prev) => [...allMsg, ...prev]);
 

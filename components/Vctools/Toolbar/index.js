@@ -19,6 +19,7 @@ import About from '../About';
 import BreakoutRoom from '../BreakOutRoom';
 import AddParticipantpopup from '../BreakOutRoom/AddParticipantpopup';
 import ChatBar from '../Chatbar';
+import CloseSessionPopup from '../CloseSessionPopup';
 import DeletePopUp from '../DeletePopUp';
 import ManageAccount from '../ManageAccount';
 import NotesContainer from '../NotesContainer';
@@ -88,6 +89,8 @@ const MainToolbar = ({
     api.addListener('contentSharingParticipantsChanged', (share) => {
       setScreenShareParticipants(share.data);
     });
+
+    console.info('Flags - ', controls);
   }, [api]);
 
   useEffect(() => {
@@ -277,25 +280,6 @@ const MainToolbar = ({
         />
       ),
     },
-    {
-      title: 'startSessionPopup',
-      component: (
-        <StartSessionPopUp
-          concelMeetingFunc={() => {
-            setSelectedButton('');
-          }}
-          startMeetingFunc={() => {
-            setMeetingIconAtom({
-              ...meetingIconsAtom,
-              isStartAdd: false,
-              isJoinedAsModerator: false,
-            });
-            setSelectedButton('');
-            startMeetingByMod();
-          }}
-        />
-      ),
-    },
 
     {
       title: 'SettingPopup',
@@ -330,12 +314,26 @@ const MainToolbar = ({
             setSelectedButton('');
           }}
           startMeetingFunc={() => {
+            startMeetingByMod();
             setMeetingIconAtom({
               ...meetingIconsAtom,
               isStartAdd: false,
               isJoinedAsModerator: false,
             });
             setSelectedButton('');
+          }}
+        />
+      ),
+    },
+    {
+      title: 'closeSessionPopup',
+      component: (
+        <CloseSessionPopup
+          leaveSession={() => {
+            endMeetng();
+          }}
+          endSession={() => {
+            endMeetng(true);
           }}
         />
       ),
@@ -508,6 +506,7 @@ const MainToolbar = ({
                   customStyle={`${styles.startMeeting}`}
                   btnValue={'Start'}
                   toolTipClass={`${styles.tooltipLefttNav}`}
+                  toolTipName={'Start the session'}
                 />
               </div>
               <div>
@@ -533,12 +532,17 @@ const MainToolbar = ({
             <div>
               <VctoolButton
                 onClickfun={() => {
-                  endMeetng();
-                  setbreakoutRoomparticipant(null);
-                  setbreakoutRoompopup({
-                    roomId: '',
-                    isRoom: false,
-                  });
+                  if (meetingIconsAtom.isModerator) {
+                    // console.info(meetingIconsAtom);
+                    setSelectedButton('closeSessionPopup');
+                  } else {
+                    endMeetng();
+                    setbreakoutRoomparticipant(null);
+                    setbreakoutRoompopup({
+                      roomId: '',
+                      isRoom: false,
+                    });
+                  }
                 }}
                 trueSrc={'/images/svg/vctool/logout.svg'}
                 falseSrc={'/images/svg/vctool/logout.svg'}
@@ -581,7 +585,6 @@ const MainToolbar = ({
 
               <VctoolButton
                 onClickfun={() => {
-                  console.info(screenShareParticipants);
                   if (screenShareParticipants.length > 0) return;
                   shareScreen();
                 }}
@@ -622,7 +625,7 @@ const MainToolbar = ({
                 falseSrc={'/images/svg/vctool/sensors-off.svg'}
                 // customId={hand ? `${styles.footerLeftbtn1}` : `${styles.footerLeftbtn2}`}
                 toolTipClass={`${styles.tooltipLefttNav}`}
-                toolTipName={'Pin Test'}
+                toolTipName={'Test button'}
               /> */}
             </>
           )}
