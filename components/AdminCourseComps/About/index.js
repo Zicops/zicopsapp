@@ -176,6 +176,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label={'To be Decided'}
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isTrainerdecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
@@ -249,6 +250,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label={'To be Decided'}
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isModeratordecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({
@@ -276,6 +278,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label="To be Decided"
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isStartDatedecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({
@@ -301,6 +304,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label="To be Decided"
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isEndDatedecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({

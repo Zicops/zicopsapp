@@ -1,4 +1,5 @@
-import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_TYPES } from '@/constants/course.constants';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
@@ -15,7 +16,7 @@ export function getCourseMetaDataObj(data = {}) {
   return {
     // meta data
     id: data?.id || null,
-    type: data?.type || ALL_COURSE_TYPES.selfPaced,
+    type: data?.type || COURSE_TYPES.selfPaced,
     status: data?.status || COURSE_STATUS.draft,
     isActive: data?.isActive || true,
 
@@ -105,6 +106,24 @@ export function getClassroomMasterDataObj(data = {}) {
     isStartDatedecided: data?.isStartDatedecided || false,
     isTrainerdecided: data?.isTrainerdecided || false,
     isModeratordecided: data?.isModeratordecided || false,
+
+    pricingType: data?.pricingType || null,
+    pricePerSeat: data?.pricePerSeat || null,
+    currency: data?.currency || null,
+    taxPercentage: data?.taxPercentage || null,
+
+    isRegistration: data?.isRegistration || false,
+    maxRegistrations: data?.maxRegistrations || null,
+    registrationStartDate: data?.registrationStartDate || null,
+    registrationEndDate: data?.registrationEndDate || null,
+    registrationPublishBy: data?.registrationPublishBy || null,
+    registrationPublishOn: data?.registrationPublishOn || null,
+
+    isBooking: data?.isBooking || false,
+    bookingStartDate: data?.bookingStartDate || null,
+    bookingEndDate: data?.bookingEndDate || null,
+    bookingPublishOn: data?.bookingPublishOn || null,
+    bookingPublishBy: data?.bookingPublishBy || null,
   };
 }
 
@@ -251,7 +270,7 @@ export function getTopicClassroomObject(data = {}) {
 
 export const CommercialsAtom = atom({
   key: 'commercialsState',
-  default: getCourseCommercialsObject,
+  default: getCourseCommercialsObject(),
 });
 export function getCourseCommercialsObject(data) {
   return {

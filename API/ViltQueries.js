@@ -22,11 +22,26 @@ export const GET_VILT_DATA = gql`
       moderators
       course_start_date
       course_end_date
-      curriculum
-      is_end_date_decided
-      is_start_date_decided
       is_trainer_decided
       is_moderator_decided
+      is_start_date_decided
+      is_end_date_decided
+      curriculum
+      pricing_type
+      price_per_seat
+      currency
+      tax_percentage
+      is_registration_open
+      is_booking_open
+      max_registrations
+      registration_end_date
+      booking_start_date
+      booking_end_date
+      registration_publish_by
+      registration_publish_on
+      booking_publish_on
+      booking_publish_by
+      registration_start_date
       created_at
       created_by
       updated_at
