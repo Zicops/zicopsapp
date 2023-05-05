@@ -2252,3 +2252,9 @@ export const UPDATE_ORDER_SERVICES = gql`
     }
   }
 `;
+
+export const ADD_USER_TOTAL_WATCH_TIME = gql`
+  mutation addUserTotalWatchTime($userId: String, $courseId: String, $time: Int, $date: String) {
+    addUserTotalWatchTime(user_id: $userId, course_id: $courseId, time: $time, date: $date)
+  }
+`;
