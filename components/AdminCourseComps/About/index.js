@@ -28,9 +28,9 @@ export default function About() {
     handleCourseMetaChange,
     getTrainersAndModerators,
     handleClassroomMasterChange,
-    moderatorCandidates
+    moderatorCandidates,
   } = useHandleCourseData();
-  
+
   const { getPaginatedTrainers } = useHandleTrainerData();
 
   const [title, settitle] = useState('');
@@ -43,7 +43,6 @@ export default function About() {
   }, []);
 
   const [trainersList, setTrainersList] = useState([]);
-
 
   useEffect(() => {
     getPaginatedTrainers()?.then((data) => {
@@ -168,13 +167,13 @@ export default function About() {
                   })
                 }
                 isLoading={trainersList == null}
-
                 customDropdownStyles={customDropdownStyleObj}
               />
 
               <LabeledRadioCheckbox
                 type="checkbox"
                 label={'To be Decided'}
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isTrainerdecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({ isTrainerdecided: e?.target?.checked });
@@ -248,6 +247,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label={'To be Decided'}
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isModeratordecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({
@@ -275,6 +275,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label="To be Decided"
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isStartDatedecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({
@@ -300,6 +301,7 @@ export default function About() {
               <LabeledRadioCheckbox
                 type="checkbox"
                 label="To be Decided"
+                isDisabled={classroomMaster?.isBooking}
                 isChecked={classroomMaster?.isEndDatedecided}
                 changeHandler={(e) => {
                   handleClassroomMasterChange({

@@ -1,12 +1,13 @@
 import { GET_QUESTION_OPTIONS_WITH_ANSWER } from '@/api/Queries';
 import {
   ADD_USER_QUIZ_ATTEMPT,
+  ADD_USER_TOTAL_WATCH_TIME,
   UPDATE_USER_COURSE_PROGRESS,
   userClient,
 } from '@/api/UserMutations';
 import { COURSE_PROGRESS_STATUS, TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
-import { limitValueInRange } from '@/helper/utils.helper';
+import { getUnixFromDate, limitValueInRange } from '@/helper/utils.helper';
 import { TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -23,6 +24,7 @@ import {
   courseHeroObj,
 } from '../atoms/learnerCourseComps.atom';
 import useHandleTopicSwitch from './useHandleTopicSwitch';
+import { useTimeInterval } from '@/helper/hooks.helper';
 
 export default function useHandleTopicProgress(videoState = {}) {
   const containerRef = useRef();
@@ -56,6 +58,26 @@ export default function useHandleTopicProgress(videoState = {}) {
     topicContent?.find((tc) => tc?.id === activeCourseData?.topicContentId) || {};
   const isTypeVideo = selectedTopicContent?.type === TOPIC_CONTENT_TYPES.mp4;
   const currentTopicQuiz = quizData?.filter((quiz) => quiz?.topicId === topicData?.id);
+
+  // api call for dashboard data
+  const cancel = useTimeInterval(
+    () => {
+      mutateData(
+        ADD_USER_TOTAL_WATCH_TIME,
+        {
+          userId: userData?.id,
+          courseId: userCourseMapData?.courseId,
+          time: 15,
+          date: getUnixFromDate()?.toString(),
+        },
+        {},
+        userClient,
+      );
+    },
+    15 * 1000,
+    [videoState?.isPlaying],
+  );
+  if (!videoState?.isPlaying) cancel();
 
   // set time from which the video should start initially
   useEffect(() => {

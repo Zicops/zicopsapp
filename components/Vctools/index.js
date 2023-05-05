@@ -11,7 +11,6 @@ import {
   joinMeeting,
   totalRoomno,
   vcMeetingIconAtom,
-  vcModeratorControlls,
   vctoolMetaData,
 } from '@/state/atoms/vctool.atoms';
 import { useRouter } from 'next/router';
@@ -125,6 +124,14 @@ const VcMaintool = ({ vcData = {} }) => {
       setShareToggle(share.on);
     });
   }, [isMeetingStarted, api]);
+
+  useEffect(() => {
+    if (!controls?.is_break) return;
+    if (!lobby) return;
+
+    StartMeeting(classroomData?.topicId, containerRef, toggleAudio, settoobar, setapi, toggleVideo);
+    setIsMeetingStarted(true);
+  }, [controls?.is_break]);
 
   useEffect(() => {
     if (!controls?.is_break) return;

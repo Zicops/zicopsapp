@@ -20,12 +20,12 @@ import {
   getCourseMetaDataObj,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { UsersOrganizationAtom, UserStateAtom } from '@/state/atoms/users.atom';
+import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
-import useHandleCourseData from './useHandleCourseData';
 import useHandleCommercial from './useHandleCommercial';
+import useHandleCourseData from './useHandleCourseData';
 
 export default function useSaveCourseData() {
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
@@ -110,6 +110,15 @@ export default function useSaveCourseData() {
       is_start_date_decided: !classroomMaster?.isStartDatedecided,
       is_trainer_decided: !classroomMaster?.isTrainerdecided,
       is_moderator_decided: !classroomMaster?.isModeratordecided,
+
+      pricing_type: classroomMaster?.pricingType,
+      price_per_seat: +classroomMaster?.pricePerSeat,
+      currency: classroomMaster?.currency,
+      tax_percentage: +classroomMaster?.taxPercentage,
+      max_registrations: +classroomMaster?.maxRegistrations,
+      registration_end_date: getUnixFromDate(classroomMaster?.registrationEndDate) || 0,
+      booking_start_date: getUnixFromDate(classroomMaster?.bookingStartDate) || 0,
+      booking_end_date: getUnixFromDate(classroomMaster?.bookingEndDate) || 0,
     });
 
     if (!!classroomMaster?.id) {
@@ -174,7 +183,10 @@ export default function useSaveCourseData() {
       setCourseCurrentState({ ...courseCurrentState, isUpdating: true });
 
     const { duration, status, approvers, ..._sendData } = _courseMetaData;
-    const sendData = sanitizeFormData({ ..._sendData, status: COURSE_STATUS.save, approvers: [] });
+    const sendData = sanitizeFormData({ ..._sendData, approvers: [] });
+
+    // for classroom courses
+    if (_courseMetaData?.type !== COURSE_TYPES.classroom) _sendData.status = COURSE_STATUS.save;
 
     // if course freezed then update status to publish
     if (_sendData?.qaRequired) sendData.status = COURSE_STATUS.publish;
@@ -184,6 +196,7 @@ export default function useSaveCourseData() {
       sendData.publish_date = getUnixFromDate();
       sendData.approvers = [userData?.email];
     }
+
     let isError = false;
     const updatedCourseRes = await mutateData(UPDATE_COURSE_DATA, sendData, {}).catch((err) => {
       console.log('Update Course Error: ', err);
@@ -215,7 +228,7 @@ export default function useSaveCourseData() {
       publishDate: _updatedCourseData?.publish_date,
       expiryDate: _updatedCourseData?.expiry_date,
       qaRequired: _updatedCourseData?.qa_required,
-      status: _updatedCourseData?.status || sendData?.status,
+      status: _updatedCourseData?.status || sendData?.status || _courseMetaData?.status,
 
       createdAt: _updatedCourseData?.created_at,
       updatedAt: _updatedCourseData?.updated_at,
@@ -264,7 +277,6 @@ export default function useSaveCourseData() {
         .catch((err) => console.log(err));
 
     await uploadCourseFiles(_courseMetaData);
-    await addUpdateCommercial();
 
     // update course
     updateCourse(_courseMetaData).then(async (res) => {
@@ -272,7 +284,6 @@ export default function useSaveCourseData() {
       if (!res?.id) return;
 
       await addUpdateClassroomMaster(res);
-      await addUpdateCommercial();
 
       setToastMessage('Course Updated', 'success');
       if (!!_configObj?.switchTabName) setActiveCourseTab(_configObj?.switchTabName);

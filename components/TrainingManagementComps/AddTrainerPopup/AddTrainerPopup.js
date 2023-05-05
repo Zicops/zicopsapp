@@ -17,12 +17,12 @@ export default function AddTrainerPopup({ popUpState = [], isEdit = false, isVie
   const tabData = [
     {
       name: 'Select Existing User ',
-      component: <SelectExistingUser isEdit={isEdit} isView={isView} />
+      component: <SelectExistingUser isEdit={isEdit} isView={isView} />,
     },
     {
       name: 'Invite New Trainer',
-      component: <InviteNewTrainer isEdit={isEdit} isView={isView}/>
-    }
+      component: <InviteNewTrainer isEdit={isEdit} isView={isView} />,
+    },
   ];
 
   const [tab, setTab] = useState(tabData[0].name);

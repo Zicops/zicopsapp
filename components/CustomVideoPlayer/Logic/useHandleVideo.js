@@ -1,11 +1,13 @@
 import {
   ADD_USER_COURSE_PROGRESS,
+  ADD_USER_TOTAL_WATCH_TIME,
   UPDATE_USER_COURSE,
   UPDATE_USER_COURSE_PROGRESS,
-  userClient
+  userClient,
 } from '@/api/UserMutations';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS, SYNC_DATA_IN_SECONDS, THUMBNAIL_GAP } from '@/helper/constants.helper';
+import { useTimeInterval } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useMutation } from '@apollo/client';
@@ -15,30 +17,30 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { filterTopicContent } from '../../../helper/data.helper';
 import {
   generateVideoThumbnails,
+  getUnixFromDate,
   limitValueInRange,
   secondsToHMS,
-  secondsToMinutes
 } from '../../../helper/utils.helper';
 import { QuizAtom, TopicContentAtom, TopicExamAtom } from '../../../state/atoms/module.atoms';
 import {
-  getVideoObject,
   QuizProgressDataAtom,
   UserCourseDataAtom,
-  VideoAtom
+  VideoAtom,
+  getVideoObject,
 } from '../../../state/atoms/video.atom';
-import { addCallbackToEvent, BookmarkStartTimeAtom } from './customVideoPlayer.helper';
+import { BookmarkStartTimeAtom, addCallbackToEvent } from './customVideoPlayer.helper';
 
 export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [updateUserCourse, { error: updateUserCourseErr }] = useMutation(UPDATE_USER_COURSE, {
-    client: userClient
+    client: userClient,
   });
   const [addUserCourseProgress, { error: addUserCourseProgressErr }] = useMutation(
     ADD_USER_COURSE_PROGRESS,
-    { client: userClient }
+    { client: userClient },
   );
   const [updateUserCourseProgress, { error: updateUserCourseProgressErr }] = useMutation(
     UPDATE_USER_COURSE_PROGRESS,
-    { client: userClient }
+    { client: userClient },
   );
 
   const [bookmarkStartTime, setBookmarkStartTime] = useRecoilState(BookmarkStartTimeAtom);
@@ -69,12 +71,33 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     isMuted: false,
     volume: 0.7,
     timestamp: '00:00',
-    duration: 0
+    duration: 0,
   });
 
   // for showing thumbnail previews
   const [previewImages, setPreviewImages] = useState([]);
   const [isScrubbing, setIsScrubbing] = useState(false);
+
+  // api call for dashboard data
+  const cancel = useTimeInterval(
+    () => {
+      mutateData(
+        ADD_USER_TOTAL_WATCH_TIME,
+        {
+          userId: userData?.id,
+          courseId: userCourseData?.userCourseMapping?.course_id,
+          time: 15,
+          date: getUnixFromDate()?.toString(),
+        },
+        {},
+        userClient,
+      );
+    },
+    15 * 1000,
+    [playerState?.isPlaying],
+  );
+  if (!playerState?.isPlaying) cancel();
+
   // udpate recoil state
   useEffect(() => {
     if (videoData?.type !== 'mp4') return;
@@ -85,11 +108,11 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         videoSrc: videoData?.videoSrc,
         type: videoData?.type,
         isPreview: videoData?.isPreview,
-        shouldShowPlayer: videoData?.startPlayer
+        shouldShowPlayer: videoData?.startPlayer,
       },
       triggerPlayerToStartAt: null,
       activeModule: { index: videoData?.currentModuleIndex, id: videoData?.currentModuleId },
-      activeTopic: { index: videoData?.currentTopicIndex, id: videoData?.topicContent[0]?.topicId }
+      activeTopic: { index: videoData?.currentTopicIndex, id: videoData?.topicContent[0]?.topicId },
     });
   }, [videoData, playerState]);
 
@@ -106,12 +129,12 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       ...bookmarkStartTime,
       topicId: null,
       time: null,
-      isClickedWhenPlayerOn: null
+      isClickedWhenPlayerOn: null,
     });
     videoContainer.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
-      inline: 'center'
+      inline: 'center',
     });
   }, [bookmarkStartTime, videoElement.current]);
 
@@ -133,7 +156,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         addedBy: userCourseMapData?.userCourseMapping?.added_by,
         courseType: userCourseMapData?.userCourseMapping?.course_type,
         isMandatory: userCourseMapData?.userCourseMapping?.is_mandatory,
-        endDate: userCourseMapData?.userCourseMapping?.end_date
+        endDate: userCourseMapData?.userCourseMapping?.end_date,
       };
 
       // console.log(sendUserCourseData);
@@ -154,7 +177,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
         // if (topic?.type !== 'Content') continue;
 
         const topicProgress = userCourseMapData?.userCourseProgress?.filter(
-          (obj) => obj?.topic_id === topic?.id
+          (obj) => obj?.topic_id === topic?.id,
         );
         // console.log(topicProgress);
         if (topicProgress?.length !== 0) {
@@ -171,7 +194,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
                 ...bookmarkStartTime,
                 topicId: null,
                 time: null,
-                isClickedWhenPlayerOn: null
+                isClickedWhenPlayerOn: null,
               });
             } else if (startProgress < 98) {
               videoElement.current.currentTime = (vidDur * startProgress) / 100;
@@ -189,7 +212,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           topicType: topic?.type,
           status: 'not-started',
           videoProgress: '',
-          timestamp: topic?.type !== 'Content' ? `${currentTime}-${duration}` : ''
+          timestamp: topic?.type !== 'Content' ? `${currentTime}-${duration}` : '',
         };
         if (topic?.id === videoData?.topicContent[0]?.topicId) {
           sendData.status = 'in-progress';
@@ -241,7 +264,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     const userCourseMapData = structuredClone(userCourseData);
     const currentProgressIndex = userCourseMapData?.userCourseProgress?.findIndex(
-      (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId
+      (obj) => obj?.topic_id === videoData?.topicContent[0]?.topicId,
     );
     // TODO: what to do if no progress found?
     if (currentProgressIndex < 0) return setDataSyncing(false);
@@ -274,7 +297,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       status: isCompleted ? 'completed' : 'in-progress',
       videoProgress:
         type === 'binge' ? '100' : limitValueInRange(playerState?.progress, 0, 100).toString(),
-      timestamp: `${currentTime}-${duration}`
+      timestamp: `${currentTime}-${duration}`,
     };
 
     // console.log('course progress', sendData);
@@ -334,7 +357,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           switchControls(0);
           clearTimeout(timeout);
           timeout = setTimeout(() => switchControls(1), duration);
-        }
+        },
       },
       {
         event: 'keydown',
@@ -342,7 +365,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           if (videoData.type !== 'mp4') return;
           switchControls(0);
           clearTimeout(timeout);
-        }
+        },
       },
       {
         event: 'click',
@@ -350,8 +373,8 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
           if (videoData.type !== 'mp4') return;
           switchControls(0);
           clearTimeout(timeout);
-        }
-      }
+        },
+      },
     ];
 
     if (freezeScreen) return addCallbackToEvent(videoContainer.current, callBackFuncArr, true);
@@ -422,7 +445,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const ImgPreviews = await generateVideoThumbnails(
       videoData,
       THUMBNAIL_GAP,
-      videoElement?.current?.duration
+      videoElement?.current?.duration,
     );
     setPreviewImages(ImgPreviews);
   }, [videoElement?.current?.duration]);
@@ -545,7 +568,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     setPlayPauseActivated(isIncrement ? 'volumeUp' : 'volumeDown');
     setPlayerState({
       ...playerState,
-      volume: vol
+      volume: vol,
     });
     videoElement.current.volume = vol;
   }
@@ -553,7 +576,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   function togglePlay(state) {
     setPlayerState({
       ...playerState,
-      isPlaying: !playerState.isPlaying
+      isPlaying: !playerState.isPlaying,
     });
 
     setPlayPauseActivated(!playerState.isPlaying ? 'play' : 'pause');
@@ -565,7 +588,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     const { allModuleTopic, currentTopicIndex, currentModuleId, allModuleOptions } = videoData;
     const topic = allModuleTopic[currentTopicIndex + (isNext ? 1 : -1)];
     const topicExam = await loadQueryDataAsync(GET_TOPIC_EXAMS, { topic_id: topic.id }).then(
-      (res) => res.getTopicExams[0]
+      (res) => res.getTopicExams[0],
     );
 
     if (!topicExam)
@@ -580,7 +603,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       examId: topicExam.examId,
       language: topicExam.language,
       currentModule: allModuleOptions?.find((mod) => mod.value === currentModuleId) || {},
-      currentTopic: topic
+      currentTopic: topic,
     });
   }
 
@@ -603,7 +626,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       if (currentModuleIndex + 1 === allModuleOptions.length) return;
       setNewModule({
         ...allModuleOptions[currentModuleIndex + 1],
-        isVideoControlClicked: !isBinge
+        isVideoControlClicked: !isBinge,
       });
       return;
     }
@@ -619,7 +642,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       currentTopicIndex: videoData.currentTopicIndex + 1 || 0,
       topicContent: filteredTopicContent,
       allModuleTopic: videoData.allModuleTopic,
-      currentTopicContentIndex: 0
+      currentTopicContentIndex: 0,
     });
 
     setVideoTime(0);
@@ -655,7 +678,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       currentTopicIndex: videoData.currentTopicIndex - 1 || 0,
       topicContent: filteredTopicContent,
       allModuleTopic: videoData.allModuleTopic,
-      currentTopicContentIndex: 0
+      currentTopicContentIndex: 0,
     });
 
     setVideoTime(0);
@@ -679,7 +702,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
       ...playerState,
       progress: progress || 0,
       timestamp: secondsToHMS(currentTime || 0),
-      duration: videoElement.current?.duration
+      duration: videoElement.current?.duration,
     });
   };
 
@@ -705,14 +728,14 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     videoElement.current.currentTime = updatedTime;
     setPlayerState({
       ...playerState,
-      progress: updatedTime
+      progress: updatedTime,
     });
   }
 
   function setVideoTime(time) {
     setPlayerState({
       ...playerState,
-      progress: time
+      progress: time,
     });
     if (!videoElement.current) return;
 
@@ -724,14 +747,14 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     videoElement.current.playbackRate = speed;
     setPlayerState({
       ...playerState,
-      speed
+      speed,
     });
   };
 
   function toggleMute() {
     setPlayerState({
       ...playerState,
-      isMuted: !playerState.isMuted
+      isMuted: !playerState.isMuted,
     });
 
     setPlayPauseActivated(!playerState.isMuted ? 'mute' : 'unmute');
@@ -758,7 +781,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     if (videoElement.current) videoElement.current.currentTime = time;
     setPlayerState({
       ...playerState,
-      progress: time
+      progress: time,
     });
 
     setPlayPauseActivated(isForward ? 'forward' : 'backward');
@@ -819,7 +842,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
 
     setPlayerState({
       ...playerState,
-      volume: volume
+      volume: volume,
     });
     videoElement.current.volume = volume;
   }
@@ -851,6 +874,6 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
     setVideoTime,
     moveVideoProgressBySeconds,
     freezeScreen,
-    setFreezeScreen
+    setFreezeScreen,
   };
 }

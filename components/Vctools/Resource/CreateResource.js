@@ -9,7 +9,7 @@ import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { CurrentParticipantDataAtom } from '@/state/atoms/vctool.atoms';
 import { isWordMatched } from '@/utils/string.utils';
-import { memo, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import styles from '../vctoolMain.module.scss';
 
@@ -73,21 +73,37 @@ const CreateResource = ({ addResource }) => {
             <p>All Files</p>
 
             <div className={`${styles.resources}`}>
-              {topicResources?.map((res) => (
-                <div
-                  onClick={() => {
-                    console.info(res?.url);
-                    setSelectedResourceData({ name: res?.name, url: res?.url, type: res?.type });
-                  }}
-                  key={res?.id}>
-                  <span>
-                    {/* <img src={
-                  } alt="" /> */}
-                    {getFileType(res?.type)}
-                  </span>
-                  <p>{res?.name}</p>
-                </div>
-              ))}
+              {topicResources?.map((res) => {
+                const isLink = res?.type === TOPIC_RESOURCE_TYPES.link;
+
+                return (
+                  <>
+                    <div
+                      onClick={() => {
+                        if (isLink) return;
+
+                        setSelectedResourceData({
+                          name: res?.name,
+                          url: res?.url,
+                          type: res?.type,
+                        });
+                      }}
+                      key={res?.id}>
+                      {isLink ? (
+                        <a href={res?.url} target="_blank">
+                          <span>{getFileType(res?.type)}</span>
+                          <p>{res?.name}</p>
+                        </a>
+                      ) : (
+                        <>
+                          <span>{getFileType(res?.type)}</span>
+                          <p>{res?.name}</p>
+                        </>
+                      )}
+                    </div>
+                  </>
+                );
+              })}
             </div>
           </section>
         )}

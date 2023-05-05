@@ -19,7 +19,6 @@ export default function SelectExistingUser() {
 
   const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
 
-
   useEffect(() => {
     getPaginatedTrainers()?.then((data) => {
       setTrainersList(data || []);
@@ -98,7 +97,7 @@ export default function SelectExistingUser() {
               userId: e.userId,
               name: e.name,
               email: e.email,
-              photo: e.photo
+              photo: e.photo,
             }));
           }}
           isLoading={trainersList == null}
