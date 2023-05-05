@@ -7,6 +7,7 @@ import styles from '../adminCourse.module.scss';
 import SectionTitle from '@/components/AdminAnalyticsDashboardComp/common/SectionTitle';
 import { useState } from 'react';
 import useHandleCourseAnalyticsDashboard from '../Logic/useHandleCourseAnalyticsDashboard';
+import useHandleIndividualCourseAnalytics from '../Logic/useHandleIndividualCourseAnalytics';
 export const UserData = [
   {
     id: 1,
@@ -82,19 +83,19 @@ export const UserData = [
 
 export default function OverallCourseWatchTime() {
   const {
-    courseViews,
+    courseWatchTime,
     selectedDate,
     setSelectedDate,
     filterBy,
     setFilterBy,
-  } = useHandleCourseAnalyticsDashboard();
+  } = useHandleIndividualCourseAnalytics();
   const labels = moment.weekdays()?.map((day) => day?.slice(0, 3));
   if (filterBy === 'Month') {
     labels.length = 0;
     labels.push(...[...Array(selectedDate?.end?.get('D'))].map((v, i) => i + 1));
   }
 
-  if (!courseViews?.length) return <></>;
+  if (!courseWatchTime?.length) return <></>;
 
   // console.info(courseViews);
 
@@ -103,7 +104,7 @@ export default function OverallCourseWatchTime() {
     datasets: [
       {
         label: 'Overall Course Watch time',
-        data: courseViews?.map((obj) => ({ ...obj, minutes: obj?.seconds / 60 })),
+        data: courseWatchTime?.map((obj) => ({ ...obj, minutes: obj?.seconds / 60 })),
         fill: true,
         tension: 0,
         backgroundColor: (context) => {
