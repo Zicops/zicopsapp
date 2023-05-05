@@ -31,7 +31,7 @@ export default function EditCoursePage() {
   const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const { getViltData, getCommercialData } = useHandleCourseData();
+  const { getViltData } = useHandleCourseData();
 
   const router = useRouter();
   const courseId = router?.query?.courseId;
@@ -44,7 +44,6 @@ export default function EditCoursePage() {
 
     //load vilt data
     getViltData(courseId);
-    getCommercialData(courseId);
     if (courseMetaData?.id !== courseId) {
       loadAndCacheDataAsync(GET_COURSE, { course_id: [courseId] })
         .then((res) => {

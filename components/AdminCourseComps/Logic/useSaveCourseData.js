@@ -24,7 +24,7 @@ import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
 import { useRouter } from 'next/router';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
 import { courseTabs } from './adminCourseComps.helper';
-import useHandleCommercial from './useHandleCommercial';
+
 import useHandleCourseData from './useHandleCourseData';
 
 export default function useSaveCourseData() {
@@ -41,7 +41,6 @@ export default function useSaveCourseData() {
   const router = useRouter();
 
   const { isDataPresent } = useHandleCourseData();
-  const { addUpdateCommercial } = useHandleCommercial();
 
   const isVendor = userOrgData.user_lsp_role?.toLowerCase()?.includes(USER_LSP_ROLE.vendor);
 

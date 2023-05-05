@@ -9,7 +9,7 @@ import useUserCourseData from '@/helper/hooks.helper';
 import {
   ActiveClassroomTopicIdAtom,
   getTopicExamObj,
-  TopicExamAtom
+  TopicExamAtom,
 } from '@/state/atoms/module.atoms';
 import { getVideoObject, VideoAtom } from '@/state/atoms/video.atom';
 import { courseContext } from '@/state/contexts/CourseContext';
@@ -26,7 +26,7 @@ export default function Course() {
   const [videoData, setVideoData] = useRecoilState(VideoAtom);
   const [topicExamData, setTopicExamData] = useRecoilState(TopicExamAtom);
   const [activeClassroomTopicId, setActiveClassroomTopicId] = useRecoilState(
-    ActiveClassroomTopicIdAtom
+    ActiveClassroomTopicIdAtom,
   );
   const startPlayer = videoData.startPlayer;
 
@@ -36,10 +36,12 @@ export default function Course() {
 
   const pageSize = 28;
 
+  const { getUserCourseData } = useUserCourseData();
+
   function setStartPlayer(val) {
     setVideoData({
       ...videoData,
-      startPlayer: !!val
+      startPlayer: !!val,
     });
   }
 
@@ -71,23 +73,24 @@ export default function Course() {
 
     setOngoingCourses(
       userCourseData?.filter(
-        (course) => course?.id !== courseId && course?.isCourseStarted && !course?.isCourseCompleted
-      )
+        (course) =>
+          course?.id !== courseId && course?.isCourseStarted && !course?.isCourseCompleted,
+      ),
     );
 
     const catCourseRes = getLatestCoursesByFilters({ Category: fullCourse?.category }, pageSize);
     const subCatCourseRes = getLatestCoursesByFilters(
       { SubCategory: fullCourse?.sub_category },
-      pageSize
+      pageSize,
     );
 
     const allCatCourses =
       (await catCourseRes)?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id),
       ) || [];
     const allSubCatCourses =
       (await subCatCourseRes)?.latestCourses?.courses?.filter(
-        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id)
+        (c) => c?.is_active && c?.is_display && !ucidArray.includes(c.id),
       ) || [];
 
     setCatCourses(allCatCourses);
@@ -104,7 +107,7 @@ export default function Course() {
             backgroundColor: 'var(--tile-bg)',
             margin: 0,
             padding: '0 0 20px 0',
-            overflowX: 'clip'
+            overflowX: 'clip',
           }}>
           {topicExamData?.id && <ExamLanding isDisplayedInCourse={true} />}
 
@@ -133,7 +136,7 @@ export default function Course() {
               handleTitleClick={() =>
                 router.push(
                   `/search-page?userCourse=${JSON.stringify({ isOngoing: true })}`,
-                  '/search-page'
+                  '/search-page',
                 )
               }
             />

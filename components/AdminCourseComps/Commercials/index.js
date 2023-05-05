@@ -6,11 +6,7 @@ import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadi
 import InputDatePicker from '@/components/common/InputDatePicker';
 import { COMMERCIAL_PRICEING_TYPE } from '@/constants/course.constants';
 import { changeHandler } from '@/helper/common.helper';
-import {
-  ClassroomMasterAtom,
-  CommercialsAtom,
-  CourseMetaDataAtom,
-} from '@/state/atoms/courses.atom';
+import { ClassroomMasterAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import { Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
@@ -21,7 +17,6 @@ import styles from '../adminCourse.module.scss';
 import ChargeTable from './ChargeTable';
 
 const Commercials = () => {
-  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [isOpenTable, setOpenTable] = useState(false);

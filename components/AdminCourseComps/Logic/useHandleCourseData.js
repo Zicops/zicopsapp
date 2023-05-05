@@ -4,7 +4,7 @@ import {
   GET_VENDORS_BY_LSP_FOR_TABLE,
   userQueryClient,
 } from '@/api/UserQueries';
-import { GET_COMMERCIAL_DATA, GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
+import { GET_VILT_DATA, viltQueryClient } from '@/api/ViltQueries';
 import { getUsersForAdmin } from '@/components/UserComps/Logic/getUsersForAdmin';
 import { COURSE_TYPES } from '@/constants/course.constants';
 import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
@@ -12,11 +12,9 @@ import { LIMITS, ONE_MB_IN_BYTES, USER_LSP_ROLE, USER_MAP_STATUS } from '@/helpe
 import {
   ActiveCourseTabNameAtom,
   ClassroomMasterAtom,
-  CommercialsAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
   getClassroomMasterDataObj,
-  getCourseCommercialsObject,
 } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom, UsersOrganizationAtom } from '@/state/atoms/users.atom';
@@ -30,7 +28,6 @@ export default function useHandleCourseData() {
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
-  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
 
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -306,38 +303,6 @@ export default function useHandleCourseData() {
       }),
     );
   }
-  async function getCommercialData(courseId = null) {
-    if (!courseId) return;
-    const resVilt = await loadQueryDataAsync(
-      GET_COMMERCIAL_DATA,
-      { courseId: courseId },
-      {},
-      viltQueryClient,
-    );
-
-    const commercialData = resVilt?.getViltData?.[0];
-    if (!commercialData) return setCommercialsData(getCourseCommercialsObject());
-    setCommercialsData(
-      getCourseCommercialsObject({
-        id: commercialData?.id,
-        courseId: commercialData?.course_id,
-        pricing_type: commercialData?.pricing_type,
-        price_per_seat: commercialData?.price_per_seat,
-        currency: commercialData?.currency,
-        tax_percentage: commercialData?.tax_percentage,
-        max_registrations: commercialData?.max_registrations,
-        registration_end_date: parseInt(commercialData?.registration_end_date)
-          ? moment.unix(commercialData?.registration_end_date).toDate()
-          : null,
-        booking_start_date: parseInt(commercialData?.booking_start_date)
-          ? moment.unix(commercialData?.booking_start_date).toDate()
-          : null,
-        booking_end_date: parseInt(commercialData?.booking_end_date)
-          ? moment.unix(commercialData?.booking_end_date).toDate()
-          : null,
-      }),
-    );
-  }
 
   return {
     ownerList,
@@ -350,6 +315,5 @@ export default function useHandleCourseData() {
     trainerCandidates,
     moderatorCandidates,
     getViltData,
-    getCommercialData,
   };
 }

@@ -1,11 +1,12 @@
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import { CommercialsAtom } from '@/state/atoms/courses.atom';
+import { ClassroomMasterAtom, CourseMetaDataAtom } from '@/state/atoms/courses.atom';
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 
 const ChargeTable = () => {
-  const commercialsData = useRecoilValue(CommercialsAtom);
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
+
   const columns = [
     {
       field: 'method',
@@ -28,41 +29,41 @@ const ChargeTable = () => {
   ];
 
   const DomCreditTax =
-    (commercialsData?.price_per_seat * 2) / 100 +
-    (((commercialsData?.price_per_seat * 2) / 100) * 18) / 100;
+    (classroomMaster?.pricePerSeat * 2) / 100 +
+    (((classroomMaster?.pricePerSeat * 2) / 100) * 18) / 100;
   const InterantionalCreditTax =
-    (commercialsData?.price_per_seat * 3) / 100 +
-    (((commercialsData?.price_per_seat * 3) / 100) * 18) / 100;
+    (classroomMaster?.pricePerSeat * 3) / 100 +
+    (((classroomMaster?.pricePerSeat * 3) / 100) * 18) / 100;
   const ChargesData = [
     {
       id: 1,
       method: 'UPI',
       fees: '0% i.e Rs 0',
-      amounts: `Rs ${commercialsData?.price_per_seat}`,
+      amounts: `Rs ${classroomMaster?.pricePerSeat}`,
     },
     {
       id: 2,
       method: 'Domestic Debit & Credit card',
-      fees: `2% + 18% GST = Rs ${(commercialsData?.price_per_seat * 2) / 100} + ${
-        (((commercialsData?.price_per_seat * 2) / 100) * 18) / 100
+      fees: `2% + 18% GST = Rs ${(classroomMaster?.pricePerSeat * 2) / 100} + ${
+        (((classroomMaster?.pricePerSeat * 2) / 100) * 18) / 100
       } = Rs ${DomCreditTax}`,
-      amounts: `Rs ${commercialsData?.price_per_seat - DomCreditTax}`,
+      amounts: `Rs ${classroomMaster?.pricePerSeat - DomCreditTax}`,
     },
     {
       id: 3,
       method: 'International Credit card',
-      fees: `3% + 18% GST = Rs ${(commercialsData?.price_per_seat * 3) / 100} + ${
-        (((commercialsData?.price_per_seat * 3) / 100) * 18) / 100
+      fees: `3% + 18% GST = Rs ${(classroomMaster?.pricePerSeat * 3) / 100} + ${
+        (((classroomMaster?.pricePerSeat * 3) / 100) * 18) / 100
       } = Rs ${InterantionalCreditTax}`,
-      amounts: `Rs ${commercialsData?.price_per_seat - InterantionalCreditTax}`,
+      amounts: `Rs ${classroomMaster?.pricePerSeat - InterantionalCreditTax}`,
     },
     {
       id: 4,
       method: 'Net banking',
-      fees: `2% + 18% GST = Rs ${(commercialsData?.price_per_seat * 2) / 100} + ${
-        (((commercialsData?.price_per_seat * 2) / 100) * 18) / 100
+      fees: `2% + 18% GST = Rs ${(classroomMaster?.pricePerSeat * 2) / 100} + ${
+        (((classroomMaster?.pricePerSeat * 2) / 100) * 18) / 100
       } = Rs ${DomCreditTax}`,
-      amounts: `Rs ${commercialsData?.price_per_seat - DomCreditTax}`,
+      amounts: `Rs ${classroomMaster?.pricePerSeat - DomCreditTax}`,
     },
   ];
   return (
