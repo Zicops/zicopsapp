@@ -1,11 +1,19 @@
 import { useRecoilState } from 'recoil';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
-import { loadQueryDataAsync } from '@/helper/api.helper';
-import { viltQueryClient, GET_PAGINATED_REGISTER_USER } from '@/api/ViltQueries';
+import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
+import {
+  viltQueryClient,
+  GET_PAGINATED_REGISTER_USER,
+  GET_REGISTRATION_DETAILS,
+} from '@/api/ViltQueries';
 import { useState } from 'react';
+import { CREATE_REGISTER_COUSER_USER, UPDATE_REGISTER_COUSER_USER } from '@/api/ViltMutations';
+import { RegisterUserAtom } from '@/state/atoms/courses.atom';
+import { sanitizeFormData } from '@/helper/common.helper';
 
 export default function useHandleRegisterData() {
   const [registerTableData, setRegisterTableData] = useState([]);
+  const [registerUserData, setRegisterUserData] = useRecoilState(RegisterUserAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   async function getPaginatedRegisterUsers(courseId = '', pageCursor = '') {
@@ -23,7 +31,7 @@ export default function useHandleRegisterData() {
       return [];
     }
     setRegisterTableData(registerUserList);
-    return registerUserList;
+    return;
   }
 
   async function getRegisterUserDetails(registerId = '') {
@@ -40,13 +48,29 @@ export default function useHandleRegisterData() {
       setToastMsg({ type: 'warning', message: 'Register User Not Found' });
       return [];
     }
-
-    return registerDetails;
+    setRegisterUserData(registerDetails?.getRegistrationDetails);
+    return;
   }
 
+  async function addUpdateRegisterUser() {
+    const sendData = sanitizeFormData(registerUserData);
+    // add new module
+    if (!registerUserData?.id) {
+      mutateData(CREATE_REGISTER_COUSER_USER, sendData).catch(() =>
+        setToastMsg({ type: 'warning', message: 'Register User Create Error' }),
+      );
+      return;
+    }
+
+    // update module
+    mutateData(UPDATE_REGISTER_COUSER_USER, sendData).catch(() =>
+      setToastMsg({ type: 'warning', message: 'Register User Update Error' }),
+    );
+  }
   return {
     getPaginatedRegisterUsers,
     getRegisterUserDetails,
     registerTableData,
+    addUpdateRegisterUser,
   };
 }

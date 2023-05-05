@@ -96,7 +96,7 @@ const FeeDetails = () => {
         </div>
 
         <div className={`${styles.hr}`}></div>
-        <Info3 name="Total amount payable" data={category} />
+        <Info3 name="Total amount payable" data="1600" />
         <div className={`${styles.hr}`}></div>
       </div>
     </div>

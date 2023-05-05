@@ -18,6 +18,9 @@ import AssignCourse from '@/components/CourseComps/AssignCourse';
 import CourseHeader from '../CourseHeader';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import FeeDetails from '@/components/AdminCourseComps/CoursePayment/FeeDetails';
+import Button from '@/components/common/Button';
+import { RegisterUserAtom } from '@/state/atoms/courses.atom';
+import useHandleRegisterData from '@/components/AdminCourseComps/RegisterUserTabs/Logic/useHandleRegisterData';
 
 export default function ClassRoomCourseHero({ isPreview = false }) {
   const {
@@ -39,6 +42,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const [isBooking, setIsBooking] = useState(false);
   const [isOpenFees, setIsOpenFees] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
+  const [registerUserData, setRegisterUserData] = useRecoilState(RegisterUserAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
 
   const router = useRouter();
@@ -62,6 +66,8 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     owner: provisionedBy,
     publisher: publishedBy,
   } = fullCourse;
+
+  const { addUpdateRegisterUser } = useHandleRegisterData();
 
   // useEffect(() => {
   //   if (!router?.query?.isAssign) return;
@@ -102,7 +108,20 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
 
   const suggestedDuration = fullCourse?.expected_completion || 1;
 
-  const onRegisterHandler = () => {
+  const onRegisterHandler = async () => {
+    const userData = JSON.parse(sessionStorage?.getItem('loggedUser'));
+    const currentDate = new Date();
+    const unixCurrentDate = currentDate.getTime() / 1000;
+
+    const registrationData = {
+      courseId: fullCourse?.id,
+      userId: userData?.id,
+      registration_date: unixCurrentDate,
+      invoice: '',
+      status: 'active',
+    };
+    setRegisterUserData(registrationData);
+    await addUpdateRegisterUser();
     setIsRegsiter(true);
     setIsOpenRegsiter(false);
   };
@@ -295,12 +314,40 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
         popUpState={[isOpenFees, setIsOpenFees]}
         customStyles={{ width: '800px', height: '80vh' }}
         popUpCustomStyles={{ padding: '0px 0px 15px 0px' }}
-        closeBtn={{ name: 'Cancel' }}
-        submitBtn={{ name: 'Proceed to Pay' }}
+        isCloseButton={false}
+        isSubmitButton={false}
         isMarketYard
-        isVilt
-        isFooterVisible={true}>
-        <FeeDetails />
+        isVilt>
+        <>
+          <FeeDetails />
+          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              text="Cancel"
+              customStyles={{
+                borderRadius: '4px',
+                border: 'none',
+                backgroundColor: '#26292C',
+                color: '#ACACAC',
+              }}
+              clickHandler={() => {
+                setIsOpenFees(false);
+              }}
+            />
+            <Button
+              text="Proceed to Pay"
+              customStyles={{
+                borderRadius: '4px',
+                backgroundColor: '#6BCFCF',
+                color: '#0B0C0D',
+                fontWeight: '500',
+                border: 'none',
+              }}
+              clickHandler={() => {
+                setIsOpenFees(false);
+              }}
+            />
+          </div>
+        </>
       </VendorPopUp>
     </div>
   );

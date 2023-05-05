@@ -86,7 +86,7 @@ const RegisterTable = () => {
         columns={columns}
         tableHeight="60vh"
         pageSize={getPageSizeBasedOnScreen()}
-        data={registerData}
+        data={registerTableData}
         // loading={!vendorOrderDetails?.length}
       />
       <VendorPopUp

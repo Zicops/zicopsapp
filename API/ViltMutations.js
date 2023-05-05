@@ -283,3 +283,67 @@ export const CREATE_TRAINER = gql`
     }
   }
 `;
+export const CREATE_REGISTER_COUSER_USER = gql`
+  mutation registerUserForCourse(
+    $id: String
+    $courseId: String
+    $userId: String
+    $registration_date: Int
+    $invoice: String
+    $status: String
+  ) {
+    registerUserForCourse(
+      input: {
+        id: $id
+        course_id: $courseId
+        user_id: $userId
+        registration_date: $registration_date
+        invoice: $invoice
+        status: $status
+      }
+    ) {
+      id
+      course_id
+      user_id
+      registration_date
+      invoice
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
+export const UPDATE_REGISTER_COUSER_USER = gql`
+  mutation updateRegistrationForCourse(
+    $id: String
+    $courseId: String
+    $userId: String
+    $registration_date: Int
+    $invoice: String
+    $status: String
+  ) {
+    updateRegistrationForCourse(
+      input: {
+        id: $id
+        course_id: $courseId
+        user_id: $userId
+        registration_date: $registration_date
+        invoice: $invoice
+        status: $status
+      }
+    ) {
+      id
+      course_id
+      user_id
+      registration_date
+      invoice
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
