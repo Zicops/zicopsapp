@@ -4,6 +4,7 @@ import AboutCard from './AboutCard';
 import Inclusions from './Inclusions';
 import Lists from './Lists';
 import TargetAudienceList from './TargetAudienceList';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 
 export default function CourseBodyAbout() {
   const { fullCourse } = useContext(courseContext);
@@ -18,6 +19,11 @@ export default function CourseBodyAbout() {
       <div className="CardCourseAbout">
         <AboutCard isDataLoaded={isDataLoaded} fullCourse={fullCourse} />
       </div>
+      {fullCourse.type === COURSE_TYPES[1] && (
+        <div className="CardCourseAbout">
+          <Lists title="Curriculum" list={fullCourse.benefits} />
+        </div>
+      )}
 
       <div className="compo_row">
         <div className="col_50 small_compo">

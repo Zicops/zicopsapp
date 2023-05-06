@@ -12,35 +12,37 @@ export const tabs = [
   {
     name: 'Topics',
     comp: <CourseBodyTopics />,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
   },
   {
     name: 'Resources',
     comp: <CourseBodyResources />,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
   },
   {
     name: 'Notes',
     comp: <CourseBodyNotes />,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
   },
   {
     name: 'Discussion',
     comp: <CourseBodyDiscussion />,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
+    isRegister: false,
   },
   // { name: 'Mentor', comp: ' XYZ ' },
   {
     name: 'About',
     comp: <CourseBodyAbout />,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
+    isRegister: false,
   },
   {
     name: 'Certificates',
     comp: <Certificates />,
     isHidden: true,
-    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor]
-  }
+    roleAccess: [USER_LSP_ROLE.admin, USER_LSP_ROLE.vendor],
+  },
 ];
 
 export function getResourceCount(resources, topicId) {
@@ -69,7 +71,7 @@ export function updateVideoData(
   currrentModule,
   setSelectedModule,
   userCourseData,
-  setUserCourseData
+  setUserCourseData,
 ) {
   const { moduleId, topicId } = idObject;
   const filteredTopicData = filterAndSortTopicsBasedOnModuleId(topic, moduleId);
@@ -82,7 +84,7 @@ export function updateVideoData(
   setUserCourseData({
     ...userCourseData,
     activeModule: { id: moduleId, index: currentModuleIndex },
-    activeTopic: { id: topicId, index: currentTopicIndex }
+    activeTopic: { id: topicId, index: currentTopicIndex },
   });
 
   setVideoData({
@@ -102,21 +104,21 @@ export function updateVideoData(
 
     allModuleOptions: allModuleOptions,
     currentModuleIndex: currentModuleIndex,
-    setNewModule: setSelectedModule
+    setNewModule: setSelectedModule,
   });
 }
 
 export const ActiveCourseTabAtom = atom({
   key: 'ActiveCourseTab',
-  default: tabs[0].name
+  default: tabs[0].name,
 });
 
 export const ActiveResourcesAtom = atom({
   key: 'ActiveResources',
-  default: null
+  default: null,
 });
 
 export const SelectedModuleDataAtom = atom({
   key: 'SelectedModuleData',
-  default: {}
+  default: {},
 });

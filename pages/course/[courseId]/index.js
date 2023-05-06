@@ -20,6 +20,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { mutationClient } from '../../../API/Mutations';
 import ClassRoomCourseHero from '@/components/CourseHero/ClassRoomCourseHero';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 
 export default function Course() {
   const { fullCourse } = useContext(courseContext);
@@ -118,7 +119,7 @@ export default function Course() {
           {!startPlayer &&
             !topicExamData?.id &&
             !activeClassroomTopicId &&
-            (fullCourse.type === 'classroom' ? (
+            (fullCourse.type === COURSE_TYPES[1] ? (
               <ClassRoomCourseHero set={setStartPlayer} />
             ) : (
               <CourseHero set={setStartPlayer} />

@@ -20,6 +20,7 @@ import useShowData from './Logic/useShowData';
 import { SelectedResourceDataAtom } from '../LearnerCourseComps/atoms/learnerCourseComps.atom';
 import PopUp from '../common/PopUp';
 import ZicopsFileViewer from '../common/ZicopsFileViewer';
+import { COURSE_TYPES } from '@/helper/constants.helper';
 
 export default function CourseBody({ isPreview = false }) {
   const courseContextData = useContext(courseContext);
@@ -41,12 +42,16 @@ export default function CourseBody({ isPreview = false }) {
   const [userCourseData, setUserCourseData] = useRecoilState(UserCourseDataAtom);
   const [showAlert, setShowAlert] = useRecoilState(ShowNotAssignedErrorAtom);
   const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
+  let newTabs = [...tabs];
 
-  const i = tabs?.findIndex((tab) => tab?.name === 'Certificates');
-  if (i >= 0) tabs[i].isHidden = !isDemo;
-
+  const i = newTabs?.findIndex((tab) => tab?.name === 'Certificates');
+  if (i >= 0) newTabs[i].isHidden = !isDemo;
+  if (courseContextData?.fullCourse?.type === COURSE_TYPES[1]) {
+    newTabs = newTabs.filter((tab) => tab?.isRegister === false);
+    console.info(newTabs);
+  }
   useEffect(() => {
-    setActiveCourseTab(tabs[0].name);
+    setActiveCourseTab(newTabs[0].name);
     setIsResourceShown(null);
     setSelectedModule(getModuleOptions()[0]);
     if (isPreview) setUserCourseData(getUserCourseDataObj());
@@ -76,7 +81,7 @@ export default function CourseBody({ isPreview = false }) {
 
       <div className={coursebody}>
         <CoursePageTabs
-          tabData={tabs}
+          tabData={newTabs}
           ref={myRef}
           activeCourseTab={activeCourseTab}
           setActiveTab={setActiveCourseTab}
@@ -84,7 +89,7 @@ export default function CourseBody({ isPreview = false }) {
 
         {showActiveTab(activeCourseTab)}
 
-        {activeCourseTab !== tabs[tabs.length - 1].name && (
+        {activeCourseTab !== newTabs[newTabs.length - 1].name && (
           <>
             {/* <Dropdown options={options} /> */}
             <BottomTabsMenu props={props} />
