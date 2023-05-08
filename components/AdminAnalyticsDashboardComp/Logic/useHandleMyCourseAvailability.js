@@ -50,11 +50,11 @@ export default function useHandleMyCourseAvailability() {
       });
 
       await getAllCourseCount(_lspId, COURSE_STATUS.approvalPending, 'self-paced').then((resp) => {
-        setExpiredCard({ ...expiredCard, count: resp?.getCourseCountStats?.count || 0 });
+        setReadyCard({ ...readyCard, count: resp?.getCourseCountStats?.count || 0 });
       });
 
       await getAllCourseCount(_lspId, COURSE_STATUS.reject, 'self-paced').then((resp) => {
-        setReadyCard({ ...readyCard, count: resp?.getCourseCountStats?.count || 0 });
+        setExpiredCard({ ...expiredCard, count: resp?.getCourseCountStats?.count || 0 });
       });
     }
   }, [courseType]);

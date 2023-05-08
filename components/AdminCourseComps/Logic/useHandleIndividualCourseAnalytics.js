@@ -42,7 +42,8 @@ export default function useHandleIndividualCourseAnalytics() {
         userClient,
       );
 
-      console.info(courseStats);
+      const times = courseStats?.getCourseWatchTime?.map((obj) => obj.time);
+      console.info(courseStats?.getCourseWatchTime, times);
 
       // const allDates = [];
       // for (
@@ -65,8 +66,7 @@ export default function useHandleIndividualCourseAnalytics() {
       //     ...dataFromBackend,
       //   });
       // }
-      console.info(allDates);
-      setCourseWatchTime(allDates);
+      setCourseWatchTime(times);
     }
   }, [selectedDate?.start, selectedDate.end]);
 
@@ -100,25 +100,30 @@ export default function useHandleIndividualCourseAnalytics() {
       userQueryClient,
     );
 
-    console.info(getCourseTotalWatchTime);
-
     return getCourseTotalWatchTime;
   }
 
-  async function getCourseWatchTimeGraphData(course_id, start_date, end_date) {
-    const getCourseWatchTime = loadQueryDataAsync(
-      GET_COURSE_WATCH_TIME_GRAPH_DATA,
-      { course_id: course_id, start_data: start_date, end_date: end_date },
-      {},
-      userQueryClient,
-    );
-  }
+  // async function getCourseWatchTimeGraphData() {
+  //   const queryVariables = {
+  //     course_id: courseMetaData?.id,
+  //     start_date: new Date(selectedDate?.start).getTime() / 1000,
+  //     end_date: new Date(selectedDate?.end).getTime() / 1000,
+  //   };
+  //   const getCourseWatchTime = loadQueryDataAsync(
+  //     GET_COURSE_WATCH_TIME_GRAPH_DATA,
+  //     queryVariables,
+  //     {},
+  //     userQueryClient,
+  //   );
+
+  //   console.info(getCourseWatchTime);
+  // }
 
   return {
     getCourseAnalyticsById,
     getPaginatedLearner,
     getCourseTotalWatchTime,
-    getCourseWatchTimeGraphData,
+    // getCourseWatchTimeGraphData,
     courseWatchTime,
     selectedDate,
     setSelectedDate,
