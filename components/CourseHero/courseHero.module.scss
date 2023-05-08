@@ -361,3 +361,20 @@
 .text{
   color: $bgBody;
 }
+.registerPopMain{
+  width: 410px;
+  height: 150px;
+  // background: #040404;
+  color: #26BA4D;
+  padding: 20px;
+}
+.registerTitle{
+  display: flex;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 18px;
+  padding-bottom: 5px;
+}
+.registerDetails{
+  color: $bgBody;
+}

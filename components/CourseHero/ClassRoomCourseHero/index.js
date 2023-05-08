@@ -21,6 +21,7 @@ import FeeDetails from '@/components/AdminCourseComps/CoursePayment/FeeDetails';
 import Button from '@/components/common/Button';
 import { RegisterUserAtom } from '@/state/atoms/courses.atom';
 import useHandleRegisterData from '@/components/AdminCourseComps/RegisterUserTabs/Logic/useHandleRegisterData';
+import PopUp from '@/components/common/PopUp';
 
 export default function ClassRoomCourseHero({ isPreview = false }) {
   const {
@@ -41,6 +42,7 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
   const [isOpenBooking, setIsOpenBooking] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
   const [isOpenFees, setIsOpenFees] = useState(false);
+  const [isShowPopup, setShowPopup] = useState(false);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const [registerUserData, setRegisterUserData] = useRecoilState(RegisterUserAtom);
   const [toastMsg, setToastMsg] = useRecoilState(ToastMsgAtom);
@@ -124,11 +126,13 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
     await addUpdateRegisterUser(registrationData);
     setIsRegsiter(true);
     setIsOpenRegsiter(false);
+    setShowPopup(true);
   };
   const onBookingHandler = () => {
     setIsOpenFees(true);
     setIsOpenBooking(false);
   };
+  const closeRegisterModal = () => setShowPopup(false);
   return (
     <div
       className={`${style.course_header}`}
@@ -349,6 +353,30 @@ export default function ClassRoomCourseHero({ isPreview = false }) {
           </div>
         </>
       </VendorPopUp>
+      <PopUp
+        popUpState={[isShowPopup, setShowPopup]}
+        customPopStyles={{ padding: '0px', minHeight: '0px' }}
+        customStyles={{
+          width: '400px',
+          height: '170px',
+          padding: '0px',
+          buttom: '10%',
+          top: '85%',
+          left: '20%',
+        }}
+        size=""
+        isFooterVisible={false}>
+        <div className={`${style.registerPopMain}`}>
+          <div className={`${style.registerTitle}`}>
+            <img src="/images/svg/new_releases.svg" alt="" />
+            Registered Successful
+          </div>
+          <p className={`${style.registerDetails}`}>
+            You have successfully registered for JAVA Programming Classroom Training Course. You
+            will be notified via mail for booking process.
+          </p>
+        </div>
+      </PopUp>
     </div>
   );
 }
