@@ -19,6 +19,11 @@ export function getTrainerDataObj(data = {}) {
     vendorName: data?.vendorName || '',
     inviteEmails: data?.inviteEmails || '',
     id: data?.id || '',
+    yearsOfExperience: data?.yearsOfExperience || '',
+    linkedinURL: data?.linkedinURL || '',
+    githubURL: data?.githubURL || '',
+    websiteURL: data?.websiteURL || '',
+    aboutTrainer: data?.aboutTrainer || '',
   };
 }
 
@@ -27,17 +32,17 @@ export const AddTrainerAtom = atom({
   default: false,
 });
 
-export const TrainerProfileAtom = atom({
-  key: 'trainerData',
-  default: getTrainerProfileObj(),
-});
+// export const TrainerProfileAtom = atom({
+//   key: 'trainerData',
+//   default: getTrainerProfileObj(),
+// });
 
-export function getTrainerProfileObj(data = {}) {
-  return {
-    yearsOfExperience: data?.yearsOfExperience || '',
-    linkedinURL: data?.linkedinURL || '',
-    twitterURL: data?.twitterURL || '',
-    websiteURL: data?.websiteURL || '',
-    aboutTrainer: data?.aboutTrainer || '',
-  };
-}
+// export function getTrainerProfileObj(data = {}) {
+//   return {
+//     yearsOfExperience: data?.yearsOfExperience || '',
+//     linkedinURL: data?.linkedinURL || '',
+//     twitterURL: data?.twitterURL || '',
+//     websiteURL: data?.websiteURL || '',
+//     aboutTrainer: data?.aboutTrainer || '',
+//   };
+// }

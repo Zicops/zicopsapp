@@ -128,6 +128,11 @@ export const GET_PAGINATED_TRAINERS = gql`
         created_by
         updated_at
         updated_by
+        years_of_experience
+        website
+        linkedin
+        github
+        description
       }
       pageCursor
       Direction

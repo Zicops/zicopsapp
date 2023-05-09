@@ -9,6 +9,7 @@ import Button from '@/components/common/Button';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 import { useRecoilState } from 'recoil';
 import { TrainerDataAtom, getTrainerDataObj } from '@/state/atoms/trainingManagement.atoms';
+import TrainingProfileAccordian from './TrainingProfileAccordian';
 
 export default function AddTrainerPopup({
   popUpState = [],
@@ -57,6 +58,12 @@ export default function AddTrainerPopup({
           }}
           customStyles={{ backgroundColor: 'transparent', height: 'auto', overflow: 'unset' }}
         />
+
+        <div className={`${styles.trainingProfile}`}>
+          <h3>Training Profile</h3>
+          <TrainingProfileAccordian individualTrainerData={individualTrainerData} isView={isView} />
+        </div>
+
         <div className={`${styles.addTrainingExpertiseContainer}`}>
           <AddTrainingExpertise individualTrainerData={individualTrainerData} isView={isView} />
         </div>

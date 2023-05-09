@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { userOptions } from '../trainingManagement.helper.js';
 import styles from './../trainingComps.module.scss';
-import TrainingProfileAccordian from './TrainingProfileAccordian';
 
 export default function InviteNewTrainer() {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
@@ -106,11 +105,6 @@ export default function InviteNewTrainer() {
           />
         </div>
       )}
-
-      <div className={`${styles.trainingProfile}`}>
-        <h3>Training Profile</h3>
-        <TrainingProfileAccordian />
-      </div>
     </div>
   );
 }

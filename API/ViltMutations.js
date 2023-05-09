@@ -260,6 +260,11 @@ export const CREATE_TRAINER = gql`
     $vendorId: String
     $expertise: [String]
     $status: String
+    $yearsOfExperience: String
+    $websiteURL: String
+    $linkedinURL: String
+    $githubURL: String
+    $aboutTrainer: String
   ) {
     createTrainerData(
       input: {
@@ -268,6 +273,11 @@ export const CREATE_TRAINER = gql`
         vendor_id: $vendorId
         expertise: $expertise
         status: $status
+        years_of_experience: $yearsOfExperience
+        website: $websiteURL
+        linkedin: $linkedinURL
+        github: $githubURL
+        description: $aboutTrainer
       }
     ) {
       id
@@ -280,6 +290,11 @@ export const CREATE_TRAINER = gql`
       created_by
       updated_at
       updated_by
+      years_of_experience
+      website
+      linkedin
+      github
+      description
     }
   }
 `;

@@ -9,16 +9,12 @@ import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
 export default function SelectExistingUser({ individualTrainerData }) {
   const { getTrainersAndModerators } = useHandleCourseData();
-  const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
 
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    getPaginatedTrainers()?.then((data) => {
-      setTrainersList(data || []);
-    });
-    // getTrainerById(trainersList?.id);
+    getTrainersAndModerators().then((resp) => setUserList(resp));
   }, []);
 
   useEffect(() => {
@@ -54,7 +50,8 @@ export default function SelectExistingUser({ individualTrainerData }) {
     };
   }
 
-  let trainers = trainersList?.map(getUserListObject);
+  let trainers = userList?.map(getUserListObject);
+
   return (
     <div>
       <div>
@@ -105,7 +102,7 @@ export default function SelectExistingUser({ individualTrainerData }) {
               photo: e.photo,
             }));
           }}
-          isLoading={trainersList == null}
+          isLoading={userList == null}
           isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />

@@ -2,41 +2,24 @@ import Accordian from '../../../components/UserProfile/Accordian';
 import LabeledTextarea from '@/components/common/FormComponents/LabeledTextarea';
 import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import styles from './../trainingComps.module.scss';
-import { useState } from 'react';
-import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
-import AddUrl from '@/components/VendorComps/AddVendor/common/AddUrl';
+import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { TrainerProfileAtom } from '@/state/atoms/trainingManagement.atoms';
 import { changeHandler } from '@/helper/common.helper';
 
-export default function TrainingProfileAccordian() {
-  const [trainerProfileData, setTrainerProfileData] = useRecoilState(TrainerProfileAtom);
+export default function TrainingProfileAccordian({ individualTrainerData, isView }) {
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
 
-  const [openSocialMedia, setOpenSocialMedia] = useState(null);
-  const [socialMediaInput, setSocialMediaInput] = useState('');
-
-  const socialMediaPopup = [
-    {
-      title: 'LinkedIn',
-      inputName: 'linkedinURL',
-      value: trainerProfileData?.linkedinURL,
-      imageUrl: trainerProfileData?.linkedinURL
-        ? '/images/svg/Linkedin.svg'
-        : '/images/Linkedin1.png',
-    },
-    {
-      title: 'Twitter',
-      inputName: 'twitterURL',
-      value: trainerProfileData?.facebookURL,
-      imageUrl: trainerProfileData?.twitterURL ? '/images/svg/Twitter.svg' : '/images/Twitter1.png',
-    },
-    {
-      title: 'Website',
-      inputName: 'websiteURL',
-      value: trainerProfileData?.websiteURL,
-      imageUrl: trainerProfileData?.websiteURL ? '/images/svg/Website.svg' : '/images/Website1.png',
-    },
-  ];
+  useEffect(() => {
+    if (individualTrainerData != null)
+      setTrainerData((prev) => ({
+        ...prev,
+        yearsOfExperience: individualTrainerData?.years_of_experience,
+        websiteURL: individualTrainerData?.website,
+        linkedinURL: individualTrainerData?.linkedin,
+        githubURL: individualTrainerData?.github,
+        aboutTrainer: individualTrainerData?.description,
+      }));
+  }, [individualTrainerData]);
 
   return (
     <div>
@@ -49,24 +32,52 @@ export default function TrainingProfileAccordian() {
                 inputName: 'yearsOfExperience',
                 placeholder: 'Enter years of experience as a trainer',
                 maxLength: 60,
-                value: trainerProfileData?.yearsOfExperience,
+                value: trainerData?.yearsOfExperience,
+                isDisabled: isView,
               }}
-              changeHandler={(e) => changeHandler(e, trainerProfileData, setTrainerProfileData)}
+              changeHandler={(e) => changeHandler(e, trainerData, setTrainerData)}
             />
           </div>
           <div className={`${styles.input3}`}>
-            <label for="vendorName">Add URL of social media pages: </label>
-            <div className={`${styles.icons}`}>
-              {socialMediaPopup?.map((media, index) => (
-                <img
-                  src={`${media?.imageUrl}`}
-                  onClick={() => {
-                    setSocialMediaInput(media?.value);
-                    setOpenSocialMedia(index);
-                  }}
-                />
-              ))}
-            </div>
+            <label for="website">Website: </label>
+            <LabeledInput
+              inputOptions={{
+                inputName: 'websiteURL',
+                placeholder: 'Enter URL',
+                maxLength: 300,
+                value: trainerData?.websiteURL,
+                isDisabled: isView,
+              }}
+              changeHandler={(e) => changeHandler(e, trainerData, setTrainerData)}
+            />
+          </div>
+        </div>
+        <div className={`${styles.websiteSocialDiv}`}>
+          <div className={`${styles.input3}`}>
+            <label for="website">LinkedIn: </label>
+            <LabeledInput
+              inputOptions={{
+                inputName: 'linkedinURL',
+                placeholder: 'Enter URL',
+                maxLength: 300,
+                value: trainerData?.linkedinURL,
+                isDisabled: isView,
+              }}
+              changeHandler={(e) => changeHandler(e, trainerData, setTrainerData)}
+            />
+          </div>
+          <div className={`${styles.input3}`}>
+            <label for="website">Github: </label>
+            <LabeledInput
+              inputOptions={{
+                inputName: 'githubURL',
+                placeholder: 'Enter URL',
+                maxLength: 300,
+                value: trainerData?.githubURL,
+                isDisabled: isView,
+              }}
+              changeHandler={(e) => changeHandler(e, trainerData, setTrainerData)}
+            />
           </div>
         </div>
 
@@ -76,41 +87,14 @@ export default function TrainingProfileAccordian() {
               label: 'About the Trainer',
               inputName: 'aboutTrainer',
               placeholder: 'Add Text',
-              value: trainerProfileData?.aboutTrainer,
+              value: trainerData?.aboutTrainer,
+              isDisabled: isView,
             }}
             styleClass={`${styles.aboutTrainer}`}
-            changeHandler={(e) => changeHandler(e, trainerProfileData, setTrainerProfileData)}
+            changeHandler={(e) => changeHandler(e, trainerData, setTrainerData)}
           />
         </div>
       </Accordian>
-      {!!socialMediaPopup?.[openSocialMedia]?.title && (
-        <VendorPopUp
-          title={socialMediaPopup[openSocialMedia]?.title}
-          popUpState={[openSocialMedia + 1, setOpenSocialMedia]}
-          size="small"
-          closeBtn={{
-            name: 'Cancel',
-            handleClick: () => setOpenSocialMedia(null),
-          }}
-          submitBtn={{
-            name: 'Done',
-            handleClick: () => {
-              setTrainerProfileData((prev) => ({
-                ...prev,
-                [socialMediaPopup[openSocialMedia].inputName]: socialMediaInput,
-              }));
-              setOpenSocialMedia(null);
-            },
-          }}
-          onCloseWithCross={() => setOpenSocialMedia(null)}
-          isFooterVisible={true}>
-          <AddUrl
-            inputName={socialMediaPopup[openSocialMedia]?.inputName}
-            urlData={socialMediaInput}
-            setUrlData={setSocialMediaInput}
-          />
-        </VendorPopUp>
-      )}
     </div>
   );
 }
