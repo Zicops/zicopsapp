@@ -73,6 +73,7 @@ const PollBox = ({ pollData }) => {
   useEffect(() => {
     if (!pollResult) return;
     pollResult.map((res) => {
+      if (!res?.user_ids?.length) return;
       setVoteCount((prevCount) => prevCount + res?.user_ids?.length);
 
       let localArr = result;

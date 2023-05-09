@@ -1404,7 +1404,7 @@ export function useTimeout(callback, delay = fifteenSeconds) {
   return timeoutRef;
 }
 
-export function useTimeInterval(callback, delay = fifteenSeconds, dependencies = []) {
+export function useTimeInterval(callback, delayInMS = fifteenSeconds, dependencies = []) {
   const timeoutId = useRef(null);
   const savedCallback = useRef(callback);
 
@@ -1417,7 +1417,7 @@ export function useTimeInterval(callback, delay = fifteenSeconds, dependencies =
   }, []);
 
   useEffect(() => {
-    if (typeof delay !== 'number') return;
+    if (typeof delayInMS !== 'number') return;
     if (timeoutId.current != null) return;
 
     const handleTick = () => {
@@ -1425,16 +1425,13 @@ export function useTimeInterval(callback, delay = fifteenSeconds, dependencies =
         savedCallback.current();
 
         handleTick();
-      }, delay);
+      }, delayInMS);
     };
 
     handleTick();
 
-    return () => {
-      window.clearTimeout(timeoutId.current);
-      timeoutId.current = null;
-    };
-  }, [delay, ...(dependencies || [])]);
+    return cancel;
+  }, [delayInMS, ...(dependencies || [])]);
 
   const cancel = useCallback(function () {
     window.clearTimeout(timeoutId.current);

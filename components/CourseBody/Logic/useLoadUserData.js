@@ -127,7 +127,6 @@ export default function useLoadUserData(isPreview, setSelectedModule, getModuleO
     if (!fullCourse.id) return;
     if (!userData.id) return;
     if (fullCourse.id !== courseId) return;
-    console.log('data de', moduleData);
 
     // setIsLoading(
     //   loadingModuleData &&

@@ -18,7 +18,8 @@ export const StartMeeting = (
       prejoinPageEnabled: false,
       notifications: [],
       disabledNotifications: ['notify.grantedTo'],
-      disableFilmstripAutohiding: true
+      disableSelfView: false,
+      disableFilmstripAutohiding: false
     },
     interfaceConfigOverwrite: {
       SHOW_JITSI_WATERMARK: false,

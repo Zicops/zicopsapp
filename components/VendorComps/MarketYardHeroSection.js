@@ -1,4 +1,4 @@
-import { VENDOR_MASTER_TYPE } from '@/helper/constants.helper';
+import { VENDOR_MASTER_TYPE, VENDOR_SERVICES_TYPE } from '@/helper/constants.helper';
 import { FeatureFlagsAtom } from '@/state/atoms/global.atom';
 import { useRecoilValue } from 'recoil';
 import LabeledDropdown from '../common/FormComponents/LabeledDropdown';
@@ -14,16 +14,16 @@ const customDropdownStyleObj = {
     border: '2px solid var(--white)',
     marginBottom: '3px',
     '&:hover': {
-      background: 'var(--background_body)'
-    }
+      background: 'var(--background_body)',
+    },
   },
   menuStyles: { background: 'var(--primary)' },
   dropdownIndicatorStyles: {
     color: 'var(--white)',
     '&:hover': {
-      svg: { fill: 'var(--background_body)' }
-    }
-  }
+      svg: { fill: 'var(--background_body)' },
+    },
+  },
 };
 
 export default function MarketYardHeroSection({
@@ -32,7 +32,7 @@ export default function MarketYardHeroSection({
   vendorService,
   setVendorService,
   searchText = '',
-  setSearchText = () => {}
+  setSearchText = () => {},
 }) {
   const { isDemo, isDev } = useRecoilValue(FeatureFlagsAtom);
 
@@ -51,9 +51,9 @@ export default function MarketYardHeroSection({
                   { label: 'All', value: null },
                   ...Object.values(VENDOR_MASTER_TYPE)?.map((val) => ({
                     label: <span style={{ textTransform: 'capitalize' }}>{val}</span>,
-                    value: val
-                  }))
-                ]
+                    value: val,
+                  })),
+                ],
               }}
               changeHandler={(val) => setVendorType(val)}
               styleClass={`${styles.vendorDropDown}`}
@@ -64,12 +64,12 @@ export default function MarketYardHeroSection({
               dropdownOptions={{
                 inputName: 'Service',
                 placeholder: isDemo ? 'All Services' : 'Training',
-                value: isDemo ? vendorService : 'crt',
+                value: isDemo ? vendorService : VENDOR_SERVICES_TYPE.crt.type,
                 isDisabled: !isDemo,
                 options: [
                   { label: 'All', value: null },
-                  ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev))
-                ]
+                  ...serviceOptions?.filter((op) => (!!isDev ? true : !op?.isDev)),
+                ],
               }}
               changeHandler={(val) => setVendorService(val)}
               styleClass={`${styles.vendorDropDown}`}

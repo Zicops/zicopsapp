@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LabeledInput from '../common/FormComponents/LabeledInput';
 import styles from './vendorComps.module.scss';
-const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, setShowTax }) => {
+const ReviewOrderBottom = ({ isTax, taxAmount, isShowTax, setShowTax, currency }) => {
   const [orderData, setOrderData] = useRecoilState(OrderAtom);
   const onShowTaxHandler = () => {
     setShowTax(true);
@@ -23,7 +23,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
                   inputName: 'percentage',
                   placeholder: '%',
                   value: { label: '%', value: '%' },
-                  options: [{ label: '%', value: '%' }]
+                  options: [{ label: '%', value: '%' }],
                 }}
               />
             </div>
@@ -31,7 +31,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
         </div>
         <div>
           <p>
-            {orderData?.total} {orderData?.currency}
+            {orderData?.total} {orderData?.currency || currency}
           </p>
           {isTax && !isShowTax && (
             <div className={`${styles.taxAdd}`} onClick={onShowTaxHandler}>
@@ -45,7 +45,7 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
                 inputName: 'tax',
                 value: orderData?.tax,
                 isNumericOnly: true,
-                placeholder: '0'
+                placeholder: '0',
               }}
               inputClass={`${styles.taxValue}`}
               changeHandler={(e) => {
@@ -58,13 +58,13 @@ const ReviewOrderBottom = ({ isTax, subtotal, grossTotal, taxAmount, isShowTax, 
       <div className={`${styles.TaxAmount}`}>
         <p>Tax Amount</p>
         <p>
-          {taxAmount || 0} {orderData?.currency}
+          {taxAmount || 0} {orderData?.currency || currency}
         </p>
       </div>
       <div className={`${styles.grossTotal}`}>
         <p>Gross Total</p>
         <p>
-          {orderData?.grossTotal} {orderData?.currency}
+          {orderData?.grossTotal || orderData?.grand_total} {orderData?.currency || currency}
         </p>
       </div>
     </div>

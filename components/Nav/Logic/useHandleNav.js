@@ -27,7 +27,7 @@ export function useHandleNav(isAdmin, setAdmin) {
     // setAdmin(JSON.parse(window.localStorage.getItem('isAdmin')));
     const role = sessionStorage?.getItem('user_lsp_role');
     if (!role) return;
-    console.log(role, 'role');
+    // console.log(role, 'role');
     setAdmin(role.toLowerCase() === 'admin' || role.toLowerCase() === 'vendor');
   }, [userData?.id]);
 
@@ -65,7 +65,7 @@ export function useHandleNav(isAdmin, setAdmin) {
   function handleSearch(e) {
     e.stopPropagation();
     const searchText = e.target.value;
-    console.log(searchText);
+    // console.log(searchText);
     setSearchQuery(searchText);
   }
 

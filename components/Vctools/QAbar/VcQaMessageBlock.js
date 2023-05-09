@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import style from './vcQA.module.scss';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { loadQueryDataAsync } from '@/helper/api.helper';
+import { loadAndCacheDataAsync, loadQueryDataAsync } from '@/helper/api.helper';
 import { GET_USER_DETAIL, userQueryClient } from '@/api/UserQueries';
 const VcQaMessageBlock = ({ isReply, isLeft, message, setshowQAbtn, setParentId }) => {
   // const userDetails = useRecoilValue(UserStateAtom);
@@ -11,7 +11,7 @@ const VcQaMessageBlock = ({ isReply, isLeft, message, setshowQAbtn, setParentId 
   const [userDetails, setUserDetails] = useState('');
 
   useEffect(async () => {
-    const resUserDetails = await loadQueryDataAsync(
+    const resUserDetails = await loadAndCacheDataAsync(
       GET_USER_DETAIL,
       { user_id: message.user_id },
       {},

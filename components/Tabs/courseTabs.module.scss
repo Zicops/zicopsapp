@@ -61,6 +61,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
+
     button {
       color: $black;
     }
@@ -109,6 +110,7 @@
       color: $white;
       border: 2px solid $primary;
     }
+
     &:focus {
       border: 2px solid $primary;
       box-shadow: 0px 0px 10px 0px $primary;
@@ -127,7 +129,7 @@
 .popUpFormContainer {
   padding: 20px 50px;
 
-  > div {
+  >div {
     margin-bottom: 20px;
 
     &:last-child {
@@ -231,6 +233,7 @@
 
   .bingeform {
     width: 60%;
+
     // padding: 10px;
     // display: flex;
     .binge_setting {
@@ -243,6 +246,7 @@
         color: $primary;
         width: 23%;
       }
+
       .binge_setting_body {
         width: 75%;
         padding: 10px;
@@ -277,14 +281,17 @@
     background-color: $darkTwo;
     box-shadow: none;
   }
+
   .durationvalue {
     width: 40px;
   }
 }
+
 .label {
   min-width: 80px;
   font-size: 14px;
 }
+
 // //   .value {
 // //     min-width: 60px;
 // //     color: #ffffff;
@@ -301,6 +308,7 @@
   font-size: 12px;
   margin-left: 20px;
 }
+
 .video_preview {
   height: 150px;
   // width: 40%;
@@ -308,16 +316,19 @@
   // margin-left: auto;
   display: flex;
 }
+
 .from_end {
   display: flex;
   justify-content: center;
   margin-left: 25%;
 }
+
 .checkbox_label {
   font-size: 18px;
   color: #ffffff;
   margin: auto;
 }
+
 .center {
   display: flex;
   justify-content: center;
@@ -469,6 +480,7 @@
   font-size: large;
   padding: 5px 15px 5px 20px;
   border: 1px solid transparent;
+
   span {
     margin-right: 12px;
   }
@@ -503,7 +515,7 @@
   display: flex;
   margin: 20px auto;
 
-  > div {
+  >div {
     width: 50%;
 
     &:last-child {
@@ -559,7 +571,7 @@
 .switchRadioBox {
   display: flex;
   padding: 10px 15px;
-  margin: 15px;
+  margin: 15px 0px;
 
   border: 1px solid $darkThree;
   border-radius: 5px;
@@ -569,6 +581,7 @@
   .label {
     font-weight: bold;
   }
+
   .description {
     color: $darkThree;
   }

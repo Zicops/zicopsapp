@@ -69,8 +69,15 @@ $marginBetweenInputs: 1em;
 }
 
 // configuration
+.toggleboxContainer {
+  margin: 0.5em 0px;
+
+  label {
+    margin: 0.5em 0px;
+  }
+}
+
 .configurationHead {
-  font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
   font-size: 20px;
@@ -94,32 +101,13 @@ $marginBetweenInputs: 1em;
 }
 
 .configSettingContainer {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  margin: 0;
-}
+  display: grid;
+  grid-template-columns: 49% 49%;
 
-.registrationBox,
-.bookingBox {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: $gapBetweenInputAndLabel;
-
-  // div {
-  //   // display: flex;
-  //   gap: $marginBetweenInputs;
-  // }
-}
-
-.registrationBox > label,
-.bookingBox > label {
-  width: 100%;
-  margin: 0;
+  div {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .configurationDetailHead {
@@ -873,7 +861,7 @@ button.addTopicFormBtn {
   border: 1px solid $darkThree;
   border-radius: 5px;
 
-  width: 50%;
+  height: 100%;
 
   div {
     display: flex;

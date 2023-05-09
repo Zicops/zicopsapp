@@ -1,4 +1,5 @@
-import { ALL_COURSE_TYPES, COURSE_STATUS } from '@/helper/constants.helper';
+import { COURSE_TYPES } from '@/constants/course.constants';
+import { COURSE_STATUS } from '@/helper/constants.helper';
 import { atom, atomFamily } from 'recoil';
 
 export const ActiveCourseTabNameAtom = atom({
@@ -15,7 +16,7 @@ export function getCourseMetaDataObj(data = {}) {
   return {
     // meta data
     id: data?.id || null,
-    type: data?.type || ALL_COURSE_TYPES.selfPaced,
+    type: data?.type || COURSE_TYPES.selfPaced,
     status: data?.status || COURSE_STATUS.draft,
     isActive: data?.isActive || true,
 
@@ -105,6 +106,24 @@ export function getClassroomMasterDataObj(data = {}) {
     isStartDatedecided: data?.isStartDatedecided || false,
     isTrainerdecided: data?.isTrainerdecided || false,
     isModeratordecided: data?.isModeratordecided || false,
+
+    pricingType: data?.pricingType || null,
+    pricePerSeat: data?.pricePerSeat || null,
+    currency: data?.currency || null,
+    taxPercentage: data?.taxPercentage || null,
+
+    isRegistration: data?.isRegistration || false,
+    maxRegistrations: data?.maxRegistrations || null,
+    registrationStartDate: data?.registrationStartDate || null,
+    registrationEndDate: data?.registrationEndDate || null,
+    registrationPublishBy: data?.registrationPublishBy || null,
+    registrationPublishOn: data?.registrationPublishOn || null,
+
+    isBooking: data?.isBooking || false,
+    bookingStartDate: data?.bookingStartDate || null,
+    bookingEndDate: data?.bookingEndDate || null,
+    bookingPublishOn: data?.bookingPublishOn || null,
+    bookingPublishBy: data?.bookingPublishBy || null,
   };
 }
 
@@ -246,5 +265,30 @@ export function getTopicClassroomObject(data = {}) {
     updatedAt: data?.updatedAt || '',
     updatedBy: data?.updatedBy || '',
     status: data?.status || '',
+  };
+}
+
+export const CommercialsAtom = atom({
+  key: 'commercialsState',
+  default: getCourseCommercialsObject(),
+});
+export function getCourseCommercialsObject(data) {
+  return {
+    id: data?.id || null,
+    courseId: data?.courseId || null,
+    is_decided: data?.is_decided,
+    is_paid_traning: data?.is_paid_traning,
+    is_free_traning: data?.is_free_traning,
+    pricing_type: data?.pricing_type || '',
+    price_per_seat: data?.price_per_seat || '',
+    currency: data?.currency,
+    tax_percentage: data?.tax_percentage || null,
+    total: data?.total || null,
+    max_registrations: data?.max_registrations || null,
+    registration_end_date: data?.registration_end_date,
+    booking_start_date: data?.booking_start_date,
+    booking_end_date: data?.booking_end_date,
+    registration_start_date: data?.registration_start_date,
+    is_start_date: data?.is_start_date,
   };
 }

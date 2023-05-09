@@ -33,10 +33,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
   const [participantPollArr, setParticipantPollArr] = useRecoilState(participantPoll);
 
   const pollsRef = collection(db, 'polls');
-  const q = query(
-    pollsRef,
-    where('meeting_id', '==', activeClassroomTopicId),
-  );
+  const q = query(pollsRef, where('meeting_id', '==', activeClassroomTopicId));
 
   useEffect(async () => {
     const unsub = onSnapshot(q, (querySnapshot) => {
@@ -53,7 +50,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
   useEffect(() => {
     const publishedPolls = [];
     const endedPolls = [];
-    
+
     pollInfo.map((poll) => {
       if (poll.status === 'published') {
         publishedPolls.push(poll);
@@ -61,7 +58,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       if (poll.status === 'ended') {
         endedPolls.push(poll);
       }
-    })
+    });
     setActivePoll(publishedPolls);
     setEndedPoll(endedPolls);
   }, [pollInfo]);
@@ -111,7 +108,7 @@ const Poll = ({ hide = false, deletePollPopUp }) => {
       component: (
         <ShowPoll
           setPollTitle={() => {
-            editPollFunc('pollQA');
+            setPollTitle('pollQA');
           }}
           deletePoll={(index) => {
             deletePollPopUp(index);

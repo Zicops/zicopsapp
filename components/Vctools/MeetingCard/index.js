@@ -1,10 +1,16 @@
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { vcMeetingIconAtom, vctoolAlluserinfo, vcUserData } from '@/state/atoms/vctool.atoms';
+import {
+  ClassRoomFlagsInput,
+  vcMeetingIconAtom,
+  vctoolAlluserinfo
+} from '@/state/atoms/vctool.atoms';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { OnVideo, StopVideo } from '../help/vctool.helper';
 import VctoolButton from '../Vctoolbutton';
 import styles from '../vctoolMain.module.scss';
+
 const MeetingCard = ({
   vcData = {},
   startMeeting,
@@ -19,6 +25,7 @@ const MeetingCard = ({
   const userData = useRecoilValue(UserStateAtom);
   const meetingInfo = useRecoilValue(vctoolAlluserinfo);
   const [meetingIconsAtom, setMeetingIconAtom] = useRecoilState(vcMeetingIconAtom);
+
   const nameRef = useRef(null);
   let video = videoref.current;
   let startName = '';

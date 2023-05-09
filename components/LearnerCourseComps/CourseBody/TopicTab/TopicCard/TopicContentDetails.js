@@ -5,6 +5,7 @@ import {
   getTopicQuizAttemptsDataObj,
 } from '@/components/LearnerCourseComps/atoms/learnerCourseComps.atom';
 import ZicopsSkeleton from '@/components/LearnerCourseComps/common/ZicopsSkeleton';
+import { TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
 import { COURSE_TOPIC_STATUS } from '@/helper/constants.helper';
 import { limitValueInRange } from '@/helper/utils.helper';
@@ -81,15 +82,21 @@ export default function TopicContentDetails({
     width: `${limitValueInRange(currentTopicProgress?.videoProgress)}%`,
   };
 
+  const isDocument = topicContent?.type === TOPIC_CONTENT_TYPES.document;
+
   return (
     <>
       <div className={styles.topicContent}>
-        <div className={styles.progress}>
-          <div className={`${styles.progressBarFill}`} style={progressBarStyles}></div>
-        </div>
+        {!isDocument ? (
+          <div className={styles.progress}>
+            <div className={`${styles.progressBarFill}`} style={progressBarStyles}></div>
+          </div>
+        ) : (
+          <div className={`${styles.startReading}`}>Start Reading</div>
+        )}
 
         <div className={styles.details}>
-          <span>e-Content</span>
+          <span>{isDocument ? 'Document' : 'e-Content'}</span>
           <span>
             {!!currentTopicQuiz?.length
               ? `Quiz: ${currentTopicQuizAttempts}/ ${currentTopicQuiz?.length}`
@@ -100,7 +107,7 @@ export default function TopicContentDetails({
               <ZicopsSkeleton variant="text" height={30} width={150} />
             ) : (
               <>
-                Duration:{' '}
+                {isDocument ? 'Read Time: ' : 'Duration: '}
                 {!topicContent?.duration ? 'N/A' : getCourseDisplayTime(topicContent?.duration)}
               </>
             )}

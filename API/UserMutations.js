@@ -2088,31 +2088,32 @@ export const DELETE_SAMPLE_FILE = gql`
 
 export const ADD_ORDER = gql`
   mutation addOrder(
-    $orderId: String
     $vendorId: String
     $lspId: String
     $total: Int
     $tax: Int
     $grandTotal: Int
+    $description: String
     $status: String
   ) {
     addOrder(
       input: {
-        order_id: $orderId
         vendor_id: $vendorId
         lsp_id: $lspId
         total: $total
         tax: $tax
         grand_total: $grandTotal
+        description: $description
         status: $status
       }
     ) {
-      order_id
+      id
       vendor_id
       lsp_id
       total
       tax
       grand_total
+      description
       created_at
       created_by
       updated_at
@@ -2129,25 +2130,28 @@ export const UPDATE_ORDER = gql`
     $total: Int
     $tax: Int
     $grandTotal: Int
+    $description: String
     $status: String
   ) {
     updateOrder(
       input: {
-        order_id: $orderId
+        id: $orderId
         vendor_id: $vendorId
         lsp_id: $lspId
         total: $total
         tax: $tax
         grand_total: $grandTotal
+        description: $description
         status: $status
       }
     ) {
-      order_id
+      id
       vendor_id
       lsp_id
       total
       tax
       grand_total
+      description
       created_at
       created_by
       updated_at
@@ -2246,5 +2250,11 @@ export const UPDATE_ORDER_SERVICES = gql`
       updated_by
       status
     }
+  }
+`;
+
+export const ADD_USER_TOTAL_WATCH_TIME = gql`
+  mutation addUserTotalWatchTime($userId: String, $courseId: String, $time: Int, $date: String) {
+    addUserTotalWatchTime(user_id: $userId, course_id: $courseId, time: $time, date: $date)
   }
 `;

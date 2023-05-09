@@ -15,12 +15,12 @@ export default function VendorDetails({ data }) {
     { label: 'Name', value: data?.name || 'NA' },
     { label: 'Address', value: data?.address || 'NA' },
     { label: 'Website', value: data?.website || 'NA' },
-    { label: 'Type', value: data?.type || 'NA' }
+    { label: 'Type', value: data?.type || 'NA' },
   ];
 
   const individualVendorDetails = [
     { label: 'Years of Experience', value: individualVendorState?.experienceYear || 'NA' },
-    { label: 'Speaker', value: individualVendorState?.isSpeaker ? 'Yes' : 'No' }
+    { label: 'Speaker', value: individualVendorState?.isSpeaker ? 'Yes' : 'No' },
   ];
 
   const socialMediaData = [
@@ -28,26 +28,26 @@ export default function VendorDetails({ data }) {
       title: 'Facebook',
       inputName: 'facebookURL',
       value: data?.facebookURL,
-      imageUrl: '/images/svg/Facebook.svg'
+      imageUrl: '/images/svg/Facebook.svg',
     },
     {
       title: 'Instagram',
       inputName: 'instagramURL',
       value: data?.instagramURL,
-      imageUrl: '/images/svg/Instagram.svg'
+      imageUrl: '/images/svg/Instagram.svg',
     },
     {
       title: 'Twitter',
       inputName: 'twitterURL',
       value: data?.twitterURL,
-      imageUrl: '/images/svg/Twitter.svg'
+      imageUrl: '/images/svg/Twitter.svg',
     },
     {
       title: 'LinkedIn',
       inputName: 'linkedinURL',
       value: data?.linkedinURL,
-      imageUrl: '/images/svg/Linkedin.svg'
-    }
+      imageUrl: '/images/svg/Linkedin.svg',
+    },
   ];
   return (
     <div className={`${styles.vendorDetailsContainer}`}>
@@ -60,14 +60,16 @@ export default function VendorDetails({ data }) {
               <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
             </div>
           ))}
-          {individualVendorDetails?.map((data, index) => (
-            <div key={index}>
-              <span>{data?.label}</span>
-              <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
-            </div>
-          ))}
+          {data?.type === 'individual' &&
+            individualVendorDetails?.map((data, index) => (
+              <div key={index}>
+                <span>{data?.label}</span>
+                <p style={{ textTransform: 'capitalize' }}>{data?.value}</p>
+              </div>
+            ))}
         </div>
-        <hr />
+        {/* <hr /> */}
+        <div className={`${styles.hr}`}></div>
         <div>Social Media</div>
         <div className={`${styles.marketyardSocialMediaIcons}`}>
           {socialMediaData?.map((media, i) => (

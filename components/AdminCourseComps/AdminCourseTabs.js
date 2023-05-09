@@ -3,6 +3,7 @@ import { COURSE_STATUS, COURSE_TYPES } from '@/constants/course.constants';
 import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   ActiveCourseTabNameAtom,
+  ClassroomMasterAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
@@ -20,6 +21,7 @@ import useSaveCourseData from './Logic/useSaveCourseData';
 export default function AdminCourseTabs() {
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
   const courseMetaData = useRecoilValue(CourseMetaDataAtom);
+  const classroomMaster = useRecoilValue(ClassroomMasterAtom);
   const courseCurrentState = useRecoilValue(CourseCurrentStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
@@ -60,6 +62,11 @@ export default function AdminCourseTabs() {
         displayStatus = COURSE_STATUS?.freeze;
       // course expired
       if (courseStatus === COURSE_STATUS?.reject) displayStatus = 'EXPIRED';
+      // classroom course
+      if (courseStatus === COURSE_STATUS?.publish && classroomMaster?.isBooking)
+        displayStatus = 'PUBLISHED-B';
+      if (courseStatus === COURSE_STATUS?.publish && classroomMaster?.isRegistration)
+        displayStatus = 'PUBLISHED-R';
 
       return (
         <>
@@ -80,6 +87,8 @@ export default function AdminCourseTabs() {
       if (isPublishCourseEditable) return false;
       // course is not saved and vendor login
       if (isVendor && courseStatus !== COURSE_STATUS.save) return true;
+      // for classroom course
+      if (courseMetaData?.type === COURSE_TYPES.classroom) return false;
       // course is published or expired
       if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus)) return true;
 
@@ -89,7 +98,12 @@ export default function AdminCourseTabs() {
       // dev flag for updating published courses
       if (!!isPublishCourseEditable) return 'Published (U)';
       // published or expired courses
-      if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus)) return 'Published';
+      if ([COURSE_STATUS.publish, COURSE_STATUS.reject].includes(courseStatus)) {
+        // for classroom course
+        if (courseMetaData?.type === COURSE_TYPES.classroom) return 'Update';
+
+        return 'Published';
+      }
       // vendor login
       if (isVendor) {
         if (courseStatus === COURSE_STATUS.approvalPending) return 'Sent For Approval';

@@ -10,7 +10,7 @@
 
 - Folder name should NOT be capitalized.
 - React Components folders should be capitalized.
-- Component should alway be in folder with index.js inside exporting the component
+- Component should alway be in folder with index.js inside exporting the component.
 
 For creating a new component
 

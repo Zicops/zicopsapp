@@ -10,7 +10,7 @@ import {
   VendorCurrentStateAtom,
   VendorProfileAtom,
   VendorStateAtom,
-  vendorUserInviteAtom
+  vendorUserInviteAtom,
 } from '@/state/atoms/vendor.atoms';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -48,7 +48,7 @@ export default function ManageVendorTabs() {
     getSingleProfileInfo,
     getVendorAdmins,
     syncIndividualVendorProfile,
-    handleMail
+    handleMail,
   } = useHandleVendor();
 
   const router = useRouter();
@@ -67,7 +67,7 @@ export default function ManageVendorTabs() {
     if (!vendorCurrentState?.isSaved) return;
 
     setVendorCurrentState(
-      getVendorCurrentStateObj({ enabledServices: vendorCurrentState?.enabledServices })
+      getVendorCurrentStateObj({ enabledServices: vendorCurrentState?.enabledServices }),
     );
   }, [
     router.isReady,
@@ -82,7 +82,7 @@ export default function ManageVendorTabs() {
     vendorData?.description,
     smeData,
     ctData,
-    cdData
+    cdData,
   ]);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function ManageVendorTabs() {
     loadVendorDetails();
 
     async function loadVendorDetails() {
-      const singleVendorInfo = await getSingleVendorInfo();
+      const singleVendorInfo = await getSingleVendorInfo(vendorId);
       const smeData = await getSmeDetails();
       const crtData = await getCrtDetails();
       const cdData = await getCdDetails();
@@ -123,7 +123,7 @@ export default function ManageVendorTabs() {
     setEmailId(
       vendorAdminUsers
         ?.map((user) => (user?.user_lsp_status !== USER_MAP_STATUS.disable ? user?.email : null))
-        ?.filter((email) => email) || []
+        ?.filter((email) => email) || [],
     );
 
     if (isIndividual && vendorAdminUsers?.[0]?.email)
@@ -172,7 +172,7 @@ export default function ManageVendorTabs() {
     if (vendorData?.type?.toLowerCase() !== VENDOR_MASTER_TYPE.individual.toLowerCase()) return;
 
     const allServiceLanguages = [
-      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages])
+      ...new Set([...smeData?.languages, ...ctData?.languages, ...cdData?.languages]),
     ];
 
     let [firstName, ...lastName] = vendorData?.name?.split(' ');
@@ -190,8 +190,8 @@ export default function ManageVendorTabs() {
         languages: allServiceLanguages,
         sme_expertises: smeData?.isApplicable ? smeData?.expertises : [],
         crt_expertises: ctData?.isApplicable ? ctData?.expertises : [],
-        content_development: cdData?.isApplicable ? cdData?.expertises : []
-      })
+        content_development: cdData?.isApplicable ? cdData?.expertises : [],
+      }),
     );
   }, [vendorData, smeData, cdData, ctData, emailId]);
 
@@ -241,7 +241,7 @@ export default function ManageVendorTabs() {
         },
         status: vendorData?.status?.toUpperCase(),
         disableSubmit: isViewPage || loading,
-        handleCancel: () => router.push('/admin/vendor/manage-vendor')
+        handleCancel: () => router.push('/admin/vendor/manage-vendor'),
       }}
       customStyles={['Courses', 'Orders'].includes(tab) ? { padding: '0px' } : {}}>
       <div className={`${styles.previewButtonContainer}`}>

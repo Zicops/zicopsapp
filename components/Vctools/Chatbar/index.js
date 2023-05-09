@@ -1,13 +1,16 @@
+import { db } from '@/helper/firebaseUtil/firestore.helper';
+import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { UserStateAtom } from '@/state/atoms/users.atom';
-import { ClassRoomFlagsInput, vcChatBarAtom, vcChatObj, vcToolNavbarState } from '@/state/atoms/vctool.atoms';
+import {
+  ClassRoomFlagsInput,
+  vcToolNavbarState
+} from '@/state/atoms/vctool.atoms';
+import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import useLoadClassroomData from '../Logic/useLoadClassroomData';
 import styles from '../vctoolMain.module.scss';
 import ChatMessageBlock from './VcChatMessageBlock';
-import useLoadClassroomData from '../Logic/useLoadClassroomData';
-import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
-import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { db } from '@/helper/firebaseUtil/firestore.helper';
 
 const ChatBar = ({ hide = false }) => {
   const { sendChatMessage } = useLoadClassroomData();
@@ -54,6 +57,7 @@ const ChatBar = ({ hide = false }) => {
   }, [classroomChats]);
 
   const sendMessageHandler = async () => {
+    if (!message || !activeClassroomTopicId) return;
     const obj = {
       meetingId: activeClassroomTopicId,
       userId: userDetails?.id,

@@ -1,162 +1,129 @@
 import EllipsisMenu from '@/components/common/EllipsisMenu';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-const data = [
-  {
-    id: '1001',
-    order_id: 110,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  },
-  {
-    id: '1001',
-    order_id: 111,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Freelancer',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1002',
-    order_id: 112,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  },
-  {
-    id: '1003',
-    order_id: 113,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Freelancer',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1004',
-    order_id: 114,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1005',
-    order_id: 115,
-    vendor_name: 'Mnop learning',
-    vendor_type: 'Company',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1006',
-    order_id: 116,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Confirmed'
-  },
-  {
-    id: '1007',
-    order_id: 117,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'Training',
-    status: 'Added'
-  },
-  {
-    id: '1008',
-    order_id: 118,
-    vendor_name: 'Abcd learning ',
-    vendor_type: 'Company',
-    services: 'SME, Content development',
-    status: 'Added'
-  }
-];
+import useHandleMarketYard from './Logic/useHandleMarketYard';
+import useHandleVendor from './Logic/useHandleVendor';
+import {
+  getVendorOrderObject,
+  OrderAtom,
+  ServicesAtom,
+  VendorServicesListAtom,
+  getVendorServicesList,
+  getVendorServicesObject,
+} from '@/state/atoms/vendor.atoms';
+import { useRecoilState } from 'recoil';
+import { AllServicesAtom } from '@/state/atoms/vendor.atoms';
+import ViewOrder from './ViewOrder';
 
-const VendorOrders = () => {
+const VendorOrders = ({ isVendor = false }) => {
+  const [servicesData, setServicesData] = useRecoilState(ServicesAtom);
+  const [selectedServicesForOrder, setSelectedServicesForOrder] =
+    useRecoilState(VendorServicesListAtom);
+  const [orderData, setOrderData] = useRecoilState(OrderAtom);
+  const [allServicesData, setAllServicesData] = useRecoilState(AllServicesAtom);
+  const { getAllOrders, orderDetails } = useHandleMarketYard();
+  const { getVendors, vendorInfo } = useHandleVendor();
+  const [vendorOrderDetails, setVendorOrderDetails] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [viewOrder, setViewOrder] = useState(false);
   const router = useRouter();
+
+  const vendorId = router.query.vendorId || null;
+
+  useEffect(async () => {
+    const lspId = sessionStorage?.getItem('lsp_id');
+    await getAllOrders(lspId);
+    setAllServicesData([]);
+    setServicesData(getVendorServicesObject());
+    setSelectedServicesForOrder(getVendorServicesList());
+    setOrderData(getVendorOrderObject());
+  }, []);
+  useEffect(async () => {
+    const vendorIds = orderDetails?.map((data) => data?.vendor_id);
+    await getVendors(vendorIds);
+  }, [orderDetails]);
+
+  useEffect(() => {
+    if (!vendorInfo?.length) return;
+    const vendorDatails = vendorInfo?.map((item, index) =>
+      Object.assign({}, item, orderDetails[index]),
+    );
+    if (!isVendor) {
+      setVendorOrderDetails(vendorDatails);
+    } else {
+      const singleVendorOrders = vendorDatails?.filter((data) => data?.vendorId === vendorId);
+      setVendorOrderDetails(singleVendorOrders);
+    }
+  }, [vendorInfo]);
+
   const columns = [
     {
-      field: 'order_id',
+      field: 'id',
       headerClassName: 'course-list-header',
       headerName: 'Order ID',
-      flex: 0.6
+      flex: 0.9,
     },
     {
-      field: 'vendor_name',
+      field: 'name',
       headerClassName: 'course-list-header',
       headerName: 'Vendor Name',
-      flex: 1
+      flex: 1,
     },
     {
-      field: 'vendor_type',
+      field: 'type',
       headerClassName: 'course-list-header',
       headerName: 'Vendor type',
-      flex: 0.8
+      flex: 0.8,
+      renderCell: (params) => {
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.type}</span>;
+      },
     },
     {
       field: 'services',
       headerClassName: 'course-list-header',
       headerName: 'Services',
-      flex: 1.5
+      flex: 1.1,
+      renderCell: (params) => {
+        return params?.row?.services?.join(', ').toUpperCase();
+      },
     },
     {
       field: 'status',
       headerClassName: 'course-list-header',
       headerName: 'Status',
-      flex: 0.8
+      flex: 0.8,
+      renderCell: (params) => {
+        return <span style={{ textTransform: 'capitalize' }}>{params?.row?.status}</span>;
+      },
     },
     {
+      field: 'action',
       headerClassName: 'course-list-header',
+      headerName: 'Action',
       flex: 0.5,
       renderCell: (params) => {
-        // let status = '';
-        // if (disabledUserList?.includes(params?.row?.id)) status = 'disable';
-        // let _lspStatus = params?.row?.lsp_status;
-        // if (status === 'disable') {
-        //   _lspStatus = USER_MAP_STATUS.disable;
-        // }
-
-        // let isLearner = false;
-        // let isAdmin = false;
-        // isAdmin = params?.row?.role?.toLowerCase() !== 'learner';
-        // isLearner = !isAdmin;
-
-        // if (adminLearnerList?.admins?.includes(params?.row?.id)) {
-        //   isLearner = false;
-        //   isAdmin = true;
-        // }
-        // if (adminLearnerList?.learners?.includes(params?.row?.id)) {
-        //   isLearner = true;
-        //   isAdmin = false;
-        // }
-
         const buttonArr = [
-          // { handleClick: () => router.push(`/edit-order`) },
           {
             text: 'Edit',
-            handleClick: () => router.push(`/admin/vendor/orders/edit-order`)
+            handleClick: () => router.push(`/admin/vendor/orders/edit-order/${params.row.id}`),
           },
           {
-            text: 'Disable'
-          }
+            text: 'View',
+            handleClick: () => {
+              setSelectedOrderId(params.row.id);
+              setViewOrder(true);
+            },
+          },
         ];
-
-        // if(params?.row?.role?.toLowerCase() === 'learner'){
-        //   buttonArr.push({text:'Demote Admin', handleClick:()=>{setIsMakeAdminAlert(true),updateUserRole(params?.row)}})
-        // }
         return (
           <>
             <EllipsisMenu buttonArr={buttonArr} />
           </>
         );
-      }
-    }
+      },
+    },
   ];
   return (
     <>
@@ -164,8 +131,25 @@ const VendorOrders = () => {
         columns={columns}
         tableHeight="70vh"
         pageSize={getPageSizeBasedOnScreen()}
-        data={data}
+        data={vendorOrderDetails}
+        loading={!vendorOrderDetails?.length}
       />
+      {!!selectedOrderId && (
+        <ViewOrder
+          orderId={selectedOrderId}
+          viewOrder={viewOrder}
+          setViewOrder={setViewOrder}
+          onSuccess={(status) => {
+            setVendorOrderDetails((prev) => {
+              const _data = structuredClone(prev);
+              const index = _data?.findIndex((v) => v?.id === selectedOrderId);
+              if (index >= 0) _data[index].status = status;
+
+              return _data;
+            });
+          }}
+        />
+      )}
     </>
   );
 };
