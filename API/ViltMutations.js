@@ -308,6 +308,9 @@ export const UPDATE_TRAINER = gql`
       user_id
       vendor_id
       expertise
+    }
+  }
+`;
 export const CREATE_REGISTER_COUSER_USER = gql`
   mutation registerUserForCourse(
     $id: String
