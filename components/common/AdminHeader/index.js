@@ -29,6 +29,7 @@ export default function AdminHeader({
   isProductTooltip,
   productTooltipData,
   tourId,
+  isShowUserIcon = false,
 }) {
   const [courseType, setCourseType] = useRecoilState(CourseTypeAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
@@ -102,7 +103,7 @@ export default function AdminHeader({
               {/* <CustomTooltip info="create new question bank" /> */}
             </span>
           )}
-          {courseMetaData?.type === COURSE_TYPES[1] && (
+          {isShowUserIcon && (
             <ToolTip title="Users table" placement="bottom">
               <img
                 src="/images/svg/group.svg"

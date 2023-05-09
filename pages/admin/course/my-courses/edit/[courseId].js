@@ -8,7 +8,7 @@ import MainBodyBox from '@/components/common/MainBodyBox';
 import Sidebar from '@/components/common/Sidebar';
 import { courseSidebarData } from '@/components/common/Sidebar/Logic/sidebar.helper';
 import { loadAndCacheDataAsync } from '@/helper/api.helper';
-import { USER_LSP_ROLE } from '@/helper/constants.helper';
+import { COURSE_TYPES, USER_LSP_ROLE } from '@/helper/constants.helper';
 import {
   ClassroomMasterAtom,
   CourseCurrentStateAtom,
@@ -31,7 +31,7 @@ export default function EditCoursePage() {
   const courseType = useRecoilValue(CourseTypeAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
 
-  const { getViltData, getCommercialData } = useHandleCourseData();
+  const { getViltData } = useHandleCourseData();
 
   const router = useRouter();
   const courseId = router?.query?.courseId;
@@ -44,7 +44,6 @@ export default function EditCoursePage() {
 
     //load vilt data
     getViltData(courseId);
-    getCommercialData(courseId);
     if (courseMetaData?.id !== courseId) {
       loadAndCacheDataAsync(GET_COURSE, { course_id: [courseId] })
         .then((res) => {
@@ -88,7 +87,10 @@ export default function EditCoursePage() {
       <Sidebar sidebarItemsArr={courseSidebarData} />
 
       <MainBody>
-        <AdminHeader title={<CoursePageTitle />} />
+        <AdminHeader
+          title={<CoursePageTitle />}
+          isShowUserIcon={courseType !== COURSE_TYPES.classroom}
+        />
 
         <MainBodyBox>
           <AdminCourseTabs />
