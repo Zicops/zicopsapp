@@ -7,16 +7,6 @@ import { useRecoilState } from 'recoil';
 import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
-export default function SelectExistingUser() {
-  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
-  const [trainersList, setTrainersList] = useState([]);
-
-  const [searchText, setSearchText] = useState('');
-
-  // useEffect(() => {
-  //   console.info(searchText);
-  // }, [searchText]);
-
 export default function SelectExistingUser({ individualTrainerData }) {
   const { getTrainersAndModerators } = useHandleCourseData();
   const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
