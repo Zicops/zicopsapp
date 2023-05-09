@@ -7,6 +7,16 @@ import { useRecoilState } from 'recoil';
 import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
+export default function SelectExistingUser() {
+  const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
+  const [trainersList, setTrainersList] = useState([]);
+
+  const [searchText, setSearchText] = useState('');
+
+  // useEffect(() => {
+  //   console.info(searchText);
+  // }, [searchText]);
+
 export default function SelectExistingUser({ individualTrainerData }) {
   const { getTrainersAndModerators } = useHandleCourseData();
   const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
@@ -15,7 +25,10 @@ export default function SelectExistingUser({ individualTrainerData }) {
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    getTrainersAndModerators().then((resp) => setUserList(resp));
+    getPaginatedTrainers()?.then((data) => {
+      setTrainersList(data || []);
+    });
+    // getTrainerById(trainersList?.id);
   }, []);
 
   useEffect(() => {
@@ -51,8 +64,7 @@ export default function SelectExistingUser({ individualTrainerData }) {
     };
   }
 
-  let trainers = userList?.map(getUserListObject);
-
+  let trainers = trainersList?.map(getUserListObject);
   return (
     <div>
       <div>
@@ -103,7 +115,7 @@ export default function SelectExistingUser({ individualTrainerData }) {
               photo: e.photo,
             }));
           }}
-          isLoading={userList == null}
+          isLoading={trainersList == null}
           isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />

@@ -16,6 +16,7 @@ export default function PopUp({
   size = 'medium',
   customStyles = {},
   customBodyStyles = {},
+  customPopStyles = {},
   children,
   tooltipCloseBtnTitle,
   onClose = () => {},
@@ -48,7 +49,7 @@ export default function PopUp({
         closeOnDocumentClick={false}
         closeOnEscape={false}>
         <div className={`${styles.popUpContainer}`} style={propStyles}>
-          <div className={`${styles.popUp}`}>
+          <div className={`${styles.popUp}`} style={customPopStyles}>
             <div className={`${styles.header}`}>
               <div className={`${styles.title}`}>{title} </div>
               <div

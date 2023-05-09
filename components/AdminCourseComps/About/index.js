@@ -39,6 +39,7 @@ export default function About() {
 
   const [title, settitle] = useState('');
   const [typeMOderator, settypeModerator] = useState('internal');
+  const [isTrainerDetails, setIsTrainerDetails] = useState(true);
 
   useEffect(() => {
     if (moderatorCandidates?.length) return;

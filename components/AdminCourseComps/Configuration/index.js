@@ -13,7 +13,6 @@ import { USER_LSP_ROLE } from '@/helper/constants.helper';
 import { getUnixFromDate } from '@/helper/utils.helper';
 import {
   ClassroomMasterAtom,
-  CommercialsAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
 } from '@/state/atoms/courses.atom';
@@ -36,7 +35,6 @@ export default function Configuration() {
   const [courseCurrentState, setCourseCurrentState] = useRecoilState(CourseCurrentStateAtom);
   const [courseMetaData, setCourseMetaData] = useRecoilState(CourseMetaDataAtom);
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
-  const commercialsData = useRecoilValue(CommercialsAtom);
   const userData = useRecoilValue(UserStateAtom);
   const userOrgData = useRecoilValue(UsersOrganizationAtom);
   const { isPublishCourseEditable } = useRecoilValue(FeatureFlagsAtom);
@@ -61,8 +59,7 @@ export default function Configuration() {
     isStartDatedecided ||
     isTrainerdecided ||
     isModeratordecided ||
-    commercialsData?.is_decided ||
-    commercialsData?.pricing_type === COMMERCIAL_PRICEING_TYPE?.tbd;
+    classroomMaster?.pricingType === COMMERCIAL_PRICEING_TYPE?.tbd;
 
   const detailsInfo = [
     {

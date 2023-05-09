@@ -58,7 +58,6 @@ export default function useHandleTrainerData() {
 
     let isError = false;
 
-
     // Query is not working from backend so commented.
     // if (individualTrainerData !== null) {
     //   const res = await updateTrainer({ variables: sendData }).catch((err) => {
@@ -87,6 +86,8 @@ export default function useHandleTrainerData() {
 
   async function handleMail(isToasterDisplay = false) {
     const lspId = sessionStorage.getItem('lsp_id');
+
+    if (!isToasterDisplay) return;
 
     if (!isToasterDisplay) return;
 

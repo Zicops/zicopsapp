@@ -12,7 +12,6 @@ import {
   ActiveCourseTabNameAtom,
   AllCourseModulesDataAtom,
   ClassroomMasterAtom,
-  CommercialsAtom,
   CourseCurrentStateAtom,
   CourseMetaDataAtom,
   getClassroomMasterDataObj,
@@ -31,7 +30,6 @@ export default function AddCoursePage() {
   const [classroomMaster, setClassroomMaster] = useRecoilState(ClassroomMasterAtom);
   const [allModules, setAllModules] = useRecoilState(AllCourseModulesDataAtom);
   const [activeCourseTab, setActiveCourseTab] = useRecoilState(ActiveCourseTabNameAtom);
-  const [commercialsData, setCommercialsData] = useRecoilState(CommercialsAtom);
   const userOrg = useRecoilValue(UsersOrganizationAtom);
 
   // set default values
@@ -47,7 +45,6 @@ export default function AddCoursePage() {
     );
     setCourseCurrentState(getCourseCurrentStateObj({ isSaved: true }));
     setClassroomMaster(getClassroomMasterDataObj({ status: CLASSROOM_MASTER_STATUS.save }));
-    setCommercialsData(getCourseCommercialsObject({ status: CLASSROOM_MASTER_STATUS.save }));
     setAllModules([]);
   }, [userOrg?.lsp_id]);
 

@@ -4,7 +4,6 @@ import LabeledInput from '@/components/common/FormComponents/LabeledInput';
 import LabeledRadioCheckbox from '@/components/common/FormComponents/LabeledRadioCheckbox';
 import ZicopsTable from '@/components/common/ZicopsTable';
 import { getPageSizeBasedOnScreen } from '@/helper/utils.helper';
-import { CommercialsAtom } from '@/state/atoms/courses.atom';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
