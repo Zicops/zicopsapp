@@ -25,7 +25,7 @@ export default function SelectExistingUser({ individualTrainerData }) {
         email: individualTrainerData?.email,
         userId: individualTrainerData?.user_id,
         lspId: individualTrainerData?.lsp_id,
-        id: individualTrainerData?.id,
+        id: individualTrainerData?.trainerId,
       }));
   }, [individualTrainerData]);
 

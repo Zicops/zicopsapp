@@ -40,7 +40,7 @@ export default function useHandleTrainerData() {
     addUpdateTrainer();
   }, [localUserId]);
 
-  async function addUpdateTrainer(isToasterDisplay = true, individualTrainerData) {
+  async function addUpdateTrainer(isToasterDisplay = true, isEdit) {
     const sendData = {
       ...trainerData,
       name: trainerData?.name || '',
@@ -58,19 +58,18 @@ export default function useHandleTrainerData() {
 
     let isError = false;
 
-    // Query is not working from backend so commented.
-    // if (individualTrainerData !== null) {
-    //   const res = await updateTrainer({ variables: sendData }).catch((err) => {
-    //     console.log(err);
-    //     isError = !!err;
-    //     return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
-    //   });
+    if (isEdit) {
+      const res = await updateTrainer({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
+      });
 
-    //   if (isError) return null;
+      if (isError) return null;
 
-    //   setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
-    //   return;
-    // }
+      setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
+      return;
+    }
 
     const res = await addNewTrainer({ variables: sendData }).catch((err) => {
       console.log(err);
@@ -86,9 +85,7 @@ export default function useHandleTrainerData() {
 
   async function handleMail(isToasterDisplay = false) {
     const lspId = sessionStorage.getItem('lsp_id');
-
     if (!isToasterDisplay) return;
-
     if (!isToasterDisplay) return;
 
     if (!trainerData?.inviteEmails)
@@ -106,9 +103,7 @@ export default function useHandleTrainerData() {
       variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer },
     }).catch((err) => {
       console.log('error', err);
-
       errorMsg = err.message;
-
       isError = !!err;
     });
 
@@ -125,9 +120,7 @@ export default function useHandleTrainerData() {
 
     const resEmails = resEmail?.data?.inviteUsersWithRole;
     setLocalUserId(resEmails?.[0]?.user_id);
-
     let userLspMaps = [];
-
     let existingEmails = [];
 
     resEmails?.forEach((user) => {
@@ -140,7 +133,6 @@ export default function useHandleTrainerData() {
         existingEmails.push(user?.email);
       else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
     });
-
     if (!!existingEmails?.length) {
       setToastMsg({
         type: 'info',
@@ -156,9 +148,7 @@ export default function useHandleTrainerData() {
         isError = true;
       });
     }
-
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
-
     if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
   }
 
