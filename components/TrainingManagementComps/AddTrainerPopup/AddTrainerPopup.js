@@ -85,7 +85,7 @@ export default function AddTrainerPopup({
                 : 'Send Invite'
             }
             clickHandler={(e) => {
-              addUpdateTrainer(tab === tabData[0]?.name, individualTrainerData);
+              addUpdateTrainer(tab === tabData[0]?.name, isEdit);
               handleMail(tab === tabData[1]?.name);
             }}
             isDisabled={isView}

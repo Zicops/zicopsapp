@@ -5,6 +5,7 @@ import styles from './../trainingComps.module.scss';
 import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { changeHandler } from '@/helper/common.helper';
+import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 
 export default function TrainingProfileAccordian({ individualTrainerData, isView }) {
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);

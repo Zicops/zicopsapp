@@ -307,6 +307,11 @@ export const UPDATE_TRAINER = gql`
     $expertise: [String]
     $status: String
     $id: String
+    $yearsOfExperience: String
+    $websiteURL: String
+    $linkedinURL: String
+    $githubURL: String
+    $aboutTrainer: String
   ) {
     updateTrainerData(
       input: {
@@ -316,6 +321,11 @@ export const UPDATE_TRAINER = gql`
         expertise: $expertise
         status: $status
         id: $id
+        years_of_experience: $yearsOfExperience
+        website: $websiteURL
+        linkedin: $linkedinURL
+        github: $githubURL
+        description: $aboutTrainer
       }
     ) {
       id
@@ -323,6 +333,12 @@ export const UPDATE_TRAINER = gql`
       user_id
       vendor_id
       expertise
+      status
+      years_of_experience
+      website
+      linkedin
+      github
+      description
     }
   }
 `;
