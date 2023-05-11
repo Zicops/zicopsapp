@@ -87,14 +87,18 @@ export default function useHandleTrainerData() {
     const lspId = sessionStorage.getItem('lsp_id');
     if (!isToasterDisplay) return;
     if (!isToasterDisplay) return;
+
     if (!trainerData?.inviteEmails)
       return setToastMsg({ type: 'danger', message: 'Please Enter an email to invite' });
+
     if (!trainerData?.tag)
       return setToastMsg({ type: 'danger', message: 'Please Enter an User Type' });
+
     // send lowercase email only.
     let sendEmails = trainerData?.inviteEmails?.toLowerCase();
     let isError = false;
     let errorMsg;
+
     const resEmail = await inviteUsers({
       variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer },
     }).catch((err) => {
@@ -102,6 +106,7 @@ export default function useHandleTrainerData() {
       errorMsg = err.message;
       isError = !!err;
     });
+
     if (isError) return setToastMsg({ type: 'danger', message: 'Invite User Failed' });
     if (isError) {
       const message = JSON.parse(errorMsg?.split('body:')[1]);
@@ -109,12 +114,15 @@ export default function useHandleTrainerData() {
         return setToastMsg({ type: 'danger', message: `Email already exists!` });
       return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     }
+
     if (isError) return setToastMsg({ type: 'danger', message: `Error while sending mail!` });
     console.log(resEmail);
+
     const resEmails = resEmail?.data?.inviteUsersWithRole;
     setLocalUserId(resEmails?.[0]?.user_id);
     let userLspMaps = [];
     let existingEmails = [];
+
     resEmails?.forEach((user) => {
       let message = user?.message;
       if (
