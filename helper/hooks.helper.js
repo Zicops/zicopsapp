@@ -1404,7 +1404,12 @@ export function useTimeout(callback, delay = fifteenSeconds) {
   return timeoutRef;
 }
 
-export function useTimeInterval(callback, delayInMS = fifteenSeconds, dependencies = []) {
+export function useTimeInterval(
+  callback,
+  delayInMS = fifteenSeconds,
+  dependencies = [],
+  shouldCallbackRunAtStart = true,
+) {
   const timeoutId = useRef(null);
   const savedCallback = useRef(callback);
 
@@ -1412,9 +1417,12 @@ export function useTimeInterval(callback, delayInMS = fifteenSeconds, dependenci
     savedCallback.current = callback;
   }, [callback]);
 
+  // callback function call at the start
   useEffect(() => {
+    if (!shouldCallbackRunAtStart) return;
+
     savedCallback.current();
-  }, []);
+  }, [shouldCallbackRunAtStart]);
 
   useEffect(() => {
     if (typeof delayInMS !== 'number') return;

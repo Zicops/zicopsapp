@@ -1,23 +1,23 @@
 import {
   ADD_USER_COURSE_PROGRESS,
-  ADD_USER_TOTAL_WATCH_TIME,
   UPDATE_USER_COURSE,
   UPDATE_USER_COURSE_PROGRESS,
   userClient,
 } from '@/api/UserMutations';
-import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
+import { loadQueryDataAsync } from '@/helper/api.helper';
 import { COURSE_MAP_STATUS, SYNC_DATA_IN_SECONDS, THUMBNAIL_GAP } from '@/helper/constants.helper';
 import { useTimeInterval } from '@/helper/hooks.helper';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
+import { courseContext } from '@/state/contexts/CourseContext';
 import { useMutation } from '@apollo/client';
 import { GET_TOPIC_EXAMS } from 'API/Queries';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { addUserWatchTime } from 'services/dashboard.services';
 import { filterTopicContent } from '../../../helper/data.helper';
 import {
   generateVideoThumbnails,
-  getUnixFromDate,
   limitValueInRange,
   secondsToHMS,
 } from '../../../helper/utils.helper';
@@ -60,6 +60,7 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   const [hideTopBar, setHideTopBar] = useState(0);
   const tooltip = useRef(null);
   const progressBar = useRef(null);
+  const { fullCourse } = useContext(courseContext);
   const [syncProgressInSeconds, setSyncProgressInSeconds] = useState(SYNC_DATA_IN_SECONDS * 3);
 
   // [play,pause,forward,backward,volumeUp,volumeDown,enterFullScreen,exitFullScreen,reload,unmute,mute,next,previous]
@@ -81,17 +82,17 @@ export default function useVideoPlayer(videoElement, videoContainer, set) {
   // api call for dashboard data
   const cancel = useTimeInterval(
     () => {
-      mutateData(
-        ADD_USER_TOTAL_WATCH_TIME,
-        {
-          userId: userData?.id,
-          courseId: userCourseData?.userCourseMapping?.course_id,
-          time: 15,
-          date: getUnixFromDate()?.toString(),
-        },
-        {},
-        userClient,
-      );
+      addUserWatchTime({
+        courseId: fullCourse?.id,
+        topicId: videoData?.topicContent?.[0]?.topicId,
+        userId: userData?.id,
+        category: fullCourse?.category,
+        subCategories: [
+          fullCourse?.sub_category,
+          ...fullCourse?.sub_categories?.map((subCat) => subCat?.name),
+        ],
+        time: 15,
+      });
     },
     15 * 1000,
     [playerState?.isPlaying],

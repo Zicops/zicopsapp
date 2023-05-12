@@ -1,18 +1,19 @@
 import { GET_QUESTION_OPTIONS_WITH_ANSWER } from '@/api/Queries';
 import {
   ADD_USER_QUIZ_ATTEMPT,
-  ADD_USER_TOTAL_WATCH_TIME,
   UPDATE_USER_COURSE_PROGRESS,
   userClient,
 } from '@/api/UserMutations';
 import { COURSE_PROGRESS_STATUS, TOPIC_CONTENT_TYPES } from '@/constants/course.constants';
 import { loadQueryDataAsync, mutateData } from '@/helper/api.helper';
-import { getUnixFromDate, limitValueInRange } from '@/helper/utils.helper';
-import { TopicQuizAtom } from '@/state/atoms/courses.atom';
+import { useTimeInterval } from '@/helper/hooks.helper';
+import { limitValueInRange } from '@/helper/utils.helper';
+import { CourseMetaDataAtom, TopicQuizAtom } from '@/state/atoms/courses.atom';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { addUserWatchTime } from 'services/dashboard.services';
 import {
   ActiveCourseDataAtom,
   ActiveCourseHeroAtom,
@@ -24,7 +25,6 @@ import {
   courseHeroObj,
 } from '../atoms/learnerCourseComps.atom';
 import useHandleTopicSwitch from './useHandleTopicSwitch';
-import { useTimeInterval } from '@/helper/hooks.helper';
 
 export default function useHandleTopicProgress(videoState = {}) {
   const containerRef = useRef();
@@ -41,6 +41,7 @@ export default function useHandleTopicProgress(videoState = {}) {
   const topicContent = useRecoilValue(CourseTopicContentAtomFamily(activeCourseData?.topicId));
   const userCourseMapData = useRecoilValue(UserCourseMapDataAtom);
   const userData = useRecoilValue(UserStateAtom);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
 
   const [videoStartTime, setVideoStartTime] = useState(null);
   const [moveTimeBy, setMoveTimeBy] = useState(null);
@@ -62,17 +63,17 @@ export default function useHandleTopicProgress(videoState = {}) {
   // api call for dashboard data
   const cancel = useTimeInterval(
     () => {
-      mutateData(
-        ADD_USER_TOTAL_WATCH_TIME,
-        {
-          userId: userData?.id,
-          courseId: userCourseMapData?.courseId,
-          time: 15,
-          date: getUnixFromDate()?.toString(),
-        },
-        {},
-        userClient,
-      );
+      addUserWatchTime({
+        courseId: courseMetaData?.id,
+        topicId: topicData?.id,
+        userId: userData?.id,
+        category: courseMetaData?.category,
+        subCategories: [
+          courseMetaData?.subCategory,
+          ...courseMetaData?.subCategories?.map((subCat) => subCat?.name),
+        ],
+        time: 15,
+      });
     },
     15 * 1000,
     [videoState?.isPlaying],
