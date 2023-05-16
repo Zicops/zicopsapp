@@ -7,26 +7,27 @@ import { useRecoilState } from 'recoil';
 import { TrainerDataAtom } from '@/state/atoms/trainingManagement.atoms';
 import useHandleTrainerData from '../Logic/useHandleTrainerData';
 
-export default function SelectExistingUser() {
+export default function SelectExistingUser({ individualTrainerData }) {
+  const { getTrainersAndModerators } = useHandleCourseData();
+
   const [trainerData, setTrainerData] = useRecoilState(TrainerDataAtom);
-  const [trainersList, setTrainersList] = useState([]);
-
-  const [searchText, setSearchText] = useState('');
-
-  // useEffect(() => {
-  //   console.info(searchText);
-  // }, [searchText]);
-
-  const { getPaginatedTrainers, getTrainerById } = useHandleTrainerData();
+  const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    getPaginatedTrainers()?.then((data) => {
-      setTrainersList(data || []);
-    });
-    // getTrainerById(trainersList?.id);
+    getTrainersAndModerators().then((resp) => setUserList(resp));
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (individualTrainerData != null)
+      setTrainerData((prev) => ({
+        ...prev,
+        name: individualTrainerData?.first_name + '' + individualTrainerData?.last_name,
+        email: individualTrainerData?.email,
+        userId: individualTrainerData?.user_id,
+        lspId: individualTrainerData?.lsp_id,
+        id: individualTrainerData?.trainerId,
+      }));
+  }, [individualTrainerData]);
 
   const customDropdownStyleObj = {
     placeholderStyles: { color: '#747474' },
@@ -49,7 +50,8 @@ export default function SelectExistingUser() {
     };
   }
 
-  let trainers = trainersList?.map(getUserListObject);
+  let trainers = userList?.map(getUserListObject);
+
   return (
     <div>
       <div>
@@ -60,6 +62,7 @@ export default function SelectExistingUser() {
             label: 'Select User :',
             menuPlacement: 'bottom',
             isSearchEnable: true,
+            isDisabled: individualTrainerData !== null,
             options: trainers?.map((trainee, index) => ({
               label: (
                 <div className={`${styles.trainerOptions}`}>
@@ -99,7 +102,7 @@ export default function SelectExistingUser() {
               photo: e.photo,
             }));
           }}
-          isLoading={trainersList == null}
+          isLoading={userList == null}
           isColumnWise={true}
           customDropdownStyles={customDropdownStyleObj}
         />

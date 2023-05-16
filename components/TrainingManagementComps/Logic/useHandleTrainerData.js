@@ -4,7 +4,7 @@ import {
   TrainerExpertiseListAtom,
   getTrainerDataObj,
 } from '@/state/atoms/trainingManagement.atoms';
-import { CREATE_TRAINER, viltMutationClient } from '@/api/ViltMutations';
+import { CREATE_TRAINER, viltMutationClient, UPDATE_TRAINER } from '@/api/ViltMutations';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
@@ -25,6 +25,8 @@ export default function useHandleTrainerData() {
   // const [isEditTrainerPopupOpen, setIsEditTrainerPopupOpen] = useState(false);
 
   const [addNewTrainer] = useMutation(CREATE_TRAINER, { client: viltMutationClient });
+  const [updateTrainer] = useMutation(UPDATE_TRAINER, { client: viltMutationClient });
+
   const [addUserTags] = useMutation(ADD_USER_TAGS, { client: notificationClient });
 
   const [localUserId, setLocalUserId] = useState(null);
@@ -38,7 +40,7 @@ export default function useHandleTrainerData() {
     addUpdateTrainer();
   }, [localUserId]);
 
-  async function addUpdateTrainer(isToasterDisplay = true) {
+  async function addUpdateTrainer(isToasterDisplay = true, isEdit) {
     const sendData = {
       ...trainerData,
       name: trainerData?.name || '',
@@ -54,15 +56,27 @@ export default function useHandleTrainerData() {
       return setToastMsg({ type: 'danger', message: 'Please Select atleast One Expertise' });
     }
 
-    // console.info(sendData, '1736');
     let isError = false;
+
+    if (isEdit) {
+      const res = await updateTrainer({ variables: sendData }).catch((err) => {
+        console.log(err);
+        isError = !!err;
+        return setToastMsg({ type: 'danger', message: err.message || 'Update Trainer Error' });
+      });
+
+      if (isError) return null;
+
+      setToastMsg({ type: 'success', message: 'Updated Trainer Successfully' });
+      return;
+    }
 
     const res = await addNewTrainer({ variables: sendData }).catch((err) => {
       console.log(err);
       isError = !!err;
       return setToastMsg({ type: 'danger', message: err.message || 'Add Trainer Error' });
     });
-    // setLoading(false);
+
     if (isError) return null;
 
     setToastMsg({ type: 'success', message: 'Added Trainer Successfully' });
@@ -71,7 +85,7 @@ export default function useHandleTrainerData() {
 
   async function handleMail(isToasterDisplay = false) {
     const lspId = sessionStorage.getItem('lsp_id');
-
+    if (!isToasterDisplay) return;
     if (!isToasterDisplay) return;
 
     if (!isToasterDisplay) return;
@@ -91,9 +105,7 @@ export default function useHandleTrainerData() {
       variables: { emails: sendEmails, lsp_id: lspId, role: USER_LSP_ROLE?.trainer },
     }).catch((err) => {
       console.log('error', err);
-
       errorMsg = err.message;
-
       isError = !!err;
     });
 
@@ -110,9 +122,7 @@ export default function useHandleTrainerData() {
 
     const resEmails = resEmail?.data?.inviteUsersWithRole;
     setLocalUserId(resEmails?.[0]?.user_id);
-
     let userLspMaps = [];
-
     let existingEmails = [];
 
     resEmails?.forEach((user) => {
@@ -125,7 +135,6 @@ export default function useHandleTrainerData() {
         existingEmails.push(user?.email);
       else userLspMaps.push({ user_id: user?.user_id, user_lsp_id: user?.user_lsp_id });
     });
-
     if (!!existingEmails?.length) {
       setToastMsg({
         type: 'info',
@@ -141,14 +150,14 @@ export default function useHandleTrainerData() {
         isError = true;
       });
     }
-
     if (isError) return setToastMsg({ type: 'danger', message: 'Error while adding tags!.' });
-
     if (userLspMaps?.length) setToastMsg({ type: 'success', message: `Emails Sent Successfully!` });
   }
 
   async function getPaginatedTrainers(pageCursor = '') {
     const lspId = sessionStorage?.getItem('lsp_id');
+    let finalTrainerList = [];
+
     if (!lspId) return [];
 
     const trainerList = await loadQueryDataAsync(
@@ -158,12 +167,21 @@ export default function useHandleTrainerData() {
       viltQueryClient,
     ).catch((err) => setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' }));
 
-    // if (!vendorList?.getPaginatedVendors?.vendors) return [];
-
     if (trainerList.error) {
       setToastMsg({ type: 'danger', message: 'Trainer Data Load Error' });
       return [];
     }
+
+    // define trainer table data = []
+    // trainer list
+    // push trainer list to trainer table data
+    // trainers ke user id list
+    // get user detail userId array pass
+    // tabledata as array of objects
+    // id = user_id
+    // params.row.id
+
+    finalTrainerList = trainerList?.getTrainerData?.trainers;
 
     let trainerUserIdArr = trainerList?.getTrainerData?.trainers.map((trainer) => trainer.user_id);
 
@@ -176,31 +194,34 @@ export default function useHandleTrainerData() {
 
     const userDeets = userDetails?.getUserDetails;
 
-    return userDeets;
+    const result = finalTrainerList?.map((obj1) => {
+      const obj2 = userDeets.find((obj2) => obj2.id === obj1.user_id);
+      return Object.assign({ ...obj1, trainerId: obj1.id }, obj2);
+    });
+
+    return result;
   }
 
-  async function getTrainerById(trainerId = '') {
-    // if (!!trainerId) return;
+  // async function getTrainerById(trainerId = '') {
+  //   if (!trainerId) return;
 
-    const trainer = await loadQueryDataAsync(
-      GET_TRAINER_BY_ID,
-      { trainerId: trainerId },
-      {},
-      viltQueryClient,
-    ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
+  //   const trainer = await loadQueryDataAsync(
+  //     GET_TRAINER_BY_ID,
+  //     { id: trainerId },
+  //     {},
+  //     viltQueryClient,
+  //   ).catch((err) => setToastMsg({ type: 'warning', message: 'Trainer Not Found' }));
 
-    if (trainerList.error) {
-      setToastMsg({ type: 'warning', message: 'Trainer Not Found' });
-      return [];
-    }
-
-    console.info(trainer);
-  }
+  //   if (trainer.error) {
+  //     setToastMsg({ type: 'warning', message: 'Trainer Not Found' });
+  //     return [];
+  //   }
+  // }
 
   return {
     addUpdateTrainer,
     handleMail,
     getPaginatedTrainers,
-    getTrainerById,
+    // getTrainerById,
   };
 }

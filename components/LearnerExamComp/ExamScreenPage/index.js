@@ -1,9 +1,14 @@
 import ExamAlertPopupOne from '@/components/ExamAlertPopup/ExamAlertPopupOne';
+import { useTimeInterval } from '@/helper/hooks.helper';
 import { toggleFullScreen } from '@/helper/utils.helper';
+import { UserStateAtom } from '@/state/atoms/users.atom';
+import { courseContext } from '@/state/contexts/CourseContext';
 import { CircularProgress, createTheme, ThemeProvider } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { addUserWatchTime } from 'services/dashboard.services';
 import LearnerExamComponent from '..';
 import ExamInstructions from '../ExamInstructions';
 import styles from '../learnerExam.module.scss';
@@ -22,11 +27,14 @@ export default function ExamScreenPage({
   startExam = '',
   handlePopUpClose = () => {},
   handleContinue = () => {},
-  handleNewAttempt = () => {}
+  handleNewAttempt = () => {},
 }) {
   const router = useRouter();
   const examId = router.query?.examId || null;
   const courseId = router.query?.courseId || null;
+  const topicId = router.query?.topicId || null;
+  const { fullCourse } = useContext(courseContext);
+  const userData = useRecoilValue(UserStateAtom);
 
   const refFullscreen = useRef(null);
 
@@ -40,12 +48,33 @@ export default function ExamScreenPage({
           document.fullscreenElement ||
           document.webkitFullscreenElement ||
           document.mozFullScreenElement
-        )
+        ),
       );
     });
 
     return () => isFullScreen && toggleFullScreen(document.body);
   }, []);
+
+  // api call for dashboard data
+
+  const cancel = useTimeInterval(
+    () => {
+      addUserWatchTime({
+        courseId: fullCourse?.id,
+        topicId: topicId,
+        userId: userData?.id,
+        category: fullCourse?.category,
+        subCategories: [
+          fullCourse?.sub_category,
+          ...fullCourse?.sub_categories?.map((subCat) => subCat?.name),
+        ],
+        time: 15,
+      });
+    },
+    15 * 1000,
+    [isLearner],
+    false,
+  );
 
   function backToCourse() {
     if (isSampleTest) return router.push(`${localStorage?.getItem('sampleTestStartLink') || '/'}`);
@@ -95,7 +124,7 @@ export default function ExamScreenPage({
             bottom: '10px',
             display: 'flex',
             gap: '10px',
-            marginLeft: '40px'
+            marginLeft: '40px',
           }}>
           <div
             onClick={() => setIsFullScreen(toggleFullScreen(document.body))}

@@ -21,6 +21,8 @@ import BulletPointInput from './BulletPointInput';
 import useHandleTrainerData from '@/components/TrainingManagementComps/Logic/useHandleTrainerData';
 import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
 import TrainerDetails from './TrainerDetails.js';
+import AddTrainerPopup from '@/components/TrainingManagementComps/AddTrainerPopup/AddTrainerPopup';
+import { AddTrainerAtom } from '@/state/atoms/trainingManagement.atoms';
 
 export default function About() {
   const { error, isDisabled } = useRecoilValue(CourseCurrentStateAtom);
@@ -32,6 +34,8 @@ export default function About() {
     handleClassroomMasterChange,
     moderatorCandidates,
   } = useHandleCourseData();
+
+  const [isAddTrainerOpen, setIsAddTrainerOpen] = useRecoilState(AddTrainerAtom);
 
   const { getPaginatedTrainers } = useHandleTrainerData();
 
@@ -171,6 +175,7 @@ export default function About() {
                 }
                 isLoading={trainersList == null}
                 customDropdownStyles={customDropdownStyleObj}
+                isDisplayButton={true}
               />
 
               <LabeledRadioCheckbox
@@ -475,6 +480,9 @@ export default function About() {
         isFooterVisible={true}>
         <TrainerDetails />
       </VendorPopUp>
+      <NextBtn switchTabName={courseTabs?.topics?.name} />
+
+      <AddTrainerPopup popUpState={[isAddTrainerOpen, setIsAddTrainerOpen]} />
     </>
   );
 }

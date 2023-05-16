@@ -1,5 +1,57 @@
 import { Line } from 'react-chartjs-2';
 import styles from '../../Charts/charts.module.scss';
+import {
+  Chart,
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
+  Title,
+  Tooltip,
+} from 'chart.js';
+
+Chart.register(
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
+  Title,
+  Tooltip,
+);
 
 const LineChart = ({ chartData = {}, options = {}, tooltipBody = () => {} }) => {
   // https://stackoverflow.com/questions/64622766/chart-js-bar-chart-mouse-hovering-highlights-all-the-datasets-instead-of-just-th
@@ -10,26 +62,26 @@ const LineChart = ({ chartData = {}, options = {}, tooltipBody = () => {} }) => 
     ...(options || {}),
     layout: {
       padding: {
-        top: 5
+        top: 5,
       },
-      ...(options?.layout || {})
+      ...(options?.layout || {}),
     },
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         enabled: false,
         position: 'nearest',
-        external: externalTooltipHandler
+        external: externalTooltipHandler,
       },
-      ...(options.plugins || {})
+      ...(options.plugins || {}),
     },
     animation: {
       animateScale: true,
       animateRotate: true,
-      ...(options.animation || {})
-    }
+      ...(options.animation || {}),
+    },
   };
 
   function getOrCreateTooltip(chart) {
@@ -96,11 +148,11 @@ const LineChart = ({ chartData = {}, options = {}, tooltipBody = () => {} }) => 
 
     const container = {
       height: containerDom?.clientHeight || 0,
-      width: containerDom?.clientWidth || 0
+      width: containerDom?.clientWidth || 0,
     };
     const tooltipContainer = {
       height: tooltipRoot?.clientHeight || 0,
-      width: tooltipRoot?.clientWidth || 0
+      width: tooltipRoot?.clientWidth || 0,
     };
 
     const estimatedPostionLeft = positionX + tooltip.caretX;

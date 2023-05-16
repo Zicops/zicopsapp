@@ -1,5 +1,6 @@
-import { listenToCollectionWithId } from '@/helper/firebaseUtil/firestore.helper';
-import { TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
+import { db } from '@/helper/firebaseUtil/firestore.helper';
+import { useTimeInterval } from '@/helper/hooks.helper';
+import { CourseMetaDataAtom, TopicClassroomAtomFamily } from '@/state/atoms/courses.atom';
 import { ActiveClassroomTopicIdAtom } from '@/state/atoms/module.atoms';
 import { ToastMsgAtom } from '@/state/atoms/toast.atom';
 import { UserStateAtom } from '@/state/atoms/users.atom';
@@ -13,10 +14,13 @@ import {
   vcMeetingIconAtom,
   vctoolMetaData,
 } from '@/state/atoms/vctool.atoms';
+import { courseContext } from '@/state/contexts/CourseContext';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { addUserWatchTime } from 'services/dashboard.services';
 import useLoadClassroomData from './Logic/useLoadClassroomData';
 import MeetingCard from './MeetingCard';
 import MainToolbar from './Toolbar';
@@ -26,6 +30,8 @@ import styles from './vctoolMain.module.scss';
 const VcMaintool = ({ vcData = {} }) => {
   const activeClassroomTopicId = useRecoilValue(ActiveClassroomTopicIdAtom);
   const classroomData = useRecoilValue(TopicClassroomAtomFamily(activeClassroomTopicId));
+  const { fullCourse } = useContext(courseContext);
+  const courseMetaData = useRecoilValue(CourseMetaDataAtom);
 
   const setToastMessage = useRecoilCallback(({ set }) => (message = '', type = 'danger') => {
     set(ToastMsgAtom, { type, message });
@@ -143,18 +149,19 @@ const VcMaintool = ({ vcData = {} }) => {
 
   const { addUpdateClassRoomFlags } = useLoadClassroomData();
 
-  // firebase listener for VILT flags
-  useEffect(() => {
-    const unsubscribe = listenToCollectionWithId(
-      'ClassroomFlags',
-      activeClassroomTopicId,
-      (documents) => {
-        if (!documents) return;
-        setControls(documents);
-      },
-    );
-    return () => unsubscribe();
-  }, [activeClassroomTopicId]);
+  // firebase listener
+  useEffect(async () => {
+    const classroomFlagsRef = collection(db, 'ClassroomFlags');
+    const docRef = doc(classroomFlagsRef, activeClassroomTopicId);
+
+    const unsub = onSnapshot(docRef, (querySnapshot) => {
+      if (!querySnapshot.exists()) return;
+
+      setControls({ id: querySnapshot.id, ...querySnapshot.data() });
+    });
+
+    return () => unsub();
+  }, []);
 
   async function updateClassroomFlags(_obj = {}) {
     if (controls?.is_break === false) return;
@@ -166,16 +173,62 @@ const VcMaintool = ({ vcData = {} }) => {
   useEffect(() => {
     if (!controls.id) return;
     if (!api) return;
-    // console.info(controls);
-    if (controls.is_classroom_started) {
-      if (!controls.is_video_sharing_enabled) {
-        api.executeCommand('muteEveryone', 'video');
-      }
-      if (!controls.is_microphone_enabled) {
-        api.executeCommand('muteEveryone', 'audio');
-      }
-    }
+    if (!controls.is_classroom_started) return;
+
+    if (!controls.is_video_sharing_enabled) api.executeCommand('muteEveryone', 'video');
+    if (!controls.is_microphone_enabled) api.executeCommand('muteEveryone', 'audio');
   }, [controls]);
+
+  // enter jitsi meet if moderator started the meet
+  useEffect(() => {
+    if (!hidecard) return;
+    if (!controls.is_classroom_started) return;
+
+    startClassroom();
+  }, [hidecard, controls.is_classroom_started]);
+
+  // api call for dashboard data
+  useTimeInterval(
+    () => {
+      addUserWatchTime({
+        courseId: fullCourse?.id || courseMetaData?.id,
+        topicId: activeClassroomTopicId,
+        userId: userData?.id,
+        category: fullCourse?.category || courseMetaData?.category,
+        subCategories: [
+          fullCourse?.sub_category || courseMetaData?.subCategory,
+          ...(fullCourse?.sub_categories || courseMetaData?.subCategories || [])?.map(
+            (subCat) => subCat?.name,
+          ),
+        ],
+        time: 15,
+      });
+    },
+    15 * 1000,
+    [controls.is_classroom_started],
+    false,
+  );
+
+  function startClassroom() {
+    if (isMeetingStarted) return;
+
+    // update flag
+    updateClassroomFlags({ is_classroom_started: true, ad_video_url: '' });
+
+    // join jitsi meet
+    StartMeeting(classroomData?.topicId, containerRef, toggleAudio, settoobar, setapi, toggleVideo);
+
+    // hide ad toolbar
+    setMeetingIconAtom({ ...meetingIconsAtom, isJoinedAsModerator: null, isStartAdd: false });
+
+    // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
+    // other states updated
+    setLobby(false);
+    setIsMeetingStarted(true);
+    setisStarted(true);
+    sethidecard(true);
+    settoobar(true);
+  }
 
   return (
     <div ref={fullScreenRef} className={styles.mainContainer}>
@@ -190,19 +243,7 @@ const VcMaintool = ({ vcData = {} }) => {
 
         {toolbar && (
           <MainToolbar
-            startMeetingByMod={() => {
-              setLobby(false);
-              StartMeeting(
-                classroomData?.topicId,
-                containerRef,
-                toggleAudio,
-                settoobar,
-                setapi,
-                toggleVideo,
-              );
-              updateClassroomFlags({ is_classroom_started: true, ad_video_url: '' });
-              setIsMeetingStarted(true);
-            }}
+            startMeetingByMod={startClassroom}
             api={api}
             setAudio={() => {
               if (meetingIconsAtom.isModerator) {
@@ -335,35 +376,23 @@ const VcMaintool = ({ vcData = {} }) => {
               if (Route.asPath?.includes('preview'))
                 return setToastMessage('Cannot Join Classroom in preview mode');
               // Route.push('/admin/vctool')
+              if (controls?.is_classroom_started === true) return startClassroom();
 
-              if (controls?.is_classroom_started === true) {
-                setLobby(false);
-                StartMeeting(
-                  classroomData?.topicId,
-                  containerRef,
-                  toggleAudio,
-                  settoobar,
-                  setapi,
-                  toggleVideo,
-                );
-                setIsMeetingStarted(true);
-              } else {
-                const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
-                const isModerator = modIdList?.includes(userData?.id);
+              const modIdList = [...classroomData?.moderators, ...classroomData?.trainers];
+              const isModerator = modIdList?.includes(userData?.id);
 
-                setLobby(true);
-                updateClassroomFlags({
-                  is_moderator_joined: classroomData?.moderators?.includes(userData?.id),
-                  is_trainer_joined: classroomData?.trainers?.includes(userData?.id),
-                  ad_video_url:
-                    'https://demo.zicops.com/videos/zicops-product-demo-learner-panel.mp4',
-                });
-                setMeetingIconAtom({
-                  ...meetingIconsAtom,
-                  isJoinedAsModerator: isModerator,
-                  isStartAdd: true,
-                });
-              }
+              setLobby(true);
+              updateClassroomFlags({
+                is_moderator_joined: classroomData?.moderators?.includes(userData?.id),
+                is_trainer_joined: classroomData?.trainers?.includes(userData?.id),
+                ad_video_url:
+                  'https://demo.zicops.com/videos/zicops-product-demo-learner-panel.mp4',
+              });
+              setMeetingIconAtom({
+                ...meetingIconsAtom,
+                isJoinedAsModerator: isModerator,
+                isStartAdd: true,
+              });
 
               // https://www.youtube.com/watch?v=QNuILonXlRo&t=40s
               setisStarted(true);

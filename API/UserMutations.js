@@ -2253,8 +2253,17 @@ export const UPDATE_ORDER_SERVICES = gql`
   }
 `;
 
+// input CourseWatchTimeInput {
+//   course_id: String
+//   category: String
+//   sub_categories: [String]
+//   topic_id: String
+//   user_id: String
+//   time: Int
+//   date: String
+// }
 export const ADD_USER_TOTAL_WATCH_TIME = gql`
-  mutation addUserTotalWatchTime($userId: String, $courseId: String, $time: Int, $date: String) {
-    addUserTotalWatchTime(user_id: $userId, course_id: $courseId, time: $time, date: $date)
+  mutation addUserTotalWatchTime($input: CourseWatchTimeInput) {
+    addUserTotalWatchTime(input: $input)
   }
 `;

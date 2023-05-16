@@ -18,7 +18,7 @@ export default function LabeledDropdown({
   isDisplayButton = false,
   closeMenuOnSelect = true,
   hideSelectedOptions = true,
-  isColumnWise = false
+  isColumnWise = false,
 }) {
   let {
     inputName,
@@ -31,10 +31,8 @@ export default function LabeledDropdown({
     isSearchEnable,
     isMulti,
     noOptionsMessage = 'No Options',
-    menuPlacement = 'bottom'
+    menuPlacement = 'bottom',
   } = dropdownOptions;
-
-  // console.info(options);
 
   if (isReadonly) isDisabled = true;
 
@@ -44,9 +42,6 @@ export default function LabeledDropdown({
   let selectedValue = null;
   if (value?.value) selectedValue = value;
   if (isMulti && value?.length) selectedValue = value;
-
-  // let customComponents = '';
-  // if (isDisplayButton) customComponents = CustomMenu;
 
   return (
     <div className={`${labeledDropdownWrapper} ${styleClass} ${isColumnWise ? columnWise : ''}`}>
@@ -73,7 +68,7 @@ export default function LabeledDropdown({
             containerWidth,
             isError,
             isReadonly,
-            customDropdownStyles
+            customDropdownStyles,
           )}
           isSearchable={!!isSearchEnable}
           isDisabled={!!isDisabled || isLoading}
@@ -84,7 +79,7 @@ export default function LabeledDropdown({
           isClearable={false}
           closeMenuOnSelect={closeMenuOnSelect}
           hideSelectedOptions={hideSelectedOptions}
-          // components={{ Menu: customComponents }}
+          components={isDisplayButton ? { Menu: CustomMenu } : {}}
         />
       ) : (
         <Creatable
@@ -101,7 +96,7 @@ export default function LabeledDropdown({
             containerWidth,
             isError,
             isReadonly,
-            customDropdownStyles
+            customDropdownStyles,
           )}
           isSearchable={!!isSearchEnable}
           isDisabled={!!isDisabled}
@@ -112,7 +107,7 @@ export default function LabeledDropdown({
           isClearable={false}
           closeMenuOnSelect={closeMenuOnSelect}
           hideSelectedOptions={hideSelectedOptions}
-          // components={{ Menu: CustomMenu }}
+          components={isDisplayButton ? { Menu: CustomMenu } : {}}
         />
       )}
     </div>

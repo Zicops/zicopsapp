@@ -260,6 +260,11 @@ export const CREATE_TRAINER = gql`
     $vendorId: String
     $expertise: [String]
     $status: String
+    $yearsOfExperience: String
+    $websiteURL: String
+    $linkedinURL: String
+    $githubURL: String
+    $aboutTrainer: String
   ) {
     createTrainerData(
       input: {
@@ -268,6 +273,11 @@ export const CREATE_TRAINER = gql`
         vendor_id: $vendorId
         expertise: $expertise
         status: $status
+        years_of_experience: $yearsOfExperience
+        website: $websiteURL
+        linkedin: $linkedinURL
+        github: $githubURL
+        description: $aboutTrainer
       }
     ) {
       id
@@ -275,6 +285,119 @@ export const CREATE_TRAINER = gql`
       user_id
       vendor_id
       expertise
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+      years_of_experience
+      website
+      linkedin
+      github
+      description
+    }
+  }
+`;
+
+export const UPDATE_TRAINER = gql`
+  mutation updateTrainerData(
+    $lspId: String
+    $userId: String
+    $vendorId: String
+    $expertise: [String]
+    $status: String
+    $id: String
+    $yearsOfExperience: String
+    $websiteURL: String
+    $linkedinURL: String
+    $githubURL: String
+    $aboutTrainer: String
+  ) {
+    updateTrainerData(
+      input: {
+        lsp_id: $lspId
+        user_id: $userId
+        vendor_id: $vendorId
+        expertise: $expertise
+        status: $status
+        id: $id
+        years_of_experience: $yearsOfExperience
+        website: $websiteURL
+        linkedin: $linkedinURL
+        github: $githubURL
+        description: $aboutTrainer
+      }
+    ) {
+      id
+      lsp_id
+      user_id
+      vendor_id
+      expertise
+      status
+      years_of_experience
+      website
+      linkedin
+      github
+      description
+    }
+  }
+`;
+export const CREATE_REGISTER_COUSER_USER = gql`
+  mutation registerUserForCourse(
+    $id: String
+    $courseId: String
+    $userId: String
+    $registration_date: Int
+    $invoice: String
+    $status: String
+  ) {
+    registerUserForCourse(
+      input: {
+        id: $id
+        course_id: $courseId
+        user_id: $userId
+        registration_date: $registration_date
+        invoice: $invoice
+        status: $status
+      }
+    ) {
+      id
+      course_id
+      user_id
+      registration_date
+      invoice
+      status
+      created_at
+      created_by
+      updated_at
+      updated_by
+    }
+  }
+`;
+export const UPDATE_REGISTER_COUSER_USER = gql`
+  mutation updateRegistrationForCourse(
+    $id: String
+    $courseId: String
+    $userId: String
+    $registration_date: Int
+    $invoice: String
+    $status: String
+  ) {
+    updateRegistrationForCourse(
+      input: {
+        id: $id
+        course_id: $courseId
+        user_id: $userId
+        registration_date: $registration_date
+        invoice: $invoice
+        status: $status
+      }
+    ) {
+      id
+      course_id
+      user_id
+      registration_date
+      invoice
       status
       created_at
       created_by
