@@ -1,74 +1,166 @@
+.feesContainer {
+  .feesTopContainer {
+    position: relative;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
-.feesContainer{
-    .feesTopContainer{
-            position: relative;
-            background-position: right center;
-            background-repeat: no-repeat;
-            background-size: cover;
-          
-            .gradient{
-                    // height: 38.8889vw;
-                    padding: 24px;
-                    background: rgba(0, 0, 0, 0);
-                    background: linear-gradient(90deg,
-                            rgba(0, 0, 0, 1) 0%,
-                            rgba(0, 0, 0, 0.9) 35%,
-                            rgba(0, 0, 0, 0.8) 50%,
-                            rgba(0, 0, 0, 0) 100%);
-                }
-        .courseSummary{
-            font-weight: 600;
-                font-size: 16px;
-                padding-bottom: 25px;
-        }
-        .courseTitleMain{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            .courseTitle{
-                font-weight: 600;
-                font-size: 20px;
-            }
-            .courseType2 {
-                background-color: #2B60EA;
-                color: $white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                border-radius: 4px;
-                 padding: 4px 8px;
-                text-transform: capitalize;
-            }
-        }
-        .courseInstrutor{
-            padding-bottom: 25px;
-        }
-        .feesFlexContainer{
-            display: flex;
-            justify-content: space-between;
-            padding-bottom: 8px;
-        }
-        .durationContainer{
-            display: flex;
-            justify-content: space-between;
-            .durationMain{
-                padding: 10px 16px 10px 13px;
-                background: #26292C;
-                border: 1px solid #30323F;
-                border-radius: 50px;
-                display: flex;
-                align-items: center;
-                gap:8px
-            }
-        }
+    .gradient {
+      // height: 38.8889vw;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0);
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 35%,
+        rgba(0, 0, 0, 0.8) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
     }
-    .feesBottomMain{
-        padding: 24px;
+    .courseSummary {
+      font-weight: 600;
+      font-size: 16px;
+      padding-bottom: 25px;
     }
-          .hr {
-              background-color: $secondary;
-              height: 1px;
-              margin: 10px 0px;
+    .courseTitleMain {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      .courseTitle {
+        font-weight: 600;
+        font-size: 20px;
+      }
+      .courseType2 {
+        background-color: #2b60ea;
+        color: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border-radius: 4px;
+        padding: 4px 8px;
+        text-transform: capitalize;
+      }
+    }
+    .courseInstrutor {
+      padding-bottom: 25px;
+    }
+    .feesFlexContainer {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8px;
+    }
+    .durationContainer {
+      display: flex;
+      justify-content: space-between;
+      .durationMain {
+        padding: 10px 16px 10px 13px;
+        background: #26292c;
+        border: 1px solid #30323f;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+  }
+  .feesBottomMain {
+    padding: 24px;
+  }
+  .hr {
+    background-color: $secondary;
+    height: 1px;
+    margin: 10px 0px;
+  }
+}
+.payUserContainer {
+  .payTopContainer {
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .gradient {
+      height: 300px;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0);
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.9) 35%,
+        rgba(0, 0, 0, 0.8) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      .imgTextContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .imgLogo {
+          height: 70px;
+          width: 85px;
+          margin-bottom: 30px;
+          img {
+            width: 100%;
+            height: 100%;
           }
+        }
+        .imgLogoText {
+          width: 210px;
+          height: 36px;
+
+          img {
+            width: 100%;
+          }
+        }
+      }
+      .amount {
+        font-size: 22px;
+        text-align: center;
+      }
+    }
+  }
+  .payBottomContainer {
+    .payHeading {
+      padding: 24px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .flexContainer {
+      display: flex;
+      gap: 10px;
+      padding: 10px 24px;
+      .subField {
+        width: 100%;
+      }
+    }
+  }
+  input {
+    width: 100%;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+  }
+
+  input.phoneClasses {
+    width: 100%;
+    border: 1px solid #747474;
+    border-radius: 5px;
+    background: transparent;
+    outline: none;
+    padding-left: 16px;
+    color: $white;
+    height: 42px;
+  }
+}
+.hr2 {
+  background-color: $bgBody;
+  padding: 1px 40px;
+  margin: 30px 0px;
+}
+.labelMergin {
+  margin-top: 8px;
+  width: 100%;
 }

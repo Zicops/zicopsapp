@@ -19,6 +19,8 @@ import NextBtn from '../NextBtn';
 import styles from '../adminCourseComps.module.scss';
 import BulletPointInput from './BulletPointInput';
 import useHandleTrainerData from '@/components/TrainingManagementComps/Logic/useHandleTrainerData';
+import VendorPopUp from '@/components/VendorComps/common/VendorPopUp';
+import TrainerDetails from './TrainerDetails.js';
 import AddTrainerPopup from '@/components/TrainingManagementComps/AddTrainerPopup/AddTrainerPopup';
 import { AddTrainerAtom } from '@/state/atoms/trainingManagement.atoms';
 
@@ -467,6 +469,17 @@ export default function About() {
         </div>
       )}
 
+      <NextBtn />
+      <VendorPopUp
+        open={isTrainerDetails}
+        popUpState={[isTrainerDetails, setIsTrainerDetails]}
+        size="large"
+        isVilt
+        closeBtn={{ name: 'Cancel' }}
+        submitBtn={{ name: 'Select' }}
+        isFooterVisible={true}>
+        <TrainerDetails />
+      </VendorPopUp>
       <NextBtn switchTabName={courseTabs?.topics?.name} />
 
       <AddTrainerPopup popUpState={[isAddTrainerOpen, setIsAddTrainerOpen]} />

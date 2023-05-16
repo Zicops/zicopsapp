@@ -88,6 +88,8 @@ export default function useHandleTrainerData() {
     if (!isToasterDisplay) return;
     if (!isToasterDisplay) return;
 
+    if (!isToasterDisplay) return;
+
     if (!trainerData?.inviteEmails)
       return setToastMsg({ type: 'danger', message: 'Please Enter an email to invite' });
 
