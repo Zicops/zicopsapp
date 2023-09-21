@@ -35,7 +35,7 @@
     "firebase": "9.8.4",
     "fs": "^0.0.1-security",
     "googleapis": "108.0.0",
-    "graphql": "16.3.0",
+    "graphql": "16.8.1",
     "graphql-upload": "15.0.1",
     "html2canvas": "1.4.1",
     "jspdf": "2.5.1",
